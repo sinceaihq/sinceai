@@ -15,6 +15,12 @@ export function TrustBar() {
     { name: "Antler", logo: "/assets/sponsors/antler.png" },
     { name: "Boost Turku", logo: "/assets/supports/boost.svg" },
     { name: "Featherless.ai", logo: "/assets/sponsors/featherless.svg" },
+    { name: "AI Mad Lab", logo: "/assets/supports/aimadlab.svg" },
+    { name: "Aalto AI", logo: "/assets/supports/aaltoai.png" },
+    { name: "Skillio", logo: "/assets/sponsors/Skillio.png" },
+    { name: "Eisko", logo: "/assets/sponsors/eisko.svg" },
+    { name: "A'Pelago", logo: "/assets/sponsors/apelago.png" },
+    { name: "Business Turku", logo: "/assets/sponsors/businessturku.png" },
   ];
 
   return (
