@@ -107,16 +107,14 @@ export default function EventsPage() {
 
                     {/* CTAs */}
                     <div className="flex flex-col sm:flex-row gap-4">
-                      <a
-                        href={config.lumaOrgUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <Link
+                        href="/hackathon"
                         className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-black bg-white rounded-full hover:bg-neutral-100 transition-all duration-300 group"
                       >
-                        See events on Luma
-                        <ExternalLink className="w-4 h-4 ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                      </a>
-                      
+                        Since AI Hackathon 2026
+                        <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform" />
+                      </Link>
+
                       <Link
                         href="/partners"
                         className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white border border-white/20 rounded-full hover:bg-white/5 transition-all duration-300 group"

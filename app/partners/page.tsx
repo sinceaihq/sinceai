@@ -190,12 +190,16 @@ export default function PartnersPage() {
               </p>
 
               {/* Upcoming Event Notice */}
-              <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full bg-white/5 border border-white/10 mb-12">
+              <Link
+                href="/hackathon"
+                className="inline-flex items-center gap-3 px-5 py-3 rounded-full bg-white/5 border border-white/10 mb-12 hover:border-white/20 hover:bg-white/[0.08] transition-all group"
+              >
                 <Calendar className="w-4 h-4 text-neutral-400" />
                 <span className="text-sm font-medium text-neutral-400">
-                  Next event: <span className="text-white">{UPCOMING_EVENT_2026.statusLabelShort}</span>
+                  Sponsor <span className="text-white group-hover:text-neutral-200 transition-colors">Since AI Hackathon 2026</span>
                 </span>
-              </div>
+                <ArrowRight className="w-3.5 h-3.5 text-neutral-500 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+              </Link>
 
               <div className="flex flex-wrap gap-4">
                 <Link
