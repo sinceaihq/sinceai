@@ -250,8 +250,11 @@ export default function HackathonPage() {
                 Europe&apos;s Premier Annual AI Hackathon — Turku, Finland
               </p>
 
-              {/* TODO: set exact time for event */}
-              <CountdownTimer targetDate="2026-11-06T09:00:00" />
+              {/* Event: Nov 6-8, 2026. Starts 16:00, ends midnight Nov 8 */}
+              <CountdownTimer
+                startDate="2026-11-06T16:00:00"
+                endDate="2026-11-09T00:00:00"
+              />
 
               {/* Stats row */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-12 max-w-4xl mx-auto">
