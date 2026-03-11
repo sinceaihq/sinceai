@@ -12,6 +12,7 @@ const partners = [
   { name: "Eisko",          logo: "/assets/sponsors/eisko.svg",         url: "https://www.eisko.fi/" },
   { name: "A'Pelago",       logo: "/assets/sponsors/apelago.png",       url: "https://www.apelago.fi/" },
   { name: "Business Turku", logo: "/assets/sponsors/businessturku.png", url: "https://businessturku.fi/" },
+  { name: "n8n",            logo: "/assets/sponsors/n8n.svg",           url: "https://n8n.io/" },
 ];
 
 const supporters = [
