@@ -21,6 +21,7 @@ export default function PartnersPage() {
     { name: "Eisko",          logo: "/assets/sponsors/eisko.svg",         url: "https://www.eisko.fi/" },
     { name: "Business Turku", logo: "/assets/sponsors/businessturku.png", url: "https://businessturku.fi/" },
     { name: "Bayer",          logo: "/assets/sponsors/Bayer.svg",         url: "https://www.bayer.com/" },
+    { name: "n8n",            logo: "/assets/sponsors/n8n.svg",           url: "https://n8n.io/" },
   ];
 
   const supportingPartners = [

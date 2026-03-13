@@ -8,102 +8,140 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/sections/Footer";
 import ContactForm from "@/components/ContactForm";
 
-// Team members data
-const teamMembers = [
+// Team members data organized by department
+const teamSections = [
   {
-    name: "Riku Lauttia",
-    role: "Operations",
-    email: "riku.lauttia@sinceai.fi",
-    linkedin: "https://www.linkedin.com/in/rikulauttia/",
+    department: "Sales & Partnerships",
+    members: [
+      {
+        name: "Joonas Ukkonen",
+        role: "Sales & Partnerships",
+        email: "joonas.ukkonen@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/joonas-ukkonen-29844022b/",
+      },
+      {
+        name: "Juho Salmi",
+        role: "Sales & Partnerships",
+        email: "juho.salmi@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/juho-salmi-381609370/",
+      },
+      {
+        name: "Tuomas Rikkonen",
+        role: "Sales & Partnerships",
+        email: "tuomas.rikkonen@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/tuomas-rikkonen-8664421a9/",
+      },
+      {
+        name: "Aarne Ollila",
+        role: "Sales & Partnerships",
+        email: "aarne.ollila@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/aarneollila/",
+      },
+      {
+        name: "Arttu Myyryläinen",
+        role: "Sales & Partnerships",
+        email: "arttu.myyrylainen@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/arttumyyrylainen/",
+      },
+      {
+        name: "Aman Vyas",
+        role: "Sales & Partnerships",
+        email: "aman@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/aman--vyas/",
+      },
+      {
+        name: "Riku Lauttia",
+        role: "Sales & Operations",
+        email: "riku.lauttia@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/rikulauttia/",
+      },
+    ],
+  },
+  
+  {
+    department: "Community & Content",
+    members: [
+      {
+        name: "Abdul Wasay",
+        role: "Content",
+        email: "abdul@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/abdulwasaymuhammad/",
+      },
+      {
+        name: "Adeelia Koponen",
+        role: "Marketing",
+        email: "adeelia.koponen@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/adeelia-koponen-37a492379/",
+      },
+      {
+        name: "Vishaka Salpiumi",
+        role: "Social Media",
+        linkedin: "https://www.linkedin.com/in/vishaka-salpiumi-3b6578349/",
+      },
+    ],
   },
   {
-    name: "Aarne Ollila",
-    role: "Partnerships",
-    email: "aarne.ollila@sinceai.fi",
-    linkedin: "https://www.linkedin.com/in/aarneollila/",
+    department: "Technology",
+    members: [
+      {
+        name: "Abel Alem",
+        role: "Web & Tech",
+        email: "abel@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/abel-alem-25420b263",
+      },
+      {
+        name: "Otso Saarinen",
+        role: "Tech",
+        email: "otso.saarinen@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/otsosaarinen/",
+      },
+      {
+        name: "Theo Wilenius",
+        role: "Tech",
+        email: "theo.wilenius@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/tabw/",
+      },
+    ],
   },
   {
-    name: "Aman Vyas",
-    role: "International",
-    email: "aman@sinceai.fi",
-    linkedin: "https://www.linkedin.com/in/aman--vyas/",
+    department: "Production",
+    members: [
+      {
+        name: "Venla Raassina",
+        role: "Production",
+        email: "venla.raassina@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/venlaraassina/",
+      },
+      {
+        name: "Toki Mohammad Tahmid",
+        role: "Production",
+        email: "toki@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/toki-mohammad-t-a7b334159/",
+      },
+      {
+        name: "Tzu Tai Huang",
+        role: "Production & Volunteers",
+        email: "tzu@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/tzu-tai-huang/",
+      },
+    ],
   },
   {
-    name: "Venla Raassina",
-    role: "Community",
-    email: "venla.raassina@sinceai.fi",
-    linkedin: "https://www.linkedin.com/in/venlaraassina/",
-  },
-  {
-    name: "Abdul Wasay",
-    role: "Content",
-    email: "abdul@sinceai.fi",
-    linkedin: "https://www.linkedin.com/in/abdulwasaymuhammad/",
-  },
-  {
-    name: "Arttu Myyryläinen",
-    role: "Strategic Outreach",
-    email: "arttu.myyrylainen@sinceai.fi",
-    linkedin: "https://www.linkedin.com/in/arttumyyrylainen/",
-  },
-  {
-    name: "Arttu Karonen",
-    role: "Finance",
-    email: "arttu.karonen@sinceai.fi",
-    linkedin: "https://www.linkedin.com/in/arttu-karonen-526872261/",
-  },
-  {
-    name: "Vishaka Salpiumi",
-    role: "Social Media",
-    linkedin: "https://www.linkedin.com/in/vishaka-salpiumi-3b6578349/",
-  },
-  {
-    name: "Abel Alem",
-    role: "Web & Tech",
-    email: "abel@sinceai.fi",
-    linkedin: "https://www.linkedin.com/in/abel-alem-25420b263",
-  },
-  {
-    name: "Joonas Ukkonen",
-    role: "Sales & Partnerships",
-    email: "joonas.ukkonen@sinceai.fi",
-    linkedin: "https://www.linkedin.com/in/joonas-ukkonen-29844022b/",
-  },
-  {
-    name: "Juho Salmi",
-    role: "Sales & Partnerships",
-    email: "juho.salmi@sinceai.fi",
-    linkedin: "https://www.linkedin.com/in/juho-salmi-381609370/",
-  },
-  {
-    name: "Ossama Essfadi",
-    role: "Tech",
-    email: "ossama@sinceai.fi",
-    linkedin: "https://www.linkedin.com/in/essfadi/",
-  },
-  {
-    name: "Stephen Racal",
-    role: "Sales & Partnerships",
-    email: "stephen@sinceai.fi",
-    linkedin: "https://www.linkedin.com/in/stephen-racal-839ab1138/",
-  },
-  {
-    name: "Toki Mohammad Tahmid",
-    role: "Production",
-    email: "toki@sinceai.fi",
-    linkedin: "https://www.linkedin.com/in/toki-mohammad-t-a7b334159/",
-  },
-  {
-    name: "Tuomas Rikkonen",
-    role: "Production",
-    email: "tuomas.rikkonen@sinceai.fi",
-    linkedin: "https://www.linkedin.com/in/tuomas-rikkonen-8664421a9/",
-  },
-  {
-    name: "Tzu Tai Huang",
-    role: "Production & Volunteers",
-    email: "tzu@sinceai.fi",
-    linkedin: "https://www.linkedin.com/in/tzu-tai-huang/",
+    department: "Finance",
+    members: [
+      {
+        name: "Arttu Karonen",
+        role: "Finance",
+        email: "arttu.karonen@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/arttu-karonen-526872261/",
+      },
+      {
+        name: "Roope Kantola",
+        role: "Finance",
+        email: "roope.kantola@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/roope-kantola-131b23320/",
+      },
+    ],
   },
 ];
 
@@ -226,7 +264,7 @@ function ContactPageContent() {
         </div>
       </section>
 
-      {/* Team Section - Clean Grid */}
+      {/* Team Section - Organized by Department */}
       <section className="w-full bg-black py-24 px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto">
           <motion.div 
@@ -244,11 +282,26 @@ function ContactPageContent() {
             </p>
           </motion.div>
 
-          <div className="flex flex-wrap justify-center gap-6">
-            {teamMembers.map((person, index) => (
-              <div key={index} className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
-                <TeamCard person={person} index={index} />
-              </div>
+          <div className="space-y-16">
+            {teamSections.map((section, sectionIndex) => (
+              <motion.div
+                key={section.department}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: sectionIndex * 0.1 }}
+              >
+                <h3 className="text-2xl font-bold text-white mb-6 tracking-tight">
+                  {section.department}
+                </h3>
+                <div className="flex flex-wrap justify-start gap-6">
+                  {section.members.map((person, index) => (
+                    <div key={index} className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
+                      <TeamCard person={person} index={index} />
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
             ))}
           </div>
         </div>
