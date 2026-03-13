@@ -22,6 +22,7 @@ export function TrustBar() {
     { name: "A'Pelago", logo: "/assets/sponsors/apelago.png" },
     { name: "Business Turku", logo: "/assets/sponsors/businessturku.png" },
     { name: "n8n", logo: "/assets/sponsors/n8n.svg" },
+    { name: "Lovable", logo: "/assets/sponsors/lovable.png" },
   ];
 
   return (
