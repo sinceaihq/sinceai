@@ -1,29 +1,10 @@
 "use client";
 import React from "react";
+import { partnerLogos } from "@/lib/partners";
 
 export function TrustBar() {
   // All logos mixed together (partners + supporters)
-  const allLogos = [
-    { name: "Bayer", logo: "/assets/sponsors/Bayer.svg" },
-    { name: "Valmet", logo: "/assets/sponsors/valmet.png" },
-    { name: "University of Turku", logo: "/assets/supports/universityofturku.png" },
-    { name: "Sandvik", logo: "/assets/sponsors/sandvik.png" },
-    { name: "Turku AMK", logo: "/assets/supports/turkuamk.png" },
-    { name: "Kongsberg", logo: "/assets/sponsors/kongsberg.png" },
-    { name: "ElevenLabs", logo: "/assets/sponsors/elevenlabs.png" },
-    { name: "City of Turku", logo: "/assets/supports/cityofturku.png" },
-    { name: "Antler", logo: "/assets/sponsors/antler.png" },
-    { name: "Boost Turku", logo: "/assets/supports/boost.svg" },
-    { name: "Featherless.ai", logo: "/assets/sponsors/featherless.svg" },
-    { name: "AI Mad Lab", logo: "/assets/supports/aimadlab.svg" },
-    { name: "Aalto AI", logo: "/assets/supports/aaltoai.png" },
-    { name: "Skillio", logo: "/assets/sponsors/Skillio.png" },
-    { name: "Eisko", logo: "/assets/sponsors/eisko.svg" },
-    { name: "A'Pelago", logo: "/assets/sponsors/apelago.png" },
-    { name: "Business Turku", logo: "/assets/sponsors/businessturku.png" },
-    { name: "n8n", logo: "/assets/sponsors/n8n.svg" },
-    { name: "Lovable", logo: "/assets/sponsors/lovable.png" },
-  ];
+  const allLogos = partnerLogos;
 
   return (
     <section className="py-16 px-6 bg-black border-y border-white/5 overflow-hidden">

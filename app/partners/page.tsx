@@ -7,33 +7,9 @@ import { Footer } from "@/components/sections/Footer";
 import { motion } from "framer-motion";
 import { Users, Briefcase, Trophy, Megaphone, CheckCircle, ArrowRight, Calendar } from "lucide-react";
 import { UPCOMING_EVENT_2026 } from "@/lib/sinceai";
+import { partnerCompanies, supportingPartners } from "@/lib/partners";
 
 export default function PartnersPage() {
-  const partnerCompanies = [
-    { name: "Valmet",         logo: "/assets/sponsors/valmet.png",        url: "https://www.valmet.com/" },
-    { name: "Sandvik",        logo: "/assets/sponsors/sandvik.png",       url: "https://www.home.sandvik" },
-    { name: "Kongsberg",      logo: "/assets/sponsors/kongsberg.png",     url: "https://www.kongsberg.com/" },
-    { name: "ElevenLabs",     logo: "/assets/sponsors/elevenlabs.png",    url: "https://elevenlabs.io/" },
-    { name: "Antler",         logo: "/assets/sponsors/antler.png",        url: "https://www.antler.co/" },
-    { name: "Featherless.ai", logo: "/assets/sponsors/featherless.svg",   url: "https://featherless.ai/" },
-    { name: "Skillio",        logo: "/assets/sponsors/Skillio.png",       url: "https://skillio.ai/" },
-    { name: "A'Pelago",       logo: "/assets/sponsors/apelago.png",       url: "https://www.apelago.fi/" },
-    { name: "Eisko",          logo: "/assets/sponsors/eisko.svg",         url: "https://www.eisko.fi/" },
-    { name: "Business Turku", logo: "/assets/sponsors/businessturku.png", url: "https://businessturku.fi/" },
-    { name: "Bayer",          logo: "/assets/sponsors/Bayer.svg",         url: "https://www.bayer.com/" },
-    { name: "n8n",            logo: "/assets/sponsors/n8n.svg",           url: "https://n8n.io/" },
-    { name: "Lovable",        logo: "/assets/sponsors/lovable.png",       url: "https://lovable.dev/" },
-  ];
-
-  const supportingPartners = [
-    { name: "University of Turku", logo: "/assets/supports/universityofturku.png", url: "https://www.utu.fi" },
-    { name: "Turku AMK",           logo: "/assets/supports/turkuamk.png",          url: "https://www.turkuamk.fi/" },
-    { name: "City of Turku",       logo: "/assets/supports/cityofturku.png",       url: "https://www.turku.fi" },
-    { name: "Boost Turku",         logo: "/assets/supports/boost.svg",             url: "https://www.boostturku.com/" },
-    { name: "AI Mad Lab",          logo: "/assets/supports/aimadlab.svg",          url: "https://www.aimadlab.com/" },
-    { name: "Aalto AI",            logo: "/assets/supports/aaltoai.png",           url: "https://www.aaltoai.com/" },
-  ];
-
   const stats = [
     { value: "500+", label: "AI Developers", description: "In our Discord community" },
     { value: "200+", label: "Hackathon Participants", description: "Per major event" },
