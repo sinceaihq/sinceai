@@ -85,6 +85,12 @@ export const PARTNERS: Partner[] = [
     url: "https://lovable.dev/",
     tier: "partner",
   },
+  {
+    name: "Aiven",
+    logo: "/assets/sponsors/aiven.png",
+    url: "https://aiven.io/",
+    tier: "partner",
+  },
   // Supporters
   {
     name: "University of Turku",
