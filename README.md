@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Since AI
 
-## Getting Started
+Europe's AI builders community. Turku-based, globally connected.
 
-First, run the development server:
+## About
+
+Since AI brings together builders, researchers, and founders working on artificial intelligence. We run high-signal hackathons where teams ship real solutions — code, demos, and measurable outcomes — in collaboration with partner companies bringing real-world challenges.
+
+260 builders. 30+ projects. 15+ partner companies. Founded 2025.
+
+## Stack
+
+Built with Next.js 16, React 19, and TypeScript 5. Styled with Tailwind CSS v4 and Framer Motion. Deployed on Vercel with continuous integration via GitHub Actions.
+
+- **Framework**: Next.js 16.2 (App Router, React Server Components)
+- **UI**: React 19, Tailwind CSS v4, shadcn/ui, Radix UI primitives
+- **Animation**: Framer Motion 12, Motion primitives
+- **Type Safety**: TypeScript 5, Zod validation
+- **Forms**: React Hook Form with resolver integration
+- **Testing**: Jest 30, React Testing Library
+- **Deployment**: Vercel (production), GitHub Actions (CI)
+
+## Development
 
 ```bash
+npm ci --legacy-peer-deps
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+app/                    # Next.js App Router pages
+├── api/                # API routes (contact form, OG images)
+├── blog/               # Blog posts and articles
+└── [page]/             # Marketing pages
 
-## Learn More
+components/
+├── sections/           # Page-specific section components
+├── ui/                 # shadcn/ui components (Radix UI)
+├── motion-primitives/  # Reusable animation components
+└── effects/            # Visual effects and animations
 
-To learn more about Next.js, take a look at the following resources:
+lib/
+├── org.ts              # Organization constants (single source of truth)
+├── sinceai.ts          # Event data and copy
+├── partners.ts         # Partner data
+├── projects.ts         # Challenge theme data
+└── schema.ts           # JSON-LD structured data
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Commands
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run dev          # Start development server
+npm run build        # Production build
+npm run start        # Start production server
+npm run lint         # Run ESLint
+npm run test         # Run Jest tests
+```
 
-## Deploy on Vercel
+## Architecture
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Next.js App Router with React Server Components. Pages are statically generated where possible. API routes handle form submissions with rate limiting and validation. All organization data flows from centralized constants in `lib/`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Path alias `@/*` maps to project root.
+
+## Design System
+
+Dark-first design with OKLCH color space. Typography uses Geist Sans and Geist Mono. Component library built on Radix UI primitives with shadcn/ui styling conventions. Motion design follows natural, physics-based animations.
+
+Add new UI components:
+
+```bash
+npx shadcn@latest add <component>
+```
+
+## Contributing
+
+Code follows TypeScript strict mode with ESLint enforcement. All PRs require passing lint, type check, and production build. Commit messages use conventional commits format.
+
+Organization constants live in `lib/org.ts`. Never hardcode contact info, social links, or stats.
+
+## Technical Details
+
+- Node.js 20.9.0 or higher required
+- Next.js builds to static HTML where possible (SSG)
+- API routes use Edge Runtime for low latency
+- Rate limiting: IP-based, 5 requests per hour on contact endpoint
+- SEO: JSON-LD structured data, dynamic sitemap, OpenGraph metadata
+- Font optimization via `next/font` with Geist Sans and Geist Mono
+
+## Standards
+
+Every component is built with performance, accessibility, and type safety in mind. We don't ship code that doesn't meet production standards.
+
+## Community
+
+500+ AI developers, ML engineers, and researchers. Discord community open to anyone building with AI.
+
+---
+
+**Since AI ry** — Business ID 3593920-2 — Turku, Finland
+
+[sinceai.fi](https://sinceai.fi) · [Discord](https://discord.gg/6PC74zW68v) · [GitHub](https://github.com/sinceaihq)
