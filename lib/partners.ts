@@ -91,6 +91,12 @@ export const PARTNERS: Partner[] = [
     url: "https://aiven.io/",
     tier: "partner",
   },
+  {
+    name: "Maria 01",
+    logo: "/assets/sponsors/maria01.png",
+    url: "https://maria.io/",
+    tier: "partner",
+  },
   // Supporters
   {
     name: "University of Turku",
