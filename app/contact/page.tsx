@@ -166,6 +166,12 @@ const teamSections = [
         email: "christian.lairikko@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/christian-lairikko-943657376/",
       },
+      {
+        name: "Anniina Kankaanpää",
+        role: "Production",
+        email: "anniina.kankaanpaa@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/anniina-kankaanpää-4b5023358/",
+      },
     ],
   },
   {
