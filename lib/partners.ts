@@ -146,6 +146,12 @@ export const PARTNERS: Partner[] = [
     url: "https://founders-house.fi/",
     tier: "supporter",
   },
+  {
+    name: "Wave Ventures",
+    logo: "/assets/sponsors/WaveVentures.png",
+    url: "https://www.wave.ventures/",
+    tier: "supporter",
+  },
 ];
 
 // Derived exports for convenience
