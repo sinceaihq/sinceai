@@ -100,12 +100,6 @@ export const Navbar = () => {
                   Hackathon
                 </button>
                 <button
-                  onClick={() => handleNavigation(links.community)}
-                  className="text-base font-medium text-neutral-300 hover:text-white transition-colors duration-300 cursor-pointer py-3 px-4 text-left rounded-xl hover:bg-white/5"
-                >
-                  Community
-                </button>
-                <button
                   onClick={() => handleNavigation(links.events)}
                   className="text-base font-medium text-neutral-300 hover:text-white transition-colors duration-300 cursor-pointer py-3 px-4 text-left rounded-xl hover:bg-white/5"
                 >
@@ -184,16 +178,6 @@ export const Navbar = () => {
                     className="text-sm font-medium px-3 py-1.5 rounded-lg transition-all duration-300 text-neutral-400 hover:text-white hover:bg-white/5 bg-transparent border-none cursor-pointer"
                   >
                     Hackathon
-                  </button>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <button
-                    onClick={() => handleNavigation(links.community)}
-                    className="text-sm font-medium px-3 py-1.5 rounded-lg transition-all duration-300 text-neutral-400 hover:text-white hover:bg-white/5 bg-transparent border-none cursor-pointer"
-                  >
-                    Community
                   </button>
                 </NavigationMenuLink>
               </NavigationMenuItem>
