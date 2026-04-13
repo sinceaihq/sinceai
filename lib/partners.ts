@@ -85,6 +85,12 @@ export const PARTNERS: Partner[] = [
     url: "https://aiven.io/",
     tier: "partner",
   },
+  {
+    name: "Google For Developers",
+    logo: "/assets/sponsors/GoogleForDevelopers.png",
+    url: "https://developers.google.com/",
+    tier: "partner",
+  },
   // Supporters
   {
     name: "University of Turku",
