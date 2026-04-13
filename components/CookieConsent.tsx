@@ -8,31 +8,32 @@ const GA_ID = "G-1WG6MNLS9M";
 
 type ConsentState = "granted" | "denied" | null;
 
+interface State {
+  consent: ConsentState;
+  visible: boolean;
+}
+
 export function CookieConsent() {
-  const [consent, setConsent] = useState<ConsentState>(null);
-  const [visible, setVisible] = useState(false);
+  const [{ consent, visible }, setState] = useState<State>({
+    consent: null,
+    visible: false,
+  });
 
   useEffect(() => {
-    const stored = localStorage.getItem(
-      COOKIE_CONSENT_KEY,
-    ) as ConsentState | null;
-    if (stored === "granted" || stored === "denied") {
-      setConsent(stored);
-    } else {
-      setVisible(true);
-    }
+    const stored = localStorage.getItem(COOKIE_CONSENT_KEY) as ConsentState | null;
+    const hasDecided = stored === "granted" || stored === "denied";
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setState({ consent: stored, visible: !hasDecided });
   }, []);
 
   function accept() {
     localStorage.setItem(COOKIE_CONSENT_KEY, "granted");
-    setConsent("granted");
-    setVisible(false);
+    setState({ consent: "granted", visible: false });
   }
 
   function decline() {
     localStorage.setItem(COOKIE_CONSENT_KEY, "denied");
-    setConsent("denied");
-    setVisible(false);
+    setState({ consent: "denied", visible: false });
   }
 
   return (
