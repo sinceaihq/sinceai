@@ -27,6 +27,9 @@
   color: white;
   font-size: 42px;
   align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
   position: absolute;
   z-index: 1;
 }
