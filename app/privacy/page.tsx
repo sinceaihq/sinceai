@@ -2,6 +2,7 @@ import React from "react";
 import SmoothScroll from "@/components/smoothScroll";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/sections/Footer";
+import { ManageCookies } from "@/components/ManageCookies";
 
 export default function PrivacyPage() {
   return (
@@ -16,7 +17,7 @@ export default function PrivacyPage() {
           
           <div className="prose prose-invert prose-neutral max-w-none">
             <p className="text-lg text-neutral-400 mb-8">
-              Last updated: January 20, 2026
+              Last updated: April 13, 2026
             </p>
 
             <section className="mb-12">
@@ -88,12 +89,29 @@ export default function PrivacyPage() {
 
             <section className="mb-12">
               <h2 className="text-3xl font-bold text-white mb-4 tracking-tight">
+                Cookies &amp; Analytics
+              </h2>
+              <p className="text-neutral-300 leading-relaxed mb-4">
+                We use Google Analytics to understand how visitors use our site. This service uses cookies
+                to collect anonymous usage data such as pages visited, time on site, and general location
+                (country/region). No personally identifiable information is collected through analytics.
+              </p>
+              <p className="text-neutral-300 leading-relaxed mb-4">
+                Analytics cookies are only placed after you give explicit consent via the cookie banner.
+                You can withdraw your consent at any time using the button below — analytics will stop
+                on your next page load.
+              </p>
+              <ManageCookies />
+            </section>
+
+            <section className="mb-12">
+              <h2 className="text-3xl font-bold text-white mb-4 tracking-tight">
                 Third-Party Services
               </h2>
               <p className="text-neutral-300 leading-relaxed mb-4">
-                We use Discord for community management. Please review Discord&apos;s privacy policy for 
-                information about how they handle your data. We do not share your personal information 
-                with third parties for marketing purposes.
+                We use Discord for community management and Google Analytics for website analytics.
+                Please review their respective privacy policies for information about how they handle
+                your data. We do not share your personal information with third parties for marketing purposes.
               </p>
             </section>
 

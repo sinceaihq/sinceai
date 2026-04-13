@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google";
-import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import { getOrganizationSchema } from "@/lib/schema";
+import { CookieConsent } from "@/components/CookieConsent";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -96,8 +96,8 @@ export default function RootLayout({
         className={`${spaceGrotesk.variable} font-sans antialiased bg-black`}
       >
         {children}
+        <CookieConsent />
       </body>
-      {/* <GoogleAnalytics gaId="G-1WG6MNLS9M" /> */}
     </html>
   );
 }
