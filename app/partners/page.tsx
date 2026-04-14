@@ -5,7 +5,7 @@ import SmoothScroll from "@/components/smoothScroll";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/sections/Footer";
 import { motion } from "framer-motion";
-import { Users, Briefcase, Trophy, Megaphone, CheckCircle, ArrowRight, Calendar } from "lucide-react";
+import { Users, Briefcase, Trophy, Megaphone, ArrowRight, Calendar, CheckCircle } from "lucide-react";
 import { UPCOMING_EVENT_2026 } from "@/lib/sinceai";
 import { partnerCompanies, supportingPartners } from "@/lib/partners";
 
@@ -61,66 +61,6 @@ export default function PartnersPage() {
         "Advance AI research and applications",
         "Strengthen regional tech ecosystem",
       ],
-    },
-  ];
-
-  const partnershipFormats = [
-    {
-      title: "Challenge Partner",
-      description: "A focused challenge with clear deliverables and a simple process.",
-      includes: [
-        "We scope the challenge with you (30–45 min kickoff)",
-        "Your challenge presented to all teams (high-level brief)",
-        "You join judging for your category",
-        "Deliverables: demo + repo + short results summary",
-        "Priority interview rights with top team(s) (opt-in)",
-        "Logo on challenge materials + website",
-        "Prize money is discussed.",
-        "Post-event outcomes documentation",
-      ],
-      investment: "€3,000",
-      bestFor: "Companies with a specific technical problem",
-    },
-    {
-      title: "Workshop Partner",
-      description: "Run a technical workshop or masterclass for the community.",
-      includes: [
-        "60–90 min workshop slot",
-        "Direct access to 50–100 builders",
-        "Recording shared with community (if permitted)",
-        "Logo on workshop materials",
-        "Social promo",
-        "Job post in Discord (1 month)",
-      ],
-      investment: "€1,500",
-      bestFor: "Developer tools, APIs, technical products",
-    },
-    {
-      title: "Job Board Partner",
-      description: "Ongoing hiring access to the community.",
-      includes: [
-        "Dedicated #jobs access",
-        "Unlimited job posts",
-        "Company profile in Discord",
-        "Monthly featured job highlight",
-        "Direct candidate messaging (opt-in)",
-      ],
-      investment: "€500/month",
-      bestFor: "Continuous AI recruiting",
-    },
-    {
-      title: "Community Partner",
-      description: "Support the community and enable prizes, spaces, and builder programs.",
-      includes: [
-        "Support prizes and builder programs (scope agreed together)",
-        "Brand placement on website and event materials",
-        "Optional presence at community sessions",
-        "Access to community updates and partner recap",
-        "Option to co-host a community moment (e.g., lightning talks)",
-        "Partnership outcomes summary (post-event)",
-      ],
-      investment: "Prize money is discussed.",
-      bestFor: "Companies that want long-term community impact",
     },
   ];
 
@@ -197,12 +137,6 @@ export default function PartnersPage() {
                   Become a Partner
                   <ArrowRight className="w-4 h-4" />
                 </Link>
-                <a
-                  href="#partnership-formats"
-                  className="px-8 py-4 rounded-full bg-white/10 text-white font-semibold hover:bg-white/15 transition-colors border border-white/20"
-                >
-                  View Partnership Options
-                </a>
               </div>
             </motion.div>
           </div>
@@ -425,76 +359,6 @@ export default function PartnersPage() {
                 </p>
               </div>
             </motion.div>
-          </div>
-        </section>
-
-        {/* Partnership Formats */}
-        <section id="partnership-formats" className="relative w-full px-6 py-20 scroll-mt-20">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-                Partnership Formats
-              </h2>
-              <p className="text-xl text-neutral-400 max-w-2xl mx-auto">
-                We work with companies as equals — focused on real problems, real builders, and measurable outcomes. All partnerships are customizable.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              {partnershipFormats.map((format, index) => (
-                <motion.div
-                  key={format.title}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="p-8 rounded-2xl border border-white/10 bg-white/[0.02] hover:border-white/20 transition-all duration-300 flex flex-col"
-                >
-                  <div className="mb-6">
-                    <h3 className="text-2xl font-bold text-white mb-2 tracking-tight">
-                      {format.title}
-                    </h3>
-                    <p className="text-neutral-400 mb-4">
-                      {format.description}
-                    </p>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-3xl font-bold text-white">{format.investment}</span>
-                    </div>
-                    <div className="text-sm text-neutral-500 mt-2">
-                      Best for: {format.bestFor}
-                    </div>
-                  </div>
-
-                  <div className="space-y-3 mb-6 flex-1">
-                    {format.includes.map((item, i) => (
-                      <div key={i} className="flex items-start gap-3">
-                        <CheckCircle className="w-4 h-4 text-white flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-neutral-400">{item}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <Link
-                    href={`/contact?subject=Partnership%20Inquiry%20-%20${encodeURIComponent(format.title)}`}
-                    className="w-full px-6 py-3 rounded-full bg-white/10 text-white font-semibold hover:bg-white/15 transition-colors border border-white/20 text-center"
-                  >
-                    Learn More
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-
-            <div className="mt-12 text-center">
-              <p className="text-neutral-400 mb-4">
-                Need something different? We can tailor the partnership to your goals.
-              </p>
-              <Link
-                href="/contact?subject=Custom%20Partnership%20Inquiry"
-                className="text-white hover:text-neutral-300 underline font-semibold"
-              >
-                Contact us for custom options
-              </Link>
-            </div>
           </div>
         </section>
 

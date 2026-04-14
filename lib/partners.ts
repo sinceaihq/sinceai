@@ -187,6 +187,24 @@ export const PARTNERS: Partner[] = [
     logo: "/assets/sponsors/ves.png",
     url: "https://www.ves.fi",
     tier: "supporter",
+  },
+  {
+    name: "Pories",
+    logo: "/assets/sponsors/PoriES.png",
+    url: "https://www.pories.fi",
+    tier: "supporter",
+  },
+  {
+    name: "HankenES",
+    logo: "/assets/sponsors/HankenEs.png",
+    url: "https://hankenes.org",
+    tier: "supporter",
+  },
+  {
+    name: "AI Eesti",
+    logo: "/assets/sponsors/AIEesti.svg",
+    url: "https://aieesti.ee/en",
+    tier: "supporter",
   }
 ];
 

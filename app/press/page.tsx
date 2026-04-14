@@ -40,7 +40,7 @@ export default function PressPage() {
               </p>
 
               <p className="text-lg text-neutral-400 leading-relaxed mb-12">
-                <strong className="text-white">In one sentence:</strong> Since AI is Europe&apos;s only AI community
+                <strong className="text-white">In one sentence: </strong> Since AI is Europe&apos;s only AI community
                 providing end-to-end support from challenge ideation through hackathon building to production
                 deployment and commercialization.
               </p>
