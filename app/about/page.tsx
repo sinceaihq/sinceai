@@ -100,11 +100,10 @@ export default function AboutPage() {
               {/* 2. Extractable definition paragraph */}
               <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-16">
                 Since AI is Europe&apos;s execution-focused AI innovation ecosystem, where
-                frontier AI becomes shipped products. We are a Finnish non-profit (Since AI
-                ry, Business ID 3593920-2) connecting 10,000+ AI builders across Europe
-                with leading AI companies, research groups, and investors. Our mission:
-                strengthen Europe&apos;s AI capability through execution, open
-                collaboration, and real outcomes.
+                frontier AI becomes shipped products. A Finnish non-profit connecting
+                10,000+ AI builders across Europe with leading AI companies, research
+                groups, and investors. Our mission: strengthen Europe&apos;s AI capability
+                through execution, open collaboration, and real outcomes.
               </p>
 
               {/* 3. What makes us different */}
