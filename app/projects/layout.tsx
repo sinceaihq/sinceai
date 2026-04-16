@@ -13,16 +13,16 @@ export const metadata: Metadata = {
     "Since AI projects",
   ],
   alternates: {
-    canonical: "/projects",
+    canonical: "https://sinceai.fi/projects",
   },
   openGraph: {
-    title: "Projects - Since AI | Challenge Themes",
+    title: "Projects — Since AI | Challenge Themes from Hackathon 2025",
     description:
       "High-signal prototypes from partner challenge themes. Maritime safety, industrial automation, B2B sales, and more. Built by 260+ AI builders in Turku.",
     type: "website",
     locale: "en_US",
     siteName: "Since AI",
-    url: "/projects",
+    url: "https://sinceai.fi/projects",
   },
   robots: {
     index: true,

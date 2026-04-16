@@ -15,16 +15,16 @@ export const metadata: Metadata = {
     "Turku Finland", 
   ],
   alternates: {
-    canonical: "/contact",
+    canonical: "https://sinceai.fi/contact",
   },
   openGraph: {
-    title: "Contact Since AI - Partnerships, Sponsorships, Community",
+    title: "Contact Since AI — Partnerships, Sponsorships, Community",
     description:
-      "Get in touch with Since AI. Partner with us, sponsor the next hackathon, or join our community of 1000+ AI developers.",
+      "Get in touch with Since AI. Partner with us, sponsor Since AI Hackathon 2026, or join 10,000+ AI builders across Europe.",
     type: "website",
     locale: "en_US",
     siteName: "Since AI",
-    url: "/contact",
+    url: "https://sinceai.fi/contact",
   },
   twitter: {
     card: "summary_large_image",

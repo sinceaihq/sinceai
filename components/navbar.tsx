@@ -1,260 +1,189 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { FaDiscord, FaInstagram, FaLinkedin } from "react-icons/fa";
-import { Menu } from "lucide-react";
-
-import { Button } from "./ui/button";
-import {
-  NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
-  NavigationMenuLink,
-} from "./ui/navigation-menu";
-import {
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from "./ui/sheet";
-
+import { usePathname } from "next/navigation";
 import Logo from "./logo";
 
+const DISCORD_URL = "https://discord.com/invite/YkqJswRGSW";
+
+const NAV_LINKS = [
+  { label: "Hackathon", href: "/hackathon" },
+  { label: "Partners",  href: "/partners" },
+  { label: "Builders",  href: "/for-builders" },
+  { label: "Contact",   href: "/contact" },
+] as const;
+
 export const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const router = useRouter();
+  const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const handleNavigation = (path: string) => {
-    setIsMenuOpen(false);
-    if (path.startsWith("http")) {
-      window.open(path, "_blank");
-    } else if (path.startsWith("#")) {
-      const element = document.querySelector(path);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-      }
-    } else {
-      router.push(path);
-    }
-  };
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-  const links = {
-    home: "/",
-    hackathon: "/hackathon",
-    community: "https://discord.com/invite/YkqJswRGSW",
-    events: "/events",
-    projects: "/projects",
-    partners: "/partners",
-    blog: "/blog",
-    resources: "/resources",
-    contact: "/contact",
-    partner: "#partner-section",
-    instagram: "https://www.instagram.com/sinceaihq",
-    linkedin:
-      "https://www.linkedin.com/company/sinceai/about/?viewAsMember=true",
-  };
+  // Close overlay on route change
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  const isActive = (href: string) =>
+    pathname === href || (href !== "/" && pathname.startsWith(href + "/"));
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 w-full glass-dark">
-      <div className="flex h-[72px] items-center justify-between px-6 max-w-7xl mx-auto">
-        {/* Mobile Layout */}
-        <div className="flex sm:hidden items-center justify-between w-full">
-          <Link href="/" className="cursor-pointer">
+    <>
+      {/* ── Desktop / sticky header ─────────────────────────── */}
+      <header
+        className="fixed top-0 left-0 right-0 z-50 w-full"
+        style={{
+          padding: "var(--space-md) var(--space-lg)",
+          background: scrolled ? "rgba(0,0,0,0.75)" : "transparent",
+          backdropFilter: scrolled ? "blur(12px)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(12px)" : "none",
+          transition: "background 0.2s, backdrop-filter 0.2s, -webkit-backdrop-filter 0.2s",
+        }}
+      >
+        <div
+          className="flex items-center justify-between mx-auto w-full"
+          style={{ maxWidth: "1200px" }}
+        >
+          {/* Logo */}
+          <Link href="/" aria-label="Since AI — home">
             <Logo />
           </Link>
-          <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-gray-300 hover:bg-gray-800/50"
-                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+
+          {/* Desktop nav links */}
+          <nav
+            className="hidden md:flex items-center"
+            style={{ gap: "2rem" }}
+            aria-label="Main navigation"
+          >
+            {NAV_LINKS.map(({ label, href }) => (
+              <Link
+                key={href}
+                href={href}
+                aria-current={isActive(href) ? "page" : undefined}
+                className={[
+                  "text-[13px] font-normal no-underline transition-colors duration-150",
+                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
+                  isActive(href)
+                    ? "text-white"
+                    : "text-[var(--color-fg-muted)] hover:text-white",
+                ].join(" ")}
+                style={{ fontFamily: "var(--font-mono)" }}
               >
-                <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="bg-neutral-950/95 backdrop-blur-2xl border-white/5"
-            >
-              <SheetHeader>
-                <SheetTitle className="text-neutral-400 text-sm font-medium">Menu</SheetTitle>
-                <SheetDescription className="sr-only">
-                  Navigate to different sections of Since AI website
-                </SheetDescription>
-              </SheetHeader>
-              <div className="flex flex-col gap-1 pt-8 px-2">
-                <button
-                  onClick={() => handleNavigation(links.home)}
-                  className="text-base font-medium text-neutral-300 hover:text-white transition-colors duration-300 cursor-pointer py-3 px-4 text-left rounded-xl hover:bg-white/5"
-                >
-                  Home
-                </button>
-                <button
-                  onClick={() => handleNavigation(links.hackathon)}
-                  className="text-base font-medium text-neutral-300 hover:text-white transition-colors duration-300 cursor-pointer py-3 px-4 text-left rounded-xl hover:bg-white/5"
-                >
-                  Hackathon
-                </button>
-                <button
-                  onClick={() => handleNavigation(links.events)}
-                  className="text-base font-medium text-neutral-300 hover:text-white transition-colors duration-300 cursor-pointer py-3 px-4 text-left rounded-xl hover:bg-white/5"
-                >
-                  Events
-                </button>
-                <button
-                  onClick={() => handleNavigation(links.projects)}
-                  className="text-base font-medium text-neutral-300 hover:text-white transition-colors duration-300 cursor-pointer py-3 px-4 text-left rounded-xl hover:bg-white/5"
-                >
-                  Projects
-                </button>
-                <button
-                  onClick={() => handleNavigation(links.partners)}
-                  className="text-base font-medium text-neutral-300 hover:text-white transition-colors duration-300 cursor-pointer py-3 px-4 text-left rounded-xl hover:bg-white/5"
-                >
-                  Partners
-                </button>
-                <button
-                  onClick={() => handleNavigation(links.blog)}
-                  className="text-base font-medium text-neutral-300 hover:text-white transition-colors duration-300 cursor-pointer py-3 px-4 text-left rounded-xl hover:bg-white/5"
-                >
-                  Blog
-                </button>
-                <button
-                  onClick={() => handleNavigation(links.resources)}
-                  className="text-base font-medium text-neutral-300 hover:text-white transition-colors duration-300 cursor-pointer py-3 px-4 text-left rounded-xl hover:bg-white/5"
-                >
-                  Resources
-                </button>
-                <button
-                  onClick={() => handleNavigation(links.contact)}
-                  className="text-base font-medium text-neutral-300 hover:text-white transition-colors duration-300 cursor-pointer py-3 px-4 text-left rounded-xl hover:bg-white/5"
-                >
-                  Contact
-                </button>
-
-                <div className="border-t border-white/5 mt-6 pt-6">
-                  <button
-                    onClick={() => handleNavigation(links.community)}
-                    className="text-sm font-normal text-neutral-500 hover:text-neutral-300 transition-colors duration-300 cursor-pointer py-2 px-4 block text-left w-full rounded-lg hover:bg-white/5"
-                  >
-                    Discord
-                  </button>
-                  <button
-                    onClick={() => handleNavigation(links.instagram)}
-                    className="text-sm font-normal text-neutral-500 hover:text-neutral-300 transition-colors duration-300 cursor-pointer py-2 px-4 block text-left w-full rounded-lg hover:bg-white/5"
-                  >
-                    Instagram
-                  </button>
-                  <button
-                    onClick={() => handleNavigation(links.linkedin)}
-                    className="text-sm font-normal text-neutral-500 hover:text-neutral-300 transition-colors duration-300 cursor-pointer py-2 px-4 block text-left w-full rounded-lg hover:bg-white/5"
-                  >
-                    LinkedIn
-                  </button>
-                </div>
-              </div>
-            </SheetContent>
-          </Sheet>
-        </div>
-
-        {/* Desktop Layout */}
-        <div className="hidden sm:flex items-center justify-between w-full">
-          {/* Navigation Menu */}
-          <NavigationMenu className="mx-0 px-0">
-            <NavigationMenuList className="gap-4">
-              {/* Logo */}
-              <Link href="/" className="cursor-pointer">
-                <Logo />
+                {label}
               </Link>
+            ))}
+          </nav>
 
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <button
-                    onClick={() => handleNavigation(links.hackathon)}
-                    className="text-sm font-medium px-3 py-1.5 rounded-lg transition-all duration-300 text-neutral-400 hover:text-white hover:bg-white/5 bg-transparent border-none cursor-pointer"
-                  >
-                    Hackathon
-                  </button>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <button
-                    onClick={() => handleNavigation(links.events)}
-                    className="text-sm font-medium px-3 py-1.5 rounded-lg transition-all duration-300 text-neutral-400 hover:text-white hover:bg-white/5 bg-transparent border-none cursor-pointer"
-                  >
-                    Events
-                  </button>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <button
-                    onClick={() => handleNavigation(links.projects)}
-                    className="text-sm font-medium px-3 py-1.5 rounded-lg transition-all duration-300 text-neutral-400 hover:text-white hover:bg-white/5 bg-transparent border-none cursor-pointer"
-                  >
-                    Projects
-                  </button>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <button
-                    onClick={() => handleNavigation(links.partners)}
-                    className="text-sm font-medium px-3 py-1.5 rounded-lg transition-all duration-300 text-neutral-400 hover:text-white hover:bg-white/5 bg-transparent border-none cursor-pointer"
-                  >
-                    Partners
-                  </button>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <button
-                    onClick={() => handleNavigation(links.blog)}
-                    className="text-sm font-medium px-3 py-1.5 rounded-lg transition-all duration-300 text-neutral-400 hover:text-white hover:bg-white/5 bg-transparent border-none cursor-pointer"
-                  >
-                    Blog
-                  </button>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <button
-                    onClick={() => handleNavigation(links.resources)}
-                    className="text-sm font-medium px-3 py-1.5 rounded-lg transition-all duration-300 text-neutral-400 hover:text-white hover:bg-white/5 bg-transparent border-none cursor-pointer"
-                  >
-                    Resources
-                  </button>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <button
-                    onClick={() => handleNavigation(links.contact)}
-                    className="text-sm font-medium px-3 py-1.5 rounded-lg transition-all duration-300 text-neutral-400 hover:text-white hover:bg-white/5 bg-transparent border-none cursor-pointer"
-                  >
-                    Contact
-                  </button>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
+          {/* Desktop CTA */}
+          <a
+            href={DISCORD_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden md:inline-block text-[13px] font-medium no-underline text-black bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            style={{
+              fontFamily: "var(--font-mono)",
+              padding: "8px 16px",
+              borderRadius: 0,
+              border: "0.5px solid #fff",
+              whiteSpace: "nowrap",
+            }}
+          >
+            Join →
+          </a>
 
-          {/* CTA Button */}
-          <div className="flex flex-row items-center gap-2">
-            <Button
-              onClick={() => handleNavigation(links.community)}
-              className="text-sm px-5 py-2 rounded-full bg-white text-black font-semibold hover:bg-neutral-100 transition-all duration-300 border-none"
+          {/* Mobile hamburger */}
+          <button
+            className="md:hidden text-[var(--color-fg-muted)] hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+            onClick={() => setMenuOpen(true)}
+            aria-label="Open menu"
+            aria-expanded={menuOpen}
+            style={{ background: "transparent", border: "none", cursor: "pointer", padding: "4px" }}
+          >
+            <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true">
+              <line x1="0" y1="1"  x2="18" y2="1"  stroke="currentColor" strokeWidth="1.5" />
+              <line x1="0" y1="7"  x2="18" y2="7"  stroke="currentColor" strokeWidth="1.5" />
+              <line x1="0" y1="13" x2="18" y2="13" stroke="currentColor" strokeWidth="1.5" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      {/* ── Mobile fullscreen overlay ────────────────────────── */}
+      {menuOpen && (
+        <div
+          className="fixed inset-0 z-[60] bg-black flex flex-col"
+          style={{ padding: "var(--space-md) var(--space-lg)" }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigation menu"
+        >
+          {/* Top row */}
+          <div className="flex items-center justify-between" style={{ marginBottom: "var(--space-3xl)" }}>
+            <Logo />
+            <button
+              onClick={() => setMenuOpen(false)}
+              aria-label="Close menu"
+              className="text-[var(--color-fg-muted)] hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+              style={{ background: "transparent", border: "none", cursor: "pointer", padding: "4px" }}
             >
-              Join Community
-            </Button>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <line x1="1" y1="1" x2="15" y2="15" stroke="currentColor" strokeWidth="1.5" />
+                <line x1="15" y1="1" x2="1"  y2="15" stroke="currentColor" strokeWidth="1.5" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Links — large monospace */}
+          <nav
+            className="flex flex-col"
+            style={{ gap: "var(--space-lg)" }}
+            aria-label="Mobile navigation"
+          >
+            {NAV_LINKS.map(({ label, href }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setMenuOpen(false)}
+                aria-current={isActive(href) ? "page" : undefined}
+                className={[
+                  "no-underline font-medium leading-none",
+                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-white",
+                  isActive(href) ? "text-white" : "text-[var(--color-fg-muted)]",
+                ].join(" ")}
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "var(--text-headline-sm)",
+                }}
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* CTA — pinned to bottom */}
+          <div className="mt-auto">
+            <a
+              href={DISCORD_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block text-[13px] font-medium no-underline text-black bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+              style={{
+                fontFamily: "var(--font-mono)",
+                padding: "12px 20px",
+                borderRadius: 0,
+                border: "0.5px solid #fff",
+              }}
+            >
+              Join →
+            </a>
           </div>
         </div>
-      </div>
-    </header>
+      )}
+    </>
   );
 };

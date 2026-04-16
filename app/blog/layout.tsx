@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     "Since AI blog",
   ],
   alternates: {
-    canonical: "/blog",
+    canonical: "https://sinceai.fi/blog",
   },
   openGraph: {
     title: "AI Hackathon Guides & Community Resources | Since AI Blog",

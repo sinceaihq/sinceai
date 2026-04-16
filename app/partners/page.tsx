@@ -1,534 +1,476 @@
-"use client";
 import React from "react";
 import Link from "next/link";
+import type { Metadata } from "next";
 import SmoothScroll from "@/components/smoothScroll";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/sections/Footer";
-import { motion } from "framer-motion";
-import { Users, Briefcase, Trophy, Megaphone, CheckCircle, ArrowRight, Calendar } from "lucide-react";
-import { UPCOMING_EVENT_2026 } from "@/lib/sinceai";
-import { partnerCompanies, supportingPartners } from "@/lib/partners";
+import { FadeIn } from "@/components/motion-primitives/fade-in";
+import { ORG } from "@/lib/org";
+import StructuredData from "@/components/StructuredData";
+import { PartnersSection } from "@/components/sections/homepage/PartnersSection";
+
+export const metadata: Metadata = {
+  title:
+    "Partner with Since AI — Recruit AI Talent, Sponsor Hackathon Challenges, Run AI Pilots",
+  description:
+    "Partner with Since AI to access 10,000+ AI builders across Europe. Sponsor hackathon challenges at Since AI Hackathon 2026, recruit top AI talent, and run applied AI pilots with proven builders.",
+  alternates: { canonical: "https://sinceai.fi/partners" },
+  openGraph: {
+    title: "Partner with Since AI — Recruit AI Talent, Sponsor Hackathon Challenges",
+    description:
+      "Access 10,000+ AI builders across Europe. Sponsor Since AI Hackathon 2026 challenges, recruit top AI talent, and run applied AI pilots.",
+    url: "https://sinceai.fi/partners",
+    siteName: "Since AI",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Partner with Since AI",
+    description:
+      "Access 10,000+ AI builders. Sponsor Hackathon 2026, recruit talent, run AI pilots.",
+  },
+};
+
+const partnerFaqs = [
+  {
+    question: "What's the cost of sponsoring a Since AI Hackathon 2026 challenge?",
+    answer:
+      "Partnership packages are tiered based on scope — challenge sponsorship, recruiting access, workshop, or full strategic partnership. Contact partners@sinceai.fi for a tailored proposal.",
+  },
+  {
+    question: "Who owns the IP from hackathon projects?",
+    answer:
+      "IP ownership is configured per partnership. Default: builders own their work, partners get a non-exclusive license to evaluate. Custom arrangements are possible for pilots and commercial engagements.",
+  },
+  {
+    question: "Can we recruit specific individuals from the hackathon?",
+    answer:
+      "Yes. Partners get introductions to top performers during and after the event. All recruiting is direct between partner and builder — Since AI facilitates, not intermediates.",
+  },
+  {
+    question: "Do we need to be based in Europe to partner?",
+    answer:
+      "No. Since AI partners include global organizations. Google for Developers, for example, operates internationally. Partners can be based anywhere.",
+  },
+  {
+    question: "How soon can a partnership start?",
+    answer:
+      "Most partnerships formalize within 2–4 weeks from the first intro call, depending on scope. Hackathon sponsorships are accepted up to 6 weeks before the event.",
+  },
+  {
+    question: "What outcomes should we expect?",
+    answer:
+      "Realistic outcomes from a hackathon sponsorship include 3–8 strong prototype projects on your challenge, 2–5 high-signal recruiting conversations, and 1–2 candidates for deeper pilots or collaboration.",
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: partnerFaqs.map((f) => ({
+    "@type": "Question",
+    name: f.question,
+    acceptedAnswer: { "@type": "Answer", text: f.answer },
+  })),
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://sinceai.fi/" },
+    { "@type": "ListItem", position: 2, name: "Partners", item: "https://sinceai.fi/partners" },
+  ],
+};
+
+const caseStudies = [
+  {
+    partner: "Kongsberg",
+    sector: "Maritime",
+    title: "Maritime Sound Signal Detection",
+    body: "Audio ML for detecting and classifying maritime sound signals in real-time for autonomous vessel safety. Teams explored CNN-based models for COLREG whistle signals in noisy environments. Top teams advanced into further collaboration.",
+    tags: ["Audio", "CNN", "Real-time ML", "Safety"],
+  },
+  {
+    partner: "Sandvik",
+    sector: "Manufacturing",
+    title: "Intelligent Spare Part Discovery",
+    body: "Agent-based system for detecting and resolving spare-part inquiries with SKU search and product matching. Teams built RAG pipelines over product catalogs to cut support response time. Outputs progressed toward production evaluation.",
+    tags: ["Agents", "RAG", "NLP", "Search"],
+  },
+  {
+    partner: "Valmet",
+    sector: "Manufacturing",
+    title: "Visual Object Detection for Industrial Field Devices",
+    body: "3D and vision-based detection of industrial equipment in challenging field conditions. Teams explored CV models robust to lighting variation, occlusion, and complex angles for integration with maintenance workflows.",
+    tags: ["Vision", "Object Detection", "3D", "CV"],
+  },
+  {
+    partner: "ElevenLabs",
+    sector: "Dev Tools",
+    title: "Open Build Track: Voice AI Applications",
+    body: "Open-ended exploration of voice AI using the ElevenLabs API. Teams shipped creative voice applications spanning text-to-speech, voice cloning, and conversational agents, demonstrating novel commercial use cases.",
+    tags: ["Voice", "Audio", "Agents", "TTS"],
+  },
+];
+
+const steps = [
+  {
+    n: "01",
+    title: "Intro call",
+    body: "Understand your goals — recruiting, hackathon challenge, pilot project, or strategic partnership. 30 minutes.",
+  },
+  {
+    n: "02",
+    title: "Scope definition",
+    body: "Define the challenge, timeline, deliverables, and IP terms. We co-design challenges so they're technically feasible and commercially meaningful.",
+  },
+  {
+    n: "03",
+    title: "Execution",
+    body: "Hackathon, standalone project, or ongoing engagement. 1,000+ builders on your challenge in 72 hours, or a matched team on a defined problem.",
+  },
+  {
+    n: "04",
+    title: "Continued collaboration",
+    body: "Top teams continue into pilots, hires, or investments. Since AI stays involved through production support and VC introductions where relevant.",
+  },
+];
 
 export default function PartnersPage() {
-  const stats = [
-    { value: "1000+", label: "AI Developers", description: "In our Discord community" },
-    { value: "200+", label: "Hackathon Participants", description: "Per major event" },
-    { value: "80%", label: "Placement Rate", description: "Partners hired our members" },
-    { value: "30+", label: "Projects Built", description: "Real AI solutions delivered" },
-  ];
-
-  const valueProps = [
-    {
-      icon: Users,
-      title: "Access Top AI Talent",
-      description: "Connect with 1000+ AI developers, ML engineers, researchers, and founders. 80% of our partner companies have successfully hired from our community.",
-      outcomes: [
-        "Direct access to pre-vetted developers",
-        "Recruiting events with 200+ attendees",
-        "Job board access for 1000+ Discord members",
-        "Resume database from hackathon participants",
-      ],
-    },
-    {
-      icon: Briefcase,
-      title: "Solve Real Business Challenges",
-      description: "Present your AI/ML challenges at hackathons. Get 10-15 teams building solutions over 48 hours with fresh perspectives and cutting-edge approaches.",
-      outcomes: [
-        "10-15 solution prototypes in 48 hours",
-        "Access to innovative AI approaches",
-        "POCs ready for internal testing",
-        "Technical reports and documentation",
-      ],
-    },
-    {
-      icon: Megaphone,
-      title: "Build Brand Awareness",
-      description: "Position your company as an AI innovation leader. Reach 1000+ developers through hackathons, social media, and community engagement.",
-      outcomes: [
-        "Logo placement on website & materials",
-        "Social media mentions (3,000+ reach)",
-        "Speaking opportunities at events",
-        "Blog posts and case studies",
-      ],
-    },
-    {
-      icon: Trophy,
-      title: "Support the AI Ecosystem",
-      description: "Invest in the future of AI in Finland. Help build a thriving community that advances the field and creates opportunities for everyone.",
-      outcomes: [
-        "CSR and community impact",
-        "Pipeline for future talent",
-        "Advance AI research and applications",
-        "Strengthen regional tech ecosystem",
-      ],
-    },
-  ];
-
-    const partnershipFormats = [
-    {
-      title: "Challenge Partner",
-      description: "A focused challenge with clear deliverables and a simple process.",
-      includes: [
-        "We scope the challenge with you (30–45 min kickoff)",
-        "Your challenge presented to all teams (high-level brief)",
-        "You join judging for your category",
-        "Deliverables: demo + repo + short results summary",
-        "Priority interview rights with top team(s) (opt-in)",
-        "Logo on challenge materials + website",
-        "Prize money is discussed",
-        "Post-event outcomes documentation",
-      ],
-      bestFor: "Companies with a specific technical problem",
-    },
-    {
-      title: "Workshop Partner",
-      description: "Run a technical workshop or masterclass for the community.",
-      includes: [
-        "60–90 min workshop slot",
-        "Direct access to 50–100 builders",
-        "Recording shared with community (if permitted)",
-        "Logo on workshop materials",
-        "Social promo",
-        "Job post in Discord (1 month)",
-      ],
-      bestFor: "Developer tools, APIs, technical products",
-    },
-    {
-      title: "Job Board Partner",
-      description: "Ongoing hiring access to the community.",
-      includes: [
-        "Dedicated #jobs access",
-        "Unlimited job posts",
-        "Company profile in Discord",
-        "Monthly featured job highlight",
-        "Direct candidate messaging (opt-in)",
-      ],
-      bestFor: "Continuous AI recruiting",
-    },
-    {
-      title: "Community Partner",
-      description: "Support the community and enable prizes, spaces, and builder programs.",
-      includes: [
-        "Support prizes and builder programs (scope agreed together)",
-        "Brand placement on website and event materials",
-        "Optional presence at community sessions",
-        "Access to community updates and partner recap",
-        "Option to co-host a community moment (e.g., lightning talks)",
-        "Partnership outcomes summary (post-event)",
-      ],
-      bestFor: "Companies that want long-term community impact",
-    },
-  ];
-
-  const testimonials = [
-    {
-      quote: "We met highly capable builders and moved from introductions to interviews fast. The quality was senior-level—clear thinking, clean implementation, and strong communication.",
-      author: "Partner, Engineering",
-      company: "",
-      result: "Recruiting + collaboration outcomes",
-    },
-    {
-      quote: "In one weekend we saw more solution diversity than we typically get in months. Multiple teams delivered demo-ready prototypes we could immediately test internally.",
-      author: "Partner, Product & Technology",
-      company: "",
-      result: "Prototype-ready deliverables",
-    },
-    {
-      quote: "The biggest surprise was execution speed. Teams didn't just generate ideas—they shipped working systems, explained trade-offs, and presented like a professional product team.",
-      author: "Partner, Innovation / Talent",
-      company: "",
-      result: "High-signal brand + talent pipeline",
-    },
-  ];
-
   return (
     <SmoothScroll>
       <Navbar />
-      
+
+      <StructuredData data={faqSchema} />
+      <StructuredData data={breadcrumbSchema} />
+
       <main className="flex flex-col w-full bg-black min-h-screen">
-        {/* Hero Section */}
-        <section className="relative w-full px-6 py-32 md:py-40">
-          <div className="max-w-7xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              className="max-w-4xl"
-            >
-              <div className="text-xs md:text-sm font-medium text-neutral-500 tracking-wider uppercase mb-6">
-                Partner With Us
-              </div>
-              
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight leading-tight">
-                Access 1000+ AI Developers.
-                <br />
-                <span className="bg-gradient-to-b from-white to-neutral-500 bg-clip-text text-transparent">
-                  Build Real Solutions.
-                </span>
+        <div className="max-w-4xl mx-auto px-6 py-32 md:py-40">
+          <FadeIn>
+            <div className="prose prose-invert prose-neutral max-w-none">
+
+              {/* 1. H1 */}
+              <p className="text-xs uppercase tracking-[0.2em] font-semibold text-neutral-500 mb-5">
+                For Organizations
+              </p>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight leading-tight">
+                Partner with Since AI
               </h1>
-              
-              <p className="text-xl md:text-2xl text-neutral-400 leading-relaxed mb-8">
-                Partner with Since AI to recruit top talent, solve technical challenges, and build 
-                your brand in Finland&apos;s largest AI community. 80% of our partners have successfully 
-                hired developers from our hackathons.
+
+              {/* 2. Definition paragraph */}
+              <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-6">
+                Since AI partners with leading AI companies, industrial organizations,
+                research groups, and investors across Europe to turn frontier AI into
+                shipped products. Strategic partners include Google for Developers, Bayer,
+                Sandvik, Kongsberg, Valmet, Antler, Inventure, and Wave Ventures. Partner
+                with Since AI to access 10,000+ AI builders, sponsor hackathon challenges,
+                and run applied AI pilots.
               </p>
 
-              {/* Upcoming Event Notice */}
-              <Link
-                href="/hackathon"
-                className="inline-flex items-center gap-3 px-5 py-3 rounded-full bg-white/5 border border-white/10 mb-12 hover:border-white/20 hover:bg-white/[0.08] transition-all group"
-              >
-                <Calendar className="w-4 h-4 text-neutral-400" />
-                <span className="text-sm font-medium text-neutral-400">
-                  Sponsor <span className="text-white group-hover:text-neutral-200 transition-colors">Since AI Hackathon 2026</span>
-                </span>
-                <ArrowRight className="w-3.5 h-3.5 text-neutral-500 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
-              </Link>
-
-              <div className="flex flex-wrap gap-4">
-                <Link
-                  href="/contact?subject=Partnership%20Inquiry"
-                  className="px-8 py-4 rounded-full bg-white text-black font-semibold hover:bg-neutral-100 transition-colors inline-flex items-center gap-2"
-                >
-                  Become a Partner
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
+              {/* Primary CTA */}
+              <div className="flex flex-col sm:flex-row gap-3 mb-20">
                 <a
-                  href="#partnership-formats"
-                  className="px-8 py-4 rounded-full bg-white/10 text-white font-semibold hover:bg-white/15 transition-colors border border-white/20"
+                  href="mailto:partners@sinceai.fi"
+                  className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-black bg-white rounded-full transition-all duration-300 hover:bg-neutral-100 hover:scale-[1.02]"
                 >
-                  View Partnership Options
+                  Start a partnership conversation →
                 </a>
+                <Link
+                  href="/hackathon"
+                  className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-white/10 rounded-full transition-all duration-300 hover:bg-white/15 border border-white/20 hover:border-white/30 hover:scale-[1.02]"
+                >
+                  Hackathon 2026
+                </Link>
               </div>
-            </motion.div>
-          </div>
-        </section>
 
-        {/* Stats Section */}
-        <section className="relative w-full px-6 py-12">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {stats.map((stat, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="p-6 rounded-2xl border border-white/10 bg-white/[0.02]"
-                >
-                  <div className="text-4xl md:text-5xl font-bold text-white mb-2">
-                    {stat.value}
-                  </div>
-                  <div className="text-sm font-semibold text-neutral-300 mb-1">
-                    {stat.label}
-                  </div>
-                  <div className="text-xs text-neutral-600">
-                    {stat.description}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Current Partners */}
-        <section className="relative w-full px-6 py-20">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
-                Trusted by Leading Companies
-              </h2>
-              <p className="text-lg text-neutral-400">
-                Join 15+ companies investing in Finland&apos;s AI community
-              </p>
-            </div>
-
-            {/* Sponsors */}
-            <p className="text-xs uppercase tracking-widest text-neutral-600 font-semibold text-center mb-10">
-              Partners
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-x-16 gap-y-10 items-center justify-items-center mb-16">
-              {partnerCompanies.map((partner, index) => (
-                <motion.div
-                  key={partner.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.05 }}
-                >
-                  <a
-                    href={partner.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center justify-center min-w-[120px] h-16"
+              {/* Stats strip */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-20">
+                {[
+                  { value: "10,000+", label: "AI builders in our network" },
+                  { value: "1,000+", label: "Builders targeted at Hackathon 2026" },
+                  { value: "30+", label: "Partners & supporters" },
+                  { value: "50+", label: "Countries represented" },
+                ].map((s) => (
+                  <div
+                    key={s.label}
+                    className="p-5 rounded-xl border border-white/5 bg-white/[0.02] text-center"
                   >
-                    <img
-                      src={partner.logo}
-                      alt={`${partner.name} logo`}
-                      style={{ height: '64px', width: 'auto' }}
-                      className="object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
-                    />
-                  </a>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Divider */}
-            <div className="border-t border-white/5 my-14" />
-
-            {/* Supporting Partners */}
-            <p className="text-xs uppercase tracking-widest text-neutral-600 font-semibold text-center mb-10">
-              Supporting Partners
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-16 gap-y-10 items-center justify-items-center">
-              {supportingPartners.map((partner, index) => (
-                <motion.div
-                  key={partner.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.05 }}
-                >
-                  <a
-                    href={partner.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center justify-center min-w-[120px] h-16"
-                  >
-                    <img
-                      src={partner.logo}
-                      alt={`${partner.name} logo`}
-                      style={{ height: '64px', width: 'auto' }}
-                      className="object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
-                    />
-                  </a>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Value Propositions */}
-        <section className="relative w-full px-6 py-20">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-                Why Partner With Since AI?
-              </h2>
-              <p className="text-xl text-neutral-400 max-w-2xl mx-auto">
-                Concrete outcomes that drive business value
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8">
-              {valueProps.map((prop, index) => (
-                <motion.div
-                  key={prop.title}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="p-8 rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
-                >
-                  <div className="flex items-start gap-4 mb-6">
-                    <div className="p-3 rounded-xl bg-white/5 border border-white/10">
-                      <prop.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-white mb-2 tracking-tight">
-                        {prop.title}
-                      </h3>
-                      <p className="text-neutral-400 leading-relaxed">
-                        {prop.description}
-                      </p>
-                    </div>
+                    <div className="text-2xl font-bold text-white mb-1">{s.value}</div>
+                    <div className="text-xs text-neutral-500 leading-snug">{s.label}</div>
                   </div>
-
-                  <div className="space-y-2 pl-4 border-l-2 border-white/10">
-                    {prop.outcomes.map((outcome, i) => (
-                      <div key={i} className="flex items-start gap-3">
-                        <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-neutral-400">{outcome}</span>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Testimonials */}
-        <section className="relative w-full px-6 py-20">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-                What Partners Say
-              </h2>
-              <p className="text-xl text-neutral-400">
-                Real outcomes from real collaborations
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-6 mb-16">
-              {testimonials.map((testimonial, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="p-8 rounded-2xl border border-white/10 bg-white/[0.02] flex flex-col"
-                >
-                  <p className="text-neutral-300 leading-relaxed mb-6 flex-1 italic">
-                    &ldquo;{testimonial.quote}&rdquo;
-                  </p>
-                  <div className="space-y-3 pt-6 border-t border-white/10">
-                    <div>
-                      <div className="font-semibold text-white">{testimonial.author}</div>
-                    </div>
-                    <div className="inline-block px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-semibold">
-                      {testimonial.result}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* What surprised partners most */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="max-w-4xl mx-auto"
-            >
-              <div className="p-8 md:p-10 rounded-2xl border border-white/10 bg-white/[0.02]">
-                <h3 className="text-2xl font-bold text-white mb-4 tracking-tight">
-                  What surprised partners most
-                </h3>
-                <div className="space-y-4 text-neutral-300 leading-relaxed">
-                  <p>
-                    Many partners came in expecting early-stage concepts. Instead, they were genuinely surprised by how far teams could push a solution in 72 hours—not just prototypes, but testable, demo-ready systems with clear reasoning and trade-offs.
-                  </p>
-                  <p>
-                    What made the difference was team composition: several teams naturally formed like real startups—a strong software engineer, an AI/ML engineer, a commercially minded builder, and a confident presenter. The result wasn&apos;t &ldquo;hackathon theater&rdquo;; for many partners, the output was already good enough for a first internal pilot right after the event.
-                  </p>
-                </div>
-                <p className="text-sm text-neutral-500 mt-6 italic">
-                  Company names and exact numbers are shared privately.
-                </p>
+                ))}
               </div>
-            </motion.div>
-          </div>
-        </section>
 
-        {/* Partnership Formats */}
-        <section id="partnership-formats" className="relative w-full px-6 py-20 scroll-mt-20">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-                Partnership Formats
-              </h2>
-              <p className="text-xl text-neutral-400 max-w-2xl mx-auto">
-                We work with companies as equals — focused on real problems, real builders, and measurable outcomes. All partnerships are customizable.
-              </p>
-            </div>
+              {/* 3. Three ways to partner */}
+              <section className="mb-20">
+                <h2 className="text-3xl font-bold text-white mb-8 tracking-tight">
+                  Three ways to partner
+                </h2>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              {partnershipFormats.map((format, index) => (
-                <motion.div
-                  key={format.title}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="p-8 rounded-2xl border border-white/10 bg-white/[0.02] hover:border-white/20 transition-all duration-300 flex flex-col"
-                >
-                  <div className="mb-6">
-                    <h3 className="text-2xl font-bold text-white mb-2 tracking-tight">
-                      {format.title}
+                <div className="space-y-5">
+                  {/* Card 1 */}
+                  <div className="p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+                    <h3 className="text-xl font-bold text-white mb-3 tracking-tight">
+                      Sponsor a hackathon challenge
                     </h3>
-                    <p className="text-neutral-400 mb-4">
-                      {format.description}
+                    <p className="text-neutral-300 leading-relaxed mb-5">
+                      Bring a real AI problem to Since AI Hackathon 2026. Get 1,000+
+                      builders working on it over 72 hours. Best teams continue into
+                      your pilot.
                     </p>
-                    <div className="text-sm text-neutral-500">
-                      Best for: {format.bestFor}
-                    </div>
+                    <ul className="space-y-2 text-neutral-400 text-sm mb-6">
+                      <li className="flex items-start gap-3">
+                        <span className="text-white mt-0.5">—</span>
+                        Dedicated challenge track at the hackathon
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-white mt-0.5">—</span>
+                        Access to top performers for recruiting and pilots
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-white mt-0.5">—</span>
+                        Co-branded post-event report
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-white mt-0.5">—</span>
+                        Builder IP pathways configurable by partner
+                      </li>
+                    </ul>
+                    <a
+                      href="mailto:partners@sinceai.fi"
+                      className="inline-flex items-center text-sm font-semibold text-white hover:text-neutral-300 transition-colors underline"
+                    >
+                      Sponsor a challenge → partners@sinceai.fi
+                    </a>
                   </div>
 
-                  <div className="space-y-3 mb-6 flex-1">
-                    {format.includes.map((item, i) => (
-                      <div key={i} className="flex items-start gap-3">
-                        <CheckCircle className="w-4 h-4 text-white flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-neutral-400">{item}</span>
-                      </div>
-                    ))}
+                  {/* Card 2 */}
+                  <div className="p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+                    <h3 className="text-xl font-bold text-white mb-3 tracking-tight">
+                      Recruit AI talent
+                    </h3>
+                    <p className="text-neutral-300 leading-relaxed mb-5">
+                      Since AI&apos;s network includes 10,000+ AI builders across Europe.
+                      Access top performers through hackathons, applied projects, and
+                      direct introductions.
+                    </p>
+                    <ul className="space-y-2 text-neutral-400 text-sm mb-6">
+                      <li className="flex items-start gap-3">
+                        <span className="text-white mt-0.5">—</span>
+                        Targeted candidate introductions
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-white mt-0.5">—</span>
+                        Pre-vetted by hackathon performance
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-white mt-0.5">—</span>
+                        Global reach, European base
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-white mt-0.5">—</span>
+                        Non-profit — no recruiter fees
+                      </li>
+                    </ul>
+                    <a
+                      href="mailto:partners@sinceai.fi"
+                      className="inline-flex items-center text-sm font-semibold text-white hover:text-neutral-300 transition-colors underline"
+                    >
+                      Recruit from our network → partners@sinceai.fi
+                    </a>
                   </div>
 
+                  {/* Card 3 */}
+                  <div className="p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+                    <h3 className="text-xl font-bold text-white mb-3 tracking-tight">
+                      Run an applied AI pilot
+                    </h3>
+                    <p className="text-neutral-300 leading-relaxed mb-5">
+                      Turn a research problem into a working prototype with a top team
+                      from the Since AI network. Pilots run post-hackathon or on
+                      standalone timelines.
+                    </p>
+                    <ul className="space-y-2 text-neutral-400 text-sm mb-6">
+                      <li className="flex items-start gap-3">
+                        <span className="text-white mt-0.5">—</span>
+                        Matched team based on problem domain
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-white mt-0.5">—</span>
+                        Production-grade outputs
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-white mt-0.5">—</span>
+                        Commercialization pathway via the{" "}
+                        <Link
+                          href="/research-to-market"
+                          className="text-neutral-300 hover:text-white underline"
+                        >
+                          Research to Market program
+                        </Link>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-white mt-0.5">—</span>
+                        Connection to VCs if outcomes warrant
+                      </li>
+                    </ul>
+                    <a
+                      href="mailto:partners@sinceai.fi"
+                      className="inline-flex items-center text-sm font-semibold text-white hover:text-neutral-300 transition-colors underline"
+                    >
+                      Start a pilot conversation → partners@sinceai.fi
+                    </a>
+                  </div>
+                </div>
+              </section>
+
+              {/* 4. Challenge themes from past partners */}
+              <section className="mb-20">
+                <h2 className="text-3xl font-bold text-white mb-3 tracking-tight">
+                  Challenge themes from past partners
+                </h2>
+                <p className="text-neutral-500 text-sm mb-8">
+                  Public summaries only. Full challenge materials and solutions are not
+                  published.{" "}
                   <Link
-                    href={`/contact?subject=Partnership%20Inquiry%20-%20${encodeURIComponent(format.title)}`}
-                    className="w-full px-6 py-3 rounded-full bg-white/10 text-white font-semibold hover:bg-white/15 transition-colors border border-white/20 text-center"
+                    href="/projects"
+                    className="text-neutral-400 hover:text-white underline"
                   >
-                    Learn More
+                    See all projects →
                   </Link>
-                </motion.div>
-              ))}
-            </div>
+                </p>
 
-            <div className="mt-12 text-center">
-              <p className="text-neutral-400 mb-4">
-                Need something different? We can tailor the partnership to your goals.
-              </p>
-              <Link
-                href="/contact?subject=Custom%20Partnership%20Inquiry"
-                className="text-white hover:text-neutral-300 underline font-semibold"
-              >
-                Contact us for custom options
+                <div className="space-y-5">
+                  {caseStudies.map((cs) => (
+                    <div
+                      key={cs.title}
+                      className="p-6 rounded-xl border border-white/5 bg-white/[0.02]"
+                    >
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className="text-xs font-semibold text-white uppercase tracking-wider">
+                          {cs.partner}
+                        </span>
+                        <span className="text-neutral-700 text-xs">·</span>
+                        <span className="text-xs text-neutral-500">{cs.sector}</span>
+                      </div>
+                      <h3 className="text-base font-bold text-white mb-2">{cs.title}</h3>
+                      <p className="text-neutral-400 text-sm leading-relaxed mb-4">
+                        {cs.body}
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {cs.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="px-2 py-0.5 rounded-full border border-white/10 bg-white/[0.03] text-neutral-500 text-xs"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* 6. How partnerships work */}
+              <section className="mb-20">
+                <h2 className="text-3xl font-bold text-white mb-8 tracking-tight">
+                  How partnerships work
+                </h2>
+                <div className="space-y-4">
+                  {steps.map((s) => (
+                    <div
+                      key={s.n}
+                      className="flex gap-6 p-6 rounded-xl border border-white/5 bg-white/[0.02]"
+                    >
+                      <span className="text-2xl font-bold text-neutral-700 leading-none pt-0.5 min-w-[2.5rem]">
+                        {s.n}
+                      </span>
+                      <div>
+                        <h3 className="text-base font-bold text-white mb-1">{s.title}</h3>
+                        <p className="text-neutral-400 text-sm leading-relaxed">{s.body}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* 7. Partner FAQs */}
+              <section className="mb-20">
+                <h2 className="text-3xl font-bold text-white mb-8 tracking-tight">
+                  Frequently asked questions about partnering
+                </h2>
+                <div className="space-y-8">
+                  {partnerFaqs.map((faq) => (
+                    <div
+                      key={faq.question}
+                      className="pb-8 border-b border-white/5 last:border-b-0 last:pb-0"
+                    >
+                      <h3 className="text-lg font-bold text-white mb-2 tracking-tight">
+                        {faq.question}
+                      </h3>
+                      <p className="text-neutral-400 leading-relaxed">{faq.answer}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* 8. Bottom CTA */}
+              <section className="mb-20 p-10 rounded-2xl border border-white/10 bg-white/[0.03] text-center">
+                <h2 className="text-2xl font-bold text-white mb-3 tracking-tight">
+                  Ready to partner?
+                </h2>
+                <p className="text-neutral-400 mb-8 max-w-lg mx-auto leading-relaxed">
+                  Join Google for Developers, Bayer, Sandvik, Kongsberg, Valmet, and 25+
+                  other organizations building at the frontier of applied AI.
+                </p>
+                <a
+                  href="mailto:partners@sinceai.fi"
+                  className="inline-flex items-center justify-center px-10 py-4 text-base font-semibold text-black bg-white rounded-full transition-all duration-300 hover:bg-neutral-100 hover:scale-[1.02]"
+                >
+                  Start a partnership conversation → partners@sinceai.fi
+                </a>
+              </section>
+
+            </div>
+          </FadeIn>
+        </div>
+
+        {/* 5. Partner network — full tier layout reused from homepage */}
+        <PartnersSection />
+
+        <div className="max-w-4xl mx-auto px-6 pb-16 w-full">
+          <div className="pt-6 border-t border-white/5">
+            <div className="flex flex-wrap gap-3 text-sm">
+              <Link href="/hackathon" className="text-neutral-400 hover:text-white underline">
+                Hackathon 2026
+              </Link>
+              <span className="text-neutral-700">&bull;</span>
+              <Link href="/projects" className="text-neutral-400 hover:text-white underline">
+                Past projects
+              </Link>
+              <span className="text-neutral-700">&bull;</span>
+              <Link href="/for-builders" className="text-neutral-400 hover:text-white underline">
+                For builders
+              </Link>
+              <span className="text-neutral-700">&bull;</span>
+              <Link href="/research-to-market" className="text-neutral-400 hover:text-white underline">
+                Research to Market
+              </Link>
+              <span className="text-neutral-700">&bull;</span>
+              <Link href="/faq" className="text-neutral-400 hover:text-white underline">
+                FAQ
+              </Link>
+              <span className="text-neutral-700">&bull;</span>
+              <Link href="/about" className="text-neutral-400 hover:text-white underline">
+                About Since AI
               </Link>
             </div>
           </div>
-        </section>
+        </div>
 
-        {/* Final CTA */}
-        <section className="relative w-full px-6 py-20">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="p-12 rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.05] to-transparent text-center"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
-                Ready to Partner With Since AI?
-              </h2>
-              <p className="text-lg text-neutral-400 mb-8 max-w-2xl mx-auto">
-                Join Valmet, Sandvik, Kongsberg, ElevenLabs, and 10+ other leading companies 
-                investing in Finland&apos;s AI community. Let&apos;s discuss how we can help you achieve 
-                your goals.
-              </p>
-              <div className="flex flex-wrap gap-4 justify-center">
-                <Link
-                  href="/contact?subject=Partnership%20Inquiry"
-                  className="px-8 py-4 rounded-full bg-white text-black font-semibold hover:bg-neutral-100 transition-colors inline-flex items-center gap-2"
-                >
-                  Become a Partner
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-                <Link
-                  href="/events"
-                  className="px-8 py-4 rounded-full bg-white/10 text-white font-semibold hover:bg-white/15 transition-colors border border-white/20"
-                >
-                  View Past Events
-                </Link>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        <Footer discordUrl="https://discord.com/invite/YkqJswRGSW" />
+        <Footer discordUrl={ORG.social.discord} />
       </main>
     </SmoothScroll>
   );

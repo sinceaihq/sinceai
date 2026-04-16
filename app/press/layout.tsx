@@ -13,16 +13,16 @@ export const metadata: Metadata = {
     "AI community Finland",
   ],
   alternates: {
-    canonical: "/press",
+    canonical: "https://sinceai.fi/press",
   },
   openGraph: {
-    title: "Press & Media - Since AI",
+    title: "Press & Media — Since AI",
     description:
-      "Press kit and media information for Since AI, Finland's largest AI community with 1000+ members.",
+      "Press kit and media information for Since AI. 10,000+ AI builders in network, 30+ strategic partners. Europe's execution-focused AI innovation ecosystem. Based in Turku, Finland.",
     type: "website",
     locale: "en_US",
     siteName: "Since AI",
-    url: "/press",
+    url: "https://sinceai.fi/press",
   },
   robots: {
     index: true,

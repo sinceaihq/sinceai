@@ -1,138 +1,61 @@
-"use client";
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import SmoothScroll from "@/components/smoothScroll";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/sections/Footer";
-import { motion } from "framer-motion";
-import { ArrowRight, ExternalLink } from "lucide-react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { TrustBar } from "@/components/sections/homepage/TrustBar";
 import { CountdownTimer } from "@/components/countdown-timer";
+import StructuredData from "@/components/StructuredData";
 
-// FAQ data — visible in DOM and mirrored in JSON-LD
-const hackathonFaqs = [
-  {
-    q: "What is Since AI Hackathon?",
-    a: "Since AI Hackathon is the flagship annual event of Since AI — Europe's leading AI builders community based in Turku, Finland. It is one of Europe's largest hackathons, expecting 1000+ participants in 2026, and is an official MLH (Major League Hacking) partner event. Builders from across the world gather to solve real industry challenges and ship AI products in 72 hours.",
-  },
-  {
-    q: "When is Since AI Hackathon 2026?",
-    a: "Since AI Hackathon 2026 is scheduled for November 2026 in Turku, Finland. Exact dates will be announced soon. Join our Discord (discord.gg/6PC74zW68v) or Telegram (t.me/sinceaihq) to be the first to know.",
-  },
-  {
-    q: "Is Since AI Hackathon an official MLH event?",
-    a: "Yes. Since AI Hackathon 2026 is an official Major League Hacking (MLH) Member Event for the 2026 season, making it part of the global MLH hackathon league.",
-  },
-  {
-    q: "Who can participate in Since AI Hackathon?",
-    a: "Since AI Hackathon is open to builders worldwide — students, professionals, researchers, and entrepreneurs. The event is held in English. Participants have previously come from Finland, across Europe, and internationally.",
-  },
-  {
-    q: "Where is Since AI Hackathon held?",
-    a: "Since AI Hackathon is held at EduCity, Turku University of Applied Sciences (Turku AMK) campus in Turku, Finland.",
-  },
-  {
-    q: "How do I register for Since AI Hackathon 2026?",
-    a: "Registration for Since AI Hackathon 2026 will be announced soon. Join our Discord at discord.gg/6PC74zW68v or Telegram at t.me/sinceaihq to receive the registration announcement as soon as it opens.",
-  },
-  {
-    q: "What companies sponsor Since AI Hackathon?",
-    a: "Since AI Hackathon is sponsored and supported by leading industrial and tech companies including Valmet, Sandvik, Kongsberg, ElevenLabs, Antler, the City of Turku, and the University of Turku.",
-  },
-  {
-    q: "Is Since AI Hackathon free to attend?",
-    a: "Since AI Hackathon is free to participate in for builders. Sponsorship opportunities are available for companies — see sinceai.fi/partners for details.",
-  },
-];
-
-// JSON-LD schemas
-const eventSchema = {
-  "@context": "https://schema.org",
-  "@type": "Event",
-  name: "Since AI Hackathon 2026",
-  alternateName: ["Since AI Hackathon", "SinceAI Hackathon 2026"],
-  description:
-    "Europe's largest annual AI hackathon organized by Since AI community. Featuring industry challenges from top industrial and tech companies, official MLH partnership, and 1000+ participants from Finland, Europe, and worldwide.",
-  url: "https://sinceai.fi/hackathon",
-  startDate: "2026-11",
-  eventStatus: "https://schema.org/EventScheduled",
-  eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-  image: "https://sinceai.fi/api/og/hackathon",
-  location: {
-    "@type": "Place",
-    name: "EduCity, Turku University of Applied Sciences",
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "Joukahaisenkatu 3",
-      addressLocality: "Turku",
-      addressCountry: "FI",
-    },
-  },
-  organizer: {
-    "@type": "Organization",
-    name: "Since AI",
-    url: "https://sinceai.fi",
-    sameAs: ["https://discord.com/invite/YkqJswRGSW", "https://t.me/sinceaihq"],
-  },
-  sponsor: [
-    { "@type": "Organization", name: "Valmet", url: "https://www.valmet.com" },
-    {
-      "@type": "Organization",
-      name: "Sandvik",
-      url: "https://www.sandvik.com",
-    },
-    {
-      "@type": "Organization",
-      name: "Kongsberg",
-      url: "https://www.kongsberg.com",
-    },
-    {
-      "@type": "Organization",
-      name: "ElevenLabs",
-      url: "https://elevenlabs.io",
-    },
-    { "@type": "Organization", name: "Antler", url: "https://www.antler.co" },
-    {
-      "@type": "Organization",
-      name: "Major League Hacking",
-      url: "https://mlh.io",
-    },
-  ],
-  audience: {
-    "@type": "Audience",
-    audienceType:
-      "AI developers, software engineers, data scientists, entrepreneurs, students",
-  },
-  maximumAttendeeCapacity: 1000,
-  isAccessibleForFree: true,
-  inLanguage: "en",
-};
+// ── Schemas ────────────────────────────────────────────────────────────────
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    {
-      "@type": "ListItem",
-      position: 1,
-      name: "Home",
-      item: "https://sinceai.fi",
-    },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "Since AI Hackathon 2026",
-      item: "https://sinceai.fi/hackathon",
-    },
+    { "@type": "ListItem", position: 1, name: "Home",              item: "https://sinceai.fi" },
+    { "@type": "ListItem", position: 2, name: "Since AI Hackathon 2026", item: "https://sinceai.fi/hackathon" },
   ],
 };
+
+const hackathonFaqs = [
+  {
+    q: "What is Since AI Hackathon?",
+    a: "Since AI Hackathon is the flagship annual event of Since AI — Europe's execution-focused AI innovation ecosystem based in Turku, Finland. It is an official MLH (Major League Hacking) partner event. Builders from across the world gather to solve real industry challenges and ship AI products in 72 hours.",
+  },
+  {
+    q: "When is Since AI Hackathon 2026?",
+    a: "Since AI Hackathon 2026 runs November 6–8, 2026 at EduCity, Joukahaisenkatu 7, Turku, Finland. Registrations opening soon — join Discord or Telegram to be notified first.",
+  },
+  {
+    q: "Is Since AI Hackathon an official MLH event?",
+    a: "Yes. Since AI Hackathon 2026 is an official Major League Hacking (MLH) Member Event for the 2026 season. MLH is the world's largest hackathon league, supporting hundreds of events annually across North America, Europe, and Asia. Participants gain MLH recognition, prizes, and API credits.",
+  },
+  {
+    q: "Who can participate?",
+    a: "Since AI Hackathon is open to builders worldwide — developers, researchers, designers, and entrepreneurs. Students and professionals both welcome. The event is held in English.",
+  },
+  {
+    q: "Where is the event held?",
+    a: "EduCity, Joukahaisenkatu 7, Turku, Finland — the modern campus of Turku University of Applied Sciences (Turku AMK).",
+  },
+  {
+    q: "Is registration free?",
+    a: "Yes. Since AI Hackathon is free to attend for builders. Sponsorship and challenge partner opportunities are available for companies — see sinceai.fi/partners.",
+  },
+  {
+    q: "How do I register?",
+    a: "Registrations are opening soon for Since AI Hackathon 2026. Join our Discord (discord.com/invite/YkqJswRGSW) or Telegram (t.me/sinceaihq) to receive the registration announcement as soon as it opens.",
+  },
+  {
+    q: "What companies set challenges?",
+    a: "Challenge partners for 2026 include Google for Developers, Bayer, Sandvik, Kongsberg, and Valmet. Past edition partners also included ElevenLabs, Antler, and the University of Turku.",
+  },
+  {
+    q: "What happens during the 72 hours?",
+    a: "Teams form, select a partner challenge or open track, build a working AI product, and present it to judges. No slide decks — working demos only. Mentors from partner companies are available throughout.",
+  },
+];
 
 const faqSchema = {
   "@context": "https://schema.org",
@@ -140,544 +63,881 @@ const faqSchema = {
   mainEntity: hackathonFaqs.map((faq) => ({
     "@type": "Question",
     name: faq.q,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: faq.a,
-    },
+    acceptedAnswer: { "@type": "Answer", text: faq.a },
   })),
 };
 
-const heroStats = [
-  { value: "1,000+", label: "Participants Expected" },
-  { value: "72 Hours", label: "Build Sprint" },
-  { value: "MLH Official", label: "Partner Event" },
-  { value: "Nov 2026", label: "Turku, Finland" },
-];
-
-const whyCards = [
-  {
-    title: "Real Industry Challenges",
-    text: "Solve actual problems set by Valmet, Sandvik, Kongsberg, and other leading companies. The best solutions get noticed — and hired.",
-  },
-  {
-    title: "Official MLH Partner Event",
-    text: "Since AI Hackathon 2026 is part of the global Major League Hacking league. Gain MLH recognition, prizes, and connect with the worldwide hacker community.",
-  },
-  {
-    title: "Build Your European Network",
-    text: "Join 1000+ Since AI community members across Europe. Past participants have been hired, founded startups, and built lasting professional connections.",
-  },
-  {
-    title: "Ship Real AI Products",
-    text: "No slide decks. No mockups. Since AI Hackathon rewards teams that build and demo working AI products within the 72-hour sprint.",
-  },
-];
+// ── Content data ──────────────────────────────────────────────────────────
 
 const keyFacts = [
-  { label: "Event Name", value: "Since AI Hackathon 2026" },
-  { label: "Type", value: "In-person AI Hackathon" },
-  {
-    label: "Date",
-    value: "November 2026 (exact dates to be announced)",
-  },
-  {
-    label: "Location",
-    value: "EduCity, Turku AMK, Turku, Finland",
-  },
-  { label: "Duration", value: "72 hours" },
-  { label: "Expected Participants", value: "1,000+" },
-  {
-    label: "Open To",
-    value: "Builders worldwide — students and professionals",
-  },
-  { label: "Language", value: "English" },
-  {
-    label: "MLH Partner",
-    value: "Yes — Official 2026 Season Member Event",
-  },
-  {
-    label: "Past Sponsors",
-    value: "Valmet, Sandvik, Kongsberg, ElevenLabs, Antler",
-  },
-  { label: "Organized By", value: "Since AI (sinceai.fi)" },
-  { label: "Participation Fee", value: "Free" },
+  { label: "Event",          value: "Since AI Hackathon 2026" },
+  { label: "Date",           value: "November 6–8, 2026" },
+  { label: "Venue",          value: "EduCity, Joukahaisenkatu 7, Turku, Finland" },
+  { label: "Duration",       value: "72 hours" },
+  { label: "Expected",       value: "1,000+ builders" },
+  { label: "Format",         value: "In-person" },
+  { label: "Open to",        value: "Builders worldwide — students and professionals" },
+  { label: "Language",       value: "English" },
+  { label: "Participation",  value: "Free" },
+  { label: "MLH",            value: "Official 2026 Season Member Event" },
+  { label: "Organised by",   value: "Since AI (sinceai.fi)" },
 ];
+
+const whyItems = [
+  {
+    num: "01",
+    title: "Real industry challenges",
+    body: "Solve actual problems set by Bayer, Sandvik, Kongsberg, Valmet, Google for Developers. The best solutions get noticed — and hired.",
+  },
+  {
+    num: "02",
+    title: "Official MLH partner event",
+    body: "Since AI Hackathon 2026 is an official Major League Hacking (MLH) Member Event. Gain MLH recognition, prizes, API credits, and connect with the worldwide hacker community.",
+  },
+  {
+    num: "03",
+    title: "European builder network",
+    body: "Join 10,000+ Since AI community members across Europe. Past participants have been hired, founded startups, and built lasting professional connections.",
+  },
+  {
+    num: "04",
+    title: "Working demos only",
+    body: "No slide decks. No mockups. Since AI Hackathon rewards teams that build and demo working AI products within the 72-hour sprint.",
+  },
+];
+
+const ctaPrimary: React.CSSProperties = {
+  display: "inline-block",
+  fontFamily: "var(--font-mono)",
+  fontSize: "13px",
+  fontWeight: 500,
+  color: "#000",
+  background: "#fff",
+  padding: "12px 20px",
+  borderRadius: 0,
+  border: "0.5px solid #fff",
+  textDecoration: "none",
+  whiteSpace: "nowrap",
+};
+
+const ctaSecondary: React.CSSProperties = {
+  display: "inline-block",
+  fontFamily: "var(--font-mono)",
+  fontSize: "13px",
+  fontWeight: 500,
+  color: "#fff",
+  background: "transparent",
+  padding: "12px 20px",
+  borderRadius: 0,
+  border: "0.5px solid var(--color-border-strong)",
+  textDecoration: "none",
+  whiteSpace: "nowrap",
+};
+
+// ── Page ──────────────────────────────────────────────────────────────────
 
 export default function HackathonPage() {
   return (
     <SmoothScroll>
       <Navbar />
-
-      {/* JSON-LD structured data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
+      <StructuredData data={breadcrumbSchema} />
+      <StructuredData data={faqSchema} />
 
       <main className="flex flex-col w-full bg-black min-h-screen">
-        {/* SECTION 1 — Hero */}
-        <section className="relative w-full min-h-[90vh] flex items-center justify-center">
-          {/* Background image */}
+
+        {/* ── SECTION 1: Hero ─────────────────────────────────── */}
+        <section className="relative w-full min-h-[90vh] flex items-end">
           <Image
             src="/assets/images/educity.png"
-            alt="EduCity building at Turku University of Applied Sciences"
+            alt="EduCity, Turku — venue for Since AI Hackathon 2026"
             fill
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-black/50" />
-          <div className="absolute inset-x-0 bottom-0 h-40 md:h-64 bg-linear-to-t from-black to-transparent" />
+          {/* Overlays */}
+          <div className="absolute inset-0" style={{ background: "rgba(0,0,0,0.55)" }} />
+          <div
+            className="absolute inset-x-0 bottom-0"
+            style={{
+              height: "60%",
+              background: "linear-gradient(to top, #000 0%, transparent 100%)",
+            }}
+          />
 
-          <div className="relative z-10 max-w-5xl mx-auto px-6 py-32 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          <div
+            className="relative z-10 mx-auto w-full"
+            style={{
+              maxWidth: "1200px",
+              padding: "var(--space-3xl) var(--space-lg) var(--space-2xl)",
+            }}
+          >
+            <p
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "var(--text-xs)",
+                color: "var(--color-fg-muted)",
+                letterSpacing: "0.05em",
+                marginBottom: "var(--space-sm)",
+              }}
             >
-              <h1 className="text-5xl md:text-6xl lg:text-8xl font-bold text-white mb-6 tracking-tight leading-tight">
-                Since AI Hackathon 2026
-              </h1>
+              // flagship event
+            </p>
 
-              <p className="text-xl md:text-2xl text-neutral-300 max-w-3xl mx-auto mb-10">
-                Europe&apos;s Premier Annual AI Hackathon — Turku, Finland
-              </p>
+            <h1
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "var(--text-headline-lg)",
+                fontWeight: 500,
+                lineHeight: 1.0,
+                letterSpacing: "-0.02em",
+                color: "#fff",
+                margin: 0,
+                marginBottom: "var(--space-md)",
+                maxWidth: "820px",
+              }}
+            >
+              Since AI Hackathon 2026.
+            </h1>
 
-              {/* Event: Nov 6-8, 2026. Starts 16:00, ends midnight Nov 8 */}
+            <p
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "14px",
+              color: "var(--color-fg-muted)",
+              marginBottom: "var(--space-lg)",
+              letterSpacing: "0.01em",
+            }}
+          >
+            November 6–8, 2026 &nbsp;/&nbsp; EduCity, Turku, Finland &nbsp;/&nbsp; 72 hours &nbsp;/&nbsp; 1,000+ builders &nbsp;/&nbsp; MLH Official Partner Event
+          </p>
+
+            {/* Countdown */}
+            <div style={{ marginBottom: "var(--space-lg)" }}>
               <CountdownTimer
-                startDate="2026-11-06T16:00:00"
-                endDate="2026-11-09T00:00:00"
+                startDate="2026-11-06T09:00:00"
+                endDate="2026-11-08T23:59:00"
               />
+            </div>
 
-              {/* Stats row */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-12 max-w-4xl mx-auto">
-                {heroStats.map((stat) => (
-                  <div key={stat.label}>
-                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">
-                      {stat.value}
-                    </div>
-                    <div className="text-xs md:text-sm text-neutral-500 font-medium">
-                      {stat.label}
-                    </div>
-                  </div>
-                ))}
-              </div>
+            {/* Registration status */}
+            <p
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "var(--text-sm)",
+                color: "var(--color-fg-muted)",
+                marginBottom: "var(--space-lg)",
+              }}
+            >
+              <span
+                style={{
+                  display: "inline-block",
+                  width: "6px",
+                  height: "6px",
+                  borderRadius: "50%",
+                  background: "#f59e0b",
+                  marginRight: "8px",
+                  verticalAlign: "middle",
+                }}
+                aria-hidden="true"
+              />
+              Registrations opening soon — join Discord to be notified
+            </p>
 
-              {/* CTAs */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a
-                  href="#registration"
-                  className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-black bg-white rounded-full hover:bg-neutral-100 transition-all duration-300"
-                >
-                  Get Notified — Registration Opening Soon
-                </a>
-                <Link
-                  href="/partners"
-                  className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-white/10 rounded-full hover:bg-white/15 border border-white/20 hover:border-white/30 transition-all duration-300 group"
-                >
-                  Become a Partner
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform" />
-                </Link>
-              </div>
-            </motion.div>
+            {/* CTAs */}
+            <div className="flex flex-col sm:flex-row" style={{ gap: "12px" }}>
+              <a
+                href="https://discord.com/invite/YkqJswRGSW"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={ctaPrimary}
+              >
+                Get notified when registration opens →
+              </a>
+              <Link href="/partners" className="hero-cta-secondary" style={ctaSecondary}>
+                Partner with us →
+              </Link>
+            </div>
           </div>
         </section>
 
-        {/* SECTION 2 — What is Since AI Hackathon? */}
-        <section className="relative w-full px-6 py-24 border-t border-white/5">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+        {/* ── SECTION 2: What is it ────────────────────────────── */}
+        <section
+          style={{
+            padding: "var(--space-2xl) var(--space-lg)",
+            borderTop: "0.5px solid var(--color-border)",
+          }}
+        >
+          <div className="mx-auto" style={{ maxWidth: "880px" }}>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
+              // what is it
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "36px",
+                fontWeight: 500,
+                lineHeight: 1.15,
+                color: "#fff",
+                margin: 0,
+                marginBottom: "var(--space-md)",
+              }}
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 tracking-tight">
-                What is Since AI Hackathon?
-              </h2>
-
-              <div className="space-y-6 text-lg text-neutral-300 leading-relaxed">
-                <p>
-                  Since AI Hackathon is the flagship annual event organized by
-                  Since AI — the leading AI builders community in Europe, based
-                  in Turku, Finland. Founded in 2025, Since AI has grown to 1000+
-                  members across Europe with partners including Valmet, Sandvik,
-                  Kongsberg, and the University of Turku.
-                </p>
-                <p>
-                  The hackathon brings together AI developers, engineers,
-                  researchers, and entrepreneurs for an intensive 72-hour
-                  building sprint. Participants form teams and tackle real
-                  industry challenges set by partner companies, shipping working
-                  AI prototypes by the end of the event.
-                </p>
-                <p>
-                  The inaugural edition in 2025 saw 260 participants ship 30+
-                  projects. The 2026 edition, now an official MLH partner event,
-                  is expected to welcome 1,000+ participants from Finland,
-                  Europe, and worldwide.
-                </p>
-              </div>
-            </motion.div>
+              72 hours. Real challenges. Shipped products.
+            </h2>
+            <div
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "var(--text-base)",
+                color: "var(--color-fg-muted)",
+                lineHeight: 1.7,
+                maxWidth: "720px",
+              }}
+            >
+              <p style={{ marginBottom: "var(--space-md)" }}>
+                Since AI Hackathon is the flagship annual event of Since AI — Europe&apos;s
+                execution-focused AI innovation ecosystem based in Turku, Finland. The inaugural
+                edition in November 2025 brought together 260 builders who shipped 30+ AI
+                projects in 72 hours.
+              </p>
+              <p style={{ marginBottom: "var(--space-md)" }}>
+                The 2026 edition targets 1,000+ builders. Partner challenges come from Google
+                for Developers, Bayer, Sandvik, Kongsberg, and Valmet. Open to developers,
+                researchers, and entrepreneurs worldwide.
+              </p>
+              <p style={{ margin: 0 }}>
+                No slide decks. No mockups. Only working demos.
+              </p>
+            </div>
           </div>
         </section>
 
-        {/* SECTION 3 — Why Participate */}
-        <section className="relative w-full px-6 py-24 border-t border-white/5">
-          <div className="max-w-5xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+        {/* ── SECTION 3: Why participate ──────────────────────── */}
+        <section
+          style={{
+            padding: "var(--space-2xl) var(--space-lg)",
+            borderTop: "0.5px solid var(--color-border)",
+          }}
+        >
+          <div className="mx-auto" style={{ maxWidth: "1200px" }}>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
+              // why participate
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "36px",
+                fontWeight: 500,
+                color: "#fff",
+                margin: 0,
+                marginBottom: "var(--space-xl)",
+              }}
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-12 tracking-tight text-center">
-                Why Participate
-              </h2>
+              Built for builders who ship.
+            </h2>
 
-              <div className="grid md:grid-cols-2 gap-6">
-                {whyCards.map((card, index) => (
-                  <motion.div
-                    key={card.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="p-8 rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
+            <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: "var(--space-lg)" }}>
+              {whyItems.map((item) => (
+                <div
+                  key={item.num}
+                  style={{
+                    borderLeft: "0.5px solid var(--color-border)",
+                    paddingLeft: "var(--space-md)",
+                  }}
+                >
+                  <p
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "var(--text-xs)",
+                      color: "var(--color-fg-subtle)",
+                      letterSpacing: "0.1em",
+                      marginBottom: "var(--space-xs)",
+                    }}
+                    aria-hidden="true"
                   >
-                    <h3 className="text-2xl font-bold text-white mb-3 tracking-tight">
-                      {card.title}
-                    </h3>
-                    <p className="text-neutral-400 leading-relaxed">
-                      {card.text}
-                    </p>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+                    {item.num}
+                  </p>
+                  <h3
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "16px",
+                      fontWeight: 500,
+                      color: "#fff",
+                      margin: 0,
+                      marginBottom: "var(--space-xs)",
+                    }}
+                  >
+                    {item.title}
+                  </h3>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "var(--text-sm)",
+                      color: "var(--color-fg-muted)",
+                      lineHeight: 1.6,
+                      margin: 0,
+                    }}
+                  >
+                    {item.body}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* SECTION 4 — Key Facts */}
-        <section className="relative w-full px-6 py-24 border-t border-white/5">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+        {/* ── SECTION 4: Key facts ─────────────────────────────── */}
+        <section
+          style={{
+            padding: "var(--space-2xl) var(--space-lg)",
+            borderTop: "0.5px solid var(--color-border)",
+          }}
+        >
+          <div className="mx-auto" style={{ maxWidth: "880px" }}>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
+              // key facts
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "36px",
+                fontWeight: 500,
+                color: "#fff",
+                margin: 0,
+                marginBottom: "var(--space-lg)",
+              }}
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-12 tracking-tight">
-                Since AI Hackathon 2026 — Key Facts
-              </h2>
+              Since AI Hackathon 2026 — at a glance.
+            </h2>
 
-              <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-                <dl>
-                  {keyFacts.map((fact, index) => (
-                    <div
-                      key={fact.label}
-                      className={`flex flex-col sm:flex-row sm:items-center px-8 py-5 ${
-                        index !== keyFacts.length - 1
-                          ? "border-b border-white/5"
-                          : ""
-                      }`}
-                    >
-                      <dt className="text-sm font-semibold text-neutral-500 uppercase tracking-wider sm:w-56 flex-shrink-0 mb-1 sm:mb-0">
-                        {fact.label}
-                      </dt>
-                      <dd className="text-base text-neutral-300">
-                        {fact.value}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
-            </motion.div>
+            <div style={{ borderTop: "0.5px solid var(--color-border)" }}>
+              {keyFacts.map((fact) => (
+                <div
+                  key={fact.label}
+                  className="flex flex-col sm:flex-row sm:items-baseline"
+                  style={{
+                    padding: "var(--space-sm) 0",
+                    borderBottom: "0.5px solid var(--color-border)",
+                    gap: "var(--space-sm)",
+                  }}
+                >
+                  <dt
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "var(--text-xs)",
+                      color: "var(--color-fg-subtle)",
+                      letterSpacing: "0.08em",
+                      textTransform: "uppercase",
+                      flexShrink: 0,
+                      width: "160px",
+                    }}
+                  >
+                    {fact.label}
+                  </dt>
+                  <dd
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "var(--text-sm)",
+                      color: "#fff",
+                      margin: 0,
+                    }}
+                  >
+                    {fact.value}
+                  </dd>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* SECTION 5 — Venue */}
-        <section className="relative w-full px-6 py-24 border-t border-white/5">
-          <div className="max-w-5xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+        {/* ── SECTION 5: Venue ─────────────────────────────────── */}
+        <section
+          style={{
+            padding: "var(--space-2xl) var(--space-lg)",
+            borderTop: "0.5px solid var(--color-border)",
+          }}
+        >
+          <div className="mx-auto" style={{ maxWidth: "1200px" }}>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
+              // venue
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "36px",
+                fontWeight: 500,
+                color: "#fff",
+                margin: 0,
+                marginBottom: "var(--space-lg)",
+              }}
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 tracking-tight">
-                Venue: EduCity, Turku
-              </h2>
+              EduCity, Turku.
+            </h2>
 
-              <div className="relative w-full h-64 md:h-96 rounded-2xl overflow-hidden mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: "var(--space-xl)", alignItems: "start" }}>
+              <div>
+                <p
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "var(--text-base)",
+                    color: "var(--color-fg-muted)",
+                    lineHeight: 1.7,
+                    marginBottom: "var(--space-md)",
+                  }}
+                >
+                  Since AI Hackathon 2026 takes place at EduCity — the modern campus of Turku
+                  University of Applied Sciences (Turku AMK), Joukahaisenkatu 7, 20520 Turku,
+                  Finland. State-of-the-art facilities for 1,000+ builders to collaborate, build,
+                  and present.
+                </p>
+                <a
+                  href="https://maps.google.com/?q=EduCity+Joukahaisenkatu+7+Turku"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition-colors"
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "var(--text-sm)",
+                    color: "var(--color-fg-muted)",
+                    textDecoration: "none",
+                  }}
+                >
+                  View on Google Maps ↗
+                </a>
+              </div>
+
+              <div
+                className="relative w-full overflow-hidden"
+                style={{ height: "280px" }}
+              >
                 <Image
                   src="/assets/images/educity.jpg"
-                  alt="EduCity building at Turku University of Applied Sciences — venue for Since AI Hackathon 2026"
+                  alt="EduCity building — venue for Since AI Hackathon 2026, Turku, Finland"
                   fill
                   className="object-cover"
                 />
               </div>
+            </div>
+          </div>
+        </section>
 
-              <p className="text-lg text-neutral-300 leading-relaxed mb-6 max-w-3xl">
-                Since AI Hackathon 2026 takes place at EduCity — the modern
-                campus of Turku University of Applied Sciences (Turku AMK).
-                Located in the heart of Turku, Finland, EduCity provides
-                state-of-the-art facilities for 1,000+ builders to collaborate,
-                build, and compete.
-              </p>
+        {/* ── SECTION 6: Partners ──────────────────────────────── */}
+        <section
+          style={{
+            padding: "var(--space-2xl) var(--space-lg)",
+            borderTop: "0.5px solid var(--color-border)",
+          }}
+        >
+          <div className="mx-auto" style={{ maxWidth: "1200px" }}>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
+              // challenge partners
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "36px",
+                fontWeight: 500,
+                color: "#fff",
+                margin: 0,
+                marginBottom: "var(--space-lg)",
+              }}
+            >
+              Real problems from real companies.
+            </h2>
 
-              <a
-                href="https://maps.google.com/?q=EduCity+Turku+AMK+Joukahaisenkatu+3+Turku"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-white hover:text-neutral-300 transition-colors group"
+            <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: "var(--space-xl)", marginBottom: "var(--space-xl)" }}>
+              {[
+                {
+                  label: "// 2026 challenge partners",
+                  partners: [
+                    { name: "Google for Developers", url: "https://developers.google.com/" },
+                    { name: "Bayer",    url: "https://www.bayer.com/" },
+                    { name: "Sandvik",  url: "https://www.sandvik.com/" },
+                    { name: "Kongsberg", url: "https://www.kongsberg.com/" },
+                    { name: "Valmet",   url: "https://www.valmet.com/" },
+                  ],
+                },
+                {
+                  label: "// technology partners",
+                  partners: [
+                    { name: "ElevenLabs",     url: "https://elevenlabs.io/" },
+                    { name: "Aiven",          url: "https://aiven.io/" },
+                    { name: "Lovable",        url: "https://lovable.dev/" },
+                    { name: "n8n",            url: "https://n8n.io/" },
+                    { name: "Featherless.ai", url: "https://featherless.ai/" },
+                  ],
+                },
+                {
+                  label: "// capital & ecosystem",
+                  partners: [
+                    { name: "Antler",              url: "https://www.antler.co/" },
+                    { name: "Inventure",           url: "https://www.inventure.vc/" },
+                    { name: "Wave Ventures",       url: "https://www.wave.ventures/" },
+                    { name: "University of Turku", url: "https://www.utu.fi" },
+                    { name: "City of Turku",       url: "https://www.turku.fi" },
+                  ],
+                },
+              ].map(({ label, partners }) => (
+                <div key={label}>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "var(--text-xs)",
+                      color: "var(--color-fg-subtle)",
+                      letterSpacing: "0.1em",
+                      textTransform: "uppercase",
+                      marginBottom: "var(--space-md)",
+                    }}
+                  >
+                    {label}
+                  </p>
+                  <div style={{ fontFamily: "var(--font-mono)", fontSize: "14px", lineHeight: 2, color: "#fff" }}>
+                    {partners.map((p, i) => (
+                      <span key={p.name}>
+                        <a
+                          href={p.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:underline"
+                          style={{ color: "inherit", textDecoration: "none" }}
+                        >
+                          {p.name}
+                        </a>
+                        {i < partners.length - 1 && (
+                          <span style={{ color: "var(--color-fg-subtle)" }}>, </span>
+                        )}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ borderTop: "0.5px solid var(--color-border)", paddingTop: "var(--space-lg)" }}>
+              <Link
+                href="/partners"
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "var(--text-sm)",
+                  color: "var(--color-fg-muted)",
+                  textDecoration: "none",
+                }}
+                className="hover:text-white transition-colors"
               >
-                <span className="text-base font-medium">
-                  View on Google Maps
-                </span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-              </a>
-            </motion.div>
+                Interested in setting a challenge or sponsoring? → sinceai.fi/partners
+              </Link>
+            </div>
           </div>
         </section>
 
-        {/* SECTION 6 — Partners & Sponsors */}
-        <section className="relative w-full border-t border-white/5">
-          <div className="max-w-5xl mx-auto px-6 pt-24 pb-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center"
+        {/* ── SECTION 7: Past edition ──────────────────────────── */}
+        <section
+          style={{
+            padding: "var(--space-2xl) var(--space-lg)",
+            borderTop: "0.5px solid var(--color-border)",
+          }}
+        >
+          <div className="mx-auto" style={{ maxWidth: "880px" }}>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
+              // previous editions
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "36px",
+                fontWeight: 500,
+                color: "#fff",
+                margin: 0,
+                marginBottom: "var(--space-lg)",
+              }}
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-                Hackathon Partners & Sponsors
-              </h2>
-              <p className="text-lg text-neutral-400 max-w-2xl mx-auto mb-4">
-                Since AI Hackathon attracts Finland and Europe&apos;s leading
-                industrial, technology, and investment companies as sponsors and
-                challenge providers.
+              Since AI Hackathon 2025.
+            </h2>
+
+            <div style={{ borderLeft: "0.5px solid var(--color-border)", paddingLeft: "var(--space-md)" }}>
+              <p
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "var(--text-sm)",
+                  color: "var(--color-fg-muted)",
+                  marginBottom: "var(--space-sm)",
+                  letterSpacing: "0.02em",
+                }}
+              >
+                260 builders &nbsp;·&nbsp; 30+ projects shipped &nbsp;·&nbsp; 10+ partner companies &nbsp;·&nbsp; Nov 21–23, 2025 &nbsp;·&nbsp; EduCity, Turku
               </p>
-            </motion.div>
-          </div>
+              <p
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "var(--text-base)",
+                  color: "var(--color-fg-muted)",
+                  lineHeight: 1.7,
+                  marginBottom: "var(--space-lg)",
+                  maxWidth: "640px",
+                }}
+              >
+                The inaugural Since AI Hackathon brought together 260 builders from across
+                Finland and Europe. Teams tackled real industry challenges from Kongsberg,
+                Sandvik, Valmet, and other partner companies, shipping 30+ AI prototypes
+                in 72 hours.
+              </p>
 
-          <TrustBar />
-
-          <div className="max-w-5xl mx-auto px-6 pb-24 pt-8 text-center">
-            <Link
-              href="/partners"
-              className="inline-flex items-center gap-2 text-white hover:text-neutral-300 transition-colors group text-base font-medium"
-            >
-              Interested in sponsoring?
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
+              <div className="flex flex-wrap" style={{ gap: "var(--space-lg)" }}>
+                <Link
+                  href="/projects"
+                  className="hover:text-white transition-colors"
+                  style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)", color: "var(--color-fg-muted)", textDecoration: "none" }}
+                >
+                  View shipped projects →
+                </Link>
+                <Link
+                  href="/events"
+                  className="hover:text-white transition-colors"
+                  style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)", color: "var(--color-fg-muted)", textDecoration: "none" }}
+                >
+                  All events →
+                </Link>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* SECTION 7 — MLH Partnership */}
-        <section className="relative w-full px-6 py-24 border-t border-white/5">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+        {/* ── SECTION 8: MLH partnership ───────────────────────── */}
+        <section
+          style={{
+            padding: "var(--space-2xl) var(--space-lg)",
+            borderTop: "0.5px solid var(--color-border)",
+          }}
+        >
+          <div className="mx-auto" style={{ maxWidth: "880px" }}>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
+              // mlh partnership
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "36px",
+                fontWeight: 500,
+                color: "#fff",
+                margin: 0,
+                marginBottom: "var(--space-lg)",
+              }}
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 tracking-tight">
-                Official Major League Hacking Partner Event
-              </h2>
+              Official Major League Hacking partner event.
+            </h2>
 
-              <div className="space-y-6 text-lg text-neutral-300 leading-relaxed">
-                <p>
-                  Since AI Hackathon 2026 is an official Major League Hacking
-                  (MLH) Member Event for the 2026 season. MLH is the
-                  world&apos;s largest hackathon league, supporting hundreds of
-                  events annually across North America, Europe, and Asia.
-                </p>
-                <p>
-                  As an official MLH partner event, Since AI Hackathon
-                  participants gain access to the global MLH hacker community,
-                  MLH-sponsored prizes and API credits, and official recognition
-                  as part of the worldwide hackathon movement.
-                </p>
-              </div>
-
+            <div
+              style={{
+                borderLeft: "0.5px solid var(--color-border)",
+                paddingLeft: "var(--space-md)",
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "var(--text-base)",
+                  color: "var(--color-fg-muted)",
+                  lineHeight: 1.7,
+                  marginBottom: "var(--space-md)",
+                  maxWidth: "640px",
+                }}
+              >
+                Since AI Hackathon 2026 is an official Major League Hacking (MLH) Member
+                Event for the 2026 season. MLH is the world&apos;s largest hackathon league,
+                supporting hundreds of events annually across North America, Europe, and Asia.
+              </p>
+              <p
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "var(--text-base)",
+                  color: "var(--color-fg-muted)",
+                  lineHeight: 1.7,
+                  marginBottom: "var(--space-lg)",
+                  maxWidth: "640px",
+                }}
+              >
+                As an official MLH partner event, participants gain access to the global MLH
+                hacker community, MLH-sponsored prizes and API credits, and official recognition
+                as part of the worldwide hackathon movement.
+              </p>
               <a
                 href="https://mlh.io/eu"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-white hover:text-neutral-300 transition-colors group mt-6"
+                className="hover:text-white transition-colors"
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "var(--text-sm)",
+                  color: "var(--color-fg-muted)",
+                  textDecoration: "none",
+                }}
               >
-                <span className="text-base font-medium">
-                  Learn more about MLH
-                </span>
-                <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                Learn more about MLH ↗
               </a>
-            </motion.div>
+            </div>
           </div>
         </section>
 
-        {/* SECTION 8 — Past Editions */}
-        <section className="relative w-full px-6 py-24 border-t border-white/5">
-          <div className="max-w-5xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-12 tracking-tight">
-                Previous Since AI Hackathons
-              </h2>
-
-              <div className="border border-white/10 rounded-3xl p-8 md:p-12 bg-white/[0.02]">
-                <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
-                  Since AI Hackathon 2025
-                </h3>
-
-                <p className="text-lg text-neutral-400 mb-6">
-                  260 Participants — 30+ Projects Shipped — 10+ Partner Companies — Turku, Finland
-                </p>
-
-                <p className="text-base text-neutral-300 leading-relaxed mb-8">
-                  The inaugural Since AI Hackathon brought together 260 builders
-                  from across Finland and Europe. Teams tackled real industry
-                  challenges from Kongsberg, Sandvik, Valmet, and 10+ other
-                  partner companies, shipping over 30 AI prototypes in 72 hours.
-                </p>
-
-                <div className="flex flex-wrap gap-4">
-                  <Link
-                    href="/projects"
-                    className="inline-flex items-center gap-2 text-white hover:text-neutral-300 transition-colors group"
-                  >
-                    <span className="text-base font-medium">View projects</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                  </Link>
-                  <Link
-                    href="/events"
-                    className="inline-flex items-center gap-2 text-neutral-400 hover:text-white transition-colors group"
-                  >
-                    <span className="text-base font-medium">All events</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* SECTION 9 — Registration */}
+        {/* ── SECTION 9: Registration ──────────────────────────── */}
         <section
           id="registration"
-          className="relative w-full px-6 py-24 border-t border-white/5 scroll-mt-20"
+          style={{
+            padding: "var(--space-3xl) var(--space-lg)",
+            borderTop: "0.5px solid var(--color-border)",
+            borderBottom: "0.5px solid var(--color-border)",
+            scrollMarginTop: "80px",
+          }}
         >
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center"
+          <div className="mx-auto" style={{ maxWidth: "880px" }}>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
+              // registrations
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "var(--text-headline-sm)",
+                fontWeight: 500,
+                lineHeight: 1.0,
+                color: "#fff",
+                margin: 0,
+                marginBottom: "var(--space-md)",
+              }}
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-                Join Since AI Hackathon 2026
-              </h2>
+              Opening soon.
+            </h2>
+            <p
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "var(--text-base)",
+                color: "var(--color-fg-muted)",
+                lineHeight: 1.7,
+                maxWidth: "560px",
+                marginBottom: "var(--space-lg)",
+              }}
+            >
+              Registration for Since AI Hackathon 2026 (November 6–8, Turku) opens soon. 
+              Join our community channels to be notified the moment applications go live —
+              and to connect with other builders before the event.
+            </p>
 
-              <p className="text-2xl text-neutral-300 mb-6 font-semibold">
-                Registration Opening Soon
-              </p>
+            <div className="flex flex-col sm:flex-row" style={{ gap: "12px", marginBottom: "var(--space-xl)" }}>
+              <a
+                href="https://discord.com/invite/YkqJswRGSW"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={ctaPrimary}
+              >
+                Join Discord — get notified →
+              </a>
+              <a
+                href="https://t.me/sinceaihq"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hero-cta-secondary"
+                style={ctaSecondary}
+              >
+                Join Telegram →
+              </a>
+            </div>
 
-              <p className="text-lg text-neutral-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-                Since AI Hackathon 2026 registration will be announced soon. To
-                be among the first to know when applications open — and to
-                connect with other builders ahead of the event — join our
-                community channels.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
-                <a
-                  href="https://discord.com/invite/YkqJswRGSW"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-black bg-white rounded-full hover:bg-neutral-100 transition-all duration-300"
+            <div style={{ borderTop: "0.5px solid var(--color-border)", paddingTop: "var(--space-lg)" }}>
+              <p
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "var(--text-sm)",
+                  color: "var(--color-fg-muted)",
+                }}
+              >
+                Setting a challenge or sponsoring?{" "}
+                <Link
+                  href="/partners"
+                  className="hover:text-white transition-colors"
+                  style={{ color: "inherit", textDecoration: "underline" }}
                 >
-                  Join Discord
-                </a>
-                <a
-                  href="https://t.me/sinceaihq"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-white/10 rounded-full hover:bg-white/15 border border-white/20 hover:border-white/30 transition-all duration-300"
-                >
-                  Join Telegram
-                </a>
-              </div>
-
-              <p className="text-sm text-neutral-500 mb-12">
-                Registration, dates, and partner challenges will be announced
-                first in these channels.
+                  Partner with Since AI →
+                </Link>
               </p>
-
-              <div className="border-t border-white/10 pt-8">
-                <p className="text-neutral-400">
-                  Are you a company interested in sponsoring or setting a
-                  challenge?{" "}
-                  <Link
-                    href="/partners"
-                    className="text-white hover:text-neutral-300 underline inline-flex items-center gap-1"
-                  >
-                    Partner with us
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </p>
-              </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
-        {/* SECTION 10 — FAQ */}
-        <section className="relative w-full px-6 py-24 border-t border-white/5">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+        {/* ── SECTION 9: FAQ ───────────────────────────────────── */}
+        <section
+          style={{
+            padding: "var(--space-2xl) var(--space-lg)",
+            borderTop: "0.5px solid var(--color-border)",
+          }}
+        >
+          <div className="mx-auto" style={{ maxWidth: "880px" }}>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
+              // faq
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "36px",
+                fontWeight: 500,
+                color: "#fff",
+                margin: 0,
+                marginBottom: "var(--space-xl)",
+              }}
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-12 tracking-tight">
-                Frequently Asked Questions
-              </h2>
+              Frequently asked questions.
+            </h2>
 
-              <Accordion type="single" collapsible className="w-full space-y-2">
-                {hackathonFaqs.map((faq, index) => (
-                  <AccordionItem
-                    key={index}
-                    value={`faq-${index}`}
-                    className="rounded-xl px-6 border border-white/5 data-[state=open]:bg-white/[0.03] transition-colors duration-200"
+            <div style={{ borderTop: "0.5px solid var(--color-border)" }}>
+              {hackathonFaqs.map((faq) => (
+                <div
+                  key={faq.q}
+                  style={{
+                    padding: "var(--space-lg) 0",
+                    borderBottom: "0.5px solid var(--color-border)",
+                  }}
+                >
+                  <h3
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "var(--text-base)",
+                      fontWeight: 500,
+                      color: "#fff",
+                      margin: 0,
+                      marginBottom: "var(--space-sm)",
+                    }}
                   >
-                    <AccordionTrigger className="text-left text-white font-semibold hover:no-underline py-5 text-lg">
-                      {faq.q}
-                    </AccordionTrigger>
-                    <AccordionContent className="text-neutral-400 font-normal leading-relaxed pb-5 text-base">
-                      {faq.a}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </motion.div>
+                    {faq.q}
+                  </h3>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "var(--text-sm)",
+                      color: "var(--color-fg-muted)",
+                      lineHeight: 1.7,
+                      margin: 0,
+                    }}
+                  >
+                    {faq.a}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ marginTop: "var(--space-xl)" }}>
+              <Link
+                href="/faq"
+                className="hover:text-white transition-colors"
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "var(--text-sm)",
+                  color: "var(--color-fg-muted)",
+                  textDecoration: "none",
+                }}
+              >
+                More questions? See our full FAQ →
+              </Link>
+            </div>
           </div>
         </section>
 
-        <Footer discordUrl="https://discord.com/invite/YkqJswRGSW" />
+        <Footer />
       </main>
     </SmoothScroll>
   );

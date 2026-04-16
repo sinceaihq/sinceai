@@ -5,16 +5,16 @@ export const metadata: Metadata = {
   description:
     "Learn how Since AI collects, uses, and protects your personal information. GDPR-compliant privacy policy for our AI community.",
   alternates: {
-    canonical: "/privacy",
+    canonical: "https://sinceai.fi/privacy",
   },
   openGraph: {
-    title: "Privacy Policy - Since AI",
+    title: "Privacy Policy — Since AI",
     description:
-      "Learn how Since AI collects, uses, and protects your personal information.",
+      "Learn how Since AI collects, uses, and protects your personal information. GDPR-compliant.",
     type: "website",
     locale: "en_US",
     siteName: "Since AI",
-    url: "/privacy",
+    url: "https://sinceai.fi/privacy",
   },
   robots: {
     index: true,

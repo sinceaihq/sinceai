@@ -3,30 +3,31 @@ import { getFirstEventSchema, getUpcoming2026EventSchema } from "@/lib/schema";
 import { FIRST_EVENT, UPCOMING_EVENT_2026, COPY } from "@/lib/sinceai";
 
 export const metadata: Metadata = {
-  title: "Events - Since AI | AI Hackathons in Turku, Finland",
+  title:
+    "Events — Since AI Hackathons & AI Builder Meetups | Turku, Finland",
   description:
-    `High-signal hackathons and meetups for builders who ship. ${COPY.firstEventLineShort}. Next: Hackathon 2026 – November 2026 (dates TBA).`,
+    `High-signal hackathons and meetups for builders who ship. ${COPY.firstEventLineShort}. Next: Since AI Hackathon 2026 — November 6–8, Turku.`,
   keywords: [
     "Since AI hackathon",
     "AI hackathon Turku",
     "AI hackathon Finland",
-    "hackathon 2025",
+    "AI hackathon 2026",
     "machine learning hackathon",
     "AI events Finland",
     "Turku tech events",
-    "developer hackathon",
+    "European AI events",
   ],
   alternates: {
-    canonical: "/events",
+    canonical: "https://sinceai.fi/events",
   },
   openGraph: {
-    title: "AI Hackathons & Events - Since AI",
+    title: "Events — Since AI Hackathons & AI Builder Meetups",
     description:
-      `Europe's AI builder hackathons. ${FIRST_EVENT.attendance} participants, 30+ projects built. Based in Turku, Finland.`,
+      `Europe's execution-focused AI hackathons. ${FIRST_EVENT.attendance} builders at the inaugural event, 30+ projects shipped. Since AI Hackathon 2026: November 6–8, Turku.`,
     type: "website",
     locale: "en_US",
     siteName: "Since AI",
-    url: "/events",
+    url: "https://sinceai.fi/events",
   },
   robots: {
     index: true,
