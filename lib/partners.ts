@@ -93,51 +93,9 @@ export const PARTNERS: Partner[] = [
   },
   // Supporters
   {
-    name: "University of Turku",
-    logo: "/assets/supports/universityofturku.png",
-    url: "https://www.utu.fi",
-    tier: "supporter",
-  },
-  {
-    name: "Turku AMK",
-    logo: "/assets/supports/turkuamk.png",
-    url: "https://www.turkuamk.fi/",
-    tier: "supporter",
-  },
-  {
-    name: "City of Turku",
-    logo: "/assets/supports/cityofturku.png",
-    url: "https://www.turku.fi",
-    tier: "supporter",
-  },
-  {
-    name: "Boost Turku",
-    logo: "/assets/supports/boost.svg",
-    url: "https://www.boostturku.com/",
-    tier: "supporter",
-  },
-  {
-    name: "AI Mad Lab",
-    logo: "/assets/supports/aimadlab.svg",
-    url: "https://www.aimadlab.com/",
-    tier: "supporter",
-  },
-  {
     name: "Aalto AI",
     logo: "/assets/supports/aaltoai.png",
     url: "https://www.aaltoai.com/",
-    tier: "supporter",
-  },
-  {
-    name: "Maria 01",
-    logo: "/assets/sponsors/maria01.png",
-    url: "https://maria.io/",
-    tier: "supporter",
-  },
-  {
-    name: "Tamperees",
-    logo: "/assets/sponsors/tamperees.png",
-    url: "https://tamperees.com/",
     tier: "supporter",
   },
   {
@@ -147,9 +105,9 @@ export const PARTNERS: Partner[] = [
     tier: "supporter",
   },
   {
-    name: "Founders House",
-    logo: "/assets/sponsors/founders_house.svg",
-    url: "https://founders-house.fi/",
+    name: "Inventure",
+    logo: "/assets/sponsors/Inventure.png",
+    url: "https://www.inventure.vc/",
     tier: "supporter",
   },
   {
@@ -159,9 +117,63 @@ export const PARTNERS: Partner[] = [
     tier: "supporter",
   },
   {
+    name: "AI Eesti",
+    logo: "/assets/sponsors/AIEesti.svg",
+    url: "https://aieesti.ee/en",
+    tier: "supporter",
+  },
+  {
+    name: "AI Mad Lab",
+    logo: "/assets/supports/aimadlab.svg",
+    url: "https://www.aimadlab.com/",
+    tier: "supporter",
+  },
+  {
+    name: "Maria 01",
+    logo: "/assets/sponsors/maria01.png",
+    url: "https://maria.io/",
+    tier: "supporter",
+  },
+  {
+    name: "Founders House",
+    logo: "/assets/sponsors/founders_house.svg",
+    url: "https://founders-house.fi/",
+    tier: "supporter",
+  },
+  {
+    name: "University of Turku",
+    logo: "/assets/supports/universityofturku.png",
+    url: "https://www.utu.fi",
+    tier: "supporter",
+  },
+  {
     name: "Helsinki Think Company",
     logo: "/assets/sponsors/Helsinki_Think_Company.png",
     url: "https://www.thinkcompany.fi",
+    tier: "supporter",
+  },
+  {
+    name: "Boost Turku",
+    logo: "/assets/supports/boost.svg",
+    url: "https://www.boostturku.com/",
+    tier: "supporter",
+  },
+  {
+    name: "Turku AMK",
+    logo: "/assets/supports/turkuamk.png",
+    url: "https://www.turkuamk.fi/",
+    tier: "supporter",
+  },
+  {
+    name: "HankenAI",
+    logo: "/assets/sponsors/HankAI.png",
+    url: "https://hankai.info/",
+    tier: "supporter",
+  },
+  {
+    name: "Tamperees",
+    logo: "/assets/sponsors/tamperees.png",
+    url: "https://tamperees.com/",
     tier: "supporter",
   },
   {
@@ -171,15 +183,9 @@ export const PARTNERS: Partner[] = [
     tier: "supporter",
   },
   {
-    name: "Inventure",
-    logo: "/assets/sponsors/Inventure.png",
-    url: "https://www.inventure.vc/",
-    tier: "supporter",
-  },
-  {
-    name: "HankenAI",
-    logo: "/assets/sponsors/HankAI.png",
-    url: "https://hankai.info/",
+    name: "HankenES",
+    logo: "/assets/sponsors/HankenEs.png",
+    url: "https://hankenes.org",
     tier: "supporter",
   },
   {
@@ -195,15 +201,9 @@ export const PARTNERS: Partner[] = [
     tier: "supporter",
   },
   {
-    name: "HankenES",
-    logo: "/assets/sponsors/HankenEs.png",
-    url: "https://hankenes.org",
-    tier: "supporter",
-  },
-  {
-    name: "AI Eesti",
-    logo: "/assets/sponsors/AIEesti.svg",
-    url: "https://aieesti.ee/en",
+    name: "City of Turku",
+    logo: "/assets/supports/cityofturku.png",
+    url: "https://www.turku.fi",
     tier: "supporter",
   }
 ];
