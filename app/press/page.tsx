@@ -180,7 +180,14 @@ export default function PressPage() {
                   <div className="space-y-3">
                     <p className="text-neutral-300">
                       <Mail className="inline w-4 h-4 mr-2" />
-                      <strong className="text-white">Email:</strong>{" "}
+                      <strong className="text-white">Press:</strong>{" "}
+                      <a href="mailto:press@sinceai.fi" className="text-white hover:text-neutral-300 underline">
+                        press@sinceai.fi
+                      </a>
+                    </p>
+                    <p className="text-neutral-300">
+                      <Mail className="inline w-4 h-4 mr-2" />
+                      <strong className="text-white">General:</strong>{" "}
                       <a href="mailto:info@sinceai.fi" className="text-white hover:text-neutral-300 underline">
                         info@sinceai.fi
                       </a>
