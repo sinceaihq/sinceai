@@ -106,7 +106,7 @@ const communities = [
   },
   {
     name: "AI Mad Lab",
-    base: "Helsinki, Finland",
+    base: "Oslo, Norway",
     focus: "AI research and community",
     format: "Meetups, research projects",
     international: "Yes",
