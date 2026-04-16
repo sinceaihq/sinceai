@@ -8,15 +8,39 @@ export interface Partner {
 export const PARTNERS: Partner[] = [
   // Partners
   {
-    name: "Bayer",
-    logo: "/assets/sponsors/Bayer.svg",
-    url: "https://www.bayer.com/",
+    name: "Google For Developers",
+    logo: "/assets/sponsors/GoogleForDevelopers.png",
+    url: "https://developers.google.com/",
     tier: "partner",
   },
   {
-    name: "Valmet",
-    logo: "/assets/sponsors/valmet.png",
-    url: "https://www.valmet.com/",
+    name: "ElevenLabs",
+    logo: "/assets/sponsors/elevenlabs.png",
+    url: "https://elevenlabs.io/",
+    tier: "partner",
+  },
+  {
+    name: "Aiven",
+    logo: "/assets/sponsors/aiven.png",
+    url: "https://aiven.io/",
+    tier: "partner",
+  },
+  {
+    name: "Lovable",
+    logo: "/assets/sponsors/lovable.png",
+    url: "https://lovable.dev/",
+    tier: "partner",
+  },
+  {
+    name: "n8n",
+    logo: "/assets/sponsors/n8n.svg",
+    url: "https://n8n.io/",
+    tier: "partner",
+  },
+  {
+    name: "Bayer",
+    logo: "/assets/sponsors/Bayer.svg",
+    url: "https://www.bayer.com/",
     tier: "partner",
   },
   {
@@ -32,9 +56,9 @@ export const PARTNERS: Partner[] = [
     tier: "partner",
   },
   {
-    name: "ElevenLabs",
-    logo: "/assets/sponsors/elevenlabs.png",
-    url: "https://elevenlabs.io/",
+    name: "Valmet",
+    logo: "/assets/sponsors/valmet.png",
+    url: "https://www.valmet.com/",
     tier: "partner",
   },
   {
@@ -44,15 +68,15 @@ export const PARTNERS: Partner[] = [
     tier: "partner",
   },
   {
-    name: "Skillio",
-    logo: "/assets/sponsors/Skillio.png",
-    url: "https://skillio.ai/",
-    tier: "partner",
-  },
-  {
     name: "Eisko",
     logo: "/assets/sponsors/eisko.svg",
     url: "https://www.eisko.fi/",
+    tier: "partner",
+  },
+  {
+    name: "Skillio",
+    logo: "/assets/sponsors/Skillio.png",
+    url: "https://skillio.ai/",
     tier: "partner",
   },
   {
@@ -65,30 +89,6 @@ export const PARTNERS: Partner[] = [
     name: "Business Turku",
     logo: "/assets/sponsors/businessturku.png",
     url: "https://businessturku.fi/",
-    tier: "partner",
-  },
-  {
-    name: "n8n",
-    logo: "/assets/sponsors/n8n.svg",
-    url: "https://n8n.io/",
-    tier: "partner",
-  },
-  {
-    name: "Lovable",
-    logo: "/assets/sponsors/lovable.png",
-    url: "https://lovable.dev/",
-    tier: "partner",
-  },
-  {
-    name: "Aiven",
-    logo: "/assets/sponsors/aiven.png",
-    url: "https://aiven.io/",
-    tier: "partner",
-  },
-  {
-    name: "Google For Developers",
-    logo: "/assets/sponsors/GoogleForDevelopers.png",
-    url: "https://developers.google.com/",
     tier: "partner",
   },
   // Supporters
