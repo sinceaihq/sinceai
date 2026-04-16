@@ -52,13 +52,13 @@ const rikuSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Riku Lauttia",
-  jobTitle: "Co-Founder, Head of Operations",
+  jobTitle: "Founder",
   worksFor: { "@id": "https://sinceai.fi/#organization" },
-  url: "https://www.linkedin.com/in/rikulauttia/",
+  url: "https://lauttia.ai",
   sameAs: [
+    "https://lauttia.ai",
     "https://www.linkedin.com/in/rikulauttia/",
     "https://github.com/rikulauttia",
-    "https://rikulauttia.com",
   ],
   alumniOf: [
     {
@@ -143,67 +143,24 @@ export default function AboutPage() {
                 </h2>
 
                 <div className="p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
-                  <div className="flex flex-col sm:flex-row sm:items-start gap-6">
-                    {/* Name + role block */}
-                    <div className="flex-1">
-                      <h3 className="text-2xl font-bold text-white mb-1 tracking-tight">
-                        Riku Lauttia
-                      </h3>
-                      <p className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-5">
-                        Co-Founder · Head of Operations
-                      </p>
-                      <p className="text-neutral-300 leading-relaxed mb-5">
-                        AI engineer and entrepreneur building intelligent systems at the
-                        intersection of technical execution and commercial strategy. Founded
-                        Since AI in 2025 and led its growth to a 10,000+ builder network
-                        and 30+ strategic partnerships.
-                      </p>
-
-                      {/* Credential pills */}
-                      <div className="flex flex-wrap gap-2 mb-6">
-                        {[
-                          "MSc ML/AI, Aalto University",
-                          "BSc ICT, Univ. of Turku",
-                          "AWS Certified",
-                          "Co-Founder, Root & Attractor",
-                        ].map((cred) => (
-                          <span
-                            key={cred}
-                            className="px-3 py-1 rounded-full border border-white/10 bg-white/[0.04] text-neutral-400 text-xs font-medium"
-                          >
-                            {cred}
-                          </span>
-                        ))}
-                      </div>
-
-                      {/* Links */}
-                      <div className="flex flex-wrap gap-4 text-sm">
-                        <a
-                          href="https://www.linkedin.com/in/rikulauttia/"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-neutral-400 hover:text-white underline transition-colors"
-                        >
-                          LinkedIn →
-                        </a>
-                        <a
-                          href="https://github.com/rikulauttia"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-neutral-400 hover:text-white underline transition-colors"
-                        >
-                          GitHub →
-                        </a>
-                        <a
-                          href="https://rikulauttia.com"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-neutral-400 hover:text-white underline transition-colors"
-                        >
-                          rikulauttia.com →
-                        </a>
-                      </div>
-                    </div>
+                  <div className="flex flex-col gap-4">
+                    <h3 className="text-2xl font-bold text-white tracking-tight">
+                      Riku Lauttia
+                    </h3>
+                    <p className="text-neutral-300 leading-relaxed">
+                      AI engineer and entrepreneur building intelligent systems at the
+                      intersection of technical execution and commercial strategy. Founded
+                      Since AI in 2025 and led its growth to a 10,000+ builder network
+                      and 30+ strategic partnerships.
+                    </p>
+                    <a
+                      href="https://lauttia.ai"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-neutral-400 hover:text-white underline transition-colors text-sm"
+                    >
+                      lauttia.ai →
+                    </a>
                   </div>
                 </div>
 
