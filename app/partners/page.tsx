@@ -440,34 +440,31 @@ export default function PartnersPage() {
         {/* 5. Partner network — full tier layout reused from homepage */}
         <PartnersSection />
 
-        <div className="max-w-4xl mx-auto px-6 pb-16 w-full">
-          <div className="pt-6 border-t border-white/5">
-            <div className="flex flex-wrap gap-3 text-sm">
-              <Link href="/hackathon" className="text-neutral-400 hover:text-white underline">
-                Hackathon 2026
-              </Link>
-              <span className="text-neutral-700">&bull;</span>
-              <Link href="/projects" className="text-neutral-400 hover:text-white underline">
-                Past projects
-              </Link>
-              <span className="text-neutral-700">&bull;</span>
-              <Link href="/for-builders" className="text-neutral-400 hover:text-white underline">
-                For builders
-              </Link>
-              <span className="text-neutral-700">&bull;</span>
-              <Link href="/research-to-market" className="text-neutral-400 hover:text-white underline">
-                Research to Market
-              </Link>
-              <span className="text-neutral-700">&bull;</span>
-              <Link href="/faq" className="text-neutral-400 hover:text-white underline">
-                FAQ
-              </Link>
-              <span className="text-neutral-700">&bull;</span>
-              <Link href="/about" className="text-neutral-400 hover:text-white underline">
-                About Since AI
-              </Link>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 pb-16 w-full">
+          <nav className="pt-6 border-t border-white/5" aria-label="Related pages">
+            <div className="flex flex-wrap gap-y-3 text-sm">
+              {[
+                { href: "/hackathon",          label: "Hackathon 2026" },
+                { href: "/projects",           label: "Past projects" },
+                { href: "/for-builders",       label: "For builders" },
+                { href: "/research-to-market", label: "Research to Market" },
+                { href: "/faq",                label: "FAQ" },
+                { href: "/about",              label: "About Since AI" },
+              ].map(({ href, label }, i, arr) => (
+                <span key={href} className="whitespace-nowrap">
+                  <Link
+                    href={href}
+                    className="text-neutral-500 hover:text-white transition-colors duration-150"
+                  >
+                    {label}
+                  </Link>
+                  {i < arr.length - 1 && (
+                    <span className="text-neutral-700 mx-3 select-none" aria-hidden="true">·</span>
+                  )}
+                </span>
+              ))}
             </div>
-          </div>
+          </nav>
         </div>
 
         <Footer discordUrl={ORG.social.discord} />

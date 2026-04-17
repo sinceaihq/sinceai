@@ -4,14 +4,13 @@ interface Logo {
   name: string;
   src: string;
   href: string;
-  noFilter?: boolean;
   loading?: "lazy" | "eager";
 }
 
 const logos: Logo[] = [
-  { name: "Google for Developers", src: "/assets/sponsors/GoogleForDevelopers.png", href: "https://developers.google.com/" },
-  { name: "ElevenLabs",            src: "/assets/sponsors/elevenlabs.png",           href: "https://elevenlabs.io/" },
-  { name: "Bayer",                 src: "/assets/sponsors/Bayer.svg",                href: "https://www.bayer.com/" },
+  { name: "Google for Developers", src: "/assets/sponsors/GoogleForDevelopers.png", href: "https://developers.google.com/", loading: "eager" },
+  { name: "ElevenLabs",            src: "/assets/sponsors/elevenlabs.png",           href: "https://elevenlabs.io/",         loading: "eager" },
+  { name: "Bayer",                 src: "/assets/sponsors/Bayer.svg",                href: "https://www.bayer.com/",         loading: "eager" },
   { name: "Sandvik",               src: "/assets/sponsors/sandvik.png",              href: "https://www.sandvik.com/" },
   { name: "Kongsberg",             src: "/assets/sponsors/kongsberg.png",            href: "https://www.kongsberg.com/" },
   { name: "Valmet",                src: "/assets/sponsors/valmet.png",               href: "https://www.valmet.com/" },
@@ -27,14 +26,7 @@ const logos: Logo[] = [
   { name: "Founders House",        src: "/assets/sponsors/founders_house.svg",       href: "https://founders-house.fi/" },
 ];
 
-function LogoItem({
-  name,
-  src,
-  href,
-  noFilter,
-  loading = "lazy",
-  ...rest
-}: Logo & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
+function LogoItem({ name, src, href, loading = "lazy", ...rest }: Logo & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
   return (
     <a
       href={href}
@@ -49,29 +41,50 @@ function LogoItem({
         src={src}
         alt={`${name} logo — Since AI partner`}
         loading={loading}
-        width={140}
-        height={32}
-        style={noFilter ? { filter: "none", transition: "none" } : undefined}
+        width={120}
+        height={40}
       />
     </a>
   );
 }
 
+/**
+ * Partner marquee — Apple/Stripe-grade infinite logo scroll.
+ *
+ * Architecture: pure CSS @keyframes animation on the compositor thread.
+ * No JS runtime involvement. Immune to main-thread stalls from Lenis
+ * smooth-scroll, React renders, or scroll/hover event handlers.
+ *
+ * Seamless loop math: two identical logoSets are rendered side-by-side.
+ * Each logoSet has `padding-right === gap`, making the trailing space after
+ * set A match the inter-logo spacing. translateX(-50%) moves the track by
+ * exactly one set's width, so set B's first logo lands precisely where set A's
+ * first logo was — pixel-perfect sub-pixel seam.
+ *
+ * GPU layer isolation (see .module.css): `contain: paint` + `isolation: isolate`
+ * on the container, `translateZ(0)` + `will-change: transform` on the track,
+ * ensure the marquee runs on its own GPU compositor layer unaffected by the
+ * Lenis parent transform on <html>.
+ */
 export function PartnerMarquee() {
   return (
     <div className={styles.marqueeContainer}>
-      <span className={styles.marqueeLabel}>{'// backed by'}</span>
+      <span className={styles.marqueeLabel}>{"// backed by"}</span>
 
       <div className={styles.marqueeTrackWrapper}>
         <div className={styles.marqueeTrack}>
-          {/* First copy */}
-          {logos.map((logo, i) => (
-            <LogoItem key={`a-${i}`} {...logo} />
-          ))}
-          {/* Second copy — seamless loop duplicate, lazy is fine as it starts off-screen */}
-          {logos.map((logo, i) => (
-            <LogoItem key={`b-${i}`} {...logo} aria-hidden="true" tabIndex={-1} />
-          ))}
+          {/* Set A — accessible, read by screen readers */}
+          <div className={styles.logoSet}>
+            {logos.map((logo) => (
+              <LogoItem key={`a-${logo.name}`} {...logo} />
+            ))}
+          </div>
+          {/* Set B — visual duplicate for seamless loop, hidden from AT */}
+          <div className={styles.logoSet} aria-hidden="true">
+            {logos.map((logo) => (
+              <LogoItem key={`b-${logo.name}`} {...logo} tabIndex={-1} />
+            ))}
+          </div>
         </div>
       </div>
     </div>

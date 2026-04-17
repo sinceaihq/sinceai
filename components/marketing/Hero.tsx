@@ -5,7 +5,7 @@ const DISCORD_URL = "https://discord.com/invite/YkqJswRGSW";
 
 export function Hero() {
   return (
-    <section className="relative flex flex-col min-h-[85vh] md:min-h-screen bg-black">
+    <section className="relative flex flex-col min-h-[85vh] md:min-h-screen bg-black pt-[100px]">
       {/* ── Vertically-centred content ─────────────────────── */}
       <div className="flex-1 flex items-center">
         <div

@@ -1,9 +1,29 @@
+/* ─── PartnerMarquee — Apple/Stripe-grade infinite logo scroll ──────────
+ *
+ * Runs on the GPU compositor thread via pure CSS @keyframes animation.
+ * Immune to main-thread stalls from Lenis smooth-scroll, React renders,
+ * or scroll/hover event handlers.
+ *
+ * Seamless loop math:
+ *   - Two identical .logoSet children in .marqueeTrack
+ *   - .logoSet has gap === padding-right, so trailing space equals inter-gap
+ *   - translateX(-50%) moves exactly one set's width
+ *   - Set B's first logo lands precisely where Set A's first was = no seam
+ * ───────────────────────────────────────────────────────────────────── */
+
 .marqueeContainer {
+  /* Create a stacking context and isolate this subtree from the Lenis
+     smooth-scroll ancestor transform. Critical: prevents compositor-layer
+     merging that would otherwise tie our animation to the main thread. */
+  position: relative;
+  isolation: isolate;
+  contain: paint layout;
+
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
   border-top: 0.5px solid var(--color-border);
-  padding: 1.5rem 0;
+  padding: 1.25rem 0;
   overflow: hidden;
   width: 100%;
 }
@@ -15,41 +35,103 @@
   letter-spacing: 0.05em;
   text-transform: lowercase;
   flex-shrink: 0;
-  padding-left: max(1.5rem, env(safe-area-inset-left));
+  padding-left: max(1.25rem, env(safe-area-inset-left));
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .marqueeLabel {
+    display: none;
+  }
+  .marqueeContainer {
+    padding-left: 0;
+  }
 }
 
 .marqueeTrackWrapper {
   flex: 1;
+  min-width: 0;
   overflow: hidden;
-  mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 6%,
+    #000 94%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 6%,
+    #000 94%,
+    transparent 100%
+  );
 }
 
 .marqueeTrack {
+  /* inline-flex: width === content width (not stretched to wrapper).
+     Critical so that translateX(-50%) is exactly half the content width. */
   display: inline-flex;
-  gap: 3.5rem;
   align-items: center;
-  animation: marqueeScroll 60s linear infinite;
+
+  /* ─── The Apple-grade core ───────────────────────────────────────
+   * will-change + translateZ(0) + backface-visibility forces the browser
+   * to promote this element to its own GPU compositor layer. The animation
+   * then runs on the compositor thread, completely independent of the
+   * main thread. No JS stall, React render, or Lenis scroll tick can
+   * cause it to drop a frame.
+   * ────────────────────────────────────────────────────────────── */
   will-change: transform;
-  white-space: nowrap;
-  padding-right: 3.5rem;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
+  animation: marqueeScroll 40s linear infinite;
 }
 
 .marqueeTrack:hover {
   animation-play-state: paused;
 }
 
+/* translate3d (not translateX) so the animation stays on the GPU path.
+   -50% resolves to exactly one .logoSet width because the two sets are
+   identical and the track's width is the sum of both. */
 @keyframes marqueeScroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
 }
 
+/* Each logoSet is the atomic repeat unit.
+   RULE: padding-right MUST equal gap.
+   This ensures the trailing space after set A's last logo equals the
+   inter-logo gap, so set B's first logo sits at the visually-correct
+   "next slot" — seam is mathematically invisible. */
+.logoSet {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  padding-right: 2.5rem;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .logoSet {
+    gap: 3.5rem;
+    padding-right: 3.5rem;
+  }
+}
+
+/* Respect prefers-reduced-motion: static scrollable row */
 @media (prefers-reduced-motion: reduce) {
   .marqueeTrack {
     animation: none;
+    transform: none;
+    will-change: auto;
   }
   .marqueeTrackWrapper {
     overflow-x: auto;
+    mask-image: none;
+    -webkit-mask-image: none;
     scrollbar-width: none;
   }
   .marqueeTrackWrapper::-webkit-scrollbar {
@@ -57,27 +139,51 @@
   }
 }
 
+/* Fixed dimensions prevent layout-shift when images load.
+   Without a fixed width, each logo's rendered width depends on its natural
+   aspect ratio × the CSS height. Before load the browser uses the HTML
+   width/height attributes as a placeholder ratio; after load it switches to
+   the real ratio. That width delta shifts the .logoSet total width, making
+   the -50% seam miss by several pixels — visible as a jump.
+   Fixing the width here makes the set width deterministic from the very
+   first paint, so -50% is always exact. */
 .logoItem {
-  display: inline-flex;
-  align-items: center;
-  height: 40px;
+  width: 80px;
+  height: 32px;
   flex-shrink: 0;
-  opacity: 0.5;
-  transition: opacity 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.45;
+  transition: opacity 0.25s ease;
+}
+
+@media (min-width: 640px) {
+  .logoItem {
+    width: 100px;
+    height: 36px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .logoItem {
+    width: 120px;
+    height: 40px;
+  }
 }
 
 .logoItem:hover {
   opacity: 1;
 }
 
+/* Fill the fixed box; object-fit: contain scales proportionally without crop */
 .logoItem img {
-  height: 32px;
-  width: 120px;
-  max-width: 120px;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   object-position: center;
   filter: grayscale(100%);
-  transition: filter 0.3s;
+  transition: filter 0.25s ease;
 }
 
 .logoItem:hover img {

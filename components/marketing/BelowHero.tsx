@@ -68,7 +68,7 @@ function SectionH2({ children }: { children: React.ReactNode }) {
     <h2
       style={{
         fontFamily: "var(--font-mono)",
-        fontSize: "36px",
+        fontSize: "clamp(24px, 4vw, 36px)",
         fontWeight: 500,
         lineHeight: 1.15,
         color: "#fff",
@@ -199,7 +199,7 @@ export function BelowHero() {
               <p
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "56px",
+                  fontSize: "clamp(32px, 5vw, 56px)",
                   fontWeight: 500,
                   lineHeight: 1,
                   color: "#fff",
@@ -261,7 +261,7 @@ export function BelowHero() {
                 <p
                   style={{
                     fontFamily: "var(--font-mono)",
-                    fontSize: "48px",
+                    fontSize: "clamp(32px, 4vw, 48px)",
                     fontWeight: 500,
                     lineHeight: 1,
                     color: "var(--color-fg-subtle)",
@@ -377,7 +377,7 @@ export function BelowHero() {
       {/* ── SECTION 5: Hackathon 2026 feature ─────────────────── */}
       <section
         style={{
-          padding: "var(--space-3xl) var(--space-lg)",
+          padding: "clamp(4rem, 8vw, 10rem) var(--space-lg)",
           borderTop: "0.5px solid var(--color-border)",
           borderBottom: "0.5px solid var(--color-border)",
         }}

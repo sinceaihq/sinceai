@@ -28,7 +28,7 @@ export function TrustBar() {
                     <img
                       src={logo.logo}
                       alt={`${logo.name} logo`}
-                      style={{ height: '64px', width: 'auto' }}
+                      style={{ height: '36px', width: 'auto', maxWidth: '110px' }}
                       className="object-contain grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
                     />
                   </div>
@@ -48,7 +48,7 @@ export function TrustBar() {
 
         .logo-scroll-wrapper {
           display: flex;
-          gap: 4rem;
+          gap: 3rem;
           width: fit-content;
           animation: scroll-left 45s linear infinite;
         }
@@ -59,16 +59,16 @@ export function TrustBar() {
 
         .logo-set {
           display: flex;
-          gap: 4rem;
+          gap: 3rem;
           flex-shrink: 0;
         }
 
         .logo-item {
           display: flex;
           align-items: center;
-          justify-center: center;
-          width: 8rem;
-          height: 4rem;
+          justify-content: center;
+          width: 7rem;
+          height: 3rem;
           flex-shrink: 0;
         }
 
