@@ -215,6 +215,12 @@ export const PARTNERS: Partner[] = [
     url: "https://www.turku.fi",
     tier: 3,
   },
+  {
+    name: "Lutes",
+    logo: "/assets/supports/LUTES.svg",
+    url: "https://lutes.fi/",
+    tier: 3,
+  },
 ];
 
 // ─── Tier-based exports (primary) ─────────────────────────────────────────────
