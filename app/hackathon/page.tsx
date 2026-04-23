@@ -4,8 +4,8 @@ import Image from "next/image";
 import SmoothScroll from "@/components/smoothScroll";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/sections/Footer";
-import { CountdownTimer } from "@/components/countdown-timer";
 import StructuredData from "@/components/StructuredData";
+import { HackathonCountdown } from "@/components/HackathonCountdown";
 
 // ── Schemas ────────────────────────────────────────────────────────────────
 
@@ -148,9 +148,10 @@ export default function HackathonPage() {
         {/* ── SECTION 1: Hero ─────────────────────────────────── */}
         <section className="relative w-full min-h-[90vh] flex items-end">
           <Image
-            src="/assets/images/educity.png"
+            src="/assets/images/educity-hero.webp"
             alt="EduCity, Turku — venue for Since AI Hackathon 2026"
             fill
+            sizes="100vw"
             className="object-cover"
             priority
           />
@@ -213,7 +214,7 @@ export default function HackathonPage() {
 
             {/* Countdown */}
             <div style={{ marginBottom: "var(--space-lg)" }}>
-              <CountdownTimer
+              <HackathonCountdown
                 startDate="2026-11-06T09:00:00"
                 endDate="2026-11-08T23:59:00"
               />
@@ -510,9 +511,10 @@ export default function HackathonPage() {
                 style={{ height: "280px" }}
               >
                 <Image
-                  src="/assets/images/educity.jpg"
+                  src="/assets/images/educity-card.webp"
                   alt="EduCity building — venue for Since AI Hackathon 2026, Turku, Finland"
                   fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover"
                 />
               </div>

@@ -7,7 +7,7 @@ export function HackathonFeature() {
     <section className="relative w-full overflow-hidden border-y border-white/5">
       {/* Background — EduCity venue photo */}
       <Image
-        src="/assets/images/educity.png"
+        src="/assets/images/educity-hero.webp"
         alt="EduCity, Turku — venue for Since AI Hackathon 2026"
         fill
         sizes="100vw"

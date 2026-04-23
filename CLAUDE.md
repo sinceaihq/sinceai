@@ -36,7 +36,7 @@ No test framework is configured.
 
 ### API Routes
 
-- `app/api/contact/route.ts` — POST endpoint with Zod validation and IP-based rate limiting (5 req/hour). Currently logs to console; email/CRM integrations are stubbed with TODOs.
+- Contact submissions are handled client-side from the contact page; there is no server-side contact API route in this deployment.
 
 ### Styling & Theming
 

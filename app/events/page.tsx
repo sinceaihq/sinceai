@@ -174,9 +174,10 @@ export default function EventsPage() {
                   {/* Image */}
                   <div className="relative w-full h-64 md:h-80 rounded-2xl overflow-hidden bg-neutral-900/50">
                     <Image
-                      src="/assets/images/educity.jpg"
+                      src="/assets/images/educity-card.webp"
                       alt="Since AI Hackathon 2025 — 260+ AI builders collaborating at EduCity campus in Turku, Finland"
                       fill
+                      sizes="(max-width: 768px) 100vw, 80vw"
                       className="object-cover"
                     />
                   </div>

@@ -29,14 +29,14 @@ export const metadata: Metadata = {
     url: "https://sinceai.fi/hackathon",
     siteName: "Since AI",
     type: "website",
-    images: [{ url: "/api/og/hackathon", width: 1200, height: 630 }],
+    images: [{ url: "/assets/og/hero.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Since AI Hackathon 2026 — November 6–8, Turku",
     description:
       "72-hour AI hackathon. 1,000+ builders targeted. Partner challenges from Google, Bayer, Sandvik, Kongsberg, Valmet.",
-    images: ["/api/og/hackathon"],
+    images: ["/assets/og/hero.png"],
   },
 };
 

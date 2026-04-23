@@ -49,8 +49,7 @@ All routes are under `app/` (App Router). The `layout.tsx` at each level provide
 | `app/code-of-conduct/page.tsx` | `/code-of-conduct` | |
 | `app/privacy/page.tsx` | `/privacy` | |
 | `app/terms/page.tsx` | `/terms` | |
-| `app/api/contact/route.ts` | `/api/contact` | POST, Zod validation, IP rate-limiting |
-| `app/api/og/hackathon/route.tsx` | `/api/og/hackathon` | Dynamic OG image |
+| Static assets only | No active app API routes | Contact form submits client-side; OG images use static assets |
 | `app/robots.ts` | `/robots.txt` | Next.js MetadataRoute |
 | `app/sitemap.ts` | `/sitemap.xml` | Next.js MetadataRoute |
 
@@ -138,7 +137,7 @@ Multiple locations — it is a primary content theme:
 
 **Per-page metadata:** Most pages export their own `metadata` via `layout.tsx` files in each route directory (e.g., `app/hackathon/layout.tsx`, `app/about/layout.tsx`).
 
-**OG image:** Root metadata points to `/assets/logo/SINCE AI full black.png` (a static PNG, 1200×630). The `/hackathon` route has a dynamic OG image endpoint at `/api/og/hackathon`.
+**OG image:** Root metadata points to a static image asset. The `/hackathon` route also uses a static OG image asset, so social crawlers do not execute worker-side image generation.
 
 ### 3g. JSON-LD / Structured Data
 
@@ -269,7 +268,7 @@ In `LeanHero.tsx`, the four stat pills (`"1000+ members"`, `"260+ builders"`, et
 
 ### 🟡 MEDIUM — OG image is a static black-background logo PNG
 
-Root metadata OG image: `/assets/logo/SINCE AI full black.png` — a plain logo on a black background. This is unlikely to drive click-throughs on social shares. The hackathon page has a dynamic OG (`/api/og/hackathon`) but the homepage, about, events, blog index, and all other pages share this same static fallback.
+Root metadata OG image uses a static asset. The hackathon page also uses a static OG asset, which keeps social crawls off the worker but still leaves room to improve click-through rate later with better artwork.
 
 ### 🟡 MEDIUM — `european-ai` vs `europe-ai` route duplication
 
