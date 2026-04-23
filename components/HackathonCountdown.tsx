@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-import { CountdownTimer } from "@/components/countdown-timer";
+import dynamic from "next/dynamic";
 
 interface HackathonCountdownProps {
   startDate: string;
@@ -30,19 +28,17 @@ function CountdownPlaceholder() {
   );
 }
 
+const ClientCountdownTimer = dynamic(
+  () => import("@/components/countdown-timer").then((mod) => mod.CountdownTimer),
+  {
+    ssr: false,
+    loading: CountdownPlaceholder,
+  }
+);
+
 export function HackathonCountdown({
   startDate,
   endDate,
 }: HackathonCountdownProps) {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return <CountdownPlaceholder />;
-  }
-
-  return <CountdownTimer startDate={startDate} endDate={endDate} />;
+  return <ClientCountdownTimer startDate={startDate} endDate={endDate} />;
 }
