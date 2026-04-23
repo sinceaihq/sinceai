@@ -25,7 +25,7 @@ export function Hero() {
               color: "#fff",
             }}
           >
-            Europe&apos;s execution-focused AI innovation ecosystem.
+            Global execution-focused AI innovation ecosystem.
           </h1>
 
           {/* Tagline */}
