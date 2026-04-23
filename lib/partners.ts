@@ -111,6 +111,12 @@ export const PARTNERS: Partner[] = [
     url: "https://maria.io/",
     tier: 2,
   },
+  {
+    name: "GPT Lab",
+    logo: "/assets/sponsors/GPT-Lab.svg",
+    url: "https://gpt-lab.eu/",
+    tier: 2,
+  },
 
   // ─── Tier 3: Community Supporters ───────────────────────────────────────────
   {
