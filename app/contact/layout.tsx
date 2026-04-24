@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Contact Since AI — Partnerships, Sponsorships, Community",
     description:
-      "Get in touch with Since AI. Partner with us, sponsor Since AI Hackathon 2026, or join 10,000+ AI builders across Europe.",
+      "Get in touch with Since AI. Partner with us, sponsor Since AI Hackathon 2026, or join 10,000+ AI builders globally.",
     type: "website",
     locale: "en_US",
     siteName: "Since AI",

@@ -11,13 +11,13 @@ import { faqs } from "@/data/faqs";
 
 export const metadata: Metadata = {
   title:
-    "Frequently Asked Questions about Since AI | Europe's AI Builders Ecosystem",
+    "Frequently Asked Questions about Since AI | Global AI Builders Ecosystem",
   description:
-    "Answers to common questions about Since AI — Europe's execution-focused AI innovation ecosystem. Covers partnerships, hackathons, joining, funding, and more.",
+    "Answers to common questions about Since AI — a global execution-focused AI innovation ecosystem. Covers partnerships, hackathons, joining, funding, and more.",
   alternates: { canonical: "https://sinceai.fi/faq" },
   openGraph: {
     title:
-      "Frequently Asked Questions about Since AI | Europe's AI Builders Ecosystem",
+      "Frequently Asked Questions about Since AI | Global AI Builders Ecosystem",
     description:
       "Answers to common questions about Since AI — partnerships, hackathons, joining, funding, and more.",
     url: "https://sinceai.fi/faq",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "FAQ | Since AI",
     description:
-      "Answers to common questions about Since AI — Europe's execution-focused AI innovation ecosystem.",
+      "Answers to common questions about Since AI — a global execution-focused AI innovation ecosystem.",
   },
 };
 
@@ -83,7 +83,7 @@ export default function FAQPage() {
 
               {/* 2. Intro paragraph */}
               <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-16">
-                Since AI is Europe&apos;s execution-focused AI innovation ecosystem, where
+                Since AI is a global execution-focused AI innovation ecosystem, where
                 frontier AI becomes shipped products. This page answers the most common
                 questions from AI builders, partner companies, researchers, and investors
                 about joining, partnering, and participating in Since AI&apos;s network.

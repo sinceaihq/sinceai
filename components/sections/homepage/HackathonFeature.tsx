@@ -45,7 +45,7 @@ export function HackathonFeature() {
 
         {/* Body */}
         <p className="text-base sm:text-lg text-neutral-300 max-w-2xl leading-relaxed mb-10">
-          Europe&apos;s execution-focused AI hackathon. Partner challenges from Google
+          A global execution-focused AI hackathon. Partner challenges from Google
           for Developers, Bayer, Sandvik, Kongsberg, Valmet, and more. Open to
           builders worldwide.
         </p>

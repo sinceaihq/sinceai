@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "AI Hackathon Guides & Community Resources | Since AI Blog",
   description:
-    "Comprehensive guides from Europe's leading AI builders community. Learn hackathon strategies, tech stack choices, project ideas, and discover the best AI developer events across Europe.",
+    "Comprehensive guides from the leading global AI builders community. Learn hackathon strategies, tech stack choices, project ideas, and discover the best AI developer events globally.",
   keywords: [
     "AI hackathon guide",
     "hackathon team building",
@@ -12,12 +12,12 @@ export const metadata: Metadata = {
     "hackathon tech stack",
     "AI project ideas",
     "hackathon demo",
-    "AI hackathons Europe",
+    "AI hackathons global",
     "best hackathons",
     "AI community blog",
     "hackathon strategies",
     "AI development tools",
-    "European developer events",
+    "global developer events",
     "Since AI blog",
   ],
   alternates: {
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "AI Hackathon Guides & Community Resources | Since AI Blog",
     description:
-      "Comprehensive guides from Europe's leading AI builders community. Hackathon strategies, tech stacks, project ideas, and developer events.",
+      "Comprehensive guides from the leading global AI builders community. Hackathon strategies, tech stacks, project ideas, and developer events.",
     url: "https://sinceai.fi/blog",
     siteName: "Since AI",
     locale: "en_US",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "AI Hackathon Guides & Community Resources | Since AI Blog",
     description:
-      "Comprehensive guides from Europe's leading AI builders community. Hackathon strategies, tech stacks, project ideas, and developer events.",
+      "Comprehensive guides from the leading global AI builders community. Hackathon strategies, tech stacks, project ideas, and developer events.",
     images: ["/assets/logo/SINCE AI full black.png"],
   },
   other: {

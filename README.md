@@ -1,6 +1,6 @@
 # Since AI
 
-Europe's AI builders community. Turku-based, globally connected.
+Global AI builders community. Turku-based, globally connected.
 
 ## About
 

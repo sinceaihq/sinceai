@@ -3,15 +3,15 @@ import StructuredData from "@/components/StructuredData";
 
 export const metadata: Metadata = {
   title:
-    "Since AI Hackathon 2026 — Europe's Execution-Focused AI Hackathon | November 6–8, Turku",
+    "Since AI Hackathon 2026 — Global Execution-Focused AI Hackathon | November 6–8, Turku",
   description:
     "72-hour AI hackathon in Turku, Finland. Official MLH partner event. 1,000+ builders targeted. Partner challenges from Google for Developers, Bayer, Sandvik, Kongsberg, Valmet. Open to builders worldwide.",
   keywords: [
     "Since AI Hackathon 2026",
     "AI hackathon Finland",
-    "AI hackathon Europe",
+    "AI hackathon global",
     "hackathon Turku 2026",
-    "MLH hackathon Europe 2026",
+    "MLH hackathon global 2026",
     "Major League Hacking Finland",
     "Since AI event",
     "AI builders hackathon",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title:
-      "Since AI Hackathon 2026 — Europe's Execution-Focused AI Hackathon | November 6–8, Turku",
+      "Since AI Hackathon 2026 — Global Execution-Focused AI Hackathon | November 6–8, Turku",
     description:
       "72-hour AI hackathon in Turku, Finland. 1,000+ builders targeted. Partner challenges from Google for Developers, Bayer, Sandvik, Kongsberg, Valmet. Open to builders worldwide.",
     url: "https://sinceai.fi/hackathon",
@@ -46,7 +46,7 @@ const eventSchema = {
   "@id": "https://sinceai.fi/hackathon#event",
   name: "Since AI Hackathon 2026",
   description:
-    "Europe's execution-focused AI hackathon. 1,000+ builders targeted. 72 hours. Partner challenges from Google for Developers, Bayer, Sandvik, Kongsberg, Valmet.",
+    "A global execution-focused AI hackathon. 1,000+ builders targeted. 72 hours. Partner challenges from Google for Developers, Bayer, Sandvik, Kongsberg, Valmet.",
   startDate: "2026-11-06T09:00:00+02:00",
   endDate: "2026-11-08T18:00:00+02:00",
   eventStatus: "https://schema.org/EventScheduled",

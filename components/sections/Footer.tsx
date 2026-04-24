@@ -125,7 +125,7 @@ export const Footer: React.FC<FooterProps> = () => {
                 marginBottom: "var(--space-sm)",
               }}
             >
-              Europe&apos;s execution-focused AI innovation ecosystem.
+              A global execution-focused AI innovation ecosystem.
               <br />
               Turku-based, globally connected.
             </p>

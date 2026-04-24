@@ -5,19 +5,19 @@ interface LeanHeroProps {
   discordUrl: string;
 }
 
-const H1 = "Europe's execution-focused AI innovation ecosystem.";
+const H1 = "Global execution-focused AI innovation ecosystem.";
 
 const SUBHEADING =
-  "Where frontier AI becomes shipped products. Since AI connects 10,000+ AI builders in our network across Europe with leading AI companies, research groups, and investors — through hackathons, open-source collaboration, and applied AI projects. Based in Finland. Open globally.";
+  "Where frontier AI becomes shipped products. Since AI connects 10,000+ AI builders globally with leading AI companies, research groups, and investors — through hackathons, open-source collaboration, and applied AI projects. Based in Finland. Open globally.";
 
 const PILLS = [
   "Non-profit · Since AI ry",
-  "Europe-wide · Based in Finland",
+  "Global · Based in Finland",
   "Flagship: Hackathon 2026 · 1,000+ builders targeted",
 ];
 
 const STATS = [
-  { value: "10,000+", label: "AI builders in our network across Europe" },
+  { value: "10,000+", label: "AI builders globally" },
   { value: "1,000+", label: "Builders targeted at Hackathon 2026" },
   { value: "30+", label: "Partners & supporters" },
   { value: "50+", label: "Countries represented in our network" },

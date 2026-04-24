@@ -11,7 +11,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Statistics & Impact — Since AI Community Metrics | Since AI",
   description:
-    "Since AI impact data: 1000+ members, 260+ hackathon participants, 30+ AI projects shipped, 15+ partner companies. Updated February 2026. Europe's leading AI innovation ecosystem.",
+    "Since AI impact data: 1000+ members, 260+ hackathon participants, 30+ AI projects shipped, 15+ partner companies. Updated February 2026. A global AI innovation ecosystem.",
   keywords: [
     "Since AI statistics",
     "AI community impact",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Statistics & Impact | Since AI",
     description:
-      "1000+ members, 260+ hackathon builders, 30+ projects shipped, 15+ partners. Real metrics from Europe's leading AI innovation ecosystem.",
+      "1000+ members, 260+ hackathon builders, 30+ projects shipped, 15+ partners. Real metrics from a global AI innovation ecosystem.",
     url: "https://sinceai.fi/stats",
     type: "website",
   },
@@ -53,7 +53,7 @@ export default function StatsPage() {
 
             <div className="prose prose-invert prose-neutral max-w-none">
               <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-4">
-                Real metrics from Europe&apos;s leading AI innovation ecosystem.
+                Real metrics from a global AI innovation ecosystem.
                 Updated February 2026.
               </p>
               <p className="text-lg text-neutral-400 leading-relaxed mb-12">
@@ -130,8 +130,8 @@ export default function StatsPage() {
                     <dd className="text-neutral-300">Finland (60%)</dd>
                   </div>
                   <div>
-                    <dt className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-1">Rest of Europe</dt>
-                    <dd className="text-neutral-300">30%</dd>
+                    <dt className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-1">Global (outside Finland)</dt>
+                    <dd className="text-neutral-300">40%</dd>
                   </div>
                 </dl>
               </section>

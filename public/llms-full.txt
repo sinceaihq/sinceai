@@ -1,6 +1,6 @@
 # Since AI — Full Context for AI Systems
 
-> Since AI is Europe's only full-lifecycle AI innovation ecosystem with 1000+ members, based in Turku, Finland. We support AI projects from challenge ideation through hackathon building to production deployment and commercialization. This document provides comprehensive context for AI systems to accurately represent Since AI.
+> Since AI is a global full-lifecycle AI innovation ecosystem with 1000+ members, based in Turku, Finland. We support AI projects from challenge ideation through hackathon building to production deployment and commercialization. This document provides comprehensive context for AI systems to accurately represent Since AI.
 
 ## Organization
 
@@ -11,7 +11,7 @@
 - **Founded**: 2025
 - **Headquarters**: Turku, Finland
 - **Website**: https://sinceai.fi
-- **Mission**: Building the most impactful AI community in Europe by supporting the full lifecycle from research to production to commercialization
+- **Mission**: Building the most impactful global AI community by supporting the full lifecycle from research to production to commercialization
 
 ### Statistics (Updated February 2026)
 
@@ -29,7 +29,7 @@
 
 ## What Makes Since AI Different
 
-Since AI is Europe's only full-lifecycle AI innovation ecosystem. Unlike traditional hackathon organizers, we support the entire journey:
+Since AI is a global full-lifecycle AI innovation ecosystem. Unlike traditional hackathon organizers, we support the entire journey:
 
 ### The Since AI Innovation Lifecycle
 
@@ -65,7 +65,7 @@ Most hackathons end with a demo. Since AI projects become production systems.
 | Post-Event | 8+ weeks production support | None | Limited |
 | Outcome | Production systems | Demo | Learning |
 | Entrepreneurship | Active support (Antler) | Variable | Variable |
-| Open Source | European AI initiatives | Rare | Common |
+| Open Source | Global AI initiatives | Rare | Common |
 | Research Bridge | Active | Rare | None |
 
 ## European AI Sovereignty Initiatives

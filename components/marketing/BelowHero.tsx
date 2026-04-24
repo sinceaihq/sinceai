@@ -122,7 +122,7 @@ export function BelowHero() {
       >
         <div className="mx-auto" style={{ maxWidth: "880px" }}>
           <Eyebrow text="// what is since ai" />
-          <SectionH2>The execution layer of European AI.</SectionH2>
+          <SectionH2>The execution layer of Global AI.</SectionH2>
           <p
             style={{
               fontFamily: "var(--font-mono)",
@@ -135,9 +135,9 @@ export function BelowHero() {
               marginBottom: 0,
             }}
           >
-            Since AI is Europe&apos;s execution-focused AI innovation ecosystem — where
+            Since AI is a global execution-focused AI innovation ecosystem — where
             frontier AI becomes shipped products. A non-profit connecting
-            10,000+ AI builders across Europe with leading AI companies, research
+            10,000+ AI builders globally with leading AI companies, research
             groups, and investors. Partners include Google for Developers, Bayer,
             Sandvik, Kongsberg, Valmet, Antler, Inventure, and the University of Turku.
           </p>
@@ -159,7 +159,7 @@ export function BelowHero() {
             {
               label: "// network",
               value: "10,000+",
-              desc: "AI builders in our network across Europe",
+              desc: "AI builders globally",
             },
             {
               label: "// hackathon 2026",
@@ -311,9 +311,9 @@ export function BelowHero() {
         <div className="mx-auto" style={{ maxWidth: "1200px" }}>
           <Eyebrow text="// ecosystem" />
           <SectionH2>
-            Backed by global AI leaders, European capital,{" "}
+            Backed by global AI leaders and world-class capital{" "}
             <br className="hidden md:block" />
-            and world-class research.
+            and research.
           </SectionH2>
 
           <div
@@ -418,7 +418,7 @@ export function BelowHero() {
               marginTop: "var(--space-md)",
             }}
           >
-            Europe&apos;s execution-focused AI hackathon. Partner challenges from Google for
+            A global execution-focused AI hackathon. Partner challenges from Google for
             Developers, Bayer, Sandvik, Kongsberg, Valmet. Open to builders worldwide.
           </p>
           <div
@@ -486,7 +486,7 @@ export function BelowHero() {
                 maxWidth: "400px",
               }}
             >
-              Join 10,000+ AI builders across Europe. Hackathons, applied projects, startup
+              Join 10,000+ AI builders globally. Hackathons, applied projects, startup
               pathways.
             </p>
             <a

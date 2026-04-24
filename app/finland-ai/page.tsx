@@ -51,7 +51,7 @@ export default function FinlandAIPage() {
 
             <div className="prose prose-invert prose-neutral max-w-none">
               <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-8">
-                Finland has one of Europe&apos;s strongest AI ecosystems, and Since AI
+                Finland has one of the strongest AI ecosystems globally, and Since AI
                 connects the nation&apos;s top developers and builders from Helsinki to
                 Oulu, Turku to Tampere.
               </p>
@@ -65,7 +65,7 @@ export default function FinlandAIPage() {
                   Finland consistently ranks among the world&apos;s top countries for AI
                   readiness, education, and innovation. With strong government support,
                   world-class universities, and a thriving startup scene, Finland is a
-                  European AI powerhouse.
+                  global AI powerhouse.
                 </p>
 
                 <h3 className="text-2xl font-bold text-white mb-4">Why Finland Excels at AI</h3>

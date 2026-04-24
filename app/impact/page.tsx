@@ -47,10 +47,10 @@ const metrics: {
   todo?: boolean;
 }[] = [
   {
-    metric: "AI builders in our network across Europe",
+    metric: "AI builders in our network globally",
     value: "10,000+",
     methodology:
-      "Includes direct community members (Discord, newsletter, Medium), hackathon attendees (past and registered), and verified reach across partner AI communities in Europe. Not membership — reach.",
+      "Includes direct community members (Discord, newsletter, Medium), hackathon attendees (past and registered), and verified reach across partner AI communities globally. Not membership — reach.",
   },
   {
     metric: "Direct community members",

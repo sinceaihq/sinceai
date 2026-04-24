@@ -21,7 +21,7 @@ const breadcrumbSchema = {
 const hackathonFaqs = [
   {
     q: "What is Since AI Hackathon?",
-    a: "Since AI Hackathon is the flagship annual event of Since AI — Europe's execution-focused AI innovation ecosystem based in Turku, Finland. It is an official MLH (Major League Hacking) partner event. Builders from across the world gather to solve real industry challenges and ship AI products in 72 hours.",
+    a: "Since AI Hackathon is the flagship annual event of Since AI — a global execution-focused AI innovation ecosystem based in Turku, Finland. It is an official MLH (Major League Hacking) partner event. Builders from across the world gather to solve real industry challenges and ship AI products in 72 hours.",
   },
   {
     q: "When is Since AI Hackathon 2026?",
@@ -96,8 +96,8 @@ const whyItems = [
   },
   {
     num: "03",
-    title: "European builder network",
-    body: "Join 10,000+ Since AI community members across Europe. Past participants have been hired, founded startups, and built lasting professional connections.",
+    title: "Global builder network",
+    body: "Join 10,000+ Since AI community members globally. Past participants have been hired, founded startups, and built lasting professional connections.",
   },
   {
     num: "04",
@@ -295,7 +295,7 @@ export default function HackathonPage() {
               }}
             >
               <p style={{ marginBottom: "var(--space-md)" }}>
-                Since AI Hackathon is the flagship annual event of Since AI — Europe&apos;s
+                Since AI Hackathon is the flagship annual event of Since AI — Global
                 execution-focused AI innovation ecosystem based in Turku, Finland. The inaugural
                 edition in November 2025 brought together 260 builders who shipped 30+ AI
                 projects in 72 hours.

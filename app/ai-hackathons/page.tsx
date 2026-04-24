@@ -10,15 +10,15 @@ import { ORG } from "@/lib/org";
 import StructuredData from "@/components/StructuredData";
 
 export const metadata: Metadata = {
-  title: "AI Hackathons in Europe 2026 — Best AI Hackathons & Events | Since AI",
+  title: "AI Hackathons 2026 — Best Global AI Hackathons & Events | Since AI",
   description:
-    "The definitive guide to AI hackathons in Europe. Since AI Hackathon 2026: November 6–8, Turku, Finland — 72 hours, 1,000+ builders, partner challenges from Google, Bayer, Sandvik. Free to attend.",
+    "The definitive guide to AI hackathons globally. Since AI Hackathon 2026: November 6–8, Turku, Finland — 72 hours, 1,000+ builders, partner challenges from Google, Bayer, Sandvik. Free to attend.",
   keywords: [
-    "AI hackathons Europe",
+    "AI hackathons global",
     "AI hackathon 2026",
-    "best AI hackathons Europe",
+    "best AI hackathons global",
     "AI hackathon Finland",
-    "European AI hackathon",
+    "global AI hackathon",
     "hackathon AI builders",
     "apply AI hackathon",
     "Since AI Hackathon",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     canonical: "https://sinceai.fi/ai-hackathons",
   },
   openGraph: {
-    title: "AI Hackathons in Europe 2026 | Since AI",
+    title: "AI Hackathons 2026 | Since AI",
     description:
       "Since AI Hackathon 2026: November 6–8, Turku, Finland. 72 hours, 1,000+ builders, real partner challenges. Free to attend.",
     url: "https://sinceai.fi/ai-hackathons",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI Hackathons in Europe 2026 | Since AI",
+    title: "AI Hackathons 2026 | Since AI",
     description:
       "Since AI Hackathon 2026: Nov 6–8, Turku. 72 hours, 1,000+ builders, challenges from Google, Bayer, Sandvik, Kongsberg, Valmet.",
   },
@@ -132,14 +132,14 @@ const tips = [
 export default function AIHackathonsPage() {
   const breadcrumbSchema = getBreadcrumbSchema([
     { name: "Home", url: ORG.baseUrl },
-    { name: "AI Hackathons in Europe", url: `${ORG.baseUrl}/ai-hackathons` },
+    { name: "AI Hackathons", url: `${ORG.baseUrl}/ai-hackathons` },
   ]);
 
   const eventListSchema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "AI Hackathons in Europe 2026",
-    description: "List of major AI hackathons in Europe, including Since AI Hackathon 2026",
+    name: "AI Hackathons 2026",
+    description: "List of major AI hackathons globally, including Since AI Hackathon 2026",
     itemListElement: [
       {
         "@type": "ListItem",
@@ -186,13 +186,13 @@ export default function AIHackathonsPage() {
               AI Hackathons
             </p>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight leading-tight">
-              AI Hackathons in Europe
+              AI Hackathons
             </h1>
 
             <div className="prose prose-invert prose-neutral max-w-none">
               <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-6">
-                Europe&apos;s AI hackathon ecosystem is growing fast. Since AI runs the
-                continent&apos;s most execution-focused AI hackathon — 72 hours, real
+                The global AI hackathon ecosystem is growing fast. Since AI runs an
+                execution-focused AI hackathon — 72 hours, real
                 partner challenges, production mentorship, and post-event support.
               </p>
               <p className="text-lg text-neutral-400 leading-relaxed mb-12">

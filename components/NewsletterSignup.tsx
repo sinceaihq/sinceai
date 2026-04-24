@@ -26,7 +26,7 @@ export default function NewsletterSignup() {
       </h3>
       <p className="text-neutral-400 text-sm leading-relaxed mb-8">
         Join 1000+ AI developers. Get monthly updates on hackathons, production
-        guides, and European AI projects.
+        guides, and global AI projects.
       </p>
 
       <form onSubmit={handleSubmit}>

@@ -9,14 +9,14 @@ import { ORG } from "@/lib/org";
 import StructuredData from "@/components/StructuredData";
 
 export const metadata: Metadata = {
-  title: "About Since AI — Europe's Execution-Focused AI Innovation Ecosystem",
+  title: "About Since AI — Global Execution-Focused AI Innovation Ecosystem",
   description:
-    "Since AI is a non-profit connecting 10,000+ AI builders across Europe. Learn about our mission, founders, and legal structure.",
+    "Since AI is a non-profit connecting 10,000+ AI builders globally. Learn about our mission, founders, and legal structure.",
   alternates: { canonical: "https://sinceai.fi/about" },
   openGraph: {
-    title: "About Since AI — Europe's Execution-Focused AI Innovation Ecosystem",
+    title: "About Since AI — Global Execution-Focused AI Innovation Ecosystem",
     description:
-      "Since AI is a non-profit connecting 10,000+ AI builders across Europe with leading AI companies, research groups, and investors.",
+      "Since AI is a non-profit connecting 10,000+ AI builders globally with leading AI companies, research groups, and investors.",
     url: "https://sinceai.fi/about",
     siteName: "Since AI",
     type: "website",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "About Since AI",
     description:
-      "Non-profit connecting 10,000+ AI builders across Europe. Mission: strengthen Europe's AI capability through execution.",
+      "Non-profit connecting 10,000+ AI builders globally. Mission: strengthen global AI capability through execution.",
   },
 };
 
@@ -99,10 +99,10 @@ export default function AboutPage() {
 
               {/* 2. Extractable definition paragraph */}
               <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-16">
-                Since AI is Europe&apos;s execution-focused AI innovation ecosystem, where
+                Since AI is a global execution-focused AI innovation ecosystem, where
                 frontier AI becomes shipped products. A non-profit connecting
-                10,000+ AI builders across Europe with leading AI companies, research
-                groups, and investors. Our mission: strengthen Europe&apos;s AI capability
+                10,000+ AI builders globally with leading AI companies, research
+                groups, and investors. Our mission: strengthen global AI capability
                 through execution, open collaboration, and real outcomes.
               </p>
 
@@ -123,8 +123,7 @@ export default function AboutPage() {
                     <strong className="text-white">Ecosystem over community.</strong>{" "}
                     Since AI is not a single organization. It is an ecosystem that spans
                     leading AI companies, top research groups, world-class universities,
-                    ambitious startup communities, and venture capital partners across
-                    Europe.
+                    ambitious startup communities, and venture capital partners globally.
                   </p>
                   <p className="text-neutral-300 leading-relaxed">
                     <strong className="text-white">Outcomes over events.</strong>{" "}
@@ -183,7 +182,7 @@ export default function AboutPage() {
                   Advisors and ecosystem partners
                 </h2>
                 <p className="text-neutral-300 leading-relaxed mb-4">
-                  Since AI works closely with ecosystem partners across Europe, including
+                  Since AI works closely with ecosystem partners globally, including
                   Google for Developers, Antler, the University of Turku, Aalto AI,
                   Boost Turku, and HankenAI. A formal advisory board will be announced
                   as Since AI expands in 2026.

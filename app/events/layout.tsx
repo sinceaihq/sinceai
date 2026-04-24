@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     "machine learning hackathon",
     "AI events Finland",
     "Turku tech events",
-    "European AI events",
+    "Global AI events",
   ],
   alternates: {
     canonical: "https://sinceai.fi/events",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Events — Since AI Hackathons & AI Builder Meetups",
     description:
-      `Europe's execution-focused AI hackathons. ${FIRST_EVENT.attendance} builders at the inaugural event, 30+ projects shipped. Since AI Hackathon 2026: November 6–8, Turku.`,
+      `Global execution-focused AI hackathons. ${FIRST_EVENT.attendance} builders at the inaugural event, 30+ projects shipped. Since AI Hackathon 2026: November 6–8, Turku.`,
     type: "website",
     locale: "en_US",
     siteName: "Since AI",

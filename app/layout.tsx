@@ -21,13 +21,13 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("https://sinceai.fi"),
   title:
-    "Since AI — Europe's Execution-Focused AI Innovation Ecosystem | Hackathons, Applied AI, Research",
+    "Since AI — Global Execution-Focused AI Innovation Ecosystem | Hackathons, Applied AI, Research",
   description:
-    "Where frontier AI becomes shipped products. Since AI connects 10,000+ AI builders across Europe with leading AI companies, research groups, and investors through hackathons, open-source collaboration, and applied AI projects. Based in Finland. Open globally.",
+    "Where frontier AI becomes shipped products. Since AI connects 10,000+ AI builders globally with leading AI companies, research groups, and investors through hackathons, open-source collaboration, and applied AI projects. Based in Finland. Open globally.",
   keywords: [
-    "AI community Europe",
-    "AI hackathon Europe",
-    "European AI ecosystem",
+    "AI community global",
+    "AI hackathon global",
+    "Global AI ecosystem",
     "applied AI",
     "AI builders",
     "Finland AI",
@@ -41,9 +41,9 @@ export const metadata: Metadata = {
     canonical: "https://sinceai.fi",
   },
   openGraph: {
-    title: "Since AI — Europe's Execution-Focused AI Innovation Ecosystem",
+    title: "Since AI — Global Execution-Focused AI Innovation Ecosystem",
     description:
-      "Where frontier AI becomes shipped products. 10,000+ AI builders across Europe. Backed by Google for Developers, Bayer, Sandvik, Antler, and more.",
+      "Where frontier AI becomes shipped products. 10,000+ AI builders globally. Backed by Google for Developers, Bayer, Sandvik, Antler, and more.",
     url: "https://sinceai.fi",
     siteName: "Since AI",
     locale: "en_US",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
         url: "https://sinceai.fi/assets/og/hero.png",
         width: 1200,
         height: 630,
-        alt: "Since AI — Europe's execution-focused AI innovation ecosystem",
+        alt: "Since AI — Global execution-focused AI innovation ecosystem",
       },
     ],
   },
@@ -61,9 +61,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@sinceaihq",
     creator: "@sinceaihq",
-    title: "Since AI — Europe's Execution-Focused AI Innovation Ecosystem",
+    title: "Since AI — Global Execution-Focused AI Innovation Ecosystem",
     description:
-      "Where frontier AI becomes shipped products. 10,000+ AI builders across Europe.",
+      "Where frontier AI becomes shipped products. 10,000+ AI builders globally.",
     images: ["https://sinceai.fi/assets/og/hero.png"],
   },
   robots: {
@@ -89,7 +89,7 @@ const organizationSchema = {
   url: "https://sinceai.fi",
   logo: "https://sinceai.fi/assets/logo/SINCE AI white.png",
   description:
-    "Europe's execution-focused AI innovation ecosystem. Where frontier AI becomes shipped products. Since AI connects 10,000+ AI builders across Europe with leading AI companies, research groups, and investors through hackathons, open-source collaboration, and applied AI projects.",
+    "Global execution-focused AI innovation ecosystem. Where frontier AI becomes shipped products. Since AI connects 10,000+ AI builders globally with leading AI companies, research groups, and investors through hackathons, open-source collaboration, and applied AI projects.",
   foundingDate: "2025",
   taxID: "3593920-2",
   email: "info@sinceai.fi",
@@ -128,7 +128,7 @@ const organizationSchema = {
     "Applied AI",
     "Generative AI",
     "AI Hackathons",
-    "European AI ecosystem",
+    "Global AI ecosystem",
     "AI startup creation",
     "Open-source AI",
     "Frontier AI",

@@ -29,7 +29,7 @@ export function getOrganizationSchema(): WithContext<Organization> & Record<stri
       value: ORG.businessId,
     },
     description:
-      "Since AI is Europe's only full-lifecycle AI innovation ecosystem with 1000+ members, based in Turku, Finland. Founded in 2025, we support AI projects from challenge ideation through 72-hour hackathons to production deployment and commercialization. Our flagship hackathon brought 260 builders together to ship 30+ AI projects with 15+ partner companies including Valmet, Sandvik, Kongsberg, and ElevenLabs. We provide 8+ weeks of post-hackathon production support, entrepreneurship assistance through Antler partnership, European AI sovereignty initiatives, and research-to-market bridges with universities.",
+      "Since AI is a global full-lifecycle AI innovation ecosystem with 1000+ members, based in Turku, Finland. Founded in 2025, we support AI projects from challenge ideation through 72-hour hackathons to production deployment and commercialization. Our flagship hackathon brought 260 builders together to ship 30+ AI projects with 15+ partner companies including Valmet, Sandvik, Kongsberg, and ElevenLabs. We provide 8+ weeks of post-hackathon production support, entrepreneurship assistance through Antler partnership, and research-to-market bridges with universities.",
     address: {
       '@type': 'PostalAddress',
       addressLocality: ORG.location.city,
@@ -47,8 +47,8 @@ export function getOrganizationSchema(): WithContext<Organization> & Record<stri
         name: 'Finland',
       },
       {
-        '@type': 'Continent',
-        name: 'Europe',
+        '@type': 'Place',
+        name: 'Global',
       },
     ],
     knowsAbout: [
@@ -267,7 +267,7 @@ export function getBlogSchema(): WithContext<Blog> {
     '@context': 'https://schema.org',
     '@type': 'Blog',
     name: `${ORG.name} Blog`,
-    description: 'Comprehensive guides from Europe\'s leading AI builders community. Learn hackathon strategies, AI development techniques, and discover the best developer events across Europe and globally.',
+    description: 'Comprehensive guides from the leading global AI builders community. Learn hackathon strategies, AI development techniques, and discover the best developer events globally.',
     url: `${ORG.baseUrl}/blog`,
     publisher: {
       '@type': 'Organization',
@@ -360,8 +360,8 @@ export function getBlogFAQSchema(): WithContext<FAQPage> {
       answer: 'Use a demo-first approach: build the full user flow skeleton with hardcoded data first, then layer AI features incrementally. Implement caching, offline modes, and graceful fallbacks for reliability. Focus on creating measurable proof — before/after metrics, accuracy numbers, or speed improvements that judges can verify.',
     },
     {
-      question: 'What are the best AI hackathons in Europe?',
-      answer: 'Top European AI hackathons include Junction in Helsinki (Europe\'s largest), Datathon at ETH Zurich, GenAI Zurich, Hack Kosice in Slovakia, MLH Europe network events, EU-backed innovation challenges, and Since AI Hackathon in Turku, Finland. Choose based on your goals: networking, prizes, learning, or portfolio projects.',
+      question: 'What are the best AI hackathons globally?',
+      answer: 'Top global AI hackathons include Junction in Helsinki, Datathon at ETH Zurich, GenAI Zurich, Hack Kosice in Slovakia, MLH global network events, innovation challenges, and Since AI Hackathon in Turku, Finland. Choose based on your goals: networking, prizes, learning, or portfolio projects.',
     },
     {
       question: 'What are good AI project ideas for a hackathon?',

@@ -379,7 +379,7 @@ function ContactPageContent() {
               },
               {
                 q: "Where are your events held?",
-                a: "All events are in Turku, Finland. We're building Europe's strongest AI community from one city, with global reach."
+                a: "All events are in Turku, Finland. We're building a global AI community with strong local roots."
               },
               {
                 q: "Is Since AI only for students?",

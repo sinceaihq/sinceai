@@ -39,7 +39,7 @@ export function PartnersSection() {
       <div className="max-w-6xl mx-auto">
 
         <h2 className="text-center text-xl sm:text-2xl font-semibold text-white mb-14 sm:mb-20 tracking-tight max-w-2xl mx-auto leading-snug">
-          Backed by global AI leaders, European VCs, and world-class research groups.
+          Backed by global AI leaders, VCs, and world-class research groups.
         </h2>
 
         {/* ── Tier 1: Strategic Partners ── */}

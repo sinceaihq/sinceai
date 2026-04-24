@@ -13,12 +13,12 @@ export const metadata: Metadata = {
   title:
     "Partner with Since AI — Recruit AI Talent, Sponsor Hackathon Challenges, Run AI Pilots",
   description:
-    "Partner with Since AI to access 10,000+ AI builders across Europe. Sponsor hackathon challenges at Since AI Hackathon 2026, recruit top AI talent, and run applied AI pilots with proven builders.",
+    "Partner with Since AI to access 10,000+ AI builders globally. Sponsor hackathon challenges at Since AI Hackathon 2026, recruit top AI talent, and run applied AI pilots with proven builders.",
   alternates: { canonical: "https://sinceai.fi/partners" },
   openGraph: {
     title: "Partner with Since AI — Recruit AI Talent, Sponsor Hackathon Challenges",
     description:
-      "Access 10,000+ AI builders across Europe. Sponsor Since AI Hackathon 2026 challenges, recruit top AI talent, and run applied AI pilots.",
+      "Access 10,000+ AI builders globally. Sponsor Since AI Hackathon 2026 challenges, recruit top AI talent, and run applied AI pilots.",
     url: "https://sinceai.fi/partners",
     siteName: "Since AI",
     type: "website",
@@ -48,7 +48,7 @@ const partnerFaqs = [
       "Yes. Partners get introductions to top performers during and after the event. All recruiting is direct between partner and builder — Since AI facilitates, not intermediates.",
   },
   {
-    question: "Do we need to be based in Europe to partner?",
+    question: "Do we need to be based in Finland to partner?",
     answer:
       "No. Since AI partners include global organizations. Google for Developers, for example, operates internationally. Partners can be based anywhere.",
   },
@@ -251,7 +251,7 @@ export default function PartnersPage() {
                       Recruit AI talent
                     </h3>
                     <p className="text-neutral-300 leading-relaxed mb-5">
-                      Since AI&apos;s network includes 10,000+ AI builders across Europe.
+                      Since AI&apos;s network includes 10,000+ AI builders globally.
                       Access top performers through hackathons, applied projects, and
                       direct introductions.
                     </p>

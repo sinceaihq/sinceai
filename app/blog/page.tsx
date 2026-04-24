@@ -106,10 +106,9 @@ export default function BlogPage() {
                 AI Hackathon Guides &amp; Community Resources
               </h1>
               <p className="text-xl md:text-2xl text-neutral-400 max-w-3xl mx-auto leading-relaxed">
-                Comprehensive guides from Europe&apos;s leading AI builders
+                Comprehensive guides from the leading global AI builders
                 community. Learn hackathon strategies, AI development
-                techniques, and discover the best developer events across Europe
-                and globally.
+                techniques, and discover the best developer events globally.
               </p>
             </motion.div>
           </div>

@@ -9,14 +9,14 @@ import { ORG } from "@/lib/org";
 import StructuredData from "@/components/StructuredData";
 
 export const metadata: Metadata = {
-  title: "For Builders — Join Since AI's European AI Ecosystem",
+  title: "For Builders — Join Since AI's Global AI Ecosystem",
   description:
-    "Join 10,000+ AI builders across Europe. Hackathons, applied AI projects, startup pathways. Since AI is open to developers, researchers, and founders globally.",
+    "Join 10,000+ AI builders globally. Hackathons, applied AI projects, startup pathways. Since AI is open to developers, researchers, and founders globally.",
   alternates: { canonical: "https://sinceai.fi/for-builders" },
   openGraph: {
-    title: "For Builders — Join Since AI's European AI Ecosystem",
+    title: "For Builders — Join Since AI's Global AI Ecosystem",
     description:
-      "Join 10,000+ AI builders across Europe. Hackathons, applied AI projects, startup pathways. Open globally.",
+      "Join 10,000+ AI builders globally. Hackathons, applied AI projects, startup pathways. Open globally.",
     url: "https://sinceai.fi/for-builders",
     siteName: "Since AI",
     type: "website",
@@ -58,7 +58,7 @@ const builderFaqs = [
   {
     question: "I'm a student — can I join Since AI?",
     answer:
-      "Yes. Students are welcome and make up a significant part of the Since AI community. We work with university AI societies across Europe including Aalto AI, HankenAI, and others. No minimum experience level required — we care about what you build, not your CV.",
+      "Yes. Students are welcome and make up a significant part of the Since AI community. We work with university AI societies globally including Aalto AI, HankenAI, and others. No minimum experience level required — we care about what you build, not your CV.",
   },
 ];
 
@@ -109,7 +109,7 @@ export default function ForBuildersPage() {
 
               {/* 2. Definition paragraph */}
               <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-16">
-                Since AI is Europe&apos;s execution-focused AI innovation ecosystem for
+                Since AI is a global execution-focused AI innovation ecosystem for
                 builders who ship. Join 10,000+ AI developers, researchers, and founders
                 working with partners including Google for Developers, Bayer, Sandvik,
                 Antler, and the University of Turku. Open to builders globally.

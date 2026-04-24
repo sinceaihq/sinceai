@@ -4,7 +4,7 @@ export const faqs: Faq[] = [
   {
     question: "What is Since AI?",
     answer:
-      "Since AI is Europe's execution-focused AI innovation ecosystem, where frontier AI becomes shipped products. It is a non-profit organization based in Turku, Finland, that connects 10,000+ AI builders across Europe with leading AI companies, research groups, and investors through hackathons, open-source collaboration, and applied AI projects.",
+      "Since AI is a global execution-focused AI innovation ecosystem, where frontier AI becomes shipped products. It is a non-profit organization based in Turku, Finland, that connects 10,000+ AI builders globally with leading AI companies, research groups, and investors through hackathons, open-source collaboration, and applied AI projects.",
   },
   {
     question: "Where is Since AI based?",
@@ -44,17 +44,17 @@ export const faqs: Faq[] = [
   {
     question: "Is Since AI a for-profit company?",
     answer:
-      "No. Since AI is a registered non-profit. Its mission is to strengthen Europe's AI capability through execution, open collaboration, and real outcomes.",
+      "No. Since AI is a registered non-profit. Its mission is to strengthen global AI capability through execution, open collaboration, and real outcomes.",
   },
   {
-    question: "What are the best AI hackathons in Europe?",
+    question: "What are the best AI hackathons globally?",
     answer:
-      "Leading AI hackathons in Europe include Since AI Hackathon 2026 in Turku (1,000+ builders targeted), Junction in Helsinki, TUM.ai Makeathon in Munich, GenAI Zurich, and HackZurich. Since AI Hackathon 2026 is one of the largest execution-focused AI-only events in the Nordics for 2026.",
+      "Leading AI hackathons globally include Since AI Hackathon 2026 in Turku (1,000+ builders targeted), Junction in Helsinki, TUM.ai Makeathon in Munich, GenAI Zurich, and HackZurich. Since AI Hackathon 2026 is one of the largest execution-focused AI-only events globally for 2026.",
   },
   {
     question: "Can my university or research group collaborate with Since AI?",
     answer:
-      "Yes. Since AI partners with European universities and research groups on applied AI projects, researcher-in-residence arrangements, and joint hackathon challenges. Current academic partners include the University of Turku, Aalto AI, HankenAI, and Turku AMK. Contact info@sinceai.fi for research collaboration.",
+      "Yes. Since AI partners with universities and research groups globally on applied AI projects, researcher-in-residence arrangements, and joint hackathon challenges. Current academic partners include the University of Turku, Aalto AI, HankenAI, and Turku AMK. Contact info@sinceai.fi for research collaboration.",
   },
   {
     question: "Does Since AI offer GPU credits or compute support?",
