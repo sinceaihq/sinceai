@@ -81,6 +81,12 @@ const teamSections = [
         email: "tuomas.rikkonen@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/tuomas-rikkonen-8664421a9/",
       },
+      {
+        name: "Kasper Turunen",
+        role: "Sales & Partnerships",
+        email: "kasper@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/kasperturunen/",
+      },
     ],
   },
   
@@ -89,14 +95,14 @@ const teamSections = [
     members: [
       {
         name: "Hasnain Ajmal",
-        role: "Social Media",
+        role: "Community & Content",
         email: "hasnain@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/hasnaynajmal/",
         image: "/assets/team/hasnain.webp",
       },
       {
         name: "Abdul Wasay",
-        role: "Content",
+        role: "Marketing",
         email: "abdul@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/abdulwasaymuhammad/",
       },
@@ -107,14 +113,33 @@ const teamSections = [
         linkedin: "https://www.linkedin.com/in/adeelia-koponen-37a492379/",
       },
       {
-        name: "Vishaka Salpiumi",
-        role: "Social Media",
-        linkedin: "https://www.linkedin.com/in/vishaka-salpiumi-3b6578349/",
+        name: "Juuso Pörsti",
+        role: "Marketing",
+        email: "juuso@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/juusoporsti/",
+      },
+      {
+        name: "Manu Kankaanniemi",
+        role: "Marketing & Content",
+        email: "manu@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/manu-kankaanniemi-38718b312/",
+      },
+      {
+        name: "Taneli Hautala",
+        role: "Marketing & Content",
+        email: "taneli@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/taneli-hautala-797192312/",
+      },
+      {
+        name: "Hafiza Munawar",
+        role: "Social Media & Content",
+        email: "hafiza@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/hafiza-aqsa-munawar/",
       },
     ],
   },
   {
-    department: "Development",
+    department: "Tech & Development",
     members: [
       {
         name: "Abel Alem",
@@ -137,6 +162,12 @@ const teamSections = [
         email: "theo.wilenius@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/tabw/",
         image: "/assets/team/theo.webp",
+      },
+      {
+        name: "Zain Taufique",
+        role: "Tech & Development",
+        email: "zain@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/zain-taufique-20273179/",
       },
     ],
   },
@@ -180,6 +211,24 @@ const teamSections = [
         role: "Production & Volunteers",
         email: "tzu@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/tzu-tai-huang/",
+      },
+      {
+        name: "Emil Erkkilä",
+        role: "Production",
+        email: "emil@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/emil-erkkila-302995349/",
+      },
+      {
+        name: "Eero Paloheimo",
+        role: "Production",
+        email: "eero@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/eero-paloheimo-6407883aa/",
+      },
+      {
+        name: "Radin Dabbagh",
+        role: "Production & Marketing",
+        email: "radin@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/radin-dabbagh-rezeiyeh-b64687225/",
       },
     ],
   },
