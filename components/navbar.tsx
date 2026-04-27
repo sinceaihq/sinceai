@@ -82,7 +82,7 @@ export const Navbar = () => {
 
           {/* Desktop CTA */}
           <a
-            href={DISCORD_URL}
+            href="https://sinceai.app"
             target="_blank"
             rel="noopener noreferrer"
             className="hidden md:inline-block text-[13px] font-medium no-underline text-black bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
