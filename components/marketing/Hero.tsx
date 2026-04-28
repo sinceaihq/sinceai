@@ -96,6 +96,7 @@ export function Hero() {
               href={DISCORD_URL}
               target="_blank"
               rel="noopener noreferrer"
+              className="hero-cta-secondary"
               style={{
                 display: "inline-block",
                 fontFamily: "var(--font-mono)",
