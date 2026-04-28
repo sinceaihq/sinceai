@@ -196,8 +196,6 @@ export default function HackathonPage() {
             }}
           >
             November 6–8, 2026 &nbsp;/&nbsp; EduCity, Turku, Finland &nbsp;/&nbsp; 72 hours &nbsp;/&nbsp; 1,000+ builders &nbsp;/&nbsp; €50,000 cash prize pool
-            <br />
-            MLH Official Partner Event
           </p>
 
             {/* Countdown */}
@@ -265,35 +263,28 @@ export default function HackathonPage() {
                 color: "#fff",
                 margin: 0,
                 marginBottom: "var(--space-xl)",
-                textAlign: "center",
               }}
             >
               Powered by world-class infrastructure.
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: "0" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", marginLeft: "calc(-1 * var(--space-2xl))" }}>
               {[
                 { name: "Google", label: "Compute partner" },
                 { name: "AMD",    label: "Compute partner" },
                 { name: "LUMI",   label: "Supercomputer access" },
               ].map((partner, i) => (
-                <div
-                  key={partner.name}
-                  className={[
-                    i < 2 ? "border-b md:border-b-0 md:border-r border-[var(--color-border)]" : "",
-                  ].join(" ")}
-                  style={{
-                    padding: "var(--space-lg)",
-                    textAlign: "center",
-                  }}
-                >
+                <div key={partner.name} style={{
+                  borderLeft: i > 0 ? "0.5px solid var(--color-border)" : undefined,
+                  padding: "0 var(--space-2xl)",
+                }}>
                   <p style={{
                     fontFamily: "var(--font-mono)",
                     fontSize: "var(--text-xs)",
                     color: "var(--color-fg-muted)",
                     letterSpacing: "0.08em",
                     textTransform: "uppercase",
-                    marginBottom: "var(--space-sm)",
+                    marginBottom: "var(--space-xs)",
                   }}>
                     {partner.label}
                   </p>
@@ -318,7 +309,6 @@ export default function HackathonPage() {
               color: "var(--color-fg-muted)",
               lineHeight: 1.6,
               marginTop: "var(--space-lg)",
-              textAlign: "center",
             }}>
               Google, AMD, and LUMI provide hackathon participants with compute access and GPU usage throughout the 72-hour sprint — so you can focus on building, not on infrastructure.
             </p>
