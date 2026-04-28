@@ -70,15 +70,13 @@ const faqSchema = {
 // ── Content data ──────────────────────────────────────────────────────────
 
 const keyFacts = [
-  { label: "Event",          value: "Since AI Hackathon 2026" },
   { label: "Date",           value: "November 6–8, 2026" },
   { label: "Venue",          value: "EduCity, Joukahaisenkatu 7, Turku, Finland" },
+  { label: "Prize pool",     value: "€50,000 cash" },
   { label: "Duration",       value: "72 hours" },
   { label: "Expected",       value: "1,000+ builders" },
-  { label: "Format",         value: "In-person" },
-  { label: "Open to",        value: "Builders worldwide — students and professionals" },
-  { label: "Language",       value: "English" },
   { label: "Participation",  value: "Free" },
+  { label: "Open to",        value: "Builders worldwide — students and professionals" },
   { label: "MLH",            value: "Official 2026 Season Member Event" },
   { label: "Organised by",   value: "Since AI (sinceai.ai)" },
 ];
@@ -146,7 +144,7 @@ export default function HackathonPage() {
       <main className="flex flex-col w-full bg-black min-h-screen">
 
         {/* ── SECTION 1: Hero ─────────────────────────────────── */}
-        <section className="relative w-full min-h-screen md:h-screen flex items-end">
+        <section className="relative w-full min-h-screen md:h-screen flex flex-col">
           <Image
             src="/assets/images/educity-hero.webp"
             alt="EduCity, Turku — venue for Since AI Hackathon 2026"
@@ -169,7 +167,7 @@ export default function HackathonPage() {
             className="relative z-10 mx-auto w-full"
             style={{
               maxWidth: "1200px",
-              padding: "clamp(var(--space-lg), 10vh, var(--space-3xl)) var(--space-lg) var(--space-2xl)",
+              padding: "150px var(--space-lg) var(--space-2xl)",
             }}
           >
             <h1
@@ -197,7 +195,9 @@ export default function HackathonPage() {
               letterSpacing: "0.01em",
             }}
           >
-            November 6–8, 2026 &nbsp;/&nbsp; EduCity, Turku, Finland &nbsp;/&nbsp; 72 hours &nbsp;/&nbsp; 1,000+ builders &nbsp;/&nbsp; MLH Official Partner Event
+            November 6–8, 2026 &nbsp;/&nbsp; EduCity, Turku, Finland &nbsp;/&nbsp; 72 hours &nbsp;/&nbsp; 1,000+ builders &nbsp;/&nbsp; €50,000 cash prize pool
+            <br />
+            MLH Official Partner Event
           </p>
 
             {/* Countdown */}
@@ -212,8 +212,8 @@ export default function HackathonPage() {
             <p
               style={{
                 fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-sm)",
-                color: "rgba(255,255,255,0.75)",
+                fontSize: "var(--text-base)",
+                color: "#fff",
                 marginBottom: "var(--space-lg)",
               }}
             >
@@ -249,14 +249,154 @@ export default function HackathonPage() {
           </div>
         </section>
 
-        {/* ── SECTION 2: What is it ────────────────────────────── */}
+        {/* ── SECTION 2: Headline partners ─────────────────────── */}
         <section
           style={{
             padding: "var(--space-2xl) var(--space-lg)",
             borderTop: "0.5px solid var(--color-border)",
           }}
         >
-          <div className="mx-auto" style={{ maxWidth: "880px" }}>
+          <div className="mx-auto" style={{ maxWidth: "1200px" }}>
+            <h2
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "clamp(36px, 4vw, 48px)",
+                fontWeight: 700,
+                color: "#fff",
+                margin: 0,
+                marginBottom: "var(--space-xl)",
+                textAlign: "center",
+              }}
+            >
+              Powered by world-class infrastructure.
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: "0" }}>
+              {[
+                { name: "Google", label: "Compute partner" },
+                { name: "AMD",    label: "Compute partner" },
+                { name: "LUMI",   label: "Supercomputer access" },
+              ].map((partner, i) => (
+                <div
+                  key={partner.name}
+                  className={[
+                    i < 2 ? "border-b md:border-b-0 md:border-r border-[var(--color-border)]" : "",
+                  ].join(" ")}
+                  style={{
+                    padding: "var(--space-lg)",
+                    textAlign: "center",
+                  }}
+                >
+                  <p style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "var(--text-xs)",
+                    color: "var(--color-fg-muted)",
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    marginBottom: "var(--space-sm)",
+                  }}>
+                    {partner.label}
+                  </p>
+                  <h3 style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "clamp(48px, 6vw, 80px)",
+                    fontWeight: 500,
+                    color: "#fff",
+                    lineHeight: 1,
+                    letterSpacing: "-0.03em",
+                    margin: 0,
+                  }}>
+                    {partner.name}
+                  </h3>
+                </div>
+              ))}
+            </div>
+
+            <p style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "var(--text-sm)",
+              color: "var(--color-fg-muted)",
+              lineHeight: 1.6,
+              marginTop: "var(--space-lg)",
+              textAlign: "center",
+            }}>
+              Google, AMD, and LUMI provide hackathon participants with compute access and GPU usage throughout the 72-hour sprint — so you can focus on building, not on infrastructure.
+            </p>
+          </div>
+        </section>
+
+        {/* ── SECTION 3: Key facts ─────────────────────────────── */}
+        <section
+          style={{
+            padding: "var(--space-2xl) var(--space-lg)",
+            borderTop: "0.5px solid var(--color-border)",
+          }}
+        >
+          <div className="mx-auto" style={{ maxWidth: "1200px" }}>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
+              {'// key facts'}
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "36px",
+                fontWeight: 500,
+                color: "#fff",
+                margin: 0,
+                marginBottom: "var(--space-lg)",
+              }}
+            >
+              Since AI Hackathon 2026 — at a glance.
+            </h2>
+
+            <div style={{ borderTop: "0.5px solid var(--color-border)" }}>
+              {keyFacts.map((fact) => (
+                <div
+                  key={fact.label}
+                  className="flex flex-col sm:flex-row sm:items-baseline"
+                  style={{
+                    padding: "var(--space-sm) 0",
+                    borderBottom: "0.5px solid var(--color-border)",
+                    gap: "var(--space-sm)",
+                  }}
+                >
+                  <dt
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "var(--text-xs)",
+                      color: "var(--color-fg-subtle)",
+                      letterSpacing: "0.08em",
+                      textTransform: "uppercase",
+                      flexShrink: 0,
+                      width: "160px",
+                    }}
+                  >
+                    {fact.label}
+                  </dt>
+                  <dd
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "var(--text-sm)",
+                      color: "#fff",
+                      margin: 0,
+                    }}
+                  >
+                    {fact.value}
+                  </dd>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── SECTION 4: What is it ────────────────────────────── */}
+        <section
+          style={{
+            padding: "var(--space-2xl) var(--space-lg)",
+            borderTop: "0.5px solid var(--color-border)",
+          }}
+        >
+          <div className="mx-auto" style={{ maxWidth: "1200px" }}>
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
               {'// what is it'}
             </p>
@@ -300,7 +440,7 @@ export default function HackathonPage() {
           </div>
         </section>
 
-        {/* ── SECTION 3: Why participate ──────────────────────── */}
+        {/* ── SECTION 4: Why participate ──────────────────────── */}
         <section
           style={{
             padding: "var(--space-2xl) var(--space-lg)",
@@ -374,143 +514,7 @@ export default function HackathonPage() {
           </div>
         </section>
 
-        {/* ── SECTION 4: Key facts ─────────────────────────────── */}
-        <section
-          style={{
-            padding: "var(--space-2xl) var(--space-lg)",
-            borderTop: "0.5px solid var(--color-border)",
-          }}
-        >
-          <div className="mx-auto" style={{ maxWidth: "880px" }}>
-            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
-              {'// key facts'}
-            </p>
-            <h2
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "36px",
-                fontWeight: 500,
-                color: "#fff",
-                margin: 0,
-                marginBottom: "var(--space-lg)",
-              }}
-            >
-              Since AI Hackathon 2026 — at a glance.
-            </h2>
-
-            <div style={{ borderTop: "0.5px solid var(--color-border)" }}>
-              {keyFacts.map((fact) => (
-                <div
-                  key={fact.label}
-                  className="flex flex-col sm:flex-row sm:items-baseline"
-                  style={{
-                    padding: "var(--space-sm) 0",
-                    borderBottom: "0.5px solid var(--color-border)",
-                    gap: "var(--space-sm)",
-                  }}
-                >
-                  <dt
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "var(--text-xs)",
-                      color: "var(--color-fg-subtle)",
-                      letterSpacing: "0.08em",
-                      textTransform: "uppercase",
-                      flexShrink: 0,
-                      width: "160px",
-                    }}
-                  >
-                    {fact.label}
-                  </dt>
-                  <dd
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "var(--text-sm)",
-                      color: "#fff",
-                      margin: 0,
-                    }}
-                  >
-                    {fact.value}
-                  </dd>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── SECTION 5: Venue ─────────────────────────────────── */}
-        <section
-          style={{
-            padding: "var(--space-2xl) var(--space-lg)",
-            borderTop: "0.5px solid var(--color-border)",
-          }}
-        >
-          <div className="mx-auto" style={{ maxWidth: "1200px" }}>
-            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
-              {'// venue'}
-            </p>
-            <h2
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "36px",
-                fontWeight: 500,
-                color: "#fff",
-                margin: 0,
-                marginBottom: "var(--space-lg)",
-              }}
-            >
-              EduCity, Turku.
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: "var(--space-xl)", alignItems: "start" }}>
-              <div>
-                <p
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--text-base)",
-                    color: "var(--color-fg-muted)",
-                    lineHeight: 1.7,
-                    marginBottom: "var(--space-md)",
-                  }}
-                >
-                  Since AI Hackathon 2026 takes place at EduCity — the modern campus of Turku
-                  University of Applied Sciences (Turku AMK), Joukahaisenkatu 7, 20520 Turku,
-                  Finland. State-of-the-art facilities for 1,000+ builders to collaborate, build,
-                  and present.
-                </p>
-                <a
-                  href="https://maps.google.com/?q=EduCity+Joukahaisenkatu+7+Turku"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-white transition-colors"
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--text-sm)",
-                    color: "var(--color-fg-muted)",
-                    textDecoration: "none",
-                  }}
-                >
-                  View on Google Maps ↗
-                </a>
-              </div>
-
-              <div
-                className="relative w-full overflow-hidden"
-                style={{ height: "280px" }}
-              >
-                <Image
-                  src="/assets/images/educity-card.webp"
-                  alt="EduCity building — venue for Since AI Hackathon 2026, Turku, Finland"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover"
-                />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── SECTION 6: Partners ──────────────────────────────── */}
+        {/* ── SECTION 5: All partners ──────────────────────────── */}
         <section
           style={{
             padding: "var(--space-2xl) var(--space-lg)",
@@ -619,14 +623,86 @@ export default function HackathonPage() {
           </div>
         </section>
 
-        {/* ── SECTION 7: Past edition ──────────────────────────── */}
+        {/* ── SECTION 8: Venue ─────────────────────────────────── */}
         <section
           style={{
             padding: "var(--space-2xl) var(--space-lg)",
             borderTop: "0.5px solid var(--color-border)",
           }}
         >
-          <div className="mx-auto" style={{ maxWidth: "880px" }}>
+          <div className="mx-auto" style={{ maxWidth: "1200px" }}>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
+              {'// venue'}
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "36px",
+                fontWeight: 500,
+                color: "#fff",
+                margin: 0,
+                marginBottom: "var(--space-lg)",
+              }}
+            >
+              EduCity, Turku.
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: "var(--space-xl)", alignItems: "start" }}>
+              <div>
+                <p
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "var(--text-base)",
+                    color: "var(--color-fg-muted)",
+                    lineHeight: 1.7,
+                    marginBottom: "var(--space-md)",
+                  }}
+                >
+                  Since AI Hackathon 2026 takes place at EduCity — the modern campus of Turku
+                  University of Applied Sciences (Turku AMK), Joukahaisenkatu 7, 20520 Turku,
+                  Finland. State-of-the-art facilities for 1,000+ builders to collaborate, build,
+                  and present.
+                </p>
+                <a
+                  href="https://maps.google.com/?q=EduCity+Joukahaisenkatu+7+Turku"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition-colors"
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "var(--text-sm)",
+                    color: "var(--color-fg-muted)",
+                    textDecoration: "none",
+                  }}
+                >
+                  View on Google Maps ↗
+                </a>
+              </div>
+
+              <div
+                className="relative w-full overflow-hidden"
+                style={{ height: "280px" }}
+              >
+                <Image
+                  src="/assets/images/educity-card.webp"
+                  alt="EduCity building — venue for Since AI Hackathon 2026, Turku, Finland"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── SECTION 9: Past edition ──────────────────────────── */}
+        <section
+          style={{
+            padding: "var(--space-2xl) var(--space-lg)",
+            borderTop: "0.5px solid var(--color-border)",
+          }}
+        >
+          <div className="mx-auto" style={{ maxWidth: "1200px" }}>
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
               {'// previous editions'}
             </p>
@@ -691,83 +767,7 @@ export default function HackathonPage() {
           </div>
         </section>
 
-        {/* ── SECTION 8: MLH partnership ───────────────────────── */}
-        <section
-          style={{
-            padding: "var(--space-2xl) var(--space-lg)",
-            borderTop: "0.5px solid var(--color-border)",
-          }}
-        >
-          <div className="mx-auto" style={{ maxWidth: "880px" }}>
-            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
-              {'// mlh partnership'}
-            </p>
-            <h2
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "36px",
-                fontWeight: 500,
-                color: "#fff",
-                margin: 0,
-                marginBottom: "var(--space-lg)",
-              }}
-            >
-              Official Major League Hacking partner event.
-            </h2>
-
-            <div
-              style={{
-                borderLeft: "0.5px solid var(--color-border)",
-                paddingLeft: "var(--space-md)",
-              }}
-            >
-              <p
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-base)",
-                  color: "var(--color-fg-muted)",
-                  lineHeight: 1.7,
-                  marginBottom: "var(--space-md)",
-                  maxWidth: "640px",
-                }}
-              >
-                Since AI Hackathon 2026 is an official Major League Hacking (MLH) Member
-                Event for the 2026 season. MLH is the world&apos;s largest hackathon league,
-                supporting hundreds of events annually across North America, Europe, and Asia.
-              </p>
-              <p
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-base)",
-                  color: "var(--color-fg-muted)",
-                  lineHeight: 1.7,
-                  marginBottom: "var(--space-lg)",
-                  maxWidth: "640px",
-                }}
-              >
-                As an official MLH partner event, participants gain access to the global MLH
-                hacker community, MLH-sponsored prizes and API credits, and official recognition
-                as part of the worldwide hackathon movement.
-              </p>
-              <a
-                href="https://mlh.io/eu"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white transition-colors"
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-sm)",
-                  color: "var(--color-fg-muted)",
-                  textDecoration: "none",
-                }}
-              >
-                Learn more about MLH ↗
-              </a>
-            </div>
-          </div>
-        </section>
-
-        {/* ── SECTION 9: Registration ──────────────────────────── */}
+        {/* ── SECTION 10: Registration ──────────────────────────── */}
         <section
           id="registration"
           style={{
@@ -777,7 +777,7 @@ export default function HackathonPage() {
             scrollMarginTop: "80px",
           }}
         >
-          <div className="mx-auto" style={{ maxWidth: "880px" }}>
+          <div className="mx-auto" style={{ maxWidth: "1200px" }}>
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
               {'// registrations'}
             </p>
@@ -805,8 +805,9 @@ export default function HackathonPage() {
               }}
             >
               Registration for Since AI Hackathon 2026 (November 6–8, Turku) is now open.
-              Apply at sinceai.app/sign-up — free for all builders worldwide. Join our community
-              channels to connect with other participants before the event.
+              €50,000 cash prize pool. Free to enter for all builders worldwide. Apply at
+              sinceai.app/sign-up and join our community channels to connect with other
+              participants before the event.
             </p>
 
             <div className="flex flex-col sm:flex-row" style={{ gap: "12px", marginBottom: "var(--space-xl)" }}>
@@ -857,7 +858,7 @@ export default function HackathonPage() {
             borderTop: "0.5px solid var(--color-border)",
           }}
         >
-          <div className="mx-auto" style={{ maxWidth: "880px" }}>
+          <div className="mx-auto" style={{ maxWidth: "1200px" }}>
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
               {'// faq'}
             </p>

@@ -120,7 +120,7 @@ export function BelowHero() {
       <section
         style={{ padding: "var(--space-2xl) var(--space-lg)" }}
       >
-        <div className="mx-auto" style={{ maxWidth: "880px" }}>
+        <div className="mx-auto" style={{ maxWidth: "1200px" }}>
           <Eyebrow text="// what is since ai" />
           <SectionH2>The execution layer of Global AI.</SectionH2>
           <p

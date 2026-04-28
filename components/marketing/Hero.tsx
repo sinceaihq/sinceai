@@ -1,18 +1,13 @@
 import Link from "next/link";
-import { FaDiscord } from "react-icons/fa";
 import { PartnerMarquee } from "./PartnerMarquee";
-
-const DISCORD_URL = "https://discord.com/invite/YkqJswRGSW";
 
 export function Hero() {
   return (
-    <section className="relative flex flex-col min-h-[85vh] md:min-h-screen bg-black pt-[100px]">
-      {/* ── Vertically-centred content ─────────────────────── */}
-      <div className="flex-1 flex items-center">
-        <div
-          className="mx-auto w-full px-6"
-          style={{ maxWidth: "1200px" }}
-        >
+    <section className="relative flex flex-col min-h-[85vh] md:min-h-screen bg-black">
+      <div
+        className="mx-auto w-full"
+        style={{ maxWidth: "1200px", padding: "150px var(--space-lg) 0" }}
+      >
           {/* H1 */}
           <h1
             style={{
@@ -43,43 +38,40 @@ export function Hero() {
             where frontier AI becomes shipped products.
           </p>
 
-          {/* Hackathon announcement */}
-          <a
-            href="/hackathon"
-            className="flex sm:inline-flex"
-            style={{
-              alignItems: "center",
-              gap: "12px",
-              fontFamily: "var(--font-mono)",
-              fontSize: "13px",
-              fontWeight: 500,
-              color: "#000",
-              textDecoration: "none",
-              letterSpacing: "0.02em",
-              marginTop: "var(--space-lg)",
-              padding: "12px 16px",
-              border: "0.5px solid #fff",
-              background: "#fff",
-              whiteSpace: "nowrap",
-            }}
-          >
-            <span style={{
-              display: "inline-block",
-              width: "7px",
-              height: "7px",
-              borderRadius: "50%",
-              background: "#22c55e",
-              flexShrink: 0,
-            }} />
-            <span className="sm:hidden">Since AI Hackathon 2026 &thinsp;·&thinsp; Apply now →</span>
-            <span className="hidden sm:inline">Since AI Hackathon 2026 &thinsp;·&thinsp; €50,000 cash prize pool &thinsp;·&thinsp; Registration open →</span>
-          </a>
-
           {/* CTAs */}
           <div
             className="flex flex-col sm:flex-row"
-            style={{ marginTop: "var(--space-md)", gap: "12px" }}
+            style={{ marginTop: "var(--space-lg)", gap: "12px" }}
           >
+            {/* Primary — hackathon */}
+            <Link
+              href="/hackathon"
+              style={{
+                display: "inline-block",
+                fontFamily: "var(--font-mono)",
+                fontSize: "13px",
+                fontWeight: 500,
+                color: "#000",
+                background: "#fff",
+                padding: "12px 20px",
+                borderRadius: 0,
+                border: "0.5px solid #fff",
+                textDecoration: "none",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <span style={{
+                display: "inline-block",
+                width: "7px",
+                height: "7px",
+                borderRadius: "50%",
+                background: "#22c55e",
+                marginRight: "10px",
+                verticalAlign: "middle",
+                flexShrink: 0,
+              }} />
+              Since AI Hackathon 2026 →
+            </Link>
             {/* Secondary — outlined */}
             <Link
               href="/partners"
@@ -101,32 +93,10 @@ export function Hero() {
               Partner with Since AI →
             </Link>
 
-            {/* Tertiary — Discord */}
-            <a
-              href={DISCORD_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hero-cta-secondary"
-              style={{
-                display: "inline-block",
-                fontFamily: "var(--font-mono)",
-                fontSize: "13px",
-                fontWeight: 500,
-                color: "#fff",
-                background: "transparent",
-                padding: "12px 20px",
-                borderRadius: 0,
-                border: "0.5px solid var(--color-border-strong)",
-                textDecoration: "none",
-                whiteSpace: "nowrap",
-              }}
-            >
-              <FaDiscord style={{ display: "inline", marginRight: "6px", verticalAlign: "middle" }} />
-              Join Discord
-            </a>
           </div>
-        </div>
       </div>
+
+      <div className="flex-1" />
 
       {/* ── Partner marquee — bottom-docked ─────────────────── */}
       <div className="h-10 shrink-0" />
