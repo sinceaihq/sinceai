@@ -38,10 +38,25 @@ export function Hero() {
             where frontier AI becomes shipped products.
           </p>
 
+          {/* Hackathon teaser */}
+          <p
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "var(--text-sm)",
+              color: "var(--color-fg-muted)",
+              marginTop: "var(--space-lg)",
+              marginBottom: "var(--space-sm)",
+              letterSpacing: "0.01em",
+            }}
+          >
+            <span style={{ display: "inline-block", width: "6px", height: "6px", borderRadius: "50%", background: "#22c55e", marginRight: "8px", verticalAlign: "middle" }} />
+            Since AI Hackathon 2026 &thinsp;·&thinsp; €50,000 cash prize pool &thinsp;·&thinsp; Registration open
+          </p>
+
           {/* CTAs */}
           <div
             className="flex flex-col sm:flex-row"
-            style={{ marginTop: "var(--space-lg)", gap: "12px" }}
+            style={{ gap: "12px" }}
           >
             {/* Primary — hackathon */}
             <Link
@@ -60,17 +75,7 @@ export function Hero() {
                 whiteSpace: "nowrap",
               }}
             >
-              <span style={{
-                display: "inline-block",
-                width: "7px",
-                height: "7px",
-                borderRadius: "50%",
-                background: "#22c55e",
-                marginRight: "10px",
-                verticalAlign: "middle",
-                flexShrink: 0,
-              }} />
-              Since AI Hackathon 2026 →
+              Learn more →
             </Link>
             {/* Secondary — outlined */}
             <Link

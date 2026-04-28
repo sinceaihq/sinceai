@@ -210,7 +210,7 @@ export default function HackathonPage() {
             <p
               style={{
                 fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-base)",
+                fontSize: "var(--text-sm)",
                 color: "#fff",
                 marginBottom: "var(--space-lg)",
               }}
