@@ -3,10 +3,10 @@ import { PartnerMarquee } from "./PartnerMarquee";
 
 export function Hero() {
   return (
-    <section className="relative flex flex-col bg-black">
+    <section className="relative flex flex-col bg-black" style={{ paddingLeft: "var(--space-lg)", paddingRight: "var(--space-lg)" }}>
       <div
         className="mx-auto w-full pt-20 md:pt-[clamp(100px,15vh,150px)]"
-        style={{ maxWidth: "1200px", paddingLeft: "var(--space-lg)", paddingRight: "var(--space-lg)" }}
+        style={{ maxWidth: "1200px" }}
       >
           {/* H1 */}
           <h1
