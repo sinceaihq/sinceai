@@ -144,7 +144,7 @@ export default function HackathonPage() {
       <main className="flex flex-col w-full bg-black min-h-screen">
 
         {/* ── SECTION 1: Hero ─────────────────────────────────── */}
-        <section className="relative w-full flex flex-col">
+        <section className="relative w-full flex flex-col" style={{ paddingLeft: "var(--space-lg)", paddingRight: "var(--space-lg)" }}>
           <Image
             src="/assets/images/educity-hero.webp"
             alt="EduCity, Turku — venue for Since AI Hackathon 2026"
@@ -167,7 +167,8 @@ export default function HackathonPage() {
             className="relative z-10 mx-auto w-full"
             style={{
               maxWidth: "1200px",
-              padding: "clamp(100px, 15vh, 150px) var(--space-lg) var(--space-2xl)",
+              paddingTop: "clamp(100px, 15vh, 150px)",
+              paddingBottom: "var(--space-2xl)",
             }}
           >
             <h1
