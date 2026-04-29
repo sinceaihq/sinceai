@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
 import Logo from "./logo";
 
 const DISCORD_URL = "https://discord.com/invite/YkqJswRGSW";
@@ -115,13 +116,18 @@ export const Navbar = () => {
       </header>
 
       {/* ── Mobile fullscreen overlay ────────────────────────── */}
+      <AnimatePresence>
       {menuOpen && (
-        <div
+        <motion.div
           className="fixed inset-0 z-[60] bg-black flex flex-col"
           style={{ padding: "var(--space-md) var(--space-lg)" }}
           role="dialog"
           aria-modal="true"
           aria-label="Navigation menu"
+          initial={{ opacity: 0, y: -24 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -24 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
         >
           {/* Top row */}
           <div className="flex items-center justify-between" style={{ marginBottom: "var(--space-xl)" }}>
@@ -183,8 +189,9 @@ export const Navbar = () => {
               Apply →
             </a>
           </div>
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </>
   );
 };
