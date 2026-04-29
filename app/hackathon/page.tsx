@@ -277,8 +277,7 @@ export default function HackathonPage() {
               ].map((partner, i) => (
                 <div
                   key={partner.name}
-                  className={i > 0 ? "border-t md:border-t-0 md:border-l border-[var(--color-border)]" : ""}
-                  style={{ padding: "var(--space-md) var(--space-lg)" }}
+                  className={`py-[var(--space-md)] md:px-[var(--space-lg)] ${i > 0 ? "border-t md:border-t-0 md:border-l border-[var(--color-border)]" : ""}`}
                 >
                   <p style={{
                     fontFamily: "var(--font-mono)",
