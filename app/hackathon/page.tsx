@@ -13,8 +13,8 @@ const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home",              item: "https://sinceai.fi" },
-    { "@type": "ListItem", position: 2, name: "Since AI Hackathon 2026", item: "https://sinceai.fi/hackathon" },
+    { "@type": "ListItem", position: 1, name: "Home",              item: "https://sinceai.ai" },
+    { "@type": "ListItem", position: 2, name: "Since AI Hackathon 2026", item: "https://sinceai.ai/hackathon" },
   ],
 };
 

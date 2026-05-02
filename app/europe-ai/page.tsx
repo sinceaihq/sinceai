@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     "The European AI Ecosystem in 2026: Hubs, Communities, and How to Participate",
   description:
     "A 2026 map of Europe's AI ecosystem — major hubs, leading builder communities, research groups, and VCs. Includes Since AI, Junction, AI Mad Lab, and more. Updated quarterly.",
-  alternates: { canonical: "https://sinceai.fi/europe-ai" },
+  alternates: { canonical: "https://sinceai.ai/europe-ai" },
   openGraph: {
     title: "The European AI Ecosystem in 2026",
     description:
       "A 2026 map of Europe's AI ecosystem — hubs, communities, research groups, VCs.",
-    url: "https://sinceai.fi/europe-ai",
+    url: "https://sinceai.ai/europe-ai",
     type: "article",
     siteName: "Since AI",
   },
@@ -78,13 +78,13 @@ const breadcrumbSchema = {
       "@type": "ListItem",
       position: 1,
       name: "Home",
-      item: "https://sinceai.fi/",
+      item: "https://sinceai.ai/",
     },
     {
       "@type": "ListItem",
       position: 2,
       name: "European AI Ecosystem",
-      item: "https://sinceai.fi/europe-ai",
+      item: "https://sinceai.ai/europe-ai",
     },
   ],
 };

@@ -7,7 +7,7 @@ export const ORG = {
   name: "Since AI",
   legalName: "Since AI ry",
   businessId: "3593920-2",
-  baseUrl: "https://sinceai.fi",
+  baseUrl: "https://sinceai.ai",
   location: {
     city: "Turku",
     country: "Finland",

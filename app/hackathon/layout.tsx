@@ -19,14 +19,14 @@ export const metadata: Metadata = {
     "72 hour hackathon",
   ],
   alternates: {
-    canonical: "https://sinceai.fi/hackathon",
+    canonical: "https://sinceai.ai/hackathon",
   },
   openGraph: {
     title:
       "Since AI Hackathon 2026 — Global Execution-Focused AI Hackathon | November 6–8, Turku",
     description:
       "72-hour AI hackathon in Turku, Finland. 1,000+ builders targeted. Partner challenges from Google for Developers, Bayer, Sandvik, Kongsberg, Valmet. Open to builders worldwide.",
-    url: "https://sinceai.fi/hackathon",
+    url: "https://sinceai.ai/hackathon",
     siteName: "Since AI",
     type: "website",
     images: [{ url: "/assets/og/hero.png", width: 1200, height: 630 }],
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
 const eventSchema = {
   "@context": "https://schema.org",
   "@type": "Event",
-  "@id": "https://sinceai.fi/hackathon#event",
+  "@id": "https://sinceai.ai/hackathon#event",
   name: "Since AI Hackathon 2026",
   description:
     "A global execution-focused AI hackathon. 1,000+ builders targeted. 72 hours. Partner challenges from Google for Developers, Bayer, Sandvik, Kongsberg, Valmet.",
@@ -62,7 +62,7 @@ const eventSchema = {
       addressCountry: "FI",
     },
   },
-  organizer: { "@id": "https://sinceai.fi/#organization" },
+  organizer: { "@id": "https://sinceai.ai/#organization" },
   sponsor: [
     {
       "@type": "Organization",
@@ -90,15 +90,15 @@ const eventSchema = {
       url: "https://www.valmet.com/",
     },
   ],
-  image: "https://sinceai.fi/assets/og/hero.png",
-  url: "https://sinceai.fi/hackathon",
+  image: "https://sinceai.ai/assets/og/hero.png",
+  url: "https://sinceai.ai/hackathon",
   offers: {
     "@type": "Offer",
     price: "0",
     priceCurrency: "EUR",
     availability: "https://schema.org/InStock",
     validFrom: "2025-01-01T00:00:00+02:00",
-    url: "https://sinceai.fi/hackathon",
+    url: "https://sinceai.ai/hackathon",
   },
 };
 

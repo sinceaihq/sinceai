@@ -14,12 +14,12 @@ export const metadata: Metadata = {
     "Partner with Since AI — Recruit AI Talent, Sponsor Hackathon Challenges, Run AI Pilots",
   description:
     "Partner with Since AI to access 10,000+ AI builders globally. Sponsor hackathon challenges at Since AI Hackathon 2026, recruit top AI talent, and run applied AI pilots with proven builders.",
-  alternates: { canonical: "https://sinceai.fi/partners" },
+  alternates: { canonical: "https://sinceai.ai/partners" },
   openGraph: {
     title: "Partner with Since AI — Recruit AI Talent, Sponsor Hackathon Challenges",
     description:
       "Access 10,000+ AI builders globally. Sponsor Since AI Hackathon 2026 challenges, recruit top AI talent, and run applied AI pilots.",
-    url: "https://sinceai.fi/partners",
+    url: "https://sinceai.ai/partners",
     siteName: "Since AI",
     type: "website",
   },
@@ -78,8 +78,8 @@ const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://sinceai.fi/" },
-    { "@type": "ListItem", position: 2, name: "Partners", item: "https://sinceai.fi/partners" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://sinceai.ai/" },
+    { "@type": "ListItem", position: 2, name: "Partners", item: "https://sinceai.ai/partners" },
   ],
 };
 

@@ -12,12 +12,12 @@ export const metadata: Metadata = {
   title: "Impact & Numbers — Since AI",
   description:
     "Since AI publishes real numbers and methodology notes for every metric: network reach, event size, projects shipped, partnerships. Updated quarterly.",
-  alternates: { canonical: "https://sinceai.fi/impact" },
+  alternates: { canonical: "https://sinceai.ai/impact" },
   openGraph: {
     title: "Impact & Numbers — Since AI",
     description:
       "Real numbers with methodology notes: network reach, event size, projects shipped, partnerships. Updated quarterly.",
-    url: "https://sinceai.fi/impact",
+    url: "https://sinceai.ai/impact",
     siteName: "Since AI",
     type: "website",
   },
@@ -27,12 +27,12 @@ const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://sinceai.fi/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://sinceai.ai/" },
     {
       "@type": "ListItem",
       position: 2,
       name: "Impact & Numbers",
-      item: "https://sinceai.fi/impact",
+      item: "https://sinceai.ai/impact",
     },
   ],
 };

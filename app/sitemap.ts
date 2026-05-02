@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = "https://sinceai.fi";
+  const base = "https://sinceai.ai";
   const now = new Date();
 
   // Note: /blog/[slug] pages are excluded — they redirect to Medium (301).

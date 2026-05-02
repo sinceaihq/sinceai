@@ -14,13 +14,13 @@ export const metadata: Metadata = {
     "Frequently Asked Questions about Since AI | Global AI Builders Ecosystem",
   description:
     "Answers to common questions about Since AI — a global execution-focused AI innovation ecosystem. Covers partnerships, hackathons, joining, funding, and more.",
-  alternates: { canonical: "https://sinceai.fi/faq" },
+  alternates: { canonical: "https://sinceai.ai/faq" },
   openGraph: {
     title:
       "Frequently Asked Questions about Since AI | Global AI Builders Ecosystem",
     description:
       "Answers to common questions about Since AI — partnerships, hackathons, joining, funding, and more.",
-    url: "https://sinceai.fi/faq",
+    url: "https://sinceai.ai/faq",
     siteName: "Since AI",
     type: "website",
   },
@@ -53,13 +53,13 @@ const breadcrumbSchema = {
       "@type": "ListItem",
       position: 1,
       name: "Home",
-      item: "https://sinceai.fi/",
+      item: "https://sinceai.ai/",
     },
     {
       "@type": "ListItem",
       position: 2,
       name: "FAQ",
-      item: "https://sinceai.fi/faq",
+      item: "https://sinceai.ai/faq",
     },
   ],
 };

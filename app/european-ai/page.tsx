@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     title: "European AI Sovereignty Through Open Source | Since AI",
     description:
       "Building European AI independence through community-driven open-source projects, privacy-first tools, and collaborative development.",
-    url: "https://sinceai.fi/european-ai",
+    url: "https://sinceai.ai/european-ai",
     type: "website",
   },
 };

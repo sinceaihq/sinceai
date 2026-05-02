@@ -19,7 +19,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sinceai.fi"),
+  metadataBase: new URL("https://sinceai.ai"),
   title:
     "Since AI — Global Execution-Focused AI Innovation Ecosystem | Hackathons, Applied AI, Research",
   description:
@@ -38,19 +38,19 @@ export const metadata: Metadata = {
   creator: "Since AI",
   publisher: "Since AI",
   alternates: {
-    canonical: "https://sinceai.fi",
+    canonical: "https://sinceai.ai",
   },
   openGraph: {
     title: "Since AI — Global Execution-Focused AI Innovation Ecosystem",
     description:
       "Where frontier AI becomes shipped products. 10,000+ AI builders globally. Backed by Google for Developers, Bayer, Sandvik, Antler, and more.",
-    url: "https://sinceai.fi",
+    url: "https://sinceai.ai",
     siteName: "Since AI",
     locale: "en_US",
     type: "website",
     images: [
       {
-        url: "https://sinceai.fi/assets/og/hero.png",
+        url: "https://sinceai.ai/assets/og/hero.png",
         width: 1200,
         height: 630,
         alt: "Since AI — Global execution-focused AI innovation ecosystem",
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     title: "Since AI — Global Execution-Focused AI Innovation Ecosystem",
     description:
       "Where frontier AI becomes shipped products. 10,000+ AI builders globally.",
-    images: ["https://sinceai.fi/assets/og/hero.png"],
+    images: ["https://sinceai.ai/assets/og/hero.png"],
   },
   robots: {
     index: true,
@@ -83,11 +83,11 @@ export const metadata: Metadata = {
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "@id": "https://sinceai.fi/#organization",
+  "@id": "https://sinceai.ai/#organization",
   name: "Since AI",
   alternateName: "Since AI ry",
-  url: "https://sinceai.fi",
-  logo: "https://sinceai.fi/assets/logo/SINCE AI white.png",
+  url: "https://sinceai.ai",
+  logo: "https://sinceai.ai/assets/logo/SINCE AI white.png",
   description:
     "Global execution-focused AI innovation ecosystem. Where frontier AI becomes shipped products. Since AI connects 10,000+ AI builders globally with leading AI companies, research groups, and investors through hackathons, open-source collaboration, and applied AI projects.",
   foundingDate: "2025",
@@ -138,10 +138,10 @@ const organizationSchema = {
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "@id": "https://sinceai.fi/#website",
-  url: "https://sinceai.fi",
+  "@id": "https://sinceai.ai/#website",
+  url: "https://sinceai.ai",
   name: "Since AI",
-  publisher: { "@id": "https://sinceai.fi/#organization" },
+  publisher: { "@id": "https://sinceai.ai/#organization" },
   inLanguage: "en",
 };
 

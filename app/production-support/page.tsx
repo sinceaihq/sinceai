@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     title: "Production Support — From Hackathon to Deployment | Since AI",
     description:
       "Most hackathons end with a demo. Since AI projects become production systems. 8+ weeks of deployment support for winning projects.",
-    url: "https://sinceai.fi/production-support",
+    url: "https://sinceai.ai/production-support",
     type: "website",
   },
 };

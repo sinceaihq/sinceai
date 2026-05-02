@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     "Learn how Since AI collects, uses, and protects your personal information. GDPR-compliant privacy policy for our AI community.",
   alternates: {
-    canonical: "https://sinceai.fi/privacy",
+    canonical: "https://sinceai.ai/privacy",
   },
   openGraph: {
     title: "Privacy Policy — Since AI",
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Since AI",
-    url: "https://sinceai.fi/privacy",
+    url: "https://sinceai.ai/privacy",
   },
   robots: {
     index: true,

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     "AI community Finland",
   ],
   alternates: {
-    canonical: "https://sinceai.fi/press",
+    canonical: "https://sinceai.ai/press",
   },
   openGraph: {
     title: "Press & Media — Since AI",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Since AI",
-    url: "https://sinceai.fi/press",
+    url: "https://sinceai.ai/press",
   },
   robots: {
     index: true,

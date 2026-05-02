@@ -104,4 +104,4 @@ Every component is built with performance, accessibility, and type safety in min
 
 **Since AI ry** — Business ID 3593920-2 — Turku, Finland
 
-[sinceai.fi](https://sinceai.fi) · [Discord](https://discord.com/invite/YkqJswRGSW) · [GitHub](https://github.com/sinceaihq)
+[sinceai.fi](https://sinceai.ai) · [Discord](https://discord.com/invite/YkqJswRGSW) · [GitHub](https://github.com/sinceaihq)

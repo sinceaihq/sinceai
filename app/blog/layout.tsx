@@ -21,13 +21,13 @@ export const metadata: Metadata = {
     "Since AI blog",
   ],
   alternates: {
-    canonical: "https://sinceai.fi/blog",
+    canonical: "https://sinceai.ai/blog",
   },
   openGraph: {
     title: "AI Hackathon Guides & Community Resources | Since AI Blog",
     description:
       "Comprehensive guides from the leading global AI builders community. Hackathon strategies, tech stacks, project ideas, and developer events.",
-    url: "https://sinceai.fi/blog",
+    url: "https://sinceai.ai/blog",
     siteName: "Since AI",
     locale: "en_US",
     type: "website",

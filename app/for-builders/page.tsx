@@ -12,12 +12,12 @@ export const metadata: Metadata = {
   title: "For Builders — Join Since AI's Global AI Ecosystem",
   description:
     "Join 10,000+ AI builders globally. Hackathons, applied AI projects, startup pathways. Since AI is open to developers, researchers, and founders globally.",
-  alternates: { canonical: "https://sinceai.fi/for-builders" },
+  alternates: { canonical: "https://sinceai.ai/for-builders" },
   openGraph: {
     title: "For Builders — Join Since AI's Global AI Ecosystem",
     description:
       "Join 10,000+ AI builders globally. Hackathons, applied AI projects, startup pathways. Open globally.",
-    url: "https://sinceai.fi/for-builders",
+    url: "https://sinceai.ai/for-builders",
     siteName: "Since AI",
     type: "website",
   },
@@ -76,12 +76,12 @@ const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://sinceai.fi/" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://sinceai.ai/" },
     {
       "@type": "ListItem",
       position: 2,
       name: "For Builders",
-      item: "https://sinceai.fi/for-builders",
+      item: "https://sinceai.ai/for-builders",
     },
   ],
 };

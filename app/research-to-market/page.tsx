@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     title: "Research to Market — Commercializing AI Innovation | Since AI",
     description:
       "Bridging academia and industry. Since AI helps researchers commercialize AI innovations through real-world validation, production deployment, and startup support.",
-    url: "https://sinceai.fi/research-to-market",
+    url: "https://sinceai.ai/research-to-market",
     type: "website",
   },
 };

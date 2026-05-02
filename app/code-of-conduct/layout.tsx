@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     "community safety",
   ],
   alternates: {
-    canonical: "https://sinceai.fi/code-of-conduct",
+    canonical: "https://sinceai.ai/code-of-conduct",
   },
   openGraph: {
     title: "Code of Conduct — Since AI Community Standards",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Since AI",
-    url: "https://sinceai.fi/code-of-conduct",
+    url: "https://sinceai.ai/code-of-conduct",
   },
   robots: {
     index: true,

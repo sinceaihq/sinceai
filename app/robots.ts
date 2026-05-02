@@ -20,6 +20,6 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "Bytespider", allow: "/" },
       { userAgent: "Amazonbot", allow: "/" },
     ],
-    sitemap: "https://sinceai.fi/sitemap.xml",
+    sitemap: "https://sinceai.ai/sitemap.xml",
   };
 }

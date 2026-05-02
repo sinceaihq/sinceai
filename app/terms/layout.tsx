@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     "Review the terms and conditions for participating in the Since AI community, events, and services.",
   alternates: {
-    canonical: "https://sinceai.fi/terms",
+    canonical: "https://sinceai.ai/terms",
   },
   openGraph: {
     title: "Terms of Service — Since AI",
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Since AI",
-    url: "https://sinceai.fi/terms",
+    url: "https://sinceai.ai/terms",
   },
   robots: {
     index: true,

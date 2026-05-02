@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     "Global AI events",
   ],
   alternates: {
-    canonical: "https://sinceai.fi/events",
+    canonical: "https://sinceai.ai/events",
   },
   openGraph: {
     title: "Events — Since AI Hackathons & AI Builder Meetups",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Since AI",
-    url: "https://sinceai.fi/events",
+    url: "https://sinceai.ai/events",
   },
   robots: {
     index: true,

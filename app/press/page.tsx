@@ -77,8 +77,8 @@ export default function PressPage() {
                   <strong className="text-white">Location:</strong> Turku, Finland
                   <br />
                   <strong className="text-white">Website:</strong>{" "}
-                  <a href="https://sinceai.fi" className="text-white hover:text-neutral-300 underline">
-                    sinceai.fi
+                  <a href="https://sinceai.ai" className="text-white hover:text-neutral-300 underline">
+                    sinceai.ai
                   </a>
                 </p>
                 <p className="text-neutral-400 leading-relaxed mb-4">
@@ -351,7 +351,7 @@ export default function PressPage() {
                       Valmet, Sandvik, Kongsberg, and ElevenLabs. Our unique approach includes post-hackathon
                       production support (8+ weeks), entrepreneurship assistance through Antler partnership,
                       European AI sovereignty initiatives, and research-to-market bridges with the University
-                      of Turku and Turku AMK. Learn more: sinceai.fi
+                      of Turku and Turku AMK. Learn more: sinceai.ai
                     </p>
                   </div>
 
@@ -368,7 +368,7 @@ export default function PressPage() {
                       Sandvik, Kongsberg, ElevenLabs, and Antler. Beyond individual projects, we advance
                       European AI sovereignty through open-source initiatives and bridge academic research
                       to market through partnerships with University of Turku and Turku AMK. Since AI is
-                      a registered non-profit (Since AI ry, Business ID: 3593920-2). Learn more: sinceai.fi
+                      a registered non-profit (Since AI ry, Business ID: 3593920-2). Learn more: sinceai.ai
                     </p>
                   </div>
                 </div>

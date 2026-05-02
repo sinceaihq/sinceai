@@ -12,12 +12,12 @@ export const metadata: Metadata = {
   title: "About Since AI — Global Execution-Focused AI Innovation Ecosystem",
   description:
     "Since AI is a non-profit connecting 10,000+ AI builders globally. Learn about our mission, founders, and legal structure.",
-  alternates: { canonical: "https://sinceai.fi/about" },
+  alternates: { canonical: "https://sinceai.ai/about" },
   openGraph: {
     title: "About Since AI — Global Execution-Focused AI Innovation Ecosystem",
     description:
       "Since AI is a non-profit connecting 10,000+ AI builders globally with leading AI companies, research groups, and investors.",
-    url: "https://sinceai.fi/about",
+    url: "https://sinceai.ai/about",
     siteName: "Since AI",
     type: "website",
   },
@@ -37,13 +37,13 @@ const breadcrumbSchema = {
       "@type": "ListItem",
       position: 1,
       name: "Home",
-      item: "https://sinceai.fi/",
+      item: "https://sinceai.ai/",
     },
     {
       "@type": "ListItem",
       position: 2,
       name: "About",
-      item: "https://sinceai.fi/about",
+      item: "https://sinceai.ai/about",
     },
   ],
 };
@@ -53,7 +53,7 @@ const rikuSchema = {
   "@type": "Person",
   name: "Riku Lauttia",
   jobTitle: "Founder",
-  worksFor: { "@id": "https://sinceai.fi/#organization" },
+  worksFor: { "@id": "https://sinceai.ai/#organization" },
   url: "https://lauttia.ai",
   sameAs: [
     "https://lauttia.ai",

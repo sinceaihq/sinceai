@@ -15,13 +15,13 @@ export const metadata: Metadata = {
   keywords:
     "finland ai, ai finland, finland ai community, finnish ai developers, ai hackathon finland, helsinki ai, turku ai, tampere ai",
   alternates: {
-    canonical: "https://sinceai.fi/finland-ai",
+    canonical: "https://sinceai.ai/finland-ai",
   },
   openGraph: {
     title: "Finland AI Community | Since AI - Nordic AI Excellence",
     description:
       "Join Finland's leading AI developer community. 1000+ members across Helsinki, Turku, Tampere, Oulu.",
-    url: "https://sinceai.fi/finland-ai",
+    url: "https://sinceai.ai/finland-ai",
     siteName: "Since AI",
     type: "website",
   },

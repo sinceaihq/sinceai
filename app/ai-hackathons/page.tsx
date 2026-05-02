@@ -24,13 +24,13 @@ export const metadata: Metadata = {
     "Since AI Hackathon",
   ],
   alternates: {
-    canonical: "https://sinceai.fi/ai-hackathons",
+    canonical: "https://sinceai.ai/ai-hackathons",
   },
   openGraph: {
     title: "AI Hackathons 2026 | Since AI",
     description:
       "Since AI Hackathon 2026: November 6–8, Turku, Finland. 72 hours, 1,000+ builders, real partner challenges. Free to attend.",
-    url: "https://sinceai.fi/ai-hackathons",
+    url: "https://sinceai.ai/ai-hackathons",
     siteName: "Since AI",
     type: "website",
   },
@@ -145,7 +145,7 @@ export default function AIHackathonsPage() {
         "@type": "ListItem",
         position: 1,
         item: {
-          "@id": "https://sinceai.fi/hackathon#event",
+          "@id": "https://sinceai.ai/hackathon#event",
           "@type": "Event",
           name: "Since AI Hackathon 2026",
           startDate: "2026-11-06",
@@ -159,8 +159,8 @@ export default function AIHackathonsPage() {
               addressCountry: "FI",
             },
           },
-          url: "https://sinceai.fi/hackathon",
-          organizer: { "@id": "https://sinceai.fi/#organization" },
+          url: "https://sinceai.ai/hackathon",
+          organizer: { "@id": "https://sinceai.ai/#organization" },
           offers: {
             "@type": "Offer",
             price: "0",

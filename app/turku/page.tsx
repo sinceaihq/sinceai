@@ -16,13 +16,13 @@ export const metadata: Metadata = {
   keywords:
     "turku ai, ai turku, turku ai community, turku hackathon, ai developers turku, turku tech, turku finland ai",
   alternates: {
-    canonical: "https://sinceai.fi/turku",
+    canonical: "https://sinceai.ai/turku",
   },
   openGraph: {
     title: "AI Community in Turku, Finland | Since AI",
     description:
       "Join Turku's premier AI community. 1000+ developers, AI hackathons with real company challenges, production deployment support.",
-    url: "https://sinceai.fi/turku",
+    url: "https://sinceai.ai/turku",
     siteName: "Since AI",
     type: "website",
   },

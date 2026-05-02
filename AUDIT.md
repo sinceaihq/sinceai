@@ -154,10 +154,10 @@ Multiple locations — it is a primary content theme:
 
 | File | Status | Location |
 |---|---|---|
-| `robots.txt` | **Present** | `app/robots.ts` (Next.js MetadataRoute). Allows all AI crawlers explicitly: GPTBot, ChatGPT-User, Google-Extended, anthropic-ai, Claude-Web, CCBot, PerplexityBot, Diffbot, cohere-ai, Applebot-Extended, Bytespider. Points to `https://sinceai.fi/sitemap.xml`. |
+| `robots.txt` | **Present** | `app/robots.ts` (Next.js MetadataRoute). Allows all AI crawlers explicitly: GPTBot, ChatGPT-User, Google-Extended, anthropic-ai, Claude-Web, CCBot, PerplexityBot, Diffbot, cohere-ai, Applebot-Extended, Bytespider. Points to `https://sinceai.ai/sitemap.xml`. |
 | `llms.txt` | **Present** | `public/llms.txt` — well-structured Markdown with org summary, stats, events, blog links, pages index, social, and reference to `llms-full.txt`. |
 | `llms-full.txt` | **Present** | `public/llms-full.txt` — extended context document for AI systems (stats dated February 2026). |
-| `ai.txt` | **Referenced but missing** | `llms.txt` references `https://sinceai.fi/ai.txt` but no such file exists in the repo. |
+| `ai.txt` | **Referenced but missing** | `llms.txt` references `https://sinceai.ai/ai.txt` but no such file exists in the repo. |
 
 ### 3i. sitemap.xml
 
@@ -264,7 +264,7 @@ In `LeanHero.tsx`, the four stat pills (`"1000+ members"`, `"260+ builders"`, et
 
 ### 🟡 MEDIUM — `ai.txt` referenced but missing
 
-`public/llms.txt` links to `https://sinceai.fi/ai.txt` but no such file exists in the repo or `public/` directory. This creates a 404 for any AI crawler or user following that reference.
+`public/llms.txt` links to `https://sinceai.ai/ai.txt` but no such file exists in the repo or `public/` directory. This creates a 404 for any AI crawler or user following that reference.
 
 ### 🟡 MEDIUM — OG image is a static black-background logo PNG
 

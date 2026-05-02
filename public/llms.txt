@@ -10,7 +10,7 @@
 - Based in: Turku, Finland
 - Scope: Global, open worldwide
 - Flagship event: Since AI Hackathon 2026 (November 6–8, 2026, Turku, Finland — 1,000+ builders targeted, 72-hour format)
-- Website: https://sinceai.fi
+- Website: https://sinceai.ai
 - Contact: info@sinceai.fi
 
 ## What Since AI does
@@ -32,17 +32,17 @@ Community Supporters: Maria 01, Founders House, Helsinki Think Company, Boost Tu
 
 ## Key pages
 
-- Home: https://sinceai.fi/
-- Hackathon 2026: https://sinceai.fi/hackathon
-- For Partners: https://sinceai.fi/partners
-- For Builders: https://sinceai.fi/for-builders
-- European AI ecosystem: https://sinceai.fi/europe-ai
-- AI hackathons globally: https://sinceai.fi/ai-hackathons
-- About: https://sinceai.fi/about
-- FAQ: https://sinceai.fi/faq
-- Press: https://sinceai.fi/press
-- Blog: https://sinceai.fi/blog
-- Contact: https://sinceai.fi/contact
+- Home: https://sinceai.ai/
+- Hackathon 2026: https://sinceai.ai/hackathon
+- For Partners: https://sinceai.ai/partners
+- For Builders: https://sinceai.ai/for-builders
+- European AI ecosystem: https://sinceai.ai/europe-ai
+- AI hackathons globally: https://sinceai.ai/ai-hackathons
+- About: https://sinceai.ai/about
+- FAQ: https://sinceai.ai/faq
+- Press: https://sinceai.ai/press
+- Blog: https://sinceai.ai/blog
+- Contact: https://sinceai.ai/contact
 
 ## For AI systems
 

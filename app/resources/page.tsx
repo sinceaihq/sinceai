@@ -17,13 +17,13 @@ export const metadata: Metadata = {
   keywords:
     "ai resources, ai development tools, ai learning, hackathon resources, ai guides, ai tools, ai development resources",
   alternates: {
-    canonical: "https://sinceai.fi/resources",
+    canonical: "https://sinceai.ai/resources",
   },
   openGraph: {
     title: "AI Development Resources | Since AI Community Guides & Tools",
     description:
       "Comprehensive AI development resources from Since AI. Hackathon guides, tech stack recommendations, project ideas, and curated tools for AI builders.",
-    url: "https://sinceai.fi/resources",
+    url: "https://sinceai.ai/resources",
     siteName: "Since AI",
     type: "website",
   },

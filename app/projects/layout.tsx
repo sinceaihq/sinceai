@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     "Since AI projects",
   ],
   alternates: {
-    canonical: "https://sinceai.fi/projects",
+    canonical: "https://sinceai.ai/projects",
   },
   openGraph: {
     title: "Projects — Since AI | Challenge Themes from Hackathon 2025",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Since AI",
-    url: "https://sinceai.fi/projects",
+    url: "https://sinceai.ai/projects",
   },
   robots: {
     index: true,

@@ -50,7 +50,7 @@ No test framework is configured.
 - JSON-LD schemas injected in root `layout.tsx`
 - Dynamic `sitemap.ts` and `robots.ts`
 - OpenGraph and Twitter metadata on each page
-- Canonical URL: `https://sinceai.fi`
+- Canonical URL: `https://sinceai.ai`
 
 ### Deployment
 
