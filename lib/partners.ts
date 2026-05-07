@@ -88,6 +88,12 @@ export const PARTNERS: Partner[] = [
     tier: 2,
   },
   {
+    name: "Redstone VC",
+    logo: "/assets/sponsors/Redstone.png",
+    url: "https://redstone.vc/",
+    tier: 2,
+  },
+  {
     name: "Inovexus",
     logo: "/assets/sponsors/Inovexus.svg",
     url: "https://inovexus.com/",

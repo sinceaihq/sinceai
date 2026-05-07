@@ -20,6 +20,7 @@ const CAPITAL = [
   { name: "Antler",              url: "https://www.antler.co/" },
   { name: "Inventure",           url: "https://www.inventure.vc/" },
   { name: "Wave Ventures",       url: "https://www.wave.ventures/" },
+  { name: "Redstone VC",         url: "https://redstone.vc/" },
   { name: "Aalto AI",            url: "https://www.aaltoai.com/" },
   { name: "University of Turku", url: "https://www.utu.fi" },
   { name: "HankenAI",            url: "https://hankai.info/" },
