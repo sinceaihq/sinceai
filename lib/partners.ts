@@ -44,6 +44,12 @@ export const PARTNERS: Partner[] = [
     tier: 1,
   },
   {
+    name: "Featherless.ai",
+    logo: "/assets/sponsors/featherless.svg",
+    url: "https://featherless.ai/",
+    tier: 1,
+  },
+  {
     name: "Bayer",
     logo: "/assets/sponsors/Bayer.svg",
     url: "https://www.bayer.com/",
@@ -65,6 +71,18 @@ export const PARTNERS: Partner[] = [
     name: "Valmet",
     logo: "/assets/sponsors/valmet.png",
     url: "https://www.valmet.com/",
+    tier: 1,
+  },
+  {
+    name: "Shift",
+    logo: "/assets/sponsors/shift.png",
+    url: "https://theshift.fi/",
+    tier: 1,
+  },
+  {
+    name: "Turun Teknologiakiinteistöt",
+    logo: "/assets/sponsors/TurkuTechnologyProperties.png",
+    url: "https://www.teknologiakiinteistot.fi/",
     tier: 1,
   },
 
@@ -131,12 +149,6 @@ export const PARTNERS: Partner[] = [
   },
 
   // ─── Tier 3: Community Supporters ───────────────────────────────────────────
-  {
-    name: "Featherless.ai",
-    logo: "/assets/sponsors/featherless.svg",
-    url: "https://featherless.ai/",
-    tier: 3,
-  },
   {
     name: "Eisko",
     logo: "/assets/sponsors/eisko.svg",
