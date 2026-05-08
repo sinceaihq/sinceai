@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FeaturedSpeakers } from "@/components/sections/homepage/FeaturedSpeakers";
 
 const DISCORD_URL = "https://discord.com/invite/YkqJswRGSW";
 
@@ -436,10 +437,13 @@ export function BelowHero() {
         </div>
       </section>
 
-      {/* ── SECTION 6: Testimonial slot ───────────────────────── */}
+      {/* ── SECTION: Testimonial slot ───────────────────────── */}
       {/* TODO: Named testimonial with partner attribution once confirmed.
           Format: blockquote in monospace, attribution line with name + role + company.
           Do NOT re-add the anonymous "Head of Talent, Partner Company" quote. */}
+
+      {/* ── SECTION 6: Featured Speaker ─────────────────────── */}
+      <FeaturedSpeakers />
 
       {/* ── SECTION 7: Dual-track footer CTA ──────────────────── */}
       <section

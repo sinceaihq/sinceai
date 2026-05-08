@@ -26,6 +26,12 @@ export const PARTNERS: Partner[] = [
     tier: 1,
   },
   {
+    name: "LUMI AI Factory",
+    logo: "/assets/sponsors/Lumi.svg",
+    url: "https://lumi-ai-factory.eu/",
+    tier: 1,
+  },
+  {
     name: "Aiven",
     logo: "/assets/sponsors/aiven.png",
     url: "https://aiven.io/",

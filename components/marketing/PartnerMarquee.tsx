@@ -27,6 +27,7 @@ const logos: Logo[] = [
   { name: "Maria 01",              src: "/assets/sponsors/maria01.png",              href: "https://maria.io/" },
   { name: "AI Mad Lab",            src: "/assets/supports/aimadlab.svg",             href: "https://www.aimadlab.com/" },
   { name: "Founders House",        src: "/assets/sponsors/founders_house.svg",       href: "https://founders-house.fi/" },
+  { name: "LUMI AI Factory",       src: "/assets/sponsors/Lumi.svg",                 href: "https://lumi-ai-factory.eu/" },
 ];
 
 function LogoItem({ name, src, href, loading = "lazy", ...rest }: Logo & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
