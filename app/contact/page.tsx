@@ -136,6 +136,12 @@ const teamSections = [
         email: "hafiza@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/hafiza-aqsa-munawar/",
       },
+      {
+        name: "Shanuri Perera",
+        role: "Social Media & Content",
+        email: "shanuri@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/shanuri-perera-19a3483b3/",
+      },
     ],
   },
   {
@@ -168,6 +174,12 @@ const teamSections = [
         role: "Development",
         email: "zain@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/zain-taufique-20273179/",
+      },
+      {
+        name: "Joonatan Laato",
+        role: "Development",
+        email: "joonatan.laato@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/joonatan-laato-19b3521b4/",
       },
     ],
   },
@@ -230,6 +242,12 @@ const teamSections = [
         email: "radin@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/radin-dabbagh-rezeiyeh-b64687225/",
       },
+      {
+        name: "Henrique Nunez",
+        role: "Production",
+        email: "henrique@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/henrique-nunez/",
+      },
     ],
   },
   {
@@ -241,6 +259,12 @@ const teamSections = [
         email: "arttu.karonen@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/arttu-karonen-526872261/",
         image: "/assets/team/arttu-k.webp",
+      },
+      {
+        name: "Ville Vanhala",
+        role: "Finance",
+        email: "ville.vanhala@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/ville-vanhala-99b816398/",
       },
     ],
   },
