@@ -154,6 +154,12 @@ export const PARTNERS: Partner[] = [
     tier: 2,
   },
   {
+    name: "TurkuNLP",
+    logo: "/assets/sponsors/turkunlp_logo.png",
+    url: "https://turkunlp.org",
+    tier: 2,
+  },
+  {
     name: "GPT Lab",
     logo: "/assets/sponsors/GPT-Lab.svg",
     url: "https://gpt-lab.eu/",
