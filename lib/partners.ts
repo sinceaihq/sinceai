@@ -269,6 +269,12 @@ export const PARTNERS: Partner[] = [
     url: "https://lutes.fi/",
     tier: 3,
   },
+  {
+    name: "JES",
+    logo: "/assets/supports/JESprimarylogoWhiteStickerSVG.svg",
+    url: "https://www.jkles.fi/en/",
+    tier: 3,
+  },
 ];
 
 // ─── Tier-based exports (primary) ─────────────────────────────────────────────
