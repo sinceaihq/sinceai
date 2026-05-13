@@ -181,6 +181,24 @@ const teamSections = [
         email: "joonatan.laato@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/joonatan-laato-19b3521b4/",
       },
+      {
+        name: "Ville Tuuli",
+        role: "Development",
+        email: "ville@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/ville-tuuli-67abab289/",
+      },
+      {
+        name: "Lehel Denes",
+        role: "Development",
+        email: "lehel@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/lehel-d-4a20a634b/",
+      },
+      {
+        name: "Georg Wahlroos",
+        role: "Development",
+        email: "georg@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/georg-wahlroos-689267180/",
+      },
     ],
   },
   {
