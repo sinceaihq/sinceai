@@ -124,6 +124,12 @@ export const PARTNERS: Partner[] = [
     tier: 2,
   },
   {
+    name: "Monttu Ventures",
+    logo: "/assets/sponsors/monttuventureslogo.png",
+    url: "https://monttuventures.fi/",
+    tier: 2,
+  },
+  {
     name: "Aalto AI",
     logo: "/assets/supports/aaltoai.png",
     url: "https://www.aaltoai.com/",
@@ -145,6 +151,12 @@ export const PARTNERS: Partner[] = [
     name: "Maria 01",
     logo: "/assets/sponsors/maria01.png",
     url: "https://maria.io/",
+    tier: 2,
+  },
+  {
+    name: "TurkuNLP",
+    logo: "/assets/sponsors/turkunlp_logo.png",
+    url: "https://turkunlp.org",
     tier: 2,
   },
   {
@@ -255,6 +267,12 @@ export const PARTNERS: Partner[] = [
     name: "Lutes",
     logo: "/assets/supports/LUTES.svg",
     url: "https://lutes.fi/",
+    tier: 3,
+  },
+  {
+    name: "JES",
+    logo: "/assets/supports/JESprimarylogoWhiteStickerSVG.svg",
+    url: "https://www.jkles.fi/en/",
     tier: 3,
   },
 ];
