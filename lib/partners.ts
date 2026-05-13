@@ -124,6 +124,12 @@ export const PARTNERS: Partner[] = [
     tier: 2,
   },
   {
+    name: "Monttu Ventures",
+    logo: "/assets/sponsors/monttuventureslogo.png",
+    url: "https://monttuventures.fi/",
+    tier: 2,
+  },
+  {
     name: "Aalto AI",
     logo: "/assets/supports/aaltoai.png",
     url: "https://www.aaltoai.com/",
