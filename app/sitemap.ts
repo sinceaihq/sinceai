@@ -5,7 +5,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
   // Note: /blog/[slug] pages are excluded — they redirect to Medium (301).
-  // Note: /impact does not exist → /stats used instead.
   // Note: /research and /europe do not exist → excluded.
   // Note: /european-ai is a separate page from /europe-ai — both included.
   const staticPages: {
