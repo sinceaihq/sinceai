@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import Logo from "./logo";
+import Logo from "@/components/brand/logo";
 
 const DISCORD_URL = "https://discord.com/invite/YkqJswRGSW";
 

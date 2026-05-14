@@ -2,13 +2,13 @@ import React from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import SmoothScroll from "@/components/smoothScroll";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/sections/Footer";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { getBreadcrumbSchema } from "@/lib/schema";
 import { ORG } from "@/lib/org";
 import { blogPosts } from "@/lib/blog";
-import NewsletterSignup from "@/components/NewsletterSignup";
+import NewsletterSignup from "@/components/forms/NewsletterSignup";
 
 export const metadata: Metadata = {
   title: "AI Development Resources | Since AI Community Guides & Tools",

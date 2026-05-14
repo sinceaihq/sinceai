@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 import { FaLinkedin } from "react-icons/fa";
 
 import SmoothScroll from "@/components/smoothScroll";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/sections/Footer";
-import ContactForm from "@/components/ContactForm";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
+import ContactForm from "@/components/forms/ContactForm";
 
 // Team members data organized by department
 const teamSections = [
