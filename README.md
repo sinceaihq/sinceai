@@ -169,7 +169,7 @@ sinceai/
 │   ├── assets/
 │   │   ├── logo/                 # Since AI logo variants (black/white, full/mark)
 │   │   ├── og/                   # OpenGraph images (hero.png)
-│   │   ├── images/               # Page images (educity venue photos)
+│   │   ├── images/               # Page images (educity-hero.webp, educity-card.webp)
 │   │   ├── sponsors/             # Partner and sponsor logos
 │   │   ├── speakers/             # Speaker photos
 │   │   ├── team/                 # Team member photos (used on contact page)
@@ -183,9 +183,13 @@ sinceai/
 │       ├── nextjs.yml            # CI: lint, typecheck, build
 │       └── cloudflare.yml        # CD: deploy to Cloudflare Workers
 │
+├── scripts/
+│   └── patch-opennext-worker.mjs # Post-build patch for Cloudflare image handling
+│
 ├── next.config.ts                # Next.js config (security headers, image settings)
 ├── open-next.config.ts           # OpenNext Cloudflare Workers adapter config
-├── tailwind.config.ts            # Tailwind CSS v4 config
+├── wrangler.jsonc                # Cloudflare Workers config (name, compatibility date)
+├── postcss.config.mjs            # PostCSS config for Tailwind CSS v4
 ├── tsconfig.json                 # TypeScript config (@/* path alias)
 └── CLAUDE.md                     # Instructions for Claude Code AI assistant
 ```
