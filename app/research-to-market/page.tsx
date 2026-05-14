@@ -21,6 +21,7 @@ export const metadata: Metadata = {
     "AI startup support",
     "Since AI",
   ],
+  alternates: { canonical: "https://sinceai.ai/research-to-market" },
   openGraph: {
     title: "Research to Market — Commercializing AI Innovation | Since AI",
     description:

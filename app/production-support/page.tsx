@@ -21,6 +21,7 @@ export const metadata: Metadata = {
     "production-ready AI",
     "Since AI",
   ],
+  alternates: { canonical: "https://sinceai.ai/production-support" },
   openGraph: {
     title: "Production Support — From Hackathon to Deployment | Since AI",
     description:

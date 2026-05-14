@@ -62,6 +62,15 @@ const faqData = [
   },
 ];
 
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://sinceai.ai/" },
+    { "@type": "ListItem", position: 2, name: "Contact", item: "https://sinceai.ai/contact" },
+  ],
+};
+
 export default function ContactLayout({
   children,
 }: {
@@ -73,9 +82,11 @@ export default function ContactLayout({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(faqSchema),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       {children}
     </>

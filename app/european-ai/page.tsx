@@ -22,6 +22,7 @@ export const metadata: Metadata = {
     "AI independence Europe",
     "Since AI",
   ],
+  alternates: { canonical: "https://sinceai.ai/european-ai" },
   openGraph: {
     title: "European AI Sovereignty Through Open Source | Since AI",
     description:
