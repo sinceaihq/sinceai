@@ -608,7 +608,7 @@ export default function HackathonPage() {
                 }}
                 className="hover:text-white transition-colors"
               >
-                Interested in setting a challenge or sponsoring? → sinceai.fi/partners
+                Interested in setting a challenge or sponsoring? → sinceai.ai/partners
               </Link>
             </div>
           </div>

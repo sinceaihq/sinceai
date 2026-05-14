@@ -80,7 +80,7 @@ const metrics: {
     metric: "Projects shipped",
     value: "30+",
     methodology:
-      "Hackathon and post-hackathon projects with public deliverables — GitHub repositories, live demos, or partner-accepted prototypes. See sinceai.fi/projects for public summaries.",
+      "Hackathon and post-hackathon projects with public deliverables — GitHub repositories, live demos, or partner-accepted prototypes. See sinceai.ai/projects for public summaries.",
   },
   {
     metric: "Countries represented",

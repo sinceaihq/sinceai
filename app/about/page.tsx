@@ -224,7 +224,7 @@ export default function AboutPage() {
                     href="/stats"
                     className="text-neutral-300 hover:text-white underline"
                   >
-                    sinceai.fi/stats
+                    sinceai.ai/stats
                   </Link>
                   .
                 </p>

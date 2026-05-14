@@ -43,7 +43,7 @@ const builderFaqs = [
   {
     question: "What is the application process for Since AI Hackathon 2026?",
     answer:
-      "Applications for Since AI Hackathon 2026 open on a rolling basis ahead of the event. Apply at sinceai.fi/hackathon. You can apply as an individual or as a pre-formed team. Team formation support is available at the event.",
+      "Applications for Since AI Hackathon 2026 open on a rolling basis ahead of the event. Apply at sinceai.ai/hackathon. You can apply as an individual or as a pre-formed team. Team formation support is available at the event.",
   },
   {
     question: "Do I keep the IP from my work at Since AI events?",

@@ -20,6 +20,7 @@ export const metadata: Metadata = {
     "Since AI numbers",
     "AI community growth",
   ],
+  alternates: { canonical: "https://sinceai.ai/stats" },
   openGraph: {
     title: "Statistics & Impact | Since AI",
     description:

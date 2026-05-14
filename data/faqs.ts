@@ -39,7 +39,7 @@ export const faqs: Faq[] = [
   {
     question: "How can a company partner with Since AI?",
     answer:
-      "Companies can partner with Since AI by sponsoring hackathon challenges, recruiting builders from the ecosystem, running pilot projects with top teams, or joining as strategic partners. Contact info@sinceai.fi or see sinceai.fi/partners.",
+      "Companies can partner with Since AI by sponsoring hackathon challenges, recruiting builders from the ecosystem, running pilot projects with top teams, or joining as strategic partners. Contact info@sinceai.fi or see sinceai.ai/partners.",
   },
   {
     question: "Is Since AI a for-profit company?",
@@ -74,6 +74,6 @@ export const faqs: Faq[] = [
   {
     question: "How can I stay updated on Since AI events and opportunities?",
     answer:
-      "Follow Since AI on the website blog (sinceai.fi/blog), on Medium (@sinceai), or join the Discord community. Hackathon applications and partner program updates are announced through these channels first.",
+      "Follow Since AI on the website blog (sinceai.ai/blog), on Medium (@sinceai), or join the Discord community. Hackathon applications and partner program updates are announced through these channels first.",
   },
 ];
