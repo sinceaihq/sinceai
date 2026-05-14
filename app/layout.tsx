@@ -3,6 +3,7 @@ import { JetBrains_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import StructuredData from "@/components/StructuredData";
 import { CookieConsent } from "@/components/CookieConsent";
+import { ORG } from "@/lib/org";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -83,23 +84,23 @@ export const metadata: Metadata = {
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "@id": "https://sinceai.ai/#organization",
-  name: "Since AI",
-  alternateName: "Since AI ry",
-  url: "https://sinceai.ai",
-  logo: "https://sinceai.ai/assets/logo/SINCE AI white.png",
+  "@id": `${ORG.baseUrl}/#organization`,
+  name: ORG.name,
+  alternateName: ORG.legalName,
+  url: ORG.baseUrl,
+  logo: `${ORG.baseUrl}/assets/logo/SINCE AI white.png`,
   description:
     "Global execution-focused AI innovation ecosystem. Where frontier AI becomes shipped products. Since AI connects 10,000+ AI builders globally with leading AI companies, research groups, and investors through hackathons, open-source collaboration, and applied AI projects.",
   foundingDate: "2025",
-  taxID: "3593920-2",
-  email: "info@sinceai.fi",
+  taxID: ORG.businessId,
+  email: ORG.contact.infoEmail,
   nonprofitStatus: "NonprofitType",
   location: {
     "@type": "Place",
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Turku",
-      addressCountry: "FI",
+      addressLocality: ORG.location.city,
+      addressCountry: ORG.location.countryCode,
     },
   },
   areaServed: [
@@ -111,16 +112,16 @@ const organizationSchema = {
     { "@type": "Country", name: "United Kingdom" },
   ],
   sameAs: [
-    "https://discord.com/invite/YkqJswRGSW",
-    "https://www.linkedin.com/company/sinceai",
-    "https://x.com/sinceaihq",
-    "https://github.com/sinceaihq",
-    "https://www.instagram.com/sinceaihq",
-    "https://medium.com/@sinceai",
-    "https://t.me/sinceaihq",
-    "https://www.facebook.com/sinceai",
-    "https://www.youtube.com/@sinceaihq",
-    "https://sinceai.substack.com",
+    ORG.social.discord,
+    ORG.social.linkedin,
+    ORG.social.x,
+    ORG.social.github,
+    ORG.social.instagram,
+    ORG.social.medium,
+    ORG.social.telegram,
+    ORG.social.facebook,
+    ORG.social.youtube,
+    ORG.social.substack,
   ],
   knowsAbout: [
     "Artificial Intelligence",
@@ -138,10 +139,10 @@ const organizationSchema = {
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "@id": "https://sinceai.ai/#website",
-  url: "https://sinceai.ai",
-  name: "Since AI",
-  publisher: { "@id": "https://sinceai.ai/#organization" },
+  "@id": `${ORG.baseUrl}/#website`,
+  url: ORG.baseUrl,
+  name: ORG.name,
+  publisher: { "@id": `${ORG.baseUrl}/#organization` },
   inLanguage: "en",
 };
 

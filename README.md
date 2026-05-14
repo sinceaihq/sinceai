@@ -198,7 +198,7 @@ sinceai/
 
 ## Architecture
 
-**Next.js 16 App Router** with React Server Components. Pages are server-rendered by default — `"use client"` is only added when a component needs browser APIs, state, or event handlers.
+**Next.js 16 App Router** with React Server Components. Most pages are server-rendered — `"use client"` is added only when a component needs browser APIs, state, or event handlers. Exception: the homepage and blog index are `"use client"` at the page level due to animation state (Preloader, category filter).
 
 ### Routing
 
@@ -206,7 +206,7 @@ Each page lives in `app/<route>/page.tsx`. Pages that need shared metadata or la
 
 ### Data Flow
 
-All organization constants flow from `lib/org.ts` — never hardcode contact info, social links, or stats anywhere else. Event dates and copy come from `lib/sinceai.ts`. This ensures a single edit updates the whole site.
+Organization constants live in `lib/org.ts` — contact info, social links, stats. Event dates and copy come from `lib/sinceai.ts`. Use these instead of hardcoding values in components.
 
 ### Blog
 
