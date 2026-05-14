@@ -105,10 +105,8 @@ sinceai/
 │   ├── CookieConsent.tsx         # Cookie consent banner
 │   ├── HackathonCountdown.tsx    # Live countdown to next hackathon
 │   ├── ManageCookies.tsx         # Cookie preference manager
-│   ├── NewsletterSignup.tsx      # Newsletter signup (used on blog + resources)
 │   ├── StructuredData.tsx        # JSON-LD script injection helper
 │   ├── countdown-timer.tsx       # Generic countdown primitive (used by HackathonCountdown)
-│   ├── smoothScroll.tsx          # Lenis smooth scroll wrapper
 │   │
 │   ├── brand/                    # Brand identity
 │   │   └── logo.tsx              # Since AI logo component
@@ -131,6 +129,15 @@ sinceai/
 │   │       ├── LatestPosts.tsx
 │   │       ├── ProjectSpotlight.tsx
 │   │       └── PartnersSection.tsx
+│   │
+│   ├── smoothScroll/             # Lenis smooth scroll wrapper (used by all pages)
+│   │   └── index.jsx
+│   │
+│   ├── utils/
+│   │   └── Preloader/            # Page load animation (homepage only)
+│   │       ├── index.jsx
+│   │       ├── anim.js
+│   │       └── style.module.css
 │   │
 │   ├── motion-primitives/        # Reusable Framer Motion wrappers
 │   │   ├── fade-in.tsx           # FadeIn wrapper
@@ -216,7 +223,7 @@ import { FadeIn } from "@/components/motion-primitives/fade-in";
 
 | Layer | Technology |
 |---|---|
-| Framework | Next.js 16.2 (App Router, RSC) |
+| Framework | Next.js 16 (App Router, RSC) |
 | UI | React 19, Tailwind CSS v4, shadcn/ui, Radix UI |
 | Animation | Framer Motion 12, custom motion primitives |
 | Scroll | Lenis smooth scroll (`@studio-freight/lenis`) |
