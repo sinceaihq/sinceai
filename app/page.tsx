@@ -7,6 +7,7 @@ import Preloader from "@/components/utils/Preloader";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { challengeThemes } from "@/lib/projects";
+import { ORG } from "@/lib/org";
 
 import { Hero } from "@/components/sections/homepage/Hero";
 import { BelowHero } from "@/components/sections/homepage/BelowHero";
@@ -25,7 +26,7 @@ export default function HomePage() {
   }, []);
 
   const config = {
-    discordUrl: "https://discord.com/invite/YkqJswRGSW",
+    discordUrl: ORG.social.discord,
   };
 
   // Get top 2 challenge themes for spotlight (Kongsberg and Sandvik)

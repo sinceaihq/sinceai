@@ -169,7 +169,7 @@ sinceai/
 │   ├── assets/
 │   │   ├── logo/                 # Since AI logo variants (black/white, full/mark)
 │   │   ├── og/                   # OpenGraph images (hero.png)
-│   │   ├── images/               # Page images (educity venue photos)
+│   │   ├── images/               # Page images (educity-hero.webp, educity-card.webp)
 │   │   ├── sponsors/             # Partner and sponsor logos
 │   │   ├── speakers/             # Speaker photos
 │   │   ├── team/                 # Team member photos (used on contact page)
@@ -183,9 +183,13 @@ sinceai/
 │       ├── nextjs.yml            # CI: lint, typecheck, build
 │       └── cloudflare.yml        # CD: deploy to Cloudflare Workers
 │
+├── scripts/
+│   └── patch-opennext-worker.mjs # Post-build patch for Cloudflare image handling
+│
 ├── next.config.ts                # Next.js config (security headers, image settings)
 ├── open-next.config.ts           # OpenNext Cloudflare Workers adapter config
-├── tailwind.config.ts            # Tailwind CSS v4 config
+├── wrangler.jsonc                # Cloudflare Workers config (name, compatibility date)
+├── postcss.config.mjs            # PostCSS config for Tailwind CSS v4
 ├── tsconfig.json                 # TypeScript config (@/* path alias)
 └── CLAUDE.md                     # Instructions for Claude Code AI assistant
 ```
@@ -194,7 +198,7 @@ sinceai/
 
 ## Architecture
 
-**Next.js 16 App Router** with React Server Components. Pages are server-rendered by default — `"use client"` is only added when a component needs browser APIs, state, or event handlers.
+**Next.js 16 App Router** with React Server Components. Most pages are server-rendered — `"use client"` is added only when a component needs browser APIs, state, or event handlers. Exception: the homepage and blog index are `"use client"` at the page level due to animation state (Preloader, category filter).
 
 ### Routing
 
@@ -202,7 +206,7 @@ Each page lives in `app/<route>/page.tsx`. Pages that need shared metadata or la
 
 ### Data Flow
 
-All organization constants flow from `lib/org.ts` — never hardcode contact info, social links, or stats anywhere else. Event dates and copy come from `lib/sinceai.ts`. This ensures a single edit updates the whole site.
+Organization constants live in `lib/org.ts` — contact info, social links, stats. Event dates and copy come from `lib/sinceai.ts`. Use these instead of hardcoding values in components.
 
 ### Blog
 
