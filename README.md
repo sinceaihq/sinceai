@@ -90,7 +90,6 @@ sinceai/
 │   ├── impact/                   # /impact — impact and methodology
 │   ├── resources/                # /resources — guides and tools
 │   ├── projects/                 # /projects — shipped AI projects
-│   ├── blog/                     # /blog — blog index + post redirects
 │   ├── europe-ai/                # /europe-ai — European AI ecosystem
 │   ├── european-ai/              # /european-ai — European AI sovereignty
 │   ├── finland-ai/               # /finland-ai — Finland AI community
@@ -103,39 +102,35 @@ sinceai/
 │   └── code-of-conduct/          # /code-of-conduct
 │
 ├── components/
-│   ├── navbar.tsx                # Site-wide navigation bar
-│   ├── ContactForm.tsx           # EmailJS-powered contact form
-│   ├── HackathonCountdown.tsx    # Live countdown to next hackathon
 │   ├── CookieConsent.tsx         # Cookie consent banner
-│   ├── StructuredData.tsx        # JSON-LD injection helper
-│   ├── SocialShare.tsx           # Social sharing buttons
+│   ├── HackathonCountdown.tsx    # Live countdown to next hackathon
+│   ├── ManageCookies.tsx         # Cookie preference manager
+│   ├── NewsletterSignup.tsx      # Newsletter signup (used on blog + resources)
+│   ├── StructuredData.tsx        # JSON-LD script injection helper
+│   ├── countdown-timer.tsx       # Generic countdown primitive (used by HackathonCountdown)
+│   ├── smoothScroll.tsx          # Lenis smooth scroll wrapper
+│   │
+│   ├── brand/                    # Brand identity
+│   │   └── logo.tsx              # Since AI logo component
+│   │
+│   ├── forms/                    # Form components
+│   │   ├── ContactForm.tsx       # EmailJS-powered contact form
+│   │   └── NewsletterSignup.tsx  # Newsletter signup form
+│   │
+│   ├── layout/                   # Site-wide layout primitives
+│   │   ├── Navbar.tsx            # Top navigation bar
+│   │   └── Footer.tsx            # Site footer
 │   │
 │   ├── sections/                 # Page-specific section components
-│   │   ├── Footer.tsx            # Site-wide footer
-│   │   ├── homepage/             # Homepage sections (Hero, Partners, etc.)
-│   │   │   ├── index.ts          # Barrel export
-│   │   │   ├── LeanHero.tsx      # Main hero section
-│   │   │   ├── PartnersSection.tsx
-│   │   │   ├── HackathonFeature.tsx
-│   │   │   ├── FeaturedSpeakers.tsx
-│   │   │   ├── LatestPosts.tsx
-│   │   │   ├── ProjectSpotlight.tsx
-│   │   │   ├── ThreePillars.tsx
-│   │   │   ├── TrustBar.tsx
-│   │   │   ├── ProofStrip.tsx
-│   │   │   └── DualCTA.tsx
-│   │   └── contact/              # Contact page sections
-│   │       ├── index.ts
-│   │       ├── ContactHero.tsx
-│   │       ├── ContactFAQ.tsx
-│   │       ├── DirectContact.tsx
-│   │       └── ResponseTime.tsx
-│   │
-│   ├── ui/                       # shadcn/ui components (new-york style)
-│   │   ├── button.tsx
-│   │   ├── card.tsx
-│   │   ├── dialog.tsx
-│   │   └── ...                   # Add new ones via: npx shadcn@latest add <component>
+│   │   └── homepage/             # Homepage sections
+│   │       ├── index.ts          # Barrel export
+│   │       ├── Hero.tsx          # Main hero section
+│   │       ├── BelowHero.tsx     # Below-the-fold homepage content
+│   │       ├── PartnerMarquee.tsx # Infinite partner logo scroll
+│   │       ├── FeaturedSpeakers.tsx
+│   │       ├── LatestPosts.tsx
+│   │       ├── ProjectSpotlight.tsx
+│   │       └── PartnersSection.tsx
 │   │
 │   ├── motion-primitives/        # Reusable Framer Motion wrappers
 │   │   ├── fade-in.tsx           # FadeIn wrapper
@@ -144,10 +139,11 @@ sinceai/
 │   │   ├── text-effect.tsx       # Animated text reveals
 │   │   └── ...
 │   │
-│   └── effects/                  # Standalone visual effects
-│       ├── lamp.tsx              # Lamp spotlight effect
-│       ├── number_ticker.tsx     # Animated number counter
-│       └── timeline.tsx          # Timeline component
+│   └── ui/                       # shadcn/ui components (new-york style)
+│       ├── button.tsx
+│       ├── card.tsx
+│       ├── dialog.tsx
+│       └── ...                   # Add new ones via: npx shadcn@latest add <component>
 │
 ├── lib/                          # Shared utilities and constants
 │   ├── org.ts                    # ← Single source of truth for org info
@@ -155,21 +151,21 @@ sinceai/
 │   ├── blog.ts                   # Blog post metadata (titles, slugs, Medium URLs)
 │   ├── partners.ts               # Partner company data
 │   ├── projects.ts               # Challenge theme data (ChallengeTheme type)
+│   ├── faqs.ts                   # FAQ content for /faq and structured data
 │   ├── schema.ts                 # JSON-LD structured data generators
 │   └── utils.ts                  # cn() helper (clsx + tailwind-merge)
 │
 ├── hooks/
 │   └── use-mobile.ts             # Mobile breakpoint hook (768px)
 │
-├── data/
-│   └── faqs.ts                   # FAQ content for /faq and structured data
-│
 ├── public/
 │   ├── assets/
 │   │   ├── logo/                 # Since AI logo variants (black/white, full/mark)
 │   │   ├── og/                   # OpenGraph images (hero.png)
+│   │   ├── images/               # Page images (educity venue photos)
 │   │   ├── sponsors/             # Partner and sponsor logos
 │   │   ├── speakers/             # Speaker photos
+│   │   ├── team/                 # Team member photos (used on contact page)
 │   │   └── supports/             # Supporting org logos
 │   ├── ai.txt                    # AI crawler discovery file
 │   ├── llms.txt                  # LLM context file (short)
@@ -246,7 +242,7 @@ Event data (past hackathon dates, upcoming event info), UI copy strings, and hel
 ### `lib/blog.ts`
 Blog post metadata: title, description, slug, Medium URL, publish date, tags, keywords. Adding a new post here automatically adds it to the blog index and sitemap.
 
-### `data/faqs.ts`
+### `lib/faqs.ts`
 FAQ content used on the `/faq` page and injected as `FAQPage` JSON-LD structured data.
 
 ### `lib/partners.ts`
