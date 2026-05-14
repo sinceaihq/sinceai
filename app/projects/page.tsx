@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import SmoothScroll from "@/components/smoothScroll";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/sections/Footer";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 import {

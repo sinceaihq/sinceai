@@ -1,9 +1,7 @@
-export { LeanHero } from "./LeanHero";
-export { TrustBar } from "./TrustBar";
-export { ThreePillars } from "./ThreePillars";
-export { ProofStrip } from "./ProofStrip";
+export { Hero } from "./Hero";
+export { BelowHero } from "./BelowHero";
+export { PartnerMarquee } from "./PartnerMarquee";
 export { ProjectSpotlight } from "./ProjectSpotlight";
-export { DualCTA } from "./DualCTA";
 export { LatestPosts } from "./LatestPosts";
 export { PartnersSection } from "./PartnersSection";
 export { FeaturedSpeakers } from "./FeaturedSpeakers";

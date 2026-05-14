@@ -2,8 +2,8 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import SmoothScroll from "@/components/smoothScroll";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/sections/Footer";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import StructuredData from "@/components/StructuredData";
 import { HackathonCountdown } from "@/components/HackathonCountdown";
 

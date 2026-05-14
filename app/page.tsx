@@ -4,12 +4,12 @@ import { AnimatePresence } from "framer-motion";
 
 import SmoothScroll from "@/components/smoothScroll";
 import Preloader from "@/components/utils/Preloader";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/sections";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import { challengeThemes } from "@/lib/projects";
 
-import { Hero } from "@/components/marketing/Hero";
-import { BelowHero } from "@/components/marketing/BelowHero";
+import { Hero } from "@/components/sections/homepage/Hero";
+import { BelowHero } from "@/components/sections/homepage/BelowHero";
 import { ProjectSpotlight } from "@/components/sections/homepage/ProjectSpotlight";
 import { LatestPosts } from "@/components/sections/homepage/LatestPosts";
 

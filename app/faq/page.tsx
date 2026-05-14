@@ -2,12 +2,12 @@ import React from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import SmoothScroll from "@/components/smoothScroll";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/sections/Footer";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { ORG } from "@/lib/org";
 import StructuredData from "@/components/StructuredData";
-import { faqs } from "@/data/faqs";
+import { faqs } from "@/lib/faqs";
 
 export const metadata: Metadata = {
   title:

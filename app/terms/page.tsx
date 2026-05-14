@@ -1,7 +1,7 @@
 import React from "react";
 import SmoothScroll from "@/components/smoothScroll";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/sections/Footer";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 
 export default function TermsPage() {
   return (

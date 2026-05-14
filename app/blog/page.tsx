@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import SmoothScroll from "@/components/smoothScroll";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/sections/Footer";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Clock, ChevronRight } from "lucide-react";
 import {
@@ -13,7 +13,7 @@ import {
 import { getBlogSchema, getBlogItemListSchema, getBreadcrumbSchema, getBlogFAQSchema } from "@/lib/schema";
 import Link from "next/link";
 import { ORG } from "@/lib/org";
-import NewsletterSignup from "@/components/NewsletterSignup";
+import NewsletterSignup from "@/components/forms/NewsletterSignup";
 
 const ALL_FILTER = "all" as const;
 type FilterValue = typeof ALL_FILTER | BlogCategory;
