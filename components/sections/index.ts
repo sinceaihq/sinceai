@@ -1,9 +1,1 @@
-export { HeroSection } from "./HeroSection";
-export { StatsSection } from "./StatsSection";
-export { ValuePropsSection } from "./ValuePropsSection";
-export { SponsorSection } from "./SponsorSection";
-export { CommunityEngagement } from "./CommunityEngagement";
-export { Testimonials } from "./Testimonials";
-export { NewsletterCTA } from "./NewsletterCTA";
 export { Footer } from "./Footer";
-export { PastSponsors } from "./PastSponsors";
