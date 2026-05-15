@@ -10,9 +10,7 @@ import {
   BLOG_CATEGORIES,
   type BlogCategory,
 } from "@/lib/blog";
-import { getBlogSchema, getBlogItemListSchema, getBreadcrumbSchema, getBlogFAQSchema } from "@/lib/schema";
 import Link from "next/link";
-import { ORG } from "@/lib/org";
 import NewsletterSignup from "@/components/forms/NewsletterSignup";
 
 const ALL_FILTER = "all" as const;
@@ -37,14 +35,6 @@ function formatDate(dateString: string): string {
 export default function BlogPage() {
   const [activeFilter, setActiveFilter] = useState<FilterValue>(ALL_FILTER);
 
-  const blogSchema = getBlogSchema();
-  const itemListSchema = getBlogItemListSchema();
-  const breadcrumbSchema = getBreadcrumbSchema([
-    { name: "Home", url: ORG.baseUrl },
-    { name: "Blog", url: `${ORG.baseUrl}/blog` },
-  ]);
-  const faqSchema = getBlogFAQSchema();
-
   const filteredPosts =
     activeFilter === ALL_FILTER
       ? blogPosts
@@ -53,24 +43,6 @@ export default function BlogPage() {
   return (
     <SmoothScroll>
       <Navbar />
-
-      {/* JSON-LD structured data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
 
       <main className="flex flex-col w-full bg-black min-h-screen">
         {/* Hero */}

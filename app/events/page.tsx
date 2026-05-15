@@ -8,40 +8,17 @@ import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
 import { Calendar, MapPin, ExternalLink, ArrowRight } from "lucide-react";
 import { FIRST_EVENT, COPY, LINKS } from "@/lib/sinceai";
-import { getFirstEventSchema, getUpcoming2026EventSchema, getBreadcrumbSchema } from "@/lib/schema";
-import { ORG } from "@/lib/org";
 
 export default function EventsPage() {
   const config = {
     discordUrl: "https://discord.com/invite/YkqJswRGSW",
-    lumaOrgUrl: LINKS.lumaOrg, // General events/calendar page
-    lumaHackathon2025Url: LINKS.lumaHackathon2025, // Specific 2025 event page
+    lumaOrgUrl: LINKS.lumaOrg,
+    lumaHackathon2025Url: LINKS.lumaHackathon2025,
   };
-
-  const firstEventSchema = getFirstEventSchema();
-  const upcoming2026Schema = getUpcoming2026EventSchema();
-  const breadcrumbSchema = getBreadcrumbSchema([
-    { name: "Home", url: ORG.baseUrl },
-    { name: "Events", url: `${ORG.baseUrl}/events` },
-  ]);
 
   return (
     <SmoothScroll>
       <Navbar />
-
-      {/* JSON-LD structured data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(firstEventSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(upcoming2026Schema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
 
       <main className="flex flex-col w-full bg-black min-h-screen">
         {/* Hero Section - Minimal */}

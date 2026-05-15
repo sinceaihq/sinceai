@@ -144,7 +144,7 @@ export default function HackathonPage() {
       <main className="flex flex-col w-full bg-black min-h-screen">
 
         {/* ── SECTION 1: Hero ─────────────────────────────────── */}
-        <section className="relative w-full flex flex-col" style={{ paddingLeft: "var(--space-lg)", paddingRight: "var(--space-lg)" }}>
+        <section className="relative w-full flex flex-col px-6">
           <Image
             src="/assets/images/educity-hero.webp"
             alt="EduCity, Turku — venue for Since AI Hackathon 2026"
@@ -164,9 +164,8 @@ export default function HackathonPage() {
           />
 
           <div
-            className="relative z-10 mx-auto w-full"
+            className="relative z-10 mx-auto w-full max-w-[1200px]"
             style={{
-              maxWidth: "1200px",
               paddingTop: "clamp(100px, 15vh, 150px)",
               paddingBottom: "var(--space-2xl)",
             }}
@@ -250,12 +249,10 @@ export default function HackathonPage() {
 
         {/* ── SECTION 2: Headline partners ─────────────────────── */}
         <section
-          style={{
-            padding: "var(--space-2xl) var(--space-lg)",
-            borderTop: "0.5px solid var(--color-border)",
-          }}
+          className="py-24 px-6"
+          style={{ borderTop: "0.5px solid var(--color-border)" }}
         >
-          <div className="mx-auto" style={{ maxWidth: "1200px" }}>
+          <div className="mx-auto max-w-[1200px]">
             <h2
               style={{
                 fontFamily: "var(--font-mono)",
@@ -269,7 +266,7 @@ export default function HackathonPage() {
               Powered by world-class infrastructure.
             </h2>
 
-            <div className="flex flex-col md:flex-row md:[margin-left:calc(-1*var(--space-lg))]">
+            <div className="flex flex-col md:flex-row md:-ml-6">
               {[
                 { name: "Google", label: "Compute partner" },
                 { name: "AMD",    label: "Compute partner" },
@@ -277,7 +274,7 @@ export default function HackathonPage() {
               ].map((partner, i) => (
                 <div
                   key={partner.name}
-                  className={`py-[var(--space-md)] md:px-[var(--space-lg)] ${i > 0 ? "border-t md:border-t-0 md:border-l border-[var(--color-border)]" : ""}`}
+                  className={`py-6 md:px-6 ${i > 0 ? "border-t md:border-t-0 md:border-l border-[var(--color-border)]" : ""}`}
                 >
                   <p style={{
                     fontFamily: "var(--font-mono)",
@@ -318,12 +315,10 @@ export default function HackathonPage() {
 
         {/* ── SECTION 3: Key facts ─────────────────────────────── */}
         <section
-          style={{
-            padding: "var(--space-2xl) var(--space-lg)",
-            borderTop: "0.5px solid var(--color-border)",
-          }}
+          className="py-24 px-6"
+          style={{ borderTop: "0.5px solid var(--color-border)" }}
         >
-          <div className="mx-auto" style={{ maxWidth: "1200px" }}>
+          <div className="mx-auto max-w-[1200px]">
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
               {'// key facts'}
             </p>
@@ -382,12 +377,10 @@ export default function HackathonPage() {
 
         {/* ── SECTION 4: What is it ────────────────────────────── */}
         <section
-          style={{
-            padding: "var(--space-2xl) var(--space-lg)",
-            borderTop: "0.5px solid var(--color-border)",
-          }}
+          className="py-24 px-6"
+          style={{ borderTop: "0.5px solid var(--color-border)" }}
         >
-          <div className="mx-auto" style={{ maxWidth: "1200px" }}>
+          <div className="mx-auto max-w-[1200px]">
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
               {'// what is it'}
             </p>
@@ -433,12 +426,10 @@ export default function HackathonPage() {
 
         {/* ── SECTION 4: Why participate ──────────────────────── */}
         <section
-          style={{
-            padding: "var(--space-2xl) var(--space-lg)",
-            borderTop: "0.5px solid var(--color-border)",
-          }}
+          className="py-24 px-6"
+          style={{ borderTop: "0.5px solid var(--color-border)" }}
         >
-          <div className="mx-auto" style={{ maxWidth: "1200px" }}>
+          <div className="mx-auto max-w-[1200px]">
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
               {'// why participate'}
             </p>
@@ -507,12 +498,10 @@ export default function HackathonPage() {
 
         {/* ── SECTION 5: All partners ──────────────────────────── */}
         <section
-          style={{
-            padding: "var(--space-2xl) var(--space-lg)",
-            borderTop: "0.5px solid var(--color-border)",
-          }}
+          className="py-24 px-6"
+          style={{ borderTop: "0.5px solid var(--color-border)" }}
         >
-          <div className="mx-auto" style={{ maxWidth: "1200px" }}>
+          <div className="mx-auto max-w-[1200px]">
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
               {'// challenge partners'}
             </p>
@@ -616,12 +605,10 @@ export default function HackathonPage() {
 
         {/* ── SECTION 8: Venue ─────────────────────────────────── */}
         <section
-          style={{
-            padding: "var(--space-2xl) var(--space-lg)",
-            borderTop: "0.5px solid var(--color-border)",
-          }}
+          className="py-24 px-6"
+          style={{ borderTop: "0.5px solid var(--color-border)" }}
         >
-          <div className="mx-auto" style={{ maxWidth: "1200px" }}>
+          <div className="mx-auto max-w-[1200px]">
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
               {'// venue'}
             </p>
@@ -688,12 +675,10 @@ export default function HackathonPage() {
 
         {/* ── SECTION 9: Past edition ──────────────────────────── */}
         <section
-          style={{
-            padding: "var(--space-2xl) var(--space-lg)",
-            borderTop: "0.5px solid var(--color-border)",
-          }}
+          className="py-24 px-6"
+          style={{ borderTop: "0.5px solid var(--color-border)" }}
         >
-          <div className="mx-auto" style={{ maxWidth: "1200px" }}>
+          <div className="mx-auto max-w-[1200px]">
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
               {'// previous editions'}
             </p>
@@ -761,14 +746,14 @@ export default function HackathonPage() {
         {/* ── SECTION 10: Registration ──────────────────────────── */}
         <section
           id="registration"
+          className="py-40 px-6"
           style={{
-            padding: "var(--space-3xl) var(--space-lg)",
             borderTop: "0.5px solid var(--color-border)",
             borderBottom: "0.5px solid var(--color-border)",
             scrollMarginTop: "80px",
           }}
         >
-          <div className="mx-auto" style={{ maxWidth: "1200px" }}>
+          <div className="mx-auto max-w-[1200px]">
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
               {'// registrations'}
             </p>
@@ -844,12 +829,10 @@ export default function HackathonPage() {
 
         {/* ── SECTION 9: FAQ ───────────────────────────────────── */}
         <section
-          style={{
-            padding: "var(--space-2xl) var(--space-lg)",
-            borderTop: "0.5px solid var(--color-border)",
-          }}
+          className="py-24 px-6"
+          style={{ borderTop: "0.5px solid var(--color-border)" }}
         >
-          <div className="mx-auto" style={{ maxWidth: "1200px" }}>
+          <div className="mx-auto max-w-[1200px]">
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
               {'// faq'}
             </p>

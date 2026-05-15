@@ -1,6 +1,8 @@
 import { Metadata } from "next";
-import { getFirstEventSchema, getUpcoming2026EventSchema } from "@/lib/schema";
+import StructuredData from "@/components/StructuredData";
+import { getFirstEventSchema, getUpcoming2026EventSchema, getBreadcrumbSchema } from "@/lib/schema";
 import { FIRST_EVENT, COPY } from "@/lib/sinceai";
+import { ORG } from "@/lib/org";
 
 export const metadata: Metadata = {
   title:
@@ -40,11 +42,13 @@ export default function EventsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Get both event schemas (past 2025 + upcoming 2026)
   const firstEventSchema = getFirstEventSchema();
   const upcoming2026Schema = getUpcoming2026EventSchema();
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: "Home", url: ORG.baseUrl },
+    { name: "Events", url: `${ORG.baseUrl}/events` },
+  ]);
 
-  // Create ItemList schema to group both events
   const itemListSchema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -52,27 +56,17 @@ export default function EventsLayout({
     description: "Past and upcoming AI hackathons organized by Since AI in Turku, Finland",
     numberOfItems: 2,
     itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        item: upcoming2026Schema,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        item: firstEventSchema,
-      },
+      { "@type": "ListItem", position: 1, item: upcoming2026Schema },
+      { "@type": "ListItem", position: 2, item: firstEventSchema },
     ],
   };
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(itemListSchema),
-        }}
-      />
+      <StructuredData data={firstEventSchema} />
+      <StructuredData data={upcoming2026Schema} />
+      <StructuredData data={itemListSchema} />
+      <StructuredData data={breadcrumbSchema} />
       {children}
     </>
   );

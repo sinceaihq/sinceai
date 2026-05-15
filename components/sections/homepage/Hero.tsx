@@ -102,6 +102,7 @@ export function Hero() {
               href="https://discord.com/invite/YkqJswRGSW"
               target="_blank"
               rel="noopener noreferrer"
+              className="hero-cta-secondary"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
