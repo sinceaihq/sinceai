@@ -179,9 +179,11 @@ sinceai/
 │   └── llms-full.txt             # LLM context file (full)
 │
 ├── .github/
+│   ├── labeler.yml               # PR auto-label rules (path → label mapping)
 │   └── workflows/
 │       ├── nextjs.yml            # CI: lint, typecheck, build
-│       └── cloudflare.yml        # CD: deploy to Cloudflare Workers
+│       ├── cloudflare.yml        # CD: deploy to Cloudflare Workers
+│       └── labeler.yml           # Auto-label PRs based on changed files
 │
 ├── scripts/
 │   └── patch-opennext-worker.mjs # Post-build patch for Cloudflare image handling
@@ -298,6 +300,10 @@ Production runs on **Cloudflare Workers** using the [OpenNext](https://opennext.
 - Lint + Cloudflare build (PRs: check only)
 - Deploy to Cloudflare Workers (pushes to `main` only)
 
+**`labeler.yml`** — runs on every PR open/update:
+- Automatically applies labels based on which files changed
+- Config lives in `.github/labeler.yml`
+
 ### Environment variables
 
 Cloudflare deployment requires these secrets in GitHub Actions:
@@ -318,6 +324,20 @@ Cloudflare deployment requires these secrets in GitHub Actions:
 - Use `"use client"` only when strictly necessary (browser APIs, state, event handlers)
 - All PRs must pass lint, type check, and build before merging
 - Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `chore:`, etc.)
+
+### PR labels
+
+Labels are applied automatically based on changed files. No manual action needed.
+
+| Label | Applied when |
+|---|---|
+| `components` | Any file in `components/` |
+| `pages` | Any file in `app/` |
+| `content` | Data files (`lib/blog.ts`, `lib/org.ts`, `lib/sinceai.ts`, etc.) |
+| `seo` | `lib/schema.ts`, layout files, sitemap, robots |
+| `styling` | `app/globals.css` |
+| `infra` | `.github/`, config files, `package.json` |
+| `documentation` | `README.md`, `CLAUDE.md` |
 
 ### Adding a new page
 
