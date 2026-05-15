@@ -1,0 +1,43 @@
+components:
+  - changed-files:
+    - any-glob-to-any-file: 'components/**'
+
+pages:
+  - changed-files:
+    - any-glob-to-any-file: 'app/**'
+
+content:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'lib/blog.ts'
+      - 'lib/org.ts'
+      - 'lib/sinceai.ts'
+      - 'lib/projects.ts'
+      - 'lib/partners.ts'
+
+seo:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'lib/schema.ts'
+      - 'app/**/layout.tsx'
+      - 'app/sitemap.ts'
+      - 'app/robots.ts'
+
+styling:
+  - changed-files:
+    - any-glob-to-any-file: 'app/globals.css'
+
+infra:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.github/**'
+      - 'next.config.ts'
+      - 'open-next.config.ts'
+      - 'wrangler.jsonc'
+      - 'package.json'
+
+documentation:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'README.md'
+      - 'CLAUDE.md'
