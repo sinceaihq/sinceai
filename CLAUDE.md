@@ -63,3 +63,42 @@ GitHub Actions workflows deploy to both GitHub Pages and Firebase Hosting. PRs g
 - Event dates and copy come from `lib/sinceai.ts`
 - Import path alias: `@/components/...`, `@/lib/...`, `@/hooks/...`
 - Node.js >= 20.9.0 required
+
+## Spacing & Typography
+
+These are the established conventions. Follow them when building new pages or sections so the site feels consistent.
+
+### Section padding
+
+| Use case | Classes |
+|---|---|
+| Regular content section | `py-24 px-6` |
+| Hero / page intro section | `py-24 md:py-32 px-6` |
+| Major CTA or registration section | `py-40 px-6` |
+
+### Container widths
+
+| Page type | Class |
+|---|---|
+| Prose/content pages (about, faq, partners) | `max-w-4xl mx-auto` |
+| Listing/medium pages (blog, events) | `max-w-5xl mx-auto` |
+| Grid pages (projects) | `max-w-6xl mx-auto` |
+| Hackathon event page | `max-w-[1200px] mx-auto` |
+
+### Typography
+
+| Element | Classes |
+|---|---|
+| Page H1 | `text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight` |
+| Section H2 (content pages) | `text-3xl font-bold tracking-tight` |
+| Section H2 (within-page headers) | `text-4xl md:text-5xl font-bold tracking-tight` |
+| Card / item H3 | `text-2xl font-bold tracking-tight` |
+| Body / secondary text | `text-neutral-400 leading-relaxed` |
+| Slightly emphasized body | `text-neutral-300 leading-relaxed` |
+
+### SEO & schema
+
+- Page metadata (`title`, `description`, `openGraph`, `alternates.canonical`) always goes in the route's `layout.tsx` — never in `page.tsx`
+- This applies to `"use client"` pages too: metadata must be in the server `layout.tsx`
+- JSON-LD schemas are injected via the `StructuredData` component in `layout.tsx` — never use inline `<script dangerouslySetInnerHTML>` in pages
+- Breadcrumb schema should be present on every page except the homepage
