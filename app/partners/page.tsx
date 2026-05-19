@@ -193,7 +193,7 @@ export default function PartnersPage() {
                 { value: "10,000+", label: "AI builders in our network" },
                 { value: "1,000+", label: "Builders targeted at Hackathon 2026" },
                 { value: "50+", label: "Partners & supporters" },
-                { value: "50+", label: "Countries represented" },
+                { value: "60+", label: "Countries represented" },
               ].map((s) => (
                 <div
                   key={s.label}

@@ -44,13 +44,13 @@ export function HackathonPopup() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    if (localStorage.getItem(STORAGE_KEY)) return;
     const t = setTimeout(() => setOpen(true), 4000);
     return () => clearTimeout(t);
   }, []);
 
   function dismiss() {
-    sessionStorage.setItem(STORAGE_KEY, "1");
+    localStorage.setItem(STORAGE_KEY, "1");
     setOpen(false);
   }
 
