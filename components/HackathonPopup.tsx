@@ -45,7 +45,7 @@ export function HackathonPopup() {
 
   useEffect(() => {
     if (localStorage.getItem(STORAGE_KEY)) return;
-    const t = setTimeout(() => setOpen(true), 4000);
+    const t = setTimeout(() => setOpen(true), 3000);
     return () => clearTimeout(t);
   }, []);
 
