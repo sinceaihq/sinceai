@@ -14,7 +14,7 @@ Since AI community website (sinceai.fi) — a Next.js 16 marketing site for an A
 - `npm start` — Start production server
 - `npm ci --legacy-peer-deps` — Install dependencies (legacy-peer-deps required for CI)
 
-No test framework is configured.
+Jest is configured (`npm run test`). No tests currently exist — add them when introducing testable logic.
 
 ## Architecture
 
@@ -43,7 +43,7 @@ No test framework is configured.
 - Tailwind CSS v4 via PostCSS (`@tailwindcss/postcss`)
 - OKLCH color space with CSS custom properties in `app/globals.css`
 - Dark-first design (black background, `bg-black` on body)
-- Fonts: Geist Sans and Geist Mono (Google Fonts via `next/font`)
+- Fonts: JetBrains Mono (`--font-mono`) and Inter (`--font-sans`) via `next/font/google`
 
 ### SEO
 
@@ -54,7 +54,7 @@ No test framework is configured.
 
 ### Deployment
 
-GitHub Actions workflows deploy to both GitHub Pages and Firebase Hosting. PRs get Firebase preview deployments.
+Production runs on Cloudflare Workers via the OpenNext adapter. GitHub Actions runs CI (lint, typecheck, build) on every PR and deploys to Cloudflare on merge to `main`.
 
 ## Conventions
 
