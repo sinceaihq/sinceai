@@ -3,6 +3,7 @@ import { JetBrains_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import StructuredData from "@/components/StructuredData";
 import { CookieConsent } from "@/components/CookieConsent";
+import { HackathonPopup } from "@/components/HackathonPopup";
 import { ORG } from "@/lib/org";
 
 const jetbrainsMono = JetBrains_Mono({
@@ -160,6 +161,7 @@ export default function RootLayout({
       <body className="antialiased bg-black">
         {children}
         <CookieConsent />
+        <HackathonPopup />
       </body>
     </html>
   );

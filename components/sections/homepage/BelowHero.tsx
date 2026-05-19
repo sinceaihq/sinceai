@@ -1,12 +1,10 @@
-import Link from "next/link";
 import { FeaturedSpeakers } from "@/components/sections/homepage/FeaturedSpeakers";
-
-const DISCORD_URL = "https://discord.com/invite/YkqJswRGSW";
 
 // ── Partner data for Section 4 ─────────────────────────────────────────────
 const STRATEGIC = [
   { name: "Google for Developers", url: "https://developers.google.com/" },
   { name: "ElevenLabs",            url: "https://elevenlabs.io/" },
+  { name: "LUMI AI Factory",       url: "https://lumi-ai-factory.eu/" },
   { name: "Aiven",                 url: "https://aiven.io/" },
   { name: "Lovable",               url: "https://lovable.dev/" },
   { name: "n8n",                   url: "https://n8n.io/" },
@@ -23,8 +21,6 @@ const CAPITAL = [
   { name: "Wave Ventures",       url: "https://www.wave.ventures/" },
   { name: "Redstone VC",         url: "https://redstone.vc/" },
   { name: "Aalto AI",            url: "https://www.aaltoai.com/" },
-  { name: "University of Turku", url: "https://www.utu.fi" },
-  { name: "HankenAI",            url: "https://hankai.info/" },
   { name: "Maria 01",            url: "https://maria.io/" },
 ];
 
@@ -38,13 +34,8 @@ const COMMUNITY = [
   { name: "Business Turku",         url: "https://businessturku.fi/" },
   { name: "Skillio",                url: "https://skillio.ai/" },
   { name: "A\u2019Pelago",          url: "https://www.apelago.fi/" },
-  { name: "Eisko",                  url: "https://www.eisko.fi/" },
   { name: "Tamperees",              url: "https://tamperees.com/" },
   { name: "HankenES",               url: "https://hankenes.org" },
-  { name: "\u00C5AES",              url: "https://www.aaes.fi/" },
-  { name: "VES",                    url: "https://www.ves.fi" },
-  { name: "Pories",                 url: "https://www.pories.fi" },
-  { name: "City of Turku",          url: "https://www.turku.fi" },
 ];
 
 // ── Shared sub-components ──────────────────────────────────────────────────
@@ -82,36 +73,6 @@ function SectionH2({ children }: { children: React.ReactNode }) {
   );
 }
 
-// ── CTA button styles ──────────────────────────────────────────────────────
-
-const ctaPrimary: React.CSSProperties = {
-  display: "inline-block",
-  fontFamily: "var(--font-mono)",
-  fontSize: "13px",
-  fontWeight: 500,
-  color: "#000",
-  background: "#fff",
-  padding: "12px 20px",
-  borderRadius: 0,
-  border: "0.5px solid #fff",
-  textDecoration: "none",
-  whiteSpace: "nowrap",
-};
-
-const ctaSecondary: React.CSSProperties = {
-  display: "inline-block",
-  fontFamily: "var(--font-mono)",
-  fontSize: "13px",
-  fontWeight: 500,
-  color: "#fff",
-  background: "transparent",
-  padding: "12px 20px",
-  borderRadius: 0,
-  border: "0.5px solid var(--color-border-strong)",
-  textDecoration: "none",
-  whiteSpace: "nowrap",
-};
-
 // ── Main component ─────────────────────────────────────────────────────────
 
 export function BelowHero() {
@@ -140,8 +101,8 @@ export function BelowHero() {
             Since AI is a global execution-focused AI innovation ecosystem — where
             frontier AI becomes shipped products. A non-profit connecting
             10,000+ AI builders globally with leading AI companies, research
-            groups, and investors. Partners include Google for Developers, Bayer,
-            Sandvik, Kongsberg, Valmet, Antler, Inventure, and the University of Turku.
+            groups, and investors. Partners include Google for Developers, ElevenLabs, Aiven,
+            Lovable, Antler, LUMI AI Factory, and Redstone VC.
           </p>
         </div>
       </section>
@@ -170,7 +131,7 @@ export function BelowHero() {
             },
             {
               label: "// partners",
-              value: "30+",
+              value: "50+",
               desc: "Strategic, capital, and research partners",
             },
             {
@@ -256,7 +217,7 @@ export function BelowHero() {
               {
                 num: "03",
                 title: "Scale",
-                body: "Capital introductions through Antler, Inventure, and Wave Ventures. Commercialization pathway via Since AI\u2019s Research to Market program.",
+                body: "Capital introductions through Antler, Redstone VC and Inventure. Commercialization pathway via Since AI\u2019s Research to Market program.",
               },
             ].map((pillar) => (
               <div key={pillar.num}>
@@ -376,67 +337,6 @@ export function BelowHero() {
         </div>
       </section>
 
-      {/* ── SECTION 5: Hackathon 2026 feature ─────────────────── */}
-      <section
-        style={{
-          padding: "clamp(4rem, 8vw, 10rem) var(--space-lg)",
-          borderTop: "0.5px solid var(--color-border)",
-          borderBottom: "0.5px solid var(--color-border)",
-        }}
-      >
-        <div className="mx-auto" style={{ maxWidth: "1200px" }}>
-          <Eyebrow text="// flagship event" />
-          <h2
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--text-headline-sm)",
-              fontWeight: 500,
-              lineHeight: 1.0,
-              color: "#fff",
-              margin: 0,
-              marginTop: "var(--space-sm)",
-            }}
-          >
-            Hackathon 2026.
-          </h2>
-          <p
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "14px",
-              color: "var(--color-fg-muted)",
-              marginTop: "var(--space-md)",
-              letterSpacing: "0.01em",
-            }}
-          >
-            November 6–8, 2026 / Turku, Finland / 72 hours / 1,000+ builders
-          </p>
-          <p
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--text-base)",
-              color: "#fff",
-              lineHeight: 1.6,
-              maxWidth: "640px",
-              marginTop: "var(--space-md)",
-            }}
-          >
-            A global execution-focused AI hackathon. Partner challenges from Google for
-            Developers, Bayer, Sandvik, Kongsberg, Valmet. Open to builders worldwide.
-          </p>
-          <div
-            className="flex flex-col sm:flex-row"
-            style={{ marginTop: "var(--space-lg)", gap: "12px" }}
-          >
-            <Link href="/hackathon" style={ctaPrimary}>
-              Apply to build →
-            </Link>
-            <Link href="/partners" className="hero-cta-secondary" style={ctaSecondary}>
-              Partner with us →
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* ── SECTION: Testimonial slot ───────────────────────── */}
       {/* TODO: Named testimonial with partner attribution once confirmed.
           Format: blockquote in monospace, attribution line with name + role + company.
@@ -444,114 +344,6 @@ export function BelowHero() {
 
       {/* ── SECTION 6: Featured Speaker ─────────────────────── */}
       <FeaturedSpeakers />
-
-      {/* ── SECTION 7: Dual-track footer CTA ──────────────────── */}
-      <section
-        style={{
-          padding: "var(--space-2xl) var(--space-lg)",
-          borderTop: "0.5px solid var(--color-border)",
-        }}
-      >
-        <div
-          className="mx-auto grid grid-cols-1 md:grid-cols-2"
-          style={{ maxWidth: "1200px", gap: "var(--space-xl)" }}
-        >
-          {/* Column 1 — For builders */}
-          <div>
-            <p
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-xs)",
-                color: "var(--color-fg-muted)",
-                letterSpacing: "0.05em",
-                marginBottom: "var(--space-sm)",
-              }}
-            >
-              {'// for builders'}
-            </p>
-            <h3
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "20px",
-                fontWeight: 500,
-                color: "#fff",
-                margin: 0,
-                marginBottom: "var(--space-sm)",
-              }}
-            >
-              If you build.
-            </h3>
-            <p
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-base)",
-                color: "var(--color-fg-muted)",
-                lineHeight: 1.6,
-                marginBottom: "var(--space-lg)",
-                maxWidth: "400px",
-              }}
-            >
-              Join 10,000+ AI builders globally. Hackathons, applied projects, startup
-              pathways.
-            </p>
-            <a
-              href={DISCORD_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={ctaPrimary}
-            >
-              Join the builder network →
-            </a>
-          </div>
-
-          {/* Column 2 — For partners */}
-          <div>
-            <p
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-xs)",
-                color: "var(--color-fg-muted)",
-                letterSpacing: "0.05em",
-                marginBottom: "var(--space-sm)",
-              }}
-            >
-              {'// for partners'}
-            </p>
-            <h3
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "20px",
-                fontWeight: 500,
-                color: "#fff",
-                margin: 0,
-                marginBottom: "var(--space-sm)",
-              }}
-            >
-              If you ship with us.
-            </h3>
-            <p
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-base)",
-                color: "var(--color-fg-muted)",
-                lineHeight: 1.6,
-                marginBottom: "var(--space-lg)",
-                maxWidth: "400px",
-              }}
-            >
-              Sponsor challenges. Recruit AI talent. Run applied AI pilots with proven
-              builders.
-            </p>
-            <Link
-              href="/partners"
-              className="hero-cta-secondary"
-              style={ctaSecondary}
-            >
-              Partner with Since AI →
-            </Link>
-          </div>
-        </div>
-      </section>
 
     </div>
   );
