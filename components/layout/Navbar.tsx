@@ -5,8 +5,6 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import Logo from "@/components/brand/logo";
 
-const DISCORD_URL = "https://discord.com/invite/YkqJswRGSW";
-
 const NAV_LINKS = [
   { label: "Hackathon", href: "/hackathon" },
   { label: "Partners",  href: "/partners" },
