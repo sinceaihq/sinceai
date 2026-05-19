@@ -118,7 +118,7 @@ export function HackathonPopup() {
               marginBottom: "var(--space-md)",
             }}
           >
-            November 6–8, 2026 · Turku, Finland · 72 hours · 1,000+ builders
+            November 6–8, 2026 · Turku, Finland · 72 hours · 1,000+ builders · 50,000€ prize pool
           </p>
 
           <p
