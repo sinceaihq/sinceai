@@ -92,7 +92,7 @@ export function HackathonPopup() {
               marginBottom: "var(--space-sm)",
             }}
           >
-            // flagship event · 2026
+            {"// flagship event · 2026"}
           </p>
 
           <h2

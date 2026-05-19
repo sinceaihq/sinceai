@@ -1,7 +1,4 @@
-import Link from "next/link";
 import { FeaturedSpeakers } from "@/components/sections/homepage/FeaturedSpeakers";
-
-const DISCORD_URL = "https://discord.com/invite/YkqJswRGSW";
 
 // ── Partner data for Section 4 ─────────────────────────────────────────────
 const STRATEGIC = [
@@ -75,36 +72,6 @@ function SectionH2({ children }: { children: React.ReactNode }) {
     </h2>
   );
 }
-
-// ── CTA button styles ──────────────────────────────────────────────────────
-
-const ctaPrimary: React.CSSProperties = {
-  display: "inline-block",
-  fontFamily: "var(--font-mono)",
-  fontSize: "13px",
-  fontWeight: 500,
-  color: "#000",
-  background: "#fff",
-  padding: "12px 20px",
-  borderRadius: 0,
-  border: "0.5px solid #fff",
-  textDecoration: "none",
-  whiteSpace: "nowrap",
-};
-
-const ctaSecondary: React.CSSProperties = {
-  display: "inline-block",
-  fontFamily: "var(--font-mono)",
-  fontSize: "13px",
-  fontWeight: 500,
-  color: "#fff",
-  background: "transparent",
-  padding: "12px 20px",
-  borderRadius: 0,
-  border: "0.5px solid var(--color-border-strong)",
-  textDecoration: "none",
-  whiteSpace: "nowrap",
-};
 
 // ── Main component ─────────────────────────────────────────────────────────
 
