@@ -130,6 +130,12 @@ export const PARTNERS: Partner[] = [
     tier: 2,
   },
   {
+    name: "MAKI VC",
+    logo: "/assets/sponsors/maki.png",
+    url: "https://maki.vc/",
+    tier: 2,
+  },
+  {
     name: "Inovexus",
     logo: "/assets/sponsors/Inovexus.svg",
     url: "https://inovexus.com/",
