@@ -12,55 +12,69 @@ import {
 
 const STORAGE_KEY = "hackathon2026_popup_v1";
 
-const ctaPrimary: React.CSSProperties = {
-  display: "inline-block",
-  fontFamily: "var(--font-mono)",
-  fontSize: "13px",
-  fontWeight: 500,
-  color: "#000",
-  background: "#fff",
-  padding: "12px 20px",
-  borderRadius: 0,
-  border: "0.5px solid #fff",
-  textDecoration: "none",
-  whiteSpace: "nowrap",
-};
+// Module-level so the same reference is used for add and remove
+let _preventScroll: ((e: Event) => void) | null = null;
 
-const ctaSecondary: React.CSSProperties = {
-  display: "inline-block",
-  fontFamily: "var(--font-mono)",
-  fontSize: "13px",
-  fontWeight: 500,
-  color: "#fff",
-  background: "transparent",
-  padding: "12px 20px",
-  borderRadius: 0,
-  border: "0.5px solid var(--color-border-strong)",
-  textDecoration: "none",
-  whiteSpace: "nowrap",
-};
+let _scrollY = 0;
+
+function lockScroll() {
+  if (_preventScroll) return;
+  _preventScroll = (e: Event) => e.preventDefault();
+  window.addEventListener("wheel", _preventScroll, { passive: false, capture: true });
+  window.addEventListener("touchmove", _preventScroll, { passive: false, capture: true });
+  _scrollY = window.scrollY;
+  // Use setProperty with 'important' to beat Radix's injected
+  // "body[data-scroll-locked] { position: relative !important }"
+  document.body.style.setProperty("position", "fixed", "important");
+  document.body.style.setProperty("top", `-${_scrollY}px`, "important");
+  document.body.style.setProperty("width", "100%", "important");
+  document.body.style.setProperty("overflow", "hidden", "important");
+  document.documentElement.style.setProperty("overflow", "hidden", "important");
+  document.documentElement.style.setProperty("scroll-behavior", "auto", "important");
+}
+
+function unlockScroll() {
+  if (!_preventScroll) return;
+  window.removeEventListener("wheel", _preventScroll, { capture: true });
+  window.removeEventListener("touchmove", _preventScroll, { capture: true });
+  _preventScroll = null;
+  document.body.style.removeProperty("position");
+  document.body.style.removeProperty("top");
+  document.body.style.removeProperty("width");
+  document.body.style.removeProperty("overflow");
+  document.documentElement.style.removeProperty("overflow");
+  document.documentElement.style.removeProperty("scroll-behavior");
+  window.scrollTo(0, _scrollY);
+}
 
 export function HackathonPopup() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem(STORAGE_KEY)) return;
-    const t = setTimeout(() => setOpen(true), 3000);
+    const dismissed = localStorage.getItem(STORAGE_KEY);
+    if (dismissed && Date.now() - Number(dismissed) < 24 * 60 * 60 * 1000) return;
+    const t = setTimeout(() => {
+      lockScroll();
+      setOpen(true);
+      localStorage.setItem(STORAGE_KEY, String(Date.now()));
+    }, 2000);
     return () => clearTimeout(t);
   }, []);
 
   function dismiss() {
-    localStorage.setItem(STORAGE_KEY, "1");
+    unlockScroll();
     setOpen(false);
   }
 
   return (
-    <Dialog open={open} onOpenChange={(next) => { if (!next) dismiss(); }}>
+    <Dialog open={open} onOpenChange={() => {}}>
       <DialogContent
         showCloseButton={false}
         aria-describedby={undefined}
-        className="rounded-none border-0 p-0 gap-0 sm:max-w-xl"
-        style={{ background: "#000", border: "0.5px solid var(--color-border)" }}
+        onInteractOutside={(e) => e.preventDefault()}
+        onEscapeKeyDown={(e) => e.preventDefault()}
+        className="rounded-none border-0 p-0 gap-0 sm:max-w-md"
+        style={{ background: "#000", border: "2px solid #FF2D78" }}
       >
         <DialogTitle className="sr-only">Since AI Hackathon 2026</DialogTitle>
 
@@ -74,75 +88,122 @@ export function HackathonPopup() {
             background: "none",
             border: "none",
             cursor: "pointer",
-            color: "var(--color-fg-muted)",
+            color: "#fff",
             padding: "4px",
             lineHeight: 0,
+            zIndex: 10,
           }}
         >
-          <X size={16} />
+          <X size={20} strokeWidth={2.5} />
         </DialogClose>
 
-        <div style={{ padding: "clamp(32px, 5vw, 48px)" }}>
+        <div style={{ padding: "clamp(24px, 4vw, 36px)", position: "relative", overflow: "hidden" }}>
+          {/* Ghost logo watermark */}
+          <img
+            src="/assets/logo/sinceai-white.png"
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "90%",
+              opacity: 0.10,
+              pointerEvents: "none",
+              userSelect: "none",
+              zIndex: 0,
+            }}
+          />
+          {/* Logo + heading row */}
+          <div style={{ marginBottom: "20px" }}>
+            <h2
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "clamp(20px, 4vw, 28px)",
+                fontWeight: 700,
+                lineHeight: 1.05,
+                color: "#fff",
+                margin: 0,
+              }}
+            >
+              Since AI<br />Hackathon 2026.
+            </h2>
+          </div>
+
+          {/* Prize */}
           <p
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: "var(--text-xs)",
-              color: "var(--color-fg-muted)",
-              letterSpacing: "0.05em",
-              marginBottom: "var(--space-sm)",
+              fontSize: "clamp(20px, 4vw, 28px)",
+              fontWeight: 700,
+              color: "#FF2D78",
+              margin: "0 0 20px",
+              lineHeight: 1,
             }}
           >
-            {"// flagship event · 2026"}
+            €50,000 prize pool
           </p>
 
-          <h2
+          {/* Date */}
+          <p
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: "clamp(28px, 5vw, 48px)",
-              fontWeight: 500,
-              lineHeight: 1.05,
+              fontSize: "13px",
               color: "#fff",
-              margin: 0,
-              marginBottom: "var(--space-md)",
+              letterSpacing: "0.01em",
+              marginBottom: "20px",
             }}
           >
-            Hackathon 2026.
-          </h2>
+            November 6–8, 2026 · Turku, Finland
+          </p>
 
+          {/* Tagline */}
+          <p
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "13px",
+              color: "#fff",
+              lineHeight: 1.6,
+              marginBottom: "20px",
+            }}
+          >
+            Compete alongside 1,000+ AI engineers, researchers, and founders from across the globe. Ship something real in 72 hours.
+          </p>
+
+          {/* Body */}
           <p
             style={{
               fontFamily: "var(--font-mono)",
               fontSize: "13px",
               color: "var(--color-fg-muted)",
-              letterSpacing: "0.01em",
-              marginBottom: "var(--space-md)",
-            }}
-          >
-            November 6–8, 2026 · Turku, Finland · 72 hours · 1,000+ builders · 50,000€ prize pool
-          </p>
-
-          <p
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--text-base)",
-              color: "var(--color-fg-muted)",
               lineHeight: 1.6,
-              marginBottom: "var(--space-lg)",
+              marginBottom: "20px",
             }}
           >
-            A global execution-focused AI hackathon. Partner challenges from
-            Google for Developers, ElevenLabs, Aiven, and more. Open to
-            builders worldwide.
+Backed by Google for Developers, AMD, ElevenLabs, Aiven, LUMI supercomputer, and more. Open to builders worldwide.
           </p>
 
-          <div className="flex flex-col sm:flex-row" style={{ gap: "12px" }}>
-            <Link href="/hackathon" style={ctaPrimary} onClick={dismiss}>
-              Apply to build →
-            </Link>
-            <Link href="/partners" style={ctaSecondary} onClick={dismiss}>
-              Partner with us →
-            </Link>
-          </div>
+          {/* CTA */}
+          <Link
+            href="https://sinceai.app/events/since-ai-hackathon-2026"
+            onClick={dismiss}
+            className="popup-apply-btn"
+            style={{
+              position: "relative",
+              zIndex: 1,
+              display: "block",
+              fontFamily: "var(--font-mono)",
+              fontSize: "13px",
+              fontWeight: 500,
+              padding: "12px 20px",
+              border: "none",
+              textDecoration: "none",
+              textAlign: "center",
+              margin: 0,
+            }}
+          >
+            Apply →
+          </Link>
         </div>
       </DialogContent>
     </Dialog>
