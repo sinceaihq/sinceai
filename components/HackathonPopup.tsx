@@ -111,6 +111,7 @@ export function HackathonPopup() {
               opacity: 0.10,
               pointerEvents: "none",
               userSelect: "none",
+              zIndex: 0,
             }}
           />
           {/* Logo + heading row */}
@@ -188,6 +189,8 @@ Backed by Google for Developers, AMD, ElevenLabs, Aiven, LUMI supercomputer, and
             onClick={dismiss}
             className="popup-apply-btn"
             style={{
+              position: "relative",
+              zIndex: 1,
               display: "block",
               fontFamily: "var(--font-mono)",
               fontSize: "13px",
