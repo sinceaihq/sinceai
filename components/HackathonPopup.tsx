@@ -1,6 +1,5 @@
 "use client";
 
-import Logo from "@/components/brand/logo";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
@@ -89,18 +88,33 @@ export function HackathonPopup() {
             background: "none",
             border: "none",
             cursor: "pointer",
-            color: "var(--color-fg-muted)",
+            color: "#fff",
             padding: "4px",
             lineHeight: 0,
             zIndex: 10,
           }}
         >
-          <X size={16} />
+          <X size={20} strokeWidth={2.5} />
         </DialogClose>
 
-        <div style={{ padding: "clamp(24px, 4vw, 36px)" }}>
+        <div style={{ padding: "clamp(24px, 4vw, 36px)", position: "relative", overflow: "hidden" }}>
+          {/* Ghost logo watermark */}
+          <img
+            src="/assets/logo/sinceai-white.png"
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "90%",
+              opacity: 0.10,
+              pointerEvents: "none",
+              userSelect: "none",
+            }}
+          />
           {/* Logo + heading row */}
-          <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "20px" }}>
+          <div style={{ marginBottom: "20px" }}>
             <h2
               style={{
                 fontFamily: "var(--font-mono)",
@@ -113,7 +127,6 @@ export function HackathonPopup() {
             >
               Since AI<br />Hackathon 2026.
             </h2>
-            <Logo className="w-16 h-16 object-contain" />
           </div>
 
           {/* Prize */}
