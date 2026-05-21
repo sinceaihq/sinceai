@@ -6,6 +6,7 @@ Global AI builders community — Turku-based, globally connected.
 [![Cloudflare Deploy](https://github.com/sinceaihq/sinceai/actions/workflows/cloudflare.yml/badge.svg)](https://github.com/sinceaihq/sinceai/actions/workflows/cloudflare.yml)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js&logoColor=white)](https://nextjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Node](https://img.shields.io/badge/Node.js-%3E%3D20.9.0-green?logo=node.js&logoColor=white)](https://nodejs.org/)
 
 Marketing website for Since AI — a non-profit AI builders community running hackathons, applied AI projects, and community events.
@@ -104,6 +105,7 @@ sinceai/
 ├── components/
 │   ├── CookieConsent.tsx         # Cookie consent banner
 │   ├── HackathonCountdown.tsx    # Live countdown to next hackathon
+│   ├── HackathonPopup.tsx        # Hackathon event popup modal
 │   ├── ManageCookies.tsx         # Cookie preference manager
 │   ├── StructuredData.tsx        # JSON-LD script injection helper
 │   ├── countdown-timer.tsx       # Generic countdown primitive (used by HackathonCountdown)
@@ -180,6 +182,7 @@ sinceai/
 │
 ├── .github/
 │   ├── labeler.yml               # PR auto-label rules (path → label mapping)
+│   ├── CODEOWNERS                # Default code reviewer assignment
 │   └── workflows/
 │       ├── nextjs.yml            # CI: lint, typecheck, build
 │       ├── cloudflare.yml        # CD: deploy to Cloudflare Workers
@@ -339,19 +342,7 @@ Labels are applied automatically based on changed files. No manual action needed
 | `infra` | `.github/`, config files, `package.json` |
 | `documentation` | `README.md`, `CLAUDE.md` |
 
-### Adding a new page
-
-1. Create `app/<route>/page.tsx`
-2. Export a `metadata` object with `title`, `description`, and `alternates.canonical`
-3. Add the route to `app/sitemap.ts`
-
-### Adding a new UI component
-
-```bash
-npx shadcn@latest add <component-name>
-```
-
-Components land in `components/ui/` automatically.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for full workflow details including how to add pages, components, and the CI requirements.
 
 ---
 

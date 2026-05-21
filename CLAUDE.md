@@ -22,11 +22,10 @@ Jest is configured (`npm run test`). No tests currently exist — add them when 
 
 ### Key directories
 
-- `app/` — Pages and API routes (App Router). Each page has its own directory with `page.tsx`.
-- `components/sections/` — Page-specific section components, organized by page (e.g., `homepage/`, `contact/`). Each subdirectory has a barrel `index.ts`.
+- `app/` — Pages (App Router). Each page has its own directory with `page.tsx` and a sibling `layout.tsx` for metadata.
+- `components/sections/` — Page-specific section components, organized by page (currently only `homepage/`). Each subdirectory has a barrel `index.ts`.
 - `components/ui/` — shadcn/ui components (new-york style, RSC-enabled, lucide icons). Add new ones via `npx shadcn@latest add <component>`.
 - `components/motion-primitives/` — Reusable animation components (Framer Motion wrappers).
-- `components/effects/` — Visual effects (lamp, number ticker, timeline).
 - `lib/org.ts` — Single source of truth for organization constants (name, contact info, social links, stats).
 - `lib/sinceai.ts` — Site-wide constants (event dates, copy, links).
 - `lib/projects.ts` — Challenge theme data with typed `ChallengeTheme` interface.
