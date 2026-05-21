@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Logo from "@/components/brand/logo";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
@@ -13,6 +13,40 @@ import {
 
 const STORAGE_KEY = "hackathon2026_popup_v1";
 
+// Module-level so the same reference is used for add and remove
+let _preventScroll: ((e: Event) => void) | null = null;
+
+let _scrollY = 0;
+
+function lockScroll() {
+  if (_preventScroll) return;
+  _preventScroll = (e: Event) => e.preventDefault();
+  window.addEventListener("wheel", _preventScroll, { passive: false, capture: true });
+  window.addEventListener("touchmove", _preventScroll, { passive: false, capture: true });
+  _scrollY = window.scrollY;
+  // Use setProperty with 'important' to beat Radix's injected
+  // "body[data-scroll-locked] { position: relative !important }"
+  document.body.style.setProperty("position", "fixed", "important");
+  document.body.style.setProperty("top", `-${_scrollY}px`, "important");
+  document.body.style.setProperty("width", "100%", "important");
+  document.body.style.setProperty("overflow", "hidden", "important");
+  document.documentElement.style.setProperty("overflow", "hidden", "important");
+  document.documentElement.style.setProperty("scroll-behavior", "auto", "important");
+}
+
+function unlockScroll() {
+  if (!_preventScroll) return;
+  window.removeEventListener("wheel", _preventScroll, { capture: true });
+  window.removeEventListener("touchmove", _preventScroll, { capture: true });
+  _preventScroll = null;
+  document.body.style.removeProperty("position");
+  document.body.style.removeProperty("top");
+  document.body.style.removeProperty("width");
+  document.body.style.removeProperty("overflow");
+  document.documentElement.style.removeProperty("overflow");
+  document.documentElement.style.removeProperty("scroll-behavior");
+  window.scrollTo(0, _scrollY);
+}
 
 export function HackathonPopup() {
   const [open, setOpen] = useState(false);
@@ -20,18 +54,16 @@ export function HackathonPopup() {
   useEffect(() => {
     const dismissed = localStorage.getItem(STORAGE_KEY);
     if (dismissed && Date.now() - Number(dismissed) < 24 * 60 * 60 * 1000) return;
-    function onScroll() {
-      if (window.scrollY > 0) {
-        setOpen(true);
-        localStorage.setItem(STORAGE_KEY, String(Date.now()));
-        window.removeEventListener("scroll", onScroll);
-      }
-    }
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const t = setTimeout(() => {
+      lockScroll();
+      setOpen(true);
+      localStorage.setItem(STORAGE_KEY, String(Date.now()));
+    }, 2000);
+    return () => clearTimeout(t);
   }, []);
 
   function dismiss() {
+    unlockScroll();
     setOpen(false);
   }
 
@@ -81,13 +113,7 @@ export function HackathonPopup() {
             >
               Since AI<br />Hackathon 2026.
             </h2>
-            <Image
-              src="/assets/logo/SINCE AI white.png"
-              alt="Since AI"
-              width={64}
-              height={64}
-              style={{ objectFit: "contain", flexShrink: 0 }}
-            />
+            <Logo className="w-16 h-16 object-contain" />
           </div>
 
           {/* Prize */}

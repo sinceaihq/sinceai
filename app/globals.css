@@ -174,6 +174,11 @@
   }
 }
 
+/* Lock html scroll container when Radix Dialog is open */
+html:has(body[data-scroll-locked]) {
+  overflow: hidden !important;
+}
+
 /* Popup apply button — left-to-right fill on hover */
 .popup-apply-btn {
   background: linear-gradient(to right, #fff 50%, #FF2D78 50%);
