@@ -4,14 +4,7 @@ Setup and architecture are covered in [README.md](README.md). Coding conventions
 
 ## Getting started
 
-```bash
-git clone https://github.com/sinceaihq/sinceai.git
-cd sinceai
-npm ci --legacy-peer-deps
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000). Always use `--legacy-peer-deps` when installing or adding packages.
+See [README.md](README.md) for clone, install, and dev server instructions. Always use `--legacy-peer-deps` when installing or adding packages.
 
 ## Branch and PR workflow
 
@@ -64,9 +57,12 @@ Components land in `components/ui/` automatically.
 
 ## What CI checks
 
+CI runs three separate jobs — all must pass:
+
 ```bash
-npm run lint        # ESLint — must pass with zero errors
-npm run build       # Next.js build — must complete without errors
+npm run lint          # ESLint — zero errors required
+npx tsc --noEmit      # TypeScript type check — zero errors required
+npm run build         # Next.js build — must complete without errors
 ```
 
-Type checking runs as part of the build. Fix all errors before pushing — warnings in CI are fine, errors are not.
+Fix all errors before pushing. Warnings are fine; errors block the merge.

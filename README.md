@@ -104,6 +104,7 @@ sinceai/
 ├── components/
 │   ├── CookieConsent.tsx         # Cookie consent banner
 │   ├── HackathonCountdown.tsx    # Live countdown to next hackathon
+│   ├── HackathonPopup.tsx        # Hackathon event popup modal
 │   ├── ManageCookies.tsx         # Cookie preference manager
 │   ├── StructuredData.tsx        # JSON-LD script injection helper
 │   ├── countdown-timer.tsx       # Generic countdown primitive (used by HackathonCountdown)
@@ -180,6 +181,7 @@ sinceai/
 │
 ├── .github/
 │   ├── labeler.yml               # PR auto-label rules (path → label mapping)
+│   ├── CODEOWNERS                # Default code reviewer assignment
 │   └── workflows/
 │       ├── nextjs.yml            # CI: lint, typecheck, build
 │       ├── cloudflare.yml        # CD: deploy to Cloudflare Workers
@@ -339,19 +341,7 @@ Labels are applied automatically based on changed files. No manual action needed
 | `infra` | `.github/`, config files, `package.json` |
 | `documentation` | `README.md`, `CLAUDE.md` |
 
-### Adding a new page
-
-1. Create `app/<route>/page.tsx`
-2. Export a `metadata` object with `title`, `description`, and `alternates.canonical`
-3. Add the route to `app/sitemap.ts`
-
-### Adding a new UI component
-
-```bash
-npx shadcn@latest add <component-name>
-```
-
-Components land in `components/ui/` automatically.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for full workflow details including how to add pages, components, and the CI requirements.
 
 ---
 
