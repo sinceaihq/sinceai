@@ -56,6 +56,12 @@ export const PARTNERS: Partner[] = [
     tier: 1,
   },
   {
+    name: "Pruna AI",
+    logo: "/assets/sponsors/Pruna.svg",
+    url: "https://www.pruna.ai/",
+    tier: 1,
+  },
+  {
     name: "Bayer",
     logo: "/assets/sponsors/Bayer.svg",
     url: "https://www.bayer.com/",
