@@ -6,6 +6,7 @@ Global AI builders community — Turku-based, globally connected.
 [![Cloudflare Deploy](https://github.com/sinceaihq/sinceai/actions/workflows/cloudflare.yml/badge.svg)](https://github.com/sinceaihq/sinceai/actions/workflows/cloudflare.yml)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js&logoColor=white)](https://nextjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Node](https://img.shields.io/badge/Node.js-%3E%3D20.9.0-green?logo=node.js&logoColor=white)](https://nodejs.org/)
 
 Marketing website for Since AI — a non-profit AI builders community running hackathons, applied AI projects, and community events.
