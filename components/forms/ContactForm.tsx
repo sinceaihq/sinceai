@@ -65,7 +65,7 @@ export default function ContactForm() {
       </p>
 
       {status === 'success' && (
-        <div className="mb-6 p-4 rounded-lg border border-white/10 bg-white/[0.02]">
+        <div className="mb-6 p-4 rounded-none border border-white/10 bg-white/[0.02]">
           <p className="text-white text-sm">
             Message sent successfully. We&apos;ll get back to you soon.
           </p>
@@ -73,7 +73,7 @@ export default function ContactForm() {
       )}
 
       {status === 'error' && (
-        <div className="mb-6 p-4 rounded-lg border border-white/10 bg-white/[0.02]">
+        <div className="mb-6 p-4 rounded-none border border-white/10 bg-white/[0.02]">
           <p className="text-neutral-400 text-sm">
             Failed to send message. Please try again or email us at{' '}
             <a
@@ -101,7 +101,7 @@ export default function ContactForm() {
               required
               disabled={status === 'submitting'}
               placeholder="Your name"
-              className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/10 text-white placeholder-neutral-600 focus:outline-none focus:border-white/20 disabled:opacity-50 transition-colors text-sm"
+              className="w-full px-4 py-3 rounded-none bg-white/[0.03] border border-white/10 text-white placeholder-neutral-600 focus:outline-none focus:border-white/20 disabled:opacity-50 transition-colors text-sm"
             />
           </div>
           <div>
@@ -117,7 +117,7 @@ export default function ContactForm() {
               required
               disabled={status === 'submitting'}
               placeholder="your@email.com"
-              className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/10 text-white placeholder-neutral-600 focus:outline-none focus:border-white/20 disabled:opacity-50 transition-colors text-sm"
+              className="w-full px-4 py-3 rounded-none bg-white/[0.03] border border-white/10 text-white placeholder-neutral-600 focus:outline-none focus:border-white/20 disabled:opacity-50 transition-colors text-sm"
             />
           </div>
         </div>
@@ -135,7 +135,7 @@ export default function ContactForm() {
             required
             disabled={status === 'submitting'}
             placeholder="How can we help?"
-            className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/10 text-white placeholder-neutral-600 focus:outline-none focus:border-white/20 disabled:opacity-50 transition-colors text-sm"
+            className="w-full px-4 py-3 rounded-none bg-white/[0.03] border border-white/10 text-white placeholder-neutral-600 focus:outline-none focus:border-white/20 disabled:opacity-50 transition-colors text-sm"
           />
         </div>
 
@@ -152,7 +152,7 @@ export default function ContactForm() {
             disabled={status === 'submitting'}
             rows={6}
             placeholder="Tell us more..."
-            className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/10 text-white placeholder-neutral-600 focus:outline-none focus:border-white/20 disabled:opacity-50 transition-colors text-sm resize-none"
+            className="w-full px-4 py-3 rounded-none bg-white/[0.03] border border-white/10 text-white placeholder-neutral-600 focus:outline-none focus:border-white/20 disabled:opacity-50 transition-colors text-sm resize-none"
           />
         </div>
 

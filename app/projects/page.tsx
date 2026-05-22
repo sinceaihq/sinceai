@@ -81,7 +81,7 @@ export default function ProjectsPage() {
                     placeholder="Search themes, tags, or technologies..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-neutral-500 focus:outline-none focus:border-white/20 transition-colors"
+                    className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-none text-white placeholder-neutral-500 focus:outline-none focus:border-white/20 transition-colors"
                   />
                 </div>
               </div>
