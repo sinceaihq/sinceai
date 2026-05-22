@@ -317,8 +317,8 @@ interface TeamMember {
 
 // Featured lead card — full width, horizontal layout
 const LeadCard: React.FC<{ person: TeamMember }> = ({ person }) => (
-  <div className="flex items-center gap-6 p-6 border border-white/15 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.05] transition-all duration-300">
-    <div className="relative w-20 h-20 shrink-0 overflow-hidden bg-white/5">
+  <div className="flex items-center gap-4 sm:gap-6 p-4 sm:p-6 border border-white/15 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.05] transition-all duration-300">
+    <div className="relative w-14 h-14 sm:w-20 sm:h-20 shrink-0 overflow-hidden bg-white/5">
       {person.image ? (
         <Image
           src={person.image}
