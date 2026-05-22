@@ -343,14 +343,14 @@ const LeadCard: React.FC<{ person: TeamMember }> = ({ person }) => (
       <p className="text-[10px] font-mono uppercase tracking-widest text-white/30 mb-1">Lead</p>
       <h3 className="text-white font-semibold text-xl tracking-tight leading-tight">{person.name}</h3>
       <p className="text-neutral-400 text-sm mt-0.5">{person.role}</p>
-      <div className="flex items-center gap-3 mt-3 min-w-0">
+      <div className="mt-3 space-y-2">
         {person.email && (
-          <a href={`mailto:${person.email}`} className="text-sm text-neutral-500 hover:text-white transition-colors truncate min-w-0">
+          <a href={`mailto:${person.email}`} className="text-sm text-neutral-500 hover:text-white transition-colors break-all block">
             {person.email}
           </a>
         )}
         {person.linkedin && (
-          <a href={person.linkedin} target="_blank" rel="noopener noreferrer" className="text-neutral-500 hover:text-white transition-colors shrink-0">
+          <a href={person.linkedin} target="_blank" rel="noopener noreferrer" className="text-neutral-500 hover:text-white transition-colors inline-block">
             <FaLinkedin size={15} />
           </a>
         )}
