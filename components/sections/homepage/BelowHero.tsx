@@ -59,12 +59,12 @@ function Eyebrow({ text }: { text: string }) {
 function SectionH2({ children }: { children: React.ReactNode }) {
   return (
     <h2
+      className="text-white"
       style={{
         fontFamily: "var(--font-mono)",
         fontSize: "clamp(24px, 4vw, 36px)",
-        fontWeight: 500,
+        fontWeight: 700,
         lineHeight: 1.15,
-        color: "#fff",
         margin: 0,
       }}
     >
@@ -163,7 +163,7 @@ export function BelowHero() {
                 style={{
                   fontFamily: "var(--font-mono)",
                   fontSize: "clamp(32px, 5vw, 56px)",
-                  fontWeight: 500,
+                  fontWeight: 700,
                   lineHeight: 1,
                   color: "#fff",
                   margin: 0,
@@ -225,7 +225,7 @@ export function BelowHero() {
                   style={{
                     fontFamily: "var(--font-mono)",
                     fontSize: "clamp(32px, 4vw, 48px)",
-                    fontWeight: 500,
+                    fontWeight: 700,
                     lineHeight: 1,
                     color: "var(--color-fg-subtle)",
                     marginBottom: "var(--space-sm)",
@@ -238,7 +238,7 @@ export function BelowHero() {
                   style={{
                     fontFamily: "var(--font-mono)",
                     fontSize: "20px",
-                    fontWeight: 500,
+                    fontWeight: 700,
                     color: "#fff",
                     margin: 0,
                     marginBottom: "var(--space-sm)",

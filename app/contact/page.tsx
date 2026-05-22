@@ -8,6 +8,7 @@ import SmoothScroll from "@/components/smoothScroll";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import ContactForm from "@/components/forms/ContactForm";
+import { ButtonPair } from "@/components/ui/ButtonPair";
 
 // Team members data organized by department
 const teamSections = [
@@ -355,7 +356,7 @@ const TeamCard: React.FC<{ person: TeamMember }> = ({ person }) => (
       {person.email && (
         <a
           href={`mailto:${person.email}`}
-          className="text-sm text-neutral-600 hover:text-white transition-colors block"
+          className="text-sm text-neutral-400 hover:text-white transition-colors block"
         >
           {person.email}
         </a>
@@ -366,7 +367,7 @@ const TeamCard: React.FC<{ person: TeamMember }> = ({ person }) => (
           href={person.linkedin}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-2 text-sm text-neutral-600 hover:text-white transition-colors w-full"
+          className="inline-flex items-center justify-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors w-full"
         >
           <FaLinkedin size={16} />
           <span>LinkedIn</span>
@@ -412,20 +413,12 @@ function ContactPageContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <a
-              href={config.discordUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-black bg-white rounded-full transition-all duration-300 hover:bg-neutral-100 hover:scale-[1.02]"
-            >
-              Join Discord
-            </a>
-            <a
-              href="mailto:info@sinceai.fi"
-              className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-white/10 rounded-full transition-all duration-300 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30 hover:scale-[1.02]"
-            >
-              Email Us
-            </a>
+            <ButtonPair
+              primaryLabel="Join Discord"
+              primaryHref={config.discordUrl}
+              secondaryLabel="Email Us"
+              secondaryHref="mailto:info@sinceai.fi"
+            />
           </motion.div>
         </div>
       </section>
@@ -445,7 +438,7 @@ function ContactPageContent() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
           >
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
               Team
@@ -462,7 +455,7 @@ function ContactPageContent() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: sectionIndex * 0.1 }}
+                transition={{ duration: 0.6, delay: sectionIndex * 0.1, ease: "easeOut" }}
               >
                 <h3 className="text-2xl font-bold text-white mb-6 tracking-tight">
                   {section.department}
@@ -488,7 +481,7 @@ function ContactPageContent() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
           >
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
               Quick answers
@@ -522,7 +515,7 @@ function ContactPageContent() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
                 className="border border-white/5 rounded-xl p-6 hover:border-white/10 transition-colors"
               >
                 <h3 className="text-white font-semibold text-lg mb-2">
@@ -540,11 +533,11 @@ function ContactPageContent() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
           >
             <a
               href="/faq"
-              className="inline-flex items-center gap-2 text-neutral-600 hover:text-white transition-colors text-sm"
+              className="inline-flex items-center gap-2 text-neutral-400 hover:text-white transition-colors text-sm"
             >
               View all FAQs →
             </a>

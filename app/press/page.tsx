@@ -26,7 +26,7 @@ export default function PressPage() {
       <Navbar />
       
       <main className="flex flex-col w-full bg-black min-h-screen">
-        <div className="max-w-4xl mx-auto px-6 py-32 md:py-40">
+        <div className="max-w-4xl mx-auto px-6 py-24 md:py-32">
           <FadeIn>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight leading-tight">
               Press & Media
@@ -378,7 +378,7 @@ export default function PressPage() {
                 </p>
               </section>
 
-              <section className="p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+              <section className="p-8 rounded-xl border border-white/10 bg-white/[0.02]">
                 <h2 className="text-2xl font-bold text-white mb-4">
                   Learn More
                 </h2>

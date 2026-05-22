@@ -45,7 +45,7 @@ export default function ProjectsPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
               className="text-center"
             >
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight">
@@ -70,7 +70,7 @@ export default function ProjectsPage() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
             >
               {/* Search */}
               <div className="mb-6">
@@ -98,7 +98,7 @@ export default function ProjectsPage() {
                       <button
                         key={industry}
                         onClick={() => setSelectedIndustry(industry)}
-                        className={`px-4 py-2 text-sm font-medium rounded-full transition-all ${
+                        className={`px-4 py-2 text-sm font-medium rounded-none transition-all ${
                           selectedIndustry === industry
                             ? "bg-white text-black"
                             : "bg-white/5 text-neutral-400 hover:bg-white/10 hover:text-white border border-white/10"
@@ -120,7 +120,7 @@ export default function ProjectsPage() {
                       <button
                         key={modality}
                         onClick={() => setSelectedModality(modality)}
-                        className={`px-4 py-2 text-sm font-medium rounded-full transition-all ${
+                        className={`px-4 py-2 text-sm font-medium rounded-none transition-all ${
                           selectedModality === modality
                             ? "bg-white text-black"
                             : "bg-white/5 text-neutral-400 hover:bg-white/10 hover:text-white border border-white/10"
@@ -142,7 +142,7 @@ export default function ProjectsPage() {
                       <button
                         key={sponsor}
                         onClick={() => setSelectedSponsor(sponsor)}
-                        className={`px-4 py-2 text-sm font-medium rounded-full transition-all ${
+                        className={`px-4 py-2 text-sm font-medium rounded-none transition-all ${
                           selectedSponsor === sponsor
                             ? "bg-white text-black"
                             : "bg-white/5 text-neutral-400 hover:bg-white/10 hover:text-white border border-white/10"
@@ -159,7 +159,7 @@ export default function ProjectsPage() {
         </section>
 
         {/* Challenge Themes Grid */}
-        <section className="relative w-full px-6 py-16">
+        <section className="relative w-full px-6 py-24">
           <div className="max-w-6xl mx-auto">
             {filteredThemes.length === 0 ? (
               <div className="text-center py-20">
@@ -175,8 +175,8 @@ export default function ProjectsPage() {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.05 }}
-                    className="border border-white/10 rounded-2xl p-8 bg-white/[0.02] hover:border-white/20 transition-all duration-300 group"
+                    transition={{ duration: 0.6, delay: index * 0.05, ease: "easeOut" }}
+                    className="border border-white/10 rounded-xl p-8 bg-white/[0.02] hover:border-white/20 transition-all duration-300 group"
                   >
                     {/* Sponsor */}
                     <div className="flex items-center justify-between mb-4">
@@ -259,13 +259,13 @@ export default function ProjectsPage() {
         </section>
 
         {/* Credibility Strip */}
-        <section className="relative w-full px-6 py-16 border-t border-white/5">
+        <section className="relative w-full px-6 py-24 border-t border-white/5">
           <div className="max-w-4xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
             >
               <p className="text-neutral-400 mb-4">
                 <span className="text-white font-semibold">Since AI Hackathon 2025</span> — Nov 21–23, 2025 • EduCity, Turku • 260+ builders
@@ -284,7 +284,7 @@ export default function ProjectsPage() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
             >
               <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
                 Build with the Best
@@ -298,14 +298,14 @@ export default function ProjectsPage() {
                   href={config.discordUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-black bg-white rounded-full hover:bg-neutral-100 transition-all duration-300"
+                  className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-black bg-white rounded-none hover:bg-neutral-100 transition-all duration-300"
                 >
                   Join the Community
                 </a>
 
                 <Link
                   href="/partners"
-                  className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white border border-white/20 rounded-full hover:bg-white/5 transition-all duration-300"
+                  className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white border border-white/20 rounded-none hover:bg-white/5 transition-all duration-300"
                 >
                   Partner with Since AI
                 </Link>

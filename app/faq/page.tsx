@@ -8,6 +8,7 @@ import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { ORG } from "@/lib/org";
 import StructuredData from "@/components/StructuredData";
 import { faqs } from "@/lib/faqs";
+import { ButtonPair } from "@/components/ui/ButtonPair";
 
 export const metadata: Metadata = {
   title:
@@ -73,7 +74,7 @@ export default function FAQPage() {
       <StructuredData data={breadcrumbSchema} />
 
       <main className="flex flex-col w-full bg-black min-h-screen">
-        <div className="max-w-4xl mx-auto px-6 py-32 md:py-40">
+        <div className="max-w-4xl mx-auto px-6 py-24 md:py-32">
           <FadeIn>
             <div className="prose prose-invert prose-neutral max-w-none">
               {/* 1. H1 */}
@@ -106,7 +107,7 @@ export default function FAQPage() {
               </div>
 
               {/* Bottom CTA */}
-              <div className="mt-16 p-8 rounded-2xl border border-white/10 bg-white/[0.03]">
+              <div className="mt-16 p-8 rounded-xl border border-white/10 bg-white/[0.02]">
                 <h2 className="text-xl font-bold text-white mb-4 tracking-tight">
                   Still have questions?
                 </h2>
@@ -120,22 +121,12 @@ export default function FAQPage() {
                   </a>{" "}
                   or join our Discord community.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <a
-                    href={ORG.social.discord}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-black bg-white rounded-full transition-all duration-300 hover:bg-neutral-100 hover:scale-[1.02]"
-                  >
-                    Join Discord →
-                  </a>
-                  <Link
-                    href="/contact"
-                    className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-white/10 rounded-full transition-all duration-300 hover:bg-white/15 border border-white/20 hover:border-white/30 hover:scale-[1.02]"
-                  >
-                    Contact us
-                  </Link>
-                </div>
+                <ButtonPair
+                  primaryLabel="Join Discord →"
+                  primaryHref={ORG.social.discord}
+                  secondaryLabel="Contact us"
+                  secondaryHref="/contact"
+                />
               </div>
 
               {/* Cross-links */}

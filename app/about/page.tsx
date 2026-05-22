@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { ORG } from "@/lib/org";
 import StructuredData from "@/components/StructuredData";
+import { ButtonPair } from "@/components/ui/ButtonPair";
 
 export const metadata: Metadata = {
   title: "About Since AI — Global Execution-Focused AI Innovation Ecosystem",
@@ -88,7 +89,7 @@ export default function AboutPage() {
       <StructuredData data={rikuSchema} />
 
       <main className="flex flex-col w-full bg-black min-h-screen">
-        <div className="max-w-4xl mx-auto px-6 py-32 md:py-40">
+        <div className="max-w-4xl mx-auto px-6 py-24 md:py-32">
           <FadeIn>
             <div className="prose prose-invert prose-neutral max-w-none">
 
@@ -140,7 +141,7 @@ export default function AboutPage() {
                   Founder
                 </h2>
 
-                <div className="p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+                <div className="p-8 rounded-xl border border-white/10 bg-white/[0.02]">
                   <div className="flex flex-col gap-4">
                     <h3 className="text-2xl font-bold text-white tracking-tight">
                       Riku Lauttia
@@ -349,22 +350,13 @@ export default function AboutPage() {
                   ))}
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-3 mt-8">
-                  <a
-                    href={ORG.social.discord}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-black bg-white rounded-full transition-all duration-300 hover:bg-neutral-100 hover:scale-[1.02]"
-                  >
-                    Join Discord →
-                  </a>
-                  <Link
-                    href="/contact"
-                    className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-white/10 rounded-full transition-all duration-300 hover:bg-white/15 border border-white/20 hover:border-white/30 hover:scale-[1.02]"
-                  >
-                    Full team directory
-                  </Link>
-                </div>
+                <ButtonPair
+                  primaryLabel="Join Discord →"
+                  primaryHref={ORG.social.discord}
+                  secondaryLabel="Full team directory"
+                  secondaryHref="/contact"
+                  className="mt-8"
+                />
               </section>
 
               {/* Cross-links */}

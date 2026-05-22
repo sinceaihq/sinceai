@@ -80,7 +80,7 @@ export default function ResearchToMarketPage() {
                       <li>• Limited production experience</li>
                     </ul>
                   </div>
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.03] flex items-center justify-center">
+                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02] flex items-center justify-center">
                     <div className="text-center">
                       <div className="text-2xl font-bold text-white mb-1">Since AI</div>
                       <div className="text-sm text-neutral-400">Bridges the gap</div>
@@ -203,7 +203,7 @@ export default function ResearchToMarketPage() {
               </section>
 
               {/* The Full Pipeline */}
-              <section className="mb-12 p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+              <section className="mb-12 p-8 rounded-xl border border-white/10 bg-white/[0.02]">
                 <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">
                   The Full Pipeline
                 </h2>
@@ -218,7 +218,7 @@ export default function ResearchToMarketPage() {
               </section>
 
               {/* CTA */}
-              <section className="p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+              <section className="p-8 rounded-xl border border-white/10 bg-white/[0.02]">
                 <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">
                   Get Started
                 </h2>

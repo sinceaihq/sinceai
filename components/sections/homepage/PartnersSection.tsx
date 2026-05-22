@@ -35,7 +35,7 @@ function LogoItem({
 
 export function PartnersSection() {
   return (
-    <section className="py-20 sm:py-28 lg:py-32 px-4 sm:px-6 bg-black border-t border-white/5">
+    <section className="py-24 px-6 bg-black border-t border-white/5">
       <div className="max-w-6xl mx-auto">
 
         <h2 className="text-center text-xl sm:text-2xl font-semibold text-white mb-14 sm:mb-20 tracking-tight max-w-2xl mx-auto leading-snug">
@@ -44,7 +44,7 @@ export function PartnersSection() {
 
         {/* ── Tier 1: Strategic Partners ── */}
         <div className="mb-14 sm:mb-20">
-          <h3 className="text-xs uppercase tracking-widest text-neutral-600 font-semibold text-center mb-8 sm:mb-12">
+          <h3 className="text-xs uppercase tracking-widest text-neutral-400 font-semibold text-center mb-8 sm:mb-12">
             Strategic Partners
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-y-2 gap-x-2">
@@ -63,7 +63,7 @@ export function PartnersSection() {
 
         {/* ── Tier 2: Capital & Research Partners ── */}
         <div className="mb-12 sm:mb-16">
-          <h3 className="text-xs uppercase tracking-widest text-neutral-600 font-semibold text-center mb-8 sm:mb-12">
+          <h3 className="text-xs uppercase tracking-widest text-neutral-400 font-semibold text-center mb-8 sm:mb-12">
             Capital &amp; Research Partners
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-y-2 gap-x-2">
@@ -92,7 +92,7 @@ export function PartnersSection() {
           </summary>
 
           <div className="mt-10">
-            <h3 className="text-xs uppercase tracking-widest text-neutral-600 font-semibold text-center mb-8 sm:mb-10">
+            <h3 className="text-xs uppercase tracking-widest text-neutral-400 font-semibold text-center mb-8 sm:mb-10">
               Community Supporters
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-y-2 gap-x-2">

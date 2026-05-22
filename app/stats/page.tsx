@@ -179,11 +179,11 @@ export default function StatsPage() {
                   industry-leading deployment rates for hackathon projects.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.03] text-center">
+                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02] text-center">
                     <div className="text-3xl font-bold text-white mb-2">30+</div>
                     <div className="text-sm text-neutral-400">Projects receiving production support</div>
                   </div>
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.03] text-center">
+                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02] text-center">
                     <div className="text-3xl font-bold text-white mb-2">8 weeks</div>
                     <div className="text-sm text-neutral-400">Average support duration</div>
                   </div>
@@ -273,7 +273,7 @@ export default function StatsPage() {
               </section>
 
               {/* Contact */}
-              <section className="p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+              <section className="p-8 rounded-xl border border-white/10 bg-white/[0.02]">
                 <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">
                   Data Inquiries
                 </h2>

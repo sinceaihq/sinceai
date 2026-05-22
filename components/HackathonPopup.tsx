@@ -74,7 +74,7 @@ export function HackathonPopup() {
         onInteractOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
         className="rounded-none border-0 p-0 gap-0 sm:max-w-md"
-        style={{ background: "#000", border: "2px solid #FF2D78" }}
+        style={{ background: "#000", border: "2px solid var(--color-brand)" }}
       >
         <DialogTitle className="sr-only">Since AI Hackathon 2026</DialogTitle>
 
@@ -136,7 +136,7 @@ export function HackathonPopup() {
               fontFamily: "var(--font-mono)",
               fontSize: "clamp(20px, 4vw, 28px)",
               fontWeight: 700,
-              color: "#FF2D78",
+              color: "var(--color-brand)",
               margin: "0 0 20px",
               lineHeight: 1,
             }}

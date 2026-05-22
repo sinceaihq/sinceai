@@ -150,7 +150,7 @@ export default function EuropeAIPage() {
       <StructuredData data={breadcrumbSchema} />
 
       <main className="flex flex-col w-full bg-black min-h-screen">
-        <div className="max-w-4xl mx-auto px-6 py-32 md:py-40">
+        <div className="max-w-4xl mx-auto px-6 py-24 md:py-32">
           <FadeIn>
             <div className="prose prose-invert prose-neutral max-w-none">
               {/* 1. H1 */}
@@ -170,7 +170,7 @@ export default function EuropeAIPage() {
               </p>
 
               {/* 3. TL;DR callout box */}
-              <div className="my-10 p-6 rounded-xl border border-white/10 bg-white/[0.03]">
+              <div className="my-10 p-6 rounded-xl border border-white/10 bg-white/[0.02]">
                 <h2 className="text-base font-bold text-white uppercase tracking-wider mb-4">
                   Key takeaways
                 </h2>

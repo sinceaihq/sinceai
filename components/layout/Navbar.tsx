@@ -42,7 +42,7 @@ export const Navbar = () => {
           background: scrolled ? "rgba(0,0,0,0.75)" : "transparent",
           backdropFilter: scrolled ? "blur(12px)" : "none",
           WebkitBackdropFilter: scrolled ? "blur(12px)" : "none",
-          transition: "background 0.2s, backdrop-filter 0.2s, -webkit-backdrop-filter 0.2s",
+          transition: "background 0.3s, backdrop-filter 0.3s, -webkit-backdrop-filter 0.3s",
         }}
       >
         <div
@@ -66,7 +66,7 @@ export const Navbar = () => {
                 href={href}
                 aria-current={isActive(href) ? "page" : undefined}
                 className={[
-                  "text-[13px] font-normal no-underline transition-colors duration-150",
+                  "text-[13px] font-normal no-underline transition-colors duration-300",
                   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
                   isActive(href)
                     ? "text-white"
@@ -88,7 +88,6 @@ export const Navbar = () => {
             style={{
               fontFamily: "var(--font-mono)",
               padding: "8px 16px",
-              borderRadius: 0,
               border: "0.5px solid #fff",
               whiteSpace: "nowrap",
             }}
@@ -179,7 +178,6 @@ export const Navbar = () => {
               style={{
                 fontFamily: "var(--font-mono)",
                 padding: "12px 20px",
-                borderRadius: 0,
                 border: "0.5px solid #fff",
               }}
             >

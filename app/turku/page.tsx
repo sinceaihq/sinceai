@@ -8,6 +8,7 @@ import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { getBreadcrumbSchema } from "@/lib/schema";
 import { ORG } from "@/lib/org";
 import { FIRST_EVENT, UPCOMING_EVENT_2026 } from "@/lib/sinceai";
+import { ButtonPair } from "@/components/ui/ButtonPair";
 
 export const metadata: Metadata = {
   title: "AI Community in Turku, Finland | Since AI",
@@ -44,7 +45,7 @@ export default function TurkuPage() {
       />
 
       <main className="flex flex-col w-full bg-black min-h-screen">
-        <div className="max-w-4xl mx-auto px-6 py-32 md:py-40">
+        <div className="max-w-4xl mx-auto px-6 py-24 md:py-32">
           <FadeIn>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight leading-tight">
               AI Community in Turku, Finland
@@ -238,26 +239,16 @@ export default function TurkuPage() {
               </section>
 
               {/* CTA */}
-              <section className="mb-12 p-8 rounded-2xl border border-white/10 bg-white/[0.03]">
+              <section className="mb-12 p-8 rounded-xl border border-white/10 bg-white/[0.02]">
                 <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">
                   Get Started in Turku&apos;s AI Scene
                 </h2>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <a
-                    href={ORG.social.discord}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-black bg-white rounded-full transition-all duration-300 hover:bg-neutral-100 hover:scale-[1.02]"
-                  >
-                    Join Discord Community
-                  </a>
-                  <Link
-                    href="/events"
-                    className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-white/10 rounded-full transition-all duration-300 hover:bg-white/15 border border-white/20 hover:border-white/30 hover:scale-[1.02]"
-                  >
-                    See Turku Events
-                  </Link>
-                </div>
+                <ButtonPair
+                  primaryLabel="Join Discord Community"
+                  primaryHref={ORG.social.discord}
+                  secondaryLabel="See Turku Events"
+                  secondaryHref="/events"
+                />
               </section>
 
               {/* Upcoming Events */}
@@ -358,7 +349,7 @@ export default function TurkuPage() {
               </section>
 
               {/* Contact */}
-              <section className="mb-12 p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+              <section className="mb-12 p-8 rounded-xl border border-white/10 bg-white/[0.02]">
                 <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">
                   Contact Since AI in Turku
                 </h2>

@@ -47,7 +47,7 @@ export default function ProductionSupportPage() {
       />
 
       <main className="flex flex-col w-full bg-black min-h-screen">
-        <div className="max-w-4xl mx-auto px-6 py-32 md:py-40">
+        <div className="max-w-4xl mx-auto px-6 py-24 md:py-32">
           <FadeIn>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight leading-tight">
               Production Support
@@ -126,7 +126,7 @@ export default function ProductionSupportPage() {
                 </h2>
 
                 <div className="space-y-6">
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.03]">
+                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">Maritime Sound Signal Detection (Kongsberg)</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed mb-3">
                       Built in 72 hours during the hackathon. After 8 weeks of production support including
@@ -140,7 +140,7 @@ export default function ProductionSupportPage() {
                     </div>
                   </div>
 
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.03]">
+                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">Intelligent Spare Part Discovery (Sandvik)</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed mb-3">
                       RAG-based system built at the hackathon, then optimized and integrated with internal
@@ -218,7 +218,7 @@ export default function ProductionSupportPage() {
               </section>
 
               {/* CTA */}
-              <section className="p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+              <section className="p-8 rounded-xl border border-white/10 bg-white/[0.02]">
                 <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">
                   Get Production Support
                 </h2>
@@ -228,13 +228,13 @@ export default function ProductionSupportPage() {
                 <div className="flex flex-wrap gap-4">
                   <Link
                     href="/events"
-                    className="px-6 py-3 bg-white text-black rounded-full font-semibold hover:bg-neutral-100 transition-colors"
+                    className="px-6 py-3 bg-white text-black rounded-none font-semibold hover:bg-neutral-100 transition-colors"
                   >
                     View Upcoming Events
                   </Link>
                   <Link
                     href="/partners"
-                    className="px-6 py-3 bg-white/10 text-white rounded-full font-semibold hover:bg-white/15 transition-colors border border-white/20"
+                    className="px-6 py-3 bg-white/10 text-white rounded-none font-semibold hover:bg-white/15 transition-colors border border-white/20"
                   >
                     Partner with Since AI
                   </Link>
@@ -253,3 +253,4 @@ export default function ProductionSupportPage() {
     </SmoothScroll>
   );
 }
+

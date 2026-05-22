@@ -196,7 +196,7 @@ export default function CodeOfConductPage() {
                 </p>
               </section>
 
-              <section className="mb-12 p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+              <section className="mb-12 p-8 rounded-xl border border-white/10 bg-white/[0.02]">
                 <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">
                   Questions?
                 </h2>

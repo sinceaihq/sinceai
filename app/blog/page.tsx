@@ -51,7 +51,7 @@ export default function BlogPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
               className="text-center"
             >
               {/* Breadcrumb */}
@@ -92,14 +92,14 @@ export default function BlogPage() {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.2 }}
+              transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
               className="flex flex-wrap gap-2 justify-center"
             >
               {FILTER_OPTIONS.map((option) => (
                 <button
                   key={option.value}
                   onClick={() => setActiveFilter(option.value)}
-                  className={`px-4 py-2 text-sm font-medium rounded-full border transition-all duration-200 ${
+                  className={`px-4 py-2 text-sm font-medium rounded-none border transition-all duration-300 ${
                     activeFilter === option.value
                       ? "bg-white text-black border-white"
                       : "bg-transparent text-neutral-400 border-white/10 hover:border-white/30 hover:text-neutral-200"
@@ -113,7 +113,7 @@ export default function BlogPage() {
         </section>
 
         {/* Blog Cards */}
-        <section className="relative w-full px-6 py-16 border-t border-white/5">
+        <section className="relative w-full px-6 py-24 border-t border-white/5">
           <div className="max-w-5xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {filteredPosts.map((post, index) => (
@@ -125,8 +125,8 @@ export default function BlogPage() {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="group flex flex-col justify-between p-8 md:p-10 rounded-3xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/20 transition-all duration-300"
+                  transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
+                  className="group flex flex-col justify-between p-8 md:p-10 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.03] hover:border-white/20 transition-all duration-300"
                 >
                   <article>
                     {/* Tags */}
@@ -189,7 +189,7 @@ export default function BlogPage() {
         </section>
 
         {/* Newsletter */}
-        <section className="relative w-full px-6 py-16 border-t border-white/5">
+        <section className="relative w-full px-6 py-24 border-t border-white/5">
           <div className="max-w-3xl mx-auto">
             <NewsletterSignup />
           </div>
@@ -202,7 +202,7 @@ export default function BlogPage() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
             >
               <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
                 Follow Since AI
@@ -216,7 +216,7 @@ export default function BlogPage() {
                   href="https://sinceai.substack.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-black bg-white rounded-full hover:bg-neutral-100 transition-all duration-300 group"
+                  className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-black bg-white rounded-none hover:bg-neutral-100 transition-all duration-300 group"
                 >
                   Subscribe on Substack
                   <ArrowUpRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -225,7 +225,7 @@ export default function BlogPage() {
                   href="https://medium.com/@sinceai"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-white/10 rounded-full hover:bg-white/15 border border-white/20 hover:border-white/30 transition-all duration-300 group"
+                  className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-white/10 rounded-none hover:bg-white/15 border border-white/20 hover:border-white/30 transition-all duration-300 group"
                 >
                   Follow on Medium
                   <ArrowUpRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />

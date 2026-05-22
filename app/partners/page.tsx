@@ -8,6 +8,7 @@ import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { ORG } from "@/lib/org";
 import StructuredData from "@/components/StructuredData";
 import { PartnersSection } from "@/components/sections/homepage/PartnersSection";
+import { ButtonPair } from "@/components/ui/ButtonPair";
 
 export const metadata: Metadata = {
   title:
@@ -162,20 +163,12 @@ export default function PartnersPage() {
                 companies, research groups, and investors. Sponsor challenges, recruit
                 vetted talent, or run applied AI pilots.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <a
-                  href="mailto:partners@sinceai.fi"
-                  className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-black bg-white rounded-full transition-all duration-300 hover:bg-neutral-100 hover:scale-[1.02]"
-                >
-                  Start a partnership conversation →
-                </a>
-                <Link
-                  href="/hackathon"
-                  className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-white/10 rounded-full transition-all duration-300 hover:bg-white/15 border border-white/20 hover:border-white/30 hover:scale-[1.02]"
-                >
-                  Hackathon 2026
-                </Link>
-              </div>
+              <ButtonPair
+                primaryLabel="Start a partnership conversation →"
+                primaryHref="mailto:partners@sinceai.fi"
+                secondaryLabel="Hackathon 2026"
+                secondaryHref="/hackathon"
+              />
             </div>
           </FadeIn>
         </div>
@@ -184,7 +177,7 @@ export default function PartnersPage() {
         <PartnersSection />
 
         {/* ── Rest of content ── */}
-        <div className="max-w-4xl mx-auto px-6 py-16">
+        <div className="max-w-4xl mx-auto px-6 py-24">
           <div className="prose prose-invert prose-neutral max-w-none">
 
             {/* Stats strip */}
@@ -213,7 +206,7 @@ export default function PartnersPage() {
 
               <div className="space-y-5">
                 {/* Card 1 */}
-                <div className="p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+                <div className="p-8 rounded-xl border border-white/10 bg-white/[0.02]">
                   <h3 className="text-xl font-bold text-white mb-3 tracking-tight">
                     Sponsor a hackathon challenge
                   </h3>
@@ -241,7 +234,7 @@ export default function PartnersPage() {
                 </div>
 
                 {/* Card 2 */}
-                <div className="p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+                <div className="p-8 rounded-xl border border-white/10 bg-white/[0.02]">
                   <h3 className="text-xl font-bold text-white mb-3 tracking-tight">
                     Recruit AI talent
                   </h3>
@@ -269,7 +262,7 @@ export default function PartnersPage() {
                 </div>
 
                 {/* Card 3 */}
-                <div className="p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+                <div className="p-8 rounded-xl border border-white/10 bg-white/[0.02]">
                   <h3 className="text-xl font-bold text-white mb-3 tracking-tight">
                     Run an applied AI pilot
                   </h3>
@@ -341,7 +334,7 @@ export default function PartnersPage() {
                       {cs.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="px-2 py-0.5 rounded-full border border-white/10 bg-white/[0.03] text-neutral-500 text-xs"
+                          className="px-2 py-0.5 rounded-full border border-white/10 bg-white/[0.02] text-neutral-500 text-xs"
                         >
                           {tag}
                         </span>
@@ -396,7 +389,7 @@ export default function PartnersPage() {
             </section>
 
             {/* Bottom CTA */}
-            <section className="mb-20 p-10 rounded-2xl border border-white/10 bg-white/[0.03] text-center">
+            <section className="mb-20 p-10 rounded-xl border border-white/10 bg-white/[0.02] text-center">
               <h2 className="text-2xl font-bold text-white mb-3 tracking-tight">
                 Ready to partner?
               </h2>
@@ -406,7 +399,7 @@ export default function PartnersPage() {
               </p>
               <a
                 href="mailto:partners@sinceai.fi"
-                className="inline-flex items-center justify-center px-10 py-4 text-base font-semibold text-black bg-white rounded-full transition-all duration-300 hover:bg-neutral-100 hover:scale-[1.02]"
+                className="inline-flex items-center justify-center px-10 py-4 text-base font-semibold text-black bg-white rounded-none transition-all duration-300 hover:bg-neutral-100 hover:scale-[1.02]"
               >
                 Start a partnership conversation → partners@sinceai.fi
               </a>
@@ -429,7 +422,7 @@ export default function PartnersPage() {
                 <span key={href} className="whitespace-nowrap">
                   <Link
                     href={href}
-                    className="text-neutral-500 hover:text-white transition-colors duration-150"
+                    className="text-neutral-500 hover:text-white transition-colors duration-300"
                   >
                     {label}
                   </Link>

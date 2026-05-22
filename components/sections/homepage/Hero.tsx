@@ -10,15 +10,15 @@ export function Hero() {
       >
           {/* H1 */}
           <h1
+            className="text-white"
             style={{
               fontFamily: "var(--font-mono)",
               fontSize: "var(--text-headline-lg)",
-              fontWeight: 500,
+              fontWeight: 700,
               lineHeight: 1.0,
               letterSpacing: "-0.02em",
               maxWidth: "900px",
               margin: 0,
-              color: "#fff",
             }}
           >
             Global execution-focused AI innovation ecosystem.
@@ -61,15 +61,14 @@ export function Hero() {
             {/* Primary — hackathon */}
             <Link
               href="/hackathon"
+              className="text-black"
               style={{
                 display: "inline-block",
                 fontFamily: "var(--font-mono)",
                 fontSize: "13px",
-                fontWeight: 500,
-                color: "#000",
+                fontWeight: 700,
                 background: "#fff",
                 padding: "12px 20px",
-                borderRadius: 0,
                 border: "0.5px solid #fff",
                 textDecoration: "none",
                 whiteSpace: "nowrap",
@@ -80,16 +79,14 @@ export function Hero() {
             {/* Secondary — outlined */}
             <Link
               href="/partners"
-              className="hero-cta-secondary"
+              className="hero-cta-secondary text-white"
               style={{
                 display: "inline-block",
                 fontFamily: "var(--font-mono)",
                 fontSize: "13px",
-                fontWeight: 500,
-                color: "#fff",
+                fontWeight: 700,
                 background: "transparent",
                 padding: "12px 20px",
-                borderRadius: 0,
                 border: "0.5px solid var(--color-border-strong)",
                 textDecoration: "none",
                 whiteSpace: "nowrap",
@@ -102,18 +99,16 @@ export function Hero() {
               href="https://discord.com/invite/YkqJswRGSW"
               target="_blank"
               rel="noopener noreferrer"
-              className="hero-cta-secondary"
+              className="hero-cta-secondary text-white"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "8px",
                 fontFamily: "var(--font-mono)",
                 fontSize: "13px",
-                fontWeight: 500,
-                color: "#fff",
+                fontWeight: 700,
                 background: "transparent",
                 padding: "12px 20px",
-                borderRadius: 0,
                 border: "0.5px solid var(--color-border-strong)",
                 textDecoration: "none",
                 whiteSpace: "nowrap",

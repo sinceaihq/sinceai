@@ -7,6 +7,7 @@ import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { getBreadcrumbSchema } from "@/lib/schema";
 import { ORG } from "@/lib/org";
 import type { Metadata } from "next";
+import { ButtonPair } from "@/components/ui/ButtonPair";
 
 export const metadata: Metadata = {
   title: "European AI Sovereignty Through Open Source | Since AI",
@@ -48,7 +49,7 @@ export default function EuropeanAIPage() {
       />
 
       <main className="flex flex-col w-full bg-black min-h-screen">
-        <div className="max-w-4xl mx-auto px-6 py-32 md:py-40">
+        <div className="max-w-4xl mx-auto px-6 py-24 md:py-32">
           <FadeIn>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight leading-tight">
               European AI Sovereignty Through Open Source
@@ -81,7 +82,7 @@ export default function EuropeanAIPage() {
                       <li>• Less European innovation</li>
                     </ul>
                   </div>
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.03]">
+                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">With Strong European AI</h3>
                     <ul className="text-neutral-300 text-sm space-y-2 leading-relaxed">
                       <li>• Independent capabilities</li>
@@ -187,7 +188,7 @@ export default function EuropeanAIPage() {
               </section>
 
               {/* CTA */}
-              <section className="p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+              <section className="p-8 rounded-xl border border-white/10 bg-white/[0.02]">
                 <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">
                   Join European AI Development
                 </h2>
@@ -195,24 +196,12 @@ export default function EuropeanAIPage() {
                   Join our Discord to browse open challenges, collaborate with the community,
                   and help build Europe&apos;s AI future.
                 </p>
-                <div className="flex flex-wrap gap-4">
-                  <a
-                    href={ORG.social.discord}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-6 py-3 bg-white text-black rounded-full font-semibold hover:bg-neutral-100 transition-colors"
-                  >
-                    Join Discord
-                  </a>
-                  <a
-                    href={ORG.social.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-6 py-3 bg-white/10 text-white rounded-full font-semibold hover:bg-white/15 transition-colors border border-white/20"
-                  >
-                    GitHub
-                  </a>
-                </div>
+                <ButtonPair
+                  primaryLabel="Join Discord"
+                  primaryHref={ORG.social.discord}
+                  secondaryLabel="GitHub"
+                  secondaryHref={ORG.social.github}
+                />
                 <p className="text-sm text-neutral-500 mt-4">
                   Also explore:{" "}
                   <Link href="/about" className="text-neutral-400 hover:text-white underline">About Since AI</Link>

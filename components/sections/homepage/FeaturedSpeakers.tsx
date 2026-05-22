@@ -70,7 +70,7 @@ function SocialLink({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="text-neutral-500 hover:text-white transition-colors duration-200"
+      className="text-neutral-500 hover:text-white transition-colors duration-300"
     >
       <Icon size={18} strokeWidth={1.5} />
     </a>
@@ -134,7 +134,7 @@ function SpeakerCard({ speaker }: { speaker: Speaker }) {
             style={{
               fontFamily: "var(--font-mono)",
               fontSize: "clamp(24px, 4vw, 36px)",
-              fontWeight: 500,
+              fontWeight: 700,
               lineHeight: 1.1,
               color: "#fff",
               margin: 0,
@@ -193,7 +193,7 @@ function SpeakerCard({ speaker }: { speaker: Speaker }) {
                 style={{
                   fontFamily: "var(--font-mono)",
                   fontSize: "16px",
-                  fontWeight: 500,
+                  fontWeight: 700,
                   color: "#fff",
                   margin: 0,
                   marginBottom: "var(--space-xs)",
@@ -248,7 +248,7 @@ export function FeaturedSpeakers() {
           style={{
             fontFamily: "var(--font-mono)",
             fontSize: "clamp(24px, 4vw, 36px)",
-            fontWeight: 500,
+            fontWeight: 700,
             lineHeight: 1.15,
             color: "#fff",
             margin: 0,

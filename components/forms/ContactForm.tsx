@@ -54,7 +54,7 @@ export default function ContactForm() {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
       className="border border-white/5 rounded-xl p-8 md:p-10 hover:border-white/10 transition-colors"
     >
       <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
@@ -101,7 +101,7 @@ export default function ContactForm() {
               required
               disabled={status === 'submitting'}
               placeholder="Your name"
-              className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/10 text-white placeholder-neutral-600 focus:outline-none focus:border-white/25 disabled:opacity-50 transition-colors text-sm"
+              className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/10 text-white placeholder-neutral-600 focus:outline-none focus:border-white/20 disabled:opacity-50 transition-colors text-sm"
             />
           </div>
           <div>
@@ -117,7 +117,7 @@ export default function ContactForm() {
               required
               disabled={status === 'submitting'}
               placeholder="your@email.com"
-              className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/10 text-white placeholder-neutral-600 focus:outline-none focus:border-white/25 disabled:opacity-50 transition-colors text-sm"
+              className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/10 text-white placeholder-neutral-600 focus:outline-none focus:border-white/20 disabled:opacity-50 transition-colors text-sm"
             />
           </div>
         </div>
@@ -135,7 +135,7 @@ export default function ContactForm() {
             required
             disabled={status === 'submitting'}
             placeholder="How can we help?"
-            className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/10 text-white placeholder-neutral-600 focus:outline-none focus:border-white/25 disabled:opacity-50 transition-colors text-sm"
+            className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/10 text-white placeholder-neutral-600 focus:outline-none focus:border-white/20 disabled:opacity-50 transition-colors text-sm"
           />
         </div>
 
@@ -152,14 +152,14 @@ export default function ContactForm() {
             disabled={status === 'submitting'}
             rows={6}
             placeholder="Tell us more..."
-            className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/10 text-white placeholder-neutral-600 focus:outline-none focus:border-white/25 disabled:opacity-50 transition-colors text-sm resize-none"
+            className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/10 text-white placeholder-neutral-600 focus:outline-none focus:border-white/20 disabled:opacity-50 transition-colors text-sm resize-none"
           />
         </div>
 
         <button
           type="submit"
           disabled={status === 'submitting'}
-          className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-black bg-white rounded-full transition-all duration-300 hover:bg-neutral-100 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+          className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-black bg-white rounded-none transition-all duration-300 hover:bg-neutral-100 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {status === 'submitting' ? 'Sending...' : 'Send Message'}
         </button>
