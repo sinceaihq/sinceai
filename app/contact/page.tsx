@@ -315,72 +315,83 @@ interface TeamMember {
   imagePosition?: string;
 }
 
-// Team Card Component
-const TeamCard: React.FC<{ person: TeamMember; isHead?: boolean }> = ({ person, isHead }) => (
-  <div className={`group relative p-6 transition-all duration-300 text-center ${
-    isHead
-      ? "border border-white/20 bg-white/[0.03] hover:border-white/30 hover:bg-white/[0.05]"
-      : "border border-white/5 hover:border-white/10 hover:bg-white/[0.02]"
-  }`}>
-    {isHead && (
-      <span className="absolute top-3 right-3 text-[10px] font-mono font-semibold tracking-widest uppercase text-white/40">
-        Lead
-      </span>
-    )}
-    <div className="flex justify-center mb-4">
-      <div className="relative w-32 h-32 overflow-hidden bg-white/5">
-        {person.image ? (
+// Featured lead card — full width, horizontal layout
+const LeadCard: React.FC<{ person: TeamMember }> = ({ person }) => (
+  <div className="flex items-center gap-6 p-6 border border-white/15 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.05] transition-all duration-300">
+    <div className="relative w-20 h-20 shrink-0 overflow-hidden bg-white/5">
+      {person.image ? (
+        <Image
+          src={person.image}
+          alt={person.name}
+          fill
+          className="object-cover"
+          style={{ objectPosition: person.imagePosition ?? "center" }}
+        />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center">
           <Image
-            src={person.image}
+            src="/assets/logo/SINCE AI white.png"
             alt={person.name}
-            fill
-            className="object-cover"
-            style={{ objectPosition: person.imagePosition ?? "center" }}
+            width={36}
+            height={36}
+            className="object-contain opacity-30"
           />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center p-4">
-            <Image
-              src="/assets/logo/SINCE AI white.png"
-              alt={person.name}
-              width={64}
-              height={64}
-              className="object-contain opacity-40"
-            />
-          </div>
+        </div>
+      )}
+    </div>
+    <div className="flex-1 min-w-0">
+      <p className="text-[10px] font-mono uppercase tracking-widest text-white/30 mb-1">Lead</p>
+      <h3 className="text-white font-semibold text-xl tracking-tight leading-tight">{person.name}</h3>
+      <p className="text-neutral-400 text-sm mt-0.5">{person.role}</p>
+      <div className="flex items-center gap-4 mt-3">
+        {person.email && (
+          <a href={`mailto:${person.email}`} className="text-sm text-neutral-500 hover:text-white transition-colors">
+            {person.email}
+          </a>
+        )}
+        {person.linkedin && (
+          <a href={person.linkedin} target="_blank" rel="noopener noreferrer" className="text-neutral-500 hover:text-white transition-colors">
+            <FaLinkedin size={15} />
+          </a>
         )}
       </div>
     </div>
-    <div className="space-y-3">
-      <div>
-        <h3 className="text-white font-semibold text-lg tracking-tight">
-          {person.name}
-        </h3>
-        <p className="text-neutral-500 text-sm mt-1">
-          {person.role}
-        </p>
-      </div>
+  </div>
+);
 
-      {person.email && (
-        <a
-          href={`mailto:${person.email}`}
-          className="text-sm text-neutral-400 hover:text-white transition-colors block"
-        >
-          {person.email}
-        </a>
-      )}
-
-      {person.linkedin && (
-        <a
-          href={person.linkedin}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors w-full"
-        >
-          <FaLinkedin size={16} />
-          <span>LinkedIn</span>
-        </a>
+// Compact member card — photo, name, role only
+const MemberCard: React.FC<{ person: TeamMember }> = ({ person }) => (
+  <div className="flex items-center gap-3 p-4 border border-white/5 hover:border-white/10 hover:bg-white/[0.02] transition-all duration-300">
+    <div className="relative w-10 h-10 shrink-0 overflow-hidden bg-white/5">
+      {person.image ? (
+        <Image
+          src={person.image}
+          alt={person.name}
+          fill
+          className="object-cover"
+          style={{ objectPosition: person.imagePosition ?? "center" }}
+        />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center">
+          <Image
+            src="/assets/logo/SINCE AI white.png"
+            alt={person.name}
+            width={20}
+            height={20}
+            className="object-contain opacity-25"
+          />
+        </div>
       )}
     </div>
+    <div className="min-w-0">
+      <p className="text-white text-sm font-medium tracking-tight truncate">{person.name}</p>
+      <p className="text-neutral-500 text-xs truncate">{person.role}</p>
+    </div>
+    {person.linkedin && (
+      <a href={person.linkedin} target="_blank" rel="noopener noreferrer" className="ml-auto shrink-0 text-neutral-600 hover:text-white transition-colors">
+        <FaLinkedin size={13} />
+      </a>
+    )}
   </div>
 );
 
@@ -455,7 +466,7 @@ function ContactPageContent() {
             </p>
           </motion.div>
 
-          <div className="space-y-16">
+          <div className="space-y-12">
             {teamSections.map((section, sectionIndex) => (
               <motion.div
                 key={section.department}
@@ -464,16 +475,19 @@ function ContactPageContent() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: sectionIndex * 0.06, ease: "easeOut" }}
               >
-                <h3 className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-6">
+                <p className="text-[10px] font-mono uppercase tracking-widest text-neutral-600 mb-4">
                   {section.department}
-                </h3>
-                <div className="flex flex-wrap justify-start gap-4">
-                  {section.members.map((person, i) => (
-                    <div key={i} className="w-full md:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)]">
-                      <TeamCard person={person} isHead={i === 0} />
-                    </div>
-                  ))}
-                </div>
+                </p>
+                {/* Lead */}
+                <LeadCard person={section.members[0]} />
+                {/* Rest of team */}
+                {section.members.length > 1 && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-2">
+                    {section.members.slice(1).map((person, i) => (
+                      <MemberCard key={i} person={person} />
+                    ))}
+                  </div>
+                )}
               </motion.div>
             ))}
           </div>
