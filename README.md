@@ -273,6 +273,9 @@ Partner company data used in the partner marquee and partner sections.
 - **Dark-first design** — `bg-black` on body, light text
 - **Fonts:** JetBrains Mono (`--font-mono`) and Inter (`--font-sans`) loaded via `next/font/google`
 - **Component library:** shadcn/ui (new-york style, RSC-enabled, Lucide icons)
+- **Buttons:** always `rounded-none`, two styles only (white fill or border-only ghost), `cursor-pointer`, no scale animations
+- **Brand color:** always `var(--color-brand)` — never hardcode `#FF2D78`
+- **Cards:** `rounded-xl`, `border border-white/5` or `border-white/10`, no drop shadows
 
 Add a new shadcn component:
 

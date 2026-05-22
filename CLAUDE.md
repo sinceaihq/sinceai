@@ -25,6 +25,7 @@ Jest is configured (`npm run test`). No tests currently exist — add them when 
 - `app/` — Pages (App Router). Each page has its own directory with `page.tsx` and a sibling `layout.tsx` for metadata.
 - `components/sections/` — Page-specific section components, organized by page (currently only `homepage/`). Each subdirectory has a barrel `index.ts`.
 - `components/ui/` — shadcn/ui components (new-york style, RSC-enabled, lucide icons). Add new ones via `npx shadcn@latest add <component>`.
+- `components/ui/ButtonPair.tsx` — reusable CTA button pair (primary white + ghost border). Use this for all hero/section CTA pairs.
 - `components/motion-primitives/` — Reusable animation components (Framer Motion wrappers).
 - `lib/org.ts` — Single source of truth for organization constants (name, contact info, social links, stats).
 - `lib/sinceai.ts` — Site-wide constants (event dates, copy, links).
@@ -44,6 +45,40 @@ Jest is configured (`npm run test`). No tests currently exist — add them when 
 - Dark-first design (black background, `bg-black` on body)
 - Fonts: JetBrains Mono (`--font-mono`) and Inter (`--font-sans`) via `next/font/google`
 
+#### Button conventions
+
+Two button styles only — use these everywhere, never invent variants:
+
+| Style | Classes |
+|---|---|
+| Primary (white fill) | `bg-white text-black rounded-none px-6 py-3 font-semibold hover:bg-neutral-100 transition-colors cursor-pointer` |
+| Ghost (border only) | `border border-white/20 text-white rounded-none px-6 py-3 font-semibold hover:border-white transition-colors cursor-pointer` |
+
+Rules:
+- Always `rounded-none` — no rounded corners on buttons or inputs
+- Always `cursor-pointer` on interactive elements
+- No `scale` or `transform` hover animations on buttons
+- Use `ButtonPair` component for side-by-side CTA pairs
+
+#### Design tokens
+
+Always use CSS variables — never hardcode color values:
+
+| Token | Value | Use for |
+|---|---|---|
+| `var(--color-brand)` | `#FF2D78` | Brand accent (sparingly) |
+| `var(--color-bg)` | `#000000` | Page background |
+| `var(--color-fg)` | `#ffffff` | Primary text |
+| `var(--color-fg-muted)` | `rgba(255,255,255,0.55)` | Secondary text |
+| `var(--font-mono)` | JetBrains Mono | All text (site default) |
+| `var(--font-sans)` | Inter | Use only when explicitly needed |
+
+#### Cards
+
+- Standard card corners: `rounded-xl` with `border border-white/5` or `border-white/10`
+- Hover state: `hover:border-white/20` and/or `hover:bg-white/[0.02]`
+- No drop shadows
+
 ### SEO
 
 - JSON-LD schemas injected in root `layout.tsx`
@@ -60,6 +95,7 @@ Production runs on Cloudflare Workers via the OpenNext adapter. GitHub Actions r
 - Use `"use client"` directive only on components that need client-side interactivity
 - Organization data (name, stats, social links) always comes from `lib/org.ts` — never hardcode
 - Event dates and copy come from `lib/sinceai.ts`
+- Team member data lives inline in `app/contact/page.tsx` (`teamSections` array) — not in `lib/`
 - Import path alias: `@/components/...`, `@/lib/...`, `@/hooks/...`
 - Node.js >= 20.9.0 required
 
