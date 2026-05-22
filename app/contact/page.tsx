@@ -30,7 +30,7 @@ const teamSections = [
     members: [
       {
         name: "Tuomas Rikkonen",
-        role: "Sales & Partnerships Lead",
+        role: "Sales Lead",
         email: "tuomas.rikkonen@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/tuomas-rikkonen-8664421a9/",
       },
