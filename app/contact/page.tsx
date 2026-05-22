@@ -315,6 +315,18 @@ interface TeamMember {
   imagePosition?: string;
 }
 
+// Sort non-lead members: by role title A-Z, then images first within each role, then name A-Z
+function sortMembers(members: TeamMember[]): TeamMember[] {
+  return [...members].sort((a, b) => {
+    const roleCompare = a.role.localeCompare(b.role);
+    if (roleCompare !== 0) return roleCompare;
+    const aHasImg = a.image ? 0 : 1;
+    const bHasImg = b.image ? 0 : 1;
+    if (aHasImg !== bHasImg) return aHasImg - bHasImg;
+    return a.name.localeCompare(b.name);
+  });
+}
+
 // Featured lead card — full width, horizontal layout
 const LeadCard: React.FC<{ person: TeamMember }> = ({ person }) => (
   <div className="flex items-center gap-4 sm:gap-6 p-4 sm:p-6 border border-white/15 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.05] transition-all duration-300">
@@ -483,7 +495,7 @@ function ContactPageContent() {
                 {/* Rest of team */}
                 {section.members.length > 1 && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-2">
-                    {section.members.slice(1).map((person, i) => (
+                    {sortMembers(section.members.slice(1)).map((person, i) => (
                       <MemberCard key={i} person={person} />
                     ))}
                   </div>
