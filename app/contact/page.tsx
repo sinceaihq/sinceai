@@ -21,19 +21,6 @@ const teamSections = [
         linkedin: "https://www.linkedin.com/in/tuomas-rikkonen-8664421a9/",
       },
       {
-        name: "Riku Lauttia",
-        role: "Operations Lead",
-        email: "riku.lauttia@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/rikulauttia/",
-        image: "/assets/team/riku.webp",
-      },
-      {
-        name: "Aarne Ollila",
-        role: "Marketing Lead",
-        email: "aarne.ollila@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/aarneollila/",
-      },
-      {
         name: "Aman Vyas",
         role: "Sales & Partnerships",
         email: "aman@sinceai.fi",
@@ -89,16 +76,14 @@ const teamSections = [
       },
     ],
   },
-  
   {
-    department: "Community & Content",
+    department: "Marketing",
     members: [
       {
-        name: "Hasnain Ajmal",
-        role: "Community Lead",
-        email: "hasnain@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/hasnaynajmal/",
-        image: "/assets/team/hasnain.webp",
+        name: "Aarne Ollila",
+        role: "Marketing Lead",
+        email: "aarne.ollila@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/aarneollila/",
       },
       {
         name: "Abdul Wasay",
@@ -141,6 +126,30 @@ const teamSections = [
         role: "Social Media & Content",
         email: "shanuri@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/shanuri-perera-19a3483b3/",
+      },
+    ],
+  },
+  {
+    department: "Community",
+    members: [
+      {
+        name: "Hasnain Ajmal",
+        role: "Community Lead",
+        email: "hasnain@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/hasnaynajmal/",
+        image: "/assets/team/hasnain.webp",
+      },
+    ],
+  },
+  {
+    department: "Operations",
+    members: [
+      {
+        name: "Riku Lauttia",
+        role: "Operations Lead",
+        email: "riku.lauttia@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/rikulauttia/",
+        image: "/assets/team/riku.webp",
       },
     ],
   },
