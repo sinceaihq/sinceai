@@ -352,7 +352,6 @@ const LeadCard: React.FC<{ person: TeamMember }> = ({ person }) => (
       )}
     </div>
     <div className="flex-1 min-w-0">
-      <p className="text-[10px] font-mono uppercase tracking-widest text-white/30 mb-1">Lead</p>
       <h3 className="text-white font-semibold text-xl tracking-tight leading-tight">{person.name}</h3>
       <p className="text-neutral-400 text-sm mt-0.5">{person.role}</p>
       <div className="mt-3 space-y-2">
@@ -374,7 +373,7 @@ const LeadCard: React.FC<{ person: TeamMember }> = ({ person }) => (
 // Compact member card — photo, name, role only
 const MemberCard: React.FC<{ person: TeamMember }> = ({ person }) => (
   <div className="flex items-center gap-3 p-4 border border-white/5 hover:border-white/10 hover:bg-white/[0.02] transition-all duration-300">
-    <div className="relative w-10 h-10 shrink-0 overflow-hidden bg-white/5">
+    <div className="relative w-14 h-14 shrink-0 overflow-hidden bg-white/5">
       {person.image ? (
         <Image
           src={person.image}
@@ -395,12 +394,17 @@ const MemberCard: React.FC<{ person: TeamMember }> = ({ person }) => (
         </div>
       )}
     </div>
-    <div className="min-w-0">
+    <div className="min-w-0 flex-1">
       <p className="text-white text-sm font-medium tracking-tight truncate">{person.name}</p>
       <p className="text-neutral-500 text-xs truncate">{person.role}</p>
+      {person.email && (
+        <a href={`mailto:${person.email}`} className="text-neutral-600 text-xs hover:text-white transition-colors break-all block mt-0.5">
+          {person.email}
+        </a>
+      )}
     </div>
     {person.linkedin && (
-      <a href={person.linkedin} target="_blank" rel="noopener noreferrer" className="ml-auto shrink-0 text-neutral-600 hover:text-white transition-colors">
+      <a href={person.linkedin} target="_blank" rel="noopener noreferrer" className="ml-auto shrink-0 self-start text-neutral-600 hover:text-white transition-colors">
         <FaLinkedin size={15} />
       </a>
     )}
@@ -487,14 +491,14 @@ function ContactPageContent() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: sectionIndex * 0.06, ease: "easeOut" }}
               >
-                <p className="text-[10px] font-mono uppercase tracking-widest text-neutral-600 mb-4">
+                <p className="text-xs font-mono uppercase tracking-widest text-neutral-300 mb-4">
                   {section.department}
                 </p>
                 {/* Lead */}
                 <LeadCard person={section.members[0]} />
                 {/* Rest of team */}
                 {section.members.length > 1 && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                     {sortMembers(section.members.slice(1)).map((person, i) => (
                       <MemberCard key={i} person={person} />
                     ))}
