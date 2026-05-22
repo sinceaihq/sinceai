@@ -401,7 +401,7 @@ const MemberCard: React.FC<{ person: TeamMember }> = ({ person }) => (
     </div>
     {person.linkedin && (
       <a href={person.linkedin} target="_blank" rel="noopener noreferrer" className="ml-auto shrink-0 text-neutral-600 hover:text-white transition-colors">
-        <FaLinkedin size={13} />
+        <FaLinkedin size={15} />
       </a>
     )}
   </div>
