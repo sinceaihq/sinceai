@@ -18,7 +18,7 @@ const teamSections = [
     members: [
       {
         name: "Riku Lauttia",
-        role: "Head of Operations",
+        role: "Operations Lead",
         email: "riku.lauttia@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/rikulauttia/",
         image: "/assets/team/riku.webp",
@@ -30,7 +30,7 @@ const teamSections = [
     members: [
       {
         name: "Tuomas Rikkonen",
-        role: "Head of Sales & Partnerships",
+        role: "Sales & Partnerships Lead",
         email: "tuomas.rikkonen@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/tuomas-rikkonen-8664421a9/",
       },
@@ -95,7 +95,7 @@ const teamSections = [
     members: [
       {
         name: "Toki Mohammad Tahmid",
-        role: "Head of Production",
+        role: "Production Lead",
         email: "toki@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/toki-mohammad-tahmid-a7b334159/",
         image: "/assets/team/toki.webp",
@@ -162,7 +162,7 @@ const teamSections = [
     members: [
       {
         name: "Otso Saarinen",
-        role: "Head of Technology",
+        role: "Technology Lead",
         email: "otso.saarinen@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/otsosaarinen/",
         image: "/assets/team/otso.webp",
@@ -219,7 +219,7 @@ const teamSections = [
     members: [
       {
         name: "Aarne Ollila",
-        role: "Head of Marketing",
+        role: "Marketing Lead",
         email: "aarne.ollila@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/aarneollila/",
       },
@@ -272,7 +272,7 @@ const teamSections = [
     members: [
       {
         name: "Hasnain Ajmal",
-        role: "Head of Community",
+        role: "Community Lead",
         email: "hasnain@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/hasnaynajmal/",
         image: "/assets/team/hasnain.webp",
@@ -284,7 +284,7 @@ const teamSections = [
     members: [
       {
         name: "Arttu Karonen",
-        role: "Head of Finance",
+        role: "Finance Lead",
         email: "arttu.karonen@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/arttu-karonen-526872261/",
         image: "/assets/team/arttu-k.webp",
