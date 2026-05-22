@@ -100,13 +100,6 @@ const teamSections = [
         image: "/assets/team/toki.webp",
       },
       {
-        name: "Venla Raassina",
-        role: "Production",
-        email: "venla.raassina@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/venlaraassina/",
-        image: "/assets/team/venla.webp",
-      },
-      {
         name: "Anniina Kankaanpää",
         role: "Production",
         email: "anniina.kankaanpaa@sinceai.fi",
@@ -147,6 +140,13 @@ const teamSections = [
         role: "Production",
         email: "tzu@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/tzu-tai-huang/",
+      },
+      {
+        name: "Venla Raassina",
+        role: "Production",
+        email: "venla.raassina@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/venlaraassina/",
+        image: "/assets/team/venla.webp",
       },
       {
         name: "Radin Dabbagh",
@@ -235,12 +235,6 @@ const teamSections = [
         linkedin: "https://www.linkedin.com/in/adeelia-koponen-37a492379/",
       },
       {
-        name: "Hafiza Munawar",
-        role: "Social Media & Content",
-        email: "hafiza@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/hafiza-aqsa-munawar/",
-      },
-      {
         name: "Juuso Pörsti",
         role: "Marketing",
         email: "juuso@sinceai.fi",
@@ -253,16 +247,22 @@ const teamSections = [
         linkedin: "https://www.linkedin.com/in/manu-kankaanniemi-38718b312/",
       },
       {
-        name: "Shanuri Perera",
-        role: "Social Media & Content",
-        email: "shanuri@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/shanuri-perera-19a3483b3/",
-      },
-      {
         name: "Taneli Hautala",
         role: "Marketing & Content",
         email: "taneli@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/taneli-hautala-797192312/",
+      },
+      {
+        name: "Hafiza Munawar",
+        role: "Social Media & Content",
+        email: "hafiza@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/hafiza-aqsa-munawar/",
+      },
+      {
+        name: "Shanuri Perera",
+        role: "Social Media & Content",
+        email: "shanuri@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/shanuri-perera-19a3483b3/",
       },
     ],
   },
