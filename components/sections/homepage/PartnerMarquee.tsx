@@ -24,6 +24,7 @@ const logos: Logo[] = [
   { name: "Inventure",             src: "/assets/sponsors/Inventure.png",            href: "https://www.inventure.vc/" },
   { name: "Wave Ventures",         src: "/assets/sponsors/WaveVentures.png",         href: "https://www.wave.ventures/" },
   { name: "Redstone VC",           src: "/assets/sponsors/Redstone.png",             href: "https://redstone.vc/" },
+  { name: "MAKI VC",               src: "/assets/sponsors/maki.png",                 href: "https://maki.vc/" },
   { name: "Inovexus",              src: "/assets/sponsors/Inovexus.svg",             href: "https://inovexus.com/" },
   { name: "Aalto AI",              src: "/assets/supports/aaltoai.png",              href: "https://www.aaltoai.com/" },
   { name: "Maria 01",              src: "/assets/sponsors/maria01.png",              href: "https://maria.io/" },
