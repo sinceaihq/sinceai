@@ -15,15 +15,21 @@ const teamSections = [
     department: "Sales & Partnerships",
     members: [
       {
+        name: "Tuomas Rikkonen",
+        role: "Sales Lead",
+        email: "tuomas.rikkonen@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/tuomas-rikkonen-8664421a9/",
+      },
+      {
         name: "Riku Lauttia",
-        role: "Sales & Operations",
+        role: "Operations Lead",
         email: "riku.lauttia@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/rikulauttia/",
         image: "/assets/team/riku.webp",
       },
       {
         name: "Aarne Ollila",
-        role: "Sales & Partnerships",
+        role: "Marketing Lead",
         email: "aarne.ollila@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/aarneollila/",
       },
@@ -76,12 +82,6 @@ const teamSections = [
         linkedin: "https://www.linkedin.com/in/roope-kantola-131b23320/",
       },
       {
-        name: "Tuomas Rikkonen",
-        role: "Sales & Partnerships",
-        email: "tuomas.rikkonen@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/tuomas-rikkonen-8664421a9/",
-      },
-      {
         name: "Kasper Turunen",
         role: "Sales & Partnerships",
         email: "kasper@sinceai.fi",
@@ -95,7 +95,7 @@ const teamSections = [
     members: [
       {
         name: "Hasnain Ajmal",
-        role: "Community & Content",
+        role: "Community Lead",
         email: "hasnain@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/hasnaynajmal/",
         image: "/assets/team/hasnain.webp",
@@ -148,19 +148,19 @@ const teamSections = [
     department: "Development",
     members: [
       {
+        name: "Otso Saarinen",
+        role: "Tech Lead",
+        email: "otso.saarinen@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/otsosaarinen/",
+        image: "/assets/team/otso.webp",
+        imagePosition: "40% center",
+      },
+      {
         name: "Abel Alem",
         role: "Development",
         email: "abel@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/abel-alem-25420b263",
         image: "/assets/team/abel.webp",
-      },
-      {
-        name: "Otso Saarinen",
-        role: "Development",
-        email: "otso.saarinen@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/otsosaarinen/",
-        image: "/assets/team/otso.webp",
-        imagePosition: "40% center",
       },
       {
         name: "Theo Wilenius",
@@ -206,7 +206,7 @@ const teamSections = [
     members: [
       {
         name: "Toki Mohammad Tahmid",
-        role: "Production",
+        role: "Production Lead",
         email: "toki@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/toki-mohammad-tahmid-a7b334159/",
         image: "/assets/team/toki.webp",
@@ -273,7 +273,7 @@ const teamSections = [
     members: [
       {
         name: "Arttu Karonen",
-        role: "Finance",
+        role: "Finance Lead",
         email: "arttu.karonen@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/arttu-karonen-526872261/",
         image: "/assets/team/arttu-k.webp",
