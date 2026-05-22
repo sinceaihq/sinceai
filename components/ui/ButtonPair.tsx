@@ -43,14 +43,14 @@ export function ButtonPair({
           href={secondaryHref}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-white/10 rounded-none transition-all duration-300 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30"
+          className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white rounded-none transition-colors duration-300 border border-white/20 hover:border-white"
         >
           {secondaryLabel}
         </a>
       ) : (
         <Link
           href={secondaryHref}
-          className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-white/10 rounded-none transition-all duration-300 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30"
+          className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white rounded-none transition-colors duration-300 border border-white/20 hover:border-white"
         >
           {secondaryLabel}
         </Link>

@@ -234,7 +234,7 @@ export default function ProductionSupportPage() {
                   </Link>
                   <Link
                     href="/partners"
-                    className="px-6 py-3 bg-white/10 text-white rounded-none font-semibold hover:bg-white/15 transition-colors border border-white/20"
+                    className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white rounded-none border border-white/20 hover:border-white transition-colors duration-300"
                   >
                     Partner with Since AI
                   </Link>

@@ -225,7 +225,7 @@ export default function BlogPage() {
                   href="https://medium.com/@sinceai"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-white/10 rounded-none hover:bg-white/15 border border-white/20 hover:border-white/30 transition-all duration-300 group"
+                  className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white rounded-none border border-white/20 hover:border-white transition-colors duration-300"
                 >
                   Follow on Medium
                   <ArrowUpRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
