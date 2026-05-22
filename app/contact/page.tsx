@@ -1,9 +1,8 @@
 "use client";
-import React, { Suspense, useState } from "react";
+import React, { Suspense } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { FaLinkedin } from "react-icons/fa";
-import { Plus, Minus } from "lucide-react";
 
 import SmoothScroll from "@/components/smoothScroll";
 import { Navbar } from "@/components/layout/Navbar";
@@ -318,20 +317,18 @@ interface TeamMember {
 
 // Team Card Component
 const TeamCard: React.FC<{ person: TeamMember; isHead?: boolean }> = ({ person, isHead }) => (
-  <div className={`group relative rounded-xl p-6 transition-all duration-300 text-center ${
+  <div className={`group relative p-6 transition-all duration-300 text-center ${
     isHead
-      ? "border border-[var(--color-brand)]/40 bg-[var(--color-brand)]/[0.04] hover:border-[var(--color-brand)]/60"
+      ? "border border-white/20 bg-white/[0.03] hover:border-white/30 hover:bg-white/[0.05]"
       : "border border-white/5 hover:border-white/10 hover:bg-white/[0.02]"
   }`}>
     {isHead && (
-      <span className="absolute top-3 right-3 text-[10px] font-mono font-semibold tracking-widest uppercase text-[var(--color-brand)] opacity-80">
+      <span className="absolute top-3 right-3 text-[10px] font-mono font-semibold tracking-widest uppercase text-white/40">
         Lead
       </span>
     )}
     <div className="flex justify-center mb-4">
-      <div className={`relative w-32 h-32 rounded-xl overflow-hidden bg-white/5 ${
-        isHead ? "border border-[var(--color-brand)]/30" : "border border-white/10"
-      }`}>
+      <div className="relative w-32 h-32 overflow-hidden bg-white/5 border border-white/10">
         {person.image ? (
           <Image
             src={person.image}
@@ -358,7 +355,7 @@ const TeamCard: React.FC<{ person: TeamMember; isHead?: boolean }> = ({ person, 
         <h3 className="text-white font-semibold text-lg tracking-tight">
           {person.name}
         </h3>
-        <p className={`text-sm mt-1 ${isHead ? "text-[var(--color-brand)]/70" : "text-neutral-500"}`}>
+        <p className="text-neutral-500 text-sm mt-1">
           {person.role}
         </p>
       </div>
@@ -386,83 +383,6 @@ const TeamCard: React.FC<{ person: TeamMember; isHead?: boolean }> = ({ person, 
     </div>
   </div>
 );
-
-// Department Accordion Row
-const DepartmentAccordion: React.FC<{ section: typeof teamSections[0]; index: number }> = ({ section, index }) => {
-  const [open, setOpen] = useState(false);
-  const head = section.members[0];
-  const rest = section.members.slice(1);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.06, ease: "easeOut" }}
-      className="border border-white/8 rounded-xl overflow-hidden"
-    >
-      {/* Collapsed header — always visible */}
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center gap-4 px-6 py-5 hover:bg-white/[0.02] transition-colors duration-200 cursor-pointer text-left"
-      >
-        {/* Head avatar */}
-        <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-white/5 border border-white/10 shrink-0">
-          {head.image ? (
-            <Image src={head.image} alt={head.name} fill className="object-cover" style={{ objectPosition: head.imagePosition ?? "center" }} />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <Image src="/assets/logo/SINCE AI white.png" alt={head.name} width={28} height={28} className="object-contain opacity-30" />
-            </div>
-          )}
-        </div>
-
-        {/* Dept + head info */}
-        <div className="flex-1 min-w-0">
-          <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-0.5">{section.department}</p>
-          <p className="text-white font-semibold text-base tracking-tight truncate">{head.name}</p>
-          <p className="text-[var(--color-brand)]/70 text-xs">{head.role}</p>
-        </div>
-
-        {/* Member count badge */}
-        {rest.length > 0 && (
-          <span className="text-xs text-neutral-500 font-mono mr-3 shrink-0">
-            +{rest.length} member{rest.length !== 1 ? "s" : ""}
-          </span>
-        )}
-
-        {/* Toggle icon */}
-        <div className="shrink-0 w-8 h-8 flex items-center justify-center border border-white/10 rounded-lg text-neutral-400">
-          {open ? <Minus size={14} /> : <Plus size={14} />}
-        </div>
-      </button>
-
-      {/* Expanded content */}
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            key="content"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="overflow-hidden"
-          >
-            <div className="px-6 pb-6 pt-2 border-t border-white/5">
-              <div className="flex flex-wrap justify-start gap-4 pt-4">
-                {section.members.map((person, i) => (
-                  <div key={i} className="w-full md:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)]">
-                    <TeamCard person={person} isHead={i === 0} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-};
 
 // Contact Page Content Component (uses useSearchParams)
 function ContactPageContent() {
@@ -535,9 +455,26 @@ function ContactPageContent() {
             </p>
           </motion.div>
 
-          <div className="space-y-3">
+          <div className="space-y-16">
             {teamSections.map((section, sectionIndex) => (
-              <DepartmentAccordion key={section.department} section={section} index={sectionIndex} />
+              <motion.div
+                key={section.department}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: sectionIndex * 0.06, ease: "easeOut" }}
+              >
+                <h3 className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-6">
+                  {section.department}
+                </h3>
+                <div className="flex flex-wrap justify-start gap-4">
+                  {section.members.map((person, i) => (
+                    <div key={i} className="w-full md:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)]">
+                      <TeamCard person={person} isHead={i === 0} />
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
             ))}
           </div>
         </div>
