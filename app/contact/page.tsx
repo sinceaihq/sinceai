@@ -553,7 +553,7 @@ function ContactPageContent() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
-                className="border border-white/5 rounded-xl p-6 hover:border-white/10 transition-colors"
+                className="border border-white/5 p-6 hover:border-white/10 transition-colors"
               >
                 <h3 className="text-white font-semibold text-lg mb-2">
                   {faq.q}

@@ -36,7 +36,7 @@ export function ProjectSpotlight({ themes }: ProjectSpotlightProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
-              className="group relative overflow-hidden rounded-xl border border-white/5 hover:border-white/10 transition-all duration-300 bg-black hover:bg-white/[0.02]"
+              className="group relative overflow-hidden border border-white/5 hover:border-white/10 transition-all duration-300 bg-black hover:bg-white/[0.02]"
             >
               <div className="p-8 md:p-10 flex flex-col gap-6">
                 <div className="flex-1 space-y-4">

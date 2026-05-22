@@ -51,7 +51,7 @@ export default function PressPage() {
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
                   {stats.map((stat, index) => (
-                    <div key={index} className="text-center p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                    <div key={index} className="text-center p-6 border border-white/10 bg-white/[0.02]">
                       <div className="text-3xl md:text-4xl font-bold text-white mb-2">
                         {stat.value}
                       </div>
@@ -160,7 +160,7 @@ export default function PressPage() {
                       key={index}
                       href={item.file}
                       download
-                      className="flex items-center gap-3 p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors"
+                      className="flex items-center gap-3 p-4 border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors"
                     >
                       <Download className="w-5 h-5 text-neutral-400" />
                       <span className="text-neutral-300">{item.name}</span>
@@ -173,7 +173,7 @@ export default function PressPage() {
                 <h2 className="text-3xl font-bold text-white mb-6 tracking-tight">
                   Media Contact
                 </h2>
-                <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                <div className="p-6 border border-white/10 bg-white/[0.02]">
                   <p className="text-neutral-300 mb-4">
                     For press inquiries, interviews, or media partnerships:
                   </p>
@@ -208,7 +208,7 @@ export default function PressPage() {
                     href="https://discord.com/invite/YkqJswRGSW"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-neutral-300 hover:text-white"
+                    className="p-4 border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-neutral-300 hover:text-white"
                   >
                     <strong>Discord</strong>
                     <br />
@@ -218,7 +218,7 @@ export default function PressPage() {
                     href="https://t.me/sinceaihq"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-neutral-300 hover:text-white"
+                    className="p-4 border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-neutral-300 hover:text-white"
                   >
                     <strong>Telegram</strong>
                     <br />
@@ -228,7 +228,7 @@ export default function PressPage() {
                     href="https://www.linkedin.com/company/sinceai"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-neutral-300 hover:text-white"
+                    className="p-4 border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-neutral-300 hover:text-white"
                   >
                     <strong>LinkedIn</strong>
                     <br />
@@ -238,7 +238,7 @@ export default function PressPage() {
                     href="https://www.instagram.com/sinceaihq"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-neutral-300 hover:text-white"
+                    className="p-4 border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-neutral-300 hover:text-white"
                   >
                     <strong>Instagram</strong>
                     <br />
@@ -248,7 +248,7 @@ export default function PressPage() {
                     href="https://x.com/sinceaihq"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-neutral-300 hover:text-white"
+                    className="p-4 border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-neutral-300 hover:text-white"
                   >
                     <strong>X (Twitter)</strong>
                     <br />
@@ -258,7 +258,7 @@ export default function PressPage() {
                     href="https://github.com/sinceaihq"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-neutral-300 hover:text-white"
+                    className="p-4 border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-neutral-300 hover:text-white"
                   >
                     <strong>GitHub</strong>
                     <br />
@@ -268,7 +268,7 @@ export default function PressPage() {
                     href="https://www.youtube.com/@sinceaihq"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-neutral-300 hover:text-white"
+                    className="p-4 border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-neutral-300 hover:text-white"
                   >
                     <strong>YouTube</strong>
                     <br />
@@ -278,7 +278,7 @@ export default function PressPage() {
                     href="https://www.tiktok.com/@sinceaihq"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-neutral-300 hover:text-white"
+                    className="p-4 border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-neutral-300 hover:text-white"
                   >
                     <strong>TikTok</strong>
                     <br />
@@ -288,7 +288,7 @@ export default function PressPage() {
                     href="https://www.facebook.com/sinceai"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-neutral-300 hover:text-white"
+                    className="p-4 border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-neutral-300 hover:text-white"
                   >
                     <strong>Facebook</strong>
                     <br />
@@ -331,7 +331,7 @@ export default function PressPage() {
                 </h2>
 
                 <div className="space-y-6">
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-3">Short (50 words)</h3>
                     <p className="text-neutral-300 leading-relaxed italic">
                       Since AI is Europe&apos;s leading AI innovation ecosystem based in Turku, Finland.
@@ -341,7 +341,7 @@ export default function PressPage() {
                     </p>
                   </div>
 
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-3">Medium (100 words)</h3>
                     <p className="text-neutral-300 leading-relaxed italic">
                       Since AI is Europe&apos;s only full-lifecycle AI innovation ecosystem, founded in 2025
@@ -355,7 +355,7 @@ export default function PressPage() {
                     </p>
                   </div>
 
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-3">Long (150 words)</h3>
                     <p className="text-neutral-300 leading-relaxed italic">
                       Since AI is Europe&apos;s premier AI innovation ecosystem, transforming how AI research
@@ -378,7 +378,7 @@ export default function PressPage() {
                 </p>
               </section>
 
-              <section className="p-8 rounded-xl border border-white/10 bg-white/[0.02]">
+              <section className="p-8 border border-white/10 bg-white/[0.02]">
                 <h2 className="text-2xl font-bold text-white mb-4">
                   Learn More
                 </h2>

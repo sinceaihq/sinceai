@@ -64,7 +64,7 @@ export default function ResourcesPage() {
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {blogPosts.map((post) => (
-                    <div key={post.slug} className="p-6 rounded-xl border border-white/5 bg-white/[0.02]">
+                    <div key={post.slug} className="p-6 border border-white/5 bg-white/[0.02]">
                       <h3 className="text-lg font-bold text-white mb-2">{post.title}</h3>
                       <p className="text-neutral-400 text-sm leading-relaxed mb-3">
                         {post.excerpt}
@@ -222,7 +222,7 @@ export default function ResourcesPage() {
               </section>
 
               {/* CTA */}
-              <section className="mb-12 p-8 rounded-xl border border-white/10 bg-white/[0.02]">
+              <section className="mb-12 p-8 border border-white/10 bg-white/[0.02]">
                 <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">
                   Want to Contribute?
                 </h2>

@@ -210,7 +210,7 @@ export default function AIHackathonsPage() {
                   {upcomingEvents.map((event) => (
                     <div
                       key={event.name}
-                      className="p-6 rounded-xl border border-white/10 bg-white/[0.02]"
+                      className="p-6 border border-white/10 bg-white/[0.02]"
                     >
                       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                         <div>
@@ -261,7 +261,7 @@ export default function AIHackathonsPage() {
                   {whatMakesGreat.map((item) => (
                     <div
                       key={item.title}
-                      className="p-6 rounded-xl border border-white/5 bg-white/[0.02]"
+                      className="p-6 border border-white/5 bg-white/[0.02]"
                     >
                       <h3 className="text-base font-bold text-white mb-2">{item.title}</h3>
                       <p className="text-neutral-400 text-sm leading-relaxed">{item.body}</p>

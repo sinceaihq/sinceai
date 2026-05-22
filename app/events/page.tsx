@@ -58,7 +58,7 @@ export default function EventsPage() {
               </div>
 
               {/* Card */}
-              <div className="border border-white/10 rounded-xl p-8 md:p-12 bg-white/[0.02] hover:border-white/20 transition-all duration-300">
+              <div className="border border-white/10 p-8 md:p-12 bg-white/[0.02] hover:border-white/20 transition-all duration-300">
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
                   {/* Content */}
                   <div className="flex-1">
@@ -123,7 +123,7 @@ export default function EventsPage() {
               </div>
 
               {/* Card */}
-              <div className="border border-white/10 rounded-xl p-8 md:p-12 bg-white/[0.02] hover:border-white/20 transition-all duration-300">
+              <div className="border border-white/10 p-8 md:p-12 bg-white/[0.02] hover:border-white/20 transition-all duration-300">
                 <div className="flex flex-col gap-6">
                   {/* Header */}
                   <div>
@@ -150,7 +150,7 @@ export default function EventsPage() {
                   </div>
 
                   {/* Image */}
-                  <div className="relative w-full h-64 md:h-80 rounded-xl overflow-hidden bg-neutral-900/50">
+                  <div className="relative w-full h-64 md:h-80 overflow-hidden bg-neutral-900/50">
                     <Image
                       src="/assets/images/educity-card.webp"
                       alt="Since AI Hackathon 2025 — 260+ AI builders collaborating at EduCity campus in Turku, Finland"

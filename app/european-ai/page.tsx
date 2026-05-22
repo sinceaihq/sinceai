@@ -73,7 +73,7 @@ export default function EuropeanAIPage() {
                   Why European AI Independence Matters
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div className="p-6 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-6 border border-white/5 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">Without European AI</h3>
                     <ul className="text-neutral-400 text-sm space-y-2 leading-relaxed">
                       <li>• Dependence on US/China providers</li>
@@ -82,7 +82,7 @@ export default function EuropeanAIPage() {
                       <li>• Less European innovation</li>
                     </ul>
                   </div>
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">With Strong European AI</h3>
                     <ul className="text-neutral-300 text-sm space-y-2 leading-relaxed">
                       <li>• Independent capabilities</li>
@@ -101,7 +101,7 @@ export default function EuropeanAIPage() {
                 </h2>
 
                 <div className="space-y-6">
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">European AI Model Alternatives</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Community-developed models trained with European data considerations.
@@ -110,7 +110,7 @@ export default function EuropeanAIPage() {
                     </p>
                   </div>
 
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">Privacy-Preserving AI Tools</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       On-premise deployment options. GDPR-compliant by design.
@@ -119,7 +119,7 @@ export default function EuropeanAIPage() {
                     </p>
                   </div>
 
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">European AI Infrastructure</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Open-source deployment tools. European cloud integration.
@@ -139,23 +139,23 @@ export default function EuropeanAIPage() {
                   Our projects prioritize values that align with the European approach to technology:
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                  <div className="p-4 rounded-xl border border-white/5 bg-white/[0.02] text-center">
+                  <div className="p-4 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-white font-bold mb-1">Privacy</div>
                     <div className="text-neutral-500 text-sm">GDPR-first design</div>
                   </div>
-                  <div className="p-4 rounded-xl border border-white/5 bg-white/[0.02] text-center">
+                  <div className="p-4 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-white font-bold mb-1">Transparency</div>
                     <div className="text-neutral-500 text-sm">Open source, explainable AI</div>
                   </div>
-                  <div className="p-4 rounded-xl border border-white/5 bg-white/[0.02] text-center">
+                  <div className="p-4 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-white font-bold mb-1">Sovereignty</div>
                     <div className="text-neutral-500 text-sm">European data stays in Europe</div>
                   </div>
-                  <div className="p-4 rounded-xl border border-white/5 bg-white/[0.02] text-center">
+                  <div className="p-4 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-white font-bold mb-1">Inclusivity</div>
                     <div className="text-neutral-500 text-sm">Multilingual, multicultural</div>
                   </div>
-                  <div className="p-4 rounded-xl border border-white/5 bg-white/[0.02] text-center">
+                  <div className="p-4 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-white font-bold mb-1">Sustainability</div>
                     <div className="text-neutral-500 text-sm">Efficient models, green AI</div>
                   </div>
@@ -188,7 +188,7 @@ export default function EuropeanAIPage() {
               </section>
 
               {/* CTA */}
-              <section className="p-8 rounded-xl border border-white/10 bg-white/[0.02]">
+              <section className="p-8 border border-white/10 bg-white/[0.02]">
                 <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">
                   Join European AI Development
                 </h2>

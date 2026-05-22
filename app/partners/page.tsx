@@ -190,7 +190,7 @@ export default function PartnersPage() {
               ].map((s) => (
                 <div
                   key={s.label}
-                  className="p-5 rounded-xl border border-white/5 bg-white/[0.02] text-center"
+                  className="p-5 border border-white/5 bg-white/[0.02] text-center"
                 >
                   <div className="text-2xl font-bold text-white mb-1">{s.value}</div>
                   <div className="text-xs text-neutral-500 leading-snug">{s.label}</div>
@@ -206,7 +206,7 @@ export default function PartnersPage() {
 
               <div className="space-y-5">
                 {/* Card 1 */}
-                <div className="p-8 rounded-xl border border-white/10 bg-white/[0.02]">
+                <div className="p-8 border border-white/10 bg-white/[0.02]">
                   <h3 className="text-xl font-bold text-white mb-3 tracking-tight">
                     Sponsor a hackathon challenge
                   </h3>
@@ -234,7 +234,7 @@ export default function PartnersPage() {
                 </div>
 
                 {/* Card 2 */}
-                <div className="p-8 rounded-xl border border-white/10 bg-white/[0.02]">
+                <div className="p-8 border border-white/10 bg-white/[0.02]">
                   <h3 className="text-xl font-bold text-white mb-3 tracking-tight">
                     Recruit AI talent
                   </h3>
@@ -262,7 +262,7 @@ export default function PartnersPage() {
                 </div>
 
                 {/* Card 3 */}
-                <div className="p-8 rounded-xl border border-white/10 bg-white/[0.02]">
+                <div className="p-8 border border-white/10 bg-white/[0.02]">
                   <h3 className="text-xl font-bold text-white mb-3 tracking-tight">
                     Run an applied AI pilot
                   </h3>
@@ -317,7 +317,7 @@ export default function PartnersPage() {
                 {caseStudies.map((cs) => (
                   <div
                     key={cs.title}
-                    className="p-6 rounded-xl border border-white/5 bg-white/[0.02]"
+                    className="p-6 border border-white/5 bg-white/[0.02]"
                   >
                     <div className="flex items-center gap-3 mb-3">
                       <span className="text-xs font-semibold text-white uppercase tracking-wider">
@@ -354,7 +354,7 @@ export default function PartnersPage() {
                 {steps.map((s) => (
                   <div
                     key={s.n}
-                    className="flex gap-6 p-6 rounded-xl border border-white/5 bg-white/[0.02]"
+                    className="flex gap-6 p-6 border border-white/5 bg-white/[0.02]"
                   >
                     <span className="text-2xl font-bold text-neutral-700 leading-none pt-0.5 min-w-[2.5rem]">
                       {s.n}
@@ -389,7 +389,7 @@ export default function PartnersPage() {
             </section>
 
             {/* Bottom CTA */}
-            <section className="mb-20 p-10 rounded-xl border border-white/10 bg-white/[0.02] text-center">
+            <section className="mb-20 p-10 border border-white/10 bg-white/[0.02] text-center">
               <h2 className="text-2xl font-bold text-white mb-3 tracking-tight">
                 Ready to partner?
               </h2>

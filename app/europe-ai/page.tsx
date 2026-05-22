@@ -170,7 +170,7 @@ export default function EuropeAIPage() {
               </p>
 
               {/* 3. TL;DR callout box */}
-              <div className="my-10 p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+              <div className="my-10 p-6 border border-white/10 bg-white/[0.02]">
                 <h2 className="text-base font-bold text-white uppercase tracking-wider mb-4">
                   Key takeaways
                 </h2>

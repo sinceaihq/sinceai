@@ -55,7 +55,7 @@ export default function ContactForm() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="border border-white/5 rounded-xl p-8 md:p-10 hover:border-white/10 transition-colors"
+      className="border border-white/5 p-8 md:p-10 hover:border-white/10 transition-colors"
     >
       <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
         Send a message

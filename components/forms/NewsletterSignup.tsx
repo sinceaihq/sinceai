@@ -20,7 +20,7 @@ export default function NewsletterSignup() {
   }
 
   return (
-    <div className="p-8 md:p-10 rounded-xl border border-white/10 bg-white/[0.02]">
+    <div className="p-8 md:p-10 border border-white/10 bg-white/[0.02]">
       <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 tracking-tight">
         Stay Updated
       </h3>

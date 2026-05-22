@@ -126,7 +126,7 @@ export default function BlogPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
-                  className="group flex flex-col justify-between p-8 md:p-10 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.03] hover:border-white/20 transition-all duration-300"
+                  className="group flex flex-col justify-between p-8 md:p-10 border border-white/10 bg-white/[0.02] hover:bg-white/[0.03] hover:border-white/20 transition-all duration-300"
                 >
                   <article>
                     {/* Tags */}

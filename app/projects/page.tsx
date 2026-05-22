@@ -176,7 +176,7 @@ export default function ProjectsPage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: index * 0.05, ease: "easeOut" }}
-                    className="border border-white/10 rounded-xl p-8 bg-white/[0.02] hover:border-white/20 transition-all duration-300 group"
+                    className="border border-white/10 p-8 bg-white/[0.02] hover:border-white/20 transition-all duration-300 group"
                   >
                     {/* Sponsor */}
                     <div className="flex items-center justify-between mb-4">
@@ -213,7 +213,7 @@ export default function ProjectsPage() {
                     </div>
 
                     {/* Why it matters */}
-                    <div className="mb-6 p-4 rounded-xl bg-white/5 border border-white/5">
+                    <div className="mb-6 p-4 bg-white/5 border border-white/5">
                       <p className="text-xs text-neutral-600 uppercase tracking-wider mb-1">
                         Why it matters
                       </p>

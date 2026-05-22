@@ -73,7 +73,7 @@ export default function ProductionSupportPage() {
                 </h2>
 
                 <div className="space-y-6">
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">Week 1-2: Architecture Review</h3>
                     <ul className="text-neutral-400 text-sm space-y-2 leading-relaxed">
                       <li>• Review code architecture for production readiness</li>
@@ -84,7 +84,7 @@ export default function ProductionSupportPage() {
                     </ul>
                   </div>
 
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">Week 3-4: Production Preparation</h3>
                     <ul className="text-neutral-400 text-sm space-y-2 leading-relaxed">
                       <li>• Infrastructure setup guidance</li>
@@ -95,7 +95,7 @@ export default function ProductionSupportPage() {
                     </ul>
                   </div>
 
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">Week 5-8: Deployment Support</h3>
                     <ul className="text-neutral-400 text-sm space-y-2 leading-relaxed">
                       <li>• Staging environment deployment</li>
@@ -106,7 +106,7 @@ export default function ProductionSupportPage() {
                     </ul>
                   </div>
 
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">Month 3+: Ongoing Support</h3>
                     <ul className="text-neutral-400 text-sm space-y-2 leading-relaxed">
                       <li>• Performance monitoring</li>
@@ -126,7 +126,7 @@ export default function ProductionSupportPage() {
                 </h2>
 
                 <div className="space-y-6">
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">Maritime Sound Signal Detection (Kongsberg)</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed mb-3">
                       Built in 72 hours during the hackathon. After 8 weeks of production support including
@@ -140,7 +140,7 @@ export default function ProductionSupportPage() {
                     </div>
                   </div>
 
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">Intelligent Spare Part Discovery (Sandvik)</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed mb-3">
                       RAG-based system built at the hackathon, then optimized and integrated with internal
@@ -218,7 +218,7 @@ export default function ProductionSupportPage() {
               </section>
 
               {/* CTA */}
-              <section className="p-8 rounded-xl border border-white/10 bg-white/[0.02]">
+              <section className="p-8 border border-white/10 bg-white/[0.02]">
                 <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">
                   Get Production Support
                 </h2>

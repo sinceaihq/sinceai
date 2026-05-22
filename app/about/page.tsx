@@ -141,7 +141,7 @@ export default function AboutPage() {
                   Founder
                 </h2>
 
-                <div className="p-8 rounded-xl border border-white/10 bg-white/[0.02]">
+                <div className="p-8 border border-white/10 bg-white/[0.02]">
                   <div className="flex flex-col gap-4">
                     <h3 className="text-2xl font-bold text-white tracking-tight">
                       Riku Lauttia
@@ -212,7 +212,7 @@ export default function AboutPage() {
                   ].map((s) => (
                     <div
                       key={s.label}
-                      className="p-5 rounded-xl border border-white/5 bg-white/[0.02] text-center"
+                      className="p-5 border border-white/5 bg-white/[0.02] text-center"
                     >
                       <div className="text-2xl font-bold text-white mb-1">{s.value}</div>
                       <div className="text-xs text-neutral-500 leading-snug">{s.label}</div>
@@ -237,7 +237,7 @@ export default function AboutPage() {
                   Legal and governance
                 </h2>
 
-                <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                <div className="p-6 border border-white/10 bg-white/[0.02]">
                   <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5 text-sm">
                     <div>
                       <dt className="text-neutral-500 font-semibold uppercase tracking-wider text-xs mb-1">
@@ -335,7 +335,7 @@ export default function AboutPage() {
                   ].map((item) => (
                     <div
                       key={item.label}
-                      className="p-5 rounded-xl border border-white/5 bg-white/[0.02]"
+                      className="p-5 border border-white/5 bg-white/[0.02]"
                     >
                       <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">
                         {item.label}

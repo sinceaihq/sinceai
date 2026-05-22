@@ -107,7 +107,7 @@ export default function FAQPage() {
               </div>
 
               {/* Bottom CTA */}
-              <div className="mt-16 p-8 rounded-xl border border-white/10 bg-white/[0.02]">
+              <div className="mt-16 p-8 border border-white/10 bg-white/[0.02]">
                 <h2 className="text-xl font-bold text-white mb-4 tracking-tight">
                   Still have questions?
                 </h2>
