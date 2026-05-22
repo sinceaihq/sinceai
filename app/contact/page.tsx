@@ -150,7 +150,7 @@ const teamSections = [
       },
       {
         name: "Tzu Tai Huang",
-        role: "Production & Volunteers",
+        role: "Production",
         email: "tzu@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/tzu-tai-huang/",
       },
