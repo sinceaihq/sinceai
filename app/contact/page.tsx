@@ -143,16 +143,16 @@ const teamSections = [
         linkedin: "https://www.linkedin.com/in/joan-iovchik-8b5b48314/",
       },
       {
-        name: "Radin Dabbagh",
-        role: "Production & Marketing",
-        email: "radin@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/radin-dabbagh-rezeiyeh-b64687225/",
-      },
-      {
         name: "Tzu Tai Huang",
         role: "Production",
         email: "tzu@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/tzu-tai-huang/",
+      },
+      {
+        name: "Radin Dabbagh",
+        role: "Production & Marketing",
+        email: "radin@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/radin-dabbagh-rezeiyeh-b64687225/",
       },
     ],
   },
