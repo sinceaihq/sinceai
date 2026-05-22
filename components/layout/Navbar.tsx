@@ -91,7 +91,7 @@ export const Navbar = () => {
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden text-[var(--color-fg-muted)] hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+            className="md:hidden cursor-pointer text-[var(--color-fg-muted)] hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
             aria-expanded={menuOpen}
@@ -125,8 +125,8 @@ export const Navbar = () => {
             <button
               onClick={() => setMenuOpen(false)}
               aria-label="Close menu"
-              className="text-[var(--color-fg-muted)] hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
-              style={{ background: "transparent", border: "none", cursor: "pointer", padding: "4px" }}
+              className="cursor-pointer p-1 text-[var(--color-fg-muted)] hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+              style={{ background: "transparent", border: "none" }}
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <line x1="1" y1="1" x2="15" y2="15" stroke="currentColor" strokeWidth="1.5" />

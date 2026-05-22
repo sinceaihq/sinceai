@@ -43,7 +43,7 @@ export default function NewsletterSignup() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-6 py-3 rounded-none bg-white text-black font-semibold text-sm hover:bg-neutral-100 transition-all duration-300 disabled:opacity-50 whitespace-nowrap"
+            className="px-6 py-3 rounded-none bg-white text-black font-semibold text-sm hover:bg-neutral-100 transition-all duration-300 disabled:opacity-50 whitespace-nowrap cursor-pointer"
           >
             {isSubmitting ? 'Opening...' : 'Subscribe Free'}
           </button>

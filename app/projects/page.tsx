@@ -98,7 +98,7 @@ export default function ProjectsPage() {
                       <button
                         key={industry}
                         onClick={() => setSelectedIndustry(industry)}
-                        className={`px-4 py-2 text-sm font-medium rounded-none transition-all ${
+                        className={`px-4 py-2 text-sm font-medium rounded-none transition-all cursor-pointer ${
                           selectedIndustry === industry
                             ? "bg-white text-black"
                             : "bg-white/5 text-neutral-400 hover:bg-white/10 hover:text-white border border-white/10"
@@ -120,7 +120,7 @@ export default function ProjectsPage() {
                       <button
                         key={modality}
                         onClick={() => setSelectedModality(modality)}
-                        className={`px-4 py-2 text-sm font-medium rounded-none transition-all ${
+                        className={`px-4 py-2 text-sm font-medium rounded-none transition-all cursor-pointer ${
                           selectedModality === modality
                             ? "bg-white text-black"
                             : "bg-white/5 text-neutral-400 hover:bg-white/10 hover:text-white border border-white/10"
@@ -142,7 +142,7 @@ export default function ProjectsPage() {
                       <button
                         key={sponsor}
                         onClick={() => setSelectedSponsor(sponsor)}
-                        className={`px-4 py-2 text-sm font-medium rounded-none transition-all ${
+                        className={`px-4 py-2 text-sm font-medium rounded-none transition-all cursor-pointer ${
                           selectedSponsor === sponsor
                             ? "bg-white text-black"
                             : "bg-white/5 text-neutral-400 hover:bg-white/10 hover:text-white border border-white/10"

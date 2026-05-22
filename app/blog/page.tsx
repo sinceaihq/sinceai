@@ -99,7 +99,7 @@ export default function BlogPage() {
                 <button
                   key={option.value}
                   onClick={() => setActiveFilter(option.value)}
-                  className={`px-4 py-2 text-sm font-medium rounded-none border transition-all duration-300 ${
+                  className={`px-4 py-2 text-sm font-medium rounded-none border transition-all duration-300 cursor-pointer ${
                     activeFilter === option.value
                       ? "bg-white text-black border-white"
                       : "bg-transparent text-neutral-400 border-white/10 hover:border-white/30 hover:text-neutral-200"
