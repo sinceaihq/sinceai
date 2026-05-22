@@ -328,7 +328,7 @@ const TeamCard: React.FC<{ person: TeamMember; isHead?: boolean }> = ({ person, 
       </span>
     )}
     <div className="flex justify-center mb-4">
-      <div className="relative w-32 h-32 overflow-hidden bg-white/5 border border-white/10">
+      <div className="relative w-32 h-32 overflow-hidden bg-white/5">
         {person.image ? (
           <Image
             src={person.image}
