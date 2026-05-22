@@ -84,13 +84,7 @@ export const Navbar = () => {
             href="https://sinceai.app/sign-up"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden md:inline-block text-[13px] font-medium no-underline text-black bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            style={{
-              fontFamily: "var(--font-mono)",
-              padding: "8px 16px",
-              border: "0.5px solid #fff",
-              whiteSpace: "nowrap",
-            }}
+            className="hidden md:inline-block font-mono text-[13px] font-bold text-black bg-white px-4 py-2 border border-white whitespace-nowrap transition-colors duration-300 hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
             Apply →
           </a>
@@ -174,12 +168,7 @@ export const Navbar = () => {
               href="https://sinceai.app/sign-up"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block text-[13px] font-medium no-underline text-black bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
-              style={{
-                fontFamily: "var(--font-mono)",
-                padding: "12px 20px",
-                border: "0.5px solid #fff",
-              }}
+              className="inline-block font-mono text-[13px] font-bold text-black bg-white px-5 py-3 border border-white whitespace-nowrap transition-colors duration-300 hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
             >
               Apply →
             </a>

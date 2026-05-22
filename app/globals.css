@@ -193,10 +193,6 @@ html:has(body[data-scroll-locked]) {
   color: var(--color-brand);
 }
 
-/* Hero secondary CTA hover — border brightens to white */
-.hero-cta-secondary:hover {
-  border-color: #fff !important;
-}
 
 @layer utilities {
   /* GPU acceleration for animated elements */
