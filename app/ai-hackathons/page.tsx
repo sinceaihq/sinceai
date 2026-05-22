@@ -231,7 +231,7 @@ export default function AIHackathonsPage() {
                         </div>
                         <Link
                           href={event.url}
-                          className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-black bg-white rounded-none hover:bg-neutral-100 transition-all hover:scale-[1.02] whitespace-nowrap"
+                          className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-black bg-white rounded-none hover:bg-neutral-100 transition-all whitespace-nowrap"
                         >
                           Apply now →
                         </Link>

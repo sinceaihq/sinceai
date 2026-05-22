@@ -194,7 +194,7 @@ export default function ForBuildersPage() {
                     </p>
                     <Link
                       href="/hackathon"
-                      className="inline-flex items-center justify-center px-7 py-3 text-sm font-semibold text-black bg-white rounded-none hover:bg-neutral-100 transition-all hover:scale-[1.02]"
+                      className="inline-flex items-center justify-center px-7 py-3 text-sm font-semibold text-black bg-white rounded-none hover:bg-neutral-100 transition-all"
                     >
                       Apply →
                     </Link>
@@ -212,7 +212,7 @@ export default function ForBuildersPage() {
                       href={ORG.social.discord}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center px-7 py-3 text-sm font-semibold text-black bg-white rounded-none hover:bg-neutral-100 transition-all hover:scale-[1.02]"
+                      className="inline-flex items-center justify-center px-7 py-3 text-sm font-semibold text-black bg-white rounded-none hover:bg-neutral-100 transition-all"
                     >
                       Join Discord →
                     </a>
@@ -229,7 +229,7 @@ export default function ForBuildersPage() {
                     </p>
                     <a
                       href="mailto:builders@sinceai.fi"
-                      className="inline-flex items-center justify-center px-7 py-3 text-sm font-semibold text-white bg-white/10 rounded-none border border-white/20 hover:bg-white/15 hover:border-white/30 transition-all hover:scale-[1.02]"
+                      className="inline-flex items-center justify-center px-7 py-3 text-sm font-semibold text-white bg-white/10 rounded-none border border-white/20 hover:bg-white/15 hover:border-white/30 transition-all"
                     >
                       builders@sinceai.fi →
                     </a>

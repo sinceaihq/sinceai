@@ -399,7 +399,7 @@ export default function PartnersPage() {
               </p>
               <a
                 href="mailto:partners@sinceai.fi"
-                className="inline-flex items-center justify-center px-10 py-4 text-base font-semibold text-black bg-white rounded-none transition-all duration-300 hover:bg-neutral-100 hover:scale-[1.02]"
+                className="inline-flex items-center justify-center px-10 py-4 text-base font-semibold text-black bg-white rounded-none transition-all duration-300 hover:bg-neutral-100"
               >
                 Start a partnership conversation → partners@sinceai.fi
               </a>
