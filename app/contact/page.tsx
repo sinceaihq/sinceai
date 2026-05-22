@@ -90,128 +90,6 @@ const teamSections = [
     ],
   },
   {
-    department: "Marketing",
-    members: [
-      {
-        name: "Aarne Ollila",
-        role: "Head of Marketing",
-        email: "aarne.ollila@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/aarneollila/",
-      },
-      {
-        name: "Abdul Wasay",
-        role: "Marketing",
-        email: "abdul@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/abdulwasaymuhammad/",
-      },
-      {
-        name: "Adeelia Koponen",
-        role: "Marketing",
-        email: "adeelia.koponen@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/adeelia-koponen-37a492379/",
-      },
-      {
-        name: "Juuso Pörsti",
-        role: "Marketing",
-        email: "juuso@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/juusoporsti/",
-      },
-      {
-        name: "Manu Kankaanniemi",
-        role: "Marketing & Content",
-        email: "manu@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/manu-kankaanniemi-38718b312/",
-      },
-      {
-        name: "Taneli Hautala",
-        role: "Marketing & Content",
-        email: "taneli@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/taneli-hautala-797192312/",
-      },
-      {
-        name: "Hafiza Munawar",
-        role: "Social Media & Content",
-        email: "hafiza@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/hafiza-aqsa-munawar/",
-      },
-      {
-        name: "Shanuri Perera",
-        role: "Social Media & Content",
-        email: "shanuri@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/shanuri-perera-19a3483b3/",
-      },
-    ],
-  },
-  {
-    department: "Community",
-    members: [
-      {
-        name: "Hasnain Ajmal",
-        role: "Head of Community",
-        email: "hasnain@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/hasnaynajmal/",
-        image: "/assets/team/hasnain.webp",
-      },
-    ],
-  },
-  {
-    department: "Development",
-    members: [
-      {
-        name: "Otso Saarinen",
-        role: "Head of Technology",
-        email: "otso.saarinen@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/otsosaarinen/",
-        image: "/assets/team/otso.webp",
-        imagePosition: "40% center",
-      },
-      {
-        name: "Abel Alem",
-        role: "Development",
-        email: "abel@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/abel-alem-25420b263",
-        image: "/assets/team/abel.webp",
-      },
-      {
-        name: "Theo Wilenius",
-        role: "Development",
-        email: "theo.wilenius@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/tabw/",
-        image: "/assets/team/theo.webp",
-      },
-      {
-        name: "Zain Taufique",
-        role: "Development",
-        email: "zain@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/zain-taufique-20273179/",
-      },
-      {
-        name: "Joonatan Laato",
-        role: "Development",
-        email: "joonatan.laato@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/joonatan-laato-19b3521b4/",
-      },
-      {
-        name: "Ville Tuuli",
-        role: "Development",
-        email: "ville@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/ville-tuuli-67abab289/",
-      },
-      {
-        name: "Lehel Denes",
-        role: "Development",
-        email: "lehel@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/lehel-d-4a20a634b/",
-      },
-      {
-        name: "Georg Wahlroos",
-        role: "Development",
-        email: "georg@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/georg-wahlroos-689267180/",
-      },
-    ],
-  },
-  {
     department: "Production",
     members: [
       {
@@ -275,6 +153,128 @@ const teamSections = [
         role: "Production",
         email: "henrique@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/henrique-nunez/",
+      },
+    ],
+  },
+  {
+    department: "Development",
+    members: [
+      {
+        name: "Otso Saarinen",
+        role: "Head of Technology",
+        email: "otso.saarinen@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/otsosaarinen/",
+        image: "/assets/team/otso.webp",
+        imagePosition: "40% center",
+      },
+      {
+        name: "Abel Alem",
+        role: "Development",
+        email: "abel@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/abel-alem-25420b263",
+        image: "/assets/team/abel.webp",
+      },
+      {
+        name: "Theo Wilenius",
+        role: "Development",
+        email: "theo.wilenius@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/tabw/",
+        image: "/assets/team/theo.webp",
+      },
+      {
+        name: "Zain Taufique",
+        role: "Development",
+        email: "zain@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/zain-taufique-20273179/",
+      },
+      {
+        name: "Joonatan Laato",
+        role: "Development",
+        email: "joonatan.laato@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/joonatan-laato-19b3521b4/",
+      },
+      {
+        name: "Ville Tuuli",
+        role: "Development",
+        email: "ville@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/ville-tuuli-67abab289/",
+      },
+      {
+        name: "Lehel Denes",
+        role: "Development",
+        email: "lehel@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/lehel-d-4a20a634b/",
+      },
+      {
+        name: "Georg Wahlroos",
+        role: "Development",
+        email: "georg@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/georg-wahlroos-689267180/",
+      },
+    ],
+  },
+  {
+    department: "Marketing",
+    members: [
+      {
+        name: "Aarne Ollila",
+        role: "Head of Marketing",
+        email: "aarne.ollila@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/aarneollila/",
+      },
+      {
+        name: "Abdul Wasay",
+        role: "Marketing",
+        email: "abdul@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/abdulwasaymuhammad/",
+      },
+      {
+        name: "Adeelia Koponen",
+        role: "Marketing",
+        email: "adeelia.koponen@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/adeelia-koponen-37a492379/",
+      },
+      {
+        name: "Juuso Pörsti",
+        role: "Marketing",
+        email: "juuso@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/juusoporsti/",
+      },
+      {
+        name: "Manu Kankaanniemi",
+        role: "Marketing & Content",
+        email: "manu@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/manu-kankaanniemi-38718b312/",
+      },
+      {
+        name: "Taneli Hautala",
+        role: "Marketing & Content",
+        email: "taneli@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/taneli-hautala-797192312/",
+      },
+      {
+        name: "Hafiza Munawar",
+        role: "Social Media & Content",
+        email: "hafiza@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/hafiza-aqsa-munawar/",
+      },
+      {
+        name: "Shanuri Perera",
+        role: "Social Media & Content",
+        email: "shanuri@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/shanuri-perera-19a3483b3/",
+      },
+    ],
+  },
+  {
+    department: "Community",
+    members: [
+      {
+        name: "Hasnain Ajmal",
+        role: "Head of Community",
+        email: "hasnain@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/hasnaynajmal/",
+        image: "/assets/team/hasnain.webp",
       },
     ],
   },
