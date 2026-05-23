@@ -7,7 +7,7 @@ export function Hero() {
       <div
         className="mx-auto w-full max-w-6xl pt-28 md:pt-0"
       >
-        <h1 className="text-white max-w-[700px] leading-none" style={{ fontSize: "clamp(46px, 5vw, 112px)" }}>
+        <h1 className="text-white max-w-[640px] leading-none" style={{ fontSize: "clamp(46px, 5vw, 112px)" }}>
           Global execution-focused AI innovation ecosystem.
         </h1>
 
