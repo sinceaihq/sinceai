@@ -156,7 +156,7 @@ export default function PartnersPage() {
                 For Organizations
               </p>
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight leading-tight">
-                Partner with Since AI
+                Partner with<br />Since AI
               </h1>
               <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-8">
                 A non-profit ecosystem connecting 10,000+ AI builders with leading AI
