@@ -3,11 +3,11 @@ import { PartnerMarquee } from "./PartnerMarquee";
 
 export function Hero() {
   return (
-    <section className="relative bg-black px-6 h-screen overflow-hidden">
+    <section className="relative bg-black px-6 h-screen max-h-[1100px] overflow-hidden flex flex-col justify-start md:justify-center">
       <div
-        className="mx-auto w-full max-w-6xl pt-24 pb-[100px]"
+        className="mx-auto w-full max-w-6xl pt-28 md:pt-0"
       >
-        <h1 className="text-white max-w-[600px] leading-none" style={{ fontSize: "clamp(46px, 5vw, 96px)" }}>
+        <h1 className="text-white max-w-[600px] leading-none" style={{ fontSize: "clamp(46px, 5vw, 112px)" }}>
           Global execution-focused AI innovation ecosystem.
         </h1>
 
