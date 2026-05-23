@@ -228,7 +228,7 @@ export default function StatsPage() {
                 <div className="space-y-6">
                   <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">Maritime Sound Signal Detection (Kongsberg)</h3>
-                    <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
                       <div>
                         <dt className="text-neutral-500">Built</dt>
                         <dd className="text-neutral-300">72 hours</dd>
@@ -250,7 +250,7 @@ export default function StatsPage() {
 
                   <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">Intelligent Spare Part Discovery (Sandvik)</h3>
-                    <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
                       <div>
                         <dt className="text-neutral-500">Built</dt>
                         <dd className="text-neutral-300">72 hours (RAG-based system)</dd>

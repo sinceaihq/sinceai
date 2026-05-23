@@ -75,9 +75,11 @@ Always use CSS variables — never hardcode color values:
 
 #### Cards
 
-- Standard card corners: `rounded-xl` with `border border-white/5` or `border-white/10`
+- Sharp corners — no `rounded-*` on cards or containers (`rounded-xl`, `rounded-lg` etc. are not used)
+- Border: `border border-white/5` or `border-white/10`
 - Hover state: `hover:border-white/20` and/or `hover:bg-white/[0.02]`
 - No drop shadows
+- Exception: `rounded-full` is fine for purely circular elements (avatars, dots)
 
 ### SEO
 

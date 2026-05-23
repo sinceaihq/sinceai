@@ -193,6 +193,7 @@ export default function HackathonPage() {
               color: "rgba(255,255,255,0.75)",
               marginBottom: "var(--space-lg)",
               letterSpacing: "0.01em",
+              overflowWrap: "break-word",
             }}
           >
             November 6–8, 2026 &nbsp;/&nbsp; EduCity, Turku, Finland &nbsp;/&nbsp; 72 hours &nbsp;/&nbsp; 1,000+ builders &nbsp;/&nbsp; €50,000 cash prize pool

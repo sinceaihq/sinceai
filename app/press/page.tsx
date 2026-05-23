@@ -97,7 +97,7 @@ export default function PressPage() {
                 <p className="text-neutral-300 leading-relaxed mb-4">
                   Since AI partners with leading companies including:
                 </p>
-                <div className="grid grid-cols-2 gap-3 text-neutral-400">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-neutral-400">
                   <div>
                     <strong className="text-white">• Valmet</strong> - Industrial technology
                   </div>
