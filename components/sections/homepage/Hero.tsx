@@ -3,12 +3,11 @@ import { PartnerMarquee } from "./PartnerMarquee";
 
 export function Hero() {
   return (
-    <section className="relative flex flex-col bg-black px-6">
+    <section className="relative bg-black px-6 h-screen overflow-hidden">
       <div
-        className="mx-auto w-full max-w-6xl"
-        style={{ paddingTop: "clamp(100px, 15vh, 150px)" }}
+        className="mx-auto w-full max-w-6xl pt-24 pb-[100px]"
       >
-        <h1 className="text-white max-w-[900px]">
+        <h1 className="text-white max-w-[600px] leading-none" style={{ fontSize: "clamp(46px, 5vw, 96px)" }}>
           Global execution-focused AI innovation ecosystem.
         </h1>
 
@@ -16,7 +15,7 @@ export function Hero() {
           where frontier AI becomes shipped products.
         </p>
 
-        <p className="text-sm text-white mt-10 mb-4">
+        <p className="text-sm text-white mt-8 mb-4">
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 mr-2 align-middle" />
           Since AI Hackathon 2026 &thinsp;·&thinsp; €50,000 cash prize pool &thinsp;·&thinsp; Registration open
         </p>
@@ -48,8 +47,10 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="h-16 shrink-0" />
-      <PartnerMarquee />
+      {/* Marquee anchored to the bottom of the hero viewport */}
+      <div className="absolute bottom-0 left-0 right-0">
+        <PartnerMarquee />
+      </div>
     </section>
   );
 }

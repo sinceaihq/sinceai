@@ -92,7 +92,7 @@ export const Footer: React.FC<FooterProps> = () => {
           {/* ── Social links ─────────────────────────────────── */}
           <div className="max-w-[320px]">
             <span className="text-xs font-mono uppercase tracking-widest text-neutral-500 block mb-4">
-              // community
+              {"// community"}
             </span>
             <div className="flex flex-wrap gap-x-6">
               {SOCIAL_LINKS.map((s) => (

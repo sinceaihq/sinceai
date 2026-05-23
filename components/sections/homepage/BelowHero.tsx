@@ -49,7 +49,7 @@ export function BelowHero() {
       <section className="py-24 px-6 border-t border-white/10">
         <div className="mx-auto max-w-6xl">
           <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
-            // what is since ai
+            {"// what is since ai"}
           </p>
           <h2 className="text-3xl font-bold tracking-tight text-white mb-6">
             The execution layer of Global AI.
@@ -108,7 +108,7 @@ export function BelowHero() {
       <section className="py-24 px-6 border-t border-white/10">
         <div className="mx-auto max-w-6xl">
           <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
-            // how since ai works
+            {"// how since ai works"}
           </p>
           <h2 className="text-3xl font-bold tracking-tight text-white mb-12">
             From idea to shipped product.
@@ -155,7 +155,7 @@ export function BelowHero() {
       <section className="py-24 px-6 border-t border-white/10">
         <div className="mx-auto max-w-6xl">
           <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
-            // ecosystem
+            {"// ecosystem"}
           </p>
           <h2 className="text-3xl font-bold tracking-tight text-white mb-12">
             Backed by global AI leaders and world-class capital{" "}

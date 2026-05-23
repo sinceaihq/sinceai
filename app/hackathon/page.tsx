@@ -6,6 +6,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import StructuredData from "@/components/StructuredData";
 import { HackathonCountdown } from "@/components/HackathonCountdown";
+import { FadeIn } from "@/components/motion-primitives/fade-in";
 
 // ── Schemas ────────────────────────────────────────────────────────────────
 
@@ -131,8 +132,7 @@ export default function HackathonPage() {
             style={{ background: "linear-gradient(to top, #000 0%, transparent 100%)" }}
           />
 
-          <div
-            className="relative z-10 mx-auto w-full max-w-6xl pb-24"
+          <FadeIn className="relative z-10 mx-auto w-full max-w-6xl pb-24"
             style={{ paddingTop: "clamp(100px, 15vh, 150px)" }}
           >
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-6 max-w-[820px] leading-none">
@@ -174,7 +174,7 @@ export default function HackathonPage() {
                 Partner with us →
               </Link>
             </div>
-          </div>
+          </FadeIn>
         </section>
 
         {/* ── SECTION 2: Headline partners ─────────────────────── */}
@@ -214,7 +214,7 @@ export default function HackathonPage() {
         <section className="py-24 px-6 border-t border-white/10">
           <div className="mx-auto max-w-6xl">
             <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
-              // key facts
+              {"// key facts"}
             </p>
             <h2 className="text-3xl font-bold tracking-tight text-white mb-8">
               Since AI Hackathon 2026 — at a glance.
@@ -242,7 +242,7 @@ export default function HackathonPage() {
         <section className="py-24 px-6 border-t border-white/10">
           <div className="mx-auto max-w-6xl">
             <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
-              // what is it
+              {"// what is it"}
             </p>
             <h2 className="text-3xl font-bold tracking-tight text-white mb-6">
               72 hours. Real challenges. Shipped products.
@@ -270,7 +270,7 @@ export default function HackathonPage() {
         <section className="py-24 px-6 border-t border-white/10">
           <div className="mx-auto max-w-6xl">
             <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
-              // why participate
+              {"// why participate"}
             </p>
             <h2 className="text-3xl font-bold tracking-tight text-white mb-10">
               Built for builders who ship.
@@ -301,7 +301,7 @@ export default function HackathonPage() {
         <section className="py-24 px-6 border-t border-white/10">
           <div className="mx-auto max-w-6xl">
             <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
-              // challenge partners
+              {"// challenge partners"}
             </p>
             <h2 className="text-3xl font-bold tracking-tight text-white mb-10">
               Real problems from real companies.
@@ -380,7 +380,7 @@ export default function HackathonPage() {
         <section className="py-24 px-6 border-t border-white/10">
           <div className="mx-auto max-w-6xl">
             <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
-              // venue
+              {"// venue"}
             </p>
             <h2 className="text-3xl font-bold tracking-tight text-white mb-8">
               EduCity, Turku.
@@ -421,7 +421,7 @@ export default function HackathonPage() {
         <section className="py-24 px-6 border-t border-white/10">
           <div className="mx-auto max-w-6xl">
             <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
-              // previous editions
+              {"// previous editions"}
             </p>
             <h2 className="text-3xl font-bold tracking-tight text-white mb-8">
               Since AI Hackathon 2025.
@@ -464,7 +464,7 @@ export default function HackathonPage() {
         >
           <div className="mx-auto max-w-6xl">
             <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
-              // registrations
+              {"// registrations"}
             </p>
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-6">
               Registration is open.
@@ -513,7 +513,7 @@ export default function HackathonPage() {
         <section className="py-24 px-6 border-t border-white/10">
           <div className="mx-auto max-w-6xl">
             <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
-              // faq
+              {"// faq"}
             </p>
             <h2 className="text-3xl font-bold tracking-tight text-white mb-10">
               Frequently asked questions.

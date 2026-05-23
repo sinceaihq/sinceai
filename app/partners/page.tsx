@@ -149,7 +149,7 @@ export default function PartnersPage() {
       <main className="flex flex-col w-full bg-black min-h-screen">
 
         {/* ── Hero ── */}
-        <div className="max-w-4xl mx-auto px-6 pt-32 md:pt-40 pb-12">
+        <div className="max-w-4xl mx-auto px-6 py-24 md:py-32">
           <FadeIn>
             <div className="prose prose-invert prose-neutral max-w-none">
               <p className="text-xs uppercase tracking-[0.2em] font-semibold text-neutral-500 mb-5">

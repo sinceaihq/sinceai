@@ -128,7 +128,7 @@ function SpeakerCard({ speaker }: { speaker: Speaker }) {
           {speaker.talks.map((talk, index) => (
             <div key={index} className="border-l border-white/10 pl-6">
               <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-2">
-                // {talk.type}
+                {"// "}{talk.type}
               </p>
               <h4 className="text-base font-bold text-white mb-2 leading-snug">
                 {talk.title}
@@ -149,7 +149,7 @@ export function FeaturedSpeakers() {
     <section className="py-24 px-6 border-t border-white/10 border-b border-white/10">
       <div className="mx-auto max-w-6xl">
         <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
-          // featured speakers
+          {"// featured speakers"}
         </p>
         <h2 className="text-3xl font-bold tracking-tight text-white mb-10">
           Learn from the best in AI.

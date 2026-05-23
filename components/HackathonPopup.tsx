@@ -101,6 +101,7 @@ export function HackathonPopup() {
           {/* Ghost logo watermark */}
           <img
             src="/assets/logo/sinceai-white.png"
+            alt=""
             aria-hidden="true"
             style={{
               position: "absolute",
