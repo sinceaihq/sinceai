@@ -63,105 +63,45 @@ const LEGAL_LINKS = [
   { name: "Terms",           href: "/terms" },
 ];
 
-const linkStyle: React.CSSProperties = {
-  fontFamily: "var(--font-mono)",
-  fontSize: "var(--text-sm)",
-  color: "var(--color-fg-muted)",
-  textDecoration: "none",
-  lineHeight: 2,
-  display: "block",
-  transition: "color 0.15s",
-};
-
-const labelStyle: React.CSSProperties = {
-  fontFamily: "var(--font-mono)",
-  fontSize: "var(--text-xs)",
-  color: "var(--color-fg-subtle)",
-  letterSpacing: "0.05em",
-  marginBottom: "var(--space-md)",
-  display: "block",
-};
-
 export const Footer: React.FC<FooterProps> = () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer
-      style={{
-        borderTop: "0.5px solid var(--color-border)",
-        background: "#000",
-      }}
-    >
-      <div
-        className="mx-auto"
-        style={{
-          maxWidth: "1200px",
-          padding: "var(--space-2xl) var(--space-lg)",
-        }}
-      >
-        {/* ── Top row: wordmark + tagline + email ─────────────── */}
-        <div
-          className="flex flex-col md:flex-row md:items-start md:justify-between"
-          style={{ marginBottom: "var(--space-2xl)", gap: "var(--space-lg)" }}
-        >
-          <div style={{ maxWidth: "360px" }}>
-            <p
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "15px",
-                fontWeight: 500,
-                color: "#fff",
-                marginBottom: "var(--space-xs)",
-              }}
-            >
+    <footer className="border-t border-white/10 bg-black">
+      <div className="mx-auto max-w-6xl py-24 px-6">
+
+        {/* ── Top row: wordmark + tagline + social ──────────────── */}
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-10 mb-24">
+          <div className="max-w-[360px]">
+            <p className="text-[15px] font-medium text-white mb-2">
               Since AI
             </p>
-            <p
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-sm)",
-                color: "var(--color-fg-muted)",
-                lineHeight: 1.6,
-                marginBottom: "var(--space-sm)",
-              }}
-            >
+            <p className="text-sm text-neutral-400 leading-relaxed mb-4">
               A global execution-focused AI innovation ecosystem.
               <br />
               Turku-based, globally connected.
             </p>
             <a
               href={`mailto:${ORG.contact.infoEmail}`}
-              className="hover:text-white transition-colors"
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-sm)",
-                color: "var(--color-fg-muted)",
-                textDecoration: "none",
-              }}
+              className="text-sm text-neutral-400 hover:text-white transition-colors"
             >
               {ORG.contact.infoEmail}
             </a>
           </div>
 
-          {/* ── Social links — text-based, right-aligned ──────── */}
-          <div style={{ maxWidth: "320px" }}>
-            <span style={labelStyle}>{'// community'}</span>
-            <div className="flex flex-wrap" style={{ gap: "0 var(--space-md)", rowGap: "0" }}>
+          {/* ── Social links ─────────────────────────────────── */}
+          <div className="max-w-[320px]">
+            <span className="text-xs font-mono uppercase tracking-widest text-neutral-500 block mb-4">
+              // community
+            </span>
+            <div className="flex flex-wrap gap-x-6">
               {SOCIAL_LINKS.map((s) => (
                 <a
                   key={s.name}
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--text-sm)",
-                    color: "var(--color-fg-muted)",
-                    textDecoration: "none",
-                    lineHeight: 2,
-                    whiteSpace: "nowrap",
-                  }}
+                  className="text-sm text-neutral-400 hover:text-white transition-colors leading-loose focus-visible:outline focus-visible:outline-2 focus-visible:outline-white whitespace-nowrap"
                 >
                   {s.name} ↗
                 </a>
@@ -171,24 +111,17 @@ export const Footer: React.FC<FooterProps> = () => {
         </div>
 
         {/* ── Navigation columns ──────────────────────────────── */}
-        <div
-          className="grid grid-cols-2 md:grid-cols-3"
-          style={{
-            gap: "var(--space-xl)",
-            paddingTop: "var(--space-xl)",
-            borderTop: "0.5px solid var(--color-border)",
-            marginBottom: "var(--space-xl)",
-          }}
-        >
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-16 pt-16 border-t border-white/10 mb-16">
           {NAV_COLUMNS.map((col) => (
             <nav key={col.label} aria-label={col.label}>
-              <span style={labelStyle}>{col.label}</span>
+              <span className="text-xs font-mono uppercase tracking-widest text-neutral-500 block mb-6">
+                {col.label}
+              </span>
               {col.links.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
-                  style={linkStyle}
+                  className="text-sm text-neutral-400 hover:text-white transition-colors leading-loose block focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
                 >
                   {link.name}
                 </Link>
@@ -198,42 +131,19 @@ export const Footer: React.FC<FooterProps> = () => {
         </div>
 
         {/* ── Bottom bar ──────────────────────────────────────── */}
-        <div
-          className="flex flex-col sm:flex-row sm:items-center sm:justify-between"
-          style={{
-            paddingTop: "var(--space-lg)",
-            borderTop: "0.5px solid var(--color-border)",
-            gap: "var(--space-sm)",
-          }}
-        >
-          <p
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--text-xs)",
-              color: "var(--color-fg-subtle)",
-              lineHeight: 1.8,
-            }}
-          >
-            {ORG.legalName} · Business ID {ORG.businessId} · Vähä Hämeenkatu 1, Turku,
-            Finland
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-10 border-t border-white/10 gap-4">
+          <p className="text-xs text-neutral-500 leading-relaxed">
+            {ORG.legalName} · Business ID {ORG.businessId} · Vähä Hämeenkatu 1, Turku, Finland
             <br />
             © {year} Since AI. All rights reserved.
           </p>
 
-          {/* Legal links */}
-          <div className="flex flex-wrap items-center" style={{ gap: "var(--space-md)" }}>
+          <div className="flex flex-wrap items-center gap-6">
             {LEGAL_LINKS.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
-                className="hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-xs)",
-                  color: "var(--color-fg-subtle)",
-                  textDecoration: "none",
-                  whiteSpace: "nowrap",
-                }}
+                className="text-xs text-neutral-500 hover:text-white transition-colors whitespace-nowrap focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
               >
                 {l.name}
               </Link>

@@ -118,7 +118,6 @@ export function HackathonPopup() {
           <div style={{ marginBottom: "20px" }}>
             <h2
               style={{
-                fontFamily: "var(--font-mono)",
                 fontSize: "clamp(20px, 4vw, 28px)",
                 fontWeight: 700,
                 lineHeight: 1.05,
@@ -133,7 +132,6 @@ export function HackathonPopup() {
           {/* Prize */}
           <p
             style={{
-              fontFamily: "var(--font-mono)",
               fontSize: "clamp(20px, 4vw, 28px)",
               fontWeight: 700,
               color: "var(--color-brand)",
@@ -147,7 +145,6 @@ export function HackathonPopup() {
           {/* Date */}
           <p
             style={{
-              fontFamily: "var(--font-mono)",
               fontSize: "13px",
               color: "#fff",
               letterSpacing: "0.01em",
@@ -160,7 +157,6 @@ export function HackathonPopup() {
           {/* Tagline */}
           <p
             style={{
-              fontFamily: "var(--font-mono)",
               fontSize: "13px",
               color: "#fff",
               lineHeight: 1.6,
@@ -172,10 +168,9 @@ export function HackathonPopup() {
 
           {/* Body */}
           <p
+            className="text-neutral-400"
             style={{
-              fontFamily: "var(--font-mono)",
               fontSize: "13px",
-              color: "var(--color-fg-muted)",
               lineHeight: 1.6,
               marginBottom: "20px",
             }}
@@ -192,7 +187,6 @@ Backed by Google for Developers, AMD, ElevenLabs, Aiven, LUMI supercomputer, and
               position: "relative",
               zIndex: 1,
               display: "block",
-              fontFamily: "var(--font-mono)",
               fontSize: "13px",
               fontWeight: 500,
               padding: "12px 20px",

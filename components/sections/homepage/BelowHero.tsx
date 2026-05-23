@@ -1,6 +1,7 @@
 import { FeaturedSpeakers } from "@/components/sections/homepage/FeaturedSpeakers";
 
-// ── Partner data for Section 4 ─────────────────────────────────────────────
+// ── Partner data ───────────────────────────────────────────────────────────
+
 const STRATEGIC = [
   { name: "Google for Developers", url: "https://developers.google.com/" },
   { name: "ElevenLabs",            url: "https://elevenlabs.io/" },
@@ -33,45 +34,10 @@ const COMMUNITY = [
   { name: "Turku AMK",              url: "https://www.turkuamk.fi/" },
   { name: "Business Turku",         url: "https://businessturku.fi/" },
   { name: "Skillio",                url: "https://skillio.ai/" },
-  { name: "A\u2019Pelago",          url: "https://www.apelago.fi/" },
+  { name: "A’Pelago",          url: "https://www.apelago.fi/" },
   { name: "Tamperees",              url: "https://tamperees.com/" },
   { name: "HankenES",               url: "https://hankenes.org" },
 ];
-
-// ── Shared sub-components ──────────────────────────────────────────────────
-
-function Eyebrow({ text }: { text: string }) {
-  return (
-    <p
-      style={{
-        fontFamily: "var(--font-mono)",
-        fontSize: "var(--text-xs)",
-        color: "var(--color-fg-muted)",
-        letterSpacing: "0.05em",
-        marginBottom: "var(--space-sm)",
-      }}
-    >
-      {text}
-    </p>
-  );
-}
-
-function SectionH2({ children }: { children: React.ReactNode }) {
-  return (
-    <h2
-      className="text-white"
-      style={{
-        fontFamily: "var(--font-mono)",
-        fontSize: "clamp(24px, 4vw, 36px)",
-        fontWeight: 700,
-        lineHeight: 1.15,
-        margin: 0,
-      }}
-    >
-      {children}
-    </h2>
-  );
-}
 
 // ── Main component ─────────────────────────────────────────────────────────
 
@@ -80,24 +46,15 @@ export function BelowHero() {
     <div className="w-full bg-black">
 
       {/* ── SECTION 1: Definition ──────────────────────────────── */}
-      <section
-        style={{ padding: "var(--space-2xl) var(--space-lg)" }}
-      >
-        <div className="mx-auto" style={{ maxWidth: "1200px" }}>
-          <Eyebrow text="// what is since ai" />
-          <SectionH2>The execution layer of Global AI.</SectionH2>
-          <p
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "16px",
-              fontWeight: 400,
-              lineHeight: 1.7,
-              color: "#fff",
-              maxWidth: "780px",
-              marginTop: "var(--space-md)",
-              marginBottom: 0,
-            }}
-          >
+      <section className="py-24 px-6 border-t border-white/10">
+        <div className="mx-auto max-w-6xl">
+          <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+            // what is since ai
+          </p>
+          <h2 className="text-3xl font-bold tracking-tight text-white mb-6">
+            The execution layer of Global AI.
+          </h2>
+          <p className="text-sm text-white leading-relaxed max-w-[780px]">
             Since AI is a global execution-focused AI innovation ecosystem — where
             frontier AI becomes shipped products. A non-profit connecting
             10,000+ AI builders globally with leading AI companies, research
@@ -108,16 +65,8 @@ export function BelowHero() {
       </section>
 
       {/* ── SECTION 2: Stats ───────────────────────────────────── */}
-      <section
-        style={{
-          padding: "var(--space-xl) var(--space-lg)",
-          borderTop: "0.5px solid var(--color-border)",
-        }}
-      >
-        <div
-          className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
-          style={{ maxWidth: "1200px", gap: "var(--space-lg)" }}
-        >
+      <section className="py-24 px-6 border-t border-white/10">
+        <div className="mx-auto max-w-6xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {[
             {
               label: "// network",
@@ -140,47 +89,14 @@ export function BelowHero() {
               desc: "Countries represented in our network",
             },
           ].map((stat) => (
-            <div
-              key={stat.label}
-              style={{
-                borderLeft: "0.5px solid var(--color-border)",
-                paddingLeft: "var(--space-md)",
-              }}
-            >
-              <p
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-xs)",
-                  color: "var(--color-fg-muted)",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  marginBottom: "var(--space-xs)",
-                }}
-              >
+            <div key={stat.label} className="border-l border-white/10 pl-6">
+              <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-2">
                 {stat.label}
               </p>
-              <p
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "clamp(32px, 5vw, 56px)",
-                  fontWeight: 700,
-                  lineHeight: 1,
-                  color: "#fff",
-                  margin: 0,
-                }}
-              >
+              <p className="text-4xl md:text-5xl font-bold text-white leading-none">
                 {stat.value}
               </p>
-              <p
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "13px",
-                  color: "var(--color-fg-muted)",
-                  maxWidth: "180px",
-                  lineHeight: 1.5,
-                  marginTop: "var(--space-xs)",
-                }}
-              >
+              <p className="text-sm text-neutral-400 leading-relaxed mt-2 max-w-[180px]">
                 {stat.desc}
               </p>
             </div>
@@ -189,20 +105,16 @@ export function BelowHero() {
       </section>
 
       {/* ── SECTION 3: Three pillars ───────────────────────────── */}
-      <section
-        style={{
-          padding: "var(--space-2xl) var(--space-lg)",
-          borderTop: "0.5px solid var(--color-border)",
-        }}
-      >
-        <div className="mx-auto" style={{ maxWidth: "1200px" }}>
-          <Eyebrow text="// how since ai works" />
-          <SectionH2>From idea to shipped product.</SectionH2>
+      <section className="py-24 px-6 border-t border-white/10">
+        <div className="mx-auto max-w-6xl">
+          <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+            // how since ai works
+          </p>
+          <h2 className="text-3xl font-bold tracking-tight text-white mb-12">
+            From idea to shipped product.
+          </h2>
 
-          <div
-            className="grid grid-cols-1 md:grid-cols-3 mt-12"
-            style={{ gap: "var(--space-xl)" }}
-          >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
                 num: "01",
@@ -217,45 +129,20 @@ export function BelowHero() {
               {
                 num: "03",
                 title: "Scale",
-                body: "Capital introductions through Antler, Redstone VC and Inventure. Commercialization pathway via Since AI\u2019s Research to Market program.",
+                body: "Capital introductions through Antler, Redstone VC and Inventure. Commercialization pathway via Since AI’s Research to Market program.",
               },
             ].map((pillar) => (
-              <div key={pillar.num}>
-                <p
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "clamp(32px, 4vw, 48px)",
-                    fontWeight: 700,
-                    lineHeight: 1,
-                    color: "var(--color-fg-subtle)",
-                    marginBottom: "var(--space-sm)",
-                  }}
-                  aria-hidden="true"
-                >
+              <div
+                key={pillar.num}
+                className="border border-white/5 p-6 hover:border-white/10 hover:bg-white/[0.02] transition-all duration-300"
+              >
+                <p className="text-4xl font-bold text-neutral-600 mb-4 leading-none" aria-hidden="true">
                   {pillar.num}
                 </p>
-                <h3
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "20px",
-                    fontWeight: 700,
-                    color: "#fff",
-                    margin: 0,
-                    marginBottom: "var(--space-sm)",
-                  }}
-                >
+                <h3 className="text-lg font-bold text-white mb-2">
                   {pillar.title}
                 </h3>
-                <p
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--text-base)",
-                    color: "var(--color-fg-muted)",
-                    lineHeight: 1.6,
-                    maxWidth: "320px",
-                    margin: 0,
-                  }}
-                >
+                <p className="text-sm text-neutral-400 leading-relaxed">
                   {pillar.body}
                 </p>
               </div>
@@ -264,69 +151,43 @@ export function BelowHero() {
         </div>
       </section>
 
-      {/* ── SECTION 4: Partner tiers (text list) ───────────────── */}
-      <section
-        style={{
-          padding: "var(--space-2xl) var(--space-lg)",
-          borderTop: "0.5px solid var(--color-border)",
-        }}
-      >
-        <div className="mx-auto" style={{ maxWidth: "1200px" }}>
-          <Eyebrow text="// ecosystem" />
-          <SectionH2>
+      {/* ── SECTION 4: Partner tiers ───────────────────────────── */}
+      <section className="py-24 px-6 border-t border-white/10">
+        <div className="mx-auto max-w-6xl">
+          <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+            // ecosystem
+          </p>
+          <h2 className="text-3xl font-bold tracking-tight text-white mb-12">
             Backed by global AI leaders and world-class capital{" "}
             <br className="hidden md:block" />
             and research.
-          </SectionH2>
+          </h2>
 
-          <div
-            className="grid grid-cols-1 md:grid-cols-3 mt-12"
-            style={{ gap: "var(--space-xl)" }}
-          >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {(
               [
-                { header: "// strategic",        partners: STRATEGIC },
+                { header: "// strategic",          partners: STRATEGIC },
                 { header: "// capital & research", partners: CAPITAL },
-                { header: "// community",         partners: COMMUNITY },
+                { header: "// community",          partners: COMMUNITY },
               ] as const
             ).map(({ header, partners }) => (
               <div key={header}>
-                <p
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--text-xs)",
-                    color: "var(--color-fg-muted)",
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                    marginBottom: "var(--space-md)",
-                  }}
-                >
+                <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-4">
                   {header}
                 </p>
-                <div
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "14px",
-                    lineHeight: 1.9,
-                    color: "var(--color-fg)",
-                  }}
-                >
+                <div className="text-sm leading-loose text-white">
                   {partners.map((p, i) => (
                     <span key={p.name}>
                       <a
                         href={p.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
-                        style={{
-                          color: "inherit",
-                          textDecoration: "none",
-                        }}
+                        className="hover:text-neutral-400 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
                       >
                         {p.name}
                       </a>
                       {i < partners.length - 1 && (
-                        <span style={{ color: "var(--color-fg-subtle)" }}>, </span>
+                        <span className="text-neutral-500">, </span>
                       )}
                     </span>
                   ))}
@@ -337,12 +198,7 @@ export function BelowHero() {
         </div>
       </section>
 
-      {/* ── SECTION: Testimonial slot ───────────────────────── */}
-      {/* TODO: Named testimonial with partner attribution once confirmed.
-          Format: blockquote in monospace, attribution line with name + role + company.
-          Do NOT re-add the anonymous "Head of Talent, Partner Company" quote. */}
-
-      {/* ── SECTION 6: Featured Speaker ─────────────────────── */}
+      {/* ── SECTION 5: Featured Speakers ─────────────────────── */}
       <FeaturedSpeakers />
 
     </div>

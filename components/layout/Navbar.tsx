@@ -23,7 +23,6 @@ export const Navbar = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close overlay on route change
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMenuOpen(false);
@@ -36,19 +35,15 @@ export const Navbar = () => {
     <>
       {/* ── Desktop / sticky header ─────────────────────────── */}
       <header
-        className="fixed top-0 left-0 right-0 z-50 w-full"
+        className="fixed top-0 left-0 right-0 z-50 w-full px-6 py-6"
         style={{
-          padding: "var(--space-md) var(--space-lg)",
           background: scrolled ? "rgba(0,0,0,0.75)" : "transparent",
           backdropFilter: scrolled ? "blur(12px)" : "none",
           WebkitBackdropFilter: scrolled ? "blur(12px)" : "none",
           transition: "background 0.3s, backdrop-filter 0.3s, -webkit-backdrop-filter 0.3s",
         }}
       >
-        <div
-          className="flex items-center justify-between mx-auto w-full"
-          style={{ maxWidth: "1200px" }}
-        >
+        <div className="flex items-center justify-between mx-auto w-full max-w-6xl">
           {/* Logo */}
           <Link href="/" aria-label="Since AI — home">
             <Logo />
@@ -56,8 +51,7 @@ export const Navbar = () => {
 
           {/* Desktop nav links */}
           <nav
-            className="hidden md:flex items-center"
-            style={{ gap: "2rem" }}
+            className="hidden md:flex items-center gap-8"
             aria-label="Main navigation"
           >
             {NAV_LINKS.map(({ label, href }) => (
@@ -68,11 +62,8 @@ export const Navbar = () => {
                 className={[
                   "text-[13px] font-normal no-underline transition-colors duration-300",
                   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
-                  isActive(href)
-                    ? "text-white"
-                    : "text-[var(--color-fg-muted)] hover:text-white",
+                  isActive(href) ? "text-white" : "text-neutral-400 hover:text-white",
                 ].join(" ")}
-                style={{ fontFamily: "var(--font-mono)" }}
               >
                 {label}
               </Link>
@@ -84,18 +75,17 @@ export const Navbar = () => {
             href="https://sinceai.app/sign-up"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden md:inline-block font-mono text-[13px] font-bold text-black bg-white px-4 py-2 border border-white whitespace-nowrap transition-colors duration-300 hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            className="hidden md:inline-block text-[13px] font-bold text-black bg-white rounded-none px-4 py-2 border border-white whitespace-nowrap transition-colors duration-300 hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
             Apply →
           </a>
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden cursor-pointer text-[var(--color-fg-muted)] hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+            className="md:hidden cursor-pointer p-1 text-neutral-400 hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white bg-transparent border-none"
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
             aria-expanded={menuOpen}
-            style={{ background: "transparent", border: "none", cursor: "pointer", padding: "4px" }}
           >
             <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true">
               <line x1="0" y1="1"  x2="18" y2="1"  stroke="currentColor" strokeWidth="1.5" />
@@ -108,73 +98,66 @@ export const Navbar = () => {
 
       {/* ── Mobile fullscreen overlay ────────────────────────── */}
       <AnimatePresence>
-      {menuOpen && (
-        <motion.div
-          className="fixed inset-0 z-[60] bg-black flex flex-col"
-          style={{ padding: "var(--space-md) var(--space-lg)" }}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Navigation menu"
-          initial={{ opacity: 0, y: -24 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -24 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
-        >
-          {/* Top row */}
-          <div className="flex items-center justify-end" style={{ marginBottom: "var(--space-xl)" }}>
-            <button
-              onClick={() => setMenuOpen(false)}
-              aria-label="Close menu"
-              className="cursor-pointer p-1 text-[var(--color-fg-muted)] hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
-              style={{ background: "transparent", border: "none" }}
-            >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <line x1="1" y1="1" x2="15" y2="15" stroke="currentColor" strokeWidth="1.5" />
-                <line x1="15" y1="1" x2="1"  y2="15" stroke="currentColor" strokeWidth="1.5" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Links — large monospace */}
-          <nav
-            className="flex flex-col"
-            style={{ gap: "var(--space-lg)" }}
-            aria-label="Mobile navigation"
+        {menuOpen && (
+          <motion.div
+            className="fixed inset-0 z-[60] bg-black flex flex-col px-6 py-6"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navigation menu"
+            initial={{ opacity: 0, y: -24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -24 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
           >
-            {NAV_LINKS.map(({ label, href }) => (
-              <Link
-                key={href}
-                href={href}
+            {/* Close button */}
+            <div className="flex items-center justify-end mb-16">
+              <button
                 onClick={() => setMenuOpen(false)}
-                aria-current={isActive(href) ? "page" : undefined}
-                className={[
-                  "no-underline font-medium leading-none",
-                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-white",
-                  isActive(href) ? "text-white" : "text-[var(--color-fg-muted)]",
-                ].join(" ")}
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-headline-sm)",
-                }}
+                aria-label="Close menu"
+                className="cursor-pointer p-1 text-neutral-400 hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white bg-transparent border-none"
               >
-                {label}
-              </Link>
-            ))}
-          </nav>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <line x1="1" y1="1" x2="15" y2="15" stroke="currentColor" strokeWidth="1.5" />
+                  <line x1="15" y1="1" x2="1"  y2="15" stroke="currentColor" strokeWidth="1.5" />
+                </svg>
+              </button>
+            </div>
 
-          {/* CTA */}
-          <div style={{ marginTop: "var(--space-xl)" }}>
-            <a
-              href="https://sinceai.app/sign-up"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block font-mono text-[13px] font-bold text-black bg-white px-5 py-3 border border-white whitespace-nowrap transition-colors duration-300 hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+            {/* Links */}
+            <nav
+              className="flex flex-col gap-10"
+              aria-label="Mobile navigation"
             >
-              Apply →
-            </a>
-          </div>
-        </motion.div>
-      )}
+              {NAV_LINKS.map(({ label, href }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setMenuOpen(false)}
+                  aria-current={isActive(href) ? "page" : undefined}
+                  className={[
+                    "text-5xl font-bold tracking-tight leading-none no-underline",
+                    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-white",
+                    isActive(href) ? "text-white" : "text-neutral-400",
+                  ].join(" ")}
+                >
+                  {label}
+                </Link>
+              ))}
+            </nav>
+
+            {/* CTA */}
+            <div className="mt-16">
+              <a
+                href="https://sinceai.app/sign-up"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block text-[13px] font-bold text-black bg-white rounded-none px-5 py-3 border border-white whitespace-nowrap transition-colors duration-300 hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+              >
+                Apply →
+              </a>
+            </div>
+          </motion.div>
+        )}
       </AnimatePresence>
     </>
   );

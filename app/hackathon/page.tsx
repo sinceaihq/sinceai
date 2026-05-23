@@ -104,34 +104,6 @@ const whyItems = [
   },
 ];
 
-const ctaPrimary: React.CSSProperties = {
-  display: "inline-block",
-  fontFamily: "var(--font-mono)",
-  fontSize: "13px",
-  fontWeight: 500,
-  color: "#000",
-  background: "#fff",
-  padding: "12px 20px",
-  borderRadius: 0,
-  border: "0.5px solid #fff",
-  textDecoration: "none",
-  whiteSpace: "nowrap",
-};
-
-const ctaSecondary: React.CSSProperties = {
-  display: "inline-block",
-  fontFamily: "var(--font-mono)",
-  fontSize: "13px",
-  fontWeight: 500,
-  color: "#fff",
-  background: "transparent",
-  padding: "12px 20px",
-  borderRadius: 0,
-  border: "0.5px solid var(--color-border-strong)",
-  textDecoration: "none",
-  whiteSpace: "nowrap",
-};
-
 // ── Page ──────────────────────────────────────────────────────────────────
 
 export default function HackathonPage() {
@@ -153,95 +125,52 @@ export default function HackathonPage() {
             className="object-cover"
             priority
           />
-          {/* Overlays */}
           <div className="absolute inset-0" style={{ background: "rgba(0,0,0,0.82)" }} />
           <div
-            className="absolute inset-x-0 bottom-0"
-            style={{
-              height: "60%",
-              background: "linear-gradient(to top, #000 0%, transparent 100%)",
-            }}
+            className="absolute inset-x-0 bottom-0 h-3/5"
+            style={{ background: "linear-gradient(to top, #000 0%, transparent 100%)" }}
           />
 
           <div
-            className="relative z-10 mx-auto w-full max-w-[1200px]"
-            style={{
-              paddingTop: "clamp(100px, 15vh, 150px)",
-              paddingBottom: "var(--space-2xl)",
-            }}
+            className="relative z-10 mx-auto w-full max-w-6xl pb-24"
+            style={{ paddingTop: "clamp(100px, 15vh, 150px)" }}
           >
-            <h1
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-headline-lg)",
-                fontWeight: 500,
-                lineHeight: 1.0,
-                letterSpacing: "-0.02em",
-                color: "#fff",
-                margin: 0,
-                marginBottom: "var(--space-md)",
-                maxWidth: "820px",
-              }}
-            >
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-6 max-w-[820px] leading-none">
               Since AI Hackathon 2026.
             </h1>
 
-            <p
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "14px",
-              color: "rgba(255,255,255,0.75)",
-              marginBottom: "var(--space-lg)",
-              letterSpacing: "0.01em",
-              overflowWrap: "break-word",
-            }}
-          >
-            November 6–8, 2026 &nbsp;/&nbsp; EduCity, Turku, Finland &nbsp;/&nbsp; 72 hours &nbsp;/&nbsp; 1,000+ builders &nbsp;/&nbsp; €50,000 cash prize pool
-          </p>
+            <p className="text-sm text-white/75 mb-8 tracking-wide">
+              November 6–8, 2026 &nbsp;/&nbsp; EduCity, Turku, Finland &nbsp;/&nbsp; 72 hours &nbsp;/&nbsp; 1,000+ builders &nbsp;/&nbsp; €50,000 cash prize pool
+            </p>
 
-            {/* Countdown */}
-            <div className="w-full sm:w-fit">
+            <div className="w-full sm:w-fit mb-8">
               <HackathonCountdown
                 startDate="2026-11-06T09:00:00"
                 endDate="2026-11-08T23:59:00"
               />
             </div>
 
-            {/* Registration status */}
-            <p
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-sm)",
-                color: "#fff",
-                marginBottom: "var(--space-lg)",
-              }}
-            >
+            <p className="text-sm text-white mb-8">
               <span
-                style={{
-                  display: "inline-block",
-                  width: "6px",
-                  height: "6px",
-                  borderRadius: "50%",
-                  background: "#22c55e",
-                  marginRight: "8px",
-                  verticalAlign: "middle",
-                }}
+                className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 mr-2 align-middle"
                 aria-hidden="true"
               />
               Registration is open — apply now
             </p>
 
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row" style={{ gap: "12px" }}>
+            <div className="flex flex-col sm:flex-row gap-3">
               <a
                 href="https://sinceai.app/sign-up"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={ctaPrimary}
+                className="inline-block bg-white text-black rounded-none px-6 py-3 font-semibold hover:bg-neutral-100 transition-colors cursor-pointer text-sm"
               >
                 Apply now →
               </a>
-              <Link href="/partners" className="hero-cta-secondary" style={ctaSecondary}>
+              <Link
+                href="/partners"
+                className="inline-block border border-white/20 text-white rounded-none px-6 py-3 font-semibold hover:border-white transition-colors cursor-pointer text-sm"
+              >
                 Partner with us →
               </Link>
             </div>
@@ -249,21 +178,9 @@ export default function HackathonPage() {
         </section>
 
         {/* ── SECTION 2: Headline partners ─────────────────────── */}
-        <section
-          className="py-24 px-6"
-          style={{ borderTop: "0.5px solid var(--color-border)" }}
-        >
-          <div className="mx-auto max-w-[1200px]">
-            <h2
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "36px",
-                fontWeight: 500,
-                color: "#fff",
-                margin: 0,
-                marginBottom: "var(--space-xl)",
-              }}
-            >
+        <section className="py-24 px-6 border-t border-white/10">
+          <div className="mx-auto max-w-6xl">
+            <h2 className="text-3xl font-bold tracking-tight text-white mb-12">
               Powered by world-class infrastructure.
             </h2>
 
@@ -275,99 +192,44 @@ export default function HackathonPage() {
               ].map((partner, i) => (
                 <div
                   key={partner.name}
-                  className={`py-6 md:px-6 ${i > 0 ? "border-t md:border-t-0 md:border-l border-[var(--color-border)]" : ""}`}
+                  className={`py-6 md:px-6 ${i > 0 ? "border-t md:border-t-0 md:border-l border-white/10" : ""}`}
                 >
-                  <p style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--text-xs)",
-                    color: "var(--color-fg-muted)",
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    marginBottom: "var(--space-xs)",
-                  }}>
+                  <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-2">
                     {partner.label}
                   </p>
-                  <h3 style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "clamp(48px, 6vw, 80px)",
-                    fontWeight: 500,
-                    color: "#fff",
-                    lineHeight: 1,
-                    letterSpacing: "-0.03em",
-                    margin: 0,
-                  }}>
+                  <h3 className="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white leading-none">
                     {partner.name}
                   </h3>
                 </div>
               ))}
             </div>
 
-            <p style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--text-sm)",
-              color: "var(--color-fg-muted)",
-              lineHeight: 1.6,
-              marginTop: "var(--space-lg)",
-            }}>
+            <p className="text-sm text-neutral-400 leading-relaxed mt-8 max-w-2xl">
               Google, AMD, and LUMI provide hackathon participants with compute access and GPU usage throughout the 72-hour sprint — so you can focus on building, not on infrastructure.
             </p>
           </div>
         </section>
 
         {/* ── SECTION 3: Key facts ─────────────────────────────── */}
-        <section
-          className="py-24 px-6"
-          style={{ borderTop: "0.5px solid var(--color-border)" }}
-        >
-          <div className="mx-auto max-w-[1200px]">
-            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
-              {'// key facts'}
+        <section className="py-24 px-6 border-t border-white/10">
+          <div className="mx-auto max-w-6xl">
+            <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+              // key facts
             </p>
-            <h2
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "36px",
-                fontWeight: 500,
-                color: "#fff",
-                margin: 0,
-                marginBottom: "var(--space-lg)",
-              }}
-            >
+            <h2 className="text-3xl font-bold tracking-tight text-white mb-8">
               Since AI Hackathon 2026 — at a glance.
             </h2>
 
-            <div style={{ borderTop: "0.5px solid var(--color-border)" }}>
+            <div className="border-t border-white/10">
               {keyFacts.map((fact) => (
                 <div
                   key={fact.label}
-                  className="flex flex-col sm:flex-row sm:items-baseline"
-                  style={{
-                    padding: "var(--space-sm) 0",
-                    borderBottom: "0.5px solid var(--color-border)",
-                    gap: "var(--space-sm)",
-                  }}
+                  className="flex flex-col sm:flex-row sm:items-baseline gap-3 py-4 border-b border-white/10"
                 >
-                  <dt
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "var(--text-xs)",
-                      color: "var(--color-fg-subtle)",
-                      letterSpacing: "0.08em",
-                      textTransform: "uppercase",
-                      flexShrink: 0,
-                      width: "160px",
-                    }}
-                  >
+                  <dt className="text-xs font-mono uppercase tracking-widest text-neutral-500 shrink-0 w-40">
                     {fact.label}
                   </dt>
-                  <dd
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "var(--text-sm)",
-                      color: "#fff",
-                      margin: 0,
-                    }}
-                  >
+                  <dd className="text-sm text-white">
                     {fact.value}
                   </dd>
                 </div>
@@ -377,118 +239,56 @@ export default function HackathonPage() {
         </section>
 
         {/* ── SECTION 4: What is it ────────────────────────────── */}
-        <section
-          className="py-24 px-6"
-          style={{ borderTop: "0.5px solid var(--color-border)" }}
-        >
-          <div className="mx-auto max-w-[1200px]">
-            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
-              {'// what is it'}
+        <section className="py-24 px-6 border-t border-white/10">
+          <div className="mx-auto max-w-6xl">
+            <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+              // what is it
             </p>
-            <h2
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "36px",
-                fontWeight: 500,
-                lineHeight: 1.15,
-                color: "#fff",
-                margin: 0,
-                marginBottom: "var(--space-md)",
-              }}
-            >
+            <h2 className="text-3xl font-bold tracking-tight text-white mb-6">
               72 hours. Real challenges. Shipped products.
             </h2>
-            <div
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-base)",
-                color: "var(--color-fg-muted)",
-                lineHeight: 1.7,
-                maxWidth: "720px",
-              }}
-            >
-              <p style={{ marginBottom: "var(--space-md)" }}>
+            <div className="text-sm text-neutral-400 leading-relaxed max-w-[720px] space-y-4">
+              <p>
                 Since AI Hackathon is the flagship annual event of Since AI — Global
                 execution-focused AI innovation ecosystem based in Turku, Finland. The inaugural
                 edition in November 2025 brought together 260 builders who shipped 30+ AI
                 projects in 72 hours.
               </p>
-              <p style={{ marginBottom: "var(--space-md)" }}>
+              <p>
                 The 2026 edition targets 1,000+ builders. Partner challenges come from Google
                 for Developers, Bayer, Sandvik, Kongsberg, and Valmet. Open to developers,
                 researchers, and entrepreneurs worldwide.
               </p>
-              <p style={{ margin: 0 }}>
+              <p>
                 No slide decks. No mockups. Only working demos.
               </p>
             </div>
           </div>
         </section>
 
-        {/* ── SECTION 4: Why participate ──────────────────────── */}
-        <section
-          className="py-24 px-6"
-          style={{ borderTop: "0.5px solid var(--color-border)" }}
-        >
-          <div className="mx-auto max-w-[1200px]">
-            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
-              {'// why participate'}
+        {/* ── SECTION 5: Why participate ──────────────────────── */}
+        <section className="py-24 px-6 border-t border-white/10">
+          <div className="mx-auto max-w-6xl">
+            <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+              // why participate
             </p>
-            <h2
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "36px",
-                fontWeight: 500,
-                color: "#fff",
-                margin: 0,
-                marginBottom: "var(--space-xl)",
-              }}
-            >
+            <h2 className="text-3xl font-bold tracking-tight text-white mb-10">
               Built for builders who ship.
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: "var(--space-lg)" }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {whyItems.map((item) => (
                 <div
                   key={item.num}
-                  style={{
-                    borderLeft: "0.5px solid var(--color-border)",
-                    paddingLeft: "var(--space-md)",
-                  }}
+                  className="border border-white/5 p-6 hover:border-white/10 hover:bg-white/[0.02] transition-all duration-300"
                 >
-                  <p
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "var(--text-xs)",
-                      color: "var(--color-fg-subtle)",
-                      letterSpacing: "0.1em",
-                      marginBottom: "var(--space-xs)",
-                    }}
-                    aria-hidden="true"
-                  >
+                  <p className="text-xs font-mono text-neutral-500 mb-3" aria-hidden="true">
                     {item.num}
                   </p>
-                  <h3
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "16px",
-                      fontWeight: 500,
-                      color: "#fff",
-                      margin: 0,
-                      marginBottom: "var(--space-xs)",
-                    }}
-                  >
+                  <h3 className="text-base font-semibold text-white mb-2">
                     {item.title}
                   </h3>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "var(--text-sm)",
-                      color: "var(--color-fg-muted)",
-                      lineHeight: 1.6,
-                      margin: 0,
-                    }}
-                  >
+                  <p className="text-sm text-neutral-400 leading-relaxed">
                     {item.body}
                   </p>
                 </div>
@@ -497,32 +297,20 @@ export default function HackathonPage() {
           </div>
         </section>
 
-        {/* ── SECTION 5: All partners ──────────────────────────── */}
-        <section
-          className="py-24 px-6"
-          style={{ borderTop: "0.5px solid var(--color-border)" }}
-        >
-          <div className="mx-auto max-w-[1200px]">
-            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
-              {'// challenge partners'}
+        {/* ── SECTION 6: All partners ──────────────────────────── */}
+        <section className="py-24 px-6 border-t border-white/10">
+          <div className="mx-auto max-w-6xl">
+            <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+              // challenge partners
             </p>
-            <h2
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "36px",
-                fontWeight: 500,
-                color: "#fff",
-                margin: 0,
-                marginBottom: "var(--space-lg)",
-              }}
-            >
+            <h2 className="text-3xl font-bold tracking-tight text-white mb-10">
               Real problems from real companies.
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: "var(--space-xl)", marginBottom: "var(--space-xl)" }}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
               {[
                 {
-                  label: "// 2026 challenge partners",
+                  label: "2026 challenge partners",
                   partners: [
                     { name: "Google for Developers", url: "https://developers.google.com/" },
                     { name: "Bayer",    url: "https://www.bayer.com/" },
@@ -532,7 +320,7 @@ export default function HackathonPage() {
                   ],
                 },
                 {
-                  label: "// technology partners",
+                  label: "Technology partners",
                   partners: [
                     { name: "ElevenLabs",     url: "https://elevenlabs.io/" },
                     { name: "Aiven",          url: "https://aiven.io/" },
@@ -542,7 +330,7 @@ export default function HackathonPage() {
                   ],
                 },
                 {
-                  label: "// capital & ecosystem",
+                  label: "Capital & ecosystem",
                   partners: [
                     { name: "Antler",              url: "https://www.antler.co/" },
                     { name: "Inventure",           url: "https://www.inventure.vc/" },
@@ -553,32 +341,22 @@ export default function HackathonPage() {
                 },
               ].map(({ label, partners }) => (
                 <div key={label}>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "var(--text-xs)",
-                      color: "var(--color-fg-subtle)",
-                      letterSpacing: "0.1em",
-                      textTransform: "uppercase",
-                      marginBottom: "var(--space-md)",
-                    }}
-                  >
+                  <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-4">
                     {label}
                   </p>
-                  <div style={{ fontFamily: "var(--font-mono)", fontSize: "14px", lineHeight: 2, color: "#fff" }}>
+                  <div className="text-sm leading-loose text-white">
                     {partners.map((p, i) => (
                       <span key={p.name}>
                         <a
                           href={p.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="hover:underline"
-                          style={{ color: "inherit", textDecoration: "none" }}
+                          className="hover:text-neutral-400 transition-colors"
                         >
                           {p.name}
                         </a>
                         {i < partners.length - 1 && (
-                          <span style={{ color: "var(--color-fg-subtle)" }}>, </span>
+                          <span className="text-neutral-500">, </span>
                         )}
                       </span>
                     ))}
@@ -587,16 +365,10 @@ export default function HackathonPage() {
               ))}
             </div>
 
-            <div style={{ borderTop: "0.5px solid var(--color-border)", paddingTop: "var(--space-lg)" }}>
+            <div className="border-t border-white/10 pt-6">
               <Link
                 href="/partners"
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-sm)",
-                  color: "var(--color-fg-muted)",
-                  textDecoration: "none",
-                }}
-                className="hover:text-white transition-colors"
+                className="text-sm text-neutral-400 hover:text-white transition-colors"
               >
                 Interested in setting a challenge or sponsoring? → sinceai.ai/partners
               </Link>
@@ -604,39 +376,19 @@ export default function HackathonPage() {
           </div>
         </section>
 
-        {/* ── SECTION 8: Venue ─────────────────────────────────── */}
-        <section
-          className="py-24 px-6"
-          style={{ borderTop: "0.5px solid var(--color-border)" }}
-        >
-          <div className="mx-auto max-w-[1200px]">
-            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
-              {'// venue'}
+        {/* ── SECTION 7: Venue ─────────────────────────────────── */}
+        <section className="py-24 px-6 border-t border-white/10">
+          <div className="mx-auto max-w-6xl">
+            <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+              // venue
             </p>
-            <h2
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "36px",
-                fontWeight: 500,
-                color: "#fff",
-                margin: 0,
-                marginBottom: "var(--space-lg)",
-              }}
-            >
+            <h2 className="text-3xl font-bold tracking-tight text-white mb-8">
               EduCity, Turku.
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: "var(--space-xl)", alignItems: "start" }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
               <div>
-                <p
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--text-base)",
-                    color: "var(--color-fg-muted)",
-                    lineHeight: 1.7,
-                    marginBottom: "var(--space-md)",
-                  }}
-                >
+                <p className="text-sm text-neutral-400 leading-relaxed mb-6">
                   Since AI Hackathon 2026 takes place at EduCity — the modern campus of Turku
                   University of Applied Sciences (Turku AMK), Joukahaisenkatu 7, 20520 Turku,
                   Finland. State-of-the-art facilities for 1,000+ builders to collaborate, build,
@@ -646,22 +398,13 @@ export default function HackathonPage() {
                   href="https://maps.google.com/?q=EduCity+Joukahaisenkatu+7+Turku"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-white transition-colors"
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--text-sm)",
-                    color: "var(--color-fg-muted)",
-                    textDecoration: "none",
-                  }}
+                  className="text-sm text-neutral-400 hover:text-white transition-colors"
                 >
                   View on Google Maps ↗
                 </a>
               </div>
 
-              <div
-                className="relative w-full overflow-hidden"
-                style={{ height: "280px" }}
-              >
+              <div className="relative w-full h-[280px] overflow-hidden">
                 <Image
                   src="/assets/images/educity-card.webp"
                   alt="EduCity building — venue for Since AI Hackathon 2026, Turku, Finland"
@@ -674,68 +417,37 @@ export default function HackathonPage() {
           </div>
         </section>
 
-        {/* ── SECTION 9: Past edition ──────────────────────────── */}
-        <section
-          className="py-24 px-6"
-          style={{ borderTop: "0.5px solid var(--color-border)" }}
-        >
-          <div className="mx-auto max-w-[1200px]">
-            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
-              {'// previous editions'}
+        {/* ── SECTION 8: Past edition ──────────────────────────── */}
+        <section className="py-24 px-6 border-t border-white/10">
+          <div className="mx-auto max-w-6xl">
+            <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+              // previous editions
             </p>
-            <h2
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "36px",
-                fontWeight: 500,
-                color: "#fff",
-                margin: 0,
-                marginBottom: "var(--space-lg)",
-              }}
-            >
+            <h2 className="text-3xl font-bold tracking-tight text-white mb-8">
               Since AI Hackathon 2025.
             </h2>
 
-            <div style={{ borderLeft: "0.5px solid var(--color-border)", paddingLeft: "var(--space-md)" }}>
-              <p
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-sm)",
-                  color: "var(--color-fg-muted)",
-                  marginBottom: "var(--space-sm)",
-                  letterSpacing: "0.02em",
-                }}
-              >
+            <div className="border-l border-white/10 pl-6">
+              <p className="text-sm text-neutral-500 mb-4 tracking-wide">
                 260 builders &nbsp;·&nbsp; 30+ projects shipped &nbsp;·&nbsp; 10+ partner companies &nbsp;·&nbsp; Nov 21–23, 2025 &nbsp;·&nbsp; EduCity, Turku
               </p>
-              <p
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-base)",
-                  color: "var(--color-fg-muted)",
-                  lineHeight: 1.7,
-                  marginBottom: "var(--space-lg)",
-                  maxWidth: "640px",
-                }}
-              >
+              <p className="text-sm text-neutral-400 leading-relaxed mb-8 max-w-[640px]">
                 The inaugural Since AI Hackathon brought together 260 builders from across
                 Finland and Europe. Teams tackled real industry challenges from Kongsberg,
                 Sandvik, Valmet, and other partner companies, shipping 30+ AI prototypes
                 in 72 hours.
               </p>
 
-              <div className="flex flex-wrap" style={{ gap: "var(--space-lg)" }}>
+              <div className="flex flex-wrap gap-8">
                 <Link
                   href="/projects"
-                  className="hover:text-white transition-colors"
-                  style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)", color: "var(--color-fg-muted)", textDecoration: "none" }}
+                  className="text-sm text-neutral-400 hover:text-white transition-colors"
                 >
                   View shipped projects →
                 </Link>
                 <Link
                   href="/events"
-                  className="hover:text-white transition-colors"
-                  style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)", color: "var(--color-fg-muted)", textDecoration: "none" }}
+                  className="text-sm text-neutral-400 hover:text-white transition-colors"
                 >
                   All events →
                 </Link>
@@ -744,55 +456,32 @@ export default function HackathonPage() {
           </div>
         </section>
 
-        {/* ── SECTION 10: Registration ──────────────────────────── */}
+        {/* ── SECTION 9: Registration ──────────────────────────── */}
         <section
           id="registration"
-          className="py-40 px-6"
-          style={{
-            borderTop: "0.5px solid var(--color-border)",
-            borderBottom: "0.5px solid var(--color-border)",
-            scrollMarginTop: "80px",
-          }}
+          className="py-40 px-6 border-t border-white/10 border-b border-white/10"
+          style={{ scrollMarginTop: "80px" }}
         >
-          <div className="mx-auto max-w-[1200px]">
-            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
-              {'// registrations'}
+          <div className="mx-auto max-w-6xl">
+            <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+              // registrations
             </p>
-            <h2
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-headline-sm)",
-                fontWeight: 500,
-                lineHeight: 1.0,
-                color: "#fff",
-                margin: 0,
-                marginBottom: "var(--space-md)",
-              }}
-            >
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-6">
               Registration is open.
             </h2>
-            <p
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-base)",
-                color: "var(--color-fg-muted)",
-                lineHeight: 1.7,
-                maxWidth: "560px",
-                marginBottom: "var(--space-lg)",
-              }}
-            >
+            <p className="text-sm text-neutral-400 leading-relaxed max-w-[560px] mb-8">
               Registration for Since AI Hackathon 2026 (November 6–8, Turku) is now open.
               €50,000 cash prize pool. Free to enter for all builders worldwide. Apply at
               sinceai.app/sign-up and join our community channels to connect with other
               participants before the event.
             </p>
 
-            <div className="flex flex-col sm:flex-row" style={{ gap: "12px", marginBottom: "var(--space-xl)" }}>
+            <div className="flex flex-col sm:flex-row gap-3 mb-12">
               <a
                 href="https://sinceai.app/sign-up"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={ctaPrimary}
+                className="inline-block bg-white text-black rounded-none px-6 py-3 font-semibold hover:bg-neutral-100 transition-colors cursor-pointer text-sm"
               >
                 Apply now →
               </a>
@@ -800,26 +489,18 @@ export default function HackathonPage() {
                 href="https://t.me/sinceaihq"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hero-cta-secondary"
-                style={ctaSecondary}
+                className="inline-block border border-white/20 text-white rounded-none px-6 py-3 font-semibold hover:border-white transition-colors cursor-pointer text-sm"
               >
                 Join Telegram →
               </a>
             </div>
 
-            <div style={{ borderTop: "0.5px solid var(--color-border)", paddingTop: "var(--space-lg)" }}>
-              <p
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-sm)",
-                  color: "var(--color-fg-muted)",
-                }}
-              >
+            <div className="border-t border-white/10 pt-6">
+              <p className="text-sm text-neutral-400">
                 Setting a challenge or sponsoring?{" "}
                 <Link
                   href="/partners"
-                  className="hover:text-white transition-colors"
-                  style={{ color: "inherit", textDecoration: "underline" }}
+                  className="text-neutral-400 hover:text-white transition-colors underline"
                 >
                   Partner with Since AI →
                 </Link>
@@ -828,74 +509,36 @@ export default function HackathonPage() {
           </div>
         </section>
 
-        {/* ── SECTION 9: FAQ ───────────────────────────────────── */}
-        <section
-          className="py-24 px-6"
-          style={{ borderTop: "0.5px solid var(--color-border)" }}
-        >
-          <div className="mx-auto max-w-[1200px]">
-            <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--color-fg-muted)", letterSpacing: "0.05em", marginBottom: "var(--space-sm)" }}>
-              {'// faq'}
+        {/* ── SECTION 10: FAQ ───────────────────────────────────── */}
+        <section className="py-24 px-6 border-t border-white/10">
+          <div className="mx-auto max-w-6xl">
+            <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+              // faq
             </p>
-            <h2
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "36px",
-                fontWeight: 500,
-                color: "#fff",
-                margin: 0,
-                marginBottom: "var(--space-xl)",
-              }}
-            >
+            <h2 className="text-3xl font-bold tracking-tight text-white mb-10">
               Frequently asked questions.
             </h2>
 
-            <div style={{ borderTop: "0.5px solid var(--color-border)" }}>
+            <div className="space-y-3">
               {hackathonFaqs.map((faq) => (
                 <div
                   key={faq.q}
-                  style={{
-                    padding: "var(--space-lg) 0",
-                    borderBottom: "0.5px solid var(--color-border)",
-                  }}
+                  className="border border-white/5 p-6 hover:border-white/10 hover:bg-white/[0.02] transition-all duration-300"
                 >
-                  <h3
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "var(--text-base)",
-                      fontWeight: 500,
-                      color: "#fff",
-                      margin: 0,
-                      marginBottom: "var(--space-sm)",
-                    }}
-                  >
+                  <h3 className="text-base font-semibold text-white mb-3">
                     {faq.q}
                   </h3>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "var(--text-sm)",
-                      color: "var(--color-fg-muted)",
-                      lineHeight: 1.7,
-                      margin: 0,
-                    }}
-                  >
+                  <p className="text-sm text-neutral-400 leading-relaxed">
                     {faq.a}
                   </p>
                 </div>
               ))}
             </div>
 
-            <div style={{ marginTop: "var(--space-xl)" }}>
+            <div className="mt-10">
               <Link
                 href="/faq"
-                className="hover:text-white transition-colors"
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-sm)",
-                  color: "var(--color-fg-muted)",
-                  textDecoration: "none",
-                }}
+                className="text-sm text-neutral-400 hover:text-white transition-colors"
               >
                 More questions? See our full FAQ →
               </Link>
