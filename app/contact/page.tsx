@@ -427,7 +427,7 @@ function ContactPageContent() {
             className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tighter leading-tight text-white"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.8, delay: 0, ease: [0.22, 1, 0.36, 1] }}
           >
             Let&apos;s build together.
           </motion.h1>
@@ -436,7 +436,7 @@ function ContactPageContent() {
             className="text-lg sm:text-xl text-neutral-400 max-w-2xl"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.8, delay: 0, ease: [0.22, 1, 0.36, 1] }}
           >
             Questions about partnerships, events, or community? We typically respond within 24 hours.
           </motion.p>
@@ -445,7 +445,7 @@ function ContactPageContent() {
             className="flex flex-col sm:flex-row items-center gap-4 pt-4"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.8, delay: 0, ease: [0.22, 1, 0.36, 1] }}
           >
             <ButtonPair
               primaryLabel="Join Discord"
