@@ -26,7 +26,13 @@ export const metadata: Metadata = {
     description:
       "1000+ members, 260+ hackathon builders, 30+ projects shipped, 15+ partners. Real metrics from a global AI innovation ecosystem.",
     url: "https://sinceai.ai/stats",
+    siteName: "Since AI",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Statistics & Impact | Since AI",
+    description: "1000+ members, 260+ hackathon builders, 30+ projects shipped, 15+ partners. Real metrics from a global AI innovation ecosystem.",
   },
 };
 

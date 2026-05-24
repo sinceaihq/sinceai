@@ -24,6 +24,11 @@ export const metadata: Metadata = {
     siteName: "Since AI",
     url: "https://sinceai.ai/press",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Press & Media — Since AI",
+    description: "Press kit and media information for Since AI. 1000+ members, 260+ hackathon builders, 15+ partners. Based in Turku, Finland.",
+  },
   robots: {
     index: true,
     follow: true,

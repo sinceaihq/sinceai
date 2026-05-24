@@ -27,7 +27,13 @@ export const metadata: Metadata = {
     description:
       "Bridging academia and industry. Since AI helps researchers commercialize AI innovations through real-world validation, production deployment, and startup support.",
     url: "https://sinceai.ai/research-to-market",
+    siteName: "Since AI",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Research to Market — Commercializing AI Innovation | Since AI",
+    description: "Bridging academia and industry. Since AI helps researchers commercialize AI innovations through real-world validation, production deployment, and startup support.",
   },
 };
 

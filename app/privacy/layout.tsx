@@ -16,6 +16,11 @@ export const metadata: Metadata = {
     siteName: "Since AI",
     url: "https://sinceai.ai/privacy",
   },
+  twitter: {
+    card: "summary",
+    title: "Privacy Policy — Since AI",
+    description: "Learn how Since AI collects, uses, and protects your personal information. GDPR-compliant.",
+  },
   robots: {
     index: true,
     follow: true,

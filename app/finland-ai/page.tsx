@@ -26,6 +26,11 @@ export const metadata: Metadata = {
     siteName: "Since AI",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Finland AI Community | Since AI - Nordic AI Excellence",
+    description: "Join Finland's leading AI developer community. 1000+ members across Helsinki, Turku, Tampere, Oulu.",
+  },
 };
 
 export default function FinlandAIPage() {

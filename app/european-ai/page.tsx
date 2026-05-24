@@ -29,7 +29,13 @@ export const metadata: Metadata = {
     description:
       "Building European AI independence through community-driven open-source projects, privacy-first tools, and collaborative development.",
     url: "https://sinceai.ai/european-ai",
+    siteName: "Since AI",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "European AI Sovereignty Through Open Source | Since AI",
+    description: "Building European AI independence through community-driven open-source projects, privacy-first tools, and collaborative development.",
   },
 };
 

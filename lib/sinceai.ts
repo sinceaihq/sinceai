@@ -27,12 +27,14 @@ export const FIRST_EVENT = {
 // Upcoming Event (2026)
 export const UPCOMING_EVENT_2026 = {
   name: "Since AI Hackathon 2026",
+  startDate: "2026-11-06",
+  endDate: "2026-11-08",
   month: "November",
   year: 2026,
-  dateNote: "Exact dates will be announced soon.",
+  dateNote: "November 6–8, 2026.",
   city: "Turku",
   country: "FI",
-  statusLabelShort: "November 2026 • Dates TBA",
+  statusLabelShort: "November 6–8, 2026 • Turku",
 } as const;
 
 // UI helper strings - premium & minimal
@@ -52,8 +54,8 @@ export const COPY = {
   eventDateShort: "Nov 21–23, 2025",
   
   // Upcoming 2026 event
-  upcomingEventLineShort: "Since AI Hackathon 2026 — November 2026 (dates TBA).",
-  upcomingEventLineLong: "Since AI Hackathon 2026 will be held in November 2026. Exact dates will be announced soon.",
+  upcomingEventLineShort: "Since AI Hackathon 2026 — November 6–8, 2026, Turku.",
+  upcomingEventLineLong: "Since AI Hackathon 2026 will be held November 6–8, 2026 at EduCity in Turku, Finland.",
 } as const;
 
 // Helper function to get year for copyright, etc.

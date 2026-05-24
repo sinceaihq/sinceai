@@ -31,6 +31,11 @@ export const metadata: Metadata = {
     siteName: "Since AI",
     url: "https://sinceai.ai/events",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Events — Since AI Hackathons & AI Builder Meetups",
+    description: `Global execution-focused AI hackathons. ${FIRST_EVENT.attendance} builders at the inaugural event, 30+ projects shipped. Since AI Hackathon 2026: November 6–8, Turku.`,
+  },
   robots: {
     index: true,
     follow: true,
