@@ -5,10 +5,10 @@ export function Hero() {
   return (
     <section className="relative bg-black px-6 h-screen max-h-[1100px] overflow-hidden flex flex-col justify-start md:justify-center">
       <div
-        className="mx-auto w-full max-w-6xl pt-28 md:pt-0"
+        className="mx-auto w-full max-w-6xl pt-[120px] md:pt-0"
       >
-        <h1 className="text-white max-w-[640px] leading-none" style={{ fontSize: "clamp(46px, 5vw, 112px)" }}>
-          Global execution-focused AI innovation ecosystem.
+        <h1 className="text-white leading-none" style={{ fontSize: "clamp(min(76px, 15vw), 6vw, 100px)" }}>
+          Global<br />execution-<br />focused AI<br />innovation<br />ecosystem.
         </h1>
 
         <p className="text-sm text-neutral-400 mt-6">
