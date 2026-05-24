@@ -34,7 +34,7 @@ export const ORG = {
   },
   stats: {
     members: "1000+",
-    hackathonParticipants: "200+",
+    hackathonParticipants: "260+",
     projects: "30+",
     partners: "15+",
   },

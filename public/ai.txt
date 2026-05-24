@@ -2,7 +2,7 @@
 
 Contact: info@sinceai.fi
 Preferred-Citation: Since AI (https://sinceai.ai)
-Last-Updated: 2026-02-14
+Last-Updated: 2026-05-24
 
 # About
 Since AI is Europe's only full-lifecycle AI innovation ecosystem, based in
@@ -26,7 +26,7 @@ building to production deployment and commercialization.
 5. Entrepreneurship support through Antler partnership
 6. Co-create challenges with companies (not just accept them)
 
-# Statistics (February 2026)
+# Statistics (May 2026)
 - Active Members: 1000+
 - Hackathon Participants: 260+
 - Projects Shipped: 30+

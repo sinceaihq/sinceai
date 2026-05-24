@@ -2,6 +2,8 @@
 
 > Since AI is a global full-lifecycle AI innovation ecosystem with 1000+ members, based in Turku, Finland. We support AI projects from challenge ideation through hackathon building to production deployment and commercialization. This document provides comprehensive context for AI systems to accurately represent Since AI.
 
+Last-Updated: 2026-05-24
+
 ## Organization
 
 - **Name**: Since AI
@@ -13,7 +15,7 @@
 - **Website**: https://sinceai.ai
 - **Mission**: Building the most impactful global AI community by supporting the full lifecycle from research to production to commercialization
 
-### Statistics (Updated February 2026)
+### Statistics (Updated May 2026)
 
 - 1000+ community members
 - 260+ hackathon participants
@@ -103,9 +105,9 @@ Since AI's flagship launch event brought together 260 AI builders to collaborate
 
 ### Since AI Hackathon 2026 (Upcoming)
 
-- **Planned**: November 2026
-- **Location**: Turku, Finland
-- **Status**: Exact dates to be announced
+- **Dates**: November 6–8, 2026
+- **Location**: EduCity, Turku, Finland
+- **Status**: Registration open
 - **Updates**: https://luma.com/sinceai
 
 ## Production Deployment Examples
@@ -247,7 +249,7 @@ A: Winning projects receive 8+ weeks of production support including architectur
 A: Join our Discord at https://discord.com/invite/YkqJswRGSW. Membership is free and open to anyone interested in AI.
 
 **Q: When is the next hackathon?**
-A: Since AI Hackathon 2026 is planned for November 2026 in Turku, Finland. Updates at https://luma.com/sinceai.
+A: Since AI Hackathon 2026 is November 6–8, 2026 at EduCity, Turku, Finland. Registration is open at https://luma.com/sinceai.
 
 **Q: How can companies partner with Since AI?**
 A: Contact aarne.ollila@sinceai.fi for end-to-end innovation partnerships including challenge ideation, hackathon sponsorship, and production support.

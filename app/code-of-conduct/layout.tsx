@@ -24,6 +24,11 @@ export const metadata: Metadata = {
     siteName: "Since AI",
     url: "https://sinceai.ai/code-of-conduct",
   },
+  twitter: {
+    card: "summary",
+    title: "Code of Conduct — Since AI Community Standards",
+    description: "Our commitment to a safe, inclusive, and welcoming environment for all Since AI community members.",
+  },
   robots: {
     index: true,
     follow: true,

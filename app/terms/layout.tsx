@@ -16,6 +16,11 @@ export const metadata: Metadata = {
     siteName: "Since AI",
     url: "https://sinceai.ai/terms",
   },
+  twitter: {
+    card: "summary",
+    title: "Terms of Service — Since AI",
+    description: "Review the terms and conditions for participating in the Since AI community and services.",
+  },
   robots: {
     index: true,
     follow: true,

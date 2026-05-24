@@ -21,6 +21,11 @@ export const metadata: Metadata = {
     siteName: "Since AI",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Impact & Numbers — Since AI",
+    description: "Real numbers with methodology notes: network reach, event size, projects shipped, partnerships. Updated quarterly.",
+  },
 };
 
 const breadcrumbSchema = {

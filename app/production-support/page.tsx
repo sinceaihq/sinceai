@@ -27,7 +27,13 @@ export const metadata: Metadata = {
     description:
       "Most hackathons end with a demo. Since AI projects become production systems. 8+ weeks of deployment support for winning projects.",
     url: "https://sinceai.ai/production-support",
+    siteName: "Since AI",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Production Support — From Hackathon to Deployment | Since AI",
+    description: "Most hackathons end with a demo. Since AI projects become production systems. 8+ weeks of deployment support for winning projects.",
   },
 };
 

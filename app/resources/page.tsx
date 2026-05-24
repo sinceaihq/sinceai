@@ -27,6 +27,11 @@ export const metadata: Metadata = {
     siteName: "Since AI",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "AI Development Resources | Since AI Community Guides & Tools",
+    description: "Comprehensive AI development resources from Since AI. Hackathon guides, tech stack recommendations, project ideas, and curated tools for AI builders.",
+  },
 };
 
 export default function ResourcesPage() {

@@ -27,6 +27,11 @@ export const metadata: Metadata = {
     siteName: "Since AI",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "AI Community in Turku, Finland | Since AI",
+    description: "Join Turku's premier AI community. 1000+ developers, AI hackathons with real company challenges, production deployment support.",
+  },
 };
 
 export default function TurkuPage() {

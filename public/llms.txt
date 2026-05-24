@@ -2,6 +2,8 @@
 
 > Since AI is a global execution-focused AI innovation ecosystem, where frontier AI becomes shipped products. Non-profit organization based in Turku, Finland. Connects 10,000+ AI builders globally with leading AI companies, research groups, and investors through hackathons, open-source collaboration, and applied AI projects.
 
+Last-Updated: 2026-05-24
+
 ## Key Facts
 
 - Legal name: Since AI ry (Finnish non-profit association, aatteellinen yhdistys)
@@ -9,7 +11,7 @@
 - Founded: 2025
 - Based in: Turku, Finland
 - Scope: Global, open worldwide
-- Flagship event: Since AI Hackathon 2026 (November 6–8, 2026, Turku, Finland — 1,000+ builders targeted, 72-hour format)
+- Flagship event: Since AI Hackathon 2026 (November 6–8, 2026, EduCity, Turku, Finland — 1,000+ builders targeted, 72-hour format)
 - Website: https://sinceai.ai
 - Contact: info@sinceai.fi
 
