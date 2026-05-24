@@ -5,9 +5,9 @@ export function Hero() {
   return (
     <section className="relative bg-black px-6 h-screen max-h-[1100px] overflow-hidden flex flex-col justify-start md:justify-center">
       <div
-        className="mx-auto w-full max-w-6xl pt-[120px] md:pt-0"
+        className="mx-auto w-full max-w-6xl pt-[90px] md:pt-0"
       >
-        <h1 className="text-white leading-none" style={{ fontSize: "clamp(min(76px, 15vw), 6vw, 100px)" }}>
+        <h1 className="text-white leading-none" style={{ fontSize: "clamp(min(52px, 11vw), 6vw, 100px)" }}>
           Global<br />execution-<br />focused AI<br />innovation<br />ecosystem.
         </h1>
 
