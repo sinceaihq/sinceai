@@ -182,15 +182,13 @@ html:has(body[data-scroll-locked]) {
 
 /* Popup apply button — left-to-right fill on hover */
 .popup-apply-btn {
-  background: linear-gradient(to right, #fff 50%, var(--color-brand) 50%);
-  background-size: 200% 100%;
-  background-position: right;
+  background: var(--color-brand);
   color: #fff;
-  transition: background-position 0.25s ease, color 0.25s ease;
+  border: 2px solid transparent;
+  transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
 }
 .popup-apply-btn:hover {
-  background-position: left;
-  color: var(--color-brand);
+  border-color: #fff;
 }
 
 

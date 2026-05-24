@@ -191,7 +191,6 @@ Backed by Google for Developers, AMD, ElevenLabs, Aiven, LUMI supercomputer, and
               fontSize: "13px",
               fontWeight: 500,
               padding: "12px 20px",
-              border: "none",
               textDecoration: "none",
               textAlign: "center",
               margin: 0,
