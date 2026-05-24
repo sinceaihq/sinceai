@@ -15,7 +15,7 @@ export function TimelineItem({ children, index }: TimelineItemProps) {
     <motion.div
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
+      transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
       className="flex gap-6 items-start border-l-2 border-white/10 pl-6 py-2"
     >
       {children}

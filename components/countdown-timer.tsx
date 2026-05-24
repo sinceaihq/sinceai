@@ -54,58 +54,45 @@ const UNITS = [
 function CountdownUnits({ timeLeft }: { timeLeft: TimeLeft | Record<string, number> }) {
   return (
     <div
+      className="bg-white/[0.04] border border-white/10 px-4 py-3"
       style={{
         display: "grid",
         gridTemplateColumns: "auto 1fr auto 1fr auto 1fr auto",
         rowGap: "6px",
         columnGap: "8px",
         alignItems: "center",
-        background: "rgba(255,255,255,0.04)",
-        border: "0.5px solid var(--color-border)",
-        padding: "12px 16px",
-        marginBottom: "var(--space-lg)",
         maxWidth: "100%",
       }}
     >
       {/* Label row */}
-      <span style={{
-        gridColumn: "1 / -1",
-        fontFamily: "var(--font-mono)",
-        fontSize: "var(--text-xs)",
-        color: "var(--color-fg-muted)",
-        letterSpacing: "0.08em",
-        textTransform: "uppercase",
-        paddingBottom: "8px",
-        borderBottom: "0.5px solid var(--color-border)",
-        marginBottom: "4px",
-      }}>
+      <span
+        className="text-xs uppercase tracking-widest text-neutral-400 pb-2 border-b border-white/10 mb-1"
+        style={{ gridColumn: "1 / -1" }}
+      >
         until Since AI Hackathon 2026 begins
       </span>
 
       {/* Numbers row */}
       {UNITS.map(({ key }, i) => (
         <React.Fragment key={key}>
-          <span style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "clamp(24px, 6.5vw, 80px)",
-            fontWeight: 500,
-            color: "#fff",
-            lineHeight: 1,
-            letterSpacing: "-0.03em",
-            fontVariantNumeric: "tabular-nums",
-            gridRow: 2,
-          }}>
+          <span
+            className="text-white font-medium leading-none tabular-nums"
+            style={{
+              fontSize: "clamp(24px, 6.5vw, 80px)",
+              letterSpacing: "-0.03em",
+              gridRow: 2,
+            }}
+          >
             {String(timeLeft[key]).padStart(2, "0")}
           </span>
           {i < UNITS.length - 1 && (
-            <span style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "clamp(16px, 3.5vw, 48px)",
-              color: "var(--color-border-strong)",
-              lineHeight: 1,
-              textAlign: "center",
-              gridRow: 2,
-            }}>
+            <span
+              className="text-white/25 leading-none text-center"
+              style={{
+                fontSize: "clamp(16px, 3.5vw, 48px)",
+                gridRow: 2,
+              }}
+            >
               :
             </span>
           )}
@@ -114,14 +101,10 @@ function CountdownUnits({ timeLeft }: { timeLeft: TimeLeft | Record<string, numb
       {/* Labels row */}
       {UNITS.map(({ key, label }, i) => (
         <React.Fragment key={`label-${key}`}>
-          <span style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "var(--text-xs)",
-            color: "var(--color-fg-muted)",
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            gridRow: 3,
-          }}>
+          <span
+            className="text-xs uppercase tracking-widest text-neutral-400"
+            style={{ gridRow: 3 }}
+          >
             {label}
           </span>
           {i < UNITS.length - 1 && <span style={{ gridRow: 3 }} />}
@@ -151,15 +134,15 @@ export function CountdownTimer({ startDate, endDate }: CountdownTimerProps) {
 
   if (state.status === "live") {
     return (
-      <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)", color: "#22c55e", marginBottom: "var(--space-lg)", letterSpacing: "0.05em" }}>
-        <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "#22c55e", marginRight: 8, verticalAlign: "middle" }} />
+      <p className="text-sm text-green-500 tracking-wide">
+        <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 mr-2 align-middle" />
         Event is live
       </p>
     );
   }
 
   return (
-    <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)", color: "var(--color-fg-muted)", marginBottom: "var(--space-lg)" }}>
+    <p className="text-sm text-neutral-400">
       Event ended — see you next year.
     </p>
   );

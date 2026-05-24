@@ -71,7 +71,7 @@ export default function ResearchToMarketPage() {
                   The Gap We Bridge
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="p-6 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-6 border border-white/5 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">Academic World</h3>
                     <ul className="text-neutral-400 text-sm space-y-2 leading-relaxed">
                       <li>• Cutting-edge AI research</li>
@@ -80,13 +80,13 @@ export default function ResearchToMarketPage() {
                       <li>• Limited production experience</li>
                     </ul>
                   </div>
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.03] flex items-center justify-center">
+                  <div className="p-6 border border-white/10 bg-white/[0.02] flex items-center justify-center">
                     <div className="text-center">
                       <div className="text-2xl font-bold text-white mb-1">Since AI</div>
                       <div className="text-sm text-neutral-400">Bridges the gap</div>
                     </div>
                   </div>
-                  <div className="p-6 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-6 border border-white/5 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">Commercial World</h3>
                     <ul className="text-neutral-400 text-sm space-y-2 leading-relaxed">
                       <li>• Need practical AI solutions</li>
@@ -181,7 +181,7 @@ export default function ResearchToMarketPage() {
                   University Partnerships
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">University of Turku</h3>
                     <ul className="text-neutral-400 text-sm space-y-2 leading-relaxed">
                       <li>• Computer Science department collaboration</li>
@@ -190,7 +190,7 @@ export default function ResearchToMarketPage() {
                       <li>• Joint research initiatives</li>
                     </ul>
                   </div>
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">Turku University of Applied Sciences</h3>
                     <ul className="text-neutral-400 text-sm space-y-2 leading-relaxed">
                       <li>• Applied AI programs</li>
@@ -203,7 +203,7 @@ export default function ResearchToMarketPage() {
               </section>
 
               {/* The Full Pipeline */}
-              <section className="mb-12 p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+              <section className="mb-12 p-8 border border-white/10 bg-white/[0.02]">
                 <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">
                   The Full Pipeline
                 </h2>
@@ -218,7 +218,7 @@ export default function ResearchToMarketPage() {
               </section>
 
               {/* CTA */}
-              <section className="p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+              <section className="p-8 border border-white/10 bg-white/[0.02]">
                 <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">
                   Get Started
                 </h2>

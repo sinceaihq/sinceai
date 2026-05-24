@@ -84,6 +84,7 @@
   --color-bg: #000000;
   --color-fg: #ffffff;
   --color-fg-muted: rgba(255, 255, 255, 0.55);
+  --color-brand: #FF2D78;
   --color-fg-subtle: rgba(255, 255, 255, 0.50);
   --color-border: rgba(255, 255, 255, 0.12);
   --color-border-strong: rgba(255, 255, 255, 0.25);
@@ -181,21 +182,15 @@ html:has(body[data-scroll-locked]) {
 
 /* Popup apply button — left-to-right fill on hover */
 .popup-apply-btn {
-  background: linear-gradient(to right, #fff 50%, #FF2D78 50%);
-  background-size: 200% 100%;
-  background-position: right;
+  background: var(--color-brand);
   color: #fff;
-  transition: background-position 0.25s ease, color 0.25s ease;
+  border: 2px solid transparent;
+  transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
 }
 .popup-apply-btn:hover {
-  background-position: left;
-  color: #FF2D78;
+  border-color: #fff;
 }
 
-/* Hero secondary CTA hover — border brightens to white */
-.hero-cta-secondary:hover {
-  border-color: #fff !important;
-}
 
 @layer utilities {
   /* GPU acceleration for animated elements */

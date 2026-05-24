@@ -8,6 +8,7 @@ import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
 import { Calendar, MapPin, ExternalLink, ArrowRight } from "lucide-react";
 import { FIRST_EVENT, COPY, LINKS } from "@/lib/sinceai";
+import { ButtonPair } from "@/components/ui/ButtonPair";
 
 export default function EventsPage() {
   const config = {
@@ -27,7 +28,7 @@ export default function EventsPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
               className="text-center"
             >
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight">
@@ -42,13 +43,13 @@ export default function EventsPage() {
         </section>
 
         {/* Upcoming Event - Most Prominent */}
-        <section className="relative w-full px-6 py-16 border-t border-white/5">
+        <section className="relative w-full px-6 py-24 border-t border-white/5">
           <div className="max-w-5xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
             >
               {/* Label */}
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8">
@@ -57,7 +58,7 @@ export default function EventsPage() {
               </div>
 
               {/* Card */}
-              <div className="border border-white/10 rounded-3xl p-8 md:p-12 bg-white/[0.02] hover:border-white/20 transition-all duration-300">
+              <div className="border border-white/10 p-8 md:p-12 bg-white/[0.02] hover:border-white/20 transition-all duration-300">
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
                   {/* Content */}
                   <div className="flex-1">
@@ -86,7 +87,7 @@ export default function EventsPage() {
                     <div className="flex flex-col sm:flex-row gap-4">
                       <Link
                         href="/hackathon"
-                        className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-black bg-white rounded-full hover:bg-neutral-100 transition-all duration-300 group"
+                        className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-black bg-white rounded-none hover:bg-neutral-100 transition-all duration-300 group"
                       >
                         Since AI Hackathon 2026
                         <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform" />
@@ -94,7 +95,7 @@ export default function EventsPage() {
 
                       <Link
                         href="/partners"
-                        className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white border border-white/20 rounded-full hover:bg-white/5 transition-all duration-300 group"
+                        className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white border border-white/20 rounded-none hover:bg-white/5 transition-all duration-300 group"
                       >
                         Partner for Hackathon 2026
                         <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform" />
@@ -108,13 +109,13 @@ export default function EventsPage() {
         </section>
 
         {/* Past Event */}
-        <section className="relative w-full px-6 py-16 border-t border-white/5">
+        <section className="relative w-full px-6 py-24 border-t border-white/5">
           <div className="max-w-5xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
             >
               {/* Label */}
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8">
@@ -122,7 +123,7 @@ export default function EventsPage() {
               </div>
 
               {/* Card */}
-              <div className="border border-white/10 rounded-3xl p-8 md:p-12 bg-white/[0.02] hover:border-white/20 transition-all duration-300">
+              <div className="border border-white/10 p-8 md:p-12 bg-white/[0.02] hover:border-white/20 transition-all duration-300">
                 <div className="flex flex-col gap-6">
                   {/* Header */}
                   <div>
@@ -149,7 +150,7 @@ export default function EventsPage() {
                   </div>
 
                   {/* Image */}
-                  <div className="relative w-full h-64 md:h-80 rounded-2xl overflow-hidden bg-neutral-900/50">
+                  <div className="relative w-full h-64 md:h-80 overflow-hidden bg-neutral-900/50">
                     <Image
                       src="/assets/images/educity-card.webp"
                       alt="Since AI Hackathon 2025 — 260+ AI builders collaborating at EduCity campus in Turku, Finland"
@@ -223,7 +224,7 @@ export default function EventsPage() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
             >
               <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
                 Stay Updated
@@ -243,24 +244,13 @@ export default function EventsPage() {
                 for inspiration.
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <a
-                  href={config.discordUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-black bg-white rounded-full hover:bg-neutral-100 transition-all duration-300"
-                >
-                  Join Discord
-                </a>
-                <a
-                  href="https://t.me/sinceaihq"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-white/10 rounded-full hover:bg-white/15 border border-white/20 hover:border-white/30 transition-all duration-300"
-                >
-                  Join Telegram
-                </a>
-              </div>
+              <ButtonPair
+                primaryLabel="Join Discord"
+                primaryHref={config.discordUrl}
+                secondaryLabel="Join Telegram"
+                secondaryHref="https://t.me/sinceaihq"
+                className="justify-center"
+              />
             </motion.div>
           </div>
         </section>

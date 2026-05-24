@@ -149,7 +149,7 @@ export default function CodeOfConductPage() {
                   If you experience or witness unacceptable behavior, or have any other concerns, please 
                   report it as soon as possible:
                 </p>
-                <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02] mb-6">
+                <div className="p-6 border border-white/10 bg-white/[0.02] mb-6">
                   <p className="text-neutral-300 mb-2">
                     <strong className="text-white">Email:</strong> info@sinceai.fi
                   </p>
@@ -196,7 +196,7 @@ export default function CodeOfConductPage() {
                 </p>
               </section>
 
-              <section className="mb-12 p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+              <section className="mb-12 p-8 border border-white/10 bg-white/[0.02]">
                 <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">
                   Questions?
                 </h2>

@@ -8,6 +8,7 @@ import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { getBreadcrumbSchema } from "@/lib/schema";
 import { ORG } from "@/lib/org";
 import { FIRST_EVENT, UPCOMING_EVENT_2026 } from "@/lib/sinceai";
+import { ButtonPair } from "@/components/ui/ButtonPair";
 
 export const metadata: Metadata = {
   title: "AI Community in Turku, Finland | Since AI",
@@ -44,7 +45,7 @@ export default function TurkuPage() {
       />
 
       <main className="flex flex-col w-full bg-black min-h-screen">
-        <div className="max-w-4xl mx-auto px-6 py-32 md:py-40">
+        <div className="max-w-4xl mx-auto px-6 py-24 md:py-32">
           <FadeIn>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight leading-tight">
               AI Community in Turku, Finland
@@ -84,19 +85,19 @@ export default function TurkuPage() {
                   Since AI&apos;s Impact in Turku
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                  <div className="p-6 rounded-xl border border-white/5 bg-white/[0.02] text-center">
+                  <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">1000+</div>
                     <div className="text-sm text-neutral-500">Developers in network</div>
                   </div>
-                  <div className="p-6 rounded-xl border border-white/5 bg-white/[0.02] text-center">
+                  <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">{FIRST_EVENT.attendance}+</div>
                     <div className="text-sm text-neutral-500">Hackathon participants</div>
                   </div>
-                  <div className="p-6 rounded-xl border border-white/5 bg-white/[0.02] text-center">
+                  <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">30+</div>
                     <div className="text-sm text-neutral-500">AI projects built</div>
                   </div>
-                  <div className="p-6 rounded-xl border border-white/5 bg-white/[0.02] text-center">
+                  <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">15+</div>
                     <div className="text-sm text-neutral-500">Company partnerships</div>
                   </div>
@@ -111,21 +112,21 @@ export default function TurkuPage() {
 
                 <h3 className="text-2xl font-bold text-white mb-4">Universities &amp; Research</h3>
                 <div className="space-y-4 mb-8">
-                  <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-5 border border-white/5 bg-white/[0.02]">
                     <h4 className="text-base font-bold text-white mb-1">University of Turku</h4>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Strong computer science and AI research programs, producing skilled AI
                       graduates annually. Active research in machine learning, NLP, and data science.
                     </p>
                   </div>
-                  <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-5 border border-white/5 bg-white/[0.02]">
                     <h4 className="text-base font-bold text-white mb-1">Turku University of Applied Sciences (Turku AMK)</h4>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Applied AI programs with direct industry partnerships. Students gain hands-on
                       experience through Since AI hackathons and company collaborations.
                     </p>
                   </div>
-                  <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-5 border border-white/5 bg-white/[0.02]">
                     <h4 className="text-base font-bold text-white mb-1">&Aring;bo Akademi University</h4>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Machine learning and data science research contributing to the broader
@@ -161,35 +162,35 @@ export default function TurkuPage() {
                   Why Turku for AI Development?
                 </h2>
                 <div className="space-y-4">
-                  <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-5 border border-white/5 bg-white/[0.02]">
                     <h4 className="text-base font-bold text-white mb-1">1. Strong Academic Foundation</h4>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Multiple universities producing AI talent — University of Turku, Turku AMK,
                       and &Aring;bo Akademi provide a steady pipeline of skilled developers and researchers.
                     </p>
                   </div>
-                  <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-5 border border-white/5 bg-white/[0.02]">
                     <h4 className="text-base font-bold text-white mb-1">2. Lower Cost of Living</h4>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       30-40% cheaper than Helsinki while maintaining excellent quality of life.
                       More affordable rent, good public transportation, and a walkable city center.
                     </p>
                   </div>
-                  <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-5 border border-white/5 bg-white/[0.02]">
                     <h4 className="text-base font-bold text-white mb-1">3. Industrial AI Demand</h4>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Companies like Valmet and Meyer Turku are driving real AI innovation,
                       creating demand for AI talent and practical applications.
                     </p>
                   </div>
-                  <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-5 border border-white/5 bg-white/[0.02]">
                     <h4 className="text-base font-bold text-white mb-1">4. Strategic Location</h4>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Gateway between Nordic and Baltic tech ecosystems. Under 2 hours from
                       Helsinki by train, with ferry connections to Stockholm.
                     </p>
                   </div>
-                  <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-5 border border-white/5 bg-white/[0.02]">
                     <h4 className="text-base font-bold text-white mb-1">5. Active Community</h4>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Since AI connects 1000+ developers through regular hackathons, meetups,
@@ -238,26 +239,16 @@ export default function TurkuPage() {
               </section>
 
               {/* CTA */}
-              <section className="mb-12 p-8 rounded-2xl border border-white/10 bg-white/[0.03]">
+              <section className="mb-12 p-8 border border-white/10 bg-white/[0.02]">
                 <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">
                   Get Started in Turku&apos;s AI Scene
                 </h2>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <a
-                    href={ORG.social.discord}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-black bg-white rounded-full transition-all duration-300 hover:bg-neutral-100 hover:scale-[1.02]"
-                  >
-                    Join Discord Community
-                  </a>
-                  <Link
-                    href="/events"
-                    className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-white/10 rounded-full transition-all duration-300 hover:bg-white/15 border border-white/20 hover:border-white/30 hover:scale-[1.02]"
-                  >
-                    See Turku Events
-                  </Link>
-                </div>
+                <ButtonPair
+                  primaryLabel="Join Discord Community"
+                  primaryHref={ORG.social.discord}
+                  secondaryLabel="See Turku Events"
+                  secondaryHref="/events"
+                />
               </section>
 
               {/* Upcoming Events */}
@@ -327,7 +318,7 @@ export default function TurkuPage() {
                 </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                  <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-5 border border-white/5 bg-white/[0.02]">
                     <h3 className="text-base font-bold text-white mb-2">Quality of Life</h3>
                     <ul className="text-neutral-400 text-sm space-y-1">
                       <li>&bull; Beautiful archipelago coastline</li>
@@ -336,7 +327,7 @@ export default function TurkuPage() {
                       <li>&bull; English widely spoken in tech</li>
                     </ul>
                   </div>
-                  <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-5 border border-white/5 bg-white/[0.02]">
                     <h3 className="text-base font-bold text-white mb-2">Cost of Living (vs Helsinki)</h3>
                     <ul className="text-neutral-400 text-sm space-y-1">
                       <li>&bull; Rent: 30-40% lower</li>
@@ -345,7 +336,7 @@ export default function TurkuPage() {
                       <li>&bull; Overall: More affordable</li>
                     </ul>
                   </div>
-                  <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-5 border border-white/5 bg-white/[0.02]">
                     <h3 className="text-base font-bold text-white mb-2">Tech Community</h3>
                     <ul className="text-neutral-400 text-sm space-y-1">
                       <li>&bull; Since AI (1000+ AI developers)</li>
@@ -358,7 +349,7 @@ export default function TurkuPage() {
               </section>
 
               {/* Contact */}
-              <section className="mb-12 p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+              <section className="mb-12 p-8 border border-white/10 bg-white/[0.02]">
                 <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">
                   Contact Since AI in Turku
                 </h2>

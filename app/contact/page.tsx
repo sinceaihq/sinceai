@@ -8,24 +8,30 @@ import SmoothScroll from "@/components/smoothScroll";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import ContactForm from "@/components/forms/ContactForm";
+import { ButtonPair } from "@/components/ui/ButtonPair";
 
 // Team members data organized by department
 const teamSections = [
   {
-    department: "Sales & Partnerships",
+    department: "Operations",
     members: [
       {
         name: "Riku Lauttia",
-        role: "Sales & Operations",
+        role: "Operations Lead",
         email: "riku.lauttia@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/rikulauttia/",
         image: "/assets/team/riku.webp",
       },
+    ],
+  },
+  {
+    department: "Sales & Partnerships",
+    members: [
       {
-        name: "Aarne Ollila",
-        role: "Sales & Partnerships",
-        email: "aarne.ollila@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/aarneollila/",
+        name: "Tuomas Rikkonen",
+        role: "Sales Lead",
+        email: "tuomas.rikkonen@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/tuomas-rikkonen-8664421a9/",
       },
       {
         name: "Aman Vyas",
@@ -70,35 +76,151 @@ const teamSections = [
         linkedin: "https://www.linkedin.com/in/juho-salmi-381609370/",
       },
       {
-        name: "Roope Kantola",
-        role: "Sales & Partnerships",
-        email: "roope.kantola@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/roope-kantola-131b23320/",
-      },
-      {
-        name: "Tuomas Rikkonen",
-        role: "Sales & Partnerships",
-        email: "tuomas.rikkonen@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/tuomas-rikkonen-8664421a9/",
-      },
-      {
         name: "Kasper Turunen",
         role: "Sales & Partnerships",
         email: "kasper@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/kasperturunen/",
       },
+      {
+        name: "Roope Kantola",
+        role: "Sales & Partnerships",
+        email: "roope.kantola@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/roope-kantola-131b23320/",
+      },
     ],
   },
-  
   {
-    department: "Community & Content",
+    department: "Production",
     members: [
       {
-        name: "Hasnain Ajmal",
-        role: "Community & Content",
-        email: "hasnain@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/hasnaynajmal/",
-        image: "/assets/team/hasnain.webp",
+        name: "Toki Mohammad Tahmid",
+        role: "Production Lead",
+        email: "toki@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/toki-mohammad-tahmid-a7b334159/",
+        image: "/assets/team/toki.webp",
+      },
+      {
+        name: "Anniina Kankaanpää",
+        role: "Production",
+        email: "anniina.kankaanpaa@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/anniina-kankaanpää-4b5023358/",
+      },
+      {
+        name: "Christian Lairikko",
+        role: "Production",
+        email: "christian.lairikko@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/christian-lairikko-943657376/",
+      },
+      {
+        name: "Eero Paloheimo",
+        role: "Production",
+        email: "eero@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/eero-paloheimo-6407883aa/",
+      },
+      {
+        name: "Emil Erkkilä",
+        role: "Production",
+        email: "emil@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/emil-erkkila-302995349/",
+      },
+      {
+        name: "Henrique Nunez",
+        role: "Production",
+        email: "henrique@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/henrique-nunez/",
+      },
+      {
+        name: "Joan Iovchik",
+        role: "Production",
+        email: "joan@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/joan-iovchik-8b5b48314/",
+      },
+      {
+        name: "Tzu Tai Huang",
+        role: "Production",
+        email: "tzu@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/tzu-tai-huang/",
+      },
+      {
+        name: "Venla Raassina",
+        role: "Production",
+        email: "venla.raassina@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/venlaraassina/",
+        image: "/assets/team/venla.webp",
+      },
+      {
+        name: "Radin Dabbagh",
+        role: "Production & Marketing",
+        email: "radin@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/radin-dabbagh-rezeiyeh-b64687225/",
+      },
+    ],
+  },
+  {
+    department: "Technology",
+    members: [
+      {
+        name: "Otso Saarinen",
+        role: "Technology Lead",
+        email: "otso.saarinen@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/otsosaarinen/",
+        image: "/assets/team/otso.webp",
+        imagePosition: "40% center",
+      },
+      {
+        name: "Abel Alem",
+        role: "Technology",
+        email: "abel@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/abel-alem-25420b263",
+        image: "/assets/team/abel.webp",
+      },
+      {
+        name: "Theo Wilenius",
+        role: "Technology",
+        email: "theo.wilenius@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/tabw/",
+        image: "/assets/team/theo.webp",
+      },
+      {
+        name: "Georg Wahlroos",
+        role: "Technology",
+        email: "georg@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/georg-wahlroos-689267180/",
+      },
+      {
+        name: "Joonatan Laato",
+        role: "Technology",
+        email: "joonatan.laato@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/joonatan-laato-19b3521b4/",
+      },
+      {
+        name: "Lehel Denes",
+        role: "Technology",
+        email: "lehel@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/lehel-d-4a20a634b/",
+      },
+      {
+        name: "Ville Tuuli",
+        role: "Technology",
+        email: "ville@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/ville-tuuli-67abab289/",
+      },
+      {
+        name: "Zain Taufique",
+        role: "Technology",
+        email: "zain@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/zain-taufique-20273179/",
+      },
+    ],
+  },
+  {
+    department: "Marketing",
+    members: [
+      {
+        name: "Aarne Ollila",
+        role: "Marketing Lead",
+        email: "aarne.ollila@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/aarneollila/",
       },
       {
         name: "Abdul Wasay",
@@ -145,126 +267,14 @@ const teamSections = [
     ],
   },
   {
-    department: "Development",
+    department: "Community",
     members: [
       {
-        name: "Abel Alem",
-        role: "Development",
-        email: "abel@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/abel-alem-25420b263",
-        image: "/assets/team/abel.webp",
-      },
-      {
-        name: "Otso Saarinen",
-        role: "Development",
-        email: "otso.saarinen@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/otsosaarinen/",
-        image: "/assets/team/otso.webp",
-        imagePosition: "40% center",
-      },
-      {
-        name: "Theo Wilenius",
-        role: "Development",
-        email: "theo.wilenius@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/tabw/",
-        image: "/assets/team/theo.webp",
-      },
-      {
-        name: "Zain Taufique",
-        role: "Development",
-        email: "zain@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/zain-taufique-20273179/",
-      },
-      {
-        name: "Joonatan Laato",
-        role: "Development",
-        email: "joonatan.laato@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/joonatan-laato-19b3521b4/",
-      },
-      {
-        name: "Ville Tuuli",
-        role: "Development",
-        email: "ville@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/ville-tuuli-67abab289/",
-      },
-      {
-        name: "Lehel Denes",
-        role: "Development",
-        email: "lehel@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/lehel-d-4a20a634b/",
-      },
-      {
-        name: "Georg Wahlroos",
-        role: "Development",
-        email: "georg@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/georg-wahlroos-689267180/",
-      },
-    ],
-  },
-  {
-    department: "Production",
-    members: [
-      {
-        name: "Toki Mohammad Tahmid",
-        role: "Production",
-        email: "toki@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/toki-mohammad-tahmid-a7b334159/",
-        image: "/assets/team/toki.webp",
-      },
-      {
-        name: "Venla Raassina",
-        role: "Production",
-        email: "venla.raassina@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/venlaraassina/",
-        image: "/assets/team/venla.webp",
-      },
-      {
-        name: "Anniina Kankaanpää",
-        role: "Production",
-        email: "anniina.kankaanpaa@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/anniina-kankaanpää-4b5023358/",
-      },
-      {
-        name: "Christian Lairikko",
-        role: "Production",
-        email: "christian.lairikko@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/christian-lairikko-943657376/",
-      },
-      {
-        name: "Joan Iovchik",
-        role: "Production",
-        email: "joan@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/joan-iovchik-8b5b48314/",
-      },
-      {
-        name: "Tzu Tai Huang",
-        role: "Production & Volunteers",
-        email: "tzu@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/tzu-tai-huang/",
-      },
-      {
-        name: "Emil Erkkilä",
-        role: "Production",
-        email: "emil@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/emil-erkkila-302995349/",
-      },
-      {
-        name: "Eero Paloheimo",
-        role: "Production",
-        email: "eero@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/eero-paloheimo-6407883aa/",
-      },
-      {
-        name: "Radin Dabbagh",
-        role: "Production & Marketing",
-        email: "radin@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/radin-dabbagh-rezeiyeh-b64687225/",
-      },
-      {
-        name: "Henrique Nunez",
-        role: "Production",
-        email: "henrique@sinceai.fi",
-        linkedin: "https://www.linkedin.com/in/henrique-nunez/",
+        name: "Hasnain Ajmal",
+        role: "Community Lead",
+        email: "hasnain@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/hasnaynajmal/",
+        image: "/assets/team/hasnain.webp",
       },
     ],
   },
@@ -273,7 +283,7 @@ const teamSections = [
     members: [
       {
         name: "Arttu Karonen",
-        role: "Finance",
+        role: "Finance Lead",
         email: "arttu.karonen@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/arttu-karonen-526872261/",
         image: "/assets/team/arttu-k.webp",
@@ -305,65 +315,99 @@ interface TeamMember {
   imagePosition?: string;
 }
 
-// Team Card Component - Lean & Premium
-const TeamCard: React.FC<{ person: TeamMember }> = ({ person }) => (
-  <div
-    className="group relative border border-white/5 rounded-xl p-6 hover:border-white/10 hover:bg-white/[0.02] transition-all duration-300 text-center"
-  >
-    <div className="flex justify-center mb-4">
-      <div className="relative w-32 h-32 rounded-xl overflow-hidden bg-white/5 border border-white/10">
-        {person.image ? (
+// Sort non-lead members: by role title A-Z, then images first within each role, then name A-Z
+function sortMembers(members: TeamMember[]): TeamMember[] {
+  return [...members].sort((a, b) => {
+    const roleCompare = a.role.localeCompare(b.role);
+    if (roleCompare !== 0) return roleCompare;
+    const aHasImg = a.image ? 0 : 1;
+    const bHasImg = b.image ? 0 : 1;
+    if (aHasImg !== bHasImg) return aHasImg - bHasImg;
+    return a.name.localeCompare(b.name);
+  });
+}
+
+// Featured lead card — full width, horizontal layout
+const LeadCard: React.FC<{ person: TeamMember }> = ({ person }) => (
+  <div className="flex items-center gap-4 sm:gap-6 p-4 sm:p-6 border border-white/15 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.05] transition-all duration-300">
+    <div className="relative w-16 h-16 sm:w-24 sm:h-24 shrink-0 overflow-hidden bg-white/5">
+      {person.image ? (
+        <Image
+          src={person.image}
+          alt={person.name}
+          fill
+          className="object-cover"
+          style={{ objectPosition: person.imagePosition ?? "center" }}
+        />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center">
           <Image
-            src={person.image}
+            src="/assets/logo/SINCE AI white.png"
             alt={person.name}
-            fill
-            className="object-cover"
-            style={{ objectPosition: person.imagePosition ?? "center" }}
+            width={36}
+            height={36}
+            className="object-contain opacity-30"
           />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center p-4">
-            <Image
-              src="/assets/logo/SINCE AI white.png"
-              alt={person.name}
-              width={64}
-              height={64}
-              className="object-contain opacity-40"
-            />
-          </div>
+        </div>
+      )}
+    </div>
+    <div className="flex-1 min-w-0">
+      <h3 className="text-white font-semibold text-xl tracking-tight leading-tight">{person.name}</h3>
+      <p className="text-neutral-400 text-sm mt-0.5">{person.role}</p>
+      <div className="mt-3 space-y-2">
+        {person.email && (
+          <a href={`mailto:${person.email}`} className="text-sm text-neutral-500 hover:text-white transition-colors break-all block">
+            {person.email}
+          </a>
+        )}
+        {person.linkedin && (
+          <a href={person.linkedin} target="_blank" rel="noopener noreferrer" className="text-neutral-500 hover:text-white transition-colors inline-block">
+            <FaLinkedin size={15} />
+          </a>
         )}
       </div>
     </div>
-    <div className="space-y-3">
-      <div>
-        <h3 className="text-white font-semibold text-lg tracking-tight">
-          {person.name}
-        </h3>
-        <p className="text-neutral-500 text-sm mt-1">
-          {person.role}
-        </p>
-      </div>
+  </div>
+);
 
+// Compact member card — photo, name, role only
+const MemberCard: React.FC<{ person: TeamMember }> = ({ person }) => (
+  <div className="flex items-center gap-3 p-4 border border-white/5 hover:border-white/10 hover:bg-white/[0.02] transition-all duration-300">
+    <div className="relative w-14 h-14 shrink-0 overflow-hidden bg-white/5">
+      {person.image ? (
+        <Image
+          src={person.image}
+          alt={person.name}
+          fill
+          className="object-cover"
+          style={{ objectPosition: person.imagePosition ?? "center" }}
+        />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center">
+          <Image
+            src="/assets/logo/SINCE AI white.png"
+            alt={person.name}
+            width={20}
+            height={20}
+            className="object-contain opacity-25"
+          />
+        </div>
+      )}
+    </div>
+    <div className="min-w-0 flex-1">
+      <p className="text-white text-sm font-medium tracking-tight truncate">{person.name}</p>
+      <p className="text-neutral-500 text-xs truncate">{person.role}</p>
       {person.email && (
-        <a
-          href={`mailto:${person.email}`}
-          className="text-sm text-neutral-600 hover:text-white transition-colors block"
-        >
+        <a href={`mailto:${person.email}`} className="text-neutral-600 text-xs hover:text-white transition-colors break-all block mt-0.5">
           {person.email}
         </a>
       )}
-
-      {person.linkedin && (
-        <a
-          href={person.linkedin}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-2 text-sm text-neutral-600 hover:text-white transition-colors w-full"
-        >
-          <FaLinkedin size={16} />
-          <span>LinkedIn</span>
-        </a>
-      )}
     </div>
+    {person.linkedin && (
+      <a href={person.linkedin} target="_blank" rel="noopener noreferrer" className="ml-auto shrink-0 self-start text-neutral-600 hover:text-white transition-colors">
+        <FaLinkedin size={15} />
+      </a>
+    )}
   </div>
 );
 
@@ -383,7 +427,7 @@ function ContactPageContent() {
             className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tighter leading-tight text-white"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.8, delay: 0, ease: [0.22, 1, 0.36, 1] }}
           >
             Let&apos;s build together.
           </motion.h1>
@@ -392,7 +436,7 @@ function ContactPageContent() {
             className="text-lg sm:text-xl text-neutral-400 max-w-2xl"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.8, delay: 0, ease: [0.22, 1, 0.36, 1] }}
           >
             Questions about partnerships, events, or community? We typically respond within 24 hours.
           </motion.p>
@@ -401,22 +445,14 @@ function ContactPageContent() {
             className="flex flex-col sm:flex-row items-center gap-4 pt-4"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.8, delay: 0, ease: [0.22, 1, 0.36, 1] }}
           >
-            <a
-              href={config.discordUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-black bg-white rounded-full transition-all duration-300 hover:bg-neutral-100 hover:scale-[1.02]"
-            >
-              Join Discord
-            </a>
-            <a
-              href="mailto:info@sinceai.fi"
-              className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-white/10 rounded-full transition-all duration-300 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30 hover:scale-[1.02]"
-            >
-              Email Us
-            </a>
+            <ButtonPair
+              primaryLabel="Join Discord"
+              primaryHref={config.discordUrl}
+              secondaryLabel="Email Us"
+              secondaryHref="mailto:info@sinceai.fi"
+            />
           </motion.div>
         </div>
       </section>
@@ -436,7 +472,7 @@ function ContactPageContent() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
           >
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
               Team
@@ -446,25 +482,28 @@ function ContactPageContent() {
             </p>
           </motion.div>
 
-          <div className="space-y-16">
+          <div className="space-y-12">
             {teamSections.map((section, sectionIndex) => (
               <motion.div
                 key={section.department}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: sectionIndex * 0.1 }}
+                transition={{ duration: 0.5, delay: sectionIndex * 0.06, ease: "easeOut" }}
               >
-                <h3 className="text-2xl font-bold text-white mb-6 tracking-tight">
+                <p className="text-xs font-mono uppercase tracking-widest text-neutral-300 mb-4">
                   {section.department}
-                </h3>
-                <div className="flex flex-wrap justify-start gap-6">
-                  {section.members.map((person, index) => (
-                    <div key={index} className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
-                      <TeamCard person={person} />
-                    </div>
-                  ))}
-                </div>
+                </p>
+                {/* Lead */}
+                <LeadCard person={section.members[0]} />
+                {/* Rest of team */}
+                {section.members.length > 1 && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                    {sortMembers(section.members.slice(1)).map((person, i) => (
+                      <MemberCard key={i} person={person} />
+                    ))}
+                  </div>
+                )}
               </motion.div>
             ))}
           </div>
@@ -479,7 +518,7 @@ function ContactPageContent() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
           >
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
               Quick answers
@@ -513,8 +552,8 @@ function ContactPageContent() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="border border-white/5 rounded-xl p-6 hover:border-white/10 transition-colors"
+                transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
+                className="border border-white/5 p-6 hover:border-white/10 transition-colors"
               >
                 <h3 className="text-white font-semibold text-lg mb-2">
                   {faq.q}
@@ -531,11 +570,11 @@ function ContactPageContent() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
           >
             <a
               href="/faq"
-              className="inline-flex items-center gap-2 text-neutral-600 hover:text-white transition-colors text-sm"
+              className="inline-flex items-center gap-2 text-neutral-400 hover:text-white transition-colors text-sm"
             >
               View all FAQs →
             </a>

@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { getBreadcrumbSchema } from "@/lib/schema";
 import { ORG } from "@/lib/org";
+import { ButtonPair } from "@/components/ui/ButtonPair";
 
 export const metadata: Metadata = {
   title: "Finland AI Community | Since AI - Nordic AI Excellence",
@@ -43,7 +44,7 @@ export default function FinlandAIPage() {
       />
 
       <main className="flex flex-col w-full bg-black min-h-screen">
-        <div className="max-w-4xl mx-auto px-6 py-32 md:py-40">
+        <div className="max-w-4xl mx-auto px-6 py-24 md:py-32">
           <FadeIn>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight leading-tight">
               Finland AI Community
@@ -70,35 +71,35 @@ export default function FinlandAIPage() {
 
                 <h3 className="text-2xl font-bold text-white mb-4">Why Finland Excels at AI</h3>
                 <div className="space-y-4 mb-8">
-                  <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-5 border border-white/5 bg-white/[0.02]">
                     <h4 className="text-base font-bold text-white mb-1">World-Class Education</h4>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Universities like Aalto, Helsinki, and Turku produce skilled AI talent.
                       Finland&apos;s education system is globally recognized for excellence in STEM.
                     </p>
                   </div>
-                  <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-5 border border-white/5 bg-white/[0.02]">
                     <h4 className="text-base font-bold text-white mb-1">Government Support</h4>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       National AI strategy and funding for innovation. Finland was one of the first
                       EU countries to publish a comprehensive AI strategy.
                     </p>
                   </div>
-                  <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-5 border border-white/5 bg-white/[0.02]">
                     <h4 className="text-base font-bold text-white mb-1">Privacy-First Culture</h4>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Strong alignment with European values and GDPR. Finnish AI development
                       prioritizes data privacy and ethical AI practices.
                     </p>
                   </div>
-                  <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-5 border border-white/5 bg-white/[0.02]">
                     <h4 className="text-base font-bold text-white mb-1">Startup Ecosystem</h4>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Home to globally successful tech companies. A supportive ecosystem for
                       founding and scaling AI startups.
                     </p>
                   </div>
-                  <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-5 border border-white/5 bg-white/[0.02]">
                     <h4 className="text-base font-bold text-white mb-1">English Proficiency</h4>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Easy for international developers to integrate. The Finnish tech sector
@@ -119,7 +120,7 @@ export default function FinlandAIPage() {
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.03]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-xl font-bold text-white mb-3">Turku (Headquarters)</h3>
                     <ul className="text-neutral-400 text-sm space-y-2">
                       <li>&bull; 1000+ member community base</li>
@@ -132,7 +133,7 @@ export default function FinlandAIPage() {
                     </Link>
                   </div>
 
-                  <div className="p-6 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-6 border border-white/5 bg-white/[0.02]">
                     <h3 className="text-xl font-bold text-white mb-3">Helsinki</h3>
                     <ul className="text-neutral-400 text-sm space-y-2">
                       <li>&bull; Active community members</li>
@@ -142,7 +143,7 @@ export default function FinlandAIPage() {
                     </ul>
                   </div>
 
-                  <div className="p-6 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-6 border border-white/5 bg-white/[0.02]">
                     <h3 className="text-xl font-bold text-white mb-3">Tampere</h3>
                     <ul className="text-neutral-400 text-sm space-y-2">
                       <li>&bull; Growing member base</li>
@@ -152,7 +153,7 @@ export default function FinlandAIPage() {
                     </ul>
                   </div>
 
-                  <div className="p-6 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-6 border border-white/5 bg-white/[0.02]">
                     <h3 className="text-xl font-bold text-white mb-3">Oulu</h3>
                     <ul className="text-neutral-400 text-sm space-y-2">
                       <li>&bull; Community members</li>
@@ -170,19 +171,19 @@ export default function FinlandAIPage() {
                   Finland AI Statistics
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                  <div className="p-6 rounded-xl border border-white/5 bg-white/[0.02] text-center">
+                  <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">1000+</div>
                     <div className="text-sm text-neutral-500">Finnish AI developers</div>
                   </div>
-                  <div className="p-6 rounded-xl border border-white/5 bg-white/[0.02] text-center">
+                  <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">10+</div>
                     <div className="text-sm text-neutral-500">Countries represented</div>
                   </div>
-                  <div className="p-6 rounded-xl border border-white/5 bg-white/[0.02] text-center">
+                  <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">4</div>
                     <div className="text-sm text-neutral-500">Major cities</div>
                   </div>
-                  <div className="p-6 rounded-xl border border-white/5 bg-white/[0.02] text-center">
+                  <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">30+</div>
                     <div className="text-sm text-neutral-500">AI projects built</div>
                   </div>
@@ -231,21 +232,21 @@ export default function FinlandAIPage() {
                   Since AI has helped Finnish developers and teams achieve real outcomes:
                 </p>
                 <div className="space-y-4">
-                  <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-5 border border-white/5 bg-white/[0.02]">
                     <h4 className="text-base font-bold text-white mb-1">Maritime AI</h4>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Finnish team built a sound signal detection system deployed to production
                       at Kongsberg&apos;s vessel systems.
                     </p>
                   </div>
-                  <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-5 border border-white/5 bg-white/[0.02]">
                     <h4 className="text-base font-bold text-white mb-1">Industrial AI</h4>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Turku-based solution for intelligent spare part discovery deployed in
                       production at Sandvik, saving 8+ hours per search.
                     </p>
                   </div>
-                  <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-5 border border-white/5 bg-white/[0.02]">
                     <h4 className="text-base font-bold text-white mb-1">Research Commercialization</h4>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       University researchers commercializing AI innovations through the Since AI
@@ -261,7 +262,7 @@ export default function FinlandAIPage() {
               </section>
 
               {/* CTA */}
-              <section className="mb-12 p-8 rounded-2xl border border-white/10 bg-white/[0.03]">
+              <section className="mb-12 p-8 border border-white/10 bg-white/[0.02]">
                 <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">
                   Join Finland&apos;s AI Community
                 </h2>
@@ -269,22 +270,12 @@ export default function FinlandAIPage() {
                   Whether you&apos;re in Helsinki, Turku, Tampere, Oulu, or anywhere in Finland,
                   connect with 1000+ AI developers building real production systems.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <a
-                    href={ORG.social.discord}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-black bg-white rounded-full transition-all duration-300 hover:bg-neutral-100 hover:scale-[1.02]"
-                  >
-                    Join Discord
-                  </a>
-                  <Link
-                    href="/events"
-                    className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-white/10 rounded-full transition-all duration-300 hover:bg-white/15 border border-white/20 hover:border-white/30 hover:scale-[1.02]"
-                  >
-                    See Events
-                  </Link>
-                </div>
+                <ButtonPair
+                  primaryLabel="Join Discord"
+                  primaryHref={ORG.social.discord}
+                  secondaryLabel="See Events"
+                  secondaryHref="/events"
+                />
               </section>
 
               {/* Cross-links */}

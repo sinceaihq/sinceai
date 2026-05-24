@@ -70,7 +70,7 @@ function SocialLink({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="text-neutral-500 hover:text-white transition-colors duration-200"
+      className="text-neutral-500 hover:text-white transition-colors duration-300"
     >
       <Icon size={18} strokeWidth={1.5} />
     </a>
@@ -92,124 +92,48 @@ function SpeakerCard({ speaker }: { speaker: Speaker }) {
             priority
           />
         </div>
-        
-        {/* Social Links */}
+
         <div className="flex items-center gap-4 mt-6">
           {speaker.socials.linkedin && (
-            <SocialLink
-              href={speaker.socials.linkedin}
-              icon={Linkedin}
-              label="LinkedIn"
-            />
+            <SocialLink href={speaker.socials.linkedin} icon={Linkedin} label="LinkedIn" />
           )}
           {speaker.socials.twitter && (
-            <SocialLink
-              href={speaker.socials.twitter}
-              icon={Twitter}
-              label="X (Twitter)"
-            />
+            <SocialLink href={speaker.socials.twitter} icon={Twitter} label="X (Twitter)" />
           )}
           {speaker.socials.github && (
-            <SocialLink
-              href={speaker.socials.github}
-              icon={Github}
-              label="GitHub"
-            />
+            <SocialLink href={speaker.socials.github} icon={Github} label="GitHub" />
           )}
           {speaker.socials.youtube && (
-            <SocialLink
-              href={speaker.socials.youtube}
-              icon={Youtube}
-              label="YouTube"
-            />
+            <SocialLink href={speaker.socials.youtube} icon={Youtube} label="YouTube" />
           )}
         </div>
       </div>
 
       {/* Content Column */}
       <div className="lg:col-span-8">
-        {/* Header */}
         <div className="mb-6">
-          <h3
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "clamp(24px, 4vw, 36px)",
-              fontWeight: 500,
-              lineHeight: 1.1,
-              color: "#fff",
-              margin: 0,
-            }}
-          >
+          <h3 className="text-3xl font-bold tracking-tight text-white">
             {speaker.name}
           </h3>
-          <p
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "14px",
-              color: "var(--color-fg-muted)",
-              marginTop: "var(--space-xs)",
-            }}
-          >
+          <p className="text-sm text-neutral-400 mt-2">
             {speaker.title}, {speaker.company}
           </p>
         </div>
 
-        {/* Bio */}
-        <p
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "var(--text-base)",
-            color: "var(--color-fg-muted)",
-            lineHeight: 1.7,
-            marginBottom: "var(--space-lg)",
-          }}
-        >
+        <p className="text-sm text-neutral-400 leading-relaxed mb-8">
           {speaker.bio}
         </p>
 
-        {/* Talks */}
         <div className="space-y-6">
           {speaker.talks.map((talk, index) => (
-            <div
-              key={index}
-              style={{
-                borderLeft: "0.5px solid var(--color-border)",
-                paddingLeft: "var(--space-md)",
-              }}
-            >
-              <p
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-xs)",
-                  color: "var(--color-fg-subtle)",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  marginBottom: "var(--space-xs)",
-                }}
-              >
+            <div key={index} className="border-l border-white/10 pl-6">
+              <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-2">
                 {"// "}{talk.type}
               </p>
-              <h4
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "16px",
-                  fontWeight: 500,
-                  color: "#fff",
-                  margin: 0,
-                  marginBottom: "var(--space-xs)",
-                  lineHeight: 1.4,
-                }}
-              >
+              <h4 className="text-base font-bold text-white mb-2 leading-snug">
                 {talk.title}
               </h4>
-              <p
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "13px",
-                  color: "var(--color-fg-muted)",
-                  lineHeight: 1.6,
-                }}
-              >
+              <p className="text-sm text-neutral-400 leading-relaxed">
                 {talk.description}
               </p>
             </div>
@@ -222,43 +146,15 @@ function SpeakerCard({ speaker }: { speaker: Speaker }) {
 
 export function FeaturedSpeakers() {
   return (
-    <section
-      style={{
-        padding: "var(--space-2xl) var(--space-lg)",
-        borderTop: "0.5px solid var(--color-border)",
-        borderBottom: "0.5px solid var(--color-border)",
-      }}
-    >
-      <div className="mx-auto" style={{ maxWidth: "1200px" }}>
-        {/* Eyebrow */}
-        <p
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "var(--text-xs)",
-            color: "var(--color-fg-muted)",
-            letterSpacing: "0.05em",
-            marginBottom: "var(--space-sm)",
-          }}
-        >
+    <section className="py-24 px-6 border-t border-white/10 border-b border-white/10">
+      <div className="mx-auto max-w-6xl">
+        <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
           {"// featured speakers"}
         </p>
-
-        {/* Section Title */}
-        <h2
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "clamp(24px, 4vw, 36px)",
-            fontWeight: 500,
-            lineHeight: 1.15,
-            color: "#fff",
-            margin: 0,
-            marginBottom: "var(--space-xl)",
-          }}
-        >
+        <h2 className="text-3xl font-bold tracking-tight text-white mb-10">
           Learn from the best in AI.
         </h2>
 
-        {/* Speaker Cards */}
         <div className="space-y-16">
           {speakers.map((speaker) => (
             <SpeakerCard key={speaker.name} speaker={speaker} />

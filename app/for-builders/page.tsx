@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { ORG } from "@/lib/org";
 import StructuredData from "@/components/StructuredData";
+import { ButtonPair } from "@/components/ui/ButtonPair";
 
 export const metadata: Metadata = {
   title: "For Builders — Join Since AI's Global AI Ecosystem",
@@ -95,7 +96,7 @@ export default function ForBuildersPage() {
       <StructuredData data={breadcrumbSchema} />
 
       <main className="flex flex-col w-full bg-black min-h-screen">
-        <div className="max-w-4xl mx-auto px-6 py-32 md:py-40">
+        <div className="max-w-4xl mx-auto px-6 py-24 md:py-32">
           <FadeIn>
             <div className="prose prose-invert prose-neutral max-w-none">
 
@@ -121,7 +122,7 @@ export default function ForBuildersPage() {
                   What you get
                 </h2>
                 <div className="space-y-5">
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-base font-bold text-white mb-2">
                       Access to real problems
                     </h3>
@@ -133,7 +134,7 @@ export default function ForBuildersPage() {
                     </p>
                   </div>
 
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-base font-bold text-white mb-2">
                       Production support
                     </h3>
@@ -144,7 +145,7 @@ export default function ForBuildersPage() {
                     </p>
                   </div>
 
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-base font-bold text-white mb-2">
                       Capital introductions
                     </h3>
@@ -155,7 +156,7 @@ export default function ForBuildersPage() {
                     </p>
                   </div>
 
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-base font-bold text-white mb-2">
                       Global network
                     </h3>
@@ -174,7 +175,7 @@ export default function ForBuildersPage() {
                   Three ways to participate
                 </h2>
                 <div className="space-y-5">
-                  <div className="p-8 rounded-2xl border border-white/10 bg-white/[0.03]">
+                  <div className="p-8 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2 tracking-tight">
                       Apply to Since AI Hackathon 2026
                     </h3>
@@ -193,13 +194,13 @@ export default function ForBuildersPage() {
                     </p>
                     <Link
                       href="/hackathon"
-                      className="inline-flex items-center justify-center px-7 py-3 text-sm font-semibold text-black bg-white rounded-full hover:bg-neutral-100 transition-all hover:scale-[1.02]"
+                      className="inline-flex items-center justify-center px-7 py-3 text-sm font-semibold text-black bg-white rounded-none hover:bg-neutral-100 transition-all"
                     >
                       Apply →
                     </Link>
                   </div>
 
-                  <div className="p-8 rounded-2xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-8 border border-white/5 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2 tracking-tight">
                       Join the Discord community
                     </h3>
@@ -211,13 +212,13 @@ export default function ForBuildersPage() {
                       href={ORG.social.discord}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center px-7 py-3 text-sm font-semibold text-black bg-white rounded-full hover:bg-neutral-100 transition-all hover:scale-[1.02]"
+                      className="inline-flex items-center justify-center px-7 py-3 text-sm font-semibold text-black bg-white rounded-none hover:bg-neutral-100 transition-all"
                     >
                       Join Discord →
                     </a>
                   </div>
 
-                  <div className="p-8 rounded-2xl border border-white/5 bg-white/[0.02]">
+                  <div className="p-8 border border-white/5 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2 tracking-tight">
                       Propose an applied AI project
                     </h3>
@@ -228,7 +229,7 @@ export default function ForBuildersPage() {
                     </p>
                     <a
                       href="mailto:builders@sinceai.fi"
-                      className="inline-flex items-center justify-center px-7 py-3 text-sm font-semibold text-white bg-white/10 rounded-full border border-white/20 hover:bg-white/15 hover:border-white/30 transition-all hover:scale-[1.02]"
+                      className="inline-flex items-center justify-center px-7 py-3 text-sm font-semibold text-white rounded-none border border-white/20 hover:border-white transition-colors duration-300"
                     >
                       builders@sinceai.fi →
                     </a>
@@ -313,7 +314,7 @@ export default function ForBuildersPage() {
                   ].map((item) => (
                     <div
                       key={item.title}
-                      className="flex gap-4 items-start p-5 rounded-xl border border-white/5 bg-white/[0.02]"
+                      className="flex gap-4 items-start p-5 border border-white/5 bg-white/[0.02]"
                     >
                       <span className="text-neutral-700 font-bold mt-0.5 min-w-[8px]">—</span>
                       <div>
@@ -349,7 +350,7 @@ export default function ForBuildersPage() {
               </section>
 
               {/* 8. Bottom CTA */}
-              <section className="mb-16 p-10 rounded-2xl border border-white/10 bg-white/[0.03] text-center">
+              <section className="mb-16 p-10 border border-white/10 bg-white/[0.02] text-center">
                 <h2 className="text-2xl font-bold text-white mb-3 tracking-tight">
                   Ready to build?
                 </h2>
@@ -357,22 +358,13 @@ export default function ForBuildersPage() {
                   Apply to Hackathon 2026 or join the network today. No experience
                   threshold. No membership fee. Just ship.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <Link
-                    href="/hackathon"
-                    className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-black bg-white rounded-full transition-all duration-300 hover:bg-neutral-100 hover:scale-[1.02]"
-                  >
-                    Apply to Hackathon 2026 →
-                  </Link>
-                  <a
-                    href={ORG.social.discord}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-white/10 rounded-full transition-all duration-300 hover:bg-white/15 border border-white/20 hover:border-white/30 hover:scale-[1.02]"
-                  >
-                    Join the Discord →
-                  </a>
-                </div>
+                <ButtonPair
+                  primaryLabel="Apply to Hackathon 2026 →"
+                  primaryHref="/hackathon"
+                  secondaryLabel="Join the Discord →"
+                  secondaryHref={ORG.social.discord}
+                  className="justify-center"
+                />
               </section>
 
               {/* Cross-links */}
@@ -413,3 +405,4 @@ export default function ForBuildersPage() {
     </SmoothScroll>
   );
 }
+

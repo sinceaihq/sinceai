@@ -74,7 +74,7 @@ export function HackathonPopup() {
         onInteractOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
         className="rounded-none border-0 p-0 gap-0 sm:max-w-md"
-        style={{ background: "#000", border: "2px solid #FF2D78" }}
+        style={{ background: "#000", border: "2px solid var(--color-brand)" }}
       >
         <DialogTitle className="sr-only">Since AI Hackathon 2026</DialogTitle>
 
@@ -101,13 +101,14 @@ export function HackathonPopup() {
           {/* Ghost logo watermark */}
           <img
             src="/assets/logo/sinceai-white.png"
+            alt=""
             aria-hidden="true"
             style={{
               position: "absolute",
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "90%",
+              width: "85%",
               opacity: 0.10,
               pointerEvents: "none",
               userSelect: "none",
@@ -118,7 +119,6 @@ export function HackathonPopup() {
           <div style={{ marginBottom: "20px" }}>
             <h2
               style={{
-                fontFamily: "var(--font-mono)",
                 fontSize: "clamp(20px, 4vw, 28px)",
                 fontWeight: 700,
                 lineHeight: 1.05,
@@ -133,10 +133,9 @@ export function HackathonPopup() {
           {/* Prize */}
           <p
             style={{
-              fontFamily: "var(--font-mono)",
               fontSize: "clamp(20px, 4vw, 28px)",
               fontWeight: 700,
-              color: "#FF2D78",
+              color: "var(--color-brand)",
               margin: "0 0 20px",
               lineHeight: 1,
             }}
@@ -147,7 +146,6 @@ export function HackathonPopup() {
           {/* Date */}
           <p
             style={{
-              fontFamily: "var(--font-mono)",
               fontSize: "13px",
               color: "#fff",
               letterSpacing: "0.01em",
@@ -160,7 +158,6 @@ export function HackathonPopup() {
           {/* Tagline */}
           <p
             style={{
-              fontFamily: "var(--font-mono)",
               fontSize: "13px",
               color: "#fff",
               lineHeight: 1.6,
@@ -172,10 +169,9 @@ export function HackathonPopup() {
 
           {/* Body */}
           <p
+            className="text-neutral-400"
             style={{
-              fontFamily: "var(--font-mono)",
               fontSize: "13px",
-              color: "var(--color-fg-muted)",
               lineHeight: 1.6,
               marginBottom: "20px",
             }}
@@ -192,11 +188,9 @@ Backed by Google for Developers, AMD, ElevenLabs, Aiven, LUMI supercomputer, and
               position: "relative",
               zIndex: 1,
               display: "block",
-              fontFamily: "var(--font-mono)",
               fontSize: "13px",
               fontWeight: 500,
               padding: "12px 20px",
-              border: "none",
               textDecoration: "none",
               textAlign: "center",
               margin: 0,

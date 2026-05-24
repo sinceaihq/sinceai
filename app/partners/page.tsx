@@ -8,6 +8,7 @@ import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { ORG } from "@/lib/org";
 import StructuredData from "@/components/StructuredData";
 import { PartnersSection } from "@/components/sections/homepage/PartnersSection";
+import { ButtonPair } from "@/components/ui/ButtonPair";
 
 export const metadata: Metadata = {
   title:
@@ -148,34 +149,26 @@ export default function PartnersPage() {
       <main className="flex flex-col w-full bg-black min-h-screen">
 
         {/* ── Hero ── */}
-        <div className="max-w-4xl mx-auto px-6 pt-32 md:pt-40 pb-12">
+        <div className="max-w-4xl mx-auto px-6 py-24 md:py-32">
           <FadeIn>
             <div className="prose prose-invert prose-neutral max-w-none">
               <p className="text-xs uppercase tracking-[0.2em] font-semibold text-neutral-500 mb-5">
                 For Organizations
               </p>
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight leading-tight">
-                Partner with Since AI
+                Partner with<br />Since AI
               </h1>
               <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-8">
                 A non-profit ecosystem connecting 10,000+ AI builders with leading AI
                 companies, research groups, and investors. Sponsor challenges, recruit
                 vetted talent, or run applied AI pilots.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <a
-                  href="mailto:partners@sinceai.fi"
-                  className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-black bg-white rounded-full transition-all duration-300 hover:bg-neutral-100 hover:scale-[1.02]"
-                >
-                  Start a partnership conversation →
-                </a>
-                <Link
-                  href="/hackathon"
-                  className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-white/10 rounded-full transition-all duration-300 hover:bg-white/15 border border-white/20 hover:border-white/30 hover:scale-[1.02]"
-                >
-                  Hackathon 2026
-                </Link>
-              </div>
+              <ButtonPair
+                primaryLabel="Start a partnership conversation →"
+                primaryHref="mailto:partners@sinceai.fi"
+                secondaryLabel="Hackathon 2026"
+                secondaryHref="/hackathon"
+              />
             </div>
           </FadeIn>
         </div>
@@ -184,7 +177,7 @@ export default function PartnersPage() {
         <PartnersSection />
 
         {/* ── Rest of content ── */}
-        <div className="max-w-4xl mx-auto px-6 py-16">
+        <div className="max-w-4xl mx-auto px-6 py-24">
           <div className="prose prose-invert prose-neutral max-w-none">
 
             {/* Stats strip */}
@@ -197,7 +190,7 @@ export default function PartnersPage() {
               ].map((s) => (
                 <div
                   key={s.label}
-                  className="p-5 rounded-xl border border-white/5 bg-white/[0.02] text-center"
+                  className="p-5 border border-white/5 bg-white/[0.02] text-center"
                 >
                   <div className="text-2xl font-bold text-white mb-1">{s.value}</div>
                   <div className="text-xs text-neutral-500 leading-snug">{s.label}</div>
@@ -213,7 +206,7 @@ export default function PartnersPage() {
 
               <div className="space-y-5">
                 {/* Card 1 */}
-                <div className="p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+                <div className="p-8 border border-white/10 bg-white/[0.02]">
                   <h3 className="text-xl font-bold text-white mb-3 tracking-tight">
                     Sponsor a hackathon challenge
                   </h3>
@@ -241,7 +234,7 @@ export default function PartnersPage() {
                 </div>
 
                 {/* Card 2 */}
-                <div className="p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+                <div className="p-8 border border-white/10 bg-white/[0.02]">
                   <h3 className="text-xl font-bold text-white mb-3 tracking-tight">
                     Recruit AI talent
                   </h3>
@@ -269,7 +262,7 @@ export default function PartnersPage() {
                 </div>
 
                 {/* Card 3 */}
-                <div className="p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+                <div className="p-8 border border-white/10 bg-white/[0.02]">
                   <h3 className="text-xl font-bold text-white mb-3 tracking-tight">
                     Run an applied AI pilot
                   </h3>
@@ -324,7 +317,7 @@ export default function PartnersPage() {
                 {caseStudies.map((cs) => (
                   <div
                     key={cs.title}
-                    className="p-6 rounded-xl border border-white/5 bg-white/[0.02]"
+                    className="p-6 border border-white/5 bg-white/[0.02]"
                   >
                     <div className="flex items-center gap-3 mb-3">
                       <span className="text-xs font-semibold text-white uppercase tracking-wider">
@@ -341,7 +334,7 @@ export default function PartnersPage() {
                       {cs.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="px-2 py-0.5 rounded-full border border-white/10 bg-white/[0.03] text-neutral-500 text-xs"
+                          className="px-2 py-0.5 rounded-full border border-white/10 bg-white/[0.02] text-neutral-500 text-xs"
                         >
                           {tag}
                         </span>
@@ -361,7 +354,7 @@ export default function PartnersPage() {
                 {steps.map((s) => (
                   <div
                     key={s.n}
-                    className="flex gap-6 p-6 rounded-xl border border-white/5 bg-white/[0.02]"
+                    className="flex gap-6 p-6 border border-white/5 bg-white/[0.02]"
                   >
                     <span className="text-2xl font-bold text-neutral-700 leading-none pt-0.5 min-w-[2.5rem]">
                       {s.n}
@@ -396,7 +389,7 @@ export default function PartnersPage() {
             </section>
 
             {/* Bottom CTA */}
-            <section className="mb-20 p-10 rounded-2xl border border-white/10 bg-white/[0.03] text-center">
+            <section className="mb-20 p-10 border border-white/10 bg-white/[0.02] text-center">
               <h2 className="text-2xl font-bold text-white mb-3 tracking-tight">
                 Ready to partner?
               </h2>
@@ -406,9 +399,9 @@ export default function PartnersPage() {
               </p>
               <a
                 href="mailto:partners@sinceai.fi"
-                className="inline-flex items-center justify-center px-10 py-4 text-base font-semibold text-black bg-white rounded-full transition-all duration-300 hover:bg-neutral-100 hover:scale-[1.02]"
+                className="flex items-center justify-center px-8 py-4 text-base font-semibold text-black bg-white rounded-none transition-all duration-300 hover:bg-neutral-100 text-center"
               >
-                Start a partnership conversation → partners@sinceai.fi
+                Start a partnership →&nbsp;partners@sinceai.fi
               </a>
             </section>
 
@@ -429,7 +422,7 @@ export default function PartnersPage() {
                 <span key={href} className="whitespace-nowrap">
                   <Link
                     href={href}
-                    className="text-neutral-500 hover:text-white transition-colors duration-150"
+                    className="text-neutral-500 hover:text-white transition-colors duration-300"
                   >
                     {label}
                   </Link>

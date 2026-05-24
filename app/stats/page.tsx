@@ -68,19 +68,19 @@ export default function StatsPage() {
                   Community Overview
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02] text-center">
+                  <div className="p-6 border border-white/10 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">1000+</div>
                     <div className="text-sm text-neutral-500">Active Members</div>
                   </div>
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02] text-center">
+                  <div className="p-6 border border-white/10 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">260+</div>
                     <div className="text-sm text-neutral-500">Hackathon Participants</div>
                   </div>
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02] text-center">
+                  <div className="p-6 border border-white/10 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">30+</div>
                     <div className="text-sm text-neutral-500">AI Projects Shipped</div>
                   </div>
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02] text-center">
+                  <div className="p-6 border border-white/10 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">15+</div>
                     <div className="text-sm text-neutral-500">Partner Companies</div>
                   </div>
@@ -179,11 +179,11 @@ export default function StatsPage() {
                   industry-leading deployment rates for hackathon projects.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.03] text-center">
+                  <div className="p-6 border border-white/10 bg-white/[0.02] text-center">
                     <div className="text-3xl font-bold text-white mb-2">30+</div>
                     <div className="text-sm text-neutral-400">Projects receiving production support</div>
                   </div>
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.03] text-center">
+                  <div className="p-6 border border-white/10 bg-white/[0.02] text-center">
                     <div className="text-3xl font-bold text-white mb-2">8 weeks</div>
                     <div className="text-sm text-neutral-400">Average support duration</div>
                   </div>
@@ -226,9 +226,9 @@ export default function StatsPage() {
                   Production Deployment Case Studies
                 </h2>
                 <div className="space-y-6">
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">Maritime Sound Signal Detection (Kongsberg)</h3>
-                    <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
                       <div>
                         <dt className="text-neutral-500">Built</dt>
                         <dd className="text-neutral-300">72 hours</dd>
@@ -248,9 +248,9 @@ export default function StatsPage() {
                     </dl>
                   </div>
 
-                  <div className="p-6 rounded-xl border border-white/10 bg-white/[0.02]">
+                  <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2">Intelligent Spare Part Discovery (Sandvik)</h3>
-                    <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
                       <div>
                         <dt className="text-neutral-500">Built</dt>
                         <dd className="text-neutral-300">72 hours (RAG-based system)</dd>
@@ -273,7 +273,7 @@ export default function StatsPage() {
               </section>
 
               {/* Contact */}
-              <section className="p-8 rounded-2xl border border-white/10 bg-white/[0.02]">
+              <section className="p-8 border border-white/10 bg-white/[0.02]">
                 <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">
                   Data Inquiries
                 </h2>

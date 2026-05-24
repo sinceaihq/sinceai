@@ -41,9 +41,9 @@ export function CookieConsent() {
       {consent === "granted" && <GoogleAnalytics gaId={GA_ID} />}
 
       {visible && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 px-[var(--space-lg)] py-[var(--space-sm)]">
-          <div className="mx-auto w-full max-w-[1200px] flex flex-col sm:flex-row items-start sm:items-center gap-4 px-[var(--space-lg)] py-3 bg-[rgba(10,10,10,0.95)] backdrop-blur-[12px] border-[0.5px] border-[var(--color-border-strong)]">
-            <p className="flex-1 font-mono text-[13px] leading-relaxed text-[var(--color-fg-muted)]">
+        <div className="fixed bottom-0 left-0 right-0 z-50 px-6 py-4">
+          <div className="mx-auto w-full max-w-6xl flex flex-col sm:flex-row items-start sm:items-center gap-4 px-6 py-3 bg-[rgba(10,10,10,0.95)] backdrop-blur-[12px] border border-white/25">
+            <p className="flex-1 text-sm text-neutral-400 leading-relaxed">
               We use analytics cookies to understand how visitors use our site.
               Your data stays anonymous.{" "}
               <a href="/privacy" className="text-white underline underline-offset-[3px]">
@@ -53,13 +53,13 @@ export function CookieConsent() {
             <div className="flex gap-3 shrink-0">
               <button
                 onClick={decline}
-                className="font-mono text-[13px] font-medium text-[var(--color-fg-muted)] bg-transparent border-[0.5px] border-[var(--color-border-strong)] px-4 py-2 rounded-none cursor-pointer transition-[color,border-color] duration-150 hover:text-white hover:border-white"
+                className="text-sm font-medium text-neutral-400 bg-transparent border border-white/25 px-4 py-2 rounded-none cursor-pointer transition-colors duration-300 hover:text-white hover:border-white"
               >
                 Decline
               </button>
               <button
                 onClick={accept}
-                className="font-mono text-[13px] font-medium text-black bg-white border-[0.5px] border-white px-4 py-2 rounded-none cursor-pointer"
+                className="text-sm font-medium text-black bg-white border border-white px-4 py-2 rounded-none cursor-pointer hover:bg-neutral-100 transition-colors"
               >
                 Accept
               </button>

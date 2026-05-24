@@ -8,6 +8,7 @@ import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { getBreadcrumbSchema } from "@/lib/schema";
 import { ORG } from "@/lib/org";
 import StructuredData from "@/components/StructuredData";
+import { ButtonPair } from "@/components/ui/ButtonPair";
 
 export const metadata: Metadata = {
   title: "AI Hackathons 2026 — Best Global AI Hackathons & Events | Since AI",
@@ -180,7 +181,7 @@ export default function AIHackathonsPage() {
       <StructuredData data={eventListSchema} />
 
       <main className="flex flex-col w-full bg-black min-h-screen">
-        <div className="max-w-4xl mx-auto px-6 py-32 md:py-40">
+        <div className="max-w-4xl mx-auto px-6 py-24 md:py-32">
           <FadeIn>
             <p className="text-xs uppercase tracking-[0.2em] font-semibold text-neutral-500 mb-5">
               AI Hackathons
@@ -209,7 +210,7 @@ export default function AIHackathonsPage() {
                   {upcomingEvents.map((event) => (
                     <div
                       key={event.name}
-                      className="p-6 rounded-xl border border-white/10 bg-white/[0.03]"
+                      className="p-6 border border-white/10 bg-white/[0.02]"
                     >
                       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                         <div>
@@ -230,7 +231,7 @@ export default function AIHackathonsPage() {
                         </div>
                         <Link
                           href={event.url}
-                          className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-black bg-white rounded-full hover:bg-neutral-100 transition-all hover:scale-[1.02] whitespace-nowrap"
+                          className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-black bg-white rounded-none hover:bg-neutral-100 transition-all whitespace-nowrap"
                         >
                           Apply now →
                         </Link>
@@ -260,7 +261,7 @@ export default function AIHackathonsPage() {
                   {whatMakesGreat.map((item) => (
                     <div
                       key={item.title}
-                      className="p-6 rounded-xl border border-white/5 bg-white/[0.02]"
+                      className="p-6 border border-white/5 bg-white/[0.02]"
                     >
                       <h3 className="text-base font-bold text-white mb-2">{item.title}</h3>
                       <p className="text-neutral-400 text-sm leading-relaxed">{item.body}</p>
@@ -354,20 +355,12 @@ export default function AIHackathonsPage() {
                   Aiven, Lovable, Antler, Inventure, Wave Ventures, and the universities of
                   Turku and Aalto.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Link
-                    href="/hackathon"
-                    className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-black bg-white rounded-full transition-all duration-300 hover:bg-neutral-100 hover:scale-[1.02]"
-                  >
-                    Apply to Hackathon 2026 →
-                  </Link>
-                  <Link
-                    href="/about"
-                    className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-white/10 rounded-full transition-all duration-300 hover:bg-white/15 border border-white/20 hover:border-white/30 hover:scale-[1.02]"
-                  >
-                    About Since AI
-                  </Link>
-                </div>
+                <ButtonPair
+                  primaryLabel="Apply to Hackathon 2026 →"
+                  primaryHref="/hackathon"
+                  secondaryLabel="About Since AI"
+                  secondaryHref="/about"
+                />
               </section>
 
               {/* Find more */}

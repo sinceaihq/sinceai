@@ -17,7 +17,7 @@ export default function PrivacyPage() {
           
           <div className="prose prose-invert prose-neutral max-w-none">
             <p className="text-lg text-neutral-400 mb-8">
-              Last updated: April 13, 2026
+              Last updated: May 23, 2026
             </p>
 
             <section className="mb-12">
@@ -36,13 +36,11 @@ export default function PrivacyPage() {
                 Information We Collect
               </h2>
               <p className="text-neutral-300 leading-relaxed mb-4">
-                We collect information that you provide directly to us, including:
+                This website collects personal data in two ways:
               </p>
               <ul className="list-disc list-inside text-neutral-300 space-y-2 mb-4">
-                <li>Name and email address when you contact us</li>
-                <li>Company information for partnership inquiries</li>
-                <li>Discord username when you join our community</li>
-                <li>Professional information shared in our community</li>
+                <li><strong className="text-white">Contact form</strong> — your name, email address, and message when you submit an inquiry</li>
+                <li><strong className="text-white">Analytics</strong> — anonymous usage data (pages visited, time on site, general location) via Google Analytics, only with your consent</li>
               </ul>
             </section>
 
@@ -50,14 +48,9 @@ export default function PrivacyPage() {
               <h2 className="text-3xl font-bold text-white mb-4 tracking-tight">
                 How We Use Your Information
               </h2>
-              <p className="text-neutral-300 leading-relaxed mb-4">
-                We use the information we collect to:
-              </p>
               <ul className="list-disc list-inside text-neutral-300 space-y-2 mb-4">
-                <li>Respond to your inquiries and requests</li>
-                <li>Send you updates about events and community activities</li>
-                <li>Facilitate partnerships and sponsorships</li>
-                <li>Improve our services and community experience</li>
+                <li>Contact form submissions are used solely to respond to your inquiry</li>
+                <li>Analytics data is used to understand how the site is used and improve it</li>
               </ul>
             </section>
 
@@ -109,9 +102,14 @@ export default function PrivacyPage() {
                 Third-Party Services
               </h2>
               <p className="text-neutral-300 leading-relaxed mb-4">
-                We use Discord for community management and Google Analytics for website analytics.
-                Please review their respective privacy policies for information about how they handle
-                your data. We do not share your personal information with third parties for marketing purposes.
+                We use the following third-party services:
+              </p>
+              <ul className="list-disc list-inside text-neutral-300 space-y-2 mb-4">
+                <li><strong className="text-white">Google Analytics</strong> — anonymous website usage analytics (consent required)</li>
+                <li><strong className="text-white">EmailJS</strong> — contact form delivery. When you submit our contact form, your name, email address, and message are processed by EmailJS to deliver your inquiry to our team</li>
+              </ul>
+              <p className="text-neutral-300 leading-relaxed mb-4">
+                We do not sell your personal information or share it with third parties for their own marketing purposes.
               </p>
             </section>
 
