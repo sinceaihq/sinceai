@@ -293,6 +293,12 @@ export const PARTNERS: Partner[] = [
     url: "https://www.jkles.fi/en/",
     tier: 3,
   },
+  {
+    name: "Lahti es",
+    logo: "/assets/sponsors/lahties.png",
+    url: "https://lahties.com/",
+    tier: 3,
+  },
 ];
 
 // ─── Tier-based exports (primary) ─────────────────────────────────────────────
