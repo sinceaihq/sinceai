@@ -161,7 +161,7 @@ const teamSections = [
     members: [
       {
         name: "Otso Saarinen",
-        role: "Technology Lead",
+        role: "Technical Lead",
         email: "otso.saarinen@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/otsosaarinen/",
         image: "/assets/team/otso.webp",
