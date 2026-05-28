@@ -142,6 +142,12 @@ export const PARTNERS: Partner[] = [
     tier: 2,
   },
   {
+    name: "FOV Ventures",
+    logo: "/assets/supports/FOVV.png",
+    url: "https://www.fov.ventures/",
+    tier: 2,
+  },
+  {
     name: "Monttu Ventures",
     logo: "/assets/sponsors/monttuventureslogo.png",
     url: "https://monttuventures.fi/",
