@@ -112,6 +112,12 @@ export const PARTNERS: Partner[] = [
     tier: 2,
   },
   {
+    name: "Icebreaker VC",
+    logo: "/assets/supports/Icebreaker.png",
+    url: "https://www.icebreaker.vc/",
+    tier: 2,
+  },
+  {
     name: "Inventure",
     logo: "/assets/sponsors/Inventure.png",
     url: "https://www.inventure.vc/",
