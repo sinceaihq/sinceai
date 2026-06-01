@@ -311,6 +311,12 @@ export const PARTNERS: Partner[] = [
     url: "https://lahties.com/",
     tier: 3,
   },
+  {
+    name: "Attractor",
+    logo: "/assets/supports/attractor.png",
+    url: "https://www.attractor.fi/",
+    tier: 3,
+  },
 ];
 
 // ─── Tier-based exports (primary) ─────────────────────────────────────────────
