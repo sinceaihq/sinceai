@@ -112,6 +112,12 @@ export const PARTNERS: Partner[] = [
     tier: 2,
   },
   {
+    name: "Icebreaker VC",
+    logo: "/assets/supports/Icebreaker.png",
+    url: "https://www.icebreaker.vc/",
+    tier: 2,
+  },
+  {
     name: "Inventure",
     logo: "/assets/sponsors/Inventure.png",
     url: "https://www.inventure.vc/",
@@ -139,6 +145,12 @@ export const PARTNERS: Partner[] = [
     name: "Inovexus",
     logo: "/assets/sponsors/Inovexus.svg",
     url: "https://inovexus.com/",
+    tier: 2,
+  },
+  {
+    name: "FOV Ventures",
+    logo: "/assets/supports/FOVV.png",
+    url: "https://www.fov.ventures/",
     tier: 2,
   },
   {
@@ -297,6 +309,12 @@ export const PARTNERS: Partner[] = [
     name: "Lahti es",
     logo: "/assets/sponsors/lahties.png",
     url: "https://lahties.com/",
+    tier: 3,
+  },
+  {
+    name: "Attractor",
+    logo: "/assets/supports/attractor.png",
+    url: "https://www.attractor.fi/",
     tier: 3,
   },
 ];
