@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import createMDX from "@next/mdx";
 
 const securityHeaders = [
   {
@@ -33,6 +34,7 @@ const revalidateOnEveryRequestHeader = {
 };
 
 const nextConfig: NextConfig = {
+  pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
   images: {
     unoptimized: true,
     formats: ['image/avif', 'image/webp'],
@@ -50,4 +52,6 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+const withMDX = createMDX({});
+
+export default withMDX(nextConfig);

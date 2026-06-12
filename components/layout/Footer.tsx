@@ -50,7 +50,6 @@ const SOCIAL_LINKS = [
   { name: "Instagram", href: ORG.social.instagram },
   { name: "YouTube",   href: ORG.social.youtube },
   { name: "Telegram",  href: ORG.social.telegram },
-  { name: "Medium",    href: ORG.social.medium },
   { name: "Substack",  href: ORG.social.substack },
   { name: "Reddit",    href: ORG.social.reddit },
   { name: "TikTok",    href: ORG.social.tiktok },

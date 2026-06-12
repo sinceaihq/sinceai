@@ -1,0 +1,179 @@
+A great hackathon demo isn't a feature list. It's a short, reliable story: "Here's the problem → here's the product → here's proof it works."
+
+This guide is built for AI hackathons, but the process works for any hackathon and feels like building a tiny startup MVP.
+
+## The one rule that changes everything: build the demo first
+
+Most teams fail like this:
+
+- Spend 30–40 hours "building"
+- Integrate at the end
+- The demo breaks
+- The story is unclear
+
+Winning teams do the opposite:
+
+- Decide the demo flow in hour 1
+- Ship a clickable skeleton early
+- Add "smartness" only after the flow is real
+
+If you do nothing else: demo-first beats model-first every time.
+
+## Step 0: Define your demo in one sentence
+
+Your demo sentence must include user, input, output, and benefit.
+
+> Template: "For [user], our product takes [input] and produces [output] so they can [benefit]."
+
+> Example: "For site managers, it takes incident notes and produces root-cause + next steps so issues get resolved faster."
+
+If your team can't agree on one sentence, you don't have a demo yet.
+
+## Step 1: Design the "30-second demo path"
+
+Your entire demo should be a simple path:
+
+1. User opens the app
+2. User provides input (paste/upload/select)
+3. The app generates output
+4. User takes one action (export, create ticket, send, save)
+
+That's it.
+
+**The two-screen rule:** Screen 1 is input, Screen 2 is output. More screens = more failure points.
+
+## Step 2: Make a "demo dataset" you fully control
+
+A hackathon demo is a performance. You need inputs that consistently produce good outputs. Create:
+
+- 5–10 realistic sample inputs
+- One "wow" example
+- One "edge case" example (to show robustness)
+
+For AI demos, include one ambiguous input, one messy input, and one clean input. Put these in a `/demo` folder in the repo.
+
+## Step 3: Build a clickable skeleton
+
+This is where teams win. In the first 6 hours, ship:
+
+- A UI that looks like the final product
+- Fake output (hardcoded)
+- A working "Generate" button
+- An app that doesn't crash
+
+It must be demoable even if your AI fails later.
+
+### Demo skeleton checklist
+
+- Input component exists
+- Output component exists
+- Loading state exists
+- Error state exists
+- One full path is clickable end-to-end
+
+## Step 4: Add the smallest "smart core" that matters
+
+Now add AI (or logic) inside the skeleton. For AI hackathons, high-success choices:
+
+- RAG Q&A (answers + citations)
+- Extraction (text → structured fields)
+- Classification/routing (labels, priorities)
+- Summarization with a strict format
+
+Pick one. Do it well. If you add more than one AI feature before the first one is solid, you'll lose time and stability.
+
+## Step 5: Make it judge-proof
+
+A winning demo is reliable under stress.
+
+### Reliability tactics that save you
+
+- Cache outputs for your 5–10 demo inputs
+- Add a demo-mode toggle (uses cached outputs)
+- Handle rate limits and timeouts gracefully
+- Add retries and strict output formats
+- Keep response times predictable
+
+Even if everything works live, cached outputs prevent disaster.
+
+**The "Wi-Fi died" plan (must-have):** your demo should still run if Wi-Fi is slow, the API rate-limits you, or the model output is inconsistent. If you can't run fully offline, you can still cache results and replay them.
+
+## Step 6: Add proof in tiny numbers
+
+Judges love proof. You don't need a research paper — just honest, clear evidence. Choose 1–2 metrics:
+
+- Time saved: "8 min → 45 sec"
+- Steps reduced: "12 clicks → 3"
+- Accuracy on 10 cases: "8/10 correct"
+- Fewer errors: "caught 6/10 common mistakes"
+
+### Easy proof format
+
+- **Before:** what the user does today
+- **After:** what your demo does
+- **Result:** time/steps/quality improvement
+- **Limitations:** one honest sentence
+- **Next step:** a pilot plan
+
+This makes you sound serious and deployable.
+
+## Step 7: Polish what people feel
+
+This is where "hackathon project" becomes "product." Polish typography and spacing, input placeholders, clear labels, loading messages ("Analyzing incident log…"), an export button (copy to clipboard, download JSON/PDF), and a clean "reset" button.
+
+**The one-screen product standard:** if a stranger can use it without guidance, you're in winner territory.
+
+## Step 8: Build the pitch as a demo wrapper
+
+Your pitch exists to make the demo hit harder — not to explain your architecture.
+
+### 4-slide pitch that wins
+
+1. **Problem** — who, pain, stakes
+2. **Solution** — one sentence + demo flow
+3. **Proof** — metrics + examples
+4. **Roadmap** — how it becomes real in 4 weeks
+
+Keep it visual. Keep it short.
+
+## The hour-by-hour 72h plan
+
+- **Hours 0–2: Decide the win.** Demo sentence, user + pain, scope (must-have vs nice-to-have), roles.
+- **Hours 2–6: Skeleton.** UI + fake output, end-to-end clickable flow.
+- **Hours 6–18: Smart core.** Implement one AI feature, prepare 5–10 demo inputs.
+- **Hours 18–36: Reliability.** Caching/demo mode, errors, retries, timeouts, stable performance.
+- **Hours 24–48: Proof + UX polish.** Simple metrics, export/copy feature, cleaner UI.
+- **Hours 48–60: Pitch assets.** 4 slides, demo script, README.
+- **Hours 60–72: Rehearsal + backups.** Practice the demo 10 times, assign speaking roles, prepare an offline fallback.
+
+## The demo script (90 seconds) that wins
+
+Use this exact structure:
+
+1. **Hook (10s):** "Today, [user] loses [pain] because [problem]."
+2. **Show input (10s):** "Here's a real example."
+3. **Generate output (20s):** "We turn it into [result]."
+4. **Action (10s):** "Now you can export / create ticket / send."
+5. **Proof (20s):** "This reduces time from A→B / gets X correct."
+6. **Close (10s):** "Next step is a pilot with [workflow]."
+
+If you can't do it in 90 seconds, your scope is too big.
+
+## Common mistakes (so you don't repeat them)
+
+- Leaving integration to the last 6 hours
+- Building a model instead of a product
+- No controlled demo inputs
+- No proof, only claims
+- No rehearsal
+- Adding features when the demo is unstable
+
+Hackathons reward clarity, execution, and reliability.
+
+## Read next
+
+- [How to Win an AI Hackathon](/blog/how-to-win-an-ai-hackathon)
+- [Hackathon Tech Stack Guide](/blog/hackathon-tech-stack-guide)
+- [How to Form a Hackathon Team (Like a Startup)](/blog/how-to-form-a-hackathon-team)
+
+Want to put this into practice? [Join the Since AI Hackathon](/hackathon) and build with serious teams on real company challenges.

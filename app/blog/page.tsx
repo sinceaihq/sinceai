@@ -3,13 +3,21 @@ import React, { useState } from "react";
 import SmoothScroll from "@/components/smoothScroll";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import StructuredData from "@/components/StructuredData";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Clock, ChevronRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Clock, ChevronRight } from "lucide-react";
 import {
   blogPosts,
   BLOG_CATEGORIES,
   type BlogCategory,
 } from "@/lib/blog";
+import {
+  getBlogSchema,
+  getBlogItemListSchema,
+  getBlogFAQSchema,
+  getBreadcrumbSchema,
+} from "@/lib/schema";
+import { ORG } from "@/lib/org";
 import Link from "next/link";
 import NewsletterSignup from "@/components/forms/NewsletterSignup";
 
@@ -40,9 +48,19 @@ export default function BlogPage() {
       ? blogPosts
       : blogPosts.filter((post) => post.category === activeFilter);
 
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: "Home", url: ORG.baseUrl },
+    { name: "Blog", url: `${ORG.baseUrl}/blog` },
+  ]);
+
   return (
     <SmoothScroll>
       <Navbar />
+
+      <StructuredData data={getBlogSchema()} />
+      <StructuredData data={getBlogItemListSchema()} />
+      <StructuredData data={breadcrumbSchema} />
+      <StructuredData data={getBlogFAQSchema()} />
 
       <main className="flex flex-col w-full bg-black min-h-screen">
         {/* Hero */}
@@ -117,16 +135,16 @@ export default function BlogPage() {
           <div className="max-w-5xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {filteredPosts.map((post, index) => (
-                <motion.a
+                <motion.div
                   key={post.slug}
-                  href={post.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
-                  className="group flex flex-col justify-between p-8 md:p-10 border border-white/10 bg-white/[0.02] hover:bg-white/[0.03] hover:border-white/20 transition-all duration-300"
+                >
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="group flex flex-col justify-between h-full p-8 md:p-10 border border-white/10 bg-white/[0.02] hover:bg-white/[0.03] hover:border-white/20 transition-all duration-300"
                 >
                   <article>
                     {/* Tags */}
@@ -170,10 +188,11 @@ export default function BlogPage() {
 
                   {/* CTA */}
                   <div className="flex items-center gap-2 text-white font-semibold group-hover:gap-3 transition-all duration-300">
-                    <span>Read on Medium</span>
-                    <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    <span>Read article</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                   </div>
-                </motion.a>
+                </Link>
+                </motion.div>
               ))}
             </div>
 
@@ -213,7 +232,7 @@ export default function BlogPage() {
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a
-                  href="https://sinceai.substack.com"
+                  href={ORG.social.substack}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-black bg-white rounded-none hover:bg-neutral-100 transition-all duration-300 group"
@@ -222,15 +241,25 @@ export default function BlogPage() {
                   <ArrowUpRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </a>
                 <a
-                  href="https://medium.com/@sinceai"
+                  href={ORG.social.discord}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white rounded-none border border-white/20 hover:border-white transition-colors duration-300"
+                  className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white rounded-none border border-white/20 hover:border-white transition-colors duration-300 group"
                 >
-                  Follow on Medium
+                  Join the Discord
                   <ArrowUpRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </a>
               </div>
+              <p className="mt-6 text-sm text-neutral-500">
+                Prefer a reader? Subscribe via{" "}
+                <a
+                  href="/blog/feed.xml"
+                  className="text-neutral-300 hover:text-white underline underline-offset-4 transition-colors"
+                >
+                  RSS
+                </a>
+                .
+              </p>
             </motion.div>
           </div>
         </section>
