@@ -351,4 +351,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for full workflow details including how t
 
 **Since AI ry** — Business ID 3593920-2 — Turku, Finland
 
-[sinceai.ai](https://sinceai.ai) · [Discord](https://discord.com/invite/YkqJswRGSW) · [GitHub](https://github.com/sinceaihq)
+[sinceai.ai](https://sinceai.ai) · [Discord](https://discord.gg/vMWdrVUPws) · [GitHub](https://github.com/sinceaihq)

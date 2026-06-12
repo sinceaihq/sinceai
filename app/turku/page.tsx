@@ -363,7 +363,7 @@ export default function TurkuPage() {
                   <a href={`mailto:${ORG.contact.infoEmail}`} className="text-white hover:text-neutral-300 underline">{ORG.contact.infoEmail}</a>
                   <br />
                   <strong className="text-white">Discord:</strong>{" "}
-                  <a href={ORG.social.discord} target="_blank" rel="noopener noreferrer" className="text-white hover:text-neutral-300 underline">discord.gg/6PC74zW68v</a>
+                  <a href={ORG.social.discord} target="_blank" rel="noopener noreferrer" className="text-white hover:text-neutral-300 underline">discord.gg/vMWdrVUPws</a>
                   <br />
                   <strong className="text-white">Location:</strong> Turku, Finland
                 </p>

@@ -12,7 +12,7 @@ import { ButtonPair } from "@/components/ui/ButtonPair";
 
 export default function EventsPage() {
   const config = {
-    discordUrl: "https://discord.com/invite/YkqJswRGSW",
+    discordUrl: "https://discord.gg/vMWdrVUPws",
     lumaOrgUrl: LINKS.lumaOrg,
     lumaHackathon2025Url: LINKS.lumaHackathon2025,
   };

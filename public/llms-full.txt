@@ -190,7 +190,7 @@ Core roles: Technical lead, product/design, AI specialist, pitch lead. Designate
 
 ## Community Platforms
 
-- **Discord**: https://discord.com/invite/YkqJswRGSW
+- **Discord**: https://discord.gg/vMWdrVUPws
 - **Telegram**: https://t.me/sinceaihq
 - **LinkedIn**: https://www.linkedin.com/company/sinceai
 - **GitHub**: https://github.com/sinceaihq
@@ -246,7 +246,7 @@ A: We provide full-lifecycle support: co-creating challenges with companies befo
 A: Winning projects receive 8+ weeks of production support including architecture review, deployment guidance, integration assistance, and ongoing mentorship. This is unique to Since AI.
 
 **Q: How can I join Since AI?**
-A: Join our Discord at https://discord.com/invite/YkqJswRGSW. Membership is free and open to anyone interested in AI.
+A: Join our Discord at https://discord.gg/vMWdrVUPws. Membership is free and open to anyone interested in AI.
 
 **Q: When is the next hackathon?**
 A: Since AI Hackathon 2026 is November 6–8, 2026 at EduCity, Turku, Finland. Registration is open at https://luma.com/sinceai.
