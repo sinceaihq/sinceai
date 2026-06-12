@@ -1,0 +1,196 @@
+The best hackathon stack is the one that lets you ship a reliable demo fast. Not the fanciest framework. Not the newest tool. The fastest path to "it works" — with a story judges understand.
+
+This guide gives you battle-tested stack choices, when to use them, and how to avoid the common traps.
+
+## The only thing that matters: speed to a stable demo
+
+A hackathon stack should optimize for:
+
+- **Time-to-first-demo** (hours, not days)
+- **Reliability** (works with bad Wi-Fi and zero sleep)
+- **Simplicity** (few moving parts)
+- **Team familiarity** (no learning new frameworks mid-event)
+- **Demo clarity** (clean UI, clear output)
+
+If your stack increases integration risk, it's the wrong stack.
+
+## The hackathon stack pyramid (what to choose first)
+
+Always decide in this order:
+
+1. Demo flow (input → output → action)
+2. Data source (docs, CSV, API, images, logs)
+3. AI/logic core (RAG, extraction, classification, rules)
+4. Backend (API to connect UI + AI + data)
+5. Frontend (UI that makes the demo obvious)
+6. Deployment (only if needed)
+
+Most teams pick #4–#6 first and regret it.
+
+## Recommended default stacks (pick one and commit)
+
+### Stack A: The Safe Winner (most teams should do this)
+
+Use when you want maximum speed and minimum risk.
+
+- **Frontend:** React + Vite (or Next.js if you already know it)
+- **Backend:** Node.js (Express) or Python (FastAPI)
+- **AI:** one pipeline (RAG/extraction/classification)
+- **Storage:** local files or SQLite
+- **Deploy:** optional; run locally
+
+Why it wins: simple, fast, easy to demo, easy to debug.
+
+### Stack B: The AI-Heavy Stack (when AI is the whole point)
+
+Use when the challenge is clearly AI-first (docs, workflows, copilots).
+
+- **Frontend:** Next.js (fast pages + optional API routes)
+- **Backend:** Python FastAPI (clean AI integration)
+- **AI:** RAG + structured extraction + light eval
+- **Storage:** SQLite or Postgres (only if needed)
+- **Deploy:** a one-click platform if required
+
+Why it wins: Python makes AI work faster; the UI still looks polished.
+
+### Stack C: The Enterprise Integration Stack (for "real" company challenges)
+
+Use when companies care about deployability, security, and integration.
+
+- **Frontend:** Next.js
+- **Backend:** FastAPI or NestJS
+- **Auth:** simple demo auth (or none) unless required
+- **AI:** RAG + citations + logging
+- **Storage:** Postgres (if you truly need it)
+- **Deploy:** containerized (Docker)
+
+Why it wins: you can credibly say "this could ship."
+
+## The best tech stack is role-based
+
+### If you have strong frontend talent
+
+- Don't overbuild the backend.
+- Ship a one-screen UI that feels like a product.
+- Use a thin API and focus on the demo flow.
+
+### If you have strong AI talent
+
+- Keep the UI basic but clean.
+- Put energy into stable outputs, caching, citations/proof, and a small evaluation.
+
+### If you have no designer
+
+- Use a clean component kit (minimal).
+- Avoid custom UI complexity.
+- Keep typography and spacing consistent.
+
+## AI hackathon core: choose the simplest "wow"
+
+Most winning AI demos use one of these (fast and reliable):
+
+### 1. RAG (Retrieval-Augmented Generation)
+
+Search relevant docs → generate an answer with sources. Wins because it's practical and easy to understand.
+
+Good for: internal knowledge bases; policies, manuals, PDFs; customer support. **Must-have:** citations/snippets to build trust.
+
+### 2. Extraction (text → structured JSON)
+
+Turn messy text into fields. Wins because it creates immediate business value.
+
+Good for: invoices, contracts, tickets, incidents; CRM updates; compliance workflows. **Must-have:** schema validation + "missing fields" handling.
+
+### 3. Classification / Routing
+
+Label, prioritize, route tasks. Wins because it's measurable and fast to prove.
+
+Good for: support triage; risk flags; categorizing documents. **Must-have:** a confidence score + fallback rule.
+
+### 4. Simple forecasting / anomaly detection
+
+Detect weird patterns in numbers. Wins because it's visual and "feels real."
+
+Good for: sensor data; ops metrics; supply chain / production numbers. **Must-have:** a clear chart + threshold explanation.
+
+### The "don't do this in a hackathon" list
+
+These choices kill teams:
+
+- Microservices
+- Kubernetes
+- Complex auth flows
+- Multi-database setups
+- Building your own UI framework
+- Training a model from scratch (unless the hackathon is about that)
+- Adding 5 APIs "because it's cool"
+
+Hackathons reward proof, not architecture.
+
+## Deployment: only if the hackathon requires it
+
+### Best deployment strategy for hackathons
+
+- Default: local demo
+- If needed: one simple deploy (single service)
+- Always: a demo-mode fallback
+
+### Demo mode (seriously: build this)
+
+Your app should have cached example outputs, a toggle like "Use demo data," and graceful failures (no crashes on stage). This alone can save your entire team.
+
+## The "72h repo structure" that keeps you sane
+
+Keep it boring and clean:
+
+- `/frontend`
+- `/backend`
+- `/demo` (sample inputs, cached outputs)
+- `README.md` (how to run in 5 minutes)
+
+Your README must include what the product does (1 sentence), how to run it (3 commands), demo examples (links/files), and known limitations (1–2 lines). A clean repo signals seriousness.
+
+## Tooling that helps without slowing you down
+
+Use only what creates leverage:
+
+- Git + one main-branch strategy (avoid merge hell)
+- Prettier/ESLint (basic)
+- Logging (console + file)
+- Simple env config (`.env.example`)
+- Error handling + loading states in the UI
+
+If a tool costs you time to configure, skip it.
+
+## The "stack decision" checklist (5 minutes)
+
+Answer these:
+
+1. Can we build a clickable demo in 6 hours with this stack?
+2. Do at least 2 people on the team know it well?
+3. Can we debug it quickly at 3 AM?
+4. Can we run it without internet (or with caching)?
+5. Does it support our one best AI feature?
+
+If any answer is "no," simplify.
+
+## Example: a winning stack (AI doc copilot)
+
+**Demo:** Upload PDF → ask a question → answer with citations → export summary.
+
+- **Frontend:** Next.js
+- **Backend:** FastAPI
+- **AI:** RAG + citations + structured summary output
+- **Storage:** local vector index + local files
+- **Reliability:** cached outputs for 5 PDFs
+- **Proof:** "time to find an answer: 8 min → 30 sec"
+
+This wins because it's clear, useful, and stable.
+
+## Read next
+
+- [How to Build a Demo in 72 Hours](/blog/how-to-build-a-demo-in-72-hours)
+- [AI Hackathon Project Ideas: 30 Buildable Concepts](/blog/ai-hackathon-project-ideas)
+- [How to Win an AI Hackathon](/blog/how-to-win-an-ai-hackathon)
+
+Want more hackathon guides, team templates, and event updates? [Explore the Since AI Hackathon](/hackathon) and [join the builder community](/for-builders).

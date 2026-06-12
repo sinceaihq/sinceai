@@ -2,7 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, ArrowUpRight, Clock } from "lucide-react";
+import { ArrowRight, Clock } from "lucide-react";
 import { getLatestPosts } from "@/lib/blog";
 
 const latestPosts = getLatestPosts(3);
@@ -38,16 +38,16 @@ export function LatestPosts() {
         {/* Post Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {latestPosts.map((post, index) => (
-            <motion.a
+            <motion.div
               key={post.slug}
-              href={post.url}
-              target="_blank"
-              rel="noopener noreferrer"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
-              className="group flex flex-col justify-between p-8 border border-white/10 bg-white/[0.02] hover:bg-white/[0.03] hover:border-white/20 transition-all duration-300"
+            >
+            <Link
+              href={`/blog/${post.slug}`}
+              className="group flex flex-col justify-between h-full p-8 border border-white/10 bg-white/[0.02] hover:bg-white/[0.03] hover:border-white/20 transition-all duration-300"
             >
               <div>
                 {/* Tags */}
@@ -86,10 +86,11 @@ export function LatestPosts() {
 
               {/* CTA */}
               <div className="flex items-center gap-2 text-sm text-white font-semibold group-hover:gap-3 transition-all duration-300">
-                <span>Read on Medium</span>
-                <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                <span>Read article</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </div>
-            </motion.a>
+            </Link>
+            </motion.div>
           ))}
         </div>
 

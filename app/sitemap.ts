@@ -1,10 +1,11 @@
 import { MetadataRoute } from "next";
+import { blogPosts } from "@/lib/blog";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://sinceai.ai";
   const now = new Date();
 
-  // Note: /blog/[slug] pages are excluded — they redirect to Medium (301).
+  // Note: /blog/[slug] pages are self-hosted articles and included below.
   // Note: /research and /europe do not exist → excluded.
   // Note: /european-ai is a separate page from /europe-ai — both included.
   const staticPages: {
@@ -38,10 +39,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/terms", priority: 0.3, changeFreq: "yearly" },
   ];
 
-  return staticPages.map((p) => ({
+  const staticEntries: MetadataRoute.Sitemap = staticPages.map((p) => ({
     url: `${base}${p.path}`,
     lastModified: now,
     changeFrequency: p.changeFreq,
     priority: p.priority,
   }));
+
+  const blogEntries: MetadataRoute.Sitemap = blogPosts.map((post) => ({
+    url: `${base}/blog/${post.slug}`,
+    lastModified: new Date(post.dateModified),
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  return [...staticEntries, ...blogEntries];
 }

@@ -1,0 +1,142 @@
+Winning an AI hackathon isn't about the fanciest model. It's about solving a real problem, shipping a working demo, and telling a clear story that judges can repeat to others.
+
+This playbook works for any AI hackathon — whether it's 24h or 72h, beginner-friendly or hardcore.
+
+## The real scoring system (even when it's not written)
+
+Most hackathons say they score on innovation and tech. In reality, winners usually maximize:
+
+1. **Clarity** — what problem, for whom, why it matters
+2. **Execution** — working product, stable demo, proof it works
+3. **Impact** — measurable improvement, time saved, cost reduced
+4. **Differentiation** — why this approach beats the obvious alternatives
+5. **Story + delivery** — can your pitch be remembered 10 minutes later?
+
+Your job is to build something that makes a judge say: "I immediately get it. It works. I can see it being used."
+
+## Rule #1: Build the demo first (yes, first)
+
+Most teams die because they start with modeling and end with "we didn't have time to integrate." Do the opposite:
+
+- Decide what the demo will show in 30 seconds
+- Build the demo flow first (even with fake data)
+- Only then add AI to make it smarter
+
+**The 30-second demo test:** if your demo can't be explained in one sentence, it's too big.
+
+> Great demo sentence: "Upload a maintenance log → our AI highlights likely failures → suggests the fix → generates a work order."
+
+> Weak demo sentence: "We built a multi-agent system to optimize…"
+
+## Rule #2: Pick a problem that "hurts" and can be proven fast
+
+A winning problem has three traits:
+
+- **Specific user** (not "companies," but "customer support lead," "nurse," "site manager")
+- **Pain** (time, money, risk, frustration)
+- **Proof** (you can show improvement with a small dataset or live interaction)
+
+Quick "problem quality" checklist: you can demo the pain in under 15 seconds, you can show the "after" result in under 15 seconds, and you can measure something (accuracy, time saved, reduced steps, fewer errors).
+
+## Rule #3: Choose the smallest "AI that matters"
+
+Judges don't reward complexity. They reward usefulness. Pick the simplest AI that creates a visible "wow":
+
+- RAG Q&A over documents (search + answer + citations)
+- Classification (routing, tagging, prioritization)
+- Extraction (turn messy text into structured fields)
+- Summarization (with a strict format, not "vibes")
+- Anomaly detection (flag weird values, trends, incidents)
+- Vision (counting, detecting, reading labels — only if the demo is clean)
+
+If you're unsure: do RAG + extraction. It wins constantly because it's practical.
+
+## Rule #4: Win with a "one-screen product"
+
+The best hackathon demos feel like a real product in 10 seconds. Aim for one main screen, one input, one output, and one action button.
+
+Example one-screen products:
+
+- "Paste incident log → get root cause + recommended steps"
+- "Drop PDF → get key fields + risk flags"
+- "Upload image → get defect detection + severity score"
+
+A simple UI beats a complex backend every time.
+
+## Rule #5: Make your solution judge-proof
+
+Hackathon demos fail for boring reasons: Wi-Fi dies, APIs rate-limit you, the dataset is messy, the model output is unpredictable. So build for reliability:
+
+- Cache outputs (pre-run 5 example inputs)
+- Have a demo-mode toggle (offline fallback)
+- Use small, clean sample data you control
+- Add guardrails (structured outputs, validation, retries)
+- Timebox anything uncertain: if it's not working in 2 hours, cut it
+
+## A winning 72-hour execution plan
+
+- **Hour 0–3: Decide the win.** Define the demo in one sentence, write your "judge story," pick the smallest AI feature that creates the wow moment, and choose a stack you can ship fast.
+- **Hour 3–10: Demo skeleton.** UI with fake data, backend endpoints stubbed, 1–2 example flows fully clickable.
+- **Hour 10–24: Make it real.** Connect real or realistic mock data, add the AI feature, save outputs + a basic (even tiny) evaluation.
+- **Hour 24–48: Polish + proof.** Add 3–5 test cases, add metrics ("reduced from 8 min → 45 sec"), improve UX, loading states, and error messages.
+- **Hour 48–60: Pitch assets.** One slide each for problem + stakes, how it works, results, and roadmap + why you win.
+- **Hour 60–72: Rehearse.** Script the demo, time it, practice failure scenarios, decide who speaks when.
+
+## The pitch script that wins (2 minutes)
+
+Use this structure every time:
+
+1. **The hook (10s):** "This is for [specific user]. They lose [pain] because [problem]."
+2. **The solution (20s):** "We built [product]. It takes [input] and outputs [result] in [time]."
+3. **The demo (60s):** show only the core flow. No dashboards. No code walkthrough.
+4. **Proof (20s):** "On these 5 test cases, it achieved X." "It reduces time from A → B." "It catches errors humans miss."
+5. **Why you (10s):** "This is easy to integrate because…" "We designed it for real deployment: logging, guardrails, privacy." "Next step: pilot with X workflow."
+
+## The "judge story" template (write this before coding)
+
+Copy-paste and fill it in: User / Pain / Current workaround / What we built / Input → Output / AI method (simple words) / Why it's better / Proof / If we had 4 more weeks.
+
+If your team can't fill this in cleanly, your scope is wrong.
+
+## Team roles that consistently win
+
+Even a 3-person team should cover:
+
+- **Builder** (backend/AI integration) — ships the core functionality
+- **Product** (UX/demo flow) — keeps it simple and usable
+- **Pitch** (story + slides + rehearsal) — makes it unforgettable
+
+If you have more people, add a **Data person** (clean dataset, labeling, evaluation) and **Infra** (deployment, caching, demo-mode reliability). The biggest mistake: 4 engineers coding different things with no product owner. For a deeper breakdown, read [how to form a hackathon team](/blog/how-to-form-a-hackathon-team).
+
+## Common mistakes that lose (even with great tech)
+
+- Building a model instead of a product
+- No clear user / no clear pain
+- A demo that requires too much explaining
+- "Innovation" without a measurable result
+- Spending 12 hours on architecture slides
+- Last-minute integration
+- No rehearsal
+
+Hackathons are not research conferences. They're proof-of-value competitions.
+
+## A simple tech stack that wins often
+
+Pick what you already know. A safe default: a simple web frontend, a lightweight API, one reliable AI pipeline (RAG or extraction), a tiny DB or even files, optional deployment (local demo is OK if it's stable), and a GitHub repo with a clean README. If you feel tempted to add microservices: don't. For more, see the [Hackathon Tech Stack Guide](/blog/hackathon-tech-stack-guide).
+
+## Final checklist (print this)
+
+Before submission:
+
+- Demo works offline (or with cached outputs)
+- You have 3–5 example inputs ready
+- You have 1–2 metrics or concrete proof points
+- Your README explains how to run it in under 5 minutes
+- Your pitch is under 2 minutes + short Q&A answers
+- Everyone knows the story and their speaking part
+
+## How to actually win consistently
+
+If you remember one thing: winners ship a simple product with one clear wow moment — and prove it works.
+
+Want to build with other AI people and learn fast? [Join the Since AI Hackathon](/hackathon) in Turku, Finland, or [get involved as a builder](/for-builders).

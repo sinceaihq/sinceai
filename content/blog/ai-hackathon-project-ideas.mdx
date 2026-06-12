@@ -1,0 +1,259 @@
+If you want to win an AI hackathon, you don't need a "crazy new model." You need a clear problem, a demo that works, and proof it helps.
+
+This list is built for exactly that: 30 ideas you can actually build in 72 hours, grouped by difficulty, and written so you can copy them straight into your team doc and start building immediately.
+
+Before the ideas, one quick rule:
+
+> A hackathon idea is only good if you can demo it in 30 seconds. Input → AI → output → action.
+
+## The "72h buildable" template
+
+Every idea below follows the same structure. Use it for any concept, including your own:
+
+- **Demo sentence:** what the judge sees in one line
+- **Data needed:** what you need to make it real
+- **Stack suggestion:** a safe default stack to ship fast
+- **Evaluation idea:** how you prove it works (tiny but credible)
+
+## Easy (10) — high success rate, fast demos, great for beginners
+
+### 1. Support Ticket Triage Copilot
+
+- **Demo:** Paste a support ticket → it tags topic + urgency → drafts a reply.
+- **Data:** 20–50 sample tickets (real or synthetic).
+- **Stack:** Next.js + FastAPI, LLM classification + template reply.
+- **Evaluation:** Accuracy on 20 labeled tickets + a "time saved" estimate.
+
+### 2. Meeting Notes → Action Items Extractor
+
+- **Demo:** Paste notes/transcript → it outputs structured action items with owners + deadlines.
+- **Data:** 10 meeting transcripts (public or synthetic).
+- **Stack:** React + Node/Express, structured JSON output.
+- **Evaluation:** Precision/recall on action items vs a manual list.
+
+### 3. CV/Resume Screener (Fair + Transparent)
+
+- **Demo:** Upload resume → it extracts skills + matches to role requirements → explains the match.
+- **Data:** 20 resumes (anonymized/synthetic) + 1 job description.
+- **Stack:** Next.js + FastAPI, extraction + scoring rules.
+- **Evaluation:** Consistency tests + an "explanation quality" rubric.
+
+### 4. PDF Policy Q&A (RAG with Citations)
+
+- **Demo:** Upload PDF → ask a question → get an answer with highlighted citations.
+- **Data:** 3–10 PDFs (policies/manuals).
+- **Stack:** Next.js + FastAPI, RAG with vector search.
+- **Evaluation:** Answer correctness on 15 questions + citation grounding rate.
+
+### 5. Invoice / Receipt Field Extractor
+
+- **Demo:** Upload invoice → it extracts vendor, total, VAT, date → exports CSV/JSON.
+- **Data:** 20 invoices/receipts (sample set).
+- **Stack:** FastAPI + simple UI, OCR if needed, extraction.
+- **Evaluation:** Field accuracy per field (e.g., totals correct %).
+
+### 6. Reply Assistant (Tone + Policy Safe)
+
+- **Demo:** Paste message → choose tone → it drafts a reply with the key points included.
+- **Data:** 20 example messages.
+- **Stack:** React + Node, prompt templates + guardrails.
+- **Evaluation:** Human rating checklist (clarity, correctness, tone).
+
+### 7. Personal Study Coach (Flashcards Generator)
+
+- **Demo:** Paste lecture text → it generates flashcards + a quiz → tracks weak areas.
+- **Data:** 3–5 lecture notes.
+- **Stack:** Next.js only, local storage, LLM generation.
+- **Evaluation:** Coverage check (key terms included) + quiz accuracy improvement.
+
+### 8. Code Explainer + Bug Finder (Small Scope)
+
+- **Demo:** Paste code → it explains what it does → flags likely bugs → suggests a fix.
+- **Data:** 10 code snippets with known issues.
+- **Stack:** Next.js + LLM, optional static analysis.
+- **Evaluation:** Bug detection rate on known issues.
+
+### 9. "Requirements → User Stories" Generator
+
+- **Demo:** Paste a feature request → it outputs user stories + acceptance criteria + edge cases.
+- **Data:** 10 feature requests.
+- **Stack:** React + Node, structured output.
+- **Evaluation:** Completeness score vs a checklist.
+
+### 10. Event/Community Recommendation Bot
+
+- **Demo:** Tell it your interests → it recommends events/resources → explains why.
+- **Data:** A curated list of 50 links (manual).
+- **Stack:** Next.js, lightweight search + LLM summarizer.
+- **Evaluation:** Relevance rating from 5 users.
+
+## Medium (10) — more integration, more "product feel," still very doable
+
+### 11. Incident Log → Root Cause + Next Actions
+
+- **Demo:** Paste incident log → it extracts symptoms → proposes root cause + runbook steps.
+- **Data:** 30 incident logs (synthetic ok) + runbook snippets.
+- **Stack:** Next.js + FastAPI, extraction + RAG.
+- **Evaluation:** Correct-action rate on 10 scenarios + citation grounding.
+
+### 12. Sales Call Analyzer (Objections + Next Steps)
+
+- **Demo:** Paste transcript → it highlights objections → suggests a follow-up email + next steps.
+- **Data:** 10 call transcripts.
+- **Stack:** Next.js + Node, structured summarization.
+- **Evaluation:** Objection-detection accuracy + follow-up quality rubric.
+
+### 13. Knowledge Base Cleaner (Duplicates + Missing Topics)
+
+- **Demo:** Upload a doc set → it clusters duplicates → flags missing topics → suggests a restructure.
+- **Data:** 30–100 docs (can be small).
+- **Stack:** Python + embeddings + a simple UI.
+- **Evaluation:** Duplicate-detection precision on labeled pairs.
+
+### 14. Job Matching for Hackathon Teams
+
+- **Demo:** People enter skills → it forms balanced teams → explains team composition.
+- **Data:** 30 fake profiles + skill tags.
+- **Stack:** Next.js + Node, matching algorithm + LLM explanations.
+- **Evaluation:** Balance score (coverage across roles) + user satisfaction.
+
+### 15. Warehouse/Factory Safety Checklist Assistant
+
+- **Demo:** Describe a situation → it outputs a checklist + risk flags + required PPE.
+- **Data:** Safety guideline PDFs.
+- **Stack:** RAG Q&A with citations.
+- **Evaluation:** Correct-citation rate + "missing critical step" rate.
+
+### 16. Product Feedback Analyzer (Themes + Priorities)
+
+- **Demo:** Paste a feedback CSV → it clusters themes → suggests top priorities + rationale.
+- **Data:** 200 feedback lines (public datasets exist).
+- **Stack:** Python + embeddings + a simple dashboard.
+- **Evaluation:** Cluster coherence + top-theme accuracy vs manual.
+
+### 17. Travel Plan Builder (Constraints + Budget)
+
+- **Demo:** Input dates/budget → it creates an itinerary → exports to a calendar format.
+- **Data:** None (use rules + public info placeholders).
+- **Stack:** Next.js + LLM; avoid live web calls in the demo.
+- **Evaluation:** Constraint-satisfaction checks (budget, times).
+
+### 18. Quiz Generator with Difficulty Control
+
+- **Demo:** Upload content → generate a quiz (easy/med/hard) → show answers + reasoning.
+- **Data:** 3 content sources.
+- **Stack:** Next.js only.
+- **Evaluation:** Difficulty calibration (human rating) + coverage.
+
+### 19. GitHub PR Review Assistant (Rules + Style Guide)
+
+- **Demo:** Paste a diff → it reviews against team rules → suggests improvements.
+- **Data:** A style guide + sample diffs.
+- **Stack:** Node/Python + a structured rubric.
+- **Evaluation:** Rule-violation detection rate.
+
+### 20. AI Form Autofill for Boring Admin Work
+
+- **Demo:** Paste an email → it fills a structured form (name, address, request type) → export JSON.
+- **Data:** 50 messages + a target schema.
+- **Stack:** Extraction + schema validation.
+- **Evaluation:** Field accuracy + schema-validity rate.
+
+## Hard (10) — bigger "wow," but still feasible if scoped tightly
+
+### 21. Multi-Step Research Agent with Verification
+
+- **Demo:** Ask a question → it searches your doc set → answers + verifies with sources.
+- **Data:** Curated docs + 20 questions.
+- **Stack:** Next.js + FastAPI, tool-use + RAG, caching.
+- **Evaluation:** Grounded-answer rate + citation correctness.
+
+### 22. Vision: Defect Detection (Simple)
+
+- **Demo:** Upload an image → it marks defect regions → outputs a severity score.
+- **Data:** 50–200 labeled images (or synthetic).
+- **Stack:** Python + a simple CV/vision model, minimal UI.
+- **Evaluation:** Precision/recall on defect detection.
+
+### 23. "Build a Ticket from Screenshot" Agent
+
+- **Demo:** Upload a screenshot → it extracts the issue → drafts a Jira-style ticket with steps.
+- **Data:** 20 screenshots + expected ticket fields.
+- **Stack:** Vision + extraction + template.
+- **Evaluation:** Field accuracy + reproducibility score.
+
+### 24. Supply Chain Delay Predictor (Toy but Realistic)
+
+- **Demo:** Upload a CSV → predict delays → show top risk factors.
+- **Data:** A public logistics dataset or synthetic.
+- **Stack:** Python (scikit-learn) + a simple dashboard.
+- **Evaluation:** Baseline comparison (naive vs model) + MAE.
+
+### 25. "AI QA Engineer" for a Small Web App
+
+- **Demo:** Give a URL + spec → it generates test cases → flags failures.
+- **Data:** A demo app + spec.
+- **Stack:** Node + Playwright + LLM for test generation.
+- **Evaluation:** Number of valid tests + failure-detection rate.
+
+### 26. Privacy-Safe Local LLM Assistant (Offline Demo Mode)
+
+- **Demo:** Ask questions → it answers using local docs → no internet needed.
+- **Data:** Local docs.
+- **Stack:** A local model + lightweight UI, caching.
+- **Evaluation:** Latency + grounded-answer rate.
+
+### 27. Fraud/Risk Flagging for Transactions
+
+- **Demo:** Upload transactions → it flags suspicious patterns → explains the reasons.
+- **Data:** A public fraud dataset or synthetic.
+- **Stack:** Python + anomaly detection + an explanation layer.
+- **Evaluation:** Precision@k on flagged items.
+
+### 28. "Customer Health" Predictor for SaaS
+
+- **Demo:** Upload usage data → predict churn risk → recommend actions.
+- **Data:** A synthetic SaaS usage dataset.
+- **Stack:** A Python model + dashboard.
+- **Evaluation:** ROC-AUC + an action-usefulness rubric.
+
+### 29. Industrial Maintenance Copilot (Docs + Sensor Notes)
+
+- **Demo:** Combine logs + manual → propose a diagnosis + steps with citations.
+- **Data:** Manuals + logs.
+- **Stack:** RAG + extraction, citations, caching.
+- **Evaluation:** Correct-step coverage on 10 cases.
+
+### 30. AI Demo-to-Deck Generator (Pitch Automation)
+
+- **Demo:** Provide a demo summary + screenshots → generate 4-slide pitch deck content.
+- **Data:** 5 sample project summaries.
+- **Stack:** Next.js + LLM + a structured slide schema.
+- **Evaluation:** Slide completeness + clarity score.
+
+## How to choose the right idea (fast)
+
+Pick an idea that satisfies all three:
+
+1. Demoable in 30 seconds
+2. Uses data you can get today
+3. Has a tiny evaluation you can show
+
+If you're stuck, pick one of these "always works" categories:
+
+- RAG with citations
+- Extraction to structured output
+- Classification/triage
+- Simple vision detection (only if the data is clean)
+
+## Read next
+
+If you want the playbooks that make these ideas win:
+
+- [How to Build a Demo in 72 Hours](/blog/how-to-build-a-demo-in-72-hours)
+- [Hackathon Tech Stack Guide](/blog/hackathon-tech-stack-guide)
+- [How to Win an AI Hackathon](/blog/how-to-win-an-ai-hackathon)
+
+## Bring this to Since AI
+
+If you want to build with serious teams on real company challenges, bring one of these ideas to the [Since AI Hackathon](/hackathon) in Turku, Finland. Join the [community](/for-builders) to find a team and get started.

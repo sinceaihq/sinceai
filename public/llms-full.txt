@@ -137,7 +137,7 @@ Since AI's flagship launch event brought together 260 AI builders to collaborate
 ### 1. AI Hackathon Project Ideas: 30 Buildable Concepts in 72 Hours
 
 **URL**: https://sinceai.ai/blog/ai-hackathon-project-ideas
-**Published**: June 10, 2025 | **Reading Time**: 12 minutes
+**Published**: February 14, 2026 | **Reading Time**: 12 minutes
 
 30 actionable AI project ideas categorized by difficulty (Easy, Medium, Hard), each with demo structure, required data sources, recommended tech stack, and evaluation criteria. Categories: RAG question-answering, document extraction, classification tools, computer vision, multi-agent systems.
 
@@ -146,7 +146,7 @@ Since AI's flagship launch event brought together 260 AI builders to collaborate
 ### 2. Best AI Hackathons in Europe
 
 **URL**: https://sinceai.ai/blog/best-ai-hackathons-in-europe
-**Published**: May 15, 2025 | **Reading Time**: 9 minutes
+**Published**: February 14, 2026 | **Reading Time**: 9 minutes
 
 Curated guide covering Junction (Helsinki), Datathon (ETH Zurich), GenAI Zurich, Hack Kosice, MLH Europe, EU-backed challenges, and Since AI Hackathon (Turku).
 
@@ -155,7 +155,7 @@ Curated guide covering Junction (Helsinki), Datathon (ETH Zurich), GenAI Zurich,
 ### 3. Hackathon Tech Stack Guide
 
 **URL**: https://sinceai.ai/blog/hackathon-tech-stack-guide
-**Published**: April 20, 2025 | **Reading Time**: 10 minutes
+**Published**: February 9, 2026 | **Reading Time**: 10 minutes
 
 Default Stack: Next.js + FastAPI + PostgreSQL. AI layer: LangChain/LlamaIndex + vector DB for RAG. Deploy: Vercel + Railway.
 
@@ -164,7 +164,7 @@ Default Stack: Next.js + FastAPI + PostgreSQL. AI layer: LangChain/LlamaIndex + 
 ### 4. How to Build a Demo in 72 Hours
 
 **URL**: https://sinceai.ai/blog/how-to-build-a-demo-in-72-hours
-**Published**: March 10, 2025 | **Reading Time**: 8 minutes
+**Published**: February 9, 2026 | **Reading Time**: 8 minutes
 
 Demo-first methodology: build skeleton with hardcoded data first, add AI incrementally, ensure reliability with fallbacks, create measurable proof.
 
@@ -173,7 +173,7 @@ Demo-first methodology: build skeleton with hardcoded data first, add AI increme
 ### 5. How to Win an AI Hackathon
 
 **URL**: https://sinceai.ai/blog/how-to-win-an-ai-hackathon
-**Published**: February 15, 2025 | **Reading Time**: 7 minutes
+**Published**: February 8, 2026 | **Reading Time**: 7 minutes
 
 Demo-first playbook: choose visible-impact problems, build reliable demos, show measurable proof, structure pitch around problem-solution-proof.
 
@@ -182,7 +182,7 @@ Demo-first playbook: choose visible-impact problems, build reliable demos, show 
 ### 6. How to Form a Hackathon Team (Like a Startup)
 
 **URL**: https://sinceai.ai/blog/how-to-form-a-hackathon-team
-**Published**: January 20, 2025 | **Reading Time**: 6 minutes
+**Published**: February 8, 2026 | **Reading Time**: 6 minutes
 
 Core roles: Technical lead, product/design, AI specialist, pitch lead. Designate one decision-maker. Plan sprints with milestones.
 
@@ -194,7 +194,6 @@ Core roles: Technical lead, product/design, AI specialist, pitch lead. Designate
 - **Telegram**: https://t.me/sinceaihq
 - **LinkedIn**: https://www.linkedin.com/company/sinceai
 - **GitHub**: https://github.com/sinceaihq
-- **Medium**: https://medium.com/@sinceai
 - **Instagram**: https://www.instagram.com/sinceaihq
 - **X/Twitter**: https://x.com/sinceaihq
 - **YouTube**: https://www.youtube.com/@sinceaihq

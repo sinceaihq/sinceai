@@ -28,7 +28,6 @@ export const ORG = {
     facebook: "https://www.facebook.com/sinceai",
     youtube: "https://www.youtube.com/@sinceaihq",
     tiktok: "https://www.tiktok.com/@sinceaihq",
-    medium: "https://medium.com/@sinceai",
     substack: "https://sinceai.substack.com",
     reddit: "https://www.reddit.com/r/SinceAI/",
   },

@@ -1,7 +1,4 @@
 import type { Metadata } from "next";
-import StructuredData from "@/components/StructuredData";
-import { getBlogSchema, getBlogItemListSchema, getBreadcrumbSchema, getBlogFAQSchema } from "@/lib/schema";
-import { ORG } from "@/lib/org";
 
 export const metadata: Metadata = {
   title: "AI Hackathon Guides & Community Resources | Since AI Blog",
@@ -25,6 +22,9 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: "https://sinceai.ai/blog",
+    types: {
+      "application/rss+xml": "https://sinceai.ai/blog/feed.xml",
+    },
   },
   openGraph: {
     title: "AI Hackathon Guides & Community Resources | Since AI Blog",
@@ -60,18 +60,5 @@ export default function BlogLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const breadcrumbSchema = getBreadcrumbSchema([
-    { name: "Home", url: ORG.baseUrl },
-    { name: "Blog", url: `${ORG.baseUrl}/blog` },
-  ]);
-
-  return (
-    <>
-      <StructuredData data={getBlogSchema()} />
-      <StructuredData data={getBlogItemListSchema()} />
-      <StructuredData data={breadcrumbSchema} />
-      <StructuredData data={getBlogFAQSchema()} />
-      {children}
-    </>
-  );
+  return <>{children}</>;
 }
