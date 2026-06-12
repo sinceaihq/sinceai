@@ -238,7 +238,7 @@ export default function ResourcesPage() {
                 <div className="space-y-2 text-neutral-400 text-sm">
                   <p>&bull; Share in Discord:{" "}
                     <a href={ORG.social.discord} target="_blank" rel="noopener noreferrer" className="text-white hover:text-neutral-300 underline">
-                      discord.gg/6PC74zW68v
+                      discord.gg/vMWdrVUPws
                     </a>
                   </p>
                   <p>&bull; Submit via email:{" "}

@@ -143,7 +143,7 @@ export default function TermsPage() {
           </div>
         </div>
 
-        <Footer discordUrl="https://discord.com/invite/YkqJswRGSW" />
+        <Footer discordUrl="https://discord.gg/vMWdrVUPws" />
       </main>
     </SmoothScroll>
   );

@@ -43,7 +43,7 @@ const NAV_COLUMNS = [
 ];
 
 const SOCIAL_LINKS = [
-  { name: "Discord",   href: "https://discord.com/invite/YkqJswRGSW" },
+  { name: "Discord",   href: "https://discord.gg/vMWdrVUPws" },
   { name: "LinkedIn",  href: ORG.social.linkedin },
   { name: "X",         href: ORG.social.x },
   { name: "GitHub",    href: ORG.social.github },

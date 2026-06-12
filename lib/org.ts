@@ -19,7 +19,7 @@ export const ORG = {
     partnershipEmail: "aarne.ollila@sinceai.fi",
   },
   social: {
-    discord: "https://discord.com/invite/YkqJswRGSW",
+    discord: "https://discord.gg/vMWdrVUPws",
     telegram: "https://t.me/sinceaihq",
     linkedin: "https://www.linkedin.com/company/sinceai",
     instagram: "https://www.instagram.com/sinceaihq",

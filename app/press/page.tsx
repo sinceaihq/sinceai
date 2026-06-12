@@ -205,7 +205,7 @@ export default function PressPage() {
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   <a
-                    href="https://discord.com/invite/YkqJswRGSW"
+                    href="https://discord.gg/vMWdrVUPws"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-4 border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-neutral-300 hover:text-white"
@@ -414,7 +414,7 @@ export default function PressPage() {
           </FadeIn>
         </div>
 
-        <Footer discordUrl="https://discord.com/invite/YkqJswRGSW" />
+        <Footer discordUrl="https://discord.gg/vMWdrVUPws" />
       </main>
     </SmoothScroll>
   );
