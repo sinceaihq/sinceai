@@ -4,7 +4,7 @@ import ORG from "@/lib/org";
 
 export function Hero() {
   return (
-    <section className="relative bg-black px-6 h-screen max-h-[1100px] overflow-hidden flex flex-col justify-center">
+    <section className="relative bg-black px-6 min-h-screen max-h-[1100px] overflow-hidden flex flex-col justify-center">
       <div
         className="mx-auto w-full max-w-6xl pt-[90px] pb-24 md:pt-0 md:pb-0"
       >
