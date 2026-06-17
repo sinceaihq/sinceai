@@ -31,7 +31,7 @@ const speakers: Speaker[] = [
     name: "Jason Mayes",
     title: "Web AI Lead",
     company: "Google",
-    companyLogo: "/assets/speakers/Logo.png",
+    companyLogo: "/assets/speakers/GoogleLogo.png",
     bio: "Google's Web AI lead for client side AI with 15+ years at the company. Creator of the world's first Web AI Summit and author of Google's Web AI course enabling 100K+ developers. Represents teams including LiteRT.js, DeepMind (Gemma web models), Chrome, and TensorFlow.js.",
     image: "/assets/speakers/JasonMayes.png",
     talks: [
