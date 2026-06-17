@@ -4,11 +4,12 @@ import ORG from "@/lib/org";
 
 export function Hero() {
   return (
-    <section className="relative bg-black px-6 min-h-screen max-h-[1100px] overflow-hidden flex flex-col justify-center">
-      <div
-        className="mx-auto w-full max-w-6xl pt-[90px] pb-24 md:pt-0 md:pb-0"
-      >
-        <h1 className="text-white leading-none" style={{ fontSize: "clamp(min(52px, 11vw), 6vw, 100px)" }}>
+    <section className="relative bg-black min-h-[min(100vh,1100px)] overflow-hidden flex flex-col">
+      <div className="flex-1 flex flex-col justify-center min-h-0 px-6 pt-[100px] pb-8">
+        <div
+          className="mx-auto w-full max-w-6xl"
+        >
+        <h1 className="text-white leading-none" style={{ fontSize: "clamp(min(44px, 10vw), 5.4vw, 84px)" }}>
           Global<br />execution-<br />focused AI<br />innovation<br />ecosystem.
         </h1>
 
@@ -61,12 +62,11 @@ export function Hero() {
             </a>
           </div>
         </div>
+        </div>
       </div>
 
-      {/* Marquee anchored to the bottom of the hero viewport */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <PartnerMarquee />
-      </div>
+      {/* Marquee in normal flow at the bottom of the hero, reserving its own space */}
+      <PartnerMarquee />
     </section>
   );
 }
