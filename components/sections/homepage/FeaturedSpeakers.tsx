@@ -13,6 +13,7 @@ interface Speaker {
   name: string;
   title: string;
   company: string;
+  companyLogo?: string;
   bio: string;
   image: string;
   talks: Talk[];
@@ -30,6 +31,7 @@ const speakers: Speaker[] = [
     name: "Jason Mayes",
     title: "Web AI Lead",
     company: "Google",
+    companyLogo: "/assets/speakers/GoogleLogo.png",
     bio: "Google's Web AI lead for client side AI with 15+ years at the company. Creator of the world's first Web AI Summit and author of Google's Web AI course enabling 100K+ developers. Represents teams including LiteRT.js, DeepMind (Gemma web models), Chrome, and TensorFlow.js.",
     image: "/assets/speakers/JasonMayes.png",
     talks: [
@@ -115,9 +117,21 @@ function SpeakerCard({ speaker }: { speaker: Speaker }) {
           <h3 className="text-3xl font-bold tracking-tight text-white">
             {speaker.name}
           </h3>
-          <p className="text-sm text-neutral-400 mt-2">
-            {speaker.title}, {speaker.company}
-          </p>
+          <div className="flex items-center gap-2 mt-2">
+            <p className="text-sm text-neutral-400">
+              {speaker.title}
+            </p>
+
+            {speaker.companyLogo && (
+              <Image
+                src={speaker.companyLogo}
+                alt={`${speaker.company} logo`}
+                width={45}
+                height={18}
+                className="object-contain"
+              />
+            )}
+          </div>
         </div>
 
         <p className="text-sm text-neutral-400 leading-relaxed mb-8">
