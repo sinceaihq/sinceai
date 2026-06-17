@@ -1,7 +1,15 @@
-import { WithContext, FAQPage, Event, Blog, BreadcrumbList, ItemList } from 'schema-dts'
+import { WithContext, FAQPage, Event, Blog, BlogPosting, BreadcrumbList, ItemList } from 'schema-dts'
 import { ORG } from './org'
 import { FIRST_EVENT, UPCOMING_EVENT_2026, getEventStatus, LINKS } from './sinceai'
-import { blogPosts } from './blog'
+import { blogPosts, type BlogPost } from './blog'
+import { getAuthor } from './authors'
+
+const BLOG_IMAGE = `${ORG.baseUrl}/assets/logo/SINCE AI white.png`
+
+/** Canonical on-site URL for a blog post. */
+export function getPostUrl(slug: string): string {
+  return `${ORG.baseUrl}/blog/${slug}`
+}
 
 /**
  * Generate FAQPage schema
@@ -170,14 +178,14 @@ export function getBlogSchema(): WithContext<Blog> {
       '@type': 'BlogPosting' as const,
       headline: post.title,
       description: post.description,
-      url: post.url,
+      url: getPostUrl(post.slug),
       mainEntityOfPage: {
         '@type': 'WebPage' as const,
-        '@id': `${ORG.baseUrl}/blog/${post.slug}`,
+        '@id': getPostUrl(post.slug),
       },
       datePublished: post.datePublished,
-      dateModified: post.datePublished,
-      image: `${ORG.baseUrl}/assets/logo/SINCE AI white.png`,
+      dateModified: post.dateModified,
+      image: BLOG_IMAGE,
       author: {
         '@type': 'Organization' as const,
         name: ORG.name,
@@ -189,12 +197,79 @@ export function getBlogSchema(): WithContext<Blog> {
         url: ORG.baseUrl,
         logo: {
           '@type': 'ImageObject' as const,
-          url: `${ORG.baseUrl}/assets/logo/SINCE AI white.png`,
+          url: BLOG_IMAGE,
         },
       },
       keywords: post.keywords.join(', '),
     })),
   }
+}
+
+/**
+ * Per-article BlogPosting schema for an individual /blog/[slug] page.
+ * Self-canonical (mainEntityOfPage points to our own URL) so AI engines and
+ * search crawlers treat sinceai.ai as the source of record.
+ */
+export function getArticleSchema(
+  post: BlogPost,
+  opts: { articleBody?: string } = {}
+): WithContext<BlogPosting> {
+  const url = getPostUrl(post.slug)
+  const author = getAuthor(post.author)
+  const schema: WithContext<BlogPosting> = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    name: post.title,
+    description: post.description,
+    abstract: post.keyTakeaway,
+    url,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': url,
+    },
+    inLanguage: 'en',
+    isAccessibleForFree: true,
+    datePublished: post.datePublished,
+    dateModified: post.dateModified,
+    image: BLOG_IMAGE,
+    articleSection: post.category,
+    keywords: post.keywords.join(', '),
+    timeRequired: `PT${post.readingTime}M`,
+    author: {
+      '@type': 'Person',
+      name: author.name,
+      jobTitle: author.role,
+      url: author.linkedin,
+      sameAs: [author.linkedin],
+      worksFor: {
+        '@type': 'Organization',
+        name: ORG.name,
+        url: ORG.baseUrl,
+      },
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: ORG.name,
+      url: ORG.baseUrl,
+      logo: {
+        '@type': 'ImageObject',
+        url: BLOG_IMAGE,
+      },
+    },
+  }
+
+  if (opts.articleBody) schema.articleBody = opts.articleBody
+
+  return schema
+}
+
+/**
+ * Per-article FAQPage schema built from the post's own FAQ list (GEO).
+ */
+export function getPostFAQSchema(post: BlogPost): WithContext<FAQPage> | null {
+  if (!post.faqs?.length) return null
+  return getFAQSchema(post.faqs)
 }
 
 /**
@@ -209,7 +284,7 @@ export function getBlogItemListSchema(): WithContext<ItemList> {
       '@type': 'ListItem' as const,
       position: index + 1,
       name: post.title,
-      url: post.url,
+      url: getPostUrl(post.slug),
     })),
   }
 }

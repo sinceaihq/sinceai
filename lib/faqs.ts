@@ -74,6 +74,6 @@ export const faqs: Faq[] = [
   {
     question: "How can I stay updated on Since AI events and opportunities?",
     answer:
-      "Follow Since AI on the website blog (sinceai.ai/blog), on Medium (@sinceai), or join the Discord community. Hackathon applications and partner program updates are announced through these channels first.",
+      "Follow Since AI on the website blog (sinceai.ai/blog), subscribe to the Substack newsletter, or join the Discord community. Hackathon applications and partner program updates are announced through these channels first.",
   },
 ];

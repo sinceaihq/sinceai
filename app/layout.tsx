@@ -118,7 +118,6 @@ const organizationSchema = {
     ORG.social.x,
     ORG.social.github,
     ORG.social.instagram,
-    ORG.social.medium,
     ORG.social.telegram,
     ORG.social.facebook,
     ORG.social.youtube,

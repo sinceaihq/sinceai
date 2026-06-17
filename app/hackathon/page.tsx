@@ -46,7 +46,7 @@ const hackathonFaqs = [
   },
   {
     q: "How do I register?",
-    a: "Registration for Since AI Hackathon 2026 is now open. Apply at sinceai.app/sign-up — free for all builders worldwide. Join our Discord (discord.com/invite/YkqJswRGSW) or Telegram (t.me/sinceaihq) to connect with other participants.",
+    a: "Registration for Since AI Hackathon 2026 is now open. Apply at sinceai.app/sign-up — free for all builders worldwide. Join our Discord (discord.gg/vMWdrVUPws) or Telegram (t.me/sinceaihq) to connect with other participants.",
   },
   {
     q: "What companies set challenges?",

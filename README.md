@@ -215,7 +215,7 @@ Organization constants live in `lib/org.ts` — contact info, social links, stat
 
 ### Blog
 
-Blog posts live on Medium. The `app/blog/[slug]/page.tsx` route exists only to issue a **308 permanent redirect** to the Medium URL. The blog index (`/blog`) renders post metadata from `lib/blog.ts` and links out to Medium.
+Blog posts are self-hosted. Each article body is authored as MDX in `content/blog/<slug>.mdx` and rendered by `app/blog/[slug]/page.tsx` as a full article page (table of contents, key takeaway, FAQ, prev/next, and `BlogPosting` + `FAQPage` JSON-LD). Post metadata (title, excerpt, tags, dates, keywords, FAQs) lives in `lib/blog.ts`, which also maps each slug to its MDX component. The blog index (`/blog`) lists posts from `lib/blog.ts` and links internally to `/blog/<slug>`. MDX rendering is configured via `@next/mdx` (`next.config.ts`) with element styling in the root `mdx-components.tsx`.
 
 ### Path Alias
 
@@ -351,4 +351,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for full workflow details including how t
 
 **Since AI ry** — Business ID 3593920-2 — Turku, Finland
 
-[sinceai.ai](https://sinceai.ai) · [Discord](https://discord.com/invite/YkqJswRGSW) · [GitHub](https://github.com/sinceaihq)
+[sinceai.ai](https://sinceai.ai) · [Discord](https://discord.gg/vMWdrVUPws) · [GitHub](https://github.com/sinceaihq)

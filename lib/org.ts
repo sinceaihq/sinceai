@@ -19,7 +19,7 @@ export const ORG = {
     partnershipEmail: "aarne.ollila@sinceai.fi",
   },
   social: {
-    discord: "https://discord.com/invite/YkqJswRGSW",
+    discord: "https://discord.gg/vMWdrVUPws",
     telegram: "https://t.me/sinceaihq",
     linkedin: "https://www.linkedin.com/company/sinceai",
     instagram: "https://www.instagram.com/sinceaihq",
@@ -28,7 +28,6 @@ export const ORG = {
     facebook: "https://www.facebook.com/sinceai",
     youtube: "https://www.youtube.com/@sinceaihq",
     tiktok: "https://www.tiktok.com/@sinceaihq",
-    medium: "https://medium.com/@sinceai",
     substack: "https://sinceai.substack.com",
     reddit: "https://www.reddit.com/r/SinceAI/",
   },
