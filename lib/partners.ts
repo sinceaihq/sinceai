@@ -317,6 +317,12 @@ export const PARTNERS: Partner[] = [
     url: "https://www.attractor.fi/",
     tier: 3,
   },
+  {
+    name: "Turun Kauppakamari",
+    logo: "/assets/supports/turunkauppakamari.png",
+    url: "https://turunkauppakamari.fi/",
+    tier: 3,
+  },
 ];
 
 // ─── Tier-based exports (primary) ─────────────────────────────────────────────
