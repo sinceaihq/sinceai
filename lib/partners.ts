@@ -86,6 +86,12 @@ export const PARTNERS: Partner[] = [
     tier: 1,
   },
   {
+    name: "AI Finland",
+    logo: "/assets/supports/AI_Finland.png",
+    url: "https://aifinland.fi/",
+    tier: 1,
+  },
+  {
     name: "Shift",
     logo: "/assets/sponsors/shift.png",
     url: "https://theshift.fi/",

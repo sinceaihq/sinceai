@@ -14,6 +14,7 @@ const logos: Logo[] = [
   { name: "Sandvik",               src: "/assets/sponsors/sandvik.png",              href: "https://www.sandvik.com/" },
   { name: "Kongsberg",             src: "/assets/sponsors/kongsberg.png",            href: "https://www.kongsberg.com/" },
   { name: "Valmet",                src: "/assets/sponsors/valmet.png",               href: "https://www.valmet.com/" },
+  { name: "AI Finland",            src: "/assets/supports/AI_Finland.png",           href: "https://aifinland.fi/" },
   { name: "Aiven",                 src: "/assets/sponsors/aiven.png",                href: "https://aiven.io/" },
   { name: "n8n",                   src: "/assets/sponsors/n8n.svg",                  href: "https://n8n.io/" },
   { name: "Featherless.ai",        src: "/assets/sponsors/featherless.svg",          href: "https://featherless.ai/"},
