@@ -329,6 +329,12 @@ export const PARTNERS: Partner[] = [
     url: "https://turunkauppakamari.fi/",
     tier: 3,
   },
+  {
+    name: "Root Expo",
+    logo: "/assets/supports/rootlogo.png",
+    url: "https://rootexpo.fi",
+    tier: 3,
+  },
 ];
 
 // ─── Tier-based exports (primary) ─────────────────────────────────────────────
