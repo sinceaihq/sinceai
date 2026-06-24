@@ -276,6 +276,11 @@ const teamSections = [
         linkedin: "https://www.linkedin.com/in/hasnaynajmal/",
         image: "/assets/team/hasnain.webp",
       },
+      {
+        name: "Sylvia Björkqvist",
+        role: "Community",
+        email: "sylvia@sinceai.fi",
+      },
     ],
   },
   {
