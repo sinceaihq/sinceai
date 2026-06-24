@@ -335,6 +335,12 @@ export const PARTNERS: Partner[] = [
     url: "https://rootexpo.fi",
     tier: 3,
   },
+  {
+    name: "Åbo Akademi",
+    logo: "/assets/supports/AboAkademi.png",
+    url: "https://www.abo.fi/",
+    tier: 3,
+  },
 ];
 
 // ─── Tier-based exports (primary) ─────────────────────────────────────────────
