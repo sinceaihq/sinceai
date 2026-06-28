@@ -56,6 +56,18 @@ export const PARTNERS: Partner[] = [
     tier: 1,
   },
   {
+    name: "JetBrains",
+    logo: "/assets/sponsors/jetbrains.svg",
+    url: "https://www.jetbrains.com/",
+    tier: 1,
+  },
+  {
+    name: "Atlassian",
+    logo: "/assets/sponsors/atlassian.svg",
+    url: "https://www.atlassian.com/",
+    tier: 1,
+  },
+  {
     name: "Pruna AI",
     logo: "/assets/sponsors/Pruna.svg",
     url: "https://www.pruna.ai/",
