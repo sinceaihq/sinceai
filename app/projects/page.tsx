@@ -12,6 +12,7 @@ import {
   getSponsors,
   filterChallengeThemes,
 } from "@/lib/projects";
+import { trackEvent, ANALYTICS_EVENTS } from "@/lib/gtag";
 
 export default function ProjectsPage() {
   const [selectedIndustry, setSelectedIndustry] = useState<string>("All");
@@ -240,6 +241,7 @@ export default function ProjectsPage() {
                         href={config.discordUrl}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() => trackEvent(ANALYTICS_EVENTS.DISCORD_JOIN_CLICK)}
                         className="text-sm text-neutral-400 hover:text-white transition-colors"
                       >
                         Join builders →

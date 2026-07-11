@@ -205,6 +205,7 @@ export default function EuropeanAIPage() {
                 <ButtonPair
                   primaryLabel="Join Discord"
                   primaryHref={ORG.social.discord}
+                  primaryAnalyticsEvent="discord_join_click"
                   secondaryLabel="GitHub"
                   secondaryHref={ORG.social.github}
                 />

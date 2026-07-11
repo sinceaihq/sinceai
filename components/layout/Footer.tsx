@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ORG } from "@/lib/org";
+import { TrackedDiscordLink } from "@/components/analytics/TrackedDiscordLink";
 
 interface FooterProps {
   discordUrl?: string;
@@ -43,7 +44,7 @@ const NAV_COLUMNS = [
 ];
 
 const SOCIAL_LINKS = [
-  { name: "Discord",   href: "https://discord.gg/vMWdrVUPws" },
+  { name: "Discord",   href: ORG.social.discord },
   { name: "LinkedIn",  href: ORG.social.linkedin },
   { name: "X",         href: ORG.social.x },
   { name: "GitHub",    href: ORG.social.github },
@@ -94,17 +95,28 @@ export const Footer: React.FC<FooterProps> = () => {
               {"// community"}
             </span>
             <div className="flex flex-wrap gap-x-6">
-              {SOCIAL_LINKS.map((s) => (
-                <a
-                  key={s.name}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-neutral-400 hover:text-white transition-colors leading-loose focus-visible:outline focus-visible:outline-2 focus-visible:outline-white whitespace-nowrap"
-                >
-                  {s.name} ↗
-                </a>
-              ))}
+              {SOCIAL_LINKS.map((s) =>
+                s.name === "Discord" ? (
+                  <TrackedDiscordLink
+                    key={s.name}
+                    href={s.href}
+                    analyticsEvent="discord_join_click"
+                    className="text-sm text-neutral-400 hover:text-white transition-colors leading-loose focus-visible:outline focus-visible:outline-2 focus-visible:outline-white whitespace-nowrap"
+                  >
+                    {s.name} ↗
+                  </TrackedDiscordLink>
+                ) : (
+                  <a
+                    key={s.name}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-neutral-400 hover:text-white transition-colors leading-loose focus-visible:outline focus-visible:outline-2 focus-visible:outline-white whitespace-nowrap"
+                  >
+                    {s.name} ↗
+                  </a>
+                )
+              )}
             </div>
           </div>
         </div>

@@ -9,6 +9,7 @@ import { getBreadcrumbSchema } from "@/lib/schema";
 import { ORG } from "@/lib/org";
 import StructuredData from "@/components/StructuredData";
 import { ButtonPair } from "@/components/ui/ButtonPair";
+import { TrackedDiscordLink } from "@/components/analytics/TrackedDiscordLink";
 
 export const metadata: Metadata = {
   title: "AI Hackathons 2026 — Best Global AI Hackathons & Events | Since AI",
@@ -241,9 +242,13 @@ export default function AIHackathonsPage() {
                 </div>
                 <p className="text-neutral-500 text-sm mt-4">
                   More events announced on our{" "}
-                  <Link href={ORG.social.discord} className="text-neutral-400 hover:text-white underline">
+                  <TrackedDiscordLink
+                    href={ORG.social.discord}
+                    analyticsEvent="discord_join_click"
+                    className="text-neutral-400 hover:text-white underline"
+                  >
                     Discord
-                  </Link>{" "}
+                  </TrackedDiscordLink>{" "}
                   and{" "}
                   <Link href={ORG.social.telegram} className="text-neutral-400 hover:text-white underline">
                     Telegram
@@ -378,14 +383,13 @@ export default function AIHackathonsPage() {
                     <span>
                       <strong className="text-white">Since AI Discord & Telegram:</strong>{" "}
                       We share notable AI hackathons across Europe in our community channels.{" "}
-                      <a
+                      <TrackedDiscordLink
                         href={ORG.social.discord}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        analyticsEvent="discord_join_click"
                         className="text-neutral-300 hover:text-white underline"
                       >
                         Join here.
-                      </a>
+                      </TrackedDiscordLink>
                     </span>
                   </li>
                   <li className="flex items-start gap-3">

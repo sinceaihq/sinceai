@@ -124,6 +124,7 @@ export default function FAQPage() {
                 <ButtonPair
                   primaryLabel="Join Discord →"
                   primaryHref={ORG.social.discord}
+                  primaryAnalyticsEvent="discord_join_click"
                   secondaryLabel="Contact us"
                   secondaryHref="/contact"
                 />

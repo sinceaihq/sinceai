@@ -247,6 +247,7 @@ export default function EventsPage() {
               <ButtonPair
                 primaryLabel="Join Discord"
                 primaryHref={config.discordUrl}
+                primaryAnalyticsEvent="discord_join_click"
                 secondaryLabel="Join Telegram"
                 secondaryHref="https://t.me/sinceaihq"
                 className="justify-center"

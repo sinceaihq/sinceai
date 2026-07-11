@@ -251,6 +251,7 @@ export default function TurkuPage() {
                 <ButtonPair
                   primaryLabel="Join Discord Community"
                   primaryHref={ORG.social.discord}
+                  primaryAnalyticsEvent="discord_join_click"
                   secondaryLabel="See Turku Events"
                   secondaryHref="/events"
                 />
