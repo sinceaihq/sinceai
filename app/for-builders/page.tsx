@@ -363,6 +363,7 @@ export default function ForBuildersPage() {
                   primaryHref="/hackathon"
                   secondaryLabel="Join the Discord →"
                   secondaryHref={ORG.social.discord}
+                  secondaryAnalyticsEvent="discord_join_click"
                   className="justify-center"
                 />
               </section>

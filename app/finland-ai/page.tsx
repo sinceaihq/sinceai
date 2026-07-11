@@ -278,6 +278,7 @@ export default function FinlandAIPage() {
                 <ButtonPair
                   primaryLabel="Join Discord"
                   primaryHref={ORG.social.discord}
+                  primaryAnalyticsEvent="discord_join_click"
                   secondaryLabel="See Events"
                   secondaryHref="/events"
                 />

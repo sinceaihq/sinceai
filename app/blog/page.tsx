@@ -20,6 +20,7 @@ import {
 import { ORG } from "@/lib/org";
 import Link from "next/link";
 import NewsletterSignup from "@/components/forms/NewsletterSignup";
+import { trackEvent, ANALYTICS_EVENTS } from "@/lib/gtag";
 
 const ALL_FILTER = "all" as const;
 type FilterValue = typeof ALL_FILTER | BlogCategory;
@@ -244,6 +245,7 @@ export default function BlogPage() {
                   href={ORG.social.discord}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackEvent(ANALYTICS_EVENTS.DISCORD_JOIN_CLICK)}
                   className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white rounded-none border border-white/20 hover:border-white transition-colors duration-300 group"
                 >
                   Join the Discord

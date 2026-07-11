@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Inter } from "next/font/google";
+import Script from "next/script";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import StructuredData from "@/components/StructuredData";
 import { CookieConsent } from "@/components/CookieConsent";
 import { HackathonPopup } from "@/components/HackathonPopup";
 import { ORG } from "@/lib/org";
+import { GA_ID } from "@/lib/gtag";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -156,11 +159,27 @@ export default function RootLayout({
       <head>
         <StructuredData data={organizationSchema} />
         <StructuredData data={websiteSchema} />
+        <Script id="consent-default" strategy="beforeInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent', 'default', {
+              ad_storage: 'denied',
+              ad_user_data: 'denied',
+              ad_personalization: 'denied',
+              analytics_storage: 'denied',
+              wait_for_update: 500
+            });
+            gtag('set', 'url_passthrough', true);
+            gtag('set', 'ads_data_redaction', true);
+          `}
+        </Script>
       </head>
       <body className="antialiased bg-black">
         {children}
         <CookieConsent />
         <HackathonPopup />
+        <GoogleAnalytics gaId={GA_ID} />
       </body>
     </html>
   );

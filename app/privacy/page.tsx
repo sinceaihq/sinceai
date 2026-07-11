@@ -85,14 +85,16 @@ export default function PrivacyPage() {
                 Cookies &amp; Analytics
               </h2>
               <p className="text-neutral-300 leading-relaxed mb-4">
-                We use Google Analytics to understand how visitors use our site. This service uses cookies
-                to collect anonymous usage data such as pages visited, time on site, and general location
-                (country/region). No personally identifiable information is collected through analytics.
+                We use Google Analytics to understand how visitors use our site and to measure the effectiveness
+                of our advertising campaigns. We comply with Google Ads Consent Mode v2, which means our analytics
+                script loads on every page. Until you consent, it operates in a cookieless mode that collects
+                aggregated, de-identified data only. No personally identifiable information is collected.
               </p>
               <p className="text-neutral-300 leading-relaxed mb-4">
-                Analytics cookies are only placed after you give explicit consent via the cookie banner.
-                You can withdraw your consent at any time using the button below — analytics will stop
-                on your next page load.
+                When you click &ldquo;Accept&rdquo; in the cookie banner, we set cookies for analytics and advertising
+                measurement. These cookies help us understand how visitors discover and use our site. You can
+                withdraw your consent at any time using the button below — analytics and advertising cookies
+                will stop being used, and the banner will reappear so you can review your choice.
               </p>
               <ManageCookies />
             </section>
@@ -105,11 +107,13 @@ export default function PrivacyPage() {
                 We use the following third-party services:
               </p>
               <ul className="list-disc list-inside text-neutral-300 space-y-2 mb-4">
-                <li><strong className="text-white">Google Analytics</strong> — anonymous website usage analytics (consent required)</li>
+                <li><strong className="text-white">Google Analytics</strong> — website usage analytics and advertising measurement (consent required). Analytics data may be used to measure conversion events for Google Ads campaigns and to improve our marketing effectiveness.</li>
                 <li><strong className="text-white">EmailJS</strong> — contact form delivery. When you submit our contact form, your name, email address, and message are processed by EmailJS to deliver your inquiry to our team</li>
               </ul>
               <p className="text-neutral-300 leading-relaxed mb-4">
                 We do not sell your personal information or share it with third parties for their own marketing purposes.
+                Your analytics data is shared with Google only for the purposes of analytics and advertising measurement
+                as described above.
               </p>
             </section>
 

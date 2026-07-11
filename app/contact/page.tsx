@@ -455,6 +455,7 @@ function ContactPageContent() {
             <ButtonPair
               primaryLabel="Join Discord"
               primaryHref={config.discordUrl}
+              primaryAnalyticsEvent="discord_join_click"
               secondaryLabel="Email Us"
               secondaryHref="mailto:info@sinceai.fi"
             />

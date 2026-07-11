@@ -353,6 +353,7 @@ export default function AboutPage() {
                 <ButtonPair
                   primaryLabel="Join Discord →"
                   primaryHref={ORG.social.discord}
+                  primaryAnalyticsEvent="discord_join_click"
                   secondaryLabel="Full team directory"
                   secondaryHref="/contact"
                   className="mt-8"
