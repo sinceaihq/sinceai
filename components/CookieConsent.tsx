@@ -7,16 +7,8 @@ export const COOKIE_CONSENT_KEY = "cookie_consent";
 
 type ConsentState = "granted" | "denied" | null;
 
-interface State {
-  consent: ConsentState;
-  visible: boolean;
-}
-
 export function CookieConsent() {
-  const [{ consent, visible }, setState] = useState<State>({
-    consent: null,
-    visible: false,
-  });
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem(COOKIE_CONSENT_KEY) as ConsentState | null;
@@ -24,19 +16,19 @@ export function CookieConsent() {
       updateConsent(stored);
     }
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setState({ consent: stored, visible: !stored });
+    setVisible(!stored);
   }, []);
 
   function accept() {
     localStorage.setItem(COOKIE_CONSENT_KEY, "granted");
     updateConsent("granted");
-    setState({ consent: "granted", visible: false });
+    setVisible(false);
   }
 
   function decline() {
     localStorage.setItem(COOKIE_CONSENT_KEY, "denied");
     updateConsent("denied");
-    setState({ consent: "denied", visible: false });
+    setVisible(false);
   }
 
   return (

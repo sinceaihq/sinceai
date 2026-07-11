@@ -91,7 +91,7 @@ export default function PrivacyPage() {
                 aggregated, de-identified data only. No personally identifiable information is collected.
               </p>
               <p className="text-neutral-300 leading-relaxed mb-4">
-                When you click "Accept" in the cookie banner, we set cookies for analytics and advertising
+                When you click &ldquo;Accept&rdquo; in the cookie banner, we set cookies for analytics and advertising
                 measurement. These cookies help us understand how visitors discover and use our site. You can
                 withdraw your consent at any time using the button below — analytics and advertising cookies
                 will stop being used, and the banner will reappear so you can review your choice.
