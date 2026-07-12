@@ -3,29 +3,30 @@ import StructuredData from "@/components/StructuredData";
 
 export const metadata: Metadata = {
   title:
-    "Since AI Hackathon 2026 — Global Execution-Focused AI Hackathon | November 6–8, Turku",
+    "Since AI Innovation Event 2026 — 72-Hour Build Phase + Deployment | November 6–8, Turku",
   description:
-    "72-hour AI hackathon in Turku, Finland. Official MLH partner event. 1,000+ builders targeted. Partner challenges from Google for Developers, Bayer, Sandvik, Kongsberg, Valmet. Open to builders worldwide.",
+    "Since AI Innovation Event 2026: 72-hour build phase in Turku, Finland. Part of a larger innovation programme. Official MLH partner event. 1,000+ builders targeted. Partner challenges from Google for Developers, Bayer, Sandvik, Kongsberg, Valmet. Open to builders worldwide.",
   keywords: [
-    "Since AI Hackathon 2026",
-    "AI hackathon Finland",
-    "AI hackathon global",
-    "hackathon Turku 2026",
-    "MLH hackathon global 2026",
+    "Since AI Innovation Event 2026",
+    "AI innovation event Finland",
+    "AI innovation event global",
+    "innovation event Turku 2026",
+    "AI build phase",
+    "72 hour innovation programme",
+    "MLH innovation event",
     "Major League Hacking Finland",
     "Since AI event",
-    "AI builders hackathon",
-    "hackathon Turku AMK EduCity",
-    "72 hour hackathon",
+    "AI builders innovation",
+    "innovation event Turku AMK EduCity",
   ],
   alternates: {
     canonical: "https://sinceai.ai/hackathon",
   },
   openGraph: {
     title:
-      "Since AI Hackathon 2026 — Global Execution-Focused AI Hackathon | November 6–8, Turku",
+      "Since AI Innovation Event 2026 — 72-Hour Build Phase + Deployment | November 6–8, Turku",
     description:
-      "72-hour AI hackathon in Turku, Finland. 1,000+ builders targeted. Partner challenges from Google for Developers, Bayer, Sandvik, Kongsberg, Valmet. Open to builders worldwide.",
+      "72-hour build phase as part of Since AI Innovation Event 2026 in Turku, Finland. 1,000+ builders targeted. Partner challenges from Google for Developers, Bayer, Sandvik, Kongsberg, Valmet. Open to builders worldwide.",
     url: "https://sinceai.ai/hackathon",
     siteName: "Since AI",
     type: "website",
@@ -33,9 +34,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Since AI Hackathon 2026 — November 6–8, Turku",
+    title: "Since AI Innovation Event 2026 — November 6–8, Turku",
     description:
-      "72-hour AI hackathon. 1,000+ builders targeted. Partner challenges from Google, Bayer, Sandvik, Kongsberg, Valmet.",
+      "72-hour build phase. 1,000+ builders targeted. Partner challenges from Google, Bayer, Sandvik, Kongsberg, Valmet.",
     images: ["/assets/og/hero.png"],
   },
 };
@@ -44,9 +45,9 @@ const eventSchema = {
   "@context": "https://schema.org",
   "@type": "Event",
   "@id": "https://sinceai.ai/hackathon#event",
-  name: "Since AI Hackathon 2026",
+  name: "Since AI Innovation Event 2026",
   description:
-    "A global execution-focused AI hackathon. 1,000+ builders targeted. 72 hours. Partner challenges from Google for Developers, Bayer, Sandvik, Kongsberg, Valmet.",
+    "Global execution-focused AI innovation event. 72-hour build phase targeting 1,000+ builders. Partner challenges from Google for Developers, Bayer, Sandvik, Kongsberg, Valmet. Selected solutions continue through validation and production support.",
   startDate: "2026-11-06T09:00:00+02:00",
   endDate: "2026-11-08T18:00:00+02:00",
   eventStatus: "https://schema.org/EventScheduled",
