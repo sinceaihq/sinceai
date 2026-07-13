@@ -9,7 +9,7 @@ import { ORG } from "@/lib/org";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Production Support — From Hackathon to Deployment | Since AI",
+  title: "Production Support — From Build Phase to Deployment | Since AI",
   description:
     "Since AI provides 8+ weeks of post-hackathon production support. We help companies deploy winning AI projects to production with architecture review, deployment guidance, and ongoing mentorship.",
   keywords: [
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "https://sinceai.ai/production-support" },
   openGraph: {
-    title: "Production Support — From Hackathon to Deployment | Since AI",
+    title: "Production Support — From Build Phase to Deployment | Since AI",
     description:
       "Most hackathons end with a demo. Since AI projects become production systems. 8+ weeks of deployment support for winning projects.",
     url: "https://sinceai.ai/production-support",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Production Support — From Hackathon to Deployment | Since AI",
+    title: "Production Support — From Build Phase to Deployment | Since AI",
     description: "Most hackathons end with a demo. Since AI projects become production systems. 8+ weeks of deployment support for winning projects.",
   },
 };

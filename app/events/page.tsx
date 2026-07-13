@@ -36,7 +36,7 @@ export default function EventsPage() {
               </h1>
               
               <p className="text-xl md:text-2xl text-neutral-400 max-w-2xl mx-auto">
-                High-signal hackathons and meetups for builders who ship.
+                High-signal AI innovation events, build programmes, and meetups for builders who ship.
               </p>
             </motion.div>
           </div>
@@ -63,7 +63,7 @@ export default function EventsPage() {
                   {/* Content */}
                   <div className="flex-1">
                     <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-                      Since AI Hackathon 2026
+                      Since AI Innovation Event 2026
                     </h2>
                     
                     {/* Meta */}
@@ -80,7 +80,7 @@ export default function EventsPage() {
 
                     {/* Description */}
                     <p className="text-lg text-neutral-300 mb-8 max-w-2xl">
-                      Our flagship build weekend for real partner challenges.
+                      Our flagship AI innovation event, bringing together researchers, builders, industry partners, investors, and technology providers to move AI solutions toward production.
                     </p>
 
                     {/* CTAs */}
@@ -89,7 +89,7 @@ export default function EventsPage() {
                         href="/hackathon"
                         className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-black bg-white rounded-none hover:bg-neutral-100 transition-all duration-300 group"
                       >
-                        Since AI Hackathon 2026
+                        Since AI Innovation Event 2026
                         <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform" />
                       </Link>
 
@@ -97,7 +97,7 @@ export default function EventsPage() {
                         href="/partners"
                         className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white border border-white/20 rounded-none hover:bg-white/5 transition-all duration-300 group"
                       >
-                        Partner for Hackathon 2026
+                        Become an Innovation Partner
                         <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform" />
                       </Link>
                     </div>
@@ -230,7 +230,7 @@ export default function EventsPage() {
                 Stay Updated
               </h3>
               <p className="text-lg text-neutral-400 mb-4 max-w-xl mx-auto">
-                Join our Discord or Telegram to get notified about upcoming events, meetups, and hackathons.
+                Join our Discord or Telegram to get notified about upcoming innovation events, build programmes, and meetups.
               </p>
               <p className="text-sm text-neutral-500 mb-8 max-w-xl mx-auto">
                 New to hackathons? Read our{" "}

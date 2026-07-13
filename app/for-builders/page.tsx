@@ -12,12 +12,12 @@ import { ButtonPair } from "@/components/ui/ButtonPair";
 export const metadata: Metadata = {
   title: "For Builders — Join Since AI's Global AI Ecosystem",
   description:
-    "Join 10,000+ AI builders globally. Hackathons, applied AI projects, startup pathways. Since AI is open to developers, researchers, and founders globally.",
+    "Join 10,000+ AI builders globally. Innovation Events, applied AI projects, startup pathways. Since AI is open to developers, researchers, and founders globally.",
   alternates: { canonical: "https://sinceai.ai/for-builders" },
   openGraph: {
     title: "For Builders — Join Since AI's Global AI Ecosystem",
     description:
-      "Join 10,000+ AI builders globally. Hackathons, applied AI projects, startup pathways. Open globally.",
+      "Join 10,000+ AI builders globally. Innovation Events, applied AI projects, startup pathways. Open globally.",
     url: "https://sinceai.ai/for-builders",
     siteName: "Since AI",
     type: "website",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "For Builders | Since AI",
     description:
-      "Join 10,000+ AI builders. Hackathons, applied projects, startup pathways. Open globally.",
+      "Join 10,000+ AI builders. Innovation Events, applied projects, startup pathways. Open globally.",
   },
 };
 
@@ -34,22 +34,22 @@ const builderFaqs = [
   {
     question: "Do I need to be based in Europe to join Since AI?",
     answer:
-      "No. Since AI is open to builders globally. Our network spans 50+ countries. Since AI Hackathon 2026 accepts international applications, and our Discord community is active worldwide.",
+      "No. Since AI is open to builders globally. Our network spans 50+ countries. Since AI Innovation Event 2026 accepts international applications, and our Discord community is active worldwide.",
   },
   {
     question: "Is there a cost to join Since AI?",
     answer:
-      "No. Since AI is a non-profit. Joining the community, participating in Discord, and applying to hackathons is free. Our operations are funded by partner sponsorships.",
+      "No. Since AI is a non-profit. Joining the community, participating in Discord, and applying to events is free. Our operations are funded by partner sponsorships.",
   },
   {
-    question: "What is the application process for Since AI Hackathon 2026?",
+    question: "What is the application process for Since AI Innovation Event 2026?",
     answer:
-      "Applications for Since AI Hackathon 2026 open on a rolling basis ahead of the event. Apply at sinceai.ai/hackathon. You can apply as an individual or as a pre-formed team. Team formation support is available at the event.",
+      "Applications for Since AI Innovation Event 2026 open on a rolling basis ahead of the event. Apply at sinceai.ai/hackathon. You can apply as an individual or as a pre-formed team. Team formation support is available at the event.",
   },
   {
     question: "Do I keep the IP from my work at Since AI events?",
     answer:
-      "Yes. The default is builder-owned IP. Exceptions only apply by explicit written agreement with a partner organization — for example, in a post-hackathon pilot or commercial engagement where terms are negotiated directly.",
+      "Yes. The default is builder-owned IP. Exceptions only apply by explicit written agreement with a partner organization — for example, in a post-event pilot or commercial engagement where terms are negotiated directly.",
   },
   {
     question: "Can I apply to the hackathon as a team?",
@@ -127,7 +127,7 @@ export default function ForBuildersPage() {
                       Access to real problems
                     </h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
-                      Partner-backed challenges at Since AI Hackathon 2026 and ongoing
+                      Partner-backed challenges at Since AI Innovation Event 2026 and ongoing
                       applied projects from Google for Developers, Bayer, Sandvik,
                       Kongsberg, Valmet, and others. No toy datasets, no synthetic prompts —
                       production-relevant engineering problems that matter.
@@ -141,7 +141,7 @@ export default function ForBuildersPage() {
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Deployment help, GPU credits, and infrastructure partner access for
                       teams that move from prototype to production. Since AI stays involved
-                      after the hackathon — most communities don&apos;t.
+                      after the event — most communities don&apos;t.
                     </p>
                   </div>
 
@@ -152,7 +152,7 @@ export default function ForBuildersPage() {
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Top teams get introductions to Antler, Inventure, Wave Ventures, and
                       other European VCs through Since AI&apos;s capital partner network.
-                      The path from hackathon to pre-seed is real.
+                      The path from build phase to pre-seed is real.
                     </p>
                   </div>
 
@@ -177,7 +177,7 @@ export default function ForBuildersPage() {
                 <div className="space-y-5">
                   <div className="p-8 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2 tracking-tight">
-                      Apply to Since AI Hackathon 2026
+                      Apply to Since AI Innovation Event 2026
                     </h3>
                     <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-neutral-500 mb-4">
                       <span>72 hours</span>
@@ -355,11 +355,11 @@ export default function ForBuildersPage() {
                   Ready to build?
                 </h2>
                 <p className="text-neutral-400 mb-8 max-w-lg mx-auto leading-relaxed">
-                  Apply to Hackathon 2026 or join the network today. No experience
+                  Apply to the Innovation Event 2026 or join the network today. No experience
                   threshold. No membership fee. Just ship.
                 </p>
                 <ButtonPair
-                  primaryLabel="Apply to Hackathon 2026 →"
+                  primaryLabel="Apply to the Innovation Event →"
                   primaryHref="/hackathon"
                   secondaryLabel="Join the Discord →"
                   secondaryHref={ORG.social.discord}
@@ -372,7 +372,7 @@ export default function ForBuildersPage() {
               <div className="pt-6 border-t border-white/5">
                 <div className="flex flex-wrap gap-3 text-sm">
                   <Link href="/hackathon" className="text-neutral-400 hover:text-white underline">
-                    Hackathon 2026
+                    Innovation Event 2026
                   </Link>
                   <span className="text-neutral-700">&bull;</span>
                   <Link href="/ai-hackathons" className="text-neutral-400 hover:text-white underline">

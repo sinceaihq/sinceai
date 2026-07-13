@@ -20,7 +20,7 @@ export function Hero() {
 
         <p className="text-sm text-white mt-8 mb-4">
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 mr-2 align-middle" />
-          Since AI Hackathon 2026 &thinsp;·&thinsp; €50,000 cash prize pool &thinsp;·&thinsp; Registration open
+          Since AI Innovation Event 2026 &thinsp;·&thinsp; €50,000 cash prize pool &thinsp;·&thinsp; Registration open
         </p>
 
         <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
