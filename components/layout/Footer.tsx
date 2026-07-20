@@ -81,6 +81,9 @@ export const Footer: React.FC<FooterProps> = () => {
               <br />
               Turku-based, globally connected.
             </p>
+            <p className="text-sm text-white font-medium mb-4">
+              Since AI is a registered nonprofit association (ry) in Finland.
+            </p>
             <a
               href={`mailto:${ORG.contact.infoEmail}`}
               className="text-sm text-neutral-400 hover:text-white transition-colors"
@@ -144,7 +147,7 @@ export const Footer: React.FC<FooterProps> = () => {
         {/* ── Bottom bar ──────────────────────────────────────── */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-10 border-t border-white/10 gap-4">
           <p className="text-xs text-neutral-500 leading-relaxed">
-            {ORG.legalName} · Business ID {ORG.businessId} · Vähä Hämeenkatu 1, Turku, Finland
+            {ORG.legalName} is a registered Finnish nonprofit association · Business ID {ORG.businessId} · Vähä Hämeenkatu 1, Turku, Finland
             <br />
             © {year} Since AI. All rights reserved.
           </p>

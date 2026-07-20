@@ -55,8 +55,10 @@ export function BelowHero() {
             The execution layer of Global AI.
           </h2>
           <p className="text-sm text-white leading-relaxed max-w-[780px]">
-            Since AI is a global execution-focused AI innovation ecosystem — where
-            frontier AI becomes shipped products. A non-profit connecting
+            Since AI is a{" "}
+            <strong className="font-semibold">registered nonprofit association</strong>{" "}
+            running a global execution-focused AI innovation
+            ecosystem — where frontier AI becomes shipped products. We connect
             10,000+ AI builders globally with leading AI companies, research
             groups, and investors. Partners include Google for Developers, ElevenLabs, Aiven,
             Lovable, Antler, LUMI AI Factory, and Redstone VC.

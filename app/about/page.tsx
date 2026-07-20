@@ -100,8 +100,10 @@ export default function AboutPage() {
 
               {/* 2. Extractable definition paragraph */}
               <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-16">
-                Since AI is a global execution-focused AI innovation ecosystem, where
-                frontier AI becomes shipped products. A non-profit connecting
+                Since AI is a{" "}
+                <strong className="text-white">registered nonprofit association</strong>{" "}
+                running a global execution-focused AI innovation
+                ecosystem, where frontier AI becomes shipped products. We connect
                 10,000+ AI builders globally with leading AI companies, research
                 groups, and investors. Our mission: strengthen global AI capability
                 through execution, open collaboration, and real outcomes.
