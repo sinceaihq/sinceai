@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import StructuredData from "@/components/StructuredData";
 import { HackathonCountdown } from "@/components/HackathonCountdown";
 import { FadeIn } from "@/components/motion-primitives/fade-in";
+import { Judges } from "@/components/sections/hackathon";
 
 // ── Schemas ────────────────────────────────────────────────────────────────
 
@@ -376,7 +377,10 @@ export default function HackathonPage() {
           </div>
         </section>
 
-        {/* ── SECTION 7: Venue ─────────────────────────────────── */}
+        {/* ── SECTION 7: Judges ────────────────────────────────── */}
+        <Judges />
+
+        {/* ── SECTION 8: Venue ─────────────────────────────────── */}
         <section className="py-24 px-6 border-t border-white/10">
           <div className="mx-auto max-w-6xl">
             <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
@@ -417,7 +421,7 @@ export default function HackathonPage() {
           </div>
         </section>
 
-        {/* ── SECTION 8: Past edition ──────────────────────────── */}
+        {/* ── SECTION 9: Past edition ──────────────────────────── */}
         <section className="py-24 px-6 border-t border-white/10">
           <div className="mx-auto max-w-6xl">
             <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
@@ -456,7 +460,7 @@ export default function HackathonPage() {
           </div>
         </section>
 
-        {/* ── SECTION 9: Registration ──────────────────────────── */}
+        {/* ── SECTION 10: Registration ─────────────────────────── */}
         <section
           id="registration"
           className="py-40 px-6 border-t border-white/10 border-b border-white/10"
@@ -509,7 +513,7 @@ export default function HackathonPage() {
           </div>
         </section>
 
-        {/* ── SECTION 10: FAQ ───────────────────────────────────── */}
+        {/* ── SECTION 11: FAQ ───────────────────────────────────── */}
         <section className="py-24 px-6 border-t border-white/10">
           <div className="mx-auto max-w-6xl">
             <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
