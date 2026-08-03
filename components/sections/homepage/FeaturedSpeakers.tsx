@@ -160,7 +160,7 @@ function SpeakerCard({ speaker }: { speaker: Speaker }) {
 
 export function FeaturedSpeakers() {
   return (
-    <section className="py-24 px-6 border-t border-white/10 border-b border-white/10">
+    <section className="py-24 px-6 border-t border-white/10">
       <div className="mx-auto max-w-6xl">
         <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
           {"// featured speakers"}

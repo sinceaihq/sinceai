@@ -1,4 +1,5 @@
 import { FeaturedSpeakers } from "@/components/sections/homepage/FeaturedSpeakers";
+import { Judges } from "@/components/sections/hackathon";
 
 // ── Partner data ───────────────────────────────────────────────────────────
 
@@ -202,6 +203,9 @@ export function BelowHero() {
 
       {/* ── SECTION 5: Featured Speakers ─────────────────────── */}
       <FeaturedSpeakers />
+
+      {/* ── SECTION 6: Judges ────────────────────────────────── */}
+      <Judges />
 
     </div>
   );
