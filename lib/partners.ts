@@ -166,6 +166,12 @@ export const PARTNERS: Partner[] = [
     tier: 2,
   },
   {
+    name: "FiBAN",
+    logo: "/assets/sponsors/FiBAN.svg",
+    url: "https://fiban.org/",
+    tier: 2,
+  },
+  {
     name: "FOV Ventures",
     logo: "/assets/supports/FOVV.png",
     url: "https://www.fov.ventures/",

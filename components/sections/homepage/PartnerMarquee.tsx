@@ -30,6 +30,7 @@ const logos: Logo[] = [
   { name: "Redstone VC",           src: "/assets/sponsors/Redstone.png",             href: "https://redstone.vc/" },
   { name: "MAKI VC",               src: "/assets/sponsors/maki.png",                 href: "https://maki.vc/" },
   { name: "Inovexus",              src: "/assets/sponsors/Inovexus.svg",             href: "https://inovexus.com/" },
+  { name: "FiBAN",                 src: "/assets/sponsors/FiBAN.svg",                href: "https://fiban.org/" },
   { name: "FOV Ventures",         src: "/assets/supports/FOVV.png",                 href: "https://www.fov.ventures/" },
   { name: "Aalto AI",              src: "/assets/supports/aaltoai.png",              href: "https://www.aaltoai.com/" },
   { name: "Maria 01",              src: "/assets/sponsors/maria01.png",              href: "https://maria.io/" },
