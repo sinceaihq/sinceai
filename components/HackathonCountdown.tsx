@@ -27,7 +27,7 @@ function CountdownPlaceholder() {
         className="text-xs uppercase tracking-widest text-neutral-400 pb-2 border-b border-white/10 mb-1"
         style={{ gridColumn: "1 / -1" }}
       >
-        until Since AI Hackathon 2026 begins
+        until Since AI Innovation Event 2026 begins
       </span>
 
       {TIME_UNITS.map((label, i) => (

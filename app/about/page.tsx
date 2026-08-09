@@ -208,7 +208,7 @@ export default function AboutPage() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-6">
                   {[
                     { value: "10,000+", label: "AI builders in our network" },
-                    { value: "1,000+", label: "Builders targeted at Hackathon 2026" },
+                    { value: "1,000+", label: "Builders targeted at Innvation Event 2026" },
                     { value: "50+", label: "Countries represented" },
                     { value: "30+", label: "Partners & supporters" },
                   ].map((s) => (
@@ -366,7 +366,7 @@ export default function AboutPage() {
               <div className="pt-6 border-t border-white/5">
                 <div className="flex flex-wrap gap-3 text-sm">
                   <Link href="/hackathon" className="text-neutral-400 hover:text-white underline">
-                    Hackathon 2026
+                    Innovation Event 2026
                   </Link>
                   <span className="text-neutral-700">&bull;</span>
                   <Link href="/partners" className="text-neutral-400 hover:text-white underline">

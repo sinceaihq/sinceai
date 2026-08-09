@@ -16,26 +16,26 @@ const breadcrumbSchema = {
   "@type": "BreadcrumbList",
   itemListElement: [
     { "@type": "ListItem", position: 1, name: "Home",              item: "https://sinceai.ai" },
-    { "@type": "ListItem", position: 2, name: "Since AI Hackathon 2026", item: "https://sinceai.ai/hackathon" },
+    { "@type": "ListItem", position: 2, name: "Since AI Innovation Event 2026", item: "https://sinceai.ai/hackathon" },
   ],
 };
 
 const hackathonFaqs = [
   {
-    q: "What is Since AI Hackathon?",
-    a: "Since AI Hackathon is the flagship annual event of Since AI — a global execution-focused AI innovation ecosystem based in Turku, Finland. It is an official MLH (Major League Hacking) partner event. Builders from across the world gather to solve real industry challenges and ship AI products in 72 hours.",
+    q: "What is Since AI Innovation Event?",
+    a: "Since AI Innovation Event is the flagship annual event of Since AI. It brings together AI researchers, builders, technology partners, compute providers, companies, and investors. Its 72-hour hackathon is one part of a wider programme that helps promising solutions continue through validation, pilot planning, and production support.",
   },
   {
-    q: "When is Since AI Hackathon 2026?",
-    a: "Since AI Hackathon 2026 runs November 6–8, 2026 at EduCity, Joukahaisenkatu 7, Turku, Finland. Registration is now open — apply at sinceai.app/sign-up.",
+    q: "When is Since AI Innovation Event 2026?",
+    a: "Since AI Innovation Event 2026 takes place November 6–8, 2026 at EduCity, Joukahaisenkatu 7, Turku, Finland. Registration is now open — apply at sinceai.app/sign-up.",
   },
   {
-    q: "Is Since AI Hackathon an official MLH event?",
+    q: "Does Since AI Innovation Event include an official MLH hackathon?",
     a: "Yes. Since AI Hackathon 2026 is an official Major League Hacking (MLH) Member Event for the 2026 season. MLH is the world's largest hackathon league, supporting hundreds of events annually across North America, Europe, and Asia. Participants gain MLH recognition, prizes, and API credits.",
   },
   {
     q: "Who can participate?",
-    a: "Since AI Hackathon is open to builders worldwide — developers, researchers, designers, and entrepreneurs. Students and professionals both welcome. The event is held in English.",
+    a: "Since AI Innovation Event is open to builders worldwide — developers, researchers, designers, and entrepreneurs. Students and professionals both welcome. The event is held in English.",
   },
   {
     q: "Where is the event held?",
@@ -43,11 +43,11 @@ const hackathonFaqs = [
   },
   {
     q: "Is registration free?",
-    a: "Yes. Since AI Hackathon is free to attend for builders. Sponsorship and challenge partner opportunities are available for companies — see sinceai.ai/partners.",
+    a: "Yes. The Innovation Event is free to attend for builders. Sponsorship and challenge partner opportunities are available for companies — see sinceai.ai/partners.",
   },
   {
     q: "How do I register?",
-    a: "Registration for Since AI Hackathon 2026 is now open. Apply at sinceai.app/sign-up — free for all builders worldwide. Join our Discord (discord.gg/vMWdrVUPws) or Telegram (t.me/sinceaihq) to connect with other participants.",
+    a: "Registration for Since AI Innovation Event 2026 is now open. Apply at sinceai.app/sign-up — free for all builders worldwide. Join our Discord (discord.gg/vMWdrVUPws) or Telegram (t.me/sinceaihq) to connect with other participants.",
   },
   {
     q: "What companies set challenges?",
@@ -91,7 +91,7 @@ const whyItems = [
   },
   {
     num: "02",
-    title: "Official MLH partner event",
+    title: "Innovation Event with an official MLH build phase",
     body: "Since AI Hackathon 2026 is an official Major League Hacking (MLH) Member Event. Gain MLH recognition, prizes, API credits, and connect with the worldwide hacker community.",
   },
   {
@@ -137,7 +137,7 @@ export default function HackathonPage() {
             style={{ paddingTop: "clamp(100px, 15vh, 150px)" }}
           >
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-6 max-w-[820px] leading-none">
-              Since AI Hackathon 2026.
+              Since AI Innovation Event 2026.
             </h1>
 
             <p className="text-sm text-white/75 mb-8 tracking-wide">
@@ -156,7 +156,7 @@ export default function HackathonPage() {
                 className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 mr-2 align-middle"
                 aria-hidden="true"
               />
-              Registration is open — apply now
+              Applications are open for the Innovation Event.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3">
@@ -166,7 +166,7 @@ export default function HackathonPage() {
                 rel="noopener noreferrer"
                 className="inline-block bg-white text-black rounded-none px-6 py-3 font-semibold hover:bg-neutral-100 transition-colors cursor-pointer text-sm"
               >
-                Apply now →
+                Apply to the Innovation Event →
               </a>
               <Link
                 href="/partners"
@@ -206,7 +206,7 @@ export default function HackathonPage() {
             </div>
 
             <p className="text-sm text-neutral-400 leading-relaxed mt-8 max-w-2xl">
-              Google, AMD, and LUMI provide hackathon participants with compute access and GPU usage throughout the 72-hour sprint — so you can focus on building, not on infrastructure.
+              Google, AMD, and LUMI provide compute resources for participants during the 72-hour build phase of the Innovation Event — so you can focus on building, not on infrastructure.
             </p>
           </div>
         </section>
@@ -218,7 +218,7 @@ export default function HackathonPage() {
               {"// key facts"}
             </p>
             <h2 className="text-3xl font-bold tracking-tight text-white mb-8">
-              Since AI Hackathon 2026 — at a glance.
+              Since AI Innovation Event 2026 — at a glance.
             </h2>
 
             <div className="border-t border-white/10">
@@ -250,10 +250,10 @@ export default function HackathonPage() {
             </h2>
             <div className="text-sm text-neutral-400 leading-relaxed max-w-[720px] space-y-4">
               <p>
-                Since AI Hackathon is the flagship annual event of Since AI — Global
+                The Since AI Innovation Event is the flagship annual event of Since AI — a global
                 execution-focused AI innovation ecosystem based in Turku, Finland. The inaugural
                 edition in November 2025 brought together 260 builders who shipped 30+ AI
-                projects in 72 hours.
+                projects during the 72-hour build phase.
               </p>
               <p>
                 The 2026 edition targets 1,000+ builders. Partner challenges come from Google
@@ -393,7 +393,7 @@ export default function HackathonPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
               <div>
                 <p className="text-sm text-neutral-400 leading-relaxed mb-6">
-                  Since AI Hackathon 2026 takes place at EduCity — the modern campus of Turku
+                  Since AI Innovation Event 2026 takes place at EduCity — the modern campus of Turku
                   University of Applied Sciences (Turku AMK), Joukahaisenkatu 7, 20520 Turku,
                   Finland. State-of-the-art facilities for 1,000+ builders to collaborate, build,
                   and present.
@@ -474,7 +474,7 @@ export default function HackathonPage() {
               Registration is open.
             </h2>
             <p className="text-sm text-neutral-400 leading-relaxed max-w-[560px] mb-8">
-              Registration for Since AI Hackathon 2026 (November 6–8, Turku) is now open.
+              Registration for Since AI Innovation Event 2026 (November 6–8, Turku) is now open.
               €50,000 cash prize pool. Free to enter for all builders worldwide. Apply at
               sinceai.app/sign-up and join our community channels to connect with other
               participants before the event.
@@ -487,7 +487,7 @@ export default function HackathonPage() {
                 rel="noopener noreferrer"
                 className="inline-block bg-white text-black rounded-none px-6 py-3 font-semibold hover:bg-neutral-100 transition-colors cursor-pointer text-sm"
               >
-                Apply now →
+                Apply to the Innovation Event →
               </a>
               <a
                 href="https://t.me/sinceaihq"

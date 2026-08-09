@@ -9,7 +9,7 @@ export const faqs: Faq[] = [
   {
     question: "Where is Since AI based?",
     answer:
-      "Since AI is headquartered in Turku, Finland, with active networks across Helsinki, Tampere, Tallinn, Stockholm, and other European AI hubs. Since AI Hackathon 2026, the flagship event, takes place in Turku in November 2026.",
+      "Since AI is headquartered in Turku, Finland, with active networks across Helsinki, Tampere, Tallinn, Stockholm, and other European AI hubs. Since AI Innovation Event 2026, the flagship event, takes place in Turku in November 2026.",
   },
   {
     question: "Who are Since AI's partners?",
@@ -22,9 +22,9 @@ export const faqs: Faq[] = [
       "Since AI is built around execution, not content or networking. The focus is on moving builders from idea to prototype, prototype to production, and production to startup-scale opportunity. The ecosystem spans industrial partners, research groups, and venture capital, not just developers.",
   },
   {
-    question: "When and where is Since AI Hackathon 2026?",
+    question: "When and where is Since AI Innovation Event 2026?",
     answer:
-      "Since AI Hackathon 2026 takes place November 6 to 8, 2026, at Educity, Joukahaisenkatu 7, Turku, Finland. It is a 72-hour format targeting 1,000+ builders, with partner challenges from Google for Developers, Bayer, Sandvik, Kongsberg, and Valmet.",
+      "Since AI Innovation Event 2026 takes place November 6 to 8, 2026, at Educity, Joukahaisenkatu 7, Turku, Finland. It is a 72-hour format targeting 1,000+ builders, with partner challenges from Google for Developers, Bayer, Sandvik, Kongsberg, and Valmet.",
   },
   {
     question: "Who can join Since AI?",
@@ -39,7 +39,7 @@ export const faqs: Faq[] = [
   {
     question: "How can a company partner with Since AI?",
     answer:
-      "Companies can partner with Since AI by sponsoring hackathon challenges, recruiting builders from the ecosystem, running pilot projects with top teams, or joining as strategic partners. Contact info@sinceai.fi or see sinceai.ai/partners.",
+      "Companies can partner with Since AI by sponsoring innovation challenges, recruiting builders from the ecosystem, running pilot projects with top teams, or joining as strategic partners. Contact info@sinceai.fi or see sinceai.ai/partners.",
   },
   {
     question: "Is Since AI a for-profit company?",
@@ -54,7 +54,7 @@ export const faqs: Faq[] = [
   {
     question: "Can my university or research group collaborate with Since AI?",
     answer:
-      "Yes. Since AI partners with universities and research groups globally on applied AI projects, researcher-in-residence arrangements, and joint hackathon challenges. Current academic partners include the University of Turku, Aalto AI, HankenAI, and Turku AMK. Contact info@sinceai.fi for research collaboration.",
+      "Yes. Since AI partners with universities and research groups globally on applied AI projects, researcher-in-residence arrangements, and joint innovation challenges. Current academic partners include the University of Turku, Aalto AI, HankenAI, and Turku AMK. Contact info@sinceai.fi for research collaboration.",
   },
   {
     question: "Does Since AI offer GPU credits or compute support?",
@@ -64,7 +64,7 @@ export const faqs: Faq[] = [
   {
     question: "How is Since AI funded?",
     answer:
-      "Since AI is funded by a combination of partner sponsorships for hackathons and challenges, support from public Finnish and European innovation programs where applicable, and in-kind contributions from ecosystem partners. As a non-profit, all operations are directed toward the mission rather than profit.",
+      "Since AI is funded by a combination of partner sponsorships for innovation events and challenges, support from public Finnish and European innovation programs where applicable, and in-kind contributions from ecosystem partners. As a non-profit, all operations are directed toward the mission rather than profit.",
   },
   {
     question: "What kind of AI projects does Since AI focus on?",
@@ -74,6 +74,11 @@ export const faqs: Faq[] = [
   {
     question: "How can I stay updated on Since AI events and opportunities?",
     answer:
-      "Follow Since AI on the website blog (sinceai.ai/blog), subscribe to the Substack newsletter, or join the Discord community. Hackathon applications and partner program updates are announced through these channels first.",
+      "Follow Since AI on the website blog (sinceai.ai/blog), subscribe to the Substack newsletter, or join the Discord community. Innovation Event applications and partner program updates are announced through these channels first.",
+  },
+  {
+    question: "What is the difference between the Since AI Innovation Event and the hackathon?",
+    answer:
+      "The Since AI Innovation Event is the broader programme that brings together research groups, technology partners, compute providers, industry, investors, and AI builders. Its centerpiece is a 72-hour hackathon build phase where teams develop working solutions. The strongest projects continue afterward through validation, pilot planning, and production support.",
   },
 ];

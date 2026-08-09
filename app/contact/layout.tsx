@@ -4,13 +4,14 @@ import { getFAQSchema } from "@/lib/schema";
 export const metadata: Metadata = {
   title: "Contact Since AI - Partnerships, Sponsorships, Community",
   description:
-    "Get in touch with Since AI. Partner with us, sponsor the next hackathon, or join our community of 1000+ AI developers.",
+    "Get in touch with Since AI. Partner with us, sponsor the next Since AI Innovation Event, or join our community of 10,000+ AI builders.",
   keywords: [
     "Since AI",
     "contact",
     "partnership",
     "sponsorship",
     "hackathon",
+    "innovation event",
     "AI community",
     "Turku Finland", 
   ],
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Contact Since AI — Partnerships, Sponsorships, Community",
     description:
-      "Get in touch with Since AI. Partner with us, sponsor Since AI Hackathon 2026, or join 10,000+ AI builders globally.",
+      "Get in touch with Since AI. Partner with us, sponsor Since AI Innovation Event 2026, or join 10,000+ AI builders globally.",
     type: "website",
     locale: "en_US",
     siteName: "Since AI",
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Contact Since AI",
     description:
-      "Get in touch with Since AI. Partner with us, sponsor the next hackathon, or join our community.",
+      "Get in touch with Since AI. Partner with us, sponsor the next innovation event, or join our community.",
   },
   robots: {
     index: true,
@@ -46,7 +47,7 @@ const faqData = [
   },
   {
     question: "How do I join the community?",
-    answer: "Join our Discord server for free! You'll get access to member-only channels, our job board, networking events, and updates about upcoming hackathons. It's the best way to connect with 1000+ AI developers, founders, and enthusiasts.",
+    answer: "Join our Discord server for free! You'll get access to member-only channels, our job board, networking events, and updates about upcoming innovation events and build phases. It's the best way to connect with 1000+ AI developers, founders, and enthusiasts.",
   },
   {
     question: "What's the best way to reach you?",
@@ -54,7 +55,7 @@ const faqData = [
   },
   {
     question: "Where are you based?",
-    answer: "Since AI is based in Turku, Finland. We're a registered non-profit organization (Since AI ry, Business ID: 3593920-2) focused on fostering innovation and AI development in the region and beyond. Our hackathons and events are typically held in Turku, but our community is global.",
+    answer: "Since AI is based in Turku, Finland. We're a registered non-profit organization (Since AI ry, Business ID: 3593920-2) focused on fostering innovation and AI development in the region and beyond. Our events are typically held in Turku, but our community is global.",
   },
   {
     question: "How can I volunteer or contribute?",

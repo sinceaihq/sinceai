@@ -41,7 +41,7 @@ export default function PressPage() {
 
               <p className="text-lg text-neutral-400 leading-relaxed mb-12">
                 <strong className="text-white">In one sentence: </strong> Since AI is Europe&apos;s only AI community
-                providing end-to-end support from challenge ideation through hackathon building to production
+                providing end-to-end support from challenge ideation through build phase to production
                 deployment and commercialization.
               </p>
 
@@ -126,7 +126,7 @@ export default function PressPage() {
                 <ul className="space-y-4 text-neutral-300">
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">•</span>
-                    <span>Organized flagship AI hackathon with 260 builders in 2025</span>
+                    <span>Organized flagship AI innovation event with 260 builders in 2025</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">•</span>
@@ -304,11 +304,11 @@ export default function PressPage() {
                 <ul className="space-y-4 text-neutral-300">
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">1.</span>
-                    <span><strong className="text-white">Full Innovation Lifecycle:</strong> Only community supporting ideation → hackathon → production → commercialization</span>
+                    <span><strong className="text-white">Full Innovation Lifecycle:</strong> Only community supporting ideation → innovation event → production → commercialization</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">2.</span>
-                    <span><strong className="text-white">Production Focus:</strong> 8+ weeks of post-hackathon deployment support for winning projects</span>
+                    <span><strong className="text-white">Production Focus:</strong> 8+ weeks of post-event deployment support for winning projects</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">3.</span>
@@ -335,7 +335,7 @@ export default function PressPage() {
                     <h3 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-3">Short (50 words)</h3>
                     <p className="text-neutral-300 leading-relaxed italic">
                       Since AI is Europe&apos;s leading AI innovation ecosystem based in Turku, Finland.
-                      We provide end-to-end support from challenge ideation through hackathon building
+                      We provide end-to-end support from challenge ideation through build phase
                       to production deployment and commercialization. With 1000+ members and 15+ partner
                       companies including Valmet, Sandvik, and Kongsberg, we&apos;re building Europe&apos;s AI future.
                     </p>
@@ -348,7 +348,7 @@ export default function PressPage() {
                       in Turku, Finland. Unlike traditional hackathons, we support projects from challenge
                       ideation through production deployment to commercialization. With 1000+ developers,
                       researchers, and builders, we&apos;ve shipped 30+ AI projects with partner companies including
-                      Valmet, Sandvik, Kongsberg, and ElevenLabs. Our unique approach includes post-hackathon
+                      Valmet, Sandvik, Kongsberg, and ElevenLabs. Our unique approach includes post-event
                       production support (8+ weeks), entrepreneurship assistance through Antler partnership,
                       European AI sovereignty initiatives, and research-to-market bridges with the University
                       of Turku and Turku AMK. Learn more: sinceai.ai
@@ -390,7 +390,7 @@ export default function PressPage() {
                     <Link href="/stats" className="text-white hover:text-neutral-300 underline">Statistics & Impact</Link> — community metrics and case studies
                   </p>
                   <p>
-                    <Link href="/production-support" className="text-white hover:text-neutral-300 underline">Production Support</Link> — our unique post-hackathon deployment program
+                    <Link href="/production-support" className="text-white hover:text-neutral-300 underline">Production Support</Link> — our unique post-event deployment program
                   </p>
                   <p>
                     <Link href="/european-ai" className="text-white hover:text-neutral-300 underline">European AI Sovereignty</Link> — open-source initiatives

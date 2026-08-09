@@ -76,7 +76,7 @@ export function HackathonPopup() {
         className="rounded-none border-0 p-0 gap-0 sm:max-w-md"
         style={{ background: "#000", border: "2px solid var(--color-brand)" }}
       >
-        <DialogTitle className="sr-only">Since AI Hackathon 2026</DialogTitle>
+        <DialogTitle className="sr-only">Since AI Innovation Event 2026</DialogTitle>
 
         <DialogClose
           onClick={dismiss}
@@ -126,7 +126,7 @@ export function HackathonPopup() {
                 margin: 0,
               }}
             >
-              Since AI<br />Hackathon 2026.
+              Since AI<br />Innovation Event 2026.
             </h2>
           </div>
 
@@ -164,7 +164,7 @@ export function HackathonPopup() {
               marginBottom: "20px",
             }}
           >
-            Compete alongside 1,000+ AI engineers, researchers, and founders from across the globe. Ship something real in 72 hours.
+            Join 1,000+ AI engineers, researchers, and founders from across the globe. Build something real in 72 hours, with pathway to production support.
           </p>
 
           {/* Body */}

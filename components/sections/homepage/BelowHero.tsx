@@ -77,7 +77,7 @@ export function BelowHero() {
               desc: "AI builders globally",
             },
             {
-              label: "// hackathon 2026",
+              label: "// innovation event 2026",
               value: "1,000+",
               desc: "Builders targeted at flagship event, Nov 6–8 Turku",
             },
@@ -122,7 +122,7 @@ export function BelowHero() {
               {
                 num: "01",
                 title: "Build",
-                body: "High-intensity hackathons and applied AI projects where builders go from idea to prototype. Flagship: Hackathon 2026, Turku — 1,000+ builders targeted.",
+                body: "High-intensity innovation events and applied AI projects where builders go from idea to prototype. Flagship: Innovation Event 2026, Turku — 1,000+ builders targeted.",
               },
               {
                 num: "02",

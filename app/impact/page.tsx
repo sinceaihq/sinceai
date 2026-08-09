@@ -64,13 +64,13 @@ const metrics: {
       "Active members in our core Discord community. Figure from Discord server analytics.",
   },
   {
-    metric: "Hackathon builders to date",
+    metric: "Innovation Event builders to date",
     value: "260",
     methodology:
       "Cumulative builders across all Since AI events. Since AI Hackathon, Nov 21–23 2025, EduCity, Turku: 260 builders. Exact figure, not rounded.",
   },
   {
-    metric: "Hackathon 2026 participants targeted",
+    metric: "Innovation Event 2026 participants targeted",
     value: "1,000+",
     methodology:
       "Target based on venue capacity (Educity, Joukahaisenkatu 7, Turku) and partner challenge scale. Applications open rolling from 2026.",

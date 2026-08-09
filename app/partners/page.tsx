@@ -12,14 +12,14 @@ import { ButtonPair } from "@/components/ui/ButtonPair";
 
 export const metadata: Metadata = {
   title:
-    "Partner with Since AI — Recruit AI Talent, Sponsor Hackathon Challenges, Run AI Pilots",
+    "Partner with Since AI — Recruit AI Talent, Sponsor Innovation Challenges, Run AI Pilots",
   description:
-    "Partner with Since AI to access 10,000+ AI builders globally. Sponsor hackathon challenges at Since AI Hackathon 2026, recruit top AI talent, and run applied AI pilots with proven builders.",
+    "Partner with Since AI to access 10,000+ AI builders globally. Sponsor innovation challenges at Since AI Innovation Event 2026, recruit top AI talent, and run applied AI pilots with proven builders.",
   alternates: { canonical: "https://sinceai.ai/partners" },
   openGraph: {
-    title: "Partner with Since AI — Recruit AI Talent, Sponsor Hackathon Challenges",
+    title: "Partner with Since AI — Recruit AI Talent, Sponsor Innovation Challenges",
     description:
-      "Access 10,000+ AI builders globally. Sponsor Since AI Hackathon 2026 challenges, recruit top AI talent, and run applied AI pilots.",
+      "Access 10,000+ AI builders globally. Sponsor innovation challenges at Since AI Innovation Event 2026, recruit top AI talent, and run applied AI pilots.",
     url: "https://sinceai.ai/partners",
     siteName: "Since AI",
     type: "website",
@@ -28,13 +28,13 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Partner with Since AI",
     description:
-      "Access 10,000+ AI builders. Sponsor Hackathon 2026, recruit talent, run AI pilots.",
+      "Access 10,000+ AI builders. Sponsor the Innovation Event 2026, recruit talent, run AI pilots.",
   },
 };
 
 const partnerFaqs = [
   {
-    question: "What's the cost of sponsoring a Since AI Hackathon 2026 challenge?",
+    question: "What's the cost of sponsoring an innovation challenge at Since AI Innovation Event 2026?",
     answer:
       "Partnership packages are tiered based on scope — challenge sponsorship, recruiting access, workshop, or full strategic partnership. Contact partners@sinceai.fi for a tailored proposal.",
   },
@@ -44,7 +44,7 @@ const partnerFaqs = [
       "IP ownership is configured per partnership. Default: builders own their work, partners get a non-exclusive license to evaluate. Custom arrangements are possible for pilots and commercial engagements.",
   },
   {
-    question: "Can we recruit specific individuals from the hackathon?",
+    question: "Can we recruit specific individuals from the Innovation Event?",
     answer:
       "Yes. Partners get introductions to top performers during and after the event. All recruiting is direct between partner and builder — Since AI facilitates, not intermediates.",
   },
@@ -56,12 +56,12 @@ const partnerFaqs = [
   {
     question: "How soon can a partnership start?",
     answer:
-      "Most partnerships formalize within 2–4 weeks from the first intro call, depending on scope. Hackathon sponsorships are accepted up to 6 weeks before the event.",
+      "Most partnerships formalize within 2–4 weeks from the first intro call, depending on scope. Innovation challenge sponsorships are accepted up to 6 weeks before the event.",
   },
   {
     question: "What outcomes should we expect?",
     answer:
-      "Realistic outcomes from a hackathon sponsorship include 3–8 strong prototype projects on your challenge, 2–5 high-signal recruiting conversations, and 1–2 candidates for deeper pilots or collaboration.",
+      "Realistic outcomes from sponsoring an innovation challenge include 3–8 strong prototype projects on your challenge, 2–5 high-signal recruiting conversations, and 1–2 candidates for deeper pilots or collaboration.",
   },
 ];
 
@@ -119,7 +119,7 @@ const steps = [
   {
     n: "01",
     title: "Intro call",
-    body: "Understand your goals — recruiting, hackathon challenge, pilot project, or strategic partnership. 30 minutes.",
+    body: "Understand your goals — recruiting, innovation challenge, pilot project, or strategic partnership. 30 minutes.",
   },
   {
     n: "02",
@@ -129,7 +129,7 @@ const steps = [
   {
     n: "03",
     title: "Execution",
-    body: "Hackathon, standalone project, or ongoing engagement. 1,000+ builders on your challenge in 72 hours, or a matched team on a defined problem.",
+    body: "Innovation Event, standalone project, or ongoing engagement. 1,000+ builders on your challenge in 72 hours, or a matched team on a defined problem.",
   },
   {
     n: "04",
@@ -166,7 +166,7 @@ export default function PartnersPage() {
               <ButtonPair
                 primaryLabel="Start a partnership conversation →"
                 primaryHref="mailto:partners@sinceai.fi"
-                secondaryLabel="Hackathon 2026"
+                secondaryLabel="Innovation Event 2026"
                 secondaryHref="/hackathon"
               />
             </div>
@@ -184,7 +184,7 @@ export default function PartnersPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-20">
               {[
                 { value: "10,000+", label: "AI builders in our network" },
-                { value: "1,000+", label: "Builders targeted at Hackathon 2026" },
+                { value: "1,000+", label: "Builders targeted at Innovation Event 2026" },
                 { value: "50+", label: "Partners & supporters" },
                 { value: "60+", label: "Countries represented" },
               ].map((s) => (
@@ -208,17 +208,17 @@ export default function PartnersPage() {
                 {/* Card 1 */}
                 <div className="p-8 border border-white/10 bg-white/[0.02]">
                   <h3 className="text-xl font-bold text-white mb-3 tracking-tight">
-                    Sponsor a hackathon challenge
+                    Sponsor an innovation challenge
                   </h3>
                   <p className="text-neutral-300 leading-relaxed mb-5">
-                    Bring a real AI problem to Since AI Hackathon 2026. Get 1,000+
+                    Bring a real AI problem to Since AI Innovation Event 2026. Get 1,000+
                     builders working on it over 72 hours. Best teams continue into
                     your pilot.
                   </p>
                   <ul className="space-y-2 text-neutral-400 text-sm mb-6">
                     <li className="flex items-start gap-3">
                       <span className="text-white mt-0.5">—</span>
-                      Dedicated challenge track at the hackathon
+                      Dedicated innovation challenge during the 72-hour build phase
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="text-white mt-0.5">—</span>
@@ -240,13 +240,13 @@ export default function PartnersPage() {
                   </h3>
                   <p className="text-neutral-300 leading-relaxed mb-5">
                     Since AI&apos;s network includes 10,000+ AI builders globally.
-                    Access top performers through hackathons, applied projects, and
+                    Access top performers through the Innovation Event, applied projects, and
                     direct introductions.
                   </p>
                   <ul className="space-y-2 text-neutral-400 text-sm mb-6">
                     <li className="flex items-start gap-3">
                       <span className="text-white mt-0.5">—</span>
-                      Pre-vetted by hackathon performance
+                      Pre-vetted through the 72-hour build phase
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="text-white mt-0.5">—</span>
@@ -268,7 +268,7 @@ export default function PartnersPage() {
                   </h3>
                   <p className="text-neutral-300 leading-relaxed mb-5">
                     Turn a research problem into a working prototype with a top team
-                    from the Since AI network. Pilots run post-hackathon or on
+                    from the Since AI network. Pilots continue after the Innovation Event or on
                     standalone timelines.
                   </p>
                   <ul className="space-y-2 text-neutral-400 text-sm mb-6">
@@ -412,7 +412,7 @@ export default function PartnersPage() {
           <nav className="pt-6 border-t border-white/5" aria-label="Related pages">
             <div className="flex flex-wrap gap-y-3 text-sm">
               {[
-                { href: "/hackathon",          label: "Hackathon 2026" },
+                { href: "/hackathon",          label: "Innovation Event 2026" },
                 { href: "/projects",           label: "Past projects" },
                 { href: "/for-builders",       label: "For builders" },
                 { href: "/research-to-market", label: "Research to Market" },
