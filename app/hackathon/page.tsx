@@ -188,7 +188,6 @@ export default function HackathonPage() {
             <div className="flex flex-col md:flex-row md:-ml-6">
               {[
                 { name: "Google", label: "Compute partner" },
-                { name: "AMD",    label: "Compute partner" },
                 { name: "LUMI",   label: "Supercomputer access" },
               ].map((partner, i) => (
                 <div
@@ -206,7 +205,7 @@ export default function HackathonPage() {
             </div>
 
             <p className="text-sm text-neutral-400 leading-relaxed mt-8 max-w-2xl">
-              Google, AMD, and LUMI provide hackathon participants with compute access and GPU usage throughout the 72-hour sprint — so you can focus on building, not on infrastructure.
+              Google and LUMI provide hackathon participants with compute access and GPU usage throughout the 72-hour sprint — so you can focus on building, not on infrastructure.
             </p>
           </div>
         </section>

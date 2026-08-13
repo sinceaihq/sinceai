@@ -176,7 +176,7 @@ export function HackathonPopup() {
               marginBottom: "20px",
             }}
           >
-Backed by Google for Developers, AMD, ElevenLabs, Aiven, LUMI supercomputer, and more. Open to builders worldwide.
+Backed by Google for Developers, ElevenLabs, Aiven, LUMI supercomputer, and more. Open to builders worldwide.
           </p>
 
           {/* CTA */}
