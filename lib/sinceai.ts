@@ -27,8 +27,8 @@ export const FIRST_EVENT = {
 // Upcoming Event (2026)
 export const UPCOMING_EVENT_2026 = {
   name: "Since AI Hackathon 2026",
-  startDate: "2026-11-06",
-  endDate: "2026-11-08",
+  startDate: "2026-11-06T16:00:00+02:00",
+  endDate: "2026-11-08T17:00:00+02:00",
   month: "November",
   year: 2026,
   dateNote: "November 6–8, 2026.",

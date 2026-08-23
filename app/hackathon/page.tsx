@@ -27,7 +27,7 @@ const hackathonFaqs = [
   },
   {
     q: "When is Since AI Hackathon 2026?",
-    a: "Since AI Hackathon 2026 runs November 6–8, 2026 at EduCity, Joukahaisenkatu 7, Turku, Finland. Registration is now open — apply at sinceai.app/sign-up.",
+    a: "Since AI Hackathon 2026 runs 6 November 2026, 16:00 – 8 November 17:00, 2026 at EduCity, Joukahaisenkatu 7, Turku, Finland. Registration is now open — apply at sinceai.app/sign-up.",
   },
   {
     q: "Is Since AI Hackathon an official MLH event?",
