@@ -9,7 +9,7 @@ export const faqs: Faq[] = [
   {
     question: "Where is Since AI based?",
     answer:
-      "Since AI is headquartered in Turku, Finland, with active networks across Helsinki, Tampere, Tallinn, Stockholm, and other European AI hubs. Since AI Hackathon 2026, the flagship event, takes place in Turku in November 2026.",
+      "Since AI is headquartered in Turku, Finland, with active networks across Helsinki, Tampere, Tallinn, Stockholm, and other European AI hubs. Since AI Hackathon 2026, the flagship event, takes place in Turku in November 6 to 8, 2026.",
   },
   {
     question: "Who are Since AI's partners?",

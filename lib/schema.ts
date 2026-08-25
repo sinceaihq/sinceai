@@ -127,7 +127,6 @@ export function getFirstEventSchema(): WithContext<Event> {
 
 /**
  * Get the Upcoming 2026 Event schema
- * No exact dates yet - uses "November 2026"
  */
 export function getUpcoming2026EventSchema(): WithContext<Event> {
   return {
