@@ -272,7 +272,7 @@ export default function AboutPage() {
                         Registered address
                       </dt>
                       <dd className="text-neutral-200">
-                        Vähä Hämeenkatu 1, Turku, Finland
+                        Haukilahdenkatu 1 A 89, 02200 Espoo, Finland
                       </dd>
                     </div>
                     <div>

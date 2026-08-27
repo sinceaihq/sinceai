@@ -147,7 +147,7 @@ export const Footer: React.FC<FooterProps> = () => {
         {/* ── Bottom bar ──────────────────────────────────────── */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-10 border-t border-white/10 gap-4">
           <p className="text-xs text-neutral-500 leading-relaxed">
-            {ORG.legalName} is a registered Finnish nonprofit association · Business ID {ORG.businessId} · Vähä Hämeenkatu 1, Turku, Finland
+            {ORG.legalName} is a registered Finnish nonprofit association · Business ID {ORG.businessId} · Haukilahdenkatu 1 A 89, 02200 Espoo, Finland
             <br />
             © {year} Since AI. All rights reserved.
           </p>
