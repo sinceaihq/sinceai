@@ -27,7 +27,7 @@ const hackathonFaqs = [
   },
   {
     q: "When is Since AI Hackathon 2026?",
-    a: "Since AI Hackathon 2026 runs November 6–8, 2026 at EduCity, Joukahaisenkatu 7, Turku, Finland. Registration is now open — apply at sinceai.app/sign-up.",
+    a: "Since AI Hackathon 2026 runs November 6 16:00 – November 8 17:00, 2026 at EduCity, Joukahaisenkatu 7, Turku, Finland. Registration is now open — apply at sinceai.app/sign-up.",
   },
   {
     q: "Is Since AI Hackathon an official MLH event?",
@@ -72,7 +72,7 @@ const faqSchema = {
 // ── Content data ──────────────────────────────────────────────────────────
 
 const keyFacts = [
-  { label: "Date",           value: "November 6–8, 2026" },
+  { label: "Date",           value: "November 6 16:00 – November 8 17:00, 2026" },
   { label: "Venue",          value: "EduCity, Joukahaisenkatu 7, Turku, Finland" },
   { label: "Prize pool",     value: "€50,000 cash" },
   { label: "Duration",       value: "72 hours" },
@@ -146,8 +146,8 @@ export default function HackathonPage() {
 
             <div className="w-full sm:w-fit mb-8">
               <HackathonCountdown
-                startDate="2026-11-06T09:00:00"
-                endDate="2026-11-08T23:59:00"
+                startDate="2026-11-06T16:00:00"
+                endDate="2026-11-08T17:00:00"
               />
             </div>
 

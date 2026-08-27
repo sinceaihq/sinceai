@@ -273,7 +273,7 @@ export default function ProjectsPage() {
                 <span className="text-white font-semibold">Since AI Hackathon 2025</span> — Nov 21–23, 2025 • EduCity, Turku • 260+ builders
               </p>
               <p className="text-neutral-500 text-sm">
-                <span className="text-neutral-300">Next:</span> Hackathon 2026 — November 2026 (dates TBA)
+                <span className="text-neutral-300">Next:</span> Hackathon 2026 — November 6-8, 2026
               </p>
             </motion.div>
           </div>

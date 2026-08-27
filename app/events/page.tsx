@@ -70,11 +70,11 @@ export default function EventsPage() {
                     <div className="flex flex-wrap items-center gap-4 mb-6 text-neutral-400">
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
-                        <span className="text-sm font-medium">November 2026 • Dates TBA</span>
+                        <span className="text-sm font-medium">November 6-8, 2026</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <MapPin className="w-4 h-4" />
-                        <span className="text-sm font-medium">Turku, Finland</span>
+                        <span className="text-sm font-medium">EduCity, Turku, Finland</span>
                       </div>
                     </div>
 

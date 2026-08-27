@@ -167,8 +167,8 @@ export default function StatsPage() {
                       </tr>
                       <tr>
                         <td className="py-3 pr-4 text-neutral-200">Since AI Hackathon 2026</td>
-                        <td className="py-3 pr-4">November 2026</td>
-                        <td className="py-3 pr-4" colSpan={2}>Upcoming — dates TBA</td>
+                        <td className="py-3 pr-4">Nov 6-8, 2026</td>
+                        <td className="py-3 pr-4" colSpan={2}>Upcoming</td>
                       </tr>
                     </tbody>
                   </table>
