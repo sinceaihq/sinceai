@@ -78,11 +78,25 @@ function LogoItem({ name, src, href, loading = "lazy", ...rest }: Logo & React.A
  * on the container, `translateZ(0)` + `will-change: transform` on the track,
  * ensure the marquee runs on its own GPU compositor layer unaffected by the
  * Lenis parent transform on <html>.
+ *
+ * `colorful` opts out of the default grayscale/dimmed treatment and renders
+ * logos at full colour and a larger size — used on /hackathon, the landing
+ * page for paid traffic. The homepage hero keeps the default subtle look.
  */
-export function PartnerMarquee() {
+interface PartnerMarqueeProps {
+  colorful?: boolean;
+  label?: string;
+}
+
+export function PartnerMarquee({
+  colorful = false,
+  label = "// backed by",
+}: PartnerMarqueeProps = {}) {
   return (
-    <div className={styles.marqueeContainer}>
-      <span className={styles.marqueeLabel}>{"// backed by"}</span>
+    <div
+      className={`${styles.marqueeContainer}${colorful ? ` ${styles.colorful}` : ""}`}
+    >
+      <span className={styles.marqueeLabel}>{label}</span>
 
       <div className={styles.marqueeTrackWrapper}>
         <div className={styles.marqueeTrack}>

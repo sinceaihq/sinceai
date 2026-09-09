@@ -182,7 +182,7 @@ Backed by Google for Developers, ElevenLabs, Aiven, LUMI supercomputer, and more
 
           {/* CTA */}
           <Link
-            href="https://sinceai.app/events/since-ai-hackathon-2026"
+            href="https://sinceai.app/sign-up"
             onClick={() => {
               trackEvent(ANALYTICS_EVENTS.REGISTER_CLICK);
               dismiss();

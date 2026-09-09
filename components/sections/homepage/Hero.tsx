@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PartnerMarquee } from "./PartnerMarquee";
+import { PartnerMarquee } from "@/components/PartnerMarquee";
 import ORG from "@/lib/org";
 import { TrackedLink } from "@/components/analytics/TrackedLink";
 

@@ -189,3 +189,39 @@
 .logoItem:hover img {
   filter: grayscale(0%);
 }
+
+/* ─── Colourful variant (/hackathon) ──────────────────────────────────────
+ * Logos render at full colour and full opacity, in a larger box. Used on the
+ * hackathon landing page, where the partner roster is itself the pitch.
+ * The fixed-width rule from .logoItem still applies — only the values change,
+ * so the -50% seam math stays exact.
+ * ─────────────────────────────────────────────────────────────────────── */
+.colorful .logoItem {
+  width: 100px;
+  height: 36px;
+  opacity: 1;
+}
+
+@media (min-width: 640px) {
+  .colorful .logoItem {
+    width: 120px;
+    height: 42px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .colorful .logoItem {
+    width: 140px;
+    height: 48px;
+  }
+}
+
+.colorful .logoItem img {
+  filter: none;
+}
+
+/* Hover is a subtle lift instead of a colour reveal — there is no colour left
+   to reveal, and a transform here would fight the compositor animation. */
+.colorful .logoItem:hover img {
+  filter: brightness(1.15);
+}

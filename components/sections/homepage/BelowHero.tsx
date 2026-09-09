@@ -1,5 +1,4 @@
-import { FeaturedSpeakers } from "@/components/sections/homepage/FeaturedSpeakers";
-import { Judges } from "@/components/sections/hackathon";
+import { FeaturedSpeakers, Judges } from "@/components/sections/hackathon";
 
 // ── Partner data ───────────────────────────────────────────────────────────
 

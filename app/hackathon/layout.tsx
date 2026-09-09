@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import StructuredData from "@/components/StructuredData";
+import { UPCOMING_EVENT_2026 } from "@/lib/sinceai";
 
 export const metadata: Metadata = {
   title:
@@ -47,8 +48,8 @@ const eventSchema = {
   name: "Since AI Hackathon 2026",
   description:
     "A global execution-focused AI hackathon. 1,000+ builders targeted. 72 hours. Partner challenges from Google for Developers, Bayer, Sandvik, Kongsberg, Valmet.",
-  startDate: "2026-11-06T09:00:00+02:00",
-  endDate: "2026-11-08T18:00:00+02:00",
+  startDate: UPCOMING_EVENT_2026.startDate,
+  endDate: UPCOMING_EVENT_2026.endDate,
   eventStatus: "https://schema.org/EventScheduled",
   eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
   location: {
