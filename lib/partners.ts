@@ -115,6 +115,48 @@ export const PARTNERS: Partner[] = [
     url: "https://www.teknologiakiinteistot.fi/",
     tier: 1,
   },
+  {
+    name: "Revvity",
+    logo: "/assets/sponsors/revvity.png",
+    url: "https://www.revvity.com/",
+    tier: 1,
+  },
+  {
+    name: "Traficom",
+    logo: "/assets/sponsors/traficom.png",
+    url: "https://www.traficom.fi/",
+    tier: 1,
+  },
+  {
+    name: "Meyer Turku",
+    logo: "/assets/sponsors/meyer-turku.png",
+    url: "https://www.meyerturku.fi/en/",
+    tier: 1,
+  },
+  {
+    name: "Elisa",
+    logo: "/assets/sponsors/elisa.png",
+    url: "https://www.elisa.com/",
+    tier: 1,
+  },
+  {
+    name: "Solita",
+    logo: "/assets/sponsors/solita.png",
+    url: "https://www.solita.fi/",
+    tier: 1,
+  },
+  {
+    name: "Takomo Golf",
+    logo: "/assets/sponsors/takomo-golf.png",
+    url: "https://takomogolf.com/",
+    tier: 1,
+  },
+  {
+    name: "Turku Energia",
+    logo: "/assets/sponsors/turku-energia.png",
+    url: "https://www.turkuenergia.fi/en",
+    tier: 1,
+  },
 
   // ─── Tier 2: Capital & Research Partners ────────────────────────────────────
   {
@@ -357,6 +399,12 @@ export const PARTNERS: Partner[] = [
     name: "Åbo Akademi",
     logo: "/assets/supports/AboAkademi.png",
     url: "https://www.abo.fi/",
+    tier: 3,
+  },
+  {
+    name: "SW4E / DIMECC",
+    logo: "/assets/supports/sw4e-dimecc.png",
+    url: "https://sw4e.fi/",
     tier: 3,
   },
 ];
