@@ -32,10 +32,11 @@ export const ORG = {
     reddit: "https://www.reddit.com/r/SinceAI/",
   },
   stats: {
-    members: "1000+",
+    members: "10,000+",
     hackathonParticipants: "260+",
     projects: "30+",
-    partners: "15+",
+    partners: "100+",
+    countries: "100+",
   },
 } as const;
 

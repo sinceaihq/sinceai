@@ -43,7 +43,7 @@ const breadcrumbSchema = {
 };
 
 // TODO (Riku): verify "countries represented" before this page goes live.
-// Current value uses the hero's claim of 50+ — replace with the defensible
+// Current value uses the hero's claim of 100+ — replace with the defensible
 // number from real hackathon applications + Discord analytics if lower.
 const metrics: {
   metric: string;
@@ -77,7 +77,7 @@ const metrics: {
   },
   {
     metric: "Partners & supporters",
-    value: "30+",
+    value: "100+",
     methodology:
       "Counted as organizations with a formal partnership role: event sponsorship (challenge partner), ecosystem support (MoU or named collaboration), or capital/research partner.",
   },
@@ -89,7 +89,7 @@ const metrics: {
   },
   {
     metric: "Countries represented",
-    value: "50+",
+    value: "100+",
     methodology:
       "Via partner community reach, direct applications from Since AI Hackathon 2025, and Discord member analytics.",
   },

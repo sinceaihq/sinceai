@@ -10,7 +10,7 @@ export default function PressPage() {
   const stats = [
     { label: "Community Members", value: "1000+" },
     { label: "Hackathon Participants", value: "200+" },
-    { label: "Partner Companies", value: "15+" },
+    { label: "Partner Companies", value: "100+" },
     { label: "AI Projects Built", value: "30+" },
   ];
 
@@ -138,7 +138,7 @@ export default function PressPage() {
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">•</span>
-                    <span>Partnered with 15+ companies including Fortune 500 enterprises</span>
+                    <span>Partnered with 100+ companies including Fortune 500 enterprises</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">•</span>
@@ -336,7 +336,7 @@ export default function PressPage() {
                     <p className="text-neutral-300 leading-relaxed italic">
                       Since AI is Europe&apos;s leading AI innovation ecosystem based in Turku, Finland.
                       We provide end-to-end support from challenge ideation through hackathon building
-                      to production deployment and commercialization. With 1000+ members and 15+ partner
+                      to production deployment and commercialization. With 1000+ members and 100+ partner
                       companies including Valmet, Sandvik, and Kongsberg, we&apos;re building Europe&apos;s AI future.
                     </p>
                   </div>

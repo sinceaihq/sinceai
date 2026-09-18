@@ -181,7 +181,7 @@ export default function FinlandAIPage() {
                     <div className="text-sm text-neutral-500">Finnish AI developers</div>
                   </div>
                   <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
-                    <div className="text-3xl md:text-4xl font-bold text-white mb-2">10+</div>
+                    <div className="text-3xl md:text-4xl font-bold text-white mb-2">100+</div>
                     <div className="text-sm text-neutral-500">Countries represented</div>
                   </div>
                   <div className="p-6 border border-white/5 bg-white/[0.02] text-center">

@@ -30,9 +30,9 @@ building to production deployment and commercialization.
 - Active Members: 1000+
 - Hackathon Participants: 260+
 - Projects Shipped: 30+
-- Industry Partners: 15+
+- Industry Partners: 100+
 - University Partners: 2
-- Countries Represented: 10+
+- Countries Represented: 100+
 
 # What Makes Us Different
 Unlike traditional hackathons (weekend event → demo → nothing), Since AI provides:

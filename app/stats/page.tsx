@@ -11,7 +11,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Statistics & Impact — Since AI Community Metrics | Since AI",
   description:
-    "Since AI impact data: 1000+ members, 260+ hackathon participants, 30+ AI projects shipped, 15+ partner companies. Updated February 2026. A global AI innovation ecosystem.",
+    "Since AI impact data: 1000+ members, 260+ hackathon participants, 30+ AI projects shipped, 100+ partner companies. Updated February 2026. A global AI innovation ecosystem.",
   keywords: [
     "Since AI statistics",
     "AI community impact",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Statistics & Impact | Since AI",
     description:
-      "1000+ members, 260+ hackathon builders, 30+ projects shipped, 15+ partners. Real metrics from a global AI innovation ecosystem.",
+      "1000+ members, 260+ hackathon builders, 30+ projects shipped, 100+ partners. Real metrics from a global AI innovation ecosystem.",
     url: "https://sinceai.ai/stats",
     siteName: "Since AI",
     type: "website",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Statistics & Impact | Since AI",
-    description: "1000+ members, 260+ hackathon builders, 30+ projects shipped, 15+ partners. Real metrics from a global AI innovation ecosystem.",
+    description: "1000+ members, 260+ hackathon builders, 30+ projects shipped, 100+ partners. Real metrics from a global AI innovation ecosystem.",
   },
 };
 
@@ -87,7 +87,7 @@ export default function StatsPage() {
                     <div className="text-sm text-neutral-500">AI Projects Shipped</div>
                   </div>
                   <div className="p-6 border border-white/10 bg-white/[0.02] text-center">
-                    <div className="text-3xl md:text-4xl font-bold text-white mb-2">15+</div>
+                    <div className="text-3xl md:text-4xl font-bold text-white mb-2">100+</div>
                     <div className="text-sm text-neutral-500">Partner Companies</div>
                   </div>
                 </div>
@@ -126,7 +126,7 @@ export default function StatsPage() {
                 <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-base">
                   <div>
                     <dt className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-1">Countries Represented</dt>
-                    <dd className="text-neutral-300">10+</dd>
+                    <dd className="text-neutral-300">100+</dd>
                   </div>
                   <div>
                     <dt className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-1">Headquarters</dt>
@@ -209,7 +209,7 @@ export default function StatsPage() {
                 <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-base mb-6">
                   <div>
                     <dt className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-1">Industry Partners</dt>
-                    <dd className="text-neutral-300">15+ (Valmet, Sandvik, Kongsberg, ElevenLabs, Antler, etc.)</dd>
+                    <dd className="text-neutral-300">100+ (Valmet, Sandvik, Kongsberg, ElevenLabs, Antler, etc.)</dd>
                   </div>
                   <div>
                     <dt className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-1">University Partners</dt>

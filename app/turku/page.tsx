@@ -103,7 +103,7 @@ export default function TurkuPage() {
                     <div className="text-sm text-neutral-500">AI projects built</div>
                   </div>
                   <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
-                    <div className="text-3xl md:text-4xl font-bold text-white mb-2">15+</div>
+                    <div className="text-3xl md:text-4xl font-bold text-white mb-2">100+</div>
                     <div className="text-sm text-neutral-500">Company partnerships</div>
                   </div>
                 </div>

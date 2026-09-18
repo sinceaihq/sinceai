@@ -152,7 +152,7 @@ export default function AboutPage() {
                       AI engineer and entrepreneur building intelligent systems at the
                       intersection of technical execution and commercial strategy. Founded
                       Since AI in 2025 and led its growth to a 10,000+ builder network
-                      and 30+ strategic partnerships.
+                      and 100+ strategic partnerships.
                     </p>
                     <a
                       href="https://lauttia.ai"
@@ -209,8 +209,8 @@ export default function AboutPage() {
                   {[
                     { value: "10,000+", label: "AI builders in our network" },
                     { value: "1,000+", label: "Builders targeted at Hackathon 2026" },
-                    { value: "50+", label: "Countries represented" },
-                    { value: "30+", label: "Partners & supporters" },
+                    { value: "100+", label: "Countries represented" },
+                    { value: "100+", label: "Partners & supporters" },
                   ].map((s) => (
                     <div
                       key={s.label}
