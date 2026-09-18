@@ -37,6 +37,13 @@ const logos: Logo[] = [
   { name: "AI Mad Lab",            src: "/assets/supports/aimadlab.svg",             href: "https://www.aimadlab.com/" },
   { name: "Founders House",        src: "/assets/sponsors/founders_house.svg",       href: "https://founders-house.fi/" },
   { name: "LUMI AI Factory",       src: "/assets/sponsors/Lumi.svg",                 href: "https://lumi-ai-factory.eu/" },
+  { name: "Meyer Turku",           src: "/assets/sponsors/meyer-turku.png",          href: "https://www.meyerturku.fi/" },
+  { name: "Revvity",               src: "/assets/sponsors/revvity.png",              href: "https://www.revvity.com/" },
+  { name: "Traficom",              src: "/assets/sponsors/traficom.png",             href: "https://www.traficom.fi/" },
+  { name: "Elisa",                 src: "/assets/sponsors/elisa.png",                href: "https://elisa.fi/" },
+  { name: "Solita",                src: "/assets/sponsors/solita.png",               href: "https://www.solita.fi/" },
+  { name: "Takomo Golf",           src: "/assets/sponsors/takomo-golf.png",          href: "https://takomogolf.com/" },
+  { name: "Turku Energia",         src: "/assets/sponsors/turku-energia.png",        href: "https://www.turkuenergia.fi/" },
 ];
 
 function LogoItem({ name, src, href, loading = "lazy", ...rest }: Logo & React.AnchorHTMLAttributes<HTMLAnchorElement>) {

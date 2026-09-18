@@ -261,6 +261,18 @@ export const PARTNERS: Partner[] = [
     url: "https://gpt-lab.eu/",
     tier: 2,
   },
+  {
+    name: "Turku AMK",
+    logo: "/assets/supports/turkuamk.png",
+    url: "https://www.turkuamk.fi/",
+    tier: 2,
+  },
+  {
+    name: "Founders House",
+    logo: "/assets/sponsors/founders_house.svg",
+    url: "https://founders-house.fi/",
+    tier: 2,
+  },
 
   // ─── Tier 3: Community Supporters ───────────────────────────────────────────
   {
@@ -300,12 +312,6 @@ export const PARTNERS: Partner[] = [
     tier: 3,
   },
   {
-    name: "Founders House",
-    logo: "/assets/sponsors/founders_house.svg",
-    url: "https://founders-house.fi/",
-    tier: 3,
-  },
-  {
     name: "Helsinki Think Company",
     logo: "/assets/sponsors/Helsinki_Think_Company.png",
     url: "https://www.thinkcompany.fi",
@@ -315,12 +321,6 @@ export const PARTNERS: Partner[] = [
     name: "Boost Turku",
     logo: "/assets/supports/boost.svg",
     url: "https://www.boostturku.com/",
-    tier: 3,
-  },
-  {
-    name: "Turku AMK",
-    logo: "/assets/supports/turkuamk.png",
-    url: "https://www.turkuamk.fi/",
     tier: 3,
   },
   {
