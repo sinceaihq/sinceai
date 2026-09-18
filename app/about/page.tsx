@@ -209,8 +209,8 @@ export default function AboutPage() {
                   {[
                     { value: "10,000+", label: "AI builders in our network" },
                     { value: "1,000+", label: "Builders targeted at Hackathon 2026" },
-                    { value: "50+", label: "Countries represented" },
-                    { value: "30+", label: "Partners & supporters" },
+                    { value: "100+", label: "Countries represented" },
+                    { value: "100+", label: "Partners & supporters" },
                   ].map((s) => (
                     <div
                       key={s.label}

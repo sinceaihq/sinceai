@@ -34,7 +34,7 @@ const builderFaqs = [
   {
     question: "Do I need to be based in Europe to join Since AI?",
     answer:
-      "No. Since AI is open to builders globally. Our network spans 50+ countries. Since AI Hackathon 2026 accepts international applications, and our Discord community is active worldwide.",
+      "No. Since AI is open to builders globally. Our network spans 100+ countries. Since AI Hackathon 2026 accepts international applications, and our Discord community is active worldwide.",
   },
   {
     question: "Is there a cost to join Since AI?",
@@ -162,7 +162,7 @@ export default function ForBuildersPage() {
                     </h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       10,000+ AI builders, researchers, and founders across Europe and
-                      beyond — across 50+ countries. Year-round channels for job postings,
+                      beyond — across 100+ countries. Year-round channels for job postings,
                       project collaboration, and applied AI discussion.
                     </p>
                   </div>
@@ -206,7 +206,7 @@ export default function ForBuildersPage() {
                     </h3>
                     <p className="text-neutral-400 text-sm leading-relaxed mb-5">
                       Day-to-day conversation, project collaboration, job postings, and
-                      event announcements. 10,000+ builders across 50+ countries.
+                      event announcements. 10,000+ builders across 100+ countries.
                     </p>
                     <a
                       href={ORG.social.discord}

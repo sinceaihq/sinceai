@@ -319,7 +319,7 @@ export default function HackathonPage() {
                 <p>
                   Since AI Hackathon is the flagship annual event of Since AI — a global
                   execution-focused AI innovation ecosystem based in Turku, Finland, backed
-                  by 50+ strategic, capital, and research partners.
+                  by 100+ strategic, capital, and research partners.
                 </p>
                 <p>
                   Teams form on day one, pick a partner challenge or an open track, and have

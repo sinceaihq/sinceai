@@ -82,12 +82,12 @@ export function BelowHero() {
             },
             {
               label: "// partners",
-              value: "50+",
+              value: "100+",
               desc: "Strategic, capital, and research partners",
             },
             {
               label: "// reach",
-              value: "50+",
+              value: "100+",
               desc: "Countries represented in our network",
             },
           ].map((stat) => (

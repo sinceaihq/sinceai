@@ -43,7 +43,7 @@ const breadcrumbSchema = {
 };
 
 // TODO (Riku): verify "countries represented" before this page goes live.
-// Current value uses the hero's claim of 50+ — replace with the defensible
+// Current value uses the hero's claim of 100+ — replace with the defensible
 // number from real hackathon applications + Discord analytics if lower.
 const metrics: {
   metric: string;
@@ -83,13 +83,13 @@ const metrics: {
   },
   {
     metric: "Projects shipped",
-    value: "30+",
+    value: "100+",
     methodology:
       "Hackathon and post-hackathon projects with public deliverables — GitHub repositories, live demos, or partner-accepted prototypes. See sinceai.ai/projects for public summaries.",
   },
   {
     metric: "Countries represented",
-    value: "50+",
+    value: "100+",
     methodology:
       "Via partner community reach, direct applications from Since AI Hackathon 2025, and Discord member analytics.",
   },
