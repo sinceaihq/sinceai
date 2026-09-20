@@ -78,35 +78,24 @@ export function PartnersSection() {
           </div>
         </div>
 
-        <div className="border-t border-white/5 mb-4" />
+        <div className="border-t border-white/5 mb-14 sm:mb-20" />
 
-        {/* ── Tier 3: Community Supporters (collapsed by default) ── */}
-        <details className="group">
-          <summary className="flex items-center justify-center gap-2 cursor-pointer select-none py-5 text-sm font-medium text-neutral-500 hover:text-white transition-colors [&::-webkit-details-marker]:hidden [&::marker]:hidden list-none">
-            <span className="group-open:hidden">
-              + Show all {tier3Partners.length} community supporters
-            </span>
-            <span className="hidden group-open:inline">
-              − Hide community supporters
-            </span>
-          </summary>
-
-          <div className="mt-10">
-            <h3 className="text-xs uppercase tracking-widest text-neutral-400 font-semibold text-center mb-8 sm:mb-10">
-              Community Supporters
-            </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-y-2 gap-x-2">
-              {tier3Partners.map((partner) => (
-                <LogoItem
-                  key={partner.name}
-                  partner={partner}
-                  boxClass="w-20 h-8 sm:w-24 sm:h-9 lg:w-28 lg:h-10"
-                  sizes="(max-width: 640px) 80px, (max-width: 1024px) 96px, 112px"
-                />
-              ))}
-            </div>
+        {/* ── Tier 3: Community Supporters ── */}
+        <div>
+          <h3 className="text-xs uppercase tracking-widest text-neutral-400 font-semibold text-center mb-8 sm:mb-12">
+            Community Supporters
+          </h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-y-2 gap-x-2">
+            {tier3Partners.map((partner) => (
+              <LogoItem
+                key={partner.name}
+                partner={partner}
+                boxClass="w-20 h-8 sm:w-24 sm:h-9 lg:w-28 lg:h-10"
+                sizes="(max-width: 640px) 80px, (max-width: 1024px) 96px, 112px"
+              />
+            ))}
           </div>
-        </details>
+        </div>
 
       </div>
     </section>
