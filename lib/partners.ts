@@ -407,6 +407,12 @@ export const PARTNERS: Partner[] = [
     url: "https://sw4e.fi/",
     tier: 3,
   },
+  {
+    name: "AINOW",
+    logo: "/assets/sponsors/AINOW.svg",
+    url: "https://www.ainow.mk/",
+    tier: 3,
+  },
 ];
 
 // ─── Tier-based exports (primary) ─────────────────────────────────────────────
