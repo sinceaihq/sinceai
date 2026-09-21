@@ -419,6 +419,12 @@ export const PARTNERS: Partner[] = [
     url: "https://teknologiateollisuus.fi/fisc/",
     tier: 3,
   },
+  {
+    name: "ACM BPDC Chapter",
+    logo: "/assets/sponsors/ACM-BPDC-Chapter.png",
+    url: "https://dubai.acm.org/",
+    tier: 3,
+  },
 ];
 
 // ─── Tier-based exports (primary) ─────────────────────────────────────────────
