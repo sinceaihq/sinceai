@@ -449,6 +449,12 @@ export const PARTNERS: Partner[] = [
     url: "https://www.stockholm.ai/",
     tier: 3,
   },
+  {
+    name: "BANFES",
+    logo: "/assets/sponsors/BANFES.png",
+    url: "https://banfes.ai/en/",
+    tier: 3,
+  },
 ];
 
 // ─── Tier-based exports (primary) ─────────────────────────────────────────────
