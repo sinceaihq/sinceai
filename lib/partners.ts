@@ -413,6 +413,12 @@ export const PARTNERS: Partner[] = [
     url: "https://www.ainow.mk/",
     tier: 3,
   },
+  {
+    name: "FISC",
+    logo: "/assets/sponsors/FISC_RGB_White.png",
+    url: "https://teknologiateollisuus.fi/fisc/",
+    tier: 3,
+  },
 ];
 
 // ─── Tier-based exports (primary) ─────────────────────────────────────────────
