@@ -467,6 +467,18 @@ export const PARTNERS: Partner[] = [
     url: "https://fusionxhub.com/",
     tier: 3,
   },
+  {
+    name: "GalsenAI",
+    logo: "/assets/sponsors/GalsenAI.png",
+    url: "https://galsen.ai/",
+    tier: 3,
+  },
+  {
+    name: "DVC",
+    logo: "/assets/sponsors/DVC.svg",
+    url: "https://dvc.org/",
+    tier: 3,
+  },
 ];
 
 // ─── Tier-based exports (primary) ─────────────────────────────────────────────
