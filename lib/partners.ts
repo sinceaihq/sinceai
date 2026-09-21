@@ -425,6 +425,12 @@ export const PARTNERS: Partner[] = [
     url: "https://dubai.acm.org/",
     tier: 3,
   },
+  {
+    name: "Gauteng AI Community",
+    logo: "/assets/sponsors/Gauteng-AI-Community.jpeg",
+    url: "https://www.gaic.co.za/",
+    tier: 3,
+  },
 ];
 
 // ─── Tier-based exports (primary) ─────────────────────────────────────────────
