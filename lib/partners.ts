@@ -455,6 +455,12 @@ export const PARTNERS: Partner[] = [
     url: "https://banfes.ai/en/",
     tier: 3,
   },
+  {
+    name: "HelsinkiJS",
+    logo: "/assets/sponsors/HelsinkiJS.jpg",
+    url: "https://helsinkijs.org/",
+    tier: 3,
+  },
 ];
 
 // ─── Tier-based exports (primary) ─────────────────────────────────────────────
