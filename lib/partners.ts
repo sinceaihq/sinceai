@@ -479,6 +479,42 @@ export const PARTNERS: Partner[] = [
     url: "https://dvc.org/",
     tier: 3,
   },
+  {
+    name: "Warsaw.AI",
+    logo: "/assets/sponsors/Warsaw-AI.png",
+    url: "https://warsaw.ai/",
+    tier: 3,
+  },
+  {
+    name: "Tech Emerging Africa",
+    logo: "/assets/sponsors/TEA.png",
+    url: "https://techemergingafrica.com/",
+    tier: 3,
+  },
+  {
+    name: "Helsinki XR Center",
+    logo: "/assets/sponsors/Helsinki-XR-Center.png",
+    url: "https://helsinkixrcenter.com/",
+    tier: 3,
+  },
+  {
+    name: "KIRAHub",
+    logo: "/assets/sponsors/KIRAHub.png",
+    url: "https://kirahub.org/",
+    tier: 3,
+  },
+  {
+    name: "Hive Helsinki",
+    logo: "/assets/sponsors/Hive.png",
+    url: "https://www.hive.fi/",
+    tier: 3,
+  },
+  {
+    name: "Lagos AI Summit",
+    logo: "/assets/sponsors/Lagos-AI-Summit.png",
+    url: "https://lagosaisummit.com/",
+    tier: 3,
+  },
 ];
 
 // ─── Tier-based exports (primary) ─────────────────────────────────────────────
