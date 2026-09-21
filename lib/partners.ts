@@ -461,6 +461,12 @@ export const PARTNERS: Partner[] = [
     url: "https://helsinkijs.org/",
     tier: 3,
   },
+  {
+    name: "FusionX Hub",
+    logo: "/assets/sponsors/FusionX.png",
+    url: "https://fusionxhub.com/",
+    tier: 3,
+  },
 ];
 
 // ─── Tier-based exports (primary) ─────────────────────────────────────────────
