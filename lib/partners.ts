@@ -515,6 +515,12 @@ export const PARTNERS: Partner[] = [
     url: "https://lagosaisummit.com/",
     tier: 3,
   },
+  {
+    name: "Arcada ES",
+    logo: "/assets/sponsors/Arcada-ES.png",
+    url: "https://www.aesarcada.com/",
+    tier: 3,
+  },
 ];
 
 // ─── Tier-based exports (primary) ─────────────────────────────────────────────
