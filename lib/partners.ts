@@ -431,6 +431,12 @@ export const PARTNERS: Partner[] = [
     url: "https://www.gaic.co.za/",
     tier: 3,
   },
+  {
+    name: "MAIA",
+    logo: "/assets/sponsors/MAIA.png",
+    url: "https://www.maiafuture.com/en",
+    tier: 3,
+  },
 ];
 
 // ─── Tier-based exports (primary) ─────────────────────────────────────────────
