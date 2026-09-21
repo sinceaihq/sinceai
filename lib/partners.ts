@@ -437,6 +437,18 @@ export const PARTNERS: Partner[] = [
     url: "https://www.maiafuture.com/en",
     tier: 3,
   },
+  {
+    name: "BDSS",
+    logo: "/assets/sponsors/BDSS.png",
+    url: "https://www.bristolsu.org.uk/groups/bristol-data-science-and-artificial-intelligence-society-bdss",
+    tier: 3,
+  },
+  {
+    name: "Stockholm AI",
+    logo: "/assets/sponsors/Stockholm-AI.png",
+    url: "https://www.stockholm.ai/",
+    tier: 3,
+  },
 ];
 
 // ─── Tier-based exports (primary) ─────────────────────────────────────────────
