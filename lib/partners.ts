@@ -157,6 +157,24 @@ export const PARTNERS: Partner[] = [
     url: "https://www.turkuenergia.fi/en",
     tier: 1,
   },
+  {
+    name: "Apetit",
+    logo: "/assets/sponsors/Apetit.png",
+    url: "https://apetit.fi/",
+    tier: 1,
+  },
+  {
+    name: "Lindström",
+    logo: "/assets/sponsors/Lindstrom.svg",
+    url: "https://lindstromgroup.com/",
+    tier: 1,
+  },
+  {
+    name: "Bo",
+    logo: "/assets/sponsors/Bo.svg",
+    url: "https://bo.fi/en/",
+    tier: 1,
+  },
 
   // ─── Tier 2: Capital & Research Partners ────────────────────────────────────
   {
