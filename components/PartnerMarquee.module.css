@@ -86,7 +86,7 @@
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 
-  animation: marqueeScroll 48s linear infinite;
+  animation: marqueeScroll 40s linear infinite;
 }
 
 .marqueeTrack:hover {

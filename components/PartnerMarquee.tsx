@@ -8,7 +8,7 @@ interface Logo {
   loading?: "lazy" | "eager";
 }
 
-/** Capital partners that must appear in the homepage marquee in addition to all Strategic Partners. */
+/** Capital partners that must appear in the homepage marquee in addition to Strategic Partners. */
 const extraMarqueeNames = [
   "Antler",
   "Tesi",
@@ -17,14 +17,9 @@ const extraMarqueeNames = [
   "Wave Ventures",
   "Redstone VC",
   "MAKI VC",
-  "Inovexus",
-  "FiBAN",
-  "FOV Ventures",
-  "Aalto AI",
-  "Maria 01",
-  "AI Mad Lab",
-  "Founders House",
 ] as const;
+
+const excludedFromMarquee = new Set(["AI Finland", "Shift"]);
 
 function byName(name: string): Partner {
   const partner = PARTNERS.find((p) => p.name === name);
@@ -35,7 +30,7 @@ function byName(name: string): Partner {
 const logos: Logo[] = [];
 const seen = new Set<string>();
 for (const partner of [...tier1Partners, ...extraMarqueeNames.map(byName)]) {
-  if (seen.has(partner.name)) continue;
+  if (excludedFromMarquee.has(partner.name) || seen.has(partner.name)) continue;
   seen.add(partner.name);
   logos.push({
     name: partner.name,
