@@ -1,4 +1,5 @@
 import styles from "./PartnerMarquee.module.css";
+import { PARTNERS, tier1Partners, type Partner } from "@/lib/partners";
 
 interface Logo {
   name: string;
@@ -7,44 +8,37 @@ interface Logo {
   loading?: "lazy" | "eager";
 }
 
-const logos: Logo[] = [
-  { name: "Google for Developers", src: "/assets/sponsors/GoogleForDevelopers.png", href: "https://developers.google.com/", loading: "eager" },
-  { name: "ElevenLabs",            src: "/assets/sponsors/elevenlabs.png",           href: "https://elevenlabs.io/",         loading: "eager" },
-  { name: "Bayer",                 src: "/assets/sponsors/Bayer.svg",                href: "https://www.bayer.com/",         loading: "eager" },
-  { name: "Sandvik",               src: "/assets/sponsors/sandvik.png",              href: "https://www.sandvik.com/" },
-  { name: "Kongsberg",             src: "/assets/sponsors/kongsberg.png",            href: "https://www.kongsberg.com/" },
-  { name: "Valmet",                src: "/assets/sponsors/valmet.png",               href: "https://www.valmet.com/" },
-  { name: "AI Finland",            src: "/assets/supports/AI_Finland.png",           href: "https://aifinland.fi/" },
-  { name: "Aiven",                 src: "/assets/sponsors/aiven.png",                href: "https://aiven.io/" },
-  { name: "n8n",                   src: "/assets/sponsors/n8n.svg",                  href: "https://n8n.io/" },
-  { name: "Featherless.ai",        src: "/assets/sponsors/featherless.svg",          href: "https://featherless.ai/" },
-  { name: "JetBrains",             src: "/assets/sponsors/jetbrains.svg",            href: "https://www.jetbrains.com/" },
-  { name: "Atlassian",             src: "/assets/sponsors/atlassian.svg",            href: "https://www.atlassian.com/" },
-  { name: "Pruna AI",              src: "/assets/sponsors/Pruna.svg",                href: "https://www.pruna.ai/" },
-  { name: "Lovable",               src: "/assets/sponsors/lovable.png",              href: "https://lovable.dev/" },
-  { name: "Antler",                src: "/assets/sponsors/antler.png",               href: "https://www.antler.co/" },
-  { name: "Tesi",                  src: "/assets/sponsors/Tesi.png",                 href: "https://tesi.fi/" },
-  { name: "Icebreaker VC",         src: "/assets/supports/Icebreaker.png",           href: "https://www.icebreaker.vc/" },
-  { name: "Inventure",             src: "/assets/sponsors/Inventure.png",            href: "https://www.inventure.vc/" },
-  { name: "Wave Ventures",         src: "/assets/sponsors/WaveVentures.png",         href: "https://www.wave.ventures/" },
-  { name: "Redstone VC",           src: "/assets/sponsors/Redstone.png",             href: "https://redstone.vc/" },
-  { name: "MAKI VC",               src: "/assets/sponsors/maki.png",                 href: "https://maki.vc/" },
-  { name: "Inovexus",              src: "/assets/sponsors/Inovexus.svg",             href: "https://inovexus.com/" },
-  { name: "FiBAN",                 src: "/assets/sponsors/FiBAN.svg",                href: "https://fiban.org/" },
-  { name: "FOV Ventures",          src: "/assets/supports/FOVV.png",                 href: "https://www.fov.ventures/" },
-  { name: "Aalto AI",              src: "/assets/supports/aaltoai.png",              href: "https://www.aaltoai.com/" },
-  { name: "Maria 01",              src: "/assets/sponsors/maria01.png",              href: "https://maria.io/" },
-  { name: "AI Mad Lab",            src: "/assets/supports/aimadlab.svg",             href: "https://www.aimadlab.com/" },
-  { name: "Founders House",        src: "/assets/sponsors/founders_house.svg",       href: "https://founders-house.fi/" },
-  { name: "LUMI AI Factory",       src: "/assets/sponsors/Lumi.svg",                 href: "https://lumi-ai-factory.eu/" },
-  { name: "Meyer Turku",           src: "/assets/sponsors/meyer-turku.png",          href: "https://www.meyerturku.fi/" },
-  { name: "Revvity",               src: "/assets/sponsors/revvity.png",              href: "https://www.revvity.com/" },
-  { name: "Traficom",              src: "/assets/sponsors/traficom.png",             href: "https://www.traficom.fi/" },
-  { name: "Elisa",                 src: "/assets/sponsors/elisa.png",                href: "https://elisa.fi/" },
-  { name: "Solita",                src: "/assets/sponsors/solita.png",               href: "https://www.solita.fi/" },
-  { name: "Takomo Golf",           src: "/assets/sponsors/takomo-golf.png",          href: "https://takomogolf.com/" },
-  { name: "Turku Energia",         src: "/assets/sponsors/turku-energia.png",        href: "https://www.turkuenergia.fi/" },
-];
+/** Capital partners that must appear in the homepage marquee in addition to Strategic Partners. */
+const extraMarqueeNames = [
+  "Antler",
+  "Tesi",
+  "Icebreaker VC",
+  "Inventure",
+  "Wave Ventures",
+  "Redstone VC",
+  "MAKI VC",
+] as const;
+
+const excludedFromMarquee = new Set(["AI Finland", "Shift"]);
+
+function byName(name: string): Partner {
+  const partner = PARTNERS.find((p) => p.name === name);
+  if (!partner) throw new Error(`PartnerMarquee: unknown partner "${name}"`);
+  return partner;
+}
+
+const logos: Logo[] = [];
+const seen = new Set<string>();
+for (const partner of [...tier1Partners, ...extraMarqueeNames.map(byName)]) {
+  if (excludedFromMarquee.has(partner.name) || seen.has(partner.name)) continue;
+  seen.add(partner.name);
+  logos.push({
+    name: partner.name,
+    src: partner.logo,
+    href: partner.url,
+    loading: logos.length < 3 ? "eager" : "lazy",
+  });
+}
 
 function LogoItem({ name, src, href, loading = "lazy", ...rest }: Logo & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
   return (
@@ -89,6 +83,8 @@ function LogoItem({ name, src, href, loading = "lazy", ...rest }: Logo & React.A
  * `colorful` opts out of the default grayscale/dimmed treatment and renders
  * logos at full colour and a larger size — used on /hackathon, the landing
  * page for paid traffic. The homepage hero keeps the default subtle look.
+ *
+ * Roster: every Strategic Partner (tier 1) plus selected capital partners.
  */
 interface PartnerMarqueeProps {
   colorful?: boolean;
