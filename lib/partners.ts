@@ -521,6 +521,60 @@ export const PARTNERS: Partner[] = [
     url: "https://www.aesarcada.com/",
     tier: 3,
   },
+  {
+    name: "GOLEM",
+    logo: "/assets/sponsors/GOLEM.png",
+    url: "https://golem.ii.pw.edu.pl/",
+    tier: 3,
+  },
+  {
+    name: "EESTEC LC Zagreb",
+    logo: "/assets/sponsors/EESTEC-LC-Zagreb.svg",
+    url: "https://eestec.hr/home",
+    tier: 3,
+  },
+  {
+    name: "IDBM Klubi",
+    logo: "/assets/sponsors/IDBM-Klubi.svg",
+    url: "https://www.idbm.aalto.fi/idbm-klubi",
+    tier: 3,
+  },
+  {
+    name: "Startup Sauna",
+    logo: "/assets/sponsors/Startup-Sauna.svg",
+    url: "https://startupsauna.com/",
+    tier: 3,
+  },
+  {
+    name: "COSS",
+    logo: "/assets/sponsors/COSS.png",
+    url: "https://coss.fi/",
+    tier: 3,
+  },
+  {
+    name: "Ignite",
+    logo: "/assets/sponsors/Ignite.png",
+    url: "https://ignite.aaltoes.com/",
+    tier: 3,
+  },
+  {
+    name: "Study in Turku",
+    logo: "/assets/sponsors/Study-in-Turku.png",
+    url: "https://www.turku.fi/en/study-turku",
+    tier: 3,
+  },
+  {
+    name: "OxAI",
+    logo: "/assets/sponsors/OxAI.png",
+    url: "https://www.oxai.org/",
+    tier: 3,
+  },
+  {
+    name: "EBooster Nova",
+    logo: "/assets/sponsors/EBooster-Nova.png",
+    url: "https://eboosternova.com/",
+    tier: 3,
+  },
 ];
 
 // ─── Tier-based exports (primary) ─────────────────────────────────────────────
