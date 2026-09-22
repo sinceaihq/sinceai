@@ -283,6 +283,12 @@ export const PARTNERS: Partner[] = [
     tier: 3,
   },
   {
+    name: "ETH AI Club",
+    logo: "/assets/sponsors/ETH-AI-Club.png",
+    url: "https://www.ethaiclub.org/",
+    tier: 3,
+  },
+  {
     name: "FIWARE",
     logo: "/assets/sponsors/FIWARE.png",
     url: "https://fiware.org/",
