@@ -319,6 +319,12 @@ export const PARTNERS: Partner[] = [
     tier: 3,
   },
   {
+    name: "1991",
+    logo: "/assets/sponsors/1991.svg",
+    url: "https://www.1991.vc/",
+    tier: 3,
+  },
+  {
     name: "City of Turku",
     logo: "/assets/supports/cityofturku.png",
     url: "https://www.turku.fi",
