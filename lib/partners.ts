@@ -421,6 +421,12 @@ export const PARTNERS: Partner[] = [
     tier: 3,
   },
   {
+    name: "HW CompSoc",
+    logo: "/assets/sponsors/HW-CompSoc.png",
+    url: "https://www.hwunion.com/societies/compsci/",
+    tier: 3,
+  },
+  {
     name: "MAIA",
     logo: "/assets/sponsors/MAIA.png",
     url: "https://www.maiafuture.com/en",
