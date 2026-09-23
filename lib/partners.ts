@@ -171,7 +171,7 @@ export const PARTNERS: Partner[] = [
   },
   {
     name: "Bo",
-    logo: "/assets/sponsors/Bo.svg",
+    logo: "/assets/sponsors/Bo.png",
     url: "https://bo.fi/en/",
     tier: 1,
   },

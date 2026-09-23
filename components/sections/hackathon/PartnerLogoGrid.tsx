@@ -20,31 +20,11 @@ function byName(name: string): Partner {
   return partner;
 }
 
-const groups: { label: string; names: string[]; boxClass: string; sizes: string }[] = [
+const groups: { label: string; names: string[]; boxClass: string; sizes: string; note?: string }[] = [
   {
-    label: "2026 challenge partners",
+    label: "Tech partners",
     names: [
       "Google For Developers",
-      "Bayer",
-      "Sandvik",
-      "Kongsberg",
-      "Valmet",
-      "Turun Teknologiakiinteistöt",
-      "Revvity",
-      "Traficom",
-      "Meyer Turku",
-      "Elisa",
-      "Solita",
-      "Takomo Golf",
-      "Turku Energia",
-      "Turku AMK",
-    ],
-    boxClass: "w-32 h-12 sm:w-36 sm:h-14 lg:w-40 lg:h-16",
-    sizes: "(max-width: 640px) 128px, (max-width: 1024px) 144px, 160px",
-  },
-  {
-    label: "Technology partners",
-    names: [
       "ElevenLabs",
       "LUMI AI Factory",
       "Aiven",
@@ -59,19 +39,37 @@ const groups: { label: string; names: string[]; boxClass: string; sizes: string 
     sizes: "(max-width: 640px) 112px, (max-width: 1024px) 128px, 144px",
   },
   {
-    label: "Capital & ecosystem",
+    label: "Challenge partners",
     names: [
-      "Antler",
-      "Inventure",
-      "Wave Ventures",
-      "Icebreaker VC",
-      "Tesi",
-      "MAKI VC",
-      "University of Turku",
-      "AI Finland",
-      "Maria 01",
-      "City of Turku",
+      "Bayer",
+      "Sandvik",
+      "Kongsberg",
+      "Valmet",
+      "Turun Teknologiakiinteistöt",
+      "Revvity",
+      "Traficom",
+      "Meyer Turku",
+      "Elisa",
+      "Solita",
+      "Takomo Golf",
+      "Turku Energia",
+      "Apetit",
+      "Lindström",
+      "Bo",
     ],
+    boxClass: "w-32 h-12 sm:w-36 sm:h-14 lg:w-40 lg:h-16",
+    sizes: "(max-width: 640px) 128px, (max-width: 1024px) 144px, 160px",
+    note: "More challenge partners coming soon...",
+  },
+  {
+    label: "Funding partners",
+    names: ["Antler", "Tesi", "Icebreaker VC", "Inventure", "Wave Ventures", "Redstone VC", "MAKI VC"],
+    boxClass: "w-24 h-9 sm:w-28 sm:h-10 lg:w-32 lg:h-11",
+    sizes: "(max-width: 640px) 96px, (max-width: 1024px) 112px, 128px",
+  },
+  {
+    label: "Capital & ecosystem",
+    names: ["University of Turku", "AI Finland", "Maria 01", "City of Turku", "Turku AMK"],
     boxClass: "w-24 h-9 sm:w-28 sm:h-10 lg:w-32 lg:h-11",
     sizes: "(max-width: 640px) 96px, (max-width: 1024px) 112px, 128px",
   },
@@ -139,6 +137,9 @@ export function PartnerLogoGrid() {
                 />
               ))}
             </div>
+            {group.note && (
+              <p className="mt-4 text-sm text-neutral-400">{group.note}</p>
+            )}
           </div>
         ))}
 
