@@ -98,7 +98,7 @@ function LogoItem({
           src={partner.logo}
           alt={`${partner.name} logo — Since AI Hackathon 2026 partner`}
           fill
-          className={`object-contain object-center transition-transform duration-300 ${partner.name === "Bo" ? "invert" : ""}`}
+          className="object-contain object-center transition-transform duration-300"
           sizes={sizes}
         />
       </div>
