@@ -43,7 +43,6 @@ const groups: { label: string; names: string[]; boxClass: string; sizes: string;
     names: [
       "Bayer",
       "Sandvik",
-      "Kongsberg",
       "Valmet",
       "Turun Teknologiakiinteistöt",
       "Revvity",
