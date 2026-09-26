@@ -175,6 +175,24 @@ export const PARTNERS: Partner[] = [
     url: "https://bo.fi/en/",
     tier: 1,
   },
+  {
+    name: "Business Turku",
+    logo: "/assets/sponsors/businessturku.png",
+    url: "https://businessturku.fi/",
+    tier: 1,
+  },
+  {
+    name: "Saarioinen",
+    logo: "/assets/sponsors/Saarioinen.png",
+    url: "https://www.saarioinen.fi/",
+    tier: 1,
+  },
+  {
+    name: "Forcit Group",
+    logo: "/assets/sponsors/Forcit-Group.png",
+    url: "https://forcitgroup.com/",
+    tier: 1,
+  },
 
   // ─── Tier 2: Capital & Research Partners ────────────────────────────────────
   {
@@ -406,12 +424,6 @@ export const PARTNERS: Partner[] = [
     name: "SW4E / DIMECC",
     logo: "/assets/supports/sw4e-dimecc.png",
     url: "https://sw4e.fi/",
-    tier: 3,
-  },
-  {
-    name: "Business Turku",
-    logo: "/assets/sponsors/businessturku.png",
-    url: "https://businessturku.fi/",
     tier: 3,
   },
   {
