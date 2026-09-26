@@ -307,6 +307,12 @@ export const PARTNERS: Partner[] = [
     tier: 3,
   },
   {
+    name: "Yale Computer Society",
+    logo: "/assets/sponsors/Yale-Computer-Society.svg",
+    url: "https://yalecomputersociety.org/",
+    tier: 3,
+  },
+  {
     name: "FIWARE",
     logo: "/assets/sponsors/FIWARE.png",
     url: "https://fiware.org/",
