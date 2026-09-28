@@ -12,12 +12,12 @@ import { ButtonPair } from "@/components/ui/ButtonPair";
 export const metadata: Metadata = {
   title: "About Since AI — Finnish Nonprofit Advancing AI Education",
   description:
-    "Since AI ry is a Finnish nonprofit association whose mission is to advance education, practical AI skills, technological literacy and open collaboration for the broader community.",
+    "Since AI ry is a Finnish nonprofit association whose mission is to advance AI education, practical skills, technological literacy, and open collaboration for the broader community.",
   alternates: { canonical: "https://sinceai.ai/about" },
   openGraph: {
     title: "About Since AI — Finnish Nonprofit Advancing AI Education",
     description:
-      "Since AI ry is a Finnish nonprofit association advancing education, practical AI skills and open collaboration for the broader community.",
+      "Since AI ry is a Finnish nonprofit association advancing AI education, practical skills, and open collaboration for the broader community.",
     url: "https://sinceai.ai/about",
     siteName: "Since AI",
     type: "website",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "About Since AI — Finnish Nonprofit Advancing AI Education",
     description:
-      "Since AI ry is a Finnish nonprofit association. We advance education, practical AI skills and community benefit — not profit for members or private owners.",
+      "Since AI ry is a Finnish nonprofit association. We advance AI education and community benefit rather than private financial benefit for members or leadership.",
   },
 };
 
@@ -135,30 +135,31 @@ export default function AboutPage() {
                 </div>
               </section>
 
-              {/* 3. What makes us different */}
+              {/* 3. How programs work */}
               <section className="mb-16">
                 <h2 className="text-3xl font-bold text-white mb-8 tracking-tight">
-                  What makes us different
+                  How we carry out this mission
                 </h2>
                 <div className="space-y-6">
                   <p className="text-neutral-300 leading-relaxed">
-                    <strong className="text-white">Execution over content.</strong>{" "}
-                    We do not build another community around content, networking, or
-                    presentations. We build an execution system where exceptional people
-                    move from idea to prototype, prototype to production, and production
-                    to startup-scale opportunity.
+                    <strong className="text-white">Learning by building.</strong>{" "}
+                    We do not organize around content, networking, or presentations
+                    alone. Students, researchers, developers, and other members of the
+                    community learn about artificial intelligence by collaborating on
+                    real-world technology projects.
                   </p>
                   <p className="text-neutral-300 leading-relaxed">
-                    <strong className="text-white">Ecosystem over community.</strong>{" "}
-                    Since AI is not a single organization. It is an ecosystem that spans
-                    leading AI companies, top research groups, world-class universities,
-                    ambitious startup communities, and venture capital partners globally.
+                    <strong className="text-white">Open collaboration.</strong>{" "}
+                    Educational programs are run with universities, research groups,
+                    public institutions, and technology partners so participants learn
+                    in contact with current practice and real problems.
                   </p>
                   <p className="text-neutral-300 leading-relaxed">
-                    <strong className="text-white">Outcomes over events.</strong>{" "}
-                    Hackathons and meetups are starting points, not endpoints. The
-                    strongest teams receive continued support: deployment help, compute
-                    access, capital introductions, and commercialization pathways.
+                    <strong className="text-white">Programs, not one-off events.</strong>{" "}
+                    Hackathons, workshops, and community initiatives are educational
+                    programs. Participants can continue developing practical skills
+                    through further workshops, community projects, and
+                    research-to-practice activities.
                   </p>
                 </div>
               </section>
@@ -286,7 +287,7 @@ export default function AboutPage() {
                         Nonprofit purpose
                       </dt>
                       <dd className="text-neutral-200">
-                        Education, practical AI skills, technological literacy, and
+                        AI education, practical skills, technological literacy, and
                         open collaboration for the broader community.{" "}
                         <a
                           href="#nonprofit-mission"

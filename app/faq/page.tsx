@@ -84,11 +84,9 @@ export default function FAQPage() {
 
               {/* 2. Intro paragraph */}
               <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-16">
-                {ORG.legalName} is a Finnish nonprofit association whose mission is to
-                advance education, practical AI skills, technological literacy and
-                open collaboration for the broader community. This page answers
-                common questions about joining, partnering, and participating in
-                Since AI&apos;s programs. Last updated: September 29, 2026.
+                {ORG.mission.purpose} This page answers common questions about
+                joining, partnering, and participating in Since AI&apos;s programs.
+                Last updated: September 29, 2026.
               </p>
 
               {/* 3. FAQ list — flat H3 + p, fully visible to crawlers */}
