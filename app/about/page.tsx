@@ -10,23 +10,23 @@ import StructuredData from "@/components/StructuredData";
 import { ButtonPair } from "@/components/ui/ButtonPair";
 
 export const metadata: Metadata = {
-  title: "About Since AI — Global Execution-Focused AI Innovation Ecosystem",
+  title: "About Since AI — Finnish Nonprofit Advancing AI Education",
   description:
-    "Since AI is a non-profit connecting 10,000+ AI builders globally. Learn about our mission, founders, and legal structure.",
+    "Since AI ry is a Finnish nonprofit association whose mission is to advance education, practical AI skills, technological literacy and open collaboration for the broader community.",
   alternates: { canonical: "https://sinceai.ai/about" },
   openGraph: {
-    title: "About Since AI — Global Execution-Focused AI Innovation Ecosystem",
+    title: "About Since AI — Finnish Nonprofit Advancing AI Education",
     description:
-      "Since AI is a non-profit connecting 10,000+ AI builders globally with leading AI companies, research groups, and investors.",
+      "Since AI ry is a Finnish nonprofit association advancing education, practical AI skills and open collaboration for the broader community.",
     url: "https://sinceai.ai/about",
     siteName: "Since AI",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "About Since AI",
+    title: "About Since AI — Finnish Nonprofit Advancing AI Education",
     description:
-      "Non-profit connecting 10,000+ AI builders globally. Mission: strengthen global AI capability through execution.",
+      "Since AI ry is a Finnish nonprofit association. We advance education, practical AI skills and community benefit — not profit for members or private owners.",
   },
 };
 
@@ -98,16 +98,42 @@ export default function AboutPage() {
                 About Since AI
               </h1>
 
-              {/* 2. Extractable definition paragraph */}
-              <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-16">
-                Since AI is a{" "}
-                <strong className="text-white">registered nonprofit association</strong>{" "}
-                running a global execution-focused AI innovation
-                ecosystem, where frontier AI becomes shipped products. We connect
-                10,000+ AI builders globally with leading AI companies, research
-                groups, and investors. Our mission: strengthen global AI capability
-                through execution, open collaboration, and real outcomes.
+              <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-12">
+                {ORG.legalName} is a{" "}
+                <strong className="text-white">registered Finnish nonprofit association</strong>
+                {" "}whose purpose is public-benefit education in artificial
+                intelligence — not commercial activity for private owners.
               </p>
+
+              {/* 2. Nonprofit mission — extractable statement for program review */}
+              <section
+                id="nonprofit-mission"
+                aria-labelledby="nonprofit-mission-heading"
+                className="mb-16"
+              >
+                <div className="p-8 md:p-10 border border-white/10 bg-white/[0.02]">
+                  <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+                    Registered nonprofit · Finland
+                  </p>
+                  <h2
+                    id="nonprofit-mission-heading"
+                    className="text-3xl font-bold text-white mb-8 tracking-tight"
+                  >
+                    {ORG.mission.heading}
+                  </h2>
+                  <div className="space-y-6">
+                    <p className="text-neutral-200 leading-relaxed text-lg">
+                      {ORG.mission.purpose}
+                    </p>
+                    <p className="text-neutral-300 leading-relaxed">
+                      {ORG.mission.programs}
+                    </p>
+                    <p className="text-neutral-300 leading-relaxed">
+                      {ORG.mission.notForProfit}
+                    </p>
+                  </div>
+                </div>
+              </section>
 
               {/* 3. What makes us different */}
               <section className="mb-16">
@@ -245,7 +271,7 @@ export default function AboutPage() {
                       <dt className="text-neutral-500 font-semibold uppercase tracking-wider text-xs mb-1">
                         Legal entity
                       </dt>
-                      <dd className="text-neutral-200">Since AI ry</dd>
+                      <dd className="text-neutral-200">{ORG.legalName}</dd>
                     </div>
                     <div>
                       <dt className="text-neutral-500 font-semibold uppercase tracking-wider text-xs mb-1">
@@ -253,6 +279,21 @@ export default function AboutPage() {
                       </dt>
                       <dd className="text-neutral-200">
                         Non-profit association (aatteellinen yhdistys)
+                      </dd>
+                    </div>
+                    <div className="sm:col-span-2">
+                      <dt className="text-neutral-500 font-semibold uppercase tracking-wider text-xs mb-1">
+                        Nonprofit purpose
+                      </dt>
+                      <dd className="text-neutral-200">
+                        Education, practical AI skills, technological literacy, and
+                        open collaboration for the broader community.{" "}
+                        <a
+                          href="#nonprofit-mission"
+                          className="text-neutral-400 hover:text-white underline"
+                        >
+                          Read our nonprofit mission
+                        </a>
                       </dd>
                     </div>
                     <div>

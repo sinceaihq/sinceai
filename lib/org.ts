@@ -7,6 +7,19 @@ export const ORG = {
   name: "Since AI",
   legalName: "Since AI ry",
   businessId: "3593920-2",
+  /**
+   * Public-benefit mission shown on /about and in Organization JSON-LD.
+   * Written for nonprofit program review (education, community benefit, not-for-profit).
+   */
+  mission: {
+    heading: "Our nonprofit mission",
+    purpose:
+      "Since AI ry is a Finnish nonprofit association whose mission is to advance education, practical AI skills, technological literacy and open collaboration for the broader community.",
+    programs:
+      "We create accessible opportunities for students, researchers, developers and other members of the public to learn about artificial intelligence, develop practical skills and collaborate on real-world technology projects. Our nonprofit programs include educational events, hackathons, workshops, community initiatives and research-to-practice activities.",
+    notForProfit:
+      "Since AI ry operates on a not-for-profit basis. Its activities are carried out to advance its nonprofit mission and broader community benefit, rather than to generate profit for members, founders or private owners.",
+  },
   baseUrl: "https://sinceai.ai",
   location: {
     city: "Turku",

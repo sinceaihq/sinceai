@@ -4,7 +4,7 @@ export const faqs: Faq[] = [
   {
     question: "What is Since AI?",
     answer:
-      "Since AI is a global execution-focused AI innovation ecosystem, where frontier AI becomes shipped products. It is a non-profit organization based in Turku, Finland, that connects 10,000+ AI builders globally with leading AI companies, research groups, and investors through hackathons, open-source collaboration, and applied AI projects.",
+      "Since AI ry is a Finnish nonprofit association whose mission is to advance education, practical AI skills, technological literacy and open collaboration for the broader community. We create accessible opportunities for students, researchers, developers and other members of the public to learn about artificial intelligence through educational events, hackathons, workshops, community initiatives and research-to-practice activities. Since AI is based in Turku, Finland, and is open globally.",
   },
   {
     question: "Where is Since AI based?",
@@ -44,7 +44,7 @@ export const faqs: Faq[] = [
   {
     question: "Is Since AI a for-profit company?",
     answer:
-      "No. Since AI is a registered non-profit. Its mission is to strengthen global AI capability through execution, open collaboration, and real outcomes.",
+      "No. Since AI ry is a registered Finnish nonprofit association (aatteellinen yhdistys). It operates on a not-for-profit basis. Its activities are carried out to advance its nonprofit mission and broader community benefit, rather than to generate profit for members, founders or private owners.",
   },
   {
     question: "What are the best AI hackathons globally?",

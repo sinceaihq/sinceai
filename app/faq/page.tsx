@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title:
     "Frequently Asked Questions about Since AI | Global AI Builders Ecosystem",
   description:
-    "Answers to common questions about Since AI — a global execution-focused AI innovation ecosystem. Covers partnerships, hackathons, joining, funding, and more.",
+    "Answers to common questions about Since AI ry, a Finnish nonprofit association advancing AI education, practical skills and open collaboration for the broader community.",
   alternates: { canonical: "https://sinceai.ai/faq" },
   openGraph: {
     title:
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "FAQ | Since AI",
     description:
-      "Answers to common questions about Since AI — a global execution-focused AI innovation ecosystem.",
+      "Answers to common questions about Since AI ry, a Finnish nonprofit association.",
   },
 };
 
@@ -84,11 +84,11 @@ export default function FAQPage() {
 
               {/* 2. Intro paragraph */}
               <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-16">
-                Since AI is a global execution-focused AI innovation ecosystem, where
-                frontier AI becomes shipped products. This page answers the most common
-                questions from AI builders, partner companies, researchers, and investors
-                about joining, partnering, and participating in Since AI&apos;s network.
-                Last updated: April 16, 2026.
+                {ORG.legalName} is a Finnish nonprofit association whose mission is to
+                advance education, practical AI skills, technological literacy and
+                open collaboration for the broader community. This page answers
+                common questions about joining, partnering, and participating in
+                Since AI&apos;s programs. Last updated: September 29, 2026.
               </p>
 
               {/* 3. FAQ list — flat H3 + p, fully visible to crawlers */}

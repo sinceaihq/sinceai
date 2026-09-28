@@ -87,14 +87,14 @@ export const metadata: Metadata = {
 
 const organizationSchema = {
   "@context": "https://schema.org",
-  "@type": "Organization",
+  "@type": ["Organization", "NGO"],
   "@id": `${ORG.baseUrl}/#organization`,
   name: ORG.name,
   alternateName: ORG.legalName,
+  legalName: ORG.legalName,
   url: ORG.baseUrl,
   logo: `${ORG.baseUrl}/assets/logo/SINCE AI white.png`,
-  description:
-    "Global execution-focused AI innovation ecosystem. Where frontier AI becomes shipped products. Since AI connects 10,000+ AI builders globally with leading AI companies, research groups, and investors through hackathons, open-source collaboration, and applied AI projects.",
+  description: ORG.mission.purpose,
   foundingDate: "2025",
   taxID: ORG.businessId,
   email: ORG.contact.infoEmail,
@@ -132,6 +132,8 @@ const organizationSchema = {
     "Applied AI",
     "Generative AI",
     "AI Hackathons",
+    "AI education",
+    "Technological literacy",
     "Global AI ecosystem",
     "AI startup creation",
     "Open-source AI",
