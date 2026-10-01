@@ -367,6 +367,12 @@ export const PARTNERS: Partner[] = [
     tier: 3,
   },
   {
+    name: "InnCubator",
+    logo: "/assets/sponsors/InnCubator.png",
+    url: "https://inncubator.at/home",
+    tier: 3,
+  },
+  {
     name: "1991",
     logo: "/assets/sponsors/1991.svg",
     url: "https://www.1991.vc/",
