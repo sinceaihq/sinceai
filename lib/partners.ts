@@ -182,12 +182,6 @@ export const PARTNERS: Partner[] = [
     tier: 1,
   },
   {
-    name: "Saarioinen",
-    logo: "/assets/sponsors/Saarioinen.png",
-    url: "https://www.saarioinen.fi/",
-    tier: 1,
-  },
-  {
     name: "Forcit Group",
     logo: "/assets/sponsors/Forcit-Group.png",
     url: "https://forcitgroup.com/",
