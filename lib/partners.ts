@@ -140,6 +140,12 @@ export const PARTNERS: Partner[] = [
     tier: 1,
   },
   {
+    name: "DNA",
+    logo: "/assets/sponsors/DNA.png",
+    url: "https://www.dna.fi/",
+    tier: 1,
+  },
+  {
     name: "Solita",
     logo: "/assets/sponsors/solita.png",
     url: "https://www.solita.fi/",
