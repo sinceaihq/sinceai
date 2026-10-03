@@ -25,7 +25,7 @@ export function MapImage({
   );
   return (
     <div
-      className={cn("relative w-full overflow-hidden bg-white", className)}
+      className={cn("guide-map relative w-full overflow-hidden bg-white", className)}
       style={{ aspectRatio: `${map.width} / ${map.height}` }}
     >
       <Image

@@ -334,7 +334,17 @@ html:has(body[data-scroll-locked]) {
   }
   .guide-root img {
     max-height: 120mm;
-    width: auto !important;
     object-fit: contain;
+  }
+  /* Maps scale as a whole so highlight rings stay on their rooms. */
+  .guide-root .guide-map {
+    max-width: 120mm;
+  }
+  .guide-root .guide-map img {
+    max-height: none;
+  }
+  /* Site-wide overlays (cookie banner etc.) never print on guide pages. */
+  body:has(.guide-root) .fixed {
+    display: none !important;
   }
 }

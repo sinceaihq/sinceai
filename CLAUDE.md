@@ -14,7 +14,9 @@ Since AI community website (sinceai.fi) — a Next.js 16 marketing site for an A
 - `npm start` — Start production server
 - `npm ci --legacy-peer-deps` — Install dependencies (legacy-peer-deps required for CI)
 
-Jest is configured (`npm run test`). No tests currently exist — add them when introducing testable logic.
+Jest is configured (`npm run test`). Add tests when introducing testable logic.
+
+- `npm run test:e2e` — Playwright browser tests for the Hackathon 2026 Field Guide (run `npm run build` first; reuses a server on port 3100)
 
 ## Architecture
 
@@ -33,6 +35,8 @@ Jest is configured (`npm run test`). No tests currently exist — add them when 
 - `lib/schema.ts` — JSON-LD structured data generators (Organization, Event, FAQ schemas).
 - `lib/utils.ts` — `cn()` helper (clsx + tailwind-merge).
 - `hooks/` — Custom hooks (e.g., `use-mobile.ts` with 768px breakpoint).
+- `lib/hackathon-2026/` — Single source of truth for the Hackathon 2026 Field Guide (event facts, schedule, venues, challenge company rooms, BioCity stand plan, maps). Change times, rooms and stands here, never in components.
+- `components/guide/` — Field Guide UI. `venue3d/` is a three.js preview loaded only on demand; re-render its posters with `scripts/render-guide-posters.mjs` after visible scene changes.
 
 ### API Routes
 
@@ -139,3 +143,4 @@ These are the established conventions. Follow them when building new pages or se
 - This applies to `"use client"` pages too: metadata must be in the server `layout.tsx`
 - JSON-LD schemas are injected via the `StructuredData` component in `layout.tsx` — never use inline `<script dangerouslySetInnerHTML>` in pages
 - Breadcrumb schema should be present on every page except the homepage
+- Exception: the Hackathon 2026 Field Guide (`/hackathon-2026/guide/*`) is shared by direct link only — noindex via metadata and `X-Robots-Tag`, intentionally absent from `app/sitemap.ts` and the public nav/footer

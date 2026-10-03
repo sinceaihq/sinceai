@@ -55,7 +55,7 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
         title={company.name}
         titleAddon={
           company.logo ? (
-            <span className="mb-2 block h-10 w-32 md:h-12 md:w-40">
+            <span className="guide-no-print mb-2 block h-10 w-32 md:h-12 md:w-40">
               <CompanyLogo name={company.name} logo={company.logo} sizes="160px" />
             </span>
           ) : undefined

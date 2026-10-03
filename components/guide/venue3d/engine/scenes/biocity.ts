@@ -212,7 +212,7 @@ export function buildBioCityScene(quality: Quality): BuiltScene {
   portal.add(box(0.08, 3.0, 0.12, frameMat, -1.7, -35.2));
   portal.add(box(0.08, 3.0, 0.12, frameMat, 1.7, -35.2));
   root.add(portal);
-  labels.push(makeLabel("Event entrance · Jussin aukio", "stand", 0, 5.4, -36.6, "entrance"));
+  labels.push(makeLabel("Event entrance", "landmark", 0, 5.6, -36.8, "entrance", "Jussin aukio"));
 
   // ── Build hall: 4 rows × 14 tables, 280 seats ───────────────────────────
   const table = tableGeometry();
@@ -303,7 +303,6 @@ export function buildBioCityScene(quality: Quality): BuiltScene {
   labels.push(makeLabel("To Joki →", "area", 30.2, 2.4, 0.2, "hall"));
   labels.push(makeLabel("Aulagalleria", "area", -12.5, 1.2, -26.5, "entrance"));
   labels.push(makeLabel("Meeting rooms", "area", 0, 3.4, -14.5, "context"));
-  labels.push(makeLabel("Presidenttiauditorio", "area", -16, 2.6, -37, "context"));
   labels.push(makeLabel("Mauno restaurant", "area", 17.5, 2.4, -35.5, "context"));
 
   // ── Lighting ─────────────────────────────────────────────────────────────
@@ -323,9 +322,24 @@ export function buildBioCityScene(quality: Quality): BuiltScene {
 
   // ── Views ────────────────────────────────────────────────────────────────
   const views: Record<string, CameraView> = {
-    overview: { position: [30, 36, 30], target: [1, 0, -13], hfov: 70, labels: true },
-    entrance: { position: [-4, 16, -18], target: [1, 0, -31], hfov: 72, labels: true, labelGroup: "entrance" },
-    hall: { position: [-26, 13, -14], target: [3, 0, 1], hfov: 78, labels: true, labelGroup: "hall" },
+    overview: { position: [30, 36, 30], target: [1, 0, -13], hfov: 70, fit: 30, labels: true },
+    entrance: {
+      position: [-4, 16, -18],
+      target: [1, 0, -31],
+      hfov: 72,
+      fit: 11,
+      labels: true,
+      labelGroup: "entrance",
+    },
+    hall: {
+      position: [-26, 13, -14],
+      target: [3, 0, 1],
+      hfov: 78,
+      labels: true,
+      labelGroup: "hall",
+      // On a phone, look down the length of the hall instead.
+      portrait: { position: [-43, 13, 0.5], target: [4, 0, -0.5], hfov: undefined, fov: 60 },
+    },
   };
   views.default = views.overview;
 

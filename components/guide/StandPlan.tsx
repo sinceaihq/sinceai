@@ -35,11 +35,17 @@ export function StandPlan() {
                 {partner ? (
                   <span className="flex items-center gap-4">
                     {partner.logo && (
-                      <span className="block h-8 w-32">
+                      <span className="guide-no-print block h-8 w-32">
                         <CompanyLogo name={partner.name} logo={partner.logo} sizes="128px" decorative />
                       </span>
                     )}
-                    <span className={partner.logo ? "sr-only" : "text-2xl font-bold tracking-tight text-white"}>
+                    <span
+                      className={
+                        partner.logo
+                          ? "sr-only print:not-sr-only print:text-xl print:font-bold"
+                          : "text-2xl font-bold tracking-tight text-white"
+                      }
+                    >
                       {partner.name}
                     </span>
                   </span>

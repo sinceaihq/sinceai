@@ -133,10 +133,21 @@ export function createVenueEngine(container: HTMLElement, opts: EngineOptions): 
   let labelGroup: string | undefined;
 
   function refreshLabels() {
+    // On narrow screens an overview shows only the essentials; the focused
+    // views (entrance, hall, floors) show the rest.
+    const compact = !labelGroup && container.clientWidth < 640;
     current?.labels.forEach((l) => {
       const group = l.userData.group as string | undefined;
-      l.visible =
-        l.userData.kind === "floor" ? !labelGroup : labelsOn && (!labelGroup || !group || group === labelGroup);
+      const kind = l.userData.kind as string;
+      if (kind === "floor") {
+        l.visible = !labelGroup;
+        return;
+      }
+      if (compact && (kind === "open" || kind === "landmark")) {
+        l.visible = false;
+        return;
+      }
+      l.visible = labelsOn && (!labelGroup || !group || group === labelGroup);
     });
     dirty = true;
   }
@@ -158,30 +169,51 @@ export function createVenueEngine(container: HTMLElement, opts: EngineOptions): 
     return v.fov ?? camera.fov;
   }
 
+  let userMoved = false;
+
+  /** Final camera pose for a view on the current screen shape. */
+  function resolveView(input: CameraView) {
+    const portrait = camera.aspect < 1;
+    const v: CameraView = portrait && input.portrait ? { ...input, ...input.portrait } : input;
+    const target = new THREE.Vector3(...v.target);
+    const position = new THREE.Vector3(...v.position);
+    if (!portrait || !v.fit) return { position, target, fov: fovFor(v) };
+    const vfov = 62;
+    const hfov = 2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(vfov) / 2) * Math.max(camera.aspect, 0.3));
+    const offset = position.clone().sub(target);
+    const distance = Math.max(offset.length(), v.fit / Math.sin(hfov / 2));
+    return { position: target.clone().add(offset.setLength(distance)), target, fov: vfov };
+  }
+
+  function placeCamera(pose: ReturnType<typeof resolveView>) {
+    camera.position.copy(pose.position);
+    controls.target.copy(pose.target);
+    camera.fov = pose.fov;
+    camera.updateProjectionMatrix();
+    controls.update();
+    dirty = true;
+  }
+
   function applyView(v: CameraView, animate: boolean) {
     activeView = v;
+    userMoved = false;
     labelGroup = v.labelGroup;
     current?.onView?.(v);
     if (v.labels !== undefined) setLabels(v.labels);
     else refreshLabels();
-    const fov = fovFor(v);
+    const pose = resolveView(v);
     if (!animate || opts.reducedMotion) {
       tween = null;
-      camera.position.set(...v.position);
-      controls.target.set(...v.target);
-      camera.fov = fov;
-      camera.updateProjectionMatrix();
-      controls.update();
-      dirty = true;
+      placeCamera(pose);
       return;
     }
     tween = {
       fromP: camera.position.clone(),
-      toP: new THREE.Vector3(...v.position),
+      toP: pose.position,
       fromT: controls.target.clone(),
-      toT: new THREE.Vector3(...v.target),
+      toT: pose.target,
       fromFov: camera.fov,
-      toFov: fov,
+      toFov: pose.fov,
       t: 0,
       dur: 1.1,
     };
@@ -224,7 +256,6 @@ export function createVenueEngine(container: HTMLElement, opts: EngineOptions): 
     const w = Math.max(1, container.clientWidth);
     const h = Math.max(1, container.clientHeight);
     camera.aspect = w / h;
-    if (activeView?.hfov && !tween) camera.fov = fovFor(activeView);
     camera.updateProjectionMatrix();
     renderer.setSize(w, h, false);
     labelRenderer.setSize(w, h);
@@ -232,6 +263,9 @@ export function createVenueEngine(container: HTMLElement, opts: EngineOptions): 
       composer.setPixelRatio(renderer.getPixelRatio());
       composer.setSize(w, h);
     }
+    // Re-frame the current view for the new screen shape unless the user moved.
+    if (activeView && !tween && !userMoved) placeCamera(resolveView(activeView));
+    refreshLabels();
     dirty = true;
   }
   const ro = new ResizeObserver(resize);
@@ -251,6 +285,7 @@ export function createVenueEngine(container: HTMLElement, opts: EngineOptions): 
   // User input cancels camera flights.
   const cancelTween = () => {
     tween = null;
+    userMoved = true;
   };
   controls.addEventListener("start", cancelTween);
   controls.addEventListener("change", () => {
@@ -303,6 +338,11 @@ export function createVenueEngine(container: HTMLElement, opts: EngineOptions): 
 
   function unload() {
     if (!current) return;
+    // CSS2D labels live in the DOM; removing the scene root does not remove them.
+    current.labels.forEach((label) => {
+      label.element.remove();
+      label.removeFromParent();
+    });
     scene.remove(current.root);
     disposeDeep(current.root);
     current = null;
@@ -376,6 +416,7 @@ export function createVenueEngine(container: HTMLElement, opts: EngineOptions): 
       return true;
     },
     zoom(factor) {
+      userMoved = true;
       const offset = camera.position.clone().sub(controls.target);
       const len = THREE.MathUtils.clamp(offset.length() / factor, controls.minDistance, controls.maxDistance);
       camera.position.copy(controls.target).add(offset.setLength(len));

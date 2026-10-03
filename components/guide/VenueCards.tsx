@@ -6,7 +6,7 @@ import { Arrow, StatusTag, TextLink } from "./primitives";
 /** Venue cards: address first, then what happens there, then the way in. */
 export function VenueCards({ venues }: { venues: readonly VenueId[] }) {
   return (
-    <ul className="grid grid-cols-1 gap-4 md:grid-cols-3">
+    <ul className={venues.length === 1 ? "grid max-w-xl grid-cols-1 gap-4" : "grid grid-cols-1 gap-4 md:grid-cols-3"}>
       {venues.map((id) => {
         const venue = getVenue(id);
         return (

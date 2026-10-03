@@ -32,6 +32,13 @@ export interface CameraView {
    * FOV adapts to the screen's aspect ratio (portrait phones get a taller FOV).
    */
   hfov?: number;
+  /**
+   * Portrait screens: radius (m) around `target` that must fit the width.
+   * The camera keeps its direction and backs off just enough, with a taller FOV.
+   */
+  fit?: number;
+  /** Pose overrides for portrait screens (e.g. look along a long hall). */
+  portrait?: Partial<Pick<CameraView, "position" | "target" | "fov" | "hfov" | "fit">>;
   /** Show the floating labels in this view. */
   labels?: boolean;
   /** Only show labels of this group (plus ungrouped ones). */

@@ -34,7 +34,7 @@ export function buildShowroomScene(quality: Quality): BuiltScene {
 
   const views: Record<string, CameraView> = {
     entrance: { position: [0.5, 1.7, 7.4], target: [-7.16, 1.5, 0.97], hfov: 100, labels: false },
-    overview: { position: [9.5, 23, 14], target: [-0.6, 0, -0.4], hfov: 64, labels: true },
+    overview: { position: [9.5, 23, 14], target: [-0.6, 0, -0.4], hfov: 64, fit: 9.6, labels: true },
     lounge,
   };
   views.default = views.entrance;

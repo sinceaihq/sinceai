@@ -99,7 +99,7 @@ export function VenueExplorer({
         <div
           role="tablist"
           aria-label={label}
-          className="guide-no-print -mx-6 mb-4 flex gap-1 overflow-x-auto px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="guide-no-print -mx-6 mb-4 flex gap-1 overflow-x-auto px-6 [scrollbar-width:none] lg:mx-0 lg:flex-wrap lg:overflow-visible lg:px-0 [&::-webkit-scrollbar]:hidden"
         >
           {maps.map((m, i) => {
             const selected = m.id === active.id;

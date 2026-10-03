@@ -187,14 +187,14 @@ export function buildJokiTowerScene(quality: Quality): BuiltScene {
   }
 
   // Floor labels and the tower's vertical lines.
-  const floorNames: Record<1 | 2 | 3, string> = {
-    1: "Floor 1 · Showroom + Company Lounge",
-    2: "Floor 2 · Q&A + Chill Zone",
-    3: "Floor 3 · Q&A",
+  const floorDetail: Record<1 | 2 | 3, string> = {
+    1: "Showroom + Company Lounge",
+    2: "Q&A + Chill Zone",
+    3: "Q&A",
   };
   for (const floor of [1, 2, 3] as const) {
     const [x, z] = polar(250, R + 1.4);
-    labels.push(makeLabel(floorNames[floor], "floor", x, FLOOR_Y[floor] + 0.6, z));
+    labels.push(makeLabel(`Floor ${floor}`, "floor", x, FLOOR_Y[floor] + 0.6, z, undefined, floorDetail[floor]));
   }
   const lineMat = new THREE.LineBasicMaterial({ color: 0x8b7bff, transparent: true, opacity: 0.22 });
   for (let i = 0; i < 12; i++) {
@@ -219,11 +219,12 @@ export function buildJokiTowerScene(quality: Quality): BuiltScene {
     position: [10.5, FLOOR_Y[floor] + 12, 13.5],
     target: [0, FLOOR_Y[floor] + 0.6, 0],
     hfov: 68,
+    fit: 9.8,
     labels: true,
     labelGroup: `f${floor}`,
   });
   const views: Record<string, CameraView> = {
-    exploded: { position: [24, 21, 28], target: [0, 6.6, 0], hfov: 66, labels: false },
+    exploded: { position: [24, 21, 28], target: [0, 6.6, 0], hfov: 66, fit: 12.5, labels: false },
     "floor-1": floorView(1),
     "floor-2": floorView(2),
     "floor-3": floorView(3),

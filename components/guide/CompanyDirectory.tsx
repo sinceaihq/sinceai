@@ -62,11 +62,19 @@ export function CompanyDirectory({ companies }: { companies: readonly ChallengeC
               id={`company-${company.id}`}
               className="guide-target guide-avoid-break grid grid-cols-1 gap-4 border-b border-white/10 py-5 md:grid-cols-[11rem_1fr_1fr_auto] md:items-center md:gap-6"
             >
-              <div className="flex items-center gap-4 md:block">
-                <span className="block h-8 w-28 md:h-9 md:w-32">
-                  <CompanyLogo name={company.name} logo={company.logo} sizes="128px" />
-                </span>
-                <span className="text-sm font-semibold text-white md:mt-2 md:block md:text-xs md:font-normal md:text-white/55">
+              <div className="flex min-h-8 items-center gap-4 md:block">
+                {company.logo && (
+                  <span className="guide-no-print block h-8 w-28 md:h-9 md:w-32">
+                    <CompanyLogo name={company.name} logo={company.logo} sizes="128px" decorative />
+                  </span>
+                )}
+                <span
+                  className={
+                    company.logo
+                      ? "text-sm font-semibold text-white md:mt-2 md:block md:text-xs md:font-normal md:text-white/55"
+                      : "text-lg font-bold tracking-tight text-white"
+                  }
+                >
                   {company.name}
                 </span>
               </div>

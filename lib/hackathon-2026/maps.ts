@@ -275,7 +275,7 @@ export const VENUE_MAPS: readonly VenueMap[] = [
       hs({
         id: "f1-taito",
         label: "Taidon portaat",
-        description: "Complete teams wait here; opening at 17:00",
+        description: "Opening ceremony at 17:00",
         x: 0.5025,
         y: 0.533,
         kind: "area",
@@ -333,7 +333,7 @@ export const VENUE_MAPS: readonly VenueMap[] = [
     height: 1131,
     alt: "BioCity ground floor plan: the long main lobby (build area) along Lemminkäisenkatu, the curved Aulagalleria with the north entrance from Jussin aukio, the restaurant serving lines to the east and the passage to Joki at the east end.",
     caption:
-      "Event entrance from Jussin aukio (north). Build tables fill the main lobby; Joki connects at its east end.",
+      "Planned event entrance on the courtyard side (Jussin aukio). Build tables fill the main lobby; Joki connects at its east end.",
     source: "Turun Teknologiakiinteistöt floor plan",
     glossary: [
       { fi: "Biocityn pääaula", en: "BioCity main lobby" },

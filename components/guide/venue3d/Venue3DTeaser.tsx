@@ -10,7 +10,7 @@ export function Venue3DTeaser({ focus }: { focus?: string }) {
       href={href}
       className="group guide-no-print relative block overflow-hidden border border-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
     >
-      <div className="relative aspect-[16/9] w-full bg-[#06050c]">
+      <div className="relative aspect-[4/3] w-full bg-[#06050c] sm:aspect-[16/9]">
         <Image
           src="/assets/guide/3d/showroom-poster.webp"
           alt="Illustrative 3D render of the Joki Showroom: six challenge partner counters with bar stools in front of a curved, violet-lit LED wall with partner logos."
@@ -24,7 +24,7 @@ export function Venue3DTeaser({ focus }: { focus?: string }) {
             <p className="font-mono text-[11px] uppercase tracking-widest text-(--color-event)">
               Interactive 3D · illustrative
             </p>
-            <p className="mt-2 text-xl md:text-2xl font-bold tracking-tight text-white">
+            <p className="mt-2 text-lg font-bold tracking-tight text-white sm:text-xl md:text-2xl">
               Joki Showroom — challenge partner Q&amp;A
             </p>
           </div>
