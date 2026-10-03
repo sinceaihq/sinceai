@@ -149,9 +149,7 @@ export function briefingRoomLabel(company: ChallengeCompany): string {
 /** "Joki · Floor 1 · Showroom", "Joki · Floor 3" */
 export function qaLocationLabel(company: ChallengeCompany): string {
   const { floor, zone } = company.qa;
-  return zone.toLowerCase().startsWith("floor")
-    ? `Joki · Floor ${floor}`
-    : `Joki · Floor ${floor} · ${zone}`;
+  return zone.toLowerCase().startsWith("floor") ? `Joki · Floor ${floor}` : `Joki · Floor ${floor} · ${zone}`;
 }
 
 /** Map ids used for a company's briefing room and Q&A stand. */
@@ -166,11 +164,4 @@ export function companyMapIds(company: ChallengeCompany): { briefing: string; qa
  * Showroom stand order along the curved LED wall, entrance → north
  * (from the 2 Oct Joki showroom map).
  */
-export const SHOWROOM_ORDER = [
-  "meyer-turku",
-  "dna",
-  "apetit",
-  "elisa",
-  "turku-energia",
-  "bayer",
-] as const;
+export const SHOWROOM_ORDER = ["meyer-turku", "dna", "apetit", "elisa", "turku-energia", "bayer"] as const;

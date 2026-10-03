@@ -6,8 +6,7 @@ const SUN = "2026-11-08";
 const at = (date: string, time: string) => `${date}T${time}:00+02:00`;
 
 const COMPANIES: readonly Audience[] = ["challenge-partners", "partners"];
-const MEAL_OPTIONAL =
-  "Optional for company representatives — food is reserved for you at the scheduled meal times.";
+const MEAL_OPTIONAL = "Optional for company representatives — food is reserved for you at the scheduled meal times.";
 
 /**
  * One schedule for everyone. Pages filter by audience and pick the
@@ -22,7 +21,8 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   {
     id: "fri-registration",
     start: at(FRI, "15:00"),
-    title: "Registration opens",
+    title: "Builder registration opens",
+    titleFor: { builders: "Registration opens" },
     detail:
       "Check in at EduCity — both main entrances lead to registration. Public challenge previews open in sinceai.app.",
     place: "educity",
@@ -37,7 +37,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     end: at(FRI, "16:45"),
     title: "Team formation",
     detail:
-      "Create or join your team in sinceai.app — every member must appear in the team. Complete teams head to Taidon portaat; teams still looking for members use the team formation area.",
+      "Create or join your team in sinceai.app — every member must appear in the same team. Still looking for teammates? Use the team formation area next to Taidon portaat.",
     place: "educity",
     placeDetail: "Lobby · team formation area",
     audiences: ["builders"],
@@ -58,8 +58,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     id: "fri-cp-weekend-briefing",
     start: at(FRI, "15:40"),
     title: "Weekend briefing for challenge partners",
-    detail:
-      "Overview of the full weekend, Friday's schedule and practical arrangements. Coffee and a light snack.",
+    detail: "Overview of the full weekend, Friday's schedule and practical arrangements. Coffee and a light snack.",
     place: "educity",
     placeDetail: "Event staff guide you to the room",
     audiences: ["challenge-partners"],
@@ -70,8 +69,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     id: "fri-team-changes-close",
     start: at(FRI, "16:45"),
     title: "Team changes close",
-    detail:
-      "No new teams, joins or member changes after this. Move to Taidon portaat for the opening.",
+    detail: "No new teams, joins or member changes after this. Move to Taidon portaat for the opening.",
     place: "educity",
     audiences: ["builders"],
     kind: "deadline",
@@ -95,8 +93,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     titleFor: { builders: "Opening ceremony — challenge selection opens" },
     detail: "The official start of Since AI Hackathon 2026.",
     detailFor: {
-      builders:
-        "The official start. Team owners select the team's challenge in sinceai.app from 17:00.",
+      builders: "The official start. Team owners select the team's challenge in sinceai.app from 17:00.",
       speakers: "The keynote is part of the opening programme — your run sheet has your exact cue.",
     },
     place: "educity",
@@ -111,7 +108,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     end: at(FRI, "17:30"),
     title: "Challenge selection",
     detail:
-      "Only the team owner selects, in sinceai.app: first come, first served, limited places per challenge, binding once confirmed. At 17:30 your team view shows your challenge, departure time, room, floor and map.",
+      "Only the team owner selects, in sinceai.app — first come, first served, with limited places per challenge. At 17:30 your team view shows your challenge, departure time, room, floor and map.",
     place: "app",
     audiences: ["builders"],
     kind: "deadline",
@@ -144,8 +141,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
       builders: "Your challenge briefing",
       "challenge-partners": "Your challenge briefing",
     },
-    detail:
-      "Each company presents its challenge to its teams in its own EduCity room.",
+    detail: "Each company presents its challenge to its teams in its own EduCity room.",
     detailFor: {
       builders:
         "Your challenge company explains the task, expected result, boundaries, resources, evaluation and how to reach them during the event.",
@@ -216,8 +212,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     start: at(SAT, "07:30"),
     allDay: true,
     title: "Your stand is open at BioCity",
-    detail:
-      "Tell us when your representatives are at the stand — we share the times with builders.",
+    detail: "Tell us when your representatives are at the stand — we share the times with builders.",
     place: "biocity",
     audiences: ["partners"],
     kind: "note",
@@ -253,8 +248,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     start: at(SAT, "09:00"),
     end: at(SAT, "12:00"),
     title: "Challenge partner Q&A open",
-    detail:
-      "Meet the challenge companies at Joki — Showroom (floor 1) and floors 2–3.",
+    detail: "Meet the challenge companies at Joki — Showroom (floor 1) and floors 2–3.",
     detailFor: {
       builders:
         "Find your company at Joki — Showroom (floor 1) or floors 2–3. Each company posts its representative hours at its stand.",
@@ -323,8 +317,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     id: "sat-night",
     start: at(SAT, "21:30"),
     title: "Final push — building continues through the night",
-    detail:
-      "Build spaces stay open. Short rest is fine in suitable event areas; there are no sleeping facilities.",
+    detail: "Build spaces stay open. Short rest is fine in suitable event areas; there are no sleeping facilities.",
     place: "biocity-joki",
     audiences: ["builders"],
     kind: "note",
@@ -365,8 +358,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     titleFor: { partners: "Submission deadline — stands stay open" },
     detail: "Submissions close. The deadline is fixed.",
     detailFor: {
-      builders:
-        "The team owner submits the final solution in sinceai.app. The deadline is fixed — submit early.",
+      builders: "The team owner submits the final solution in sinceai.app. The deadline is fixed — submit early.",
     },
     place: "app",
     audiences: ["builders", "challenge-partners", "partners", "judges"],
@@ -378,8 +370,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     start: at(SUN, "10:00"),
     end: at(SUN, "12:00"),
     title: "Vote for your favourite submission",
-    detail:
-      "Vote in sinceai.app. The five most-voted solutions present at the closing ceremony.",
+    detail: "Vote in sinceai.app. The five most-voted solutions present at the closing ceremony.",
     place: "app",
     audiences: ["builders", "judges"],
     titleFor: { judges: "Participant voting window" },
@@ -421,11 +412,9 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     id: "sun-closing",
     start: at(SUN, "13:00"),
     title: "Closing ceremony + five finalist presentations",
-    detail:
-      "The five most-voted solutions present. The jury selects the overall winner of Since AI Hackathon 2026.",
+    detail: "The five most-voted solutions present. The jury selects the overall winner of Since AI Hackathon 2026.",
     detailFor: {
-      judges:
-        "Overall jury: be ready before 13:00 — your personal call time comes from Since AI.",
+      judges: "Overall jury: be ready before 13:00 — your personal call time comes from Since AI.",
     },
     place: "educity",
     audiences: ALL_AUDIENCES,
@@ -467,9 +456,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
 /** Items visible to an audience, publishable only, in chronological order. */
 export function scheduleFor(audience?: Audience): ScheduleItem[] {
   return SCHEDULE.filter(
-    (item) =>
-      item.status !== "do_not_publish" &&
-      (audience === undefined || item.audiences.includes(audience)),
+    (item) => item.status !== "do_not_publish" && (audience === undefined || item.audiences.includes(audience)),
   ).sort(compareItems);
 }
 
@@ -495,8 +482,7 @@ export const detailFor = (item: ScheduleItem, audience?: Audience) =>
 export const placeDetailFor = (item: ScheduleItem, audience?: Audience) =>
   (audience && item.placeDetailFor?.[audience]) || item.placeDetail;
 
-export const noteFor = (item: ScheduleItem, audience?: Audience) =>
-  (audience && item.noteFor?.[audience]) || item.note;
+export const noteFor = (item: ScheduleItem, audience?: Audience) => (audience && item.noteFor?.[audience]) || item.note;
 
 /**
  * The weekend's shared milestones shown on the hub — the moments every

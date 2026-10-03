@@ -1,17 +1,8 @@
 import * as THREE from "three";
 import { getCompany, SHOWROOM_ORDER, LOGOS_3D } from "@/lib/hackathon-2026";
-import {
-  counterGeometry,
-  stoolGeometry,
-  type Materials,
-} from "../furniture";
+import { counterGeometry, stoolGeometry, type Materials } from "../furniture";
 import { makeLabel } from "../labels";
-import {
-  makeCarpetTexture,
-  makeFadeTexture,
-  makeLedWallTexture,
-  makeRadialTexture,
-} from "../textures";
+import { makeCarpetTexture, makeFadeTexture, makeLedWallTexture, makeRadialTexture } from "../textures";
 import type { Quality } from "../types";
 import { facingOutward, polar } from "../util";
 import type { CSS2DObject } from "three/addons/renderers/CSS2DRenderer.js";
@@ -215,7 +206,11 @@ export function buildShowroomRoom(
     boh.lineTo(R * Math.sin(rad), R * Math.cos(rad));
   }
   boh.closePath();
-  const bohGeo = new THREE.ExtrudeGeometry(boh, { depth: Math.min(wallH, 1.2), bevelEnabled: false, curveSegments: 24 });
+  const bohGeo = new THREE.ExtrudeGeometry(boh, {
+    depth: Math.min(wallH, 1.2),
+    bevelEnabled: false,
+    curveSegments: 24,
+  });
   bohGeo.rotateX(-Math.PI / 2);
   group.add(new THREE.Mesh(bohGeo, new THREE.MeshStandardMaterial({ color: 0x0c0c10, roughness: 1 })));
   const southWall = new THREE.Mesh(new THREE.BoxGeometry(6.08 - X_DIV, wallH, 0.2), wallMat);
@@ -412,7 +407,10 @@ export function buildShowroomRoom(
       ceiling.add(bx, bz);
     }
     for (const z of [-4.5, 0.5, 4.5]) {
-      const duct = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 2 * Math.sqrt(R * R - z * z) - 0.6, 16), beamMat);
+      const duct = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.22, 0.22, 2 * Math.sqrt(R * R - z * z) - 0.6, 16),
+        beamMat,
+      );
       duct.rotation.z = Math.PI / 2;
       duct.position.set(0, H - 0.65, z);
       ceiling.add(duct);

@@ -4,16 +4,7 @@ import { cn } from "@/lib/utils";
 
 /** `// micro-label` in the site's grammar. */
 export function Eyebrow({ children, className }: { children: ReactNode; className?: string }) {
-  return (
-    <p
-      className={cn(
-        "text-xs font-mono uppercase tracking-widest text-neutral-500",
-        className,
-      )}
-    >
-      {children}
-    </p>
-  );
+  return <p className={cn("text-xs font-mono uppercase tracking-widest text-white/55", className)}>{children}</p>;
 }
 
 export function SectionHeading({
@@ -35,9 +26,7 @@ export function SectionHeading({
       <h2 id={id} className="text-3xl md:text-4xl font-bold tracking-tight text-white">
         {title}
       </h2>
-      {lede && (
-        <p className="mt-4 max-w-2xl text-sm text-neutral-400 leading-relaxed">{lede}</p>
-      )}
+      {lede && <p className="mt-4 max-w-2xl text-sm text-neutral-400 leading-relaxed">{lede}</p>}
     </header>
   );
 }
@@ -86,9 +75,7 @@ export function StatusTag({
     <span
       className={cn(
         "inline-flex max-w-full items-center gap-1.5 border px-2 py-0.5 text-[11px] font-mono uppercase tracking-widest",
-        status === "pending"
-          ? "border-(--color-event)/50 text-(--color-event)"
-          : "border-white/15 text-neutral-400",
+        status === "pending" ? "border-(--color-event)/50 text-(--color-event)" : "border-white/15 text-neutral-400",
         className,
       )}
     >
@@ -155,9 +142,7 @@ export function TextLink({
   return (
     <a
       href={href}
-      {...(isExternal && href.startsWith("http")
-        ? { target: "_blank", rel: "noopener noreferrer" }
-        : {})}
+      {...(isExternal && href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       className={cn(
         "inline-flex items-center text-sm text-neutral-300 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white hover:decoration-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
         className,

@@ -18,7 +18,7 @@ export function Details({ items }: { items: readonly GuideDetail[] }) {
               width="12"
               height="12"
               viewBox="0 0 12 12"
-              className="guide-chevron shrink-0 text-neutral-500 transition-transform duration-200"
+              className="guide-chevron shrink-0 text-white/55 transition-transform duration-200"
             >
               <path d="M1.5 4l4.5 4.5L10.5 4" stroke="currentColor" strokeWidth="1.5" fill="none" />
             </svg>

@@ -1,11 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  GUIDE_BASE_PATH,
-  getVenue,
-  venueAddressLine,
-  type VenueId,
-} from "@/lib/hackathon-2026";
+import { GUIDE_BASE_PATH, getVenue, venueAddressLine, type VenueId } from "@/lib/hackathon-2026";
 import { Arrow, StatusTag, TextLink } from "./primitives";
 
 /** Venue cards: address first, then what happens there, then the way in. */
@@ -32,16 +27,12 @@ export function VenueCards({ venues }: { venues: readonly VenueId[] }) {
             )}
             <div className="flex flex-1 flex-col p-5">
               <h3 className="text-2xl font-bold tracking-tight text-white">{venue.name}</h3>
-              {venue.fullName !== venue.name && (
-                <p className="mt-1 text-xs text-neutral-500">{venue.fullName}</p>
-              )}
-              <address className="mt-3 not-italic text-sm text-neutral-300">
-                {venueAddressLine(venue)}
-              </address>
+              {venue.fullName !== venue.name && <p className="mt-1 text-xs text-white/55">{venue.fullName}</p>}
+              <address className="mt-3 not-italic text-sm text-neutral-300">{venueAddressLine(venue)}</address>
               <ul className="mt-4 space-y-1.5 text-sm text-neutral-400">
                 {venue.roles.map((role) => (
                   <li key={role} className="flex gap-2">
-                    <span aria-hidden="true" className="text-neutral-600">
+                    <span aria-hidden="true" className="text-white/55">
                       —
                     </span>
                     <span>{role}</span>
@@ -50,12 +41,19 @@ export function VenueCards({ venues }: { venues: readonly VenueId[] }) {
               </ul>
               {venue.entrances.length > 0 && (
                 <div className="mt-4 space-y-2 border-t border-white/10 pt-4">
-                  {venue.entrances.map((entrance) => (
-                    <p key={entrance.label} className="text-sm text-neutral-400">
-                      <span className="font-semibold text-white">{entrance.label}: </span>
-                      {entrance.detail}
-                    </p>
-                  ))}
+                  {venue.entrances
+                    .filter((entrance) => entrance.status !== "do_not_publish")
+                    .map((entrance) => (
+                      <p key={entrance.label} className="text-sm text-neutral-400">
+                        <span className="font-semibold text-white">{entrance.label}: </span>
+                        {entrance.detail}
+                        {entrance.status === "working" && (
+                          <span className="ml-2 align-middle">
+                            <StatusTag status="working" />
+                          </span>
+                        )}
+                      </p>
+                    ))}
                 </div>
               )}
               {venue.openAroundTheClock && (

@@ -4,13 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Maximize2, Minimize2, Minus, Pause, Play, Plus, Tag, X } from "lucide-react";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
-import {
-  getScene3D,
-  normaliseTarget,
-  sceneForTarget,
-  SCENES_3D,
-  type Scene3DId,
-} from "@/lib/hackathon-2026";
+import { getScene3D, normaliseTarget, sceneForTarget, SCENES_3D, type Scene3DId } from "@/lib/hackathon-2026";
 import { cn } from "@/lib/utils";
 import type { VenueEngine } from "./engine";
 
@@ -61,42 +55,39 @@ export function Venue3D() {
     setSelected(null);
   }, []);
 
-  const start = useCallback(
-    async (id: Scene3DId, focusId?: string | null) => {
-      const host = hostRef.current;
-      if (!host) return;
-      const { createVenueEngine, isWebGL2Available } = await import("./engine");
-      if (!isWebGL2Available()) {
-        setStatus("unsupported");
-        return;
+  const start = useCallback(async (id: Scene3DId, focusId?: string | null) => {
+    const host = hostRef.current;
+    if (!host) return;
+    const { createVenueEngine, isWebGL2Available } = await import("./engine");
+    if (!isWebGL2Available()) {
+      setStatus("unsupported");
+      return;
+    }
+    setStatus("loading");
+    try {
+      if (!engineRef.current) {
+        const small = Math.min(window.screen.width, window.screen.height) < 700;
+        const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
+        engineRef.current = createVenueEngine(host, {
+          quality: (touchRef.current && small) || (memory !== undefined && memory <= 4) ? "low" : "high",
+          reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+          onSelect: (pick) => setSelected(pick),
+          onLabelsChange: setLabels,
+          onContextLost: () => setStatus("error"),
+        });
       }
-      setStatus("loading");
-      try {
-        if (!engineRef.current) {
-          const small = Math.min(window.screen.width, window.screen.height) < 700;
-          const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
-          engineRef.current = createVenueEngine(host, {
-            quality: (touchRef.current && small) || (memory !== undefined && memory <= 4) ? "low" : "high",
-            reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-            onSelect: (pick) => setSelected(pick),
-            onLabelsChange: setLabels,
-            onContextLost: () => setStatus("error"),
-          });
-        }
-        const engine = engineRef.current;
-        await engine.load(id);
-        if (focusId) {
-          engine.focus(focusId, false);
-          setSelected(focusId);
-        }
-        await Promise.race([engine.whenReady(), new Promise((r) => setTimeout(r, 6000))]);
-        if (engineRef.current === engine) setStatus("ready");
-      } catch {
-        setStatus("error");
+      const engine = engineRef.current;
+      await engine.load(id);
+      if (focusId) {
+        engine.focus(focusId, false);
+        setSelected(focusId);
       }
-    },
-    [],
-  );
+      await Promise.race([engine.whenReady(), new Promise((r) => setTimeout(r, 6000))]);
+      if (engineRef.current === engine) setStatus("ready");
+    } catch {
+      setStatus("error");
+    }
+  }, []);
 
   // Deep links (?focus=elisa, ?scene=biocity) are an explicit intent — open the 3D.
   useEffect(() => {
@@ -189,33 +180,7 @@ export function Venue3D() {
 
   return (
     <div className="guide-no-print">
-      <div
-        role="tablist"
-        aria-label="3D scenes"
-        className="-mx-6 mb-4 flex gap-1 overflow-x-auto px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      >
-        {SCENES_3D.map((s) => (
-          <button
-            key={s.id}
-            type="button"
-            role="tab"
-            id={`${uid}-tab-${s.id}`}
-            aria-selected={s.id === sceneId}
-            aria-controls={`${uid}-panel`}
-            onClick={() => switchScene(s.id)}
-            className={cn(
-              "min-h-11 shrink-0 border px-3 font-mono text-[11px] uppercase tracking-widest transition-colors cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
-              s.id === sceneId
-                ? "border-white bg-white text-black"
-                : "border-white/15 text-neutral-400 hover:border-white/40 hover:text-white",
-            )}
-          >
-            {s.tab}
-          </button>
-        ))}
-      </div>
-
-      <div id={`${uid}-panel`} role="tabpanel" aria-labelledby={`${uid}-tab-${sceneId}`}>
+      <div>
         <div
           ref={stageRef}
           tabIndex={-1}
@@ -236,202 +201,267 @@ export function Venue3D() {
           )}
 
           <div
+            role="tablist"
+            aria-label="3D scenes"
             className={cn(
-              "relative w-full overflow-hidden bg-[#050409]",
-              expanded ? "min-h-0 flex-1" : "aspect-[4/5] border border-white/10 sm:aspect-[16/9]",
+              "flex gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+              expanded ? "shrink-0 border-b border-white/10 px-3 py-2" : "-mx-6 mb-4 px-6",
             )}
           >
-            {/* Poster — visible until the 3D scene has rendered. */}
+            {SCENES_3D.map((s) => (
+              <button
+                key={s.id}
+                type="button"
+                role="tab"
+                id={`${uid}-tab-${s.id}`}
+                aria-selected={s.id === sceneId}
+                aria-controls={`${uid}-panel`}
+                onClick={() => switchScene(s.id)}
+                className={cn(
+                  "min-h-11 shrink-0 border px-3 font-mono text-[11px] uppercase tracking-widest transition-colors cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
+                  s.id === sceneId
+                    ? "border-white bg-white text-black"
+                    : "border-white/15 text-neutral-400 hover:border-white/40 hover:text-white",
+                )}
+              >
+                {s.tab}
+              </button>
+            ))}
+          </div>
+
+          <div
+            id={`${uid}-panel`}
+            role="tabpanel"
+            aria-labelledby={`${uid}-tab-${sceneId}`}
+            className={cn(expanded && "flex min-h-0 flex-1 flex-col")}
+          >
             <div
-              aria-hidden={status === "ready"}
               className={cn(
-                "absolute inset-0 transition-opacity duration-500 motion-reduce:transition-none",
-                status === "ready" ? "pointer-events-none opacity-0" : "opacity-100",
+                "relative w-full overflow-hidden bg-[#050409]",
+                expanded ? "min-h-0 flex-1" : "aspect-[4/5] border border-white/10 sm:aspect-[16/9]",
               )}
             >
-              <Image
-                src={scene.poster}
-                alt={status === "ready" ? "" : scene.alt}
-                fill
-                sizes="(max-width: 1024px) 100vw, 1024px"
-                className="object-cover"
+              {/* Poster — visible until the 3D scene has rendered. */}
+              <div
+                aria-hidden={status === "ready"}
+                className={cn(
+                  "absolute inset-0 transition-opacity duration-500 motion-reduce:transition-none",
+                  status === "ready" ? "pointer-events-none opacity-0" : "opacity-100",
+                )}
+              >
+                <Image
+                  src={scene.poster}
+                  alt={status === "ready" ? "" : scene.alt}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 1024px"
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-black/30" />
+              </div>
+
+              <div
+                ref={hostRef}
+                tabIndex={active ? 0 : -1}
+                role="group"
+                aria-roledescription="3D scene"
+                aria-label={scene.alt}
+                aria-describedby={`${uid}-help`}
+                onKeyDown={onStageKey}
+                className={cn(
+                  "absolute inset-0 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-(--color-event)",
+                  status === "ready" ? "opacity-100" : "pointer-events-none opacity-0",
+                )}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-black/30" />
+              <p id={`${uid}-help`} className="sr-only">
+                Drag to look around, scroll or pinch to zoom, arrow keys to move, plus and minus to zoom, 0 to reset.
+                Everything in this scene is also listed below as text.
+              </p>
+
+              {status === "idle" && (
+                <div className="absolute inset-x-0 bottom-0 flex flex-col gap-4 p-5 sm:flex-row sm:items-end sm:justify-between sm:p-6">
+                  <div>
+                    <p className="font-mono text-[11px] uppercase tracking-widest text-(--color-event)">
+                      Interactive 3D · illustrative
+                    </p>
+                    <p className="mt-2 text-xl font-bold tracking-tight text-white sm:text-2xl">{scene.title}</p>
+                  </div>
+                  <button
+                    ref={enterRef}
+                    type="button"
+                    onClick={onEnter}
+                    className="inline-flex min-h-11 shrink-0 items-center justify-center bg-white px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-neutral-100 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  >
+                    Step inside in 3D
+                    <span aria-hidden="true" className="ml-2">
+                      →
+                    </span>
+                  </button>
+                </div>
+              )}
+
+              {status === "loading" && (
+                <div className="absolute inset-0 flex items-center justify-center" role="status">
+                  <span className="flex items-center gap-3 border border-white/15 bg-black/70 px-4 py-3 font-mono text-[11px] uppercase tracking-widest text-white">
+                    <span
+                      aria-hidden="true"
+                      className="h-2 w-2 animate-pulse rounded-full bg-(--color-event) motion-reduce:animate-none"
+                    />
+                    Building the space…
+                  </span>
+                </div>
+              )}
+
+              {(status === "unsupported" || status === "error") && (
+                <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6" role="status">
+                  <p className="max-w-md border border-white/15 bg-black/80 p-4 text-sm text-neutral-300">
+                    {status === "unsupported"
+                      ? "This device can't show the 3D preview. The floor plans below show every room and stand."
+                      : "The 3D preview stopped. Reload the page to try again — the floor plans below show every room and stand."}
+                  </p>
+                </div>
+              )}
+
+              {status === "ready" && (
+                <>
+                  <div className="absolute right-3 top-3 flex flex-col gap-2">
+                    {!touchRef.current && (
+                      <button
+                        type="button"
+                        className={iconButton}
+                        onClick={() => (expanded ? exitExpanded() : setExpanded(true))}
+                        aria-label={expanded ? "Exit full screen" : "Full screen"}
+                      >
+                        {expanded ? (
+                          <Minimize2 className="h-4 w-4" aria-hidden="true" />
+                        ) : (
+                          <Maximize2 className="h-4 w-4" aria-hidden="true" />
+                        )}
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      className={iconButton}
+                      aria-pressed={labels}
+                      aria-label="Show names"
+                      onClick={() => engineRef.current?.setLabels(!labels)}
+                    >
+                      <Tag className="h-4 w-4" aria-hidden="true" />
+                    </button>
+                    {!reducedMotion && (
+                      <button
+                        type="button"
+                        className={iconButton}
+                        aria-pressed={touring}
+                        aria-label={touring ? "Stop the slow tour" : "Start a slow tour"}
+                        onClick={() => {
+                          engineRef.current?.setAutoRotate(!touring);
+                          setTouring(!touring);
+                        }}
+                      >
+                        {touring ? (
+                          <Pause className="h-4 w-4" aria-hidden="true" />
+                        ) : (
+                          <Play className="h-4 w-4" aria-hidden="true" />
+                        )}
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      className={cn(iconButton, "hidden sm:inline-flex")}
+                      aria-label="Zoom in"
+                      onClick={() => engineRef.current?.zoom(1.25)}
+                    >
+                      <Plus className="h-4 w-4" aria-hidden="true" />
+                    </button>
+                    <button
+                      type="button"
+                      className={cn(iconButton, "hidden sm:inline-flex")}
+                      aria-label="Zoom out"
+                      onClick={() => engineRef.current?.zoom(0.8)}
+                    >
+                      <Minus className="h-4 w-4" aria-hidden="true" />
+                    </button>
+                  </div>
+
+                  <div className="absolute inset-x-3 bottom-3 flex flex-col gap-2 sm:inset-x-4 sm:bottom-4">
+                    {target && (
+                      <div className="flex max-w-md items-start justify-between gap-4 border border-(--color-event)/50 bg-black/80 p-3 backdrop-blur">
+                        <div className="min-w-0">
+                          <p className="font-semibold text-white">{target.label}</p>
+                          <p className="text-xs text-neutral-400">{target.detail}</p>
+                          {target.href && (
+                            <Link
+                              href={target.href}
+                              className="mt-1 inline-flex min-h-9 items-center text-xs text-white underline underline-offset-4"
+                            >
+                              Details
+                              <span aria-hidden="true" className="ml-1">
+                                →
+                              </span>
+                            </Link>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          className="inline-flex h-9 w-9 shrink-0 items-center justify-center text-neutral-400 hover:text-white cursor-pointer"
+                          aria-label="Clear selection"
+                          onClick={() => setSelected(null)}
+                        >
+                          <X className="h-4 w-4" aria-hidden="true" />
+                        </button>
+                      </div>
+                    )}
+                    <div className="flex gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                      {scene.views.map((v) => (
+                        <button
+                          key={v.id}
+                          type="button"
+                          onClick={() => {
+                            setSelected(null);
+                            engineRef.current?.view(v.id);
+                          }}
+                          className="min-h-11 shrink-0 border border-white/20 bg-black/70 px-3 font-mono text-[11px] uppercase tracking-widest text-white backdrop-blur transition-colors hover:border-white cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+                        >
+                          {v.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
 
             <div
-              ref={hostRef}
-              tabIndex={active ? 0 : -1}
-              role="group"
-              aria-roledescription="3D scene"
-              aria-label={scene.alt}
-              aria-describedby={`${uid}-help`}
-              onKeyDown={onStageKey}
               className={cn(
-                "absolute inset-0 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-(--color-event)",
-                status === "ready" ? "opacity-100" : "pointer-events-none opacity-0",
+                "mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between",
+                expanded && "m-0 border-t border-white/10 p-3",
               )}
-            />
-            <p id={`${uid}-help`} className="sr-only">
-              Drag to look around, scroll or pinch to zoom, arrow keys to move, plus and minus to zoom, 0 to reset.
-              Everything in this scene is also listed below as text.
-            </p>
-
-            {status === "idle" && (
-              <div className="absolute inset-x-0 bottom-0 flex flex-col gap-4 p-5 sm:flex-row sm:items-end sm:justify-between sm:p-6">
-                <div>
-                  <p className="font-mono text-[11px] uppercase tracking-widest text-(--color-event)">
-                    Interactive 3D · illustrative
-                  </p>
-                  <p className="mt-2 text-xl font-bold tracking-tight text-white sm:text-2xl">{scene.title}</p>
-                </div>
-                <button
-                  ref={enterRef}
-                  type="button"
-                  onClick={onEnter}
-                  className="inline-flex min-h-11 shrink-0 items-center justify-center bg-white px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-neutral-100 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              <label className="flex items-center gap-3 text-xs text-neutral-400">
+                <span className="font-mono uppercase tracking-widest">Go to</span>
+                <select
+                  value={selected ?? ""}
+                  disabled={status !== "ready"}
+                  onChange={(e) => {
+                    const id = e.target.value || null;
+                    setSelected(id);
+                    if (id) engineRef.current?.focus(id);
+                    else engineRef.current?.view("default");
+                  }}
+                  className="h-11 min-w-0 flex-1 rounded-none border border-white/20 bg-black px-3 text-sm text-white focus:border-white focus:outline-none disabled:opacity-50 sm:w-72 sm:flex-none"
                 >
-                  Step inside in 3D
-                  <span aria-hidden="true" className="ml-2">
-                    →
-                  </span>
-                </button>
-              </div>
-            )}
-
-            {status === "loading" && (
-              <div className="absolute inset-0 flex items-center justify-center" role="status">
-                <span className="flex items-center gap-3 border border-white/15 bg-black/70 px-4 py-3 font-mono text-[11px] uppercase tracking-widest text-white">
-                  <span aria-hidden="true" className="h-2 w-2 animate-pulse rounded-full bg-(--color-event) motion-reduce:animate-none" />
-                  Building the space…
-                </span>
-              </div>
-            )}
-
-            {(status === "unsupported" || status === "error") && (
-              <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6" role="status">
-                <p className="max-w-md border border-white/15 bg-black/80 p-4 text-sm text-neutral-300">
-                  {status === "unsupported"
-                    ? "This device can't show the 3D preview. The floor plans below show every room and stand."
-                    : "The 3D preview stopped. Reload the page to try again — the floor plans below show every room and stand."}
-                </p>
-              </div>
-            )}
-
-            {status === "ready" && (
-              <>
-                <div className="absolute right-3 top-3 flex flex-col gap-2">
-                  {!touchRef.current && (
-                    <button
-                      type="button"
-                      className={iconButton}
-                      onClick={() => (expanded ? exitExpanded() : setExpanded(true))}
-                      aria-label={expanded ? "Exit full screen" : "Full screen"}
-                    >
-                      {expanded ? <Minimize2 className="h-4 w-4" aria-hidden="true" /> : <Maximize2 className="h-4 w-4" aria-hidden="true" />}
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    className={iconButton}
-                    aria-pressed={labels}
-                    aria-label="Show names"
-                    onClick={() => engineRef.current?.setLabels(!labels)}
-                  >
-                    <Tag className="h-4 w-4" aria-hidden="true" />
-                  </button>
-                  {!reducedMotion && (
-                    <button
-                      type="button"
-                      className={iconButton}
-                      aria-pressed={touring}
-                      aria-label={touring ? "Stop the slow tour" : "Start a slow tour"}
-                      onClick={() => {
-                        engineRef.current?.setAutoRotate(!touring);
-                        setTouring(!touring);
-                      }}
-                    >
-                      {touring ? <Pause className="h-4 w-4" aria-hidden="true" /> : <Play className="h-4 w-4" aria-hidden="true" />}
-                    </button>
-                  )}
-                  <button type="button" className={cn(iconButton, "hidden sm:inline-flex")} aria-label="Zoom in" onClick={() => engineRef.current?.zoom(1.25)}>
-                    <Plus className="h-4 w-4" aria-hidden="true" />
-                  </button>
-                  <button type="button" className={cn(iconButton, "hidden sm:inline-flex")} aria-label="Zoom out" onClick={() => engineRef.current?.zoom(0.8)}>
-                    <Minus className="h-4 w-4" aria-hidden="true" />
-                  </button>
-                </div>
-
-                <div className="absolute inset-x-3 bottom-3 flex flex-col gap-2 sm:inset-x-4 sm:bottom-4">
-                  {target && (
-                    <div className="flex max-w-md items-start justify-between gap-4 border border-(--color-event)/50 bg-black/80 p-3 backdrop-blur">
-                      <div className="min-w-0">
-                        <p className="font-semibold text-white">{target.label}</p>
-                        <p className="text-xs text-neutral-400">{target.detail}</p>
-                        {target.href && (
-                          <Link href={target.href} className="mt-1 inline-flex min-h-9 items-center text-xs text-white underline underline-offset-4">
-                            Details
-                            <span aria-hidden="true" className="ml-1">
-                              →
-                            </span>
-                          </Link>
-                        )}
-                      </div>
-                      <button
-                        type="button"
-                        className="inline-flex h-9 w-9 shrink-0 items-center justify-center text-neutral-400 hover:text-white cursor-pointer"
-                        aria-label="Clear selection"
-                        onClick={() => setSelected(null)}
-                      >
-                        <X className="h-4 w-4" aria-hidden="true" />
-                      </button>
-                    </div>
-                  )}
-                  <div className="flex gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                    {scene.views.map((v) => (
-                      <button
-                        key={v.id}
-                        type="button"
-                        onClick={() => {
-                          setSelected(null);
-                          engineRef.current?.view(v.id);
-                        }}
-                        className="min-h-11 shrink-0 border border-white/20 bg-black/70 px-3 font-mono text-[11px] uppercase tracking-widest text-white backdrop-blur transition-colors hover:border-white cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
-                      >
-                        {v.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-
-          <div className={cn("mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between", expanded && "m-0 border-t border-white/10 p-3")}>
-            <label className="flex items-center gap-3 text-xs text-neutral-400">
-              <span className="font-mono uppercase tracking-widest">Go to</span>
-              <select
-                value={selected ?? ""}
-                disabled={status !== "ready"}
-                onChange={(e) => {
-                  const id = e.target.value || null;
-                  setSelected(id);
-                  if (id) engineRef.current?.focus(id);
-                  else engineRef.current?.view("default");
-                }}
-                className="h-11 min-w-0 flex-1 rounded-none border border-white/20 bg-black px-3 text-sm text-white focus:border-white focus:outline-none disabled:opacity-50 sm:w-72 sm:flex-none"
-              >
-                <option value="">Start view</option>
-                {scene.targets.map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-            {!expanded && (
-              <p className="text-xs text-neutral-500">Illustrative, not to scale — the floor plans are the reference.</p>
-            )}
+                  <option value="">Start view</option>
+                  {scene.targets.map((t) => (
+                    <option key={t.id} value={t.id}>
+                      {t.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {!expanded && (
+                <p className="text-xs text-white/55">Illustrative, not to scale — the floor plans are the reference.</p>
+              )}
+            </div>
           </div>
         </div>
 
@@ -439,7 +469,13 @@ export function Venue3D() {
         <details className="guide-details mt-4">
           <summary className="flex min-h-11 items-center gap-2 text-xs text-neutral-400 hover:text-white">
             In this scene ({scene.targets.length})
-            <svg aria-hidden="true" width="10" height="10" viewBox="0 0 10 10" className="guide-chevron transition-transform">
+            <svg
+              aria-hidden="true"
+              width="10"
+              height="10"
+              viewBox="0 0 10 10"
+              className="guide-chevron transition-transform"
+            >
               <path d="M1 3l4 4 4-4" stroke="currentColor" strokeWidth="1.5" fill="none" />
             </svg>
           </summary>
@@ -447,7 +483,7 @@ export function Venue3D() {
             {scene.targets.map((t) => (
               <li key={t.id} className="border-b border-white/10 py-2 text-sm">
                 <span className="text-white">{t.label}</span>
-                <span className="text-neutral-500"> — {t.detail}</span>
+                <span className="text-white/55"> — {t.detail}</span>
               </li>
             ))}
           </ul>

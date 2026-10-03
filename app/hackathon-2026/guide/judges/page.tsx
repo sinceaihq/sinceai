@@ -113,7 +113,7 @@ export default function JudgeGuidePage() {
               <ul className="mt-4 space-y-2">
                 {role.points.map((p) => (
                   <li key={p} className="flex gap-2 text-sm text-neutral-400 leading-relaxed">
-                    <span aria-hidden="true" className="text-neutral-600">
+                    <span aria-hidden="true" className="text-white/55">
                       —
                     </span>
                     <span>{p}</span>

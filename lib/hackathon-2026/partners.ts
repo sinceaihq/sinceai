@@ -45,8 +45,7 @@ export const BIOCITY_STANDS: readonly PartnerStand[] = [
     venue: "biocity",
     area: "Aulagalleria",
     location: "Facing the event entrance",
-    visibility:
-      "The first stand everyone sees when entering BioCity, on the route to every meal.",
+    visibility: "The first stand everyone sees when entering BioCity, on the route to every meal.",
     partnerId: "red-hat",
     hotspotId: "stand-bc-1",
     status: "confirmed",
@@ -57,8 +56,7 @@ export const BIOCITY_STANDS: readonly PartnerStand[] = [
     venue: "biocity",
     area: "Main lobby · east end",
     location: "Where the build hall meets the passage to Joki",
-    visibility:
-      "Next to the main build tables and on the walking route between BioCity and Joki.",
+    visibility: "Next to the main build tables and on the walking route between BioCity and Joki.",
     partnerId: "solita",
     hotspotId: "stand-bc-2",
     status: "confirmed",

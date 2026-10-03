@@ -28,7 +28,7 @@ export function GuideHero({
     <section aria-labelledby="page-title" className="relative px-6 pt-12 pb-12 md:pt-20 md:pb-16">
       <div className="mx-auto max-w-5xl">
         <nav aria-label="Breadcrumb" className="mb-6">
-          <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-mono uppercase tracking-widest text-neutral-500">
+          <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-mono uppercase tracking-widest text-white/55">
             {crumbs.map((crumb, i) => (
               <li key={crumb.label} className="flex items-center gap-2">
                 {i > 0 && <span aria-hidden="true">/</span>}
@@ -56,7 +56,7 @@ export function GuideHero({
           {titleAddon}
         </div>
         <p className="mt-6 max-w-2xl text-base md:text-lg text-neutral-300 leading-relaxed">{lede}</p>
-        <p className="mt-4 text-xs font-mono uppercase tracking-widest text-neutral-500">
+        <p className="mt-4 text-xs font-mono uppercase tracking-widest text-white/55">
           {EVENT_2026.dateLabel} · {EVENT_2026.city} · Updated {EVENT_2026.lastUpdatedLabel}
         </p>
         {children && <div className="mt-10 space-y-6">{children}</div>}

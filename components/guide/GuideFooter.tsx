@@ -7,18 +7,19 @@ export function GuideFooter() {
     <footer className="border-t border-white/10 px-6 py-12">
       <div className="mx-auto flex max-w-5xl flex-col gap-8 md:flex-row md:items-end md:justify-between">
         <div className="space-y-2">
-          <p className="text-sm font-bold text-white">
-            {EVENT_2026.name} · Field Guide
-          </p>
-          <p className="text-xs text-neutral-500">
+          <p className="text-sm font-bold text-white">{EVENT_2026.name} · Field Guide</p>
+          <p className="text-xs text-white/55">
             {EVENT_2026.dateLabel} · {EVENT_2026.city}
           </p>
-          <p className="text-xs text-neutral-500">
+          <p className="text-xs text-white/55">
             Updated {EVENT_2026.lastUpdatedLabel} · All times {EVENT_2026.timezoneLabel}
           </p>
-          <p className="text-xs text-neutral-500">
+          <p className="text-xs text-white/55">
             Questions:{" "}
-            <a className="text-neutral-300 underline underline-offset-4 hover:text-white" href={`mailto:${GUIDE_LINKS.contactEmail}`}>
+            <a
+              className="text-neutral-300 underline underline-offset-4 hover:text-white"
+              href={`mailto:${GUIDE_LINKS.contactEmail}`}
+            >
               {GUIDE_LINKS.contactEmail}
             </a>
           </p>

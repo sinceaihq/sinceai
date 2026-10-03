@@ -29,11 +29,14 @@ export function MapViewer({
   open,
   onOpenChange,
   highlight = [],
+  returnFocusTo,
 }: {
   map: VenueMap;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   highlight?: readonly string[];
+  /** Element that opened the viewer; focus returns to it on close. */
+  returnFocusTo?: HTMLElement | null;
 }) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -59,18 +62,21 @@ export function MapViewer({
     stage.style.opacity = "1";
   }, []);
 
-  const clamp = useCallback((v: View): View => {
-    const vp = viewportRef.current;
-    if (!vp) return v;
-    const vw = vp.clientWidth;
-    const vh = vp.clientHeight;
-    const scale = Math.min(Math.max(v.scale, fit.current * 0.8), fit.current * MAX_ZOOM);
-    const w = map.width * scale;
-    const h = map.height * scale;
-    const x = w <= vw ? (vw - w) / 2 : Math.min(0, Math.max(vw - w, v.x));
-    const y = h <= vh ? (vh - h) / 2 : Math.min(0, Math.max(vh - h, v.y));
-    return { scale, x, y };
-  }, [map.width, map.height]);
+  const clamp = useCallback(
+    (v: View): View => {
+      const vp = viewportRef.current;
+      if (!vp) return v;
+      const vw = vp.clientWidth;
+      const vh = vp.clientHeight;
+      const scale = Math.min(Math.max(v.scale, fit.current * 0.8), fit.current * MAX_ZOOM);
+      const w = map.width * scale;
+      const h = map.height * scale;
+      const x = w <= vw ? (vw - w) / 2 : Math.min(0, Math.max(vw - w, v.x));
+      const y = h <= vh ? (vh - h) / 2 : Math.min(0, Math.max(vh - h, v.y));
+      return { scale, x, y };
+    },
+    [map.width, map.height],
+  );
 
   const set = useCallback(
     (v: View) => {
@@ -259,15 +265,30 @@ export function MapViewer({
             e.preventDefault();
             viewportRef.current?.focus();
           }}
+          onCloseAutoFocus={(e) => {
+            if (!returnFocusTo) return;
+            e.preventDefault();
+            returnFocusTo.focus();
+          }}
           aria-describedby="map-viewer-help"
         >
           <div className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-white/10 pl-4 pr-2 sm:px-4">
             <Dialog.Title className="min-w-0 truncate text-sm font-bold">{map.title}</Dialog.Title>
             <div className="flex shrink-0 items-center gap-1.5">
-              <button type="button" className={cn(controlClass, "hidden sm:inline-flex")} onClick={() => zoomAt(1 / 1.4)} aria-label="Zoom out">
+              <button
+                type="button"
+                className={cn(controlClass, "hidden sm:inline-flex")}
+                onClick={() => zoomAt(1 / 1.4)}
+                aria-label="Zoom out"
+              >
                 <Minus className="h-4 w-4" aria-hidden="true" />
               </button>
-              <button type="button" className={cn(controlClass, "hidden sm:inline-flex")} onClick={() => zoomAt(1.4)} aria-label="Zoom in">
+              <button
+                type="button"
+                className={cn(controlClass, "hidden sm:inline-flex")}
+                onClick={() => zoomAt(1.4)}
+                aria-label="Zoom in"
+              >
                 <Plus className="h-4 w-4" aria-hidden="true" />
               </button>
               <button type="button" className={controlClass} onClick={reset} aria-label="Reset zoom">
@@ -280,8 +301,8 @@ export function MapViewer({
           </div>
 
           <p id="map-viewer-help" className="sr-only">
-            Drag or use the arrow keys to move. Pinch, scroll or press plus and minus to zoom. Press 0 to reset
-            and Escape to close. The locations on this map are listed below the map.
+            Drag or use the arrow keys to move. Pinch, scroll or press plus and minus to zoom. Press 0 to reset and
+            Escape to close. The locations on this map are listed below the map.
           </p>
 
           <div
@@ -352,7 +373,7 @@ export function MapViewer({
               })}
             </div>
             {!loaded && (
-              <p className="absolute inset-0 flex items-center justify-center font-mono text-xs uppercase tracking-widest text-neutral-500">
+              <p className="absolute inset-0 flex items-center justify-center font-mono text-xs uppercase tracking-widest text-white/55">
                 Loading map…
               </p>
             )}
@@ -363,7 +384,13 @@ export function MapViewer({
               <span>
                 Locations on this map ({map.hotspots.length}) · {map.source}
               </span>
-              <svg aria-hidden="true" width="10" height="10" viewBox="0 0 10 10" className="guide-chevron rotate-180 transition-transform">
+              <svg
+                aria-hidden="true"
+                width="10"
+                height="10"
+                viewBox="0 0 10 10"
+                className="guide-chevron rotate-180 transition-transform"
+              >
                 <path d="M1 3l4 4 4-4" stroke="currentColor" strokeWidth="1.5" fill="none" />
               </svg>
             </summary>
@@ -377,12 +404,17 @@ export function MapViewer({
                       className="flex min-h-11 w-full items-center justify-between gap-3 py-2 text-left text-sm cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
                     >
                       <span>
-                        <span className={isHighlighted(h, highlight) ? "font-semibold text-(--color-event)" : "text-white"}>
+                        <span
+                          className={isHighlighted(h, highlight) ? "font-semibold text-(--color-event)" : "text-white"}
+                        >
                           {h.label}
                         </span>
                         {h.description && <span className="text-neutral-400"> — {h.description}</span>}
                       </span>
-                      <span aria-hidden="true" className="font-mono text-[11px] uppercase tracking-widest text-neutral-500">
+                      <span
+                        aria-hidden="true"
+                        className="font-mono text-[11px] uppercase tracking-widest text-white/55"
+                      >
                         Show
                       </span>
                     </button>
@@ -394,7 +426,7 @@ export function MapViewer({
                   {map.glossary.map((g) => (
                     <div key={g.fi} className="flex gap-2">
                       <dt className="text-neutral-300">{g.fi}</dt>
-                      <dd className="text-neutral-500">= {g.en}</dd>
+                      <dd className="text-white/55">= {g.en}</dd>
                     </div>
                   ))}
                 </dl>

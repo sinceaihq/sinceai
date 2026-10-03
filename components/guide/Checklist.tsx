@@ -58,7 +58,7 @@ export function Checklist({ storageKey, groups }: { storageKey: string; groups: 
                   <li key={item} className="border-b border-white/10">
                     <label
                       htmlFor={id}
-                      className="flex min-h-11 cursor-pointer items-start gap-3 py-3 text-sm text-neutral-300 leading-relaxed has-[:checked]:text-neutral-500 has-[:checked]:line-through"
+                      className="flex min-h-11 cursor-pointer items-start gap-3 py-3 text-sm text-neutral-300 leading-relaxed has-[:checked]:text-white/55 has-[:checked]:line-through"
                     >
                       <span className="relative mt-0.5 h-4 w-4 shrink-0">
                         <input
@@ -85,7 +85,7 @@ export function Checklist({ storageKey, groups }: { storageKey: string; groups: 
           </fieldset>
         ))}
       </div>
-      <p className="guide-no-print mt-6 flex flex-wrap items-center gap-4 text-xs text-neutral-500">
+      <p className="guide-no-print mt-6 flex flex-wrap items-center gap-4 text-xs text-white/55">
         Ticks are saved on this device only.
         <button type="button" onClick={reset} className="cursor-pointer underline underline-offset-4 hover:text-white">
           Clear ticks

@@ -24,7 +24,12 @@ export function buildShowroomScene(quality: Quality): BuiltScene {
     focus[id] = { position: [px, 1.7, pz], target: [tx, 1.55, tz], hfov: 70, labels: true };
   }
   const [lcx, lcz] = SHOWROOM.LOUNGE_CENTER;
-  const lounge: CameraView = { position: [lcx - 1.1, 3.9, lcz + 5.4], target: [lcx + 0.3, 0.35, lcz - 0.6], hfov: 84, labels: true };
+  const lounge: CameraView = {
+    position: [lcx - 1.1, 3.9, lcz + 5.4],
+    target: [lcx + 0.3, 0.35, lcz - 0.6],
+    hfov: 84,
+    labels: true,
+  };
   focus.lounge = lounge;
 
   const views: Record<string, CameraView> = {

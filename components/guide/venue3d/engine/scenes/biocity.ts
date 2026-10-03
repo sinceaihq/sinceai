@@ -1,11 +1,6 @@
 import * as THREE from "three";
 import type { CSS2DObject } from "three/addons/renderers/CSS2DRenderer.js";
-import {
-  BIOCITY_STANDS,
-  getStandPartner,
-  LOGOS_3D,
-  OPEN_STAND_LABEL,
-} from "@/lib/hackathon-2026";
+import { BIOCITY_STANDS, getStandPartner, LOGOS_3D, OPEN_STAND_LABEL } from "@/lib/hackathon-2026";
 import {
   buildBooth,
   chairGeometry,
@@ -187,13 +182,26 @@ export function buildBioCityScene(quality: Quality): BuiltScene {
   root.add(box(0.3, H, 2.6, wallMat, 30.8, 3.5));
   const facade = new THREE.Mesh(
     arcStrip(GALLERY.r, -62, 62, 0, H, 96),
-    new THREE.MeshStandardMaterial({ color: 0x1b1a2a, roughness: 0.15, metalness: 0.4, transparent: true, opacity: 0.55 }),
+    new THREE.MeshStandardMaterial({
+      color: 0x1b1a2a,
+      roughness: 0.15,
+      metalness: 0.4,
+      transparent: true,
+      opacity: 0.55,
+    }),
   );
   facade.position.set(GALLERY.cx, 0, GALLERY.cz);
   root.add(facade);
   for (let b = -60; b <= 60; b += 7.5) {
     const rad = THREE.MathUtils.degToRad(b);
-    const mullion = box(0.12, H, 0.12, mats.black, GALLERY.cx + GALLERY.r * Math.sin(rad), GALLERY.cz - GALLERY.r * Math.cos(rad));
+    const mullion = box(
+      0.12,
+      H,
+      0.12,
+      mats.black,
+      GALLERY.cx + GALLERY.r * Math.sin(rad),
+      GALLERY.cz - GALLERY.r * Math.cos(rad),
+    );
     root.add(mullion);
   }
 

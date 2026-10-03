@@ -25,9 +25,7 @@ const companyHref = (id: string) => `/hackathon-2026/guide/challenge-partners/${
 
 function companyTargets(floor: 1 | 2 | 3) {
   const list =
-    floor === 1
-      ? SHOWROOM_ORDER.map((id) => getCompany(id)!)
-      : CHALLENGE_COMPANIES.filter((c) => c.qa.floor === floor);
+    floor === 1 ? SHOWROOM_ORDER.map((id) => getCompany(id)!) : CHALLENGE_COMPANIES.filter((c) => c.qa.floor === floor);
   return list.map((c) => ({
     id: c.id,
     label: c.name,

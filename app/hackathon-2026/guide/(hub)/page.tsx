@@ -14,13 +14,7 @@ import {
   primaryButtonClass,
 } from "@/components/guide";
 import { Venue3DTeaser } from "@/components/guide/venue3d/Venue3DTeaser";
-import {
-  EVENT_2026,
-  getScheduleItem,
-  GUIDE_BASE_PATH,
-  HUB,
-  HUB_MILESTONE_IDS,
-} from "@/lib/hackathon-2026";
+import { EVENT_2026, getScheduleItem, GUIDE_BASE_PATH, HUB, HUB_MILESTONE_IDS } from "@/lib/hackathon-2026";
 
 const milestones = HUB_MILESTONE_IDS.map(getScheduleItem);
 
@@ -69,9 +63,7 @@ export default function FieldGuideHubPage() {
             className="group flex items-center justify-between gap-6 border border-white/10 p-6 transition-colors hover:border-white/30 hover:bg-white/[0.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:p-8"
           >
             <span>
-              <span className="block font-mono text-xs uppercase tracking-widest text-neutral-500">
-                Everyone
-              </span>
+              <span className="block font-mono text-xs uppercase tracking-widest text-white/55">Everyone</span>
               <span className="mt-3 block text-2xl md:text-3xl font-bold tracking-tight text-white">
                 Venue Explorer
               </span>
@@ -79,7 +71,7 @@ export default function FieldGuideHubPage() {
                 Zoomable floor plans for EduCity, BioCity and Joki — and a 3D preview of the event spaces.
               </span>
             </span>
-            <span aria-hidden="true" className="text-2xl text-neutral-500 transition-colors group-hover:text-white">
+            <span aria-hidden="true" className="text-2xl text-white/55 transition-colors group-hover:text-white">
               →
             </span>
           </Link>

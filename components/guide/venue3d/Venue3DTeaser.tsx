@@ -18,10 +18,7 @@ export function Venue3DTeaser({ focus }: { focus?: string }) {
           sizes="(max-width: 1024px) 100vw, 1024px"
           className="object-cover transition-transform duration-700 group-hover:scale-[1.02] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
         />
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-black/0"
-        />
+        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-black/0" />
         <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5 md:p-6">
           <div>
             <p className="font-mono text-[11px] uppercase tracking-widest text-(--color-event)">

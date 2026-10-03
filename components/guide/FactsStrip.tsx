@@ -27,9 +27,7 @@ export function FactsStrip({ facts, label = "At a glance" }: { facts: Fact[]; la
             fact.strong && "bg-(--color-event)/[0.07]",
           )}
         >
-          <dt className="text-[11px] font-mono uppercase tracking-widest text-neutral-500">
-            {fact.label}
-          </dt>
+          <dt className="text-[11px] font-mono uppercase tracking-widest text-white/55">{fact.label}</dt>
           <dd>
             <span className={cn("block font-bold text-white leading-snug", fact.strong ? "text-lg" : "text-base")}>
               {fact.value}

@@ -33,11 +33,16 @@ export function VenueExplorer({
 }) {
   const mapKey = mapIds.join(",");
   const maps = useMemo(
-    () => mapKey.split(",").map(getMap).filter((m) => m.status !== "do_not_publish"),
+    () =>
+      mapKey
+        .split(",")
+        .map(getMap)
+        .filter((m) => m.status !== "do_not_publish"),
     [mapKey],
   );
   const [activeId, setActiveId] = useState(initialMapId ?? maps[0]?.id);
   const [viewerOpen, setViewerOpen] = useState(false);
+  const [opener, setOpener] = useState<HTMLElement | null>(null);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const rootRef = useRef<HTMLDivElement>(null);
   const uid = useId();
@@ -88,8 +93,7 @@ export function VenueExplorer({
       {maps.map((m) => (
         <span key={m.id} id={syncHash ? `map-${m.id}` : undefined} />
       ))}
-      {syncHash &&
-        [...new Set(maps.map((m) => m.venue))].map((v) => <span key={v} id={`maps-${v}`} />)}
+      {syncHash && [...new Set(maps.map((m) => m.venue))].map((v) => <span key={v} id={`maps-${v}`} />)}
 
       {maps.length > 1 && (
         <div
@@ -136,7 +140,10 @@ export function VenueExplorer({
         <figure className="guide-avoid-break min-w-0">
           <button
             type="button"
-            onClick={() => setViewerOpen(true)}
+            onClick={(e) => {
+              setOpener(e.currentTarget);
+              setViewerOpen(true);
+            }}
             className="group relative block w-full cursor-zoom-in border border-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             aria-label={`Open ${active.title} full screen`}
           >
@@ -146,16 +153,14 @@ export function VenueExplorer({
               Zoom
             </span>
           </button>
-          <figcaption className="mt-3 text-xs text-neutral-500 leading-relaxed">
+          <figcaption className="mt-3 text-xs text-white/55 leading-relaxed">
             <span className="text-neutral-300">{active.title}.</span> {active.caption}{" "}
             <span className="whitespace-nowrap">Source: {active.source}.</span>
           </figcaption>
         </figure>
 
         <div className="min-w-0">
-          <h3 className="text-[11px] font-mono uppercase tracking-widest text-neutral-500">
-            Locations on this map
-          </h3>
+          <h3 className="text-[11px] font-mono uppercase tracking-widest text-white/55">Locations on this map</h3>
           <ul className="mt-3 border-t border-white/10">
             {[...highlighted, ...others].map((h) => {
               const isHl = highlighted.includes(h);
@@ -170,7 +175,7 @@ export function VenueExplorer({
                   />
                   <span className="min-w-0">
                     <span className={isHl ? "font-semibold text-white" : "text-neutral-200"}>{h.label}</span>
-                    {h.description && <span className="text-neutral-500"> — {h.description}</span>}
+                    {h.description && <span className="text-white/55"> — {h.description}</span>}
                     {isHl && <span className="sr-only"> (highlighted)</span>}
                   </span>
                 </li>
@@ -181,7 +186,13 @@ export function VenueExplorer({
             <details className="guide-details mt-4">
               <summary className="flex min-h-11 items-center gap-2 text-xs text-neutral-400 hover:text-white">
                 Finnish words on this map
-                <svg aria-hidden="true" width="10" height="10" viewBox="0 0 10 10" className="guide-chevron transition-transform">
+                <svg
+                  aria-hidden="true"
+                  width="10"
+                  height="10"
+                  viewBox="0 0 10 10"
+                  className="guide-chevron transition-transform"
+                >
                   <path d="M1 3l4 4 4-4" stroke="currentColor" strokeWidth="1.5" fill="none" />
                 </svg>
               </summary>
@@ -189,13 +200,13 @@ export function VenueExplorer({
                 {active.glossary.map((g) => (
                   <div key={g.fi} className="flex flex-wrap gap-x-2">
                     <dt className="text-neutral-300">{g.fi}</dt>
-                    <dd className="text-neutral-500">= {g.en}</dd>
+                    <dd className="text-white/55">= {g.en}</dd>
                   </div>
                 ))}
               </dl>
             </details>
           )}
-          <p className="guide-no-print mt-4 text-xs text-neutral-500">
+          <p className="guide-no-print mt-4 text-xs text-white/55">
             <a href={active.srcLarge} className="underline underline-offset-4 hover:text-white">
               Open the full-resolution image
             </a>
@@ -203,7 +214,13 @@ export function VenueExplorer({
         </div>
       </div>
 
-      <MapViewer map={active} open={viewerOpen} onOpenChange={setViewerOpen} highlight={highlight} />
+      <MapViewer
+        map={active}
+        open={viewerOpen}
+        onOpenChange={setViewerOpen}
+        highlight={highlight}
+        returnFocusTo={opener}
+      />
     </div>
   );
 }

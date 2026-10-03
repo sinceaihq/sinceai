@@ -1,7 +1,6 @@
 import type { Publishability, Venue, VenueId } from "./types";
 
-const mapsSearch = (query: string) =>
-  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+const mapsSearch = (query: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 
 /**
  * Three venues, one event flow. EduCity hosts arrival, the opening, the Friday
@@ -47,16 +46,12 @@ export const VENUES: readonly Venue[] = [
     address: "Tykistökatu 6",
     postalCode: "20520",
     city: "Turku",
-    roles: [
-      "Build space in the main lobby (around the clock)",
-      "Meals",
-      "Visibility & tech partner stands",
-    ],
+    roles: ["Build space in the main lobby (around the clock)", "Meals", "Visibility & tech partner stands"],
     openAroundTheClock: true,
     entrances: [
       {
         label: "Event entrance",
-        detail: "North entrance from Jussin aukio square, into the Aulagalleria.",
+        detail: "Courtyard-side entrance from Jussin aukio, into the Aulagalleria.",
         status: "working",
       },
       {
@@ -84,14 +79,14 @@ export const VENUES: readonly Venue[] = [
     openAroundTheClock: true,
     entrances: [
       {
-        label: "Event entry",
-        detail: "Through BioCity's main lobby (east end) — follow the event signs.",
-        status: "working",
+        label: "From BioCity",
+        detail: "Joki connects to the east end of BioCity's main lobby — follow the event signs.",
+        status: "confirmed",
       },
       {
         label: "Street door",
-        detail: "The Lemminkäisenkatu 12b street door is not an event entrance.",
-        status: "working",
+        detail: "Lemminkäisenkatu 12b. Door opening hours during the event are confirmed closer to the date.",
+        status: "pending",
       },
     ],
     mapsUrl: mapsSearch("Vierailu- ja innovaatiokeskus Joki, Lemminkäisenkatu 12b, 20520 Turku"),
@@ -106,8 +101,7 @@ export function getVenue(id: VenueId): Venue {
   return venue;
 }
 
-export const venueAddressLine = (venue: Venue) =>
-  `${venue.address}, ${venue.postalCode} ${venue.city}`;
+export const venueAddressLine = (venue: Venue) => `${venue.address}, ${venue.postalCode} ${venue.city}`;
 
 /**
  * EduCity → BioCity/Joki transfer. Organiser description (3 Oct 2026): a short
@@ -129,7 +123,7 @@ export const TRANSFER_ROUTE: {
   steps: [
     "Leave EduCity after your briefing — volunteers and event signs show the way.",
     "Walk across the campus courtyard (Jussin aukio).",
-    "Enter BioCity through the event entrance on its north side.",
+    "Enter BioCity through its courtyard-side event entrance.",
     "Joki is connected to the east end of BioCity's main lobby.",
   ],
   fallbacks: [

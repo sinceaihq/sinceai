@@ -76,7 +76,7 @@ export default function ChallengePartnerGuidePage() {
           title="Your room and your stand."
           lede="Friday briefing room at EduCity and Saturday Q&A stand at Joki for all 15 challenge companies. Open your company page for a one-link summary to share with your team."
         />
-        <p className="mb-6 flex flex-wrap items-center gap-3 text-xs text-neutral-500">
+        <p className="mb-6 flex flex-wrap items-center gap-3 text-xs text-white/55">
           <StatusTag status="working" />
           Placements follow the 2 Oct 2026 venue maps; production does a final lock — this page updates if anything
           moves.

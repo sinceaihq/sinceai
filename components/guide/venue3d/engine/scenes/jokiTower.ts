@@ -72,7 +72,14 @@ function floorSlab(mats: Materials, y: number, carpet: THREE.Texture) {
   // Low glass rim + glowing edge: a cutaway that still reads as a round room.
   const rim = new THREE.Mesh(
     arcStrip(R + 0.05, 0, 360, y, y + 0.9, 128),
-    new THREE.MeshStandardMaterial({ color: 0x8f86ff, transparent: true, opacity: 0.08, roughness: 0.1, side: THREE.DoubleSide, depthWrite: false }),
+    new THREE.MeshStandardMaterial({
+      color: 0x8f86ff,
+      transparent: true,
+      opacity: 0.08,
+      roughness: 0.1,
+      side: THREE.DoubleSide,
+      depthWrite: false,
+    }),
   );
   const edge = new THREE.Mesh(arcStrip(R + 0.06, 0, 360, y + 0.88, y + 0.92, 128), mats.violetSoft);
   g.add(slab, top, rim, edge);

@@ -274,7 +274,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
     {
       q: "How does challenge selection work?",
-      a: "Only the team owner selects, in sinceai.app, between 17:00 and 17:30. It is first come, first served with limited places per challenge, and the choice is binding once confirmed. If your team has no challenge when selection closes, go straight to event staff — do not guess a room.",
+      a: "Only the team owner selects, in sinceai.app, between 17:00 and 17:30. It is first come, first served with limited places per challenge; the app shows how changes work. If your team has no challenge when selection closes, go straight to event staff — never guess a room.",
     },
     {
       q: "Can we sleep at the venue?",

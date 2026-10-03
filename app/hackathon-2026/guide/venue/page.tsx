@@ -9,13 +9,7 @@ import {
   VenueExplorer,
 } from "@/components/guide";
 import { Venue3D } from "@/components/guide/venue3d/Venue3D";
-import {
-  getVenue,
-  GUIDE_BASE_PATH,
-  VENUE_GUIDE,
-  VENUE_MAPS,
-  VENUES,
-} from "@/lib/hackathon-2026";
+import { getVenue, GUIDE_BASE_PATH, VENUE_GUIDE, VENUE_MAPS, VENUES } from "@/lib/hackathon-2026";
 
 const MAP_ORDER = [
   "educity-flow-1",
@@ -95,12 +89,12 @@ export default function VenueExplorerPage() {
               <h3 className="text-xl font-bold tracking-tight text-white">{getVenue(venue.id).name}</h3>
               {VENUE_MAPS.filter((m) => m.venue === venue.id).map((map) => (
                 <div key={map.id} className="mt-5">
-                  <h4 className="font-mono text-[11px] uppercase tracking-widest text-neutral-500">{map.label}</h4>
+                  <h4 className="font-mono text-[11px] uppercase tracking-widest text-white/55">{map.label}</h4>
                   <ul className="mt-2 space-y-1.5 text-sm">
                     {map.hotspots.map((h) => (
                       <li key={h.id} className="text-neutral-300">
                         {h.label}
-                        {h.description && <span className="text-neutral-500"> — {h.description}</span>}
+                        {h.description && <span className="text-white/55"> — {h.description}</span>}
                       </li>
                     ))}
                   </ul>

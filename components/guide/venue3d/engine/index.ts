@@ -136,9 +136,7 @@ export function createVenueEngine(container: HTMLElement, opts: EngineOptions): 
     current?.labels.forEach((l) => {
       const group = l.userData.group as string | undefined;
       l.visible =
-        l.userData.kind === "floor"
-          ? !labelGroup
-          : labelsOn && (!labelGroup || !group || group === labelGroup);
+        l.userData.kind === "floor" ? !labelGroup : labelsOn && (!labelGroup || !group || group === labelGroup);
     });
     dirty = true;
   }

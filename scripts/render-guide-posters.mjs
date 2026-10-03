@@ -49,7 +49,10 @@ for (const scene of SCENES) {
   const png = path.join(tmpDir, `${scene}.png`);
   await stage.screenshot({ path: png });
   console.log("rendered", scene);
-  await page.getByRole("button", { name: "Close the 3D preview", exact: true }).click({ force: true }).catch(() => {});
+  await page
+    .getByRole("button", { name: "Close the 3D preview", exact: true })
+    .click({ force: true })
+    .catch(() => {});
 }
 
 // Open Graph image: the Showroom render with the guide title.

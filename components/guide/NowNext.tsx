@@ -67,9 +67,7 @@ function Row({
 }) {
   return (
     <div className="grid grid-cols-[3.75rem_1fr] gap-x-4 sm:grid-cols-[4.5rem_1fr]">
-      <span className="pt-0.5 font-mono text-[11px] uppercase tracking-widest text-neutral-500">
-        {label}
-      </span>
+      <span className="pt-0.5 font-mono text-[11px] uppercase tracking-widest text-white/55">{label}</span>
       <div className="min-w-0">
         <p className={emphasis ? "text-lg font-bold text-white leading-snug" : "font-semibold text-white"}>
           {titleFor(item, audience)}
@@ -112,9 +110,9 @@ export function NowNext({
     body = (
       <div className="space-y-4">
         {state.now.length > 0 ? (
-          state.now.slice(0, 2).map((item) => (
-            <Row key={item.id} label="Now" item={item} audience={audience} emphasis />
-          ))
+          state.now
+            .slice(0, 2)
+            .map((item) => <Row key={item.id} label="Now" item={item} audience={audience} emphasis />)
         ) : (
           <p className="text-sm text-neutral-400">Building time — nothing scheduled right now.</p>
         )}
@@ -124,9 +122,7 @@ export function NowNext({
   } else if (state?.phase === "after") {
     heading = "That's a wrap";
     body = (
-      <p className="text-sm text-neutral-300">
-        Since AI Hackathon 2026 has ended. Thank you for building with us.
-      </p>
+      <p className="text-sm text-neutral-300">Since AI Hackathon 2026 has ended. Thank you for building with us.</p>
     );
   }
 
@@ -141,7 +137,10 @@ export function NowNext({
         className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-(--color-event-glow) blur-3xl"
       />
       <div className="relative mb-4 flex items-center justify-between gap-4">
-        <h2 id="now-next-title" className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-neutral-400">
+        <h2
+          id="now-next-title"
+          className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-neutral-400"
+        >
           <span
             aria-hidden="true"
             className={
@@ -153,7 +152,7 @@ export function NowNext({
           {heading}
         </h2>
         {now !== null && (
-          <span className="font-mono text-[11px] uppercase tracking-widest text-neutral-500">
+          <span className="font-mono text-[11px] uppercase tracking-widest text-white/55">
             Turku {formatTime(new Date(now).toISOString())}
           </span>
         )}

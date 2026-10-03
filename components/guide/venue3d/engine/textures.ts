@@ -43,7 +43,14 @@ function drawContained(
   ctx.drawImage(img, cx - w / 2, cy - h / 2, w, h);
 }
 
-function wordmark(ctx: CanvasRenderingContext2D, text: string, cx: number, cy: number, size: number, color = "#ffffff") {
+function wordmark(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  cx: number,
+  cy: number,
+  size: number,
+  color = "#ffffff",
+) {
   ctx.save();
   ctx.fillStyle = color;
   ctx.font = `700 ${size}px ${monoFont()}`;
@@ -54,14 +61,7 @@ function wordmark(ctx: CanvasRenderingContext2D, text: string, cx: number, cy: n
 }
 
 /** Glowing neon polylines in the style of the event render. */
-function neonLines(
-  ctx: CanvasRenderingContext2D,
-  w: number,
-  h: number,
-  seed: number,
-  count: number,
-  scale = 1,
-) {
+function neonLines(ctx: CanvasRenderingContext2D, w: number, h: number, seed: number, count: number, scale = 1) {
   const rnd = mulberry32(seed);
   ctx.save();
   ctx.lineCap = "round";
@@ -285,7 +285,8 @@ export function makeSignTexture({
       const size = Math.min(h * 0.2, (w * 0.82) / Math.max(4, text.length * 0.62));
       wordmark(ctx, text, w / 2, h * 0.45, size, open ? "rgba(255,255,255,0.72)" : "#ffffff");
     }
-    if (subtitle) wordmark(ctx, subtitle, w / 2, h * 0.82, h * 0.06, open ? "rgba(255,255,255,0.45)" : "rgba(200,190,255,0.85)");
+    if (subtitle)
+      wordmark(ctx, subtitle, w / 2, h * 0.82, h * 0.06, open ? "rgba(255,255,255,0.45)" : "rgba(200,190,255,0.85)");
     texture.needsUpdate = true;
   })();
   return { texture, ready };

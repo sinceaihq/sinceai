@@ -7,12 +7,7 @@
  */
 
 /** Guide audiences. Staff/admin is intentionally not a public audience. */
-export type Audience =
-  | "builders"
-  | "challenge-partners"
-  | "partners"
-  | "judges"
-  | "speakers";
+export type Audience = "builders" | "challenge-partners" | "partners" | "judges" | "speakers";
 
 export const ALL_AUDIENCES: readonly Audience[] = [
   "builders",

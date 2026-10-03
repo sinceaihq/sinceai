@@ -55,7 +55,7 @@ export function GuideHeader() {
             className="truncate text-[13px] font-bold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             aria-current={pathname === GUIDE_BASE_PATH ? "page" : undefined}
           >
-            Field Guide <span className="font-normal text-neutral-500">2026</span>
+            Field Guide <span className="font-normal text-white/55">2026</span>
           </Link>
         </div>
 
@@ -79,11 +79,15 @@ export function GuideHeader() {
         </nav>
 
         <details ref={menuRef} className="guide-details relative lg:hidden">
-          <summary
-            className="flex min-h-11 items-center gap-2 border border-white/20 px-4 text-[13px] text-white hover:border-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-          >
+          <summary className="flex min-h-11 items-center gap-2 border border-white/20 px-4 text-[13px] text-white hover:border-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
             Guides
-            <svg aria-hidden="true" width="10" height="10" viewBox="0 0 10 10" className="guide-chevron transition-transform">
+            <svg
+              aria-hidden="true"
+              width="10"
+              height="10"
+              viewBox="0 0 10 10"
+              className="guide-chevron transition-transform"
+            >
               <path d="M1 3l4 4 4-4" stroke="currentColor" strokeWidth="1.5" fill="none" />
             </svg>
           </summary>

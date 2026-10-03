@@ -10,11 +10,14 @@ export function CompanyLogo({
   logo,
   className,
   sizes = "160px",
+  decorative = false,
 }: {
   name: string;
   logo?: { src: string; width: number; height: number };
   className?: string;
   sizes?: string;
+  /** The name is already rendered as text next to the logo. */
+  decorative?: boolean;
 }) {
   if (!logo) {
     return (
@@ -32,7 +35,7 @@ export function CompanyLogo({
     <span className={cn("relative block h-full w-full", className)}>
       <Image
         src={logo.src}
-        alt={`${name} logo`}
+        alt={decorative ? "" : `${name} logo`}
         fill
         sizes={sizes}
         className="object-contain object-left"

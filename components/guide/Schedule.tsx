@@ -33,14 +33,10 @@ function TimeCell({ item }: { item: ScheduleItem }) {
             {formatTime(item.start)}
           </span>
           {item.end && (
-            <span className="block font-mono text-xs tabular-nums text-neutral-500">
-              –{formatTime(item.end)}
-            </span>
+            <span className="block font-mono text-xs tabular-nums text-white/55">–{formatTime(item.end)}</span>
           )}
           {item.endPending && (
-            <span className="block font-mono text-[11px] uppercase tracking-widest text-neutral-500">
-              end TBC
-            </span>
+            <span className="block font-mono text-[11px] uppercase tracking-widest text-white/55">end TBC</span>
           )}
         </span>
       )}
@@ -97,12 +93,10 @@ export function Schedule({
                         </span>
                       )}
                     </p>
-                    {detail && (
-                      <p className="mt-1 text-sm text-neutral-400 leading-relaxed">{detail}</p>
-                    )}
+                    {detail && <p className="mt-1 text-sm text-neutral-400 leading-relaxed">{detail}</p>}
                     <p className="mt-2 flex flex-wrap items-center gap-2">
                       <PlaceChip place={item.place} />
-                      {placeDetail && <span className="text-xs text-neutral-500">{placeDetail}</span>}
+                      {placeDetail && <span className="text-xs text-white/55">{placeDetail}</span>}
                     </p>
                     {note && (
                       <p className="mt-2 text-xs text-(--color-event) leading-relaxed">

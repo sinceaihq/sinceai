@@ -43,7 +43,7 @@ const APP_STEPS = [
     title: "Challenge selection",
     who: "Team owner",
     when: "Fri 17:00–17:30",
-    text: "Pick one available challenge. First come, first served; limited places per challenge; binding once confirmed.",
+    text: "Pick one available challenge for the whole team. First come, first served, with limited places per challenge.",
   },
   {
     title: "Where to go",
@@ -134,18 +134,24 @@ export default function BuilderGuidePage() {
             <li key={step.title} className="guide-avoid-break border-b border-r border-white/10 p-5">
               <p className="font-mono text-[11px] uppercase tracking-widest text-(--color-event)">{step.when}</p>
               <h3 className="mt-3 text-lg font-bold tracking-tight text-white">{step.title}</h3>
-              <p className="mt-1 font-mono text-[11px] uppercase tracking-widest text-neutral-500">{step.who}</p>
+              <p className="mt-1 font-mono text-[11px] uppercase tracking-widest text-white/55">{step.who}</p>
               <p className="mt-3 text-sm text-neutral-400 leading-relaxed">{step.text}</p>
             </li>
           ))}
         </ol>
         <div className="guide-no-print mt-8 flex flex-col gap-3 sm:flex-row">
           <a href={GUIDE_LINKS.appTeams} target="_blank" rel="noopener noreferrer" className={primaryButtonClass}>
-            Open your team in sinceai.app <span aria-hidden="true" className="ml-2">↗</span>
+            Open your team in sinceai.app{" "}
+            <span aria-hidden="true" className="ml-2">
+              ↗
+            </span>
             <span className="sr-only"> (opens in a new tab)</span>
           </a>
           <a href={GUIDE_LINKS.discord} target="_blank" rel="noopener noreferrer" className={ghostButtonClass}>
-            Join the Discord <span aria-hidden="true" className="ml-2">↗</span>
+            Join the Discord{" "}
+            <span aria-hidden="true" className="ml-2">
+              ↗
+            </span>
             <span className="sr-only"> (opens in a new tab)</span>
           </a>
         </div>

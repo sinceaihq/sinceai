@@ -11,9 +11,9 @@ export function PrintButton({ label = "Print this guide" }: { label?: string }) 
   useEffect(() => {
     let opened: HTMLDetailsElement[] = [];
     const before = () => {
-      opened = Array.from(
-        document.querySelectorAll<HTMLDetailsElement>(".guide-root details:not([open])"),
-      ).filter((d) => !d.closest(".guide-no-print"));
+      opened = Array.from(document.querySelectorAll<HTMLDetailsElement>(".guide-root details:not([open])")).filter(
+        (d) => !d.closest(".guide-no-print"),
+      );
       opened.forEach((d) => (d.open = true));
     };
     const after = () => {

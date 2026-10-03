@@ -77,10 +77,10 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
             { label: "Awards · end", value: "Sun ~14:00 · 15:00", sub: "EduCity" },
           ]}
         />
-        <p className="flex flex-wrap items-center gap-3 text-xs text-neutral-500">
+        <p className="flex flex-wrap items-center gap-3 text-xs text-white/55">
           <StatusTag status={company.placementStatus} />
-          Room and stand follow the 2 Oct 2026 venue maps; production does a final lock — this page updates if
-          anything moves.
+          Room and stand follow the 2 Oct 2026 venue maps; production does a final lock — this page updates if anything
+          moves.
         </p>
         <NowNext items={schedule} audience={AUDIENCE} firstMoment={getScheduleItem(guide.firstMomentId)} />
       </GuideHero>

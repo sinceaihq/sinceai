@@ -105,7 +105,7 @@ export default function PartnerGuidePage() {
             </li>
           ))}
         </ul>
-        <p className="mt-4 text-xs text-neutral-500">
+        <p className="mt-4 text-xs text-white/55">
           Your agreement defines your exact benefits — this guide covers the shared logistics.
         </p>
       </GuideSection>
