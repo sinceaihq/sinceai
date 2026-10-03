@@ -103,6 +103,15 @@
   --text-lg: 18px;
   --text-headline-sm: clamp(36px, 6vw, 64px);
   --text-headline-lg: clamp(48px, 8vw, 96px);
+
+  /* ── Event layer (Hackathon 2026 Field Guide) ─────────────── */
+  /* Lilac-violet from the event lighting. Text/borders: 6.4:1 on black. */
+  --color-event: #8b7bff;
+  /* Fills, focus rings, 3D accents — not for small text. */
+  --color-event-strong: #6d4dff;
+  /* Ambient light only (backgrounds, glows). */
+  --color-event-glow: rgba(118, 84, 255, 0.16);
+  --color-surface-raised: #0a0a0f;
 }
 
 .dark {
@@ -208,5 +217,124 @@ html:has(body[data-scroll-locked]) {
 
   .transition-smooth {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* ── Hackathon 2026 Field Guide ─────────────────────────────────────────── */
+/* Event layer on top of the site system: near-black, fine rules, restrained
+   violet ambient light. Scoped to .guide-root so nothing leaks elsewhere. */
+.guide-root {
+  --guide-header-h: 3.5rem;
+  scroll-padding-top: calc(var(--guide-header-h) + 3.25rem);
+}
+.guide-root [id] {
+  scroll-margin-top: calc(var(--guide-header-h) + 3.25rem);
+}
+
+.guide-ambient {
+  background:
+    radial-gradient(60rem 28rem at 50% -6rem, var(--color-event-glow), transparent 70%),
+    radial-gradient(40rem 24rem at 100% 10rem, rgba(118, 84, 255, 0.06), transparent 70%);
+}
+.guide-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
+}
+
+/* Native <details>: no default marker, our own chevron. Works without JS. */
+.guide-details > summary {
+  list-style: none;
+  cursor: pointer;
+}
+.guide-details > summary::-webkit-details-marker {
+  display: none;
+}
+.guide-details[open] > summary .guide-chevron {
+  transform: rotate(180deg);
+}
+
+/* Map hotspots */
+.guide-hotspot-pulse {
+  animation: guide-pulse 1.8s ease-out infinite;
+}
+@keyframes guide-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(139, 123, 255, 0.55); }
+  100% { box-shadow: 0 0 0 14px rgba(139, 123, 255, 0); }
+}
+
+/* Deep links (#company-x) highlight their row — no JS needed. */
+.guide-target:target {
+  outline: 1px solid var(--color-event);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-root *,
+  .guide-root *::before,
+  .guide-root *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .guide-hotspot-pulse {
+    animation: none;
+  }
+}
+
+/* Print: schedule, address, room and checklist without an ink flood. */
+.guide-print-only {
+  display: none;
+}
+@media print {
+  @page {
+    margin: 14mm 12mm;
+  }
+  html,
+  body {
+    background: #fff !important;
+  }
+  .guide-root,
+  .guide-root * {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  .guide-root {
+    font-size: 11pt;
+  }
+  .guide-root [class*="border"] {
+    border-color: #bbb !important;
+  }
+  .guide-no-print,
+  .guide-ambient,
+  .guide-grid {
+    display: none !important;
+  }
+  .guide-print-only {
+    display: block !important;
+  }
+  .guide-root section {
+    padding-top: 10pt !important;
+    padding-bottom: 10pt !important;
+  }
+  .guide-avoid-break {
+    break-inside: avoid;
+  }
+  .guide-root a[href^="http"]::after,
+  .guide-root a[href^="mailto:"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    word-break: break-all;
+  }
+  .guide-root img {
+    max-height: 120mm;
+    width: auto !important;
+    object-fit: contain;
   }
 }

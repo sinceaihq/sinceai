@@ -1,0 +1,160 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import {
+  Checklist,
+  CompanyLogo,
+  Details,
+  FactsStrip,
+  GuideHero,
+  GuideSection,
+  HelpSection,
+  NowNext,
+  Schedule,
+  SectionHeading,
+  SectionNav,
+  StatusTag,
+  VenueExplorer,
+  ghostButtonClass,
+} from "@/components/guide";
+import { Venue3DTeaser } from "@/components/guide/venue3d/Venue3DTeaser";
+import {
+  briefingRoomLabel,
+  CHECKLISTS,
+  companyMapIds,
+  DETAILS,
+  getCompany,
+  getGuide,
+  getScheduleItem,
+  GUIDE_BASE_PATH,
+  qaLocationLabel,
+  scheduleFor,
+} from "@/lib/hackathon-2026";
+
+const AUDIENCE = "challenge-partners" as const;
+const guide = getGuide(AUDIENCE);
+const schedule = scheduleFor(AUDIENCE);
+
+export default async function CompanyGuidePage({ params }: { params: Promise<{ company: string }> }) {
+  const { company: id } = await params;
+  const company = getCompany(id);
+  if (!company) notFound();
+
+  const maps = companyMapIds(company);
+  const room = briefingRoomLabel(company);
+  const qa = qaLocationLabel(company);
+  const showroom = company.qa.floor === 1;
+
+  return (
+    <>
+      <GuideHero
+        crumbs={[
+          { label: "Field Guide", href: GUIDE_BASE_PATH },
+          { label: guide.name, href: `${GUIDE_BASE_PATH}/${guide.slug}` },
+          { label: company.name },
+        ]}
+        title={company.name}
+        titleAddon={
+          company.logo ? (
+            <span className="mb-2 block h-10 w-32 md:h-12 md:w-40">
+              <CompanyLogo name={company.name} logo={company.logo} sizes="160px" />
+            </span>
+          ) : undefined
+        }
+        lede={`Your rooms, times and maps for Since AI Hackathon 2026 — share this page with everyone representing ${company.name}.`}
+      >
+        <FactsStrip
+          facts={[
+            { label: "Arrive", value: "Fri 15:30", sub: "EduCity · briefing 15:40" },
+            {
+              label: "Your briefing room",
+              value: room,
+              sub: `EduCity · floor ${company.briefing.floor}`,
+              strong: true,
+            },
+            { label: "Your briefing", value: "Fri 18:30–19:30", sub: "Teams arrive 18:00–18:25" },
+            { label: "Your Q&A stand", value: qa.replace("Joki · ", "Joki "), sub: "Sat 09–12 · 14–18", strong: true },
+            { label: "Evaluation briefing", value: "Sun 08:15", sub: "EduCity" },
+            { label: "Awards · end", value: "Sun ~14:00 · 15:00", sub: "EduCity" },
+          ]}
+        />
+        <p className="flex flex-wrap items-center gap-3 text-xs text-neutral-500">
+          <StatusTag status={company.placementStatus} />
+          Room and stand follow the 2 Oct 2026 venue maps; production does a final lock — this page updates if
+          anything moves.
+        </p>
+        <NowNext items={schedule} audience={AUDIENCE} firstMoment={getScheduleItem(guide.firstMomentId)} />
+      </GuideHero>
+
+      <SectionNav
+        items={[
+          { id: "friday", label: "Friday room" },
+          { id: "saturday", label: "Saturday stand" },
+          { id: "schedule", label: "Schedule" },
+          { id: "prepare", label: "Prepare" },
+          { id: "details", label: "Details" },
+          { id: "help", label: "Help" },
+        ]}
+      />
+
+      <GuideSection id="friday">
+        <SectionHeading
+          id="friday-title"
+          eyebrow="// friday · educity"
+          title={`Briefing room ${room}.`}
+          lede={`EduCity floor ${company.briefing.floor}. Teams are released from the opening in groups from 18:00 and guided to your room — stay put, they come to you. Brief from 18:30 to 19:30.`}
+        />
+        <VenueExplorer mapIds={[maps.briefing]} highlight={[company.id]} label={`${company.name} briefing room`} />
+      </GuideSection>
+
+      <GuideSection id="saturday">
+        <SectionHeading
+          id="saturday-title"
+          eyebrow="// saturday · joki"
+          title={`Q&A stand: ${qa.replace("Joki · ", "")}.`}
+          lede={
+            showroom
+              ? "Your stand is in the round Showroom on Joki's first floor, along the curved LED wall. The Company Lounge is right next to it."
+              : `Your stand is on floor ${company.qa.floor} of the Joki tower — take the tower stairs or the lift from floor 1. The Company Lounge is on floor 1, next to the Showroom.`
+          }
+        />
+        <VenueExplorer mapIds={[maps.qa]} highlight={[company.id]} label={`${company.name} Q&A stand`} />
+        <div className="mt-10">
+          <Venue3DTeaser focus={company.id} />
+        </div>
+      </GuideSection>
+
+      <GuideSection id="schedule">
+        <SectionHeading
+          id="schedule-title"
+          eyebrow="// schedule"
+          title="Your timeline."
+          lede="Local Turku time (EET, UTC+2). Meals are optional — food is reserved for company representatives."
+        />
+        <Schedule items={schedule} audience={AUDIENCE} />
+      </GuideSection>
+
+      <GuideSection id="prepare">
+        <SectionHeading id="prepare-title" eyebrow="// prepare" title="Before the event." />
+        <Checklist storageKey={`challenge-partners:${company.id}`} groups={CHECKLISTS["challenge-partners"]} />
+      </GuideSection>
+
+      <GuideSection id="details">
+        <SectionHeading id="details-title" eyebrow="// details" title="Good to know." />
+        <Details items={DETAILS["challenge-partners"]} />
+        <div className="guide-no-print mt-10">
+          <Link href={`${GUIDE_BASE_PATH}/${guide.slug}`} className={ghostButtonClass}>
+            Full Challenge Partner Guide
+            <span aria-hidden="true" className="ml-2">
+              →
+            </span>
+          </Link>
+        </div>
+      </GuideSection>
+
+      <GuideSection id="help">
+        <SectionHeading id="help-title" eyebrow="// help" title="Questions?" />
+        <HelpSection onSiteNote="Event staff guide challenge partners at EduCity on Friday. All weekend, any Since AI volunteer or staff member can reach the company team." />
+      </GuideSection>
+    </>
+  );
+}

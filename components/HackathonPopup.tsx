@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import {
@@ -10,6 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { trackEvent, ANALYTICS_EVENTS } from "@/lib/gtag";
+import { GUIDE_BASE_PATH } from "@/lib/hackathon-2026/route";
 
 const STORAGE_KEY = "hackathon2026_popup_v1";
 
@@ -50,8 +52,12 @@ function unlockScroll() {
 
 export function HackathonPopup() {
   const [open, setOpen] = useState(false);
+  // The Field Guide is an operational tool for people already at the event —
+  // never interrupt it with the "Apply" popup.
+  const suppressed = usePathname()?.startsWith(GUIDE_BASE_PATH) ?? false;
 
   useEffect(() => {
+    if (suppressed) return;
     const dismissed = localStorage.getItem(STORAGE_KEY);
     if (dismissed && Date.now() - Number(dismissed) < 24 * 60 * 60 * 1000) return;
     const t = setTimeout(() => {
@@ -60,7 +66,7 @@ export function HackathonPopup() {
       localStorage.setItem(STORAGE_KEY, String(Date.now()));
     }, 2000);
     return () => clearTimeout(t);
-  }, []);
+  }, [suppressed]);
 
   function dismiss() {
     unlockScroll();

@@ -8,6 +8,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Note: /blog/[slug] pages are self-hosted articles and included below.
   // Note: /research and /europe do not exist → excluded.
   // Note: /european-ai is a separate page from /europe-ai — both included.
+  // Note: /hackathon-2026/guide/* (Field Guide) is noindex and intentionally
+  // NOT listed — shared by direct link only. Covered by a unit test.
   const staticPages: {
     path: string;
     priority: number;

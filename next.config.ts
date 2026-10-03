@@ -1,5 +1,9 @@
 import type { NextConfig } from "next";
 import createMDX from "@next/mdx";
+import {
+  GUIDE_HEADER_SOURCES,
+  GUIDE_X_ROBOTS_TAG,
+} from "./lib/hackathon-2026/route";
 
 const securityHeaders = [
   {
@@ -48,6 +52,11 @@ const nextConfig: NextConfig = {
         source: '/(.*)',
         headers: [...securityHeaders, revalidateOnEveryRequestHeader],
       },
+      // Hackathon 2026 Field Guide: shareable by direct link, never indexed.
+      ...GUIDE_HEADER_SOURCES.map((source) => ({
+        source,
+        headers: [{ key: 'X-Robots-Tag', value: GUIDE_X_ROBOTS_TAG }],
+      })),
     ];
   },
 };

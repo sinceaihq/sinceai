@@ -6,3 +6,7 @@
 
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable
+
+# Hackathon 2026 Field Guide assets (maps, 3D posters) — never indexed.
+/assets/guide/*
+  X-Robots-Tag: noindex, nofollow, noimageindex

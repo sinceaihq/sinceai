@@ -1,0 +1,271 @@
+import type { MapHotspot, VenueMap } from "./types";
+
+/**
+ * Venue maps for the 2D Venue Explorer.
+ *
+ * The images are the supplied 2026 maps (Since AI event maps, 2 Oct 2026) and
+ * the venue owner's official floor plans (Turun Teknologiakiinteistöt, 4 Jun
+ * 2026) — used as-is, never redrawn. Hotspots are normalised (0–1) positions
+ * of labels that already exist on the image, plus the BioCity stand plan.
+ *
+ * Not published on purpose: annotated production plans (emergency routes,
+ * volunteer spaces, power planning) and the 2025 venue maps.
+ */
+
+const G = {
+  floor: { fi: "Kerros", en: "Floor" },
+  entrance: { fi: "Sisäänkäynti / sisäänkäynnit", en: "Entrance / entrances" },
+  stairs: { fi: "Portaat", en: "Stairs" },
+  lift: { fi: "Hissi", en: "Lift" },
+  lobby: { fi: "Aula", en: "Lobby" },
+  taito: { fi: "Taidon portaat", en: "Large stair seating — opening ceremony" },
+  restaurant: { fi: "Ravintola", en: "Restaurant" },
+  briefingRooms: { fi: "Yritysten briiffaushuoneet", en: "Company briefing rooms" },
+  standLocations: { fi: "Yritysten ständipaikat", en: "Company stand locations" },
+  logoMarks: {
+    fi: "Yrityksen logo osoittaa…",
+    en: "The company logo marks its room / stand",
+  },
+} as const;
+
+const hs = (h: MapHotspot) => h;
+
+export const VENUE_MAPS: readonly VenueMap[] = [
+  {
+    id: "educity-1",
+    venue: "educity",
+    label: "Floor 1",
+    title: "EduCity · Floor 1 · Company briefing rooms",
+    src: "/assets/guide/maps/educity-1-preview.webp",
+    srcLarge: "/assets/guide/maps/educity-1-large.webp",
+    width: 1200,
+    height: 1500,
+    alt: "EduCity floor 1 plan with company briefing rooms: Elisa in 1001 Dromberg, Bayer in 1002 Moriaberg, Revvity in 1090 Ringsberg and Traficom in 1091 Hammarbacka, around the lobby and Taidon portaat.",
+    caption: "Company logos mark the briefing rooms used on Friday 18:30–19:30.",
+    source: "Since AI event map",
+    glossary: [G.floor, G.lobby, G.taito, G.restaurant, G.entrance, G.briefingRooms, G.logoMarks],
+    hotspots: [
+      hs({ id: "e1-elisa", label: "1001 Dromberg", description: "Elisa", x: 0.308, y: 0.199, kind: "company", refId: "elisa" }),
+      hs({ id: "e1-bayer", label: "1002 Moriaberg", description: "Bayer", x: 0.532, y: 0.199, kind: "company", refId: "bayer" }),
+      hs({ id: "e1-revvity", label: "1090 Ringsberg", description: "Revvity", x: 0.502, y: 0.2825, kind: "company", refId: "revvity" }),
+      hs({ id: "e1-traficom", label: "1091 Hammarbacka", description: "Traficom", x: 0.502, y: 0.3475, kind: "company", refId: "traficom" }),
+      hs({ id: "e1-taito", label: "Taidon portaat", description: "Opening ceremony, Fri 17:00", x: 0.502, y: 0.52, kind: "area" }),
+      hs({ id: "e1-entrances", label: "Main entrances", description: "Both lead to registration", x: 0.506, y: 0.845, kind: "entrance" }),
+    ],
+    status: "working",
+  },
+  {
+    id: "educity-2",
+    venue: "educity",
+    label: "Floor 2",
+    title: "EduCity · Floor 2 · Company briefing rooms",
+    src: "/assets/guide/maps/educity-2-preview.webp",
+    srcLarge: "/assets/guide/maps/educity-2-large.webp",
+    width: 1200,
+    height: 1500,
+    alt: "EduCity floor 2 plan with eleven company briefing rooms around the upper lobby: Bo LKV 2001, Takomo 2002, Forcit Group 2003, Lindström 2004, Saarioinen 2067, Valmet 2006/2007, Business Turku 2072, DNA 2026, Turku Energia 2029/2031, Meyer Turku 2030 and Apetit 2027.",
+    caption: "Floor 2 is reached by the stairs at Taidon portaat or the lifts.",
+    source: "Since AI event map",
+    glossary: [G.floor, G.taito, G.briefingRooms, G.logoMarks],
+    hotspots: [
+      hs({ id: "e2-bo-lkv", label: "2001 Elias", description: "Bo LKV", x: 0.221, y: 0.2025, kind: "company", refId: "bo-lkv" }),
+      hs({ id: "e2-takomo-golf", label: "2002 Ivar", description: "Takomo Golf", x: 0.379, y: 0.2025, kind: "company", refId: "takomo-golf" }),
+      hs({ id: "e2-forcit-group", label: "2003 Erik", description: "Forcit Group", x: 0.5175, y: 0.2025, kind: "company", refId: "forcit-group" }),
+      hs({ id: "e2-lindstrom", label: "2004 Johannes", description: "Lindström", x: 0.659, y: 0.2025, kind: "company", refId: "lindstrom" }),
+      hs({ id: "e2-saarioinen", label: "2067", description: "Saarioinen", x: 0.1875, y: 0.32, kind: "company", refId: "saarioinen" }),
+      hs({ id: "e2-valmet", label: "2006 / 2007", description: "Valmet", x: 0.808, y: 0.314, kind: "company", refId: "valmet" }),
+      hs({ id: "e2-business-turku", label: "2072 Työkahvila", description: "Business Turku", x: 0.496, y: 0.3865, kind: "company", refId: "business-turku" }),
+      hs({ id: "e2-dna", label: "2026 Orvokki", description: "DNA", x: 0.7375, y: 0.658, kind: "company", refId: "dna" }),
+      hs({ id: "e2-turku-energia", label: "2029 / 2031", description: "Turku Energia", x: 0.48, y: 0.7405, kind: "company", refId: "turku-energia" }),
+      hs({ id: "e2-meyer-turku", label: "2030 Evert", description: "Meyer Turku", x: 0.345, y: 0.839, kind: "company", refId: "meyer-turku" }),
+      hs({ id: "e2-apetit", label: "2027 Frans", description: "Apetit", x: 0.55, y: 0.839, kind: "company", refId: "apetit" }),
+    ],
+    status: "working",
+  },
+  {
+    id: "educity-flow-1",
+    venue: "educity",
+    label: "Fri arrival",
+    title: "EduCity · Floor 1 · Friday arrival flow",
+    src: "/assets/guide/maps/educity-flow-1-preview.webp",
+    srcLarge: "/assets/guide/maps/educity-flow-1-large.webp",
+    width: 1200,
+    height: 1462,
+    alt: "EduCity floor 1 arrival flow: from both main entrances to registration, then to the team formation area or Taidon portaat, with snacks at Ravintola Kisälli and company arrivals routed to room 1002.",
+    caption: "Arrival → registration → team formation → Taidon portaat. Snacks at Ravintola Kisälli.",
+    source: "Since AI event map",
+    glossary: [
+      { fi: "Sisäänkäynnit", en: "Entrances" },
+      { fi: "Rekisteröinti", en: "Registration" },
+      { fi: "Muodostusalue", en: "Team formation area" },
+      { fi: "Snack", en: "Snacks" },
+      { fi: "Yritys → 1002", en: "Company arrivals → room 1002" },
+      G.taito,
+      G.restaurant,
+    ],
+    hotspots: [
+      hs({ id: "f1-entrance-west", label: "Entrance", description: "Main entrance (west)", x: 0.339, y: 0.832, kind: "entrance" }),
+      hs({ id: "f1-entrance-east", label: "Entrance", description: "Main entrance (east)", x: 0.699, y: 0.865, kind: "entrance" }),
+      hs({ id: "f1-registration", label: "Registration", description: "Check in here from 15:00", x: 0.6275, y: 0.674, kind: "service", audiences: ["builders"] }),
+      hs({ id: "f1-team-formation", label: "Team formation area", description: "Teams still looking for members", x: 0.549, y: 0.486, kind: "area", audiences: ["builders"] }),
+      hs({ id: "f1-taito", label: "Taidon portaat", description: "Complete teams wait here; opening at 17:00", x: 0.5025, y: 0.533, kind: "area" }),
+      hs({ id: "f1-snack", label: "Snacks", description: "Snack line at Ravintola Kisälli", x: 0.353, y: 0.62, kind: "service" }),
+      hs({ id: "f1-company-arrival", label: "Company arrivals", description: "Challenge partner arrivals are routed towards room 1002 (current plan)", x: 0.742, y: 0.415, kind: "route", audiences: ["challenge-partners"] }),
+    ],
+    status: "working",
+  },
+  {
+    id: "educity-flow-2",
+    venue: "educity",
+    label: "Fri briefings",
+    title: "EduCity · Floor 2 · Friday move to briefing rooms",
+    src: "/assets/guide/maps/educity-flow-2-preview.webp",
+    srcLarge: "/assets/guide/maps/educity-flow-2-large.webp",
+    width: 1200,
+    height: 1462,
+    alt: "EduCity floor 2 movement flow: teams walk up from Taidon portaat to three room groups — 2001–2004, 2067–2072 and 2026–2031.",
+    caption: "After the opening, teams walk up the stairs to their room group. Keep main walkways clear.",
+    source: "Since AI event map",
+    glossary: [G.taito, { fi: "Aula", en: "Lobby" }],
+    hotspots: [
+      hs({ id: "f2-group-2001", label: "Rooms 2001–2004", x: 0.256, y: 0.279, kind: "route" }),
+      hs({ id: "f2-group-2072", label: "2072 · Lobby", x: 0.369, y: 0.37, kind: "route" }),
+      hs({ id: "f2-group-2067", label: "Rooms 2067–2072", x: 0.696, y: 0.3376, kind: "route" }),
+      hs({ id: "f2-taito", label: "Taidon portaat", x: 0.487, y: 0.5246, kind: "area" }),
+      hs({ id: "f2-group-2026", label: "Rooms 2026–2031", x: 0.631, y: 0.6068, kind: "route" }),
+    ],
+    status: "working",
+  },
+  {
+    id: "biocity-lobby",
+    venue: "biocity",
+    label: "Main lobby",
+    title: "BioCity · Main lobby (pääaula)",
+    src: "/assets/guide/maps/biocity-lobby-preview.webp",
+    srcLarge: "/assets/guide/maps/biocity-lobby-large.webp",
+    width: 1600,
+    height: 1131,
+    alt: "BioCity ground floor plan: the long main lobby (build area) along Lemminkäisenkatu, the curved Aulagalleria with the north entrance from Jussin aukio, the restaurant serving lines to the east and the passage to Joki at the east end.",
+    caption: "Event entrance from Jussin aukio (north). Build tables fill the main lobby; Joki connects at its east end.",
+    source: "Turun Teknologiakiinteistöt floor plan",
+    glossary: [
+      { fi: "Biocityn pääaula", en: "BioCity main lobby" },
+      { fi: "Aulagalleria", en: "Lobby gallery" },
+      { fi: "Sisäänkäynti Jussinaukiolta", en: "Entrance from Jussin aukio (event entrance)" },
+      { fi: "Sisäänkäynti vierailukeskus Joesta", en: "Passage from Joki" },
+      { fi: "Ruokailulinjasto", en: "Food serving line" },
+      { fi: "Liiketila", en: "Retail space (not in use)" },
+    ],
+    hotspots: [
+      hs({ id: "bio-event-entrance", label: "Event entrance", description: "North entrance from Jussin aukio", x: 0.555, y: 0.203, kind: "entrance" }),
+      hs({ id: "stand-bc-1", label: "Stand 1", x: 0.616, y: 0.256, kind: "stand", refId: "bc-1" }),
+      hs({ id: "stand-bc-3", label: "Stand 3", x: 0.494, y: 0.256, kind: "stand", refId: "bc-3" }),
+      hs({ id: "bio-food-line", label: "Restaurant serving lines", x: 0.724, y: 0.292, kind: "service" }),
+      hs({ id: "bio-build-hall", label: "Build area", description: "Main lobby build tables", x: 0.564, y: 0.698, kind: "area", audiences: ["builders"] }),
+      hs({ id: "stand-bc-2", label: "Stand 2", x: 0.806, y: 0.641, kind: "stand", refId: "bc-2" }),
+      hs({ id: "stand-bc-4", label: "Stand 4", x: 0.322, y: 0.63, kind: "stand", refId: "bc-4" }),
+      hs({ id: "bio-joki-passage", label: "To Joki", description: "Passage to Joki at the east end", x: 0.844, y: 0.685, kind: "route" }),
+    ],
+    status: "working",
+  },
+  {
+    id: "joki-1",
+    venue: "joki",
+    label: "Floor 1",
+    title: "Joki · Floor 1 · Aula, Cave and Showroom",
+    src: "/assets/guide/maps/joki-1-preview.webp",
+    srcLarge: "/assets/guide/maps/joki-1-large.webp",
+    width: 1200,
+    height: 1697,
+    alt: "Joki floor 1 plan: the round tower with the Showroom and the amphitheatre (Company Lounge) at the top, the ramp down to the large Aula and the Cave hall (build areas), and the passage to BioCity at the lower left.",
+    caption: "Build areas: Aula and Cave. Q&A: the round Showroom. The Company Lounge is the amphitheatre behind it.",
+    source: "Turun Teknologiakiinteistöt floor plan",
+    glossary: [
+      { fi: "Showroom", en: "Showroom — challenge partner Q&A" },
+      { fi: "Koulutustila / amfiteatteri", en: "Amphitheatre — Company Lounge" },
+      { fi: "Cave-sali", en: "Cave hall — build area" },
+      { fi: "Aula", en: "Lobby — build area" },
+      { fi: "Kulku BioCityyn", en: "Passage to BioCity" },
+      { fi: "Luiska", en: "Ramp" },
+      { fi: "Kulku 2. kerroksen kokoustiloihin", en: "To the floor 2 meeting rooms" },
+    ],
+    hotspots: [
+      hs({ id: "joki1-showroom", label: "Showroom", description: "Q&A: Meyer Turku, DNA, Apetit, Elisa, Turku Energia, Bayer", x: 0.413, y: 0.195, kind: "area" }),
+      hs({ id: "joki1-lounge", label: "Company Lounge", description: "Amphitheatre for company representatives", x: 0.578, y: 0.1925, kind: "area", audiences: ["challenge-partners", "partners", "judges", "speakers"] }),
+      hs({ id: "joki1-ramp", label: "Ramp", description: "Between the Aula and the Showroom", x: 0.485, y: 0.36, kind: "route" }),
+      hs({ id: "joki1-cave", label: "Cave hall", description: "Build area", x: 0.622, y: 0.4, kind: "area" }),
+      hs({ id: "joki1-aula", label: "Aula", description: "Build area", x: 0.4466, y: 0.595, kind: "area" }),
+      hs({ id: "joki1-stairs-2", label: "Stairs to floor 2", x: 0.357, y: 0.709, kind: "route" }),
+      hs({ id: "joki1-biocity", label: "To BioCity", description: "Event entry to Joki", x: 0.221, y: 0.7965, kind: "entrance" }),
+      hs({ id: "joki1-street-door", label: "Street door", description: "Not an event entrance", x: 0.192, y: 0.9285, kind: "entrance" }),
+    ],
+    status: "working",
+  },
+  {
+    id: "joki-showroom",
+    venue: "joki",
+    label: "Showroom",
+    title: "Joki · Floor 1 · Showroom stands",
+    src: "/assets/guide/maps/joki-showroom-preview.webp",
+    srcLarge: "/assets/guide/maps/joki-showroom-large.webp",
+    width: 1200,
+    height: 1050,
+    alt: "Joki floor 1 Showroom with six challenge partner stands along the curved wall from the entrance: Meyer Turku, DNA, Apetit, Elisa, Turku Energia and Bayer; the Company Lounge is behind the stairs.",
+    caption: "Six stands along the curved LED wall. Company Lounge beside the Showroom.",
+    source: "Since AI event map",
+    glossary: [G.floor, G.standLocations, G.stairs, G.lift, G.entrance, G.logoMarks],
+    hotspots: [
+      hs({ id: "sr-meyer-turku", label: "Meyer Turku", x: 0.4755, y: 0.778, kind: "company", refId: "meyer-turku" }),
+      hs({ id: "sr-dna", label: "DNA", x: 0.369, y: 0.731, kind: "company", refId: "dna" }),
+      hs({ id: "sr-apetit", label: "Apetit", x: 0.301, y: 0.626, kind: "company", refId: "apetit" }),
+      hs({ id: "sr-elisa", label: "Elisa", x: 0.291, y: 0.498, kind: "company", refId: "elisa" }),
+      hs({ id: "sr-turku-energia", label: "Turku Energia", x: 0.343, y: 0.382, kind: "company", refId: "turku-energia" }),
+      hs({ id: "sr-bayer", label: "Bayer", x: 0.431, y: 0.312, kind: "company", refId: "bayer" }),
+      hs({ id: "sr-lounge", label: "Company Lounge", x: 0.66, y: 0.514, kind: "area" }),
+      hs({ id: "sr-entrance", label: "Entrance", description: "From the ramp", x: 0.5025, y: 0.891, kind: "entrance" }),
+    ],
+    status: "working",
+  },
+  {
+    id: "joki-2-3",
+    venue: "joki",
+    label: "Floors 2–3",
+    title: "Joki · Floors 2 and 3 · Company stands",
+    src: "/assets/guide/maps/joki-2-3-preview.webp",
+    srcLarge: "/assets/guide/maps/joki-2-3-large.webp",
+    width: 1500,
+    height: 900,
+    alt: "Joki tower floors 2 and 3. Floor 2: Revvity, Valmet and Traficom with a Chill Zone. Floor 3: Lindström, Bo LKV, Takomo, Forcit Group, Saarioinen and Business Turku.",
+    caption: "Floor 2 (left) has a Chill Zone. Use the tower stairs or the lift.",
+    source: "Since AI event map",
+    glossary: [G.floor, G.standLocations, G.stairs, G.lift, G.logoMarks],
+    hotspots: [
+      hs({ id: "f2-revvity", label: "Revvity", description: "Floor 2", x: 0.3, y: 0.4, kind: "company", refId: "revvity" }),
+      hs({ id: "f2-valmet", label: "Valmet", description: "Floor 2", x: 0.335, y: 0.4917, kind: "company", refId: "valmet" }),
+      hs({ id: "f2-traficom", label: "Traficom", description: "Floor 2", x: 0.3475, y: 0.5833, kind: "company", refId: "traficom" }),
+      hs({ id: "f2-chill", label: "Chill Zone", description: "Floor 2", x: 0.1475, y: 0.609, kind: "area" }),
+      hs({ id: "f3-lindstrom", label: "Lindström", description: "Floor 3", x: 0.63, y: 0.4375, kind: "company", refId: "lindstrom" }),
+      hs({ id: "f3-bo-lkv", label: "Bo LKV", description: "Floor 3", x: 0.6175, y: 0.5833, kind: "company", refId: "bo-lkv" }),
+      hs({ id: "f3-takomo-golf", label: "Takomo", description: "Floor 3", x: 0.79, y: 0.4, kind: "company", refId: "takomo-golf" }),
+      hs({ id: "f3-forcit-group", label: "Forcit Group", description: "Floor 3", x: 0.825, y: 0.4917, kind: "company", refId: "forcit-group" }),
+      hs({ id: "f3-saarioinen", label: "Saarioinen", description: "Floor 3", x: 0.8375, y: 0.5833, kind: "company", refId: "saarioinen" }),
+      hs({ id: "f3-business-turku", label: "Business Turku", description: "Floor 3", x: 0.6825, y: 0.729, kind: "company", refId: "business-turku" }),
+    ],
+    status: "working",
+  },
+] as const;
+
+export function getMap(id: string): VenueMap {
+  const map = VENUE_MAPS.find((m) => m.id === id);
+  if (!map) throw new Error(`Unknown map: ${id}`);
+  return map;
+}
+
+export function mapsForVenue(venue: VenueMap["venue"]): VenueMap[] {
+  return VENUE_MAPS.filter((m) => m.venue === venue && m.status !== "do_not_publish");
+}
+
+/** Hotspot on a map that points at a company / stand. */
+export function findHotspot(mapId: string, refId: string): MapHotspot | undefined {
+  return getMap(mapId).hotspots.find((h) => h.refId === refId);
+}
