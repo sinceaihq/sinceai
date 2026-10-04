@@ -19,7 +19,9 @@ import {
   qaStandSentence,
   showroomCounter,
   qaLocationLabel,
-  SCENES_3D,
+  PLACES_3D,
+  TARGETS_3D,
+  TOURS_3D,
   SCHEDULE,
   scheduleFor,
   SHOWROOM_ORDER,
@@ -120,7 +122,7 @@ describe("canonical event facts", () => {
 });
 
 describe("guide copy never repeats retired or private information", () => {
-  const corpus = JSON.stringify({ SCHEDULE, CHECKLISTS, DETAILS, GUIDES, VENUES, SCENES_3D });
+  const corpus = JSON.stringify({ SCHEDULE, CHECKLISTS, DETAILS, GUIDES, VENUES, PLACES_3D, TARGETS_3D, TOURS_3D });
 
   it("does not claim a 72-hour operational duration", () => {
     expect(corpus).not.toMatch(/72[\s-]*(h\b|hours?)/i);

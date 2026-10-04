@@ -2,7 +2,7 @@ import * as THREE from "three";
 import type { CSS2DObject } from "three/addons/renderers/CSS2DRenderer.js";
 import type { TwinContext, V2 } from "../types";
 import { getCompany, SHOWROOM_ORDER } from "@/lib/hackathon-2026/companies";
-import { LOGOS_3D } from "@/lib/hackathon-2026/venue3d";
+import { LOGOS_3D } from "@/lib/hackathon-2026/logos3d";
 import { makeLedWallTexture, makeCanvas, canvasTexture, drawContained, fontReady, wordmark, EVENT_VIOLET } from "../render/canvas";
 import { LUMINANCE, kelvinToLinear } from "../sky/sky";
 import { loadImage } from "../util";

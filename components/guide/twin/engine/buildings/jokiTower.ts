@@ -2,7 +2,7 @@ import * as THREE from "three";
 import type { CSS2DObject } from "three/addons/renderers/CSS2DRenderer.js";
 import type { TwinContext, V2 } from "../types";
 import { CHALLENGE_COMPANIES } from "@/lib/hackathon-2026/companies";
-import { LOGOS_3D } from "@/lib/hackathon-2026/venue3d";
+import { LOGOS_3D } from "@/lib/hackathon-2026/logos3d";
 import { EVENT_VIOLET } from "../render/canvas";
 import { makeLabel } from "../labels";
 import { Batcher, R, Y, box, cylinder, glow, instanceMatrix, merge, metreUV, pbr, place, polar, prism, ringPrism, rod, wallSeg, yawToBearing } from "./joki/kit";

@@ -2,7 +2,7 @@ import * as THREE from "three";
 import type { CSS2DObject } from "three/addons/renderers/CSS2DRenderer.js";
 import type { LightingState, TwinContext, V2 } from "../../types";
 import { CHALLENGE_COMPANIES, briefingRoomLabel } from "@/lib/hackathon-2026/companies";
-import { LOGOS_3D } from "@/lib/hackathon-2026/venue3d";
+import { LOGOS_3D } from "@/lib/hackathon-2026/logos3d";
 import { makeLabel } from "../../labels";
 import { LUMINANCE } from "../../sky/sky";
 import { EVENT_VIOLET, makeBannerTexture } from "../../render/canvas";
