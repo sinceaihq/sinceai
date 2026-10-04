@@ -15,7 +15,7 @@ export function VenueCards({ venues }: { venues: readonly VenueId[] }) {
             className="guide-avoid-break flex flex-col border border-white/10 transition-colors hover:border-white/20"
           >
             {venue.image && (
-              <div className="guide-no-print relative aspect-[16/9] overflow-hidden border-b border-white/10">
+              <figure className="guide-no-print relative aspect-[16/9] overflow-hidden border-b border-white/10">
                 <Image
                   src={venue.image.src}
                   alt={venue.image.alt}
@@ -23,7 +23,12 @@ export function VenueCards({ venues }: { venues: readonly VenueId[] }) {
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-cover"
                 />
-              </div>
+                {venue.image.credit && (
+                  <figcaption className="absolute bottom-0 right-0 bg-black/70 px-2 py-1 text-[10px] leading-none text-white/80">
+                    {venue.image.credit}
+                  </figcaption>
+                )}
+              </figure>
             )}
             <div className="flex flex-1 flex-col p-5">
               <h3 className="text-2xl font-bold tracking-tight text-white">{venue.name}</h3>
@@ -61,11 +66,11 @@ export function VenueCards({ venues }: { venues: readonly VenueId[] }) {
                   <StatusTag status="confirmed" label="Open around the clock" />
                 </p>
               )}
-              <div className="guide-no-print mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-5">
+              <div className="guide-no-print mt-auto flex flex-wrap gap-x-5 pt-3">
                 <TextLink href={venue.mapsUrl}>Directions</TextLink>
                 <Link
                   href={`${GUIDE_BASE_PATH}/venue#maps-${venue.id}`}
-                  className="inline-flex items-center text-sm text-neutral-300 underline decoration-white/25 underline-offset-4 hover:text-white hover:decoration-white"
+                  className="inline-flex min-h-11 items-center text-sm text-neutral-300 underline decoration-white/25 underline-offset-4 hover:text-white hover:decoration-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                 >
                   Floor plans
                   <Arrow />

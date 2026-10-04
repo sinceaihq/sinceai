@@ -1,4 +1,5 @@
 import {
+  CalendarButton,
   Checklist,
   CriticalPath,
   Details,
@@ -130,10 +131,13 @@ export default function JudgeGuidePage() {
           id="sunday-title"
           eyebrow="// sunday 8 november"
           title="Deadline to winner."
-          lede="Local Turku time (EET, UTC+2)."
+          lede="Judging happens on Sunday. Friday's opening is listed too — you are welcome to join it. Local Turku time (EET, UTC+2)."
         />
         <div className="mb-12">
           <CriticalPath label="Judging steps" steps={CRITICAL_PATH.judges ?? []} />
+        </div>
+        <div className="mb-8 flex flex-wrap gap-3">
+          <CalendarButton audience={AUDIENCE} />
         </div>
         <Schedule items={schedule} audience={AUDIENCE} />
       </GuideSection>

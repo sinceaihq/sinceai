@@ -25,9 +25,38 @@ test.describe("routes and indexing", () => {
     });
   }
 
-  test("unknown company pages 404", async ({ page }) => {
-    const response = await page.goto(`${GUIDE}/challenge-partners/not-a-company`);
-    expect(response?.status()).toBe(404);
+  test("unknown guide URLs show the guide's own 404", async ({ page }) => {
+    for (const path of [`${GUIDE}/challenge-partners/not-a-company`, `${GUIDE}/no-such-page`, `${GUIDE}/builders/extra`]) {
+      const response = await page.goto(path);
+      expect(response?.status(), path).toBe(404);
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText("This page isn't in the guide.");
+      await expect(page.locator('meta[name="robots"]').first()).toHaveAttribute("content", /noindex/);
+      await expect(page.getByRole("link", { name: /Field Guide home/ }).first()).toBeVisible();
+    }
+  });
+
+  test("the bare event path leads to the hub", async ({ page }) => {
+    await page.goto("/hackathon-2026");
+    await expect(page).toHaveURL(new RegExp(`${GUIDE}$`));
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Field Guide");
+  });
+
+  test("calendar files per guide and per company", async ({ request }) => {
+    const builders = await request.get(`${GUIDE}/calendar/builders`);
+    expect(builders.status()).toBe(200);
+    expect(builders.headers()["content-type"]).toContain("text/calendar");
+    expect(builders.headers()["content-disposition"]).toContain("since-ai-hackathon-2026-builders.ics");
+    expect(builders.headers()["x-robots-tag"]).toContain("noindex");
+    expect(await builders.text()).toContain("BEGIN:VCALENDAR");
+
+    const elisa = await request.get(`${GUIDE}/calendar/challenge-partners/elisa`);
+    expect(elisa.status()).toBe(200);
+    expect(elisa.headers()["content-disposition"]).toContain("since-ai-hackathon-2026-elisa.ics");
+    expect((await elisa.text()).replace(/\r\n /g, "")).toContain("Room 1001 Dromberg · floor 1");
+
+    for (const path of ["calendar/nope", "calendar/builders/elisa", "calendar/challenge-partners/nope"]) {
+      expect((await request.get(`${GUIDE}/${path}`)).status(), path).toBe(404);
+    }
   });
 
   test("sitemap excludes the guide; robots.txt does not block it", async ({ request }) => {
@@ -99,6 +128,78 @@ test.describe("content", () => {
     await expect(page.getByRole("heading", { name: "Briefing room 2026 Orvokki." })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Q&A stand: Floor 1 · Showroom." })).toBeVisible();
   });
+
+  test("company schedule and calendar are personalised", async ({ page }) => {
+    await page.goto(`${GUIDE}/challenge-partners/saarioinen`);
+    const schedule = page.locator("#schedule");
+    await expect(schedule).toContainText("Room 2067 · floor 2");
+    await expect(schedule).toContainText("Your stand · Floor 3");
+    await expect(schedule).toContainText("floor 3 of the Joki tower");
+    await expect(schedule).not.toContainText("Your place");
+    const calendar = page.getByRole("link", { name: /Add to calendar/ }).first();
+    await expect(calendar).toHaveAttribute("href", `${GUIDE}/calendar/challenge-partners/saarioinen`);
+    await expect(calendar).toHaveAttribute("download", "since-ai-hackathon-2026-saarioinen.ics");
+  });
+
+  test("venue photos are credited", async ({ page }) => {
+    await page.goto(`${GUIDE}/venue#photos`);
+    const figures = page.locator("#photos figure");
+    await expect(figures).toHaveCount(6);
+    for (const credit of ["Vesa Loikas", "Turun Teknologiakiinteistöt Oy"]) {
+      await expect(page.locator("#photos figcaption").filter({ hasText: credit }).first()).toBeVisible();
+    }
+    const footer = page.locator("footer");
+    await expect(footer).toContainText("Vesa Loikas");
+    await expect(footer).toContainText("Turun Teknologiakiinteistöt Oy");
+    const jsonLd = await page.locator('script[type="application/ld+json"]').allTextContents();
+    const photos = jsonLd.find((t) => t.includes("ImageObject"));
+    expect(photos).toBeDefined();
+    expect(photos).toContain("creditText");
+    expect(photos).toContain("copyrightHolder");
+  });
+});
+
+test.describe("photo lightbox", () => {
+  test("opens, pages with arrow keys, closes with Escape and returns focus", async ({ page }) => {
+    await page.goto(`${GUIDE}/venue#photos`);
+    const opener = page.getByRole("button", { name: /^Open photo:/ }).first();
+    await opener.click();
+    const dialog = page.getByRole("dialog");
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByRole("heading")).toContainText("1 / ");
+    await expect(dialog).toContainText("Photo: Vesa Loikas");
+    await page.keyboard.press("ArrowRight");
+    await expect(dialog.getByRole("heading")).toContainText("2 / ");
+    await page.keyboard.press("ArrowLeft");
+    await expect(dialog.getByRole("heading")).toContainText("1 / ");
+    await page.keyboard.press("Escape");
+    await expect(dialog).toHaveCount(0);
+    await expect(opener).toBeFocused();
+  });
+});
+
+test.describe("navigation", () => {
+  test("section nav follows the section in view", async ({ page }) => {
+    await page.goto(`${GUIDE}/builders`);
+    const nav = page.getByRole("navigation", { name: "On this page" });
+    await page.locator("#schedule").scrollIntoViewIfNeeded();
+    await page.evaluate(() => window.scrollBy(0, 200));
+    await expect(nav.locator('[aria-current="location"]')).toHaveText("Schedule");
+  });
+
+  test("mobile menu closes when tapping outside", async ({ page, isMobile }) => {
+    test.skip(!isMobile, "The guide menu is a phone-only control");
+    await page.goto(`${GUIDE}/judges`);
+    const menu = page.locator("header details");
+    await menu.locator("summary").click();
+    await expect(menu).toHaveAttribute("open", "");
+    // Tap the page margin just below the open menu panel.
+    const panel = (await menu.locator("nav").boundingBox())!;
+    const viewport = page.viewportSize()!;
+    await page.touchscreen.tap(12, Math.min(panel.y + panel.height + 48, viewport.height - 12));
+    await expect(menu).not.toHaveAttribute("open", "");
+    await expect(page).toHaveURL(new RegExp(`${GUIDE}/judges$`));
+  });
 });
 
 test.describe("venue explorer", () => {
@@ -139,7 +240,9 @@ test.describe("venue explorer", () => {
     const locations = page.locator("#locations");
     await expect(locations).toContainText("1001 Dromberg");
     await expect(locations).toContainText("Company Lounge");
-    await expect(locations).toContainText("Stand 1");
+    await expect(locations).toContainText("Stand 1 · Red Hat");
+    await expect(locations).toContainText("Stand 2 · Solita");
+    await expect(locations).toContainText("Visibility / Tech Partner stand ·");
   });
 });
 

@@ -36,7 +36,6 @@ const IGNORED = [
   /google-analytics/i,
   /GPU stall/i,
   /GL Driver Message/i,
-  /preloaded using link preload/i,
 ];
 
 /** Collects console errors and warnings for a page. */

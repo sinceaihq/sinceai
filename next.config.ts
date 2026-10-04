@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 import createMDX from "@next/mdx";
 import {
+  GUIDE_BASE_PATH,
   GUIDE_HEADER_SOURCES,
+  GUIDE_PARENT_PATH,
   GUIDE_X_ROBOTS_TAG,
 } from "./lib/hackathon-2026/route";
 
@@ -45,6 +47,10 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
+  },
+  async redirects() {
+    // Temporary, so the path stays free for a future event page.
+    return [{ source: GUIDE_PARENT_PATH, destination: GUIDE_BASE_PATH, permanent: false }];
   },
   async headers() {
     return [

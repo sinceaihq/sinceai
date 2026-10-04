@@ -1,4 +1,5 @@
 import {
+  CalendarButton,
   Checklist,
   CompanyDirectory,
   CriticalPath,
@@ -96,6 +97,9 @@ export default function ChallengePartnerGuidePage() {
           title="Your timeline."
           lede="Local Turku time (EET, UTC+2). Food will be reserved for company representatives at the scheduled meal times — joining the meals is entirely optional."
         />
+        <div className="mb-8 flex flex-wrap gap-3">
+          <CalendarButton audience={AUDIENCE} />
+        </div>
         <Schedule items={schedule} audience={AUDIENCE} />
       </GuideSection>
 

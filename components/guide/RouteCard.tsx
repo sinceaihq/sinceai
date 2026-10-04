@@ -23,7 +23,7 @@ export function RouteCard() {
             </li>
           ))}
         </ol>
-        <div className="guide-no-print mt-6 flex flex-col gap-2">
+        <div className="guide-no-print mt-4 flex flex-col items-start">
           {TRANSFER_ROUTE.fallbacks.map((f) => (
             <TextLink key={f.href} href={f.href}>
               {f.label}

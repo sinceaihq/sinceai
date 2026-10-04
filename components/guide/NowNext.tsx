@@ -25,9 +25,23 @@ function readOverride(): number | null {
   try {
     const raw = new URLSearchParams(window.location.search).get("now");
     if (!raw) return null;
-    const iso = /[zZ]|[+-]\d\d:?\d\d$/.test(raw) ? raw : `${raw}+02:00`;
-    const ms = Date.parse(iso);
-    return Number.isNaN(ms) ? null : ms;
+    if (/[zZ]|[+-]\d\d:?\d\d$/.test(raw)) {
+      const ms = Date.parse(raw);
+      return Number.isNaN(ms) ? null : ms;
+    }
+    // A plain wall-clock time is Turku time: winter (+02:00) or summer (+03:00).
+    for (const offset of ["+02:00", "+03:00"]) {
+      const ms = Date.parse(`${raw}${offset}`);
+      if (Number.isNaN(ms)) return null;
+      const wall = new Intl.DateTimeFormat("sv-SE", {
+        timeZone: "Europe/Helsinki",
+        hour: "2-digit",
+        minute: "2-digit",
+        hourCycle: "h23",
+      }).format(ms);
+      if (raw.slice(11, 16) === wall || raw.length <= 10) return ms;
+    }
+    return null;
   } catch {
     return null;
   }
@@ -74,7 +88,7 @@ function Row({
         </p>
         <p className="mt-1 flex flex-wrap items-center gap-2 text-xs text-neutral-400">
           <span className="font-mono tabular-nums">
-            {formatDayShort(item.start)} · {formatTimeRange(item)}
+            {formatDayShort(item.start)}&nbsp;· {item.allDay ? "All day" : formatTimeRange(item)}
           </span>
           <PlaceChip place={item.place} />
         </p>
@@ -114,7 +128,11 @@ export function NowNext({
             .slice(0, 2)
             .map((item) => <Row key={item.id} label="Now" item={item} audience={audience} emphasis />)
         ) : (
-          <p className="text-sm text-neutral-400">Building time — nothing scheduled right now.</p>
+          <p className="text-sm text-neutral-400">
+            {audience === "builders"
+              ? "Building time — nothing scheduled right now."
+              : "Nothing scheduled for you right now."}
+          </p>
         )}
         {state.next && <Row label="Next" item={state.next} audience={audience} />}
       </div>
@@ -129,7 +147,6 @@ export function NowNext({
   return (
     <section
       aria-labelledby="now-next-title"
-      aria-live="polite"
       className="guide-no-print relative overflow-hidden border border-white/10 bg-(--color-surface-raised) p-5 sm:p-6"
     >
       <div
@@ -157,7 +174,10 @@ export function NowNext({
           </span>
         )}
       </div>
-      <div className="relative min-h-[4.5rem]">{body}</div>
+      {/* Only the now / next rows are live — not the ticking clock or countdown. */}
+      <div aria-live="polite" className="relative min-h-[4.5rem]">
+        {body}
+      </div>
     </section>
   );
 }

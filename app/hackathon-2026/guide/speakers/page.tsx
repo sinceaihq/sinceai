@@ -1,4 +1,5 @@
 import {
+  CalendarButton,
   Checklist,
   CriticalPath,
   Details,
@@ -120,6 +121,9 @@ export default function SpeakerGuidePage() {
           title="The shared moments."
           lede="Local Turku time (EET, UTC+2). If your run sheet differs, your run sheet wins."
         />
+        <div className="mb-8 flex flex-wrap gap-3">
+          <CalendarButton audience={AUDIENCE} />
+        </div>
         <Schedule items={schedule} audience={AUDIENCE} />
       </GuideSection>
 
@@ -143,7 +147,7 @@ export default function SpeakerGuidePage() {
           lede="Your booked itinerary is the source of truth. If you can, arrive in Turku the day before your call time."
         />
         <Details items={DETAILS.speakers} />
-        <div className="guide-no-print mt-6 flex flex-wrap gap-x-6 gap-y-2">
+        <div className="guide-no-print mt-4 flex flex-wrap gap-x-6">
           <TextLink href="https://www.vr.fi/en">VR trains</TextLink>
           <TextLink href="https://www.foli.fi/en">Föli local transport</TextLink>
           <TextLink href="https://www.finavia.fi/en/airports/turku">Turku Airport</TextLink>

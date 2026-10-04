@@ -65,6 +65,15 @@ describe("now / next", () => {
     if (state.phase === "during") expect(state.next?.id).toBe("sun-submission-deadline");
   });
 
+  it("treats all-day items as current for their whole day", () => {
+    const partners = scheduleFor("partners");
+    const saturday = getNowNext(partners, at("2026-11-07T10:00:00+02:00"));
+    expect(saturday.phase).toBe("during");
+    if (saturday.phase === "during") expect(saturday.now.map((i) => i.id)).toContain("sat-partner-stand");
+    const sunday = getNowNext(partners, at("2026-11-08T08:00:00+02:00"));
+    if (sunday.phase === "during") expect(sunday.now.map((i) => i.id)).not.toContain("sat-partner-stand");
+  });
+
   it("ends after 15:00 on Sunday", () => {
     expect(getNowNext(builders, at("2026-11-08T16:00:00+02:00")).phase).toBe("after");
   });

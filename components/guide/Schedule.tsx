@@ -2,6 +2,7 @@ import {
   detailFor,
   formatTime,
   groupByDay,
+  keepDots,
   noteFor,
   placeDetailFor,
   titleFor,
@@ -96,7 +97,7 @@ export function Schedule({
                     {detail && <p className="mt-1 text-sm text-neutral-400 leading-relaxed">{detail}</p>}
                     <p className="mt-2 flex flex-wrap items-center gap-2">
                       <PlaceChip place={item.place} />
-                      {placeDetail && <span className="text-xs text-white/55">{placeDetail}</span>}
+                      {placeDetail && <span className="text-xs text-white/55">{keepDots(placeDetail)}</span>}
                     </p>
                     {note && (
                       <p className="mt-2 text-xs text-(--color-event) leading-relaxed">

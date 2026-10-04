@@ -3,7 +3,7 @@
 ## Git
 
 - Branch: `feature/hackathon-2026-field-guide` (from `main` @ `6ea8234`)
-- Commits: `d24332e` feature · `c75c775` tests + a11y fixes · `169ac2e` mobile 3D, print, polish · this report
+- Commits: `d24332e` feature · `c75c775` tests + a11y fixes · `169ac2e` mobile 3D, print, polish · `6b02748` report · final QA round (photos, calendars, personalised company pages, guide 404, cross-browser fixes) — see `git log`
 - Remote branch: `origin/feature/hackathon-2026-field-guide` — pushed, **not merged**. CI deploys only on pushes to `main`, so pushing this branch deploys nothing.
 - Untouched: the user's untracked files in `public/assets/sponsors/` and `public/assets/supports/` were left as they were and are not in any commit.
 
@@ -16,54 +16,85 @@ All public by direct link, `noindex`, not in the sitemap or the marketing nav/fo
 | `/hackathon-2026/guide` | Hackathon 2026 / Field Guide (hub) |
 | `/hackathon-2026/guide/builders` | Builder Guide |
 | `/hackathon-2026/guide/challenge-partners` | Challenge Partner Guide (all 15 companies, searchable) |
-| `/hackathon-2026/guide/challenge-partners/[company]` | One page per company (15, statically generated; unknown ids 404) |
+| `/hackathon-2026/guide/challenge-partners/[company]` | One page per company (15, statically generated) — its own room, stand, schedule and calendar |
 | `/hackathon-2026/guide/partners` | Partner & Tech Guide (BioCity stand plan) |
 | `/hackathon-2026/guide/judges` | Judge Guide (overall jury vs. company evaluators) |
 | `/hackathon-2026/guide/speakers` | Speaker & Guest Guide |
-| `/hackathon-2026/guide/venue` | Venue Explorer: floor plans, route, 3D preview, text list of all locations |
+| `/hackathon-2026/guide/venue` | Venue Explorer: 3D preview, venue photos, floor plans, route, text list of all locations |
+| `/hackathon-2026/guide/calendar/[guide]` | `.ics` calendar per guide (5) |
+| `/hackathon-2026/guide/calendar/challenge-partners/[company]` | `.ics` calendar per company (15) with its own room and stand |
+| any other `/hackathon-2026/guide/…` | Guide-styled 404 with links to every guide |
+| `/hackathon-2026` | Temporary (307) redirect to the hub — a common truncation of shared links |
 
-## Decisions taken (owner instruction 3 Oct 2026)
+## Decisions taken
 
-- **BioCity visibility & tech partner stands:** Stand 1 (most visible — Aulagalleria, facing the event entrance, on the route to every meal) = **Red Hat**. Stand 2 (main lobby east end, where the build hall meets the passage to Joki) = **Solita**. Stands 3 and 4 stay in the plan, marked **“Visibility / Tech Partner stand”**. Edit in `lib/hackathon-2026/partners.ts`.
+Owner instructions 3–4 Oct 2026:
+
+- **BioCity visibility & tech partner stands:** Stand 1 (most visible — Aulagalleria, facing the event entrance, on the route to every meal) = **Red Hat**. Stand 2 (main lobby east end, where the build hall meets the passage to Joki) = **Solita**. Stands 3 and 4 stay in the plan, marked **“Visibility / Tech Partner stand”** — on the stand cards, in the map location lists, in the 3D scene and in the text version. Edit in `lib/hackathon-2026/partners.ts`.
 - **BioCity event entrance:** the courtyard-side entrance from Jussin aukio (the official plan’s “Sisäänkäynti Jussinaukiolta”), shown as *Current plan*. Distance shown as “approx. 50 m outdoors (organiser estimate)” with Google Maps fallbacks between the official addresses.
-- **3D preview** (owner request): lazy-loaded three.js scenes of the Joki Showroom (dark room, violet light, black counters and bar stools, partner logos on the curved LED wall — after the supplied event render), the Joki Q&A floors 1–3, and the BioCity build hall (56 tables / 280 seats from the 3 Oct furniture plan, stands, route to Joki). Labelled “illustrative, not to scale”; the 2D floor plans remain the reference and every location is also listed as text.
+- **3D preview:** lazy-loaded three.js scenes of the Joki Showroom (dark room, violet light, black counters and bar stools, partner logos on the curved LED wall — after the supplied event render), the Joki Q&A floors 1–3, and the BioCity build hall (56 tables / 280 seats from the 3 Oct furniture plan, stands, route to Joki). Labelled “illustrative, not to scale”; the 2D floor plans remain the reference and every location is also listed as text.
+- **Venue photos and official plans are published with credits** (owner instruction 4 Oct 2026, see *Images and credits*).
 
 ## Architecture
 
 - **Shared data source:** `lib/hackathon-2026/`
   - `facts.ts` (event times, verified links) · `route.ts` (route constants, used by `next.config.ts`)
-  - `schedule.ts` (one schedule, audience tags, audience-specific wording, publishability, `endPending`, `approx`)
-  - `venues.ts` (addresses, roles, entrances with status, transfer route) · `companies.ts` (15 companies → EduCity room + Joki Q&A) · `partners.ts` (stand plan)
-  - `maps.ts` (maps, normalised hotspots, Finnish→English glossaries) · `guides.ts` (role copy, checklists, details) · `venue3d.ts` (3D scene metadata + text alternative)
+  - `schedule.ts` (one schedule, audience tags, audience-specific wording, publishability, `endPending`, `approx`, all-day items)
+  - `venues.ts` (addresses, roles, entrances with status, transfer route) · `companies.ts` (15 companies → EduCity room + Joki Q&A, Showroom counter order, `companySchedule()` — the partner schedule with the company’s own room and stand) · `partners.ts` (stand plan)
+  - `maps.ts` (maps, normalised hotspots — stand and Showroom counter labels derived from the data above — Finnish→English glossaries) · `guides.ts` (role copy, checklists, details) · `venue3d.ts` (3D scene metadata + text alternative)
+  - `photos.ts` (venue photos, captions, credits) · `calendar.ts` (RFC 5545 export: UTC times, 75-octet folding, no DTEND where the end is not confirmed)
   - `seo.ts` (shared metadata) · `time.ts` (Europe/Helsinki formatting, now/next) · `types.ts`
-- **Components:** `components/guide/` — shell/header/footer, hero, facts strip, critical path, schedule, live now/next card, venue cards, route card + isometric campus schematic, checklist (ticks saved on device), details (native `<details>`), help, company directory, stand plan.
+- **Components:** `components/guide/` — shell/header/footer (image credits), hero, facts strip, critical path, schedule, live now/next card, venue cards, route card + isometric campus schematic, checklist (ticks saved on device), details (native `<details>`), help, company directory, stand plan, photo gallery with lightbox, calendar and share buttons, section nav with scrollspy.
 - **Map viewer:** `components/guide/maps/` — floor tabs (arrow keys), contained preview with highlighted rooms, full-screen dialog (Radix) with pinch/drag/wheel/keyboard zoom & pan, focus trap, Escape, focus return, hotspot list + glossary. Deep links `#maps-joki`, `#map-educity-2`.
-- **3D:** `components/guide/venue3d/` — poster first; `three` loads only after “Step inside”; renders on demand, pauses off-screen, honours reduced motion, disposes on unmount, adapts framing to portrait phones, opens full screen on touch devices. Posters/OG image regenerate with `scripts/render-guide-posters.mjs`.
-- **noindex / sitemap:** `<meta name="robots" content="noindex, nofollow, nocache">` + `googlebot` + `bingbot` on every page; `X-Robots-Tag: noindex, nofollow, noimageindex` for the route family and `/assets/guide/*` (`next.config.ts` + `public/_headers` for Cloudflare static assets); excluded from `app/sitemap.ts`; robots.txt deliberately does **not** disallow it (crawlers must see the noindex). The marketing “Apply” popup is suppressed on guide pages.
+- **3D:** `components/guide/venue3d/` — poster first; `three` loads only after “Step inside”; renders on demand, pauses off-screen, honours reduced motion, disposes on unmount, adapts framing to portrait phones, opens full screen on touch devices. Teasers on other pages show the scene they open (Showroom, Joki tower or BioCity). Posters/OG image regenerate with `scripts/render-guide-posters.mjs`.
+- **Live card:** “Starts in … / Live now / Next / That’s a wrap”, all-day items count for their whole day, only the rows are an ARIA live region (not the ticking clock). Preview any moment with `?now=2026-11-07T10:30` (Turku time).
+- **noindex / sitemap:** `<meta name="robots" content="noindex, nofollow, nocache">` + `googlebot` + `bingbot` on every page; `X-Robots-Tag: noindex, nofollow, noimageindex` for the route family, the calendars and `/assets/guide/*` (`next.config.ts` + `public/_headers` for Cloudflare static assets); excluded from `app/sitemap.ts`; robots.txt deliberately does **not** disallow it (crawlers must see the noindex). The marketing “Apply” popup is suppressed on guide pages.
 - **Dependencies added:** `three` (runtime, code-split to the 3D chunk only), `@types/three`, `@playwright/test`, `@axe-core/playwright` (dev).
+
+## Images and credits
+
+Published on the owner’s instruction (4 Oct 2026): use the venue images and official plans, credit their owners in the metadata, keep everything lawful. Every image is credited where it is shown, in the guide footer, inside the files (EXIF `Artist`/`Copyright` + XMP `dc:creator`, `dc:rights`, `photoshop:Credit`) and in `ImageObject` structured data on the venue page.
+
+| Image | Credit | Source |
+|---|---|---|
+| EduCity interior photos (Taidon portaat, atrium) | Photo: Vesa Loikas (© Vesa Loikas Photography, from the files’ own EXIF) | User-supplied event pack |
+| BioCity exterior, Joki tower at dusk | Photo: Turun Teknologiakiinteistöt Oy | Venue owner’s website |
+| Joki lobby, Joki amphitheatre (Company Lounge) | Still from the Joki video · Turun Teknologiakiinteistöt Oy | Joki video in the event pack; frames chosen without people |
+| BioCity and Joki floor 1 floor plans | Turun Teknologiakiinteistöt Oy (4 Jun 2026) | Official plans supplied for the event, used as-is |
+| EduCity and Joki event maps | Since AI (2 Oct 2026) | Since AI |
+| 3D preview and posters | Since AI — illustrative render | Original |
+| EduCity exterior (venue card) | — | Existing site asset already used on `/hackathon` |
+
+**Before production:** confirm the usage terms for the EduCity photos (photographer / Turku AMK media bank) and the TTK photos and video stills (TTK is the venue owner and a partner). Removing any photo is a one-line change in `lib/hackathon-2026/photos.ts` or `venues.ts`.
+
+Still not published: Pentagon Design and Sarc+Sigge portfolio images (“all rights reserved”, not needed), the 2025 venue maps, and the internal production plans (emergency routes, volunteer spaces, power and furniture planning).
 
 ## Verification
 
-| Command | Result |
+Final run on the last build (`next build` + `next start`), 4 Oct 2026:
+
+| Check | Result |
 |---|---|
-| `npm install --legacy-peer-deps` (lockfile updated) | ✅ |
 | `npm run lint` | ✅ 0 errors (1 pre-existing warning in `components/HackathonPopup.tsx`) |
 | `npx tsc --noEmit` | ✅ |
-| `npx jest lib/hackathon-2026 components/guide` | ✅ 55/55 — also under `TZ=UTC` and `TZ=America/Los_Angeles` |
-| `npm test` (whole repo) | ⚠️ 64/68 — the 4 failures are `components/countdown-timer.test.tsx`, failing identically on a clean `main` worktree (component labels changed in `c6a78a0`, test not updated). Not touched. |
-| `npm run build` | ✅ all guide routes static; 15 company pages SSG |
+| `npm test` (whole repo, Jest) | ✅ 92/92 — also under `TZ=UTC`, `TZ=America/Los_Angeles` and `TZ=Pacific/Kiritimati`. `components/countdown-timer.test.tsx` was failing on `main` too (labels changed in `c6a78a0`); its expectations were updated to the current component. |
+| `npm run build` | ✅ all guide routes static; 15 company pages and 20 calendars SSG |
 | `npm run build:cloudflare` (OpenNext) | ✅ |
-| `npm run test:e2e` (Playwright, desktop 1440×900 + Pixel 7) | ✅ 90/90 |
-| e2e against the Cloudflare Workers preview (`opennextjs-cloudflare preview`) | ✅ 45/45 desktop; `x-robots-tag` present on pages and guide assets, absent on `/hackathon` |
-| External links in the guide (11) | ✅ all 200 |
+| `npm run test:e2e` (Playwright, desktop 1440×900 + Pixel 7) | ✅ 103 passed, 1 skipped by design (phone-only menu test on desktop) |
+| Same e2e suite against the Cloudflare Workers preview (`opennextjs-cloudflare preview`) | ✅ 103 passed, 1 skipped; `X-Robots-Tag` on pages, calendars, 404s and guide assets, absent on `/hackathon` |
+| Page audit — 23 pages (incl. the 404) × 320, 390, 768, 1280, 1920 px | ✅ 0 findings |
+| Interaction walkthrough — Chromium / WebKit (iPhone 14) / Firefox | ✅ 125/125 · 123/123 · 123/123 |
+| Time states (`?now=` before / during / after, per role), first-visit cookie banner, landscape phone | ✅ 26/26 |
+| Console after 7 s idle — 11 URLs × 3 engines | ✅ 0 on every guide page, except WebKit’s analytics-preload timing note on the browser-rendered 404 page; Firefox also notes the site-wide Inter preload during the heavy 3D test — both explained in *Notes for the wider site* |
+| Print (A4 PDF) — company, partner, venue and builder pages | ✅ white, readable, maps scaled, no overlays |
 
-The e2e suite covers: every route 200 + `noindex` meta + `X-Robots-Tag`; unknown company 404; sitemap exclusion; robots.txt not blocking; no guide links in public nav/footer; no console errors/warnings; no horizontal overflow; canonical times on the hub; 15-company mapping; company search; Red Hat 1st / Solita 2nd / open stands labelled; map viewer keyboard zoom, Escape and focus return; floor tabs with arrow keys; deep links; 3D loads on demand and flies to a company; axe (WCAG 2.1 A/AA, no serious/critical); skip link; reduced motion; print view; critical content with JavaScript disabled; all internal links resolve.
+The e2e suite covers: every route 200 + `noindex` meta + `X-Robots-Tag`; guide 404s; the `/hackathon-2026` redirect; calendar files per guide and per company (headers, content, 404s); sitemap exclusion; robots.txt not blocking; no guide links in public nav/footer; no console errors/warnings; no horizontal overflow; canonical times on the hub; 15-company mapping; company search; Red Hat 1st / Solita 2nd / open stands labelled; personalised company schedule; credited photos + lightbox keyboard paging and focus return; section-nav scrollspy; mobile menu closing on outside tap; map viewer keyboard zoom, Escape and focus return; floor tabs with arrow keys; deep links; 3D loads on demand and flies to a company; axe (WCAG 2.1 A/AA, no serious/critical); skip link; reduced motion; print view; critical content with JavaScript disabled; all internal links resolve.
 
-## Screenshot review
+The audit checks every page at every width for horizontal overflow, heading order, duplicate ids, broken images, missing alt text, unnamed controls, tap targets under 44 px, `target=_blank` without `noopener`, layout shift, `noindex`, console errors, failed requests and axe violations. The interaction walkthrough exercises the header menu, scrollspy, live card, checklist persistence, accordions, company search and focus, all 8 map tabs and the full-screen viewer (zoom, pan, pinch, double tap, reset, Escape), the photo lightbox, all three 3D scenes (views, fly-to, labels, full screen, focus trap, deep links, phone framing), calendar downloads, the share button, print view of 8 pages, teaser deep links, keyboard focus visibility, reduced motion and the no-JavaScript fallback.
 
-Saved locally (git-ignored) in `qa-screenshots/field-guide-2026/`: `first-view/` (8 pages × 390×844, 430×932, 768×1024, 1440×900, 1920×1080), `full-page/` (390 and 1440), `3d/` (desktop + phone, all scenes and views), `print/elisa-company-page.pdf`.
+## QA rounds — issues found and fixed
 
-Issues found and fixed during review:
+Round 1 (3 Oct):
 
 - Muted micro-text at 4.42:1 contrast → site token `--color-fg-muted` (6.2:1); axe now clean.
 - Map dialog did not return focus to its trigger → fixed.
@@ -71,6 +102,39 @@ Issues found and fixed during review:
 - 3D: labels from the previous scene stayed on screen after switching (CSS2D DOM not removed) → fixed; overview views re-framed for portrait; phone-specific hall view; compact labels on narrow screens.
 - Print: cookie banner printed on every page, highlight rings drifted off their rooms, white logos invisible on paper → fixed.
 - Stand cards showed Solita only as an image → name added; duplicate wordmark for companies without a logo removed; single venue card too narrow on tablet; map tabs now wrap on desktop; campus schematic redrawn from the north-east so it matches the real layout.
+
+Round 2 (4 Oct):
+
+- 320 px: a map caption overflowed the screen; the header’s “2026” was cut to “2” → fixed.
+- Tap targets under 44 px (breadcrumbs, footer links, text links, “Clear ticks”, logo) → enlarged.
+- Header title lost its space (“Field Guide2026”) → fixed.
+- Map pinch threw “No active pointer” on some touch sequences; Radix dialogs missed descriptions → fixed.
+- `?now=` preview was an hour off for summer-time dates → parsed as Turku wall-clock time.
+- 3D full screen did not close with Escape while a button had focus → handled at the overlay.
+- Firefox warned about unused preloads from prefetching marketing pages → no prefetch on links that leave the guide; 0 console warnings in all three engines.
+- Unknown guide URLs showed the marketing 404 → guide 404 page.
+- Proofreading against the sources: the company-page schedule pointed to a section that does not exist there; BioCity stands were nameless (“Stand 1…4”) in map lists; “Takomo” vs “Takomo Golf” and room 2072’s name differed between map and directory; the stand-setup and route copy read awkwardly for some roles → all fixed. Times re-checked against the participant and challenge-partner schedules (incl. Sunday lunch 10–12, Joki as the Saturday Q&A location).
+- 3D teasers always showed the Showroom, even when they opened BioCity or the Joki tower → each shows its own scene.
+- Live card: said “Building time” to partners and judges, ignored the partners’ all-day stand, and announced the ticking clock to screen readers every minute → fixed.
+- Company pages now show the company’s own room and stand inside the schedule, the Showroom counter number (1–6 from the entrance), and offer their own calendar file.
+- Facts that wrapped in narrow cells started a line with “·” or split “09–12” → fixed.
+- Section nav stayed scrolled to the end after returning to the top → scrolls back.
+- Hard-coded colours in the guide replaced with CSS tokens.
+
+Round 3 (4 Oct, final verification):
+
+- **Privacy:** the guide’s 404 page set Google Analytics cookies even after a visitor had declined. Next.js renders nested not-found pages only in the browser, so the root layout’s `consent-default` script never ran before Google Analytics. Fixed with `ensureConsentDefaults()` (`lib/gtag.ts`, mirrors the root script, unit-tested against it) called from `components/guide/ConsentDefaults.tsx` in the guide shell; it runs before the analytics script loads and does nothing on server-rendered pages. Verified in Chromium, WebKit and Firefox for declined / accepted / first visit: identical behaviour to every other page.
+- Desktop photo grid left a lone photo on the last row → even 3 × 2 grid of 4:3 photos.
+- The map “Zoom” label sat on top of the image and covered the event maps’ date and, on the venue owner’s plans, their title block → moved to a bar below the map.
+- 404 page skipped a heading level → section heading added.
+- Text separated by “·” could wrap with the dot at the start of a line (hero date line, “Q&A stand: Floor 1 · Showroom.”, map and schedule labels) → `keepDots()` keeps the dot at the end of the line everywhere it is shown.
+- 3D teaser, now/next, facts and copy changes from round 2 re-verified at all widths.
+
+## Notes for the wider site (not changed)
+
+- The root layout preloads the Inter font on every page although nothing renders it (`font-sans` is only used by two unused UI components); Firefox may log “preloaded but not used” for it. `preload: false` would fix that, but it made the Turbopack production build fail intermittently in Next.js 16.2.6 (`next/font/google queries have exactly one entry`), so `app/layout.tsx` is unchanged.
+- Browser console messages that are not caused by the guide and also appear on marketing pages: Chrome’s “preloaded but not used” for the body font after a **second full page load in the same tab** (marketing pages show more of these; client-side navigation inside the guide is clean); Firefox’s “expires overwritten” for the `_ga` cookie once analytics is **accepted** (Firefox caps cookie lifetimes); WebKit’s “gtag.js preloaded but not used” on browser-rendered 404 pages.
+- The site has no `app/not-found.tsx`, so unknown marketing URLs show Next.js’s default 404. Any page Next.js renders only in the browser (e.g. a future nested not-found or error page) would skip the consent defaults — reuse `ensureConsentDefaults()` there.
 
 ## Operational content still pending
 
@@ -94,10 +158,6 @@ Modelled in data as *Current plan* / *To be confirmed* (or left out), easy to ch
 - `/hackathon` venue copy and JSON-LD name EduCity only; building happens in BioCity + Joki.
 - `/hackathon` metadata/FAQ list “Google for Developers, Bayer, Sandvik, Kongsberg, Valmet” as challenge partners; the 2026 challenge companies are the 15 in this guide.
 
-## Rights-sensitive assets kept as research only
-
-Not published: the EduCity photographs in the pack (Vesa Loikas / Leena Arola credits), the Joki video and its frames, Pentagon Design and Sarc+Sigge web images, the 2025 venue maps, and the internal production plans (emergency routes, volunteer spaces, power and furniture planning). Published: the Since AI 2026 event maps, the venue’s official floor plans for BioCity and Joki floor 1 (as supplied for the event), approved partner logos already in the repo, and the EduCity night photo already used on `/hackathon`. The 3D scenes and posters are original renders.
-
 ## Local review
 
 ```bash
@@ -113,5 +173,9 @@ npm run build && npm start          # http://localhost:3000
 - http://localhost:3000/hackathon-2026/guide/partners
 - http://localhost:3000/hackathon-2026/guide/judges
 - http://localhost:3000/hackathon-2026/guide/speakers
-- http://localhost:3000/hackathon-2026/guide/venue — 3D preview at the top
+- http://localhost:3000/hackathon-2026/guide/venue — 3D preview at the top, photos below it
 - Preview the live “now / next” card at any moment: append `?now=2026-11-07T10:30`
+- 3D deep links: `/venue?focus=elisa`, `/venue?focus=valmet`, `/venue?focus=red-hat`
+- Calendars: `/hackathon-2026/guide/calendar/builders`, `/hackathon-2026/guide/calendar/challenge-partners/elisa`
+
+Re-run the checks: `npx jest` · `npm run test:e2e` (starts or reuses a production server on port 3100).

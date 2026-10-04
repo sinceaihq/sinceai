@@ -29,3 +29,6 @@ export {
   primaryButtonClass,
   ghostButtonClass,
 } from "./primitives";
+export { CalendarButton } from "./CalendarButton";
+export { ShareButton } from "./ShareButton";
+export { PhotoGallery } from "./PhotoGallery";

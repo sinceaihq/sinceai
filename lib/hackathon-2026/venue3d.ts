@@ -59,7 +59,7 @@ export const SCENES_3D: readonly Scene3DMeta[] = [
     title: "Joki tower · floors 1–3",
     caption:
       "The three Q&A floors pulled apart: Showroom and Company Lounge on floor 1, three partners and a Chill Zone on floor 2, six partners on floor 3.",
-    alt: "Illustrative exploded 3D view of the round Joki tower: floor 1 with the Showroom LED wall and six counters, floor 2 with Revvity, Valmet and Traficom and a Chill Zone, floor 3 with Lindström, Bo LKV, Takomo, Forcit Group, Saarioinen and Business Turku.",
+    alt: "Illustrative exploded 3D view of the round Joki tower: floor 1 with the Showroom LED wall and six counters, floor 2 with Revvity, Valmet and Traficom and a Chill Zone, floor 3 with Lindström, Bo LKV, Takomo Golf, Forcit Group, Saarioinen and Business Turku.",
     poster: "/assets/guide/3d/joki-tower-poster.webp",
     views: [
       { id: "exploded", label: "All floors" },

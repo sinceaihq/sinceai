@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { ConsentDefaults } from "./ConsentDefaults";
 import { GuideHeader } from "./GuideHeader";
 import { GuideFooter } from "./GuideFooter";
 
@@ -6,6 +7,7 @@ import { GuideFooter } from "./GuideFooter";
 export function GuideShell({ children }: { children: ReactNode }) {
   return (
     <div className="guide-root relative min-h-screen bg-black text-white">
+      <ConsentDefaults />
       <div aria-hidden="true" className="guide-ambient pointer-events-none absolute inset-x-0 top-0 h-[44rem]" />
       <div aria-hidden="true" className="guide-grid pointer-events-none absolute inset-x-0 top-0 h-[44rem]" />
       <a

@@ -33,7 +33,12 @@ export function GuideHero({
               <li key={crumb.label} className="flex items-center gap-2">
                 {i > 0 && <span aria-hidden="true">/</span>}
                 {crumb.href ? (
-                  <Link href={crumb.href} className="hover:text-white transition-colors">
+                  <Link
+                    href={crumb.href}
+                    // Pages outside the guide are not prefetched (saves mobile data on site).
+                    prefetch={crumb.href.startsWith("/hackathon-2026/") ? undefined : false}
+                    className="-my-4 py-4 transition-colors hover:text-white"
+                  >
                     {crumb.label}
                   </Link>
                 ) : (
@@ -57,7 +62,7 @@ export function GuideHero({
         </div>
         <p className="mt-6 max-w-2xl text-base md:text-lg text-neutral-300 leading-relaxed">{lede}</p>
         <p className="mt-4 text-xs font-mono uppercase tracking-widest text-white/55">
-          {EVENT_2026.dateLabel} · {EVENT_2026.city} · Updated {EVENT_2026.lastUpdatedLabel}
+          {EVENT_2026.dateLabel}&nbsp;· {EVENT_2026.city}&nbsp;· Updated {EVENT_2026.lastUpdatedLabel}
         </p>
         {children && <div className="mt-10 space-y-6">{children}</div>}
       </div>

@@ -36,7 +36,7 @@ function Box({ x0, y0, x1, y1, h }: { x0: number; y0: number; x1: number; y1: nu
           [x1, y0, h],
           [x0, y0, h],
         ])}
-        fill="#0d0c16"
+        fill="var(--color-schematic-front)"
       />
       <polygon
         points={pts([
@@ -45,7 +45,7 @@ function Box({ x0, y0, x1, y1, h }: { x0: number; y0: number; x1: number; y1: nu
           [x1, y1, h],
           [x1, y0, h],
         ])}
-        fill="#09080f"
+        fill="var(--color-schematic-side)"
       />
       <polygon
         points={pts([
@@ -54,7 +54,8 @@ function Box({ x0, y0, x1, y1, h }: { x0: number; y0: number; x1: number; y1: nu
           [x1, y1, h],
           [x0, y1, h],
         ])}
-        fill="rgba(139,123,255,0.18)"
+        fill="var(--color-event)"
+        fillOpacity={0.18}
       />
     </g>
   );
@@ -77,8 +78,8 @@ function Tower({ cx, cy, r, h }: { cx: number; cy: number; r: number; h: number 
   ];
   return (
     <g stroke="var(--color-event)" strokeWidth={1.2}>
-      <polygon points={pts(side)} fill="#0d0c16" />
-      <polygon points={pts(arc(h, 0, Math.PI * 2, 40))} fill="rgba(139,123,255,0.28)" />
+      <polygon points={pts(side)} fill="var(--color-schematic-front)" />
+      <polygon points={pts(arc(h, 0, Math.PI * 2, 40))} fill="var(--color-event)" fillOpacity={0.28} />
     </g>
   );
 }
@@ -147,8 +148,10 @@ export function CampusSchematic() {
             [100, 36, 0],
             [-4, 36, 0],
           ])}
-          fill="rgba(255,255,255,0.015)"
-          stroke="rgba(255,255,255,0.08)"
+          fill="var(--color-fg)"
+          fillOpacity={0.015}
+          stroke="var(--color-fg)"
+          strokeOpacity={0.08}
         />
         <polygon
           points={pts([
@@ -157,8 +160,10 @@ export function CampusSchematic() {
             [70, -3, 0],
             [33, -3, 0],
           ])}
-          fill="rgba(139,123,255,0.07)"
-          stroke="rgba(139,123,255,0.35)"
+          fill="var(--color-event)"
+          fillOpacity={0.07}
+          stroke="var(--color-event)"
+          strokeOpacity={0.35}
           strokeDasharray="4 5"
         />
 
@@ -185,7 +190,8 @@ export function CampusSchematic() {
           x={cx}
           y={cy}
           textAnchor="middle"
-          fill="rgba(255,255,255,0.75)"
+          fill="var(--color-fg)"
+          fillOpacity={0.75}
           fontSize={15}
           fontFamily="var(--font-mono)"
         >
@@ -206,7 +212,8 @@ export function CampusSchematic() {
           x={530}
           y={410}
           textAnchor="end"
-          fill="rgba(255,255,255,0.5)"
+          fill="var(--color-fg)"
+          fillOpacity={0.5}
           fontSize={13}
           fontFamily="var(--font-mono)"
           letterSpacing="2"

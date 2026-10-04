@@ -8,8 +8,26 @@ import {
   VenueCards,
   VenueExplorer,
 } from "@/components/guide";
+import StructuredData from "@/components/StructuredData";
+import { PhotoGallery } from "@/components/guide/PhotoGallery";
 import { Venue3D } from "@/components/guide/venue3d/Venue3D";
-import { getVenue, GUIDE_BASE_PATH, VENUE_GUIDE, VENUE_MAPS, VENUES } from "@/lib/hackathon-2026";
+import { getVenue, GUIDE_BASE_PATH, keepDots, VENUE_GUIDE, VENUE_MAPS, VENUE_PHOTOS, VENUES } from "@/lib/hackathon-2026";
+import { ORG } from "@/lib/org";
+
+/** Machine-readable credits for every photo on the page. */
+const photoSchema = {
+  "@context": "https://schema.org",
+  "@graph": VENUE_PHOTOS.map((p) => ({
+    "@type": "ImageObject",
+    contentUrl: `${ORG.baseUrl}${p.src}`,
+    caption: p.caption,
+    description: p.alt,
+    creditText: p.credit,
+    creator: { "@type": "Organization", name: p.creator },
+    copyrightHolder: { "@type": "Organization", name: p.copyrightHolder },
+    copyrightNotice: `© ${p.copyrightHolder}`,
+  })),
+};
 
 const MAP_ORDER = [
   "educity-flow-1",
@@ -25,6 +43,7 @@ const MAP_ORDER = [
 export default function VenueExplorerPage() {
   return (
     <>
+      <StructuredData data={photoSchema} />
       <GuideHero
         crumbs={[
           { label: "Hackathon 2026", href: "/hackathon" },
@@ -38,6 +57,7 @@ export default function VenueExplorerPage() {
       <SectionNav
         items={[
           { id: "preview-3d", label: "3D preview" },
+          { id: "photos", label: "Photos" },
           { id: "maps", label: "Floor plans" },
           { id: "route", label: "Between venues" },
           { id: "venues", label: "Addresses" },
@@ -51,9 +71,19 @@ export default function VenueExplorerPage() {
           id="preview-3d-title"
           eyebrow="// step inside · illustrative 3D"
           title="See the space before you arrive."
-          lede="Explore the Joki Showroom, the Q&A floors and the BioCity build hall as they are being set up. Illustrative and not to scale — the floor plans below are the reference for rooms and stands."
+          lede="Explore the Joki Showroom, the Q&A floors and the BioCity build hall as they are planned for the event. Illustrative and not to scale — the floor plans below are the reference for rooms and stands."
         />
         <Venue3D />
+      </GuideSection>
+
+      <GuideSection id="photos">
+        <SectionHeading
+          id="photos-title"
+          eyebrow="// what it looks like"
+          title="The real spaces."
+          lede="Recognise the buildings and rooms before you arrive. Tap a photo to see it full size."
+        />
+        <PhotoGallery photos={VENUE_PHOTOS} />
       </GuideSection>
 
       <GuideSection id="maps">
@@ -94,7 +124,7 @@ export default function VenueExplorerPage() {
                     {map.hotspots.map((h) => (
                       <li key={h.id} className="text-neutral-300">
                         {h.label}
-                        {h.description && <span className="text-white/55"> — {h.description}</span>}
+                        {h.description && <span className="text-white/55"> — {keepDots(h.description)}</span>}
                       </li>
                     ))}
                   </ul>

@@ -85,9 +85,9 @@ export function Checklist({ storageKey, groups }: { storageKey: string; groups: 
           </fieldset>
         ))}
       </div>
-      <p className="guide-no-print mt-6 flex flex-wrap items-center gap-4 text-xs text-white/55">
+      <p className="guide-no-print mt-4 flex flex-wrap items-center gap-x-4 text-xs text-white/55">
         Ticks are saved on this device only.
-        <button type="button" onClick={reset} className="cursor-pointer underline underline-offset-4 hover:text-white">
+        <button type="button" onClick={reset} className="inline-flex min-h-11 items-center cursor-pointer underline underline-offset-4 hover:text-white">
           Clear ticks
         </button>
       </p>

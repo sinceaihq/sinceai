@@ -31,15 +31,15 @@ describe("CountdownTimer", () => {
       expect(screen.getByText(/^45$/)).toBeInTheDocument(); // Seconds
 
       // Check labels
-      expect(screen.getByText("Days")).toBeInTheDocument();
-      expect(screen.getByText("Hours")).toBeInTheDocument();
-      expect(screen.getByText("Minutes")).toBeInTheDocument();
-      expect(screen.getByText("Seconds")).toBeInTheDocument();
+      expect(screen.getByText("days")).toBeInTheDocument();
+      expect(screen.getByText("hours")).toBeInTheDocument();
+      expect(screen.getByText("min")).toBeInTheDocument();
+      expect(screen.getByText("sec")).toBeInTheDocument();
     });
   });
 
   describe("Event states", () => {
-    it('shows "Event is Live!" when event is ongoing', () => {
+    it('shows "Event is live" when event is ongoing', () => {
       // Set current time to be DURING the event
       const mockNow = new Date("2026-01-07T12:00:00Z").getTime();
       jest.spyOn(Date, "now").mockReturnValue(mockNow);
@@ -48,8 +48,8 @@ describe("CountdownTimer", () => {
       const endDate = "2026-01-09T00:00:00Z";
       render(<CountdownTimer startDate={startDate} endDate={endDate} />);
 
-      expect(screen.getByText("Event is Live!")).toBeInTheDocument();
-      expect(screen.queryByText("Days")).not.toBeInTheDocument();
+      expect(screen.getByText("Event is live")).toBeInTheDocument();
+      expect(screen.queryByText("days")).not.toBeInTheDocument();
     });
 
     it('shows "Event ended" when event has finished', () => {
@@ -62,7 +62,7 @@ describe("CountdownTimer", () => {
       render(<CountdownTimer startDate={startDate} endDate={endDate} />);
 
       expect(screen.getByText(/Event ended/)).toBeInTheDocument();
-      expect(screen.queryByText("Days")).not.toBeInTheDocument();
+      expect(screen.queryByText("days")).not.toBeInTheDocument();
     });
   });
 
@@ -173,8 +173,8 @@ describe("CountdownTimer", () => {
       const endDate = "2026-06-17T00:00:00Z";
       render(<CountdownTimer startDate={startDate} endDate={endDate} />);
 
-      // At exact start time, should show "Event is Live!"
-      expect(screen.getByText("Event is Live!")).toBeInTheDocument();
+      // At exact start time, should show "Event is live"
+      expect(screen.getByText("Event is live")).toBeInTheDocument();
     });
 
     it("handles exact end time (zero difference after event)", () => {
@@ -232,17 +232,17 @@ describe("CountdownTimer", () => {
       const endDate = "2026-12-03T00:00:00Z";
       const { container } = render(<CountdownTimer startDate={startDate} endDate={endDate} />);
 
-      // Ensure the component renders with flex container
-      const timerContainer = container.querySelector(
-        ".flex.items-center.justify-center"
-      );
+      // Ensure the component renders its grid container with the heading
+      const timerContainer = container.firstElementChild as HTMLElement;
       expect(timerContainer).toBeInTheDocument();
+      expect(timerContainer.style.display).toBe("grid");
+      expect(screen.getByText("until Since AI Hackathon 2026 begins")).toBeInTheDocument();
 
       // Ensure all labels are present
-      expect(screen.getByText("Days")).toBeInTheDocument();
-      expect(screen.getByText("Hours")).toBeInTheDocument();
-      expect(screen.getByText("Minutes")).toBeInTheDocument();
-      expect(screen.getByText("Seconds")).toBeInTheDocument();
+      expect(screen.getByText("days")).toBeInTheDocument();
+      expect(screen.getByText("hours")).toBeInTheDocument();
+      expect(screen.getByText("min")).toBeInTheDocument();
+      expect(screen.getByText("sec")).toBeInTheDocument();
     });
   });
 });

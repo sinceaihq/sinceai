@@ -1,4 +1,5 @@
 import {
+  CalendarButton,
   Checklist,
   CriticalPath,
   Details,
@@ -119,6 +120,9 @@ export default function BuilderGuidePage() {
           title="Friday to Sunday."
           lede="Local Turku time (EET, UTC+2). Times marked “end TBC” have a confirmed start only."
         />
+        <div className="mb-8 flex flex-wrap gap-3">
+          <CalendarButton audience={AUDIENCE} />
+        </div>
         <Schedule items={schedule} audience={AUDIENCE} />
       </GuideSection>
 

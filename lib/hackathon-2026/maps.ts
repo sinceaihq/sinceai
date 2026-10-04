@@ -1,3 +1,5 @@
+import { getCompany, SHOWROOM_ORDER } from "./companies";
+import { BIOCITY_STANDS, getStandPartner, OPEN_STAND_LABEL } from "./partners";
 import type { MapHotspot, VenueMap } from "./types";
 
 /**
@@ -29,6 +31,34 @@ const G = {
 } as const;
 
 const hs = (h: MapHotspot) => h;
+
+/** Showroom counters, numbered along the LED wall from the entrance. */
+const counterHotspot = (companyId: (typeof SHOWROOM_ORDER)[number], x: number, y: number): MapHotspot => ({
+  id: `sr-${companyId}`,
+  label: getCompany(companyId)!.name,
+  description: `Counter ${SHOWROOM_ORDER.indexOf(companyId) + 1} of ${SHOWROOM_ORDER.length} from the entrance`,
+  x,
+  y,
+  kind: "company",
+  refId: companyId,
+});
+
+/** BioCity stand hotspots carry the stand plan's partner names (partners.ts). */
+const standHotspot = (id: string, x: number, y: number): MapHotspot => {
+  const stand = BIOCITY_STANDS.find((s) => s.hotspotId === id);
+  if (!stand) throw new Error(`No BioCity stand for hotspot ${id}`);
+  const partner = getStandPartner(stand);
+  const where = `${stand.area}, ${stand.location.charAt(0).toLowerCase()}${stand.location.slice(1)}`;
+  return {
+    id,
+    label: partner ? `Stand ${stand.rank} · ${partner.name}` : `Stand ${stand.rank}`,
+    description: partner ? where : `${OPEN_STAND_LABEL} · ${where}`,
+    x,
+    y,
+    kind: "stand",
+    refId: stand.id,
+  };
+};
 
 export const VENUE_MAPS: readonly VenueMap[] = [
   {
@@ -109,7 +139,7 @@ export const VENUE_MAPS: readonly VenueMap[] = [
     srcLarge: "/assets/guide/maps/educity-2-large.webp",
     width: 1200,
     height: 1500,
-    alt: "EduCity floor 2 plan with eleven company briefing rooms around the upper lobby: Bo LKV 2001, Takomo 2002, Forcit Group 2003, Lindström 2004, Saarioinen 2067, Valmet 2006/2007, Business Turku 2072, DNA 2026, Turku Energia 2029/2031, Meyer Turku 2030 and Apetit 2027.",
+    alt: "EduCity floor 2 plan with eleven company briefing rooms around the upper lobby: Bo LKV 2001, Takomo Golf 2002, Forcit Group 2003, Lindström 2004, Saarioinen 2067, Valmet 2006/2007, Business Turku 2072, DNA 2026, Turku Energia 2029/2031, Meyer Turku 2030 and Apetit 2027.",
     caption: "Floor 2 is reached by the stairs at Taidon portaat or the lifts.",
     source: "Since AI event map",
     glossary: [G.floor, G.taito, G.briefingRooms, G.logoMarks],
@@ -170,7 +200,7 @@ export const VENUE_MAPS: readonly VenueMap[] = [
       }),
       hs({
         id: "e2-business-turku",
-        label: "2072 Työkahvila",
+        label: "2072 Työkahvila / Aurinkokylpy",
         description: "Business Turku",
         x: 0.496,
         y: 0.3865,
@@ -352,9 +382,10 @@ export const VENUE_MAPS: readonly VenueMap[] = [
         y: 0.203,
         kind: "entrance",
       }),
-      hs({ id: "stand-bc-1", label: "Stand 1", x: 0.616, y: 0.256, kind: "stand", refId: "bc-1" }),
-      hs({ id: "stand-bc-3", label: "Stand 3", x: 0.494, y: 0.256, kind: "stand", refId: "bc-3" }),
-      hs({ id: "bio-food-line", label: "Restaurant serving lines", x: 0.724, y: 0.292, kind: "service" }),
+      standHotspot("stand-bc-1", 0.616, 0.256),
+      standHotspot("stand-bc-2", 0.806, 0.641),
+      standHotspot("stand-bc-3", 0.494, 0.256),
+      standHotspot("stand-bc-4", 0.322, 0.63),
       hs({
         id: "bio-build-hall",
         label: "Build area",
@@ -364,8 +395,7 @@ export const VENUE_MAPS: readonly VenueMap[] = [
         kind: "area",
         audiences: ["builders"],
       }),
-      hs({ id: "stand-bc-2", label: "Stand 2", x: 0.806, y: 0.641, kind: "stand", refId: "bc-2" }),
-      hs({ id: "stand-bc-4", label: "Stand 4", x: 0.322, y: 0.63, kind: "stand", refId: "bc-4" }),
+      hs({ id: "bio-food-line", label: "Restaurant serving lines", x: 0.724, y: 0.292, kind: "service" }),
       hs({
         id: "bio-joki-passage",
         label: "To Joki",
@@ -460,21 +490,21 @@ export const VENUE_MAPS: readonly VenueMap[] = [
     source: "Since AI event map",
     glossary: [G.floor, G.standLocations, G.stairs, G.lift, G.entrance, G.logoMarks],
     hotspots: [
-      hs({ id: "sr-meyer-turku", label: "Meyer Turku", x: 0.4755, y: 0.778, kind: "company", refId: "meyer-turku" }),
-      hs({ id: "sr-dna", label: "DNA", x: 0.369, y: 0.731, kind: "company", refId: "dna" }),
-      hs({ id: "sr-apetit", label: "Apetit", x: 0.301, y: 0.626, kind: "company", refId: "apetit" }),
-      hs({ id: "sr-elisa", label: "Elisa", x: 0.291, y: 0.498, kind: "company", refId: "elisa" }),
-      hs({
-        id: "sr-turku-energia",
-        label: "Turku Energia",
-        x: 0.343,
-        y: 0.382,
-        kind: "company",
-        refId: "turku-energia",
-      }),
-      hs({ id: "sr-bayer", label: "Bayer", x: 0.431, y: 0.312, kind: "company", refId: "bayer" }),
-      hs({ id: "sr-lounge", label: "Company Lounge", x: 0.66, y: 0.514, kind: "area" }),
       hs({ id: "sr-entrance", label: "Entrance", description: "From the ramp", x: 0.5025, y: 0.891, kind: "entrance" }),
+      counterHotspot("meyer-turku", 0.4755, 0.778),
+      counterHotspot("dna", 0.369, 0.731),
+      counterHotspot("apetit", 0.301, 0.626),
+      counterHotspot("elisa", 0.291, 0.498),
+      counterHotspot("turku-energia", 0.343, 0.382),
+      counterHotspot("bayer", 0.431, 0.312),
+      hs({
+        id: "sr-lounge",
+        label: "Company Lounge",
+        description: "Amphitheatre beside the Showroom",
+        x: 0.66,
+        y: 0.514,
+        kind: "area",
+      }),
     ],
     status: "working",
   },
@@ -487,7 +517,7 @@ export const VENUE_MAPS: readonly VenueMap[] = [
     srcLarge: "/assets/guide/maps/joki-2-3-large.webp",
     width: 1500,
     height: 900,
-    alt: "Joki tower floors 2 and 3. Floor 2: Revvity, Valmet and Traficom with a Chill Zone. Floor 3: Lindström, Bo LKV, Takomo, Forcit Group, Saarioinen and Business Turku.",
+    alt: "Joki tower floors 2 and 3. Floor 2: Revvity, Valmet and Traficom with a Chill Zone. Floor 3: Lindström, Bo LKV, Takomo Golf, Forcit Group, Saarioinen and Business Turku.",
     caption: "Floor 2 (left) has a Chill Zone. Use the tower stairs or the lift.",
     source: "Since AI event map",
     glossary: [G.floor, G.standLocations, G.stairs, G.lift, G.logoMarks],
@@ -540,7 +570,7 @@ export const VENUE_MAPS: readonly VenueMap[] = [
       }),
       hs({
         id: "f3-takomo-golf",
-        label: "Takomo",
+        label: "Takomo Golf",
         description: "Floor 3",
         x: 0.79,
         y: 0.4,

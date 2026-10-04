@@ -145,11 +145,6 @@ export function Venue3D() {
 
   const onStageKey = (e: React.KeyboardEvent) => {
     const engine = engineRef.current;
-    if (e.key === "Escape" && expanded) {
-      e.preventDefault();
-      exitExpanded();
-      return;
-    }
     if (!engine || status !== "ready") return;
     if (e.key === "+" || e.key === "=") engine.zoom(1.25);
     else if (e.key === "-" || e.key === "_") engine.zoom(0.8);
@@ -160,6 +155,11 @@ export function Venue3D() {
 
   // Keep keyboard focus inside the full-screen overlay.
   const onOverlayKeyDown = (e: React.KeyboardEvent) => {
+    if (expanded && e.key === "Escape") {
+      e.preventDefault();
+      exitExpanded();
+      return;
+    }
     if (!expanded || e.key !== "Tab") return;
     const nodes = stageRef.current?.querySelectorAll<HTMLElement>(
       'button:not([disabled]), select, a[href], [tabindex="0"]',
@@ -237,7 +237,7 @@ export function Venue3D() {
           >
             <div
               className={cn(
-                "relative w-full overflow-hidden bg-[#050409]",
+                "relative w-full overflow-hidden bg-(--color-scene)",
                 expanded ? "min-h-0 flex-1" : "aspect-[4/5] border border-white/10 sm:aspect-[16/9]",
               )}
             >

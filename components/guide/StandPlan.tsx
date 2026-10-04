@@ -1,4 +1,4 @@
-import { BIOCITY_STANDS, getStandPartner, OPEN_STAND_LABEL } from "@/lib/hackathon-2026";
+import { BIOCITY_STANDS, getStandPartner, keepDots, OPEN_STAND_LABEL } from "@/lib/hackathon-2026";
 import { cn } from "@/lib/utils";
 import { CompanyLogo } from "./CompanyLogo";
 import { VenueExplorer } from "./maps/VenueExplorer";
@@ -27,7 +27,7 @@ export function StandPlan() {
               <div className="flex items-center justify-between gap-4">
                 <span className="font-mono text-xs uppercase tracking-widest text-white/55">
                   Stand {stand.rank}
-                  {stand.rank === 1 && " · most visible"}
+                  {stand.rank === 1 && "\u00a0· most visible"}
                 </span>
                 <span className="font-mono text-[11px] uppercase tracking-widest text-white/55">BioCity</span>
               </div>
@@ -53,7 +53,7 @@ export function StandPlan() {
                   <span className="text-base font-semibold text-neutral-300">{OPEN_STAND_LABEL}</span>
                 )}
               </div>
-              <p className="mt-4 font-semibold text-white">{stand.area}</p>
+              <p className="mt-4 font-semibold text-white">{keepDots(stand.area)}</p>
               <p className="text-sm text-neutral-300">{stand.location}</p>
               <p className="mt-2 text-sm text-white/55 leading-relaxed">{stand.visibility}</p>
             </li>

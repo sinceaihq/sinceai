@@ -8,6 +8,7 @@ import {
   companyMapIds,
   getMap,
   GUIDE_BASE_PATH,
+  keepDots,
   qaLocationLabel,
   type ChallengeCompany,
   type VenueMap,
@@ -60,9 +61,9 @@ export function CompanyDirectory({ companies }: { companies: readonly ChallengeC
             <li
               key={company.id}
               id={`company-${company.id}`}
-              className="guide-target guide-avoid-break grid grid-cols-1 gap-4 border-b border-white/10 py-5 md:grid-cols-[11rem_1fr_1fr_auto] md:items-center md:gap-6"
+              className="guide-target guide-avoid-break grid grid-cols-2 gap-x-4 gap-y-3 border-b border-white/10 py-5 md:grid-cols-[11rem_1fr_1fr_auto] md:items-center md:gap-6"
             >
-              <div className="flex min-h-8 items-center gap-4 md:block">
+              <div className="col-span-2 flex min-h-8 items-center gap-4 md:col-span-1 md:block">
                 {company.logo && (
                   <span className="guide-no-print block h-8 w-28 md:h-9 md:w-32">
                     <CompanyLogo name={company.name} logo={company.logo} sizes="128px" decorative />
@@ -78,9 +79,9 @@ export function CompanyDirectory({ companies }: { companies: readonly ChallengeC
                   {company.name}
                 </span>
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-[11px] font-mono uppercase tracking-widest text-white/55">
-                  Fri briefing · EduCity floor {company.briefing.floor}
+                  Fri briefing&nbsp;· EduCity floor {company.briefing.floor}
                 </p>
                 <p className="mt-1 font-semibold text-white">{briefingRoomLabel(company)}</p>
                 <button
@@ -93,9 +94,9 @@ export function CompanyDirectory({ companies }: { companies: readonly ChallengeC
                   Room on map
                 </button>
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-[11px] font-mono uppercase tracking-widest text-white/55">Sat Q&amp;A</p>
-                <p className="mt-1 font-semibold text-white">{qaLocationLabel(company)}</p>
+                <p className="mt-1 font-semibold text-white">{keepDots(qaLocationLabel(company))}</p>
                 <button
                   type="button"
                   onClick={(e) => setViewer({ map: getMap(maps.qa), highlight: [company.id], opener: e.currentTarget })}
@@ -106,7 +107,7 @@ export function CompanyDirectory({ companies }: { companies: readonly ChallengeC
               </div>
               <Link
                 href={`${GUIDE_BASE_PATH}/challenge-partners/${company.id}`}
-                className="guide-no-print inline-flex min-h-11 items-center justify-center border border-white/20 px-4 text-sm font-semibold text-white transition-colors hover:border-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                className="guide-no-print col-span-2 inline-flex min-h-11 items-center justify-center border border-white/20 px-4 text-sm font-semibold text-white transition-colors hover:border-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:col-span-1"
               >
                 {company.name} page
                 <span aria-hidden="true" className="ml-2">

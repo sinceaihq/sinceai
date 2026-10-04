@@ -116,13 +116,17 @@ export function getNowNext(items: readonly ScheduleItem[], nowMs: number): NowNe
     return { phase: "before", next, msUntilStart: firstStart - nowMs };
   }
 
+  // All-day items (e.g. a partner stand open all Saturday) are current for
+  // their whole Turku calendar day.
+  const today = localDate(nowMs);
+  const allDay = items.filter((i) => i.allDay && localDate(i.start) === today);
   const now = timed.filter((i) => {
     const start = Date.parse(i.start);
     const end = i.end ? Date.parse(i.end) : start + POINT_DURATION_MS;
     return start <= nowMs && nowMs < end;
   });
 
-  return { phase: "during", now, next };
+  return { phase: "during", now: [...allDay, ...now], next };
 }
 
 /** "33 days", "5 h 20 min", "12 min" */

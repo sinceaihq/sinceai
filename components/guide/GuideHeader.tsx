@@ -31,8 +31,17 @@ export function GuideHeader() {
         menuRef.current.querySelector("summary")?.focus();
       }
     };
+    // Tap / click anywhere outside the open menu closes it.
+    const onPointerDown = (e: PointerEvent) => {
+      const menu = menuRef.current;
+      if (menu?.open && !menu.contains(e.target as Node)) menu.open = false;
+    };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onPointerDown);
+    };
   }, []);
 
   const isActive = (href: string) => pathname === href || pathname?.startsWith(`${href}/`);
@@ -43,8 +52,9 @@ export function GuideHeader() {
         <div className="flex min-w-0 items-center gap-3">
           <Link
             href="/"
+            prefetch={false}
             aria-label="Since AI — home"
-            className="shrink-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            className="-ml-2.5 flex h-11 w-11 shrink-0 items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/assets/logo/sinceai-white.png" alt="" width={24} height={24} className="h-6 w-6" />
@@ -52,10 +62,10 @@ export function GuideHeader() {
           <span aria-hidden="true" className="h-5 w-px bg-white/15" />
           <Link
             href={GUIDE_BASE_PATH}
-            className="truncate text-[13px] font-bold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            className="flex min-h-11 items-center gap-[0.45em] truncate text-[13px] font-bold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             aria-current={pathname === GUIDE_BASE_PATH ? "page" : undefined}
           >
-            Field Guide <span className="font-normal text-white/55">2026</span>
+            Field Guide <span className="hidden font-normal text-white/55 min-[360px]:inline">2026</span>
           </Link>
         </div>
 

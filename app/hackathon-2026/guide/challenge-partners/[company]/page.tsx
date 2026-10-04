@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
+  CalendarButton,
   Checklist,
   CompanyLogo,
   Details,
@@ -12,6 +13,7 @@ import {
   Schedule,
   SectionHeading,
   SectionNav,
+  ShareButton,
   StatusTag,
   VenueExplorer,
   ghostButtonClass,
@@ -21,18 +23,19 @@ import {
   briefingRoomLabel,
   CHECKLISTS,
   companyMapIds,
+  companySchedule,
   DETAILS,
   getCompany,
   getGuide,
   getScheduleItem,
   GUIDE_BASE_PATH,
+  keepDots,
   qaLocationLabel,
-  scheduleFor,
+  qaStandSentence,
 } from "@/lib/hackathon-2026";
 
 const AUDIENCE = "challenge-partners" as const;
 const guide = getGuide(AUDIENCE);
-const schedule = scheduleFor(AUDIENCE);
 
 export default async function CompanyGuidePage({ params }: { params: Promise<{ company: string }> }) {
   const { company: id } = await params;
@@ -40,6 +43,7 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
   if (!company) notFound();
 
   const maps = companyMapIds(company);
+  const schedule = companySchedule(company);
   const room = briefingRoomLabel(company);
   const qa = qaLocationLabel(company);
   const showroom = company.qa.floor === 1;
@@ -72,7 +76,12 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
               strong: true,
             },
             { label: "Your briefing", value: "Fri 18:30–19:30", sub: "Teams arrive 18:00–18:25" },
-            { label: "Your Q&A stand", value: qa.replace("Joki · ", "Joki "), sub: "Sat 09–12 · 14–18", strong: true },
+            {
+              label: "Your Q&A stand",
+              value: showroom ? "Joki Showroom" : `Joki Floor ${company.qa.floor}`,
+              sub: showroom ? "Floor 1 · Sat 09–12 · 14–18" : "Sat 09–12 · 14–18",
+              strong: true,
+            },
             { label: "Evaluation briefing", value: "Sun 08:15", sub: "EduCity" },
             { label: "Awards · end", value: "Sun ~14:00 · 15:00", sub: "EduCity" },
           ]}
@@ -82,6 +91,10 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
           Room and stand follow the 2 Oct 2026 venue maps; production does a final lock — this page updates if anything
           moves.
         </p>
+        <div className="flex flex-wrap gap-3">
+          <ShareButton title={`${company.name} · Since AI Hackathon 2026`} />
+          <CalendarButton company={company} />
+        </div>
         <NowNext items={schedule} audience={AUDIENCE} firstMoment={getScheduleItem(guide.firstMomentId)} />
       </GuideHero>
 
@@ -110,12 +123,10 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
         <SectionHeading
           id="saturday-title"
           eyebrow="// saturday · joki"
-          title={`Q&A stand: ${qa.replace("Joki · ", "")}.`}
-          lede={
-            showroom
-              ? "Your stand is in the round Showroom on Joki's first floor, along the curved LED wall. The Company Lounge is right next to it."
-              : `Your stand is on floor ${company.qa.floor} of the Joki tower — take the tower stairs or the lift from floor 1. The Company Lounge is on floor 1, next to the Showroom.`
-          }
+          title={keepDots(`Q&A stand: ${qa.replace("Joki · ", "")}.`)}
+          lede={`${qaStandSentence(company)} ${
+            showroom ? "The Company Lounge is right next to it." : "The Company Lounge is on floor 1, next to the Showroom."
+          }`}
         />
         <VenueExplorer mapIds={[maps.qa]} highlight={[company.id]} label={`${company.name} Q&A stand`} />
         <div className="mt-10">
@@ -130,6 +141,9 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
           title="Your timeline."
           lede="Local Turku time (EET, UTC+2). Meals are optional — food is reserved for company representatives."
         />
+        <div className="mb-8 flex flex-wrap gap-3">
+          <CalendarButton company={company} />
+        </div>
         <Schedule items={schedule} audience={AUDIENCE} />
       </GuideSection>
 

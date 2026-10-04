@@ -1,4 +1,5 @@
-import type { ChallengeCompany } from "./types";
+import { scheduleFor } from "./schedule";
+import type { ChallengeCompany, ScheduleItem } from "./types";
 
 /**
  * The 15 challenge companies with their Friday briefing room (EduCity) and
@@ -152,6 +153,34 @@ export function qaLocationLabel(company: ChallengeCompany): string {
   return zone.toLowerCase().startsWith("floor") ? `Joki · Floor ${floor}` : `Joki · Floor ${floor} · ${zone}`;
 }
 
+/**
+ * The challenge partner schedule with this company's own room and stand filled
+ * in — used on the company page and in its calendar file.
+ */
+export function companySchedule(company: ChallengeCompany): ScheduleItem[] {
+  const room = `Room ${briefingRoomLabel(company)} · floor ${company.briefing.floor}`;
+  const stand = `Your stand · ${qaLocationLabel(company).replace("Joki · ", "")}`;
+  const standDetail = qaStandSentence(company);
+  const own: Record<string, { detail?: string; placeDetail?: string }> = {
+    "fri-move-to-briefings": { placeDetail: room },
+    "fri-briefings": { placeDetail: room },
+    "sat-cp-arrival": { detail: standDetail, placeDetail: stand },
+    "sat-qa-morning": { placeDetail: stand },
+    "sat-qa-afternoon": { placeDetail: stand },
+  };
+  return scheduleFor("challenge-partners").map((item) => {
+    const patch = own[item.id];
+    if (!patch) return item;
+    return {
+      ...item,
+      detailFor: patch.detail ? { ...item.detailFor, "challenge-partners": patch.detail } : item.detailFor,
+      placeDetailFor: patch.placeDetail
+        ? { ...item.placeDetailFor, "challenge-partners": patch.placeDetail }
+        : item.placeDetailFor,
+    };
+  });
+}
+
 /** Map ids used for a company's briefing room and Q&A stand. */
 export function companyMapIds(company: ChallengeCompany): { briefing: string; qa: string } {
   return {
@@ -165,3 +194,20 @@ export function companyMapIds(company: ChallengeCompany): { briefing: string; qa
  * (from the 2 Oct Joki showroom map).
  */
 export const SHOWROOM_ORDER = ["meyer-turku", "dna", "apetit", "elisa", "turku-energia", "bayer"] as const;
+
+/** Counter number along the Showroom LED wall, counted from the entrance (1–6). */
+export function showroomCounter(company: ChallengeCompany): number | undefined {
+  const index = (SHOWROOM_ORDER as readonly string[]).indexOf(company.id);
+  return index === -1 ? undefined : index + 1;
+}
+
+/** One sentence on where the company's Saturday Q&A stand is. */
+export function qaStandSentence(company: ChallengeCompany): string {
+  const counter = showroomCounter(company);
+  if (company.qa.floor === 1) {
+    return counter
+      ? `Your stand is counter ${counter} of ${SHOWROOM_ORDER.length} along the curved LED wall in the round Showroom on Joki's first floor, counted from the entrance.`
+      : "Your stand is in the round Showroom on Joki's first floor, along the curved LED wall.";
+  }
+  return `Your stand is on floor ${company.qa.floor} of the Joki tower — take the tower stairs or the lift from floor 1.`;
+}

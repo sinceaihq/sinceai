@@ -81,8 +81,8 @@ export interface Venue {
   entrances: readonly Entrance[];
   /** Google Maps search link for the official street address. */
   mapsUrl: string;
-  /** Approved image already published on sinceai.ai (optional). */
-  image?: { src: string; alt: string; width: number; height: number };
+  /** Card image (exterior, so people recognise the building). */
+  image?: { src: string; alt: string; width: number; height: number; credit?: string };
   /** Map ids (see maps.ts) relevant to this venue, in display order. */
   mapIds: readonly string[];
   status: Publishability;

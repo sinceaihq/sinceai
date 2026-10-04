@@ -20,3 +20,6 @@ export const GUIDE_HEADER_SOURCES = [
   `${GUIDE_BASE_PATH}/:path*`,
   `${GUIDE_ASSET_PATH}/:path*`,
 ] as const;
+
+/** The bare event path is a common truncation of shared links — send it to the hub. */
+export const GUIDE_PARENT_PATH = "/hackathon-2026";

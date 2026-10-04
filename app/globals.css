@@ -112,6 +112,11 @@
   /* Ambient light only (backgrounds, glows). */
   --color-event-glow: rgba(118, 84, 255, 0.16);
   --color-surface-raised: #0a0a0f;
+  /* 3D preview backdrop — matches the scenes' clear colour. */
+  --color-scene: #050409;
+  /* Campus schematic building faces (front / side). */
+  --color-schematic-front: #0d0c16;
+  --color-schematic-side: #09080f;
 }
 
 .dark {

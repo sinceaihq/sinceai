@@ -4,14 +4,20 @@ import {
   CHALLENGE_COMPANIES,
   CHECKLISTS,
   companyMapIds,
+  companySchedule,
+  detailFor,
   DETAILS,
   EVENT_2026,
   findHotspot,
   formatTime,
+  getCompany,
   getScheduleItem,
   getStandPartner,
   GUIDES,
   OPEN_STAND_LABEL,
+  placeDetailFor,
+  qaStandSentence,
+  showroomCounter,
   qaLocationLabel,
   SCENES_3D,
   SCHEDULE,
@@ -217,6 +223,44 @@ describe("BioCity visibility & tech partner stands", () => {
       expect(stand.venue).toBe("biocity");
       expect(findHotspot("biocity-lobby", stand.id)).toBeDefined();
     }
+  });
+
+  it("names the stand partner on the map, and marks open stands", () => {
+    const label = (id: string) => {
+      const h = findHotspot("biocity-lobby", id)!;
+      return `${h.label} — ${h.description}`;
+    };
+    expect(label("bc-1")).toMatch(/^Stand 1 · Red Hat — Aulagalleria/);
+    expect(label("bc-2")).toMatch(/^Stand 2 · Solita — Main lobby/);
+    expect(label("bc-3")).toContain(OPEN_STAND_LABEL);
+    expect(label("bc-4")).toContain(OPEN_STAND_LABEL);
+  });
+});
+
+describe("company schedule", () => {
+  it("fills in the company's own room and stand", () => {
+    const elisa = getCompany("elisa")!;
+    const items = companySchedule(elisa);
+    expect(items.map((i) => i.id)).toEqual(scheduleFor("challenge-partners").map((i) => i.id));
+    const briefing = items.find((i) => i.id === "fri-briefings")!;
+    expect(placeDetailFor(briefing, "challenge-partners")).toBe("Room 1001 Dromberg · floor 1");
+    const arrival = items.find((i) => i.id === "sat-cp-arrival")!;
+    expect(detailFor(arrival, "challenge-partners")).toContain("Showroom");
+    expect(placeDetailFor(arrival, "challenge-partners")).toBe("Your stand · Floor 1 · Showroom");
+  });
+
+  it("numbers Showroom counters from the entrance", () => {
+    expect(showroomCounter(getCompany("meyer-turku")!)).toBe(1);
+    expect(showroomCounter(getCompany("bayer")!)).toBe(6);
+    expect(showroomCounter(getCompany("valmet")!)).toBeUndefined();
+    expect(qaStandSentence(getCompany("elisa")!)).toContain("counter 4 of 6");
+    expect(findHotspot("joki-showroom", "elisa")?.description).toBe("Counter 4 of 6 from the entrance");
+  });
+
+  it("leaves the shared schedule untouched", () => {
+    companySchedule(getCompany("valmet")!);
+    expect(placeDetailFor(getScheduleItem("fri-briefings"), "challenge-partners")).toBe("Your assigned room");
+    expect(detailFor(getScheduleItem("sat-cp-arrival"), "challenge-partners")).not.toMatch(/Your stand is/);
   });
 });
 

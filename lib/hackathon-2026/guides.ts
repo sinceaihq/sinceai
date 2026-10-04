@@ -85,7 +85,7 @@ export const VENUE_GUIDE = {
   name: "Venue Explorer",
   lede: "Floor plans for EduCity, BioCity and Joki, the walk between them — and a 3D preview of the spaces.",
   metaDescription:
-    "Since AI Hackathon 2026 Venue Explorer: zoomable floor plans for EduCity, BioCity and Joki, company rooms and stands, and a 3D preview of the event spaces.",
+    "Since AI Hackathon 2026 Venue Explorer: zoomable floor plans for EduCity, BioCity and Joki, company rooms and stands, venue photos and a 3D preview of the event spaces.",
 } as const;
 
 /** The first-view critical path per audience: short, action-first. */
@@ -300,7 +300,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
     {
       q: "Stand setup at Joki",
-      a: "Being confirmed: either Since AI sets up your stand on Friday night from materials you leave at EduCity, or you set it up on Saturday at 08:30. We will tell you which.",
+      a: "Either Since AI sets up your stand on Friday night from materials you leave at EduCity, or you set it up yourself on Saturday at 08:30. We will tell you which before the event.",
       status: "pending",
     },
     {

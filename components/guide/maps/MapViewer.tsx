@@ -173,7 +173,11 @@ export function MapViewer({
 
   const onPointerDown = (e: React.PointerEvent) => {
     if ((e.target as HTMLElement).closest("button")) return;
-    viewportRef.current?.setPointerCapture(e.pointerId);
+    try {
+      viewportRef.current?.setPointerCapture(e.pointerId);
+    } catch {
+      // The pointer may already be gone (fast taps, synthetic events) — panning still works.
+    }
     const p = local(e);
     pointers.current.set(e.pointerId, p);
     if (pointers.current.size === 1) {
@@ -270,7 +274,6 @@ export function MapViewer({
             e.preventDefault();
             returnFocusTo.focus();
           }}
-          aria-describedby="map-viewer-help"
         >
           <div className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-white/10 pl-4 pr-2 sm:px-4">
             <Dialog.Title className="min-w-0 truncate text-sm font-bold">{map.title}</Dialog.Title>
@@ -300,10 +303,10 @@ export function MapViewer({
             </div>
           </div>
 
-          <p id="map-viewer-help" className="sr-only">
+          <Dialog.Description className="sr-only">
             Drag or use the arrow keys to move. Pinch, scroll or press plus and minus to zoom. Press 0 to reset and
             Escape to close. The locations on this map are listed below the map.
-          </p>
+          </Dialog.Description>
 
           <div
             ref={viewportRef}
@@ -382,7 +385,7 @@ export function MapViewer({
           <details className="guide-details shrink-0 border-t border-white/10 bg-black">
             <summary className="flex min-h-12 items-center justify-between px-4 text-xs font-mono uppercase tracking-widest text-neutral-400">
               <span>
-                Locations on this map ({map.hotspots.length}) · {map.source}
+                Locations on this map ({map.hotspots.length})&nbsp;· {map.source}
               </span>
               <svg
                 aria-hidden="true"

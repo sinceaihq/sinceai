@@ -2,7 +2,7 @@
 
 import { Maximize2 } from "lucide-react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { getMap, getVenue, type VenueMap } from "@/lib/hackathon-2026";
+import { getMap, getVenue, keepDots, type VenueMap } from "@/lib/hackathon-2026";
 import { cn } from "@/lib/utils";
 import { MapImage } from "./MapImage";
 import { MapViewer } from "./MapViewer";
@@ -148,14 +148,15 @@ export function VenueExplorer({
             aria-label={`Open ${active.title} full screen`}
           >
             <MapImage map={active} highlight={highlight} />
-            <span className="guide-no-print absolute right-3 top-3 inline-flex items-center gap-2 bg-black px-3 py-2 text-[11px] font-mono uppercase tracking-widest text-white">
+            {/* Below the image, so it never covers a plan's title block or date. */}
+            <span className="guide-no-print flex items-center justify-end gap-2 border-t border-white/10 bg-black px-3 py-2 text-[11px] font-mono uppercase tracking-widest text-neutral-300 transition-colors group-hover:text-white">
               <Maximize2 aria-hidden="true" className="h-3.5 w-3.5" />
               Zoom
             </span>
           </button>
           <figcaption className="mt-3 text-xs text-white/55 leading-relaxed">
-            <span className="text-neutral-300">{active.title}.</span> {active.caption}{" "}
-            <span className="whitespace-nowrap">Source: {active.source}.</span>
+            <span className="text-neutral-300">{keepDots(active.title)}.</span> {active.caption}{" "}
+            <span>Source: {active.source}.</span>
           </figcaption>
         </figure>
 
@@ -174,8 +175,8 @@ export function VenueExplorer({
                     )}
                   />
                   <span className="min-w-0">
-                    <span className={isHl ? "font-semibold text-white" : "text-neutral-200"}>{h.label}</span>
-                    {h.description && <span className="text-white/55"> — {h.description}</span>}
+                    <span className={isHl ? "font-semibold text-white" : "text-neutral-200"}>{keepDots(h.label)}</span>
+                    {h.description && <span className="text-white/55"> — {keepDots(h.description)}</span>}
                     {isHl && <span className="sr-only"> (highlighted)</span>}
                   </span>
                 </li>
