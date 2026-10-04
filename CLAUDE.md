@@ -36,7 +36,7 @@ Jest is configured (`npm run test`). Add tests when introducing testable logic.
 - `lib/utils.ts` — `cn()` helper (clsx + tailwind-merge).
 - `hooks/` — Custom hooks (e.g., `use-mobile.ts` with 768px breakpoint).
 - `lib/hackathon-2026/` — Single source of truth for the Hackathon 2026 Field Guide (event facts, schedule, venues, challenge company rooms, BioCity stand plan, maps). Change times, rooms and stands here, never in components.
-- `components/guide/` — Field Guide UI. `venue3d/` is a three.js preview loaded only on demand; re-render its posters with `scripts/render-guide-posters.mjs` after visible scene changes.
+- `components/guide/` — Field Guide UI. `twin/` is the campus twin: a to-scale three.js model of the event campus (EduCity, BioCity, Joki, streets, arrival routes), loaded only on demand. Read `docs/campus-twin/README.md` before changing it; its texts live in `lib/hackathon-2026/twin.ts`, its data pipeline in `scripts/twin/` with inputs in `data/campus-twin/sources/`. Re-render its posters with `scripts/render-guide-posters.mjs` after visible scene changes. QA browsers go through `scripts/twin/qa/gpu.mjs` (the dev machine has 16 GB shared with other projects — max 2 GPU browsers, Jest with `--maxWorkers=2`).
 
 ### API Routes
 

@@ -1,0 +1,2416 @@
+{
+ "frame": {
+  "description": "All y values are metres relative to EduCity 1st-floor finished floor level (lobby = Stroget deck level) = 0.0. Joukahaisenkatu street level at the NE facade = -5.0 (architect section, +-0.3). Campus local frame: origin BioCity centroid, x east, z south. Building frame: a = along NE facade from N corner toward E corner (bearing 128.7 deg), b = from NE facade toward SW (bearing 218.7 deg). x = 217.57 + 0.7793a - 0.6307b ; z = 51.24 + 0.6266a + 0.7762b.",
+  "storey_levels_rel_lobby": {
+   "basement_floor": -8.7,
+   "lower_level_street": -5.0,
+   "floor1_lobby": 0.0,
+   "floor2": 5.0,
+   "floor3": 9.0,
+   "floor4": 13.0,
+   "floor5": 17.0,
+   "floor6": 21.0,
+   "main_roof_slab_top": 25.0,
+   "brick_parapet_top_max": 25.9,
+   "plant_room_top": 33.5
+  },
+  "sources": "architect section+elevation (ark.fi 1/2021, Sigge) scaled 10.27 px/m; OSM ways 731925812/1212766524-26; Turku true ortho 2022; photos (Vesa Loikas, TTK, ThingLink TUAS)"
+ },
+ "corners": {
+  "N": [
+   217.57,
+   51.24
+  ],
+  "E": [
+   257.94,
+   83.7
+  ],
+  "S_main": [
+   216.82,
+   134.31
+  ],
+  "W_main": [
+   176.45,
+   101.85
+  ],
+  "pavilion_W": [
+   169.86,
+   115.67
+  ],
+  "pavilion_S": [
+   204.77,
+   143.74
+  ],
+  "pavilion_E_junction": [
+   214.17,
+   132.18
+  ],
+  "pavilion_N_junction": [
+   179.25,
+   104.1
+  ]
+ },
+ "lower_level": {
+  "footprint": [
+   [
+    217.57,
+    51.24
+   ],
+   [
+    257.94,
+    83.7
+   ],
+   [
+    216.82,
+    134.31
+   ],
+   [
+    176.45,
+    101.85
+   ]
+  ],
+  "y0": -5.0,
+  "y1": 0.0,
+  "note": "street-level storey; exposed as storefront glazing on NE facade (a~1-45), else mostly below deck/terraces; extends under pavilion (lower lobby, slide+stair from pavilion)"
+ },
+ "brick_mantle": {
+  "footprint": [
+   [
+    217.57,
+    51.24
+   ],
+   [
+    257.94,
+    83.7
+   ],
+   [
+    216.82,
+    134.31
+   ],
+   [
+    176.45,
+    101.85
+   ]
+  ],
+  "base_y": "-5.0 where ground is street level (NE facade, NE ends of NW/SE facades), 0.0 where deck/walkway abuts",
+  "top_formula": "y_top = min(25.9, 65.2 - 0.726*b - 0.245*a)  (fit: SE facade from architect elevation; SW/NW from photos+terrace levels; estimate +-1 m on NW/SW)",
+  "facade_top_polylines": {
+   "NE": [
+    [
+     217.57,
+     51.24,
+     25.9
+    ],
+    [
+     257.94,
+     83.7,
+     25.9
+    ]
+   ],
+   "SE": [
+    [
+     257.94,
+     83.7,
+     25.9
+    ],
+    [
+     234.79,
+     112.18,
+     25.9
+    ],
+    [
+     216.82,
+     134.31,
+     5.2
+    ]
+   ],
+   "SW": [
+    [
+     216.82,
+     134.31,
+     5.2
+    ],
+    [
+     176.45,
+     101.85,
+     17.9
+    ]
+   ],
+   "NW": [
+    [
+     176.45,
+     101.85,
+     17.9
+    ],
+    [
+     183.45,
+     93.23,
+     25.9
+    ],
+    [
+     217.57,
+     51.24,
+     25.9
+    ]
+   ]
+  },
+  "material": "Petersen Kolumba handmade brick 528x108x37 mm, ~13 mm joints (50 mm courses), dark grey-brown mix"
+ },
+ "plant_room": {
+  "parts": {
+   "NE_bar": [
+    [
+     214.16,
+     56.71
+    ],
+    [
+     253.75,
+     88.54
+    ],
+    [
+     247.44,
+     96.3
+    ],
+    [
+     207.85,
+     64.47
+    ]
+   ],
+   "NW_arm": [
+    [
+     207.85,
+     64.47
+    ],
+    [
+     221.25,
+     75.25
+    ],
+    [
+     200.82,
+     100.4
+    ],
+    [
+     187.42,
+     89.62
+    ]
+   ],
+   "SE_arm": [
+    [
+     234.03,
+     85.52
+    ],
+    [
+     247.44,
+     96.3
+    ],
+    [
+     238.86,
+     106.86
+    ],
+    [
+     225.46,
+     96.08
+    ]
+   ]
+  },
+  "y0": 25.0,
+  "y1": 33.5,
+  "material": "aluminium-magnesium alloy vertical panels ~1.2 m module, light silver; dark grey louvre bands at ends; roof: PV arrays + AHU units"
+ },
+ "atrium_glass_roof": {
+  "quad": [
+   [
+    221.25,
+    75.25,
+    29.0
+   ],
+   [
+    234.03,
+    85.52,
+    29.0
+   ],
+   [
+    213.79,
+    110.44,
+    13.4
+   ],
+   [
+    201.01,
+    100.16,
+    13.4
+   ]
+  ],
+  "slope_deg": 26,
+  "material": "silk-screen fritted glass (white dash pattern) on light-grey steel beams; maintenance ladder/rail along SE edge"
+ },
+ "atrium_void": {
+  "plan": [
+   [
+    220.69,
+    75.31
+   ],
+   [
+    233.47,
+    85.58
+   ],
+   [
+    213.48,
+    110.19
+   ],
+   [
+    200.7,
+    99.91
+   ]
+  ],
+  "floor": "2nd-floor aula (y 5.0) for b<35; Taidon portaat void down to lobby (y 0) for b 35-48.5",
+  "top": "glass roof"
+ },
+ "terraces_estimate": [
+  {
+   "name": "NW wing T3 roof terrace",
+   "poly": [
+    [
+     187.42,
+     89.62
+    ],
+    [
+     200.82,
+     100.4
+    ],
+    [
+     197.22,
+     104.82
+    ],
+    [
+     183.82,
+     94.04
+    ]
+   ],
+   "y": 25.0
+  },
+  {
+   "name": "NW wing T2",
+   "poly": [
+    [
+     183.82,
+     94.04
+    ],
+    [
+     197.22,
+     104.82
+    ],
+    [
+     193.82,
+     109.01
+    ],
+    [
+     180.41,
+     98.24
+    ]
+   ],
+   "y": 21.0
+  },
+  {
+   "name": "NW wing T1 (W corner)",
+   "poly": [
+    [
+     180.41,
+     98.24
+    ],
+    [
+     193.82,
+     109.01
+    ],
+    [
+     190.48,
+     113.13
+    ],
+    [
+     177.07,
+     102.35
+    ]
+   ],
+   "y": 17.0
+  },
+  {
+   "name": "Terrace R (4th floor level, sedum square a21-32 b53.5-62.5 + decking)",
+   "poly": [
+    [
+     201.01,
+     100.16
+    ],
+    [
+     213.79,
+     110.44
+    ],
+    [
+     203.26,
+     123.4
+    ],
+    [
+     190.48,
+     113.13
+    ]
+   ],
+   "y": 13.0
+  },
+  {
+   "name": "SE wing roof terrace (sedum)",
+   "poly": [
+    [
+     225.46,
+     96.08
+    ],
+    [
+     238.86,
+     106.86
+    ],
+    [
+     234.64,
+     112.06
+    ],
+    [
+     221.23,
+     101.28
+    ]
+   ],
+   "y": 25.0
+  },
+  {
+   "name": "SE wing step",
+   "poly": [
+    [
+     221.23,
+     101.28
+    ],
+    [
+     234.64,
+     112.06
+    ],
+    [
+     231.92,
+     115.4
+    ],
+    [
+     218.52,
+     104.62
+    ]
+   ],
+   "y": 21.0
+  },
+  {
+   "name": "SE wing step",
+   "poly": [
+    [
+     218.52,
+     104.62
+    ],
+    [
+     231.92,
+     115.4
+    ],
+    [
+     228.27,
+     119.9
+    ],
+    [
+     214.86,
+     109.12
+    ]
+   ],
+   "y": 17.0
+  },
+  {
+   "name": "SE wing step",
+   "poly": [
+    [
+     214.86,
+     109.12
+    ],
+    [
+     228.27,
+     119.9
+    ],
+    [
+     227.0,
+     121.45
+    ],
+    [
+     213.6,
+     110.67
+    ]
+   ],
+   "y": 13.0
+  },
+  {
+   "name": "2nd-floor TERASSI (event map) enclosed by sloping brick screen",
+   "poly": [
+    [
+     213.6,
+     110.67
+    ],
+    [
+     227.0,
+     121.45
+    ],
+    [
+     216.66,
+     134.18
+    ],
+    [
+     203.26,
+     123.4
+    ]
+   ],
+   "y": 5.0
+  },
+  {
+   "name": "main roof NE band (no plant room)",
+   "poly": [
+    [
+     217.57,
+     51.24
+    ],
+    [
+     257.94,
+     83.7
+    ],
+    [
+     253.9,
+     88.67
+    ],
+    [
+     213.53,
+     56.21
+    ]
+   ],
+   "y": 25.0
+  }
+ ],
+ "pavilion": {
+  "footprint": [
+   [
+    179.25,
+    104.1
+   ],
+   [
+    214.17,
+    132.18
+   ],
+   [
+    204.77,
+    143.74
+   ],
+   [
+    169.86,
+    115.67
+   ]
+  ],
+  "y0": 0.0,
+  "roof_y": 5.2,
+  "lower_level_below": [
+   -5.0,
+   0.0
+  ],
+  "skylights_pyramidal": [
+   {
+    "centre": [
+     182.34,
+     118.39
+    ],
+    "base_m": 3.2
+   },
+   {
+    "centre": [
+     191.88,
+     122.98
+    ],
+    "base_m": 4.4
+   },
+   {
+    "centre": [
+     199.17,
+     131.92
+    ],
+    "base_m": 3.2
+   }
+  ],
+  "entrances": {
+   "NW_main": {
+    "pos": [
+     173.31,
+     111.9
+    ],
+    "osm_entrance_node": [
+     176.1,
+     108.78
+    ],
+    "type": "revolving door per plan (+ adjacent glass doors)",
+    "faces": "NW onto Stroget deck"
+   },
+   "SE_main": {
+    "pos": [
+     207.83,
+     139.66
+    ],
+    "type": "revolving door per plan; as-built photo shows automatic sliding double door marked B under deep canopy",
+    "faces": "SE onto plaza"
+   }
+  },
+  "facade": "glazed curtain wall (dark frames) under ~2.5 m projecting canopy with brushed-aluminium fascia ~1.3 m; aluminium-clad corner piers; roof sedum"
+ },
+ "link_bridges_ICT_City": {
+  "footprint": [
+   [
+    188.64,
+    67.5
+   ],
+   [
+    198.14,
+    75.15
+   ],
+   [
+    195.5,
+    78.41
+   ],
+   [
+    185.99,
+    70.76
+   ]
+  ],
+  "lower": {
+   "floor_y": 0.0,
+   "roof_y": 4.0,
+   "underside_y": -0.8,
+   "note": "1st floor; passage clearance ~4 m (OSM maxheight 4)"
+  },
+  "upper": {
+   "floor_y": 13.0,
+   "note": "4th floor per architect plan (OSM tags min_level 3 -> could be 3rd floor y 9.0)"
+  },
+  "material": "glazed (OSM building:colour blue/red, unverified)"
+ },
+ "side_entrances": {
+  "SE_B_door": {
+   "pos": [
+    237.5,
+    108.85
+   ],
+   "y": 0.0,
+   "note": "double glass door \"B\" in recessed brick portal, from SE walkway"
+  },
+  "NW_ICT_gateway": {
+   "pos": [
+    196.66,
+    76.65
+   ],
+   "y": "street level -5.0 (lift lobby) and 0.0 via link bridge"
+  }
+ },
+ "main_stairs_SE": {
+  "centreline": [
+   [
+    260.94,
+    85.08,
+    -5.0
+   ],
+   [
+    251.27,
+    96.82,
+    0.0
+   ]
+  ],
+  "width_m_estimate": 6.0,
+  "steps_estimate": 30,
+  "note": "precast concrete steps, railing on outer side, handrail on brick wall, sawtooth brick plinth"
+ },
+ "SE_walkway": {
+  "poly": [
+   [
+    248.86,
+    94.88
+   ],
+   [
+    253.69,
+    98.76
+   ],
+   [
+    221.14,
+    138.81
+   ],
+   [
+    216.31,
+    134.93
+   ]
+  ],
+  "y": 0.0
+ },
+ "stroget_deck_centreline": [
+  [
+   69,
+   21,
+   0.0
+  ],
+  [
+   135,
+   75,
+   0.0
+  ],
+  [
+   160,
+   96,
+   0.0
+  ],
+  [
+   176.1,
+   108.8,
+   0.0
+  ]
+ ],
+ "Meanderi_artwork": [
+  165.04,
+  106.53
+ ],
+ "windows_SE_facade_architect_elevation": {
+  "note": "square windows read from Sigge SE elevation (ark.fi), centre b (m from E corner along SE facade), y centre rel lobby, outer size m (+-0.15). Facade plane a=51.8, outward normal (x,z)=(0.7793,0.6266). Openings with b>48.8 and y>5 are openings in the brick screen around the 2nd-floor terrace. B door at b 29.7-34.1, y 0-2.9.",
+  "windows": [
+   {
+    "b": 2.2,
+    "y": 24.0,
+    "size": 1.08,
+    "xz": [
+     256.55,
+     85.41
+    ]
+   },
+   {
+    "b": 26.7,
+    "y": 24.0,
+    "size": 1.03,
+    "xz": [
+     241.1,
+     104.42
+    ]
+   },
+   {
+    "b": 9.6,
+    "y": 22.8,
+    "size": 1.08,
+    "xz": [
+     251.88,
+     91.15
+    ]
+   },
+   {
+    "b": 15.3,
+    "y": 22.8,
+    "size": 1.08,
+    "xz": [
+     248.29,
+     95.57
+    ]
+   },
+   {
+    "b": 38.2,
+    "y": 22.4,
+    "size": 1.13,
+    "xz": [
+     233.84,
+     113.35
+    ]
+   },
+   {
+    "b": 29.8,
+    "y": 22.3,
+    "size": 1.08,
+    "xz": [
+     239.14,
+     106.83
+    ]
+   },
+   {
+    "b": 12.4,
+    "y": 22.2,
+    "size": 2.83,
+    "xz": [
+     250.12,
+     93.32
+    ]
+   },
+   {
+    "b": 7.0,
+    "y": 21.9,
+    "size": 2.15,
+    "xz": [
+     253.52,
+     89.13
+    ]
+   },
+   {
+    "b": 32.7,
+    "y": 21.9,
+    "size": 2.05,
+    "xz": [
+     237.31,
+     109.08
+    ]
+   },
+   {
+    "b": 1.7,
+    "y": 21.2,
+    "size": 2.1,
+    "xz": [
+     256.87,
+     85.02
+    ]
+   },
+   {
+    "b": 29.0,
+    "y": 19.0,
+    "size": 1.08,
+    "xz": [
+     239.65,
+     106.21
+    ]
+   },
+   {
+    "b": 13.4,
+    "y": 18.9,
+    "size": 1.08,
+    "xz": [
+     249.49,
+     94.1
+    ]
+   },
+   {
+    "b": 6.6,
+    "y": 18.9,
+    "size": 1.03,
+    "xz": [
+     253.78,
+     88.82
+    ]
+   },
+   {
+    "b": 39.5,
+    "y": 18.9,
+    "size": 1.03,
+    "xz": [
+     233.03,
+     114.36
+    ]
+   },
+   {
+    "b": 43.0,
+    "y": 18.4,
+    "size": 1.17,
+    "xz": [
+     230.82,
+     117.07
+    ]
+   },
+   {
+    "b": 10.4,
+    "y": 18.3,
+    "size": 2.83,
+    "xz": [
+     251.38,
+     91.77
+    ]
+   },
+   {
+    "b": 32.7,
+    "y": 18.2,
+    "size": 2.78,
+    "xz": [
+     237.31,
+     109.08
+    ]
+   },
+   {
+    "b": 4.4,
+    "y": 17.4,
+    "size": 1.03,
+    "xz": [
+     255.16,
+     87.11
+    ]
+   },
+   {
+    "b": 26.2,
+    "y": 16.5,
+    "size": 2.05,
+    "xz": [
+     241.41,
+     104.03
+    ]
+   },
+   {
+    "b": 7.3,
+    "y": 14.9,
+    "size": 1.03,
+    "xz": [
+     253.33,
+     89.36
+    ]
+   },
+   {
+    "b": 45.7,
+    "y": 14.7,
+    "size": 2.2,
+    "xz": [
+     229.11,
+     119.17
+    ]
+   },
+   {
+    "b": 10.0,
+    "y": 14.6,
+    "size": 2.15,
+    "xz": [
+     251.63,
+     91.46
+    ]
+   },
+   {
+    "b": 49.8,
+    "y": 14.5,
+    "size": 1.17,
+    "xz": [
+     226.53,
+     122.35
+    ]
+   },
+   {
+    "b": 37.5,
+    "y": 14.5,
+    "size": 1.08,
+    "xz": [
+     234.29,
+     112.81
+    ]
+   },
+   {
+    "b": 43.2,
+    "y": 14.5,
+    "size": 1.22,
+    "xz": [
+     230.69,
+     117.23
+    ]
+   },
+   {
+    "b": 29.8,
+    "y": 14.4,
+    "size": 1.03,
+    "xz": [
+     239.14,
+     106.83
+    ]
+   },
+   {
+    "b": 14.5,
+    "y": 14.3,
+    "size": 2.83,
+    "xz": [
+     248.79,
+     94.95
+    ]
+   },
+   {
+    "b": 32.7,
+    "y": 13.9,
+    "size": 2.05,
+    "xz": [
+     237.31,
+     109.08
+    ]
+   },
+   {
+    "b": 3.9,
+    "y": 13.1,
+    "size": 2.0,
+    "xz": [
+     255.48,
+     86.73
+    ]
+   },
+   {
+    "b": 25.8,
+    "y": 12.0,
+    "size": 1.08,
+    "xz": [
+     241.67,
+     103.72
+    ]
+   },
+   {
+    "b": 29.0,
+    "y": 11.1,
+    "size": 1.03,
+    "xz": [
+     239.65,
+     106.21
+    ]
+   },
+   {
+    "b": 15.3,
+    "y": 11.0,
+    "size": 1.08,
+    "xz": [
+     248.29,
+     95.57
+    ]
+   },
+   {
+    "b": 46.2,
+    "y": 11.0,
+    "size": 1.08,
+    "xz": [
+     228.8,
+     119.56
+    ]
+   },
+   {
+    "b": 52.4,
+    "y": 10.7,
+    "size": 2.15,
+    "xz": [
+     224.89,
+     124.37
+    ]
+   },
+   {
+    "b": 12.7,
+    "y": 10.7,
+    "size": 2.1,
+    "xz": [
+     249.93,
+     93.56
+    ]
+   },
+   {
+    "b": 43.6,
+    "y": 10.7,
+    "size": 2.1,
+    "xz": [
+     230.44,
+     117.54
+    ]
+   },
+   {
+    "b": 55.3,
+    "y": 10.5,
+    "size": 1.22,
+    "xz": [
+     223.06,
+     126.62
+    ]
+   },
+   {
+    "b": 38.3,
+    "y": 10.3,
+    "size": 2.83,
+    "xz": [
+     233.78,
+     113.43
+    ]
+   },
+   {
+    "b": 4.4,
+    "y": 10.1,
+    "size": 1.03,
+    "xz": [
+     255.16,
+     87.11
+    ]
+   },
+   {
+    "b": 7.0,
+    "y": 9.9,
+    "size": 2.15,
+    "xz": [
+     253.52,
+     89.13
+    ]
+   },
+   {
+    "b": 19.3,
+    "y": 9.9,
+    "size": 2.1,
+    "xz": [
+     245.77,
+     98.68
+    ]
+   },
+   {
+    "b": 32.7,
+    "y": 9.9,
+    "size": 2.05,
+    "xz": [
+     237.31,
+     109.08
+    ]
+   },
+   {
+    "b": 26.8,
+    "y": 8.1,
+    "size": 1.03,
+    "xz": [
+     241.03,
+     104.5
+    ]
+   },
+   {
+    "b": 6.6,
+    "y": 7.0,
+    "size": 1.08,
+    "xz": [
+     253.78,
+     88.82
+    ]
+   },
+   {
+    "b": 13.4,
+    "y": 7.0,
+    "size": 1.08,
+    "xz": [
+     249.49,
+     94.1
+    ]
+   },
+   {
+    "b": 29.4,
+    "y": 7.0,
+    "size": 2.05,
+    "xz": [
+     239.4,
+     106.52
+    ]
+   },
+   {
+    "b": 47.5,
+    "y": 7.0,
+    "size": 1.08,
+    "xz": [
+     227.98,
+     120.57
+    ]
+   },
+   {
+    "b": 50.8,
+    "y": 6.7,
+    "size": 2.15,
+    "xz": [
+     225.9,
+     123.13
+    ]
+   },
+   {
+    "b": 57.7,
+    "y": 6.7,
+    "size": 2.15,
+    "xz": [
+     221.55,
+     128.48
+    ]
+   },
+   {
+    "b": 55.2,
+    "y": 6.5,
+    "size": 1.13,
+    "xz": [
+     223.12,
+     126.54
+    ]
+   },
+   {
+    "b": 17.6,
+    "y": 6.5,
+    "size": 1.08,
+    "xz": [
+     246.84,
+     97.36
+    ]
+   },
+   {
+    "b": 37.5,
+    "y": 6.5,
+    "size": 1.08,
+    "xz": [
+     234.29,
+     112.81
+    ]
+   },
+   {
+    "b": 41.7,
+    "y": 6.5,
+    "size": 1.08,
+    "xz": [
+     231.64,
+     116.07
+    ]
+   },
+   {
+    "b": 60.4,
+    "y": 6.5,
+    "size": 1.17,
+    "xz": [
+     219.84,
+     130.58
+    ]
+   },
+   {
+    "b": 10.4,
+    "y": 6.3,
+    "size": 2.83,
+    "xz": [
+     251.38,
+     91.77
+    ]
+   },
+   {
+    "b": 44.6,
+    "y": 6.3,
+    "size": 2.78,
+    "xz": [
+     229.81,
+     118.32
+    ]
+   },
+   {
+    "b": 32.7,
+    "y": 6.2,
+    "size": 2.78,
+    "xz": [
+     237.31,
+     109.08
+    ]
+   },
+   {
+    "b": 65.6,
+    "y": 4.5,
+    "size": 0.98,
+    "xz": [
+     216.56,
+     134.62
+    ]
+   },
+   {
+    "b": 3.9,
+    "y": 4.4,
+    "size": 2.05,
+    "xz": [
+     255.48,
+     86.73
+    ]
+   },
+   {
+    "b": 26.2,
+    "y": 3.6,
+    "size": 2.0,
+    "xz": [
+     241.41,
+     104.03
+    ]
+   },
+   {
+    "b": 38.7,
+    "y": 2.0,
+    "size": 2.1,
+    "xz": [
+     233.53,
+     113.74
+    ]
+   },
+   {
+    "b": 43.6,
+    "y": 2.0,
+    "size": 2.1,
+    "xz": [
+     230.44,
+     117.54
+    ]
+   },
+   {
+    "b": 50.9,
+    "y": 2.0,
+    "size": 2.05,
+    "xz": [
+     225.84,
+     123.21
+    ]
+   },
+   {
+    "b": 55.7,
+    "y": 2.0,
+    "size": 2.1,
+    "xz": [
+     222.81,
+     126.93
+    ]
+   },
+   {
+    "b": 63.2,
+    "y": 2.0,
+    "size": 2.05,
+    "xz": [
+     218.08,
+     132.75
+    ]
+   },
+   {
+    "b": 7.0,
+    "y": 1.7,
+    "size": 2.1,
+    "xz": [
+     253.52,
+     89.13
+    ]
+   },
+   {
+    "b": 11.1,
+    "y": 1.5,
+    "size": 1.08,
+    "xz": [
+     250.94,
+     92.31
+    ]
+   },
+   {
+    "b": 18.4,
+    "y": 1.5,
+    "size": 1.08,
+    "xz": [
+     246.33,
+     97.98
+    ]
+   },
+   {
+    "b": 46.2,
+    "y": 1.5,
+    "size": 1.08,
+    "xz": [
+     228.8,
+     119.56
+    ]
+   },
+   {
+    "b": 58.3,
+    "y": 1.5,
+    "size": 1.08,
+    "xz": [
+     221.17,
+     128.95
+    ]
+   },
+   {
+    "b": 1.7,
+    "y": -0.4,
+    "size": 2.1,
+    "xz": [
+     256.87,
+     85.02
+    ]
+   }
+  ]
+ },
+ "windows_NE_facade_photo_detected_partial": {
+  "note": "46 of ~65 windows auto-detected in Vesa Loikas photo (sarcsigge ss_002); a = m from N corner along NE facade; y = centre height ABOVE STREET (subtract 5.0 for rel-lobby); size incl. frame+sill shadow (overestimates ~0.15 m); vertical scale +-1 m. Facade plane b=0, outward normal (x,z)=(0.6307,-0.7762).",
+  "windows": [
+   {
+    "a": 50.0,
+    "y_above_street": 28.3,
+    "size": 1.71,
+    "xz": [
+     256.53,
+     82.57
+    ]
+   },
+   {
+    "a": 36.0,
+    "y_above_street": 28.1,
+    "size": 1.52,
+    "xz": [
+     245.62,
+     73.8
+    ]
+   },
+   {
+    "a": 22.2,
+    "y_above_street": 28.0,
+    "size": 1.45,
+    "xz": [
+     234.87,
+     65.15
+    ]
+   },
+   {
+    "a": 8.7,
+    "y_above_street": 28.0,
+    "size": 1.43,
+    "xz": [
+     224.35,
+     56.69
+    ]
+   },
+   {
+    "a": 1.8,
+    "y_above_street": 28.0,
+    "size": 1.38,
+    "xz": [
+     218.97,
+     52.37
+    ]
+   },
+   {
+    "a": 13.8,
+    "y_above_street": 27.4,
+    "size": 3.16,
+    "xz": [
+     228.32,
+     59.89
+    ]
+   },
+   {
+    "a": 47.8,
+    "y_above_street": 24.6,
+    "size": 1.66,
+    "xz": [
+     254.82,
+     81.19
+    ]
+   },
+   {
+    "a": 5.8,
+    "y_above_street": 24.0,
+    "size": 1.4,
+    "xz": [
+     222.09,
+     54.87
+    ]
+   },
+   {
+    "a": 14.9,
+    "y_above_street": 24.0,
+    "size": 1.43,
+    "xz": [
+     229.18,
+     60.58
+    ]
+   },
+   {
+    "a": 40.8,
+    "y_above_street": 23.9,
+    "size": 1.66,
+    "xz": [
+     249.37,
+     76.81
+    ]
+   },
+   {
+    "a": 36.3,
+    "y_above_street": 23.6,
+    "size": 2.57,
+    "xz": [
+     245.86,
+     73.99
+    ]
+   },
+   {
+    "a": 17.9,
+    "y_above_street": 23.4,
+    "size": 3.23,
+    "xz": [
+     231.52,
+     62.46
+    ]
+   },
+   {
+    "a": 3.3,
+    "y_above_street": 23.0,
+    "size": 2.36,
+    "xz": [
+     220.14,
+     53.31
+    ]
+   },
+   {
+    "a": 49.5,
+    "y_above_street": 20.3,
+    "size": 1.57,
+    "xz": [
+     256.15,
+     82.26
+    ]
+   },
+   {
+    "a": 21.8,
+    "y_above_street": 19.9,
+    "size": 1.4,
+    "xz": [
+     234.56,
+     64.9
+    ]
+   },
+   {
+    "a": 31.4,
+    "y_above_street": 19.8,
+    "size": 1.5,
+    "xz": [
+     242.04,
+     70.92
+    ]
+   },
+   {
+    "a": 40.4,
+    "y_above_street": 19.6,
+    "size": 1.52,
+    "xz": [
+     249.05,
+     76.55
+    ]
+   },
+   {
+    "a": 34.6,
+    "y_above_street": 19.0,
+    "size": 3.3,
+    "xz": [
+     244.53,
+     72.92
+    ]
+   },
+   {
+    "a": 43.1,
+    "y_above_street": 18.5,
+    "size": 2.67,
+    "xz": [
+     251.16,
+     78.25
+    ]
+   },
+   {
+    "a": 14.5,
+    "y_above_street": 15.9,
+    "size": 1.43,
+    "xz": [
+     228.87,
+     60.33
+    ]
+   },
+   {
+    "a": 47.2,
+    "y_above_street": 15.5,
+    "size": 1.54,
+    "xz": [
+     254.35,
+     80.82
+    ]
+   },
+   {
+    "a": 40.3,
+    "y_above_street": 15.4,
+    "size": 1.54,
+    "xz": [
+     248.98,
+     76.49
+    ]
+   },
+   {
+    "a": 35.8,
+    "y_above_street": 15.2,
+    "size": 2.67,
+    "xz": [
+     245.47,
+     73.67
+    ]
+   },
+   {
+    "a": 17.5,
+    "y_above_street": 15.2,
+    "size": 3.18,
+    "xz": [
+     231.21,
+     62.21
+    ]
+   },
+   {
+    "a": 28.6,
+    "y_above_street": 15.2,
+    "size": 1.64,
+    "xz": [
+     239.86,
+     69.16
+    ]
+   },
+   {
+    "a": 2.9,
+    "y_above_street": 15.0,
+    "size": 2.62,
+    "xz": [
+     219.83,
+     53.06
+    ]
+   },
+   {
+    "a": 25.8,
+    "y_above_street": 14.7,
+    "size": 2.62,
+    "xz": [
+     237.68,
+     67.41
+    ]
+   },
+   {
+    "a": 43.0,
+    "y_above_street": 14.3,
+    "size": 2.74,
+    "xz": [
+     251.08,
+     78.18
+    ]
+   },
+   {
+    "a": 48.4,
+    "y_above_street": 12.2,
+    "size": 2.67,
+    "xz": [
+     255.29,
+     81.57
+    ]
+   },
+   {
+    "a": 23.1,
+    "y_above_street": 11.7,
+    "size": 1.57,
+    "xz": [
+     235.57,
+     65.71
+    ]
+   },
+   {
+    "a": 18.7,
+    "y_above_street": 11.5,
+    "size": 2.57,
+    "xz": [
+     232.14,
+     62.96
+    ]
+   },
+   {
+    "a": 31.0,
+    "y_above_street": 11.4,
+    "size": 1.66,
+    "xz": [
+     241.73,
+     70.66
+    ]
+   },
+   {
+    "a": 38.5,
+    "y_above_street": 10.8,
+    "size": 1.52,
+    "xz": [
+     247.57,
+     75.36
+    ]
+   },
+   {
+    "a": 35.3,
+    "y_above_street": 10.6,
+    "size": 3.37,
+    "xz": [
+     245.08,
+     73.36
+    ]
+   },
+   {
+    "a": 25.6,
+    "y_above_street": 10.6,
+    "size": 2.62,
+    "xz": [
+     237.52,
+     67.28
+    ]
+   },
+   {
+    "a": 42.7,
+    "y_above_street": 10.1,
+    "size": 2.67,
+    "xz": [
+     250.85,
+     78.0
+    ]
+   },
+   {
+    "a": 48.7,
+    "y_above_street": 7.0,
+    "size": 1.54,
+    "xz": [
+     255.52,
+     81.76
+    ]
+   },
+   {
+    "a": 16.3,
+    "y_above_street": 6.8,
+    "size": 1.45,
+    "xz": [
+     230.27,
+     61.45
+    ]
+   },
+   {
+    "a": 24.2,
+    "y_above_street": 6.5,
+    "size": 1.45,
+    "xz": [
+     236.43,
+     66.4
+    ]
+   },
+   {
+    "a": 30.5,
+    "y_above_street": 6.5,
+    "size": 2.01,
+    "xz": [
+     241.34,
+     70.35
+    ]
+   },
+   {
+    "a": 21.5,
+    "y_above_street": 6.3,
+    "size": 2.53,
+    "xz": [
+     234.32,
+     64.71
+    ]
+   },
+   {
+    "a": 11.9,
+    "y_above_street": 6.2,
+    "size": 2.74,
+    "xz": [
+     226.84,
+     58.7
+    ]
+   },
+   {
+    "a": 45.6,
+    "y_above_street": 5.5,
+    "size": 1.64,
+    "xz": [
+     253.11,
+     79.81
+    ]
+   },
+   {
+    "a": 33.9,
+    "y_above_street": 5.5,
+    "size": 3.37,
+    "xz": [
+     243.99,
+     72.48
+    ]
+   },
+   {
+    "a": 39.8,
+    "y_above_street": 5.4,
+    "size": 1.54,
+    "xz": [
+     248.59,
+     76.18
+    ]
+   },
+   {
+    "a": 42.5,
+    "y_above_street": 4.9,
+    "size": 2.57,
+    "xz": [
+     250.69,
+     77.87
+    ]
+   }
+  ]
+ },
+ "floor1_zones": {
+  "room_1001_Dromberg": {
+   "poly": [
+    [
+     217.57,
+     51.24
+    ],
+    [
+     231.21,
+     62.21
+    ],
+    [
+     225.85,
+     68.8
+    ],
+    [
+     212.21,
+     57.84
+    ]
+   ],
+   "note": "NE facade room (Elisa briefing)"
+  },
+  "room_1002_Moriaberg": {
+   "poly": [
+    [
+     231.21,
+     62.21
+    ],
+    [
+     248.27,
+     75.93
+    ],
+    [
+     242.91,
+     82.53
+    ],
+    [
+     225.85,
+     68.8
+    ]
+   ],
+   "note": "NE facade room (Bayer briefing; company arrival target)"
+  },
+  "room_1090_Ringsberg": {
+   "poly": [
+    [
+     224.84,
+     70.05
+    ],
+    [
+     237.77,
+     80.45
+    ],
+    [
+     233.74,
+     85.41
+    ],
+    [
+     220.8,
+     75.01
+    ]
+   ],
+   "note": "central glass-walled pop-up box N half (Revvity)"
+  },
+  "room_1091_Hammarbacka": {
+   "poly": [
+    [
+     220.8,
+     75.01
+    ],
+    [
+     233.74,
+     85.41
+    ],
+    [
+     228.5,
+     91.86
+    ],
+    [
+     215.57,
+     81.46
+    ]
+   ],
+   "note": "central box S half (Traficom)"
+  },
+  "aula_north": {
+   "poly": [
+    [
+     212.22,
+     78.76
+    ],
+    [
+     232.56,
+     95.12
+    ],
+    [
+     226.06,
+     103.11
+    ],
+    [
+     205.72,
+     86.76
+    ]
+   ],
+   "note": "1st-floor lobby under 2nd-floor slab; faceted seating niches; formation area"
+  },
+  "taidon_portaat": {
+   "poly": [
+    [
+     209.15,
+     89.51
+    ],
+    [
+     221.93,
+     99.79
+    ],
+    [
+     216.25,
+     106.77
+    ],
+    [
+     203.47,
+     96.5
+    ]
+   ],
+   "note": "stair seating rising NE from lobby (y0) to 2nd floor (y5.0); storage under upper half"
+  },
+  "lobby_restaurant_Kisalli": {
+   "poly": [
+    [
+     200.35,
+     93.99
+    ],
+    [
+     220.38,
+     110.1
+    ],
+    [
+     207.07,
+     126.47
+    ],
+    [
+     187.05,
+     110.37
+    ]
+   ],
+   "note": "open lobby + Kisalli seating; registration near a~36 b~54; 2nd floor above for b>48.5"
+  },
+  "kitchen_serving_F": {
+   "poly": [
+    [
+     195.75,
+     78.1
+    ],
+    [
+     206.03,
+     86.37
+    ],
+    [
+     186.61,
+     110.27
+    ],
+    [
+     176.32,
+     102.0
+    ]
+   ],
+   "note": "Kisalli kitchen + serving line facing lobby along a~13"
+  },
+  "services_SE_K_L_M": {
+   "poly": [
+    [
+     227.67,
+     111.59
+    ],
+    [
+     232.27,
+     115.29
+    ],
+    [
+     217.01,
+     134.07
+    ],
+    [
+     212.41,
+     130.38
+    ]
+   ],
+   "note": "international services / IT support / student services"
+  },
+  "test_room_J": {
+   "poly": [
+    [
+     247.79,
+     86.83
+    ],
+    [
+     251.76,
+     90.03
+    ],
+    [
+     243.44,
+     100.27
+    ],
+    [
+     239.46,
+     97.08
+    ]
+   ],
+   "note": "test room"
+  },
+  "wc_core_NW": {
+   "poly": [
+    [
+     217.99,
+     64.67
+    ],
+    [
+     221.27,
+     67.3
+    ],
+    [
+     208.15,
+     83.45
+    ],
+    [
+     204.88,
+     80.82
+    ]
+   ],
+   "note": "WCs/rooms"
+  },
+  "wc_core_SE": {
+   "poly": [
+    [
+     241.76,
+     83.78
+    ],
+    [
+     244.96,
+     86.35
+    ],
+    [
+     213.55,
+     125.01
+    ],
+    [
+     210.35,
+     122.44
+    ]
+   ],
+   "note": "WCs/rooms (several blocks)"
+  },
+  "stair_lift_core_NW": {
+   "poly": [
+    [
+     202.05,
+     70.33
+    ],
+    [
+     206.42,
+     73.84
+    ],
+    [
+     198.09,
+     84.09
+    ],
+    [
+     193.73,
+     80.58
+    ]
+   ],
+   "note": "stair b24.6-31, side entrance/vestibule b31.2-34.6 (ICT-City link D), 2 lifts b34.6-37.8"
+  },
+  "stair_lift_core_SE": {
+   "poly": [
+    [
+     237.82,
+     99.1
+    ],
+    [
+     242.42,
+     102.79
+    ],
+    [
+     234.6,
+     112.42
+    ],
+    [
+     230.0,
+     108.72
+    ]
+   ],
+   "note": "stair, side entrance B (b~32.4), lifts"
+  },
+  "pavilion_pub_Kaivomestari": {
+   "poly": [
+    [
+     180.69,
+     105.51
+    ],
+    [
+     186.45,
+     110.15
+    ],
+    [
+     182.16,
+     115.43
+    ],
+    [
+     176.4,
+     110.79
+    ]
+   ],
+   "note": "pub in pavilion"
+  },
+  "pavilion_slide_lift_stair": {
+   "poly": [
+    [
+     179.26,
+     119.0
+    ],
+    [
+     199.52,
+     135.29
+    ],
+    [
+     197.63,
+     137.62
+    ],
+    [
+     177.37,
+     121.33
+    ]
+   ],
+   "note": "lift a13-15, slide (liukumaki) a17-20, stair down to lower lobby a30.7-39"
+  }
+ },
+ "floor2_zones": {
+  "room_2001_Elias": {
+   "poly": [
+    [
+     217.57,
+     51.24
+    ],
+    [
+     226.92,
+     58.76
+    ],
+    [
+     221.62,
+     65.28
+    ],
+    [
+     212.27,
+     57.76
+    ]
+   ],
+   "note": ""
+  },
+  "room_2002_Ivar": {
+   "poly": [
+    [
+     226.92,
+     58.76
+    ],
+    [
+     235.1,
+     65.34
+    ],
+    [
+     229.81,
+     71.86
+    ],
+    [
+     221.62,
+     65.28
+    ]
+   ],
+   "note": ""
+  },
+  "room_2003_Erik": {
+   "poly": [
+    [
+     235.1,
+     65.34
+    ],
+    [
+     242.66,
+     71.42
+    ],
+    [
+     237.37,
+     77.94
+    ],
+    [
+     229.81,
+     71.86
+    ]
+   ],
+   "note": ""
+  },
+  "room_2004_Johannes": {
+   "poly": [
+    [
+     242.66,
+     71.42
+    ],
+    [
+     251.0,
+     78.12
+    ],
+    [
+     245.7,
+     84.64
+    ],
+    [
+     237.37,
+     77.94
+    ]
+   ],
+   "note": ""
+  },
+  "room_2006_2007": {
+   "poly": [
+    [
+     246.98,
+     85.29
+    ],
+    [
+     252.83,
+     89.99
+    ],
+    [
+     244.82,
+     99.84
+    ],
+    [
+     238.97,
+     95.14
+    ]
+   ],
+   "note": "Valmet"
+  },
+  "room_2067": {
+   "poly": [
+    [
+     212.27,
+     57.76
+    ],
+    [
+     218.04,
+     62.4
+    ],
+    [
+     210.22,
+     72.02
+    ],
+    [
+     204.45,
+     67.38
+    ]
+   ],
+   "note": "Saarioinen"
+  },
+  "aula_tyokahvila_2072": {
+   "poly": [
+    [
+     218.26,
+     72.59
+    ],
+    [
+     235.41,
+     86.37
+    ],
+    [
+     223.55,
+     100.96
+    ],
+    [
+     206.41,
+     87.18
+    ]
+   ],
+   "note": "atrium floor: work cafe Aurinkokylpy (box a19-33 b17.5-21.5)"
+  },
+  "kaivo_2073": {
+   "poly": [
+    [
+     223.18,
+     83.98
+    ],
+    [
+     227.85,
+     87.74
+    ],
+    [
+     224.38,
+     92.01
+    ],
+    [
+     219.71,
+     88.25
+    ]
+   ],
+   "note": "round timber-slat drum dia ~5.4 m, pink stepped seating inside"
+  },
+  "room_2026_Orvokki": {
+   "poly": [
+    [
+     218.17,
+     104.73
+    ],
+    [
+     231.89,
+     115.75
+    ],
+    [
+     227.16,
+     121.58
+    ],
+    [
+     213.44,
+     110.55
+    ]
+   ],
+   "note": "DNA"
+  },
+  "room_2029_2031": {
+   "poly": [
+    [
+     197.47,
+     97.7
+    ],
+    [
+     213.21,
+     110.36
+    ],
+    [
+     209.17,
+     115.33
+    ],
+    [
+     193.43,
+     102.67
+    ]
+   ],
+   "note": "Turku Energia"
+  },
+  "room_2030_Evert": {
+   "poly": [
+    [
+     188.96,
+     100.87
+    ],
+    [
+     198.32,
+     108.39
+    ],
+    [
+     192.89,
+     115.07
+    ],
+    [
+     183.54,
+     107.55
+    ]
+   ],
+   "note": "Meyer Turku"
+  },
+  "room_2027_Frans": {
+   "poly": [
+    [
+     200.89,
+     110.46
+    ],
+    [
+     209.23,
+     117.17
+    ],
+    [
+     203.8,
+     123.84
+    ],
+    [
+     195.46,
+     117.14
+    ]
+   ],
+   "note": "Apetit"
+  },
+  "terrace_2nd_floor": {
+   "poly": [
+    [
+     213.96,
+     111.35
+    ],
+    [
+     226.81,
+     121.68
+    ],
+    [
+     216.98,
+     133.79
+    ],
+    [
+     204.12,
+     123.45
+    ]
+   ],
+   "note": "outdoor terrace (TERASSI)"
+  }
+ },
+ "atrium_bridges": [
+  {
+   "level": "3rd floor (floor y 9.0)",
+   "plan": [
+    [
+     211.73,
+     86.33
+    ],
+    [
+     224.51,
+     96.61
+    ],
+    [
+     222.31,
+     99.32
+    ],
+    [
+     209.53,
+     89.05
+    ]
+   ]
+  },
+  {
+   "level": "4th floor (floor y 13.0)",
+   "plan": [
+    [
+     211.73,
+     86.33
+    ],
+    [
+     224.51,
+     96.61
+    ],
+    [
+     222.31,
+     99.32
+    ],
+    [
+     209.53,
+     89.05
+    ]
+   ]
+  }
+ ],
+ "SE_rooflight_strip": {
+  "poly": [
+   [
+    238.85,
+    108.14
+   ],
+   [
+    240.1,
+    109.14
+   ],
+   [
+    219.29,
+    134.75
+   ],
+   [
+    218.04,
+    133.75
+   ]
+  ],
+  "y": 0.0,
+  "note": "blue segmented glazing strip in true ortho next to SE facade; probably low rooflight upstand lighting lower level (estimate)"
+ }
+}

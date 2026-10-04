@@ -1,0 +1,21 @@
+{
+ "file": "terrain_dtm2021_050m_uint16.png",
+ "encoding": "uint16 grayscale; elevation_N2000_m = 15.0 + value/1000",
+ "width_px": 1043,
+ "height_px": 973,
+ "pixel_size_m": 0.5,
+ "pixel(0,0)_top_left_corner_local": [
+  -178.981,
+  -207.815
+ ],
+ "pixel_centre_local": "x = -178.981 + (col+0.5)*0.5 ; z = -207.815 + (row+0.5)*0.5",
+ "axes": "columns -> +x (east), rows -> +z (south); north up",
+ "frame": "local metres, origin BioCity centroid lat 60.44932 lon 22.29326",
+ "source": "Turku 2021 laser scanning (scan date 2021-04-18, >=30 pts/m2, 5 cm accuracy), ground classes 2 and 8 averaged per 0.5 m cell; gaps (buildings, cars) filled by iterative neighbour averaging",
+ "measured_mask": "terrain_dtm2021_050m_measuredmask.png (255 = cell had ground returns, 0 = interpolated)",
+ "measured_fraction": 0.669,
+ "elev_min": 16.85,
+ "elev_max": 27.27,
+ "licence": "CC BY 4.0, attribution: (c) Turun kaupunki, kayttolupa CC BY 4.0 (laserkeilausaineisto 2021)",
+ "caveat": "state of 18 Apr 2021; areas rebuilt later (ParkCity 2022-23, CivilCity 2022, Jussin aukio north edge works ~2022-24, Station North/East 2023+) may differ"
+}
