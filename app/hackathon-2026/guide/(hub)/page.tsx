@@ -13,7 +13,7 @@ import {
   VenueCards,
   primaryButtonClass,
 } from "@/components/guide";
-import { Venue3DTeaser } from "@/components/guide/venue3d/Venue3DTeaser";
+import { TwinTeaser } from "@/components/guide/twin/TwinTeaser";
 import { EVENT_2026, getScheduleItem, GUIDE_BASE_PATH, HUB, HUB_MILESTONE_IDS } from "@/lib/hackathon-2026";
 
 const milestones = HUB_MILESTONE_IDS.map(getScheduleItem);
@@ -116,14 +116,14 @@ export default function FieldGuideHubPage() {
       <GuideSection id="preview">
         <SectionHeading
           id="preview-title"
-          eyebrow="// preview the space"
-          title="Walk the Showroom before you arrive."
-          lede="An illustrative 3D preview of the Joki Showroom, the Q&A floors and the BioCity build hall — dark, focused and lit in violet."
+          eyebrow="// the whole campus in 3D"
+          title="Walk the campus before you arrive."
+          lede="EduCity, BioCity and Joki in 3D, built to scale from City of Turku open data: find your room or stand, follow the arrival routes and see the campus at the hour you arrive."
         />
-        <Venue3DTeaser />
+        <TwinTeaser />
         <div className="mt-6">
           <Link href={`${GUIDE_BASE_PATH}/venue#preview-3d`} className={primaryButtonClass}>
-            Open the 3D preview
+            Open the 3D campus
             <span aria-hidden="true" className="ml-2">
               →
             </span>

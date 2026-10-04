@@ -7,6 +7,7 @@ export { Schedule } from "./Schedule";
 export { NowNext } from "./NowNext";
 export { VenueCards } from "./VenueCards";
 export { RouteCard } from "./RouteCard";
+export { RouteLinks } from "./RouteLinks";
 export { CampusSchematic } from "./CampusSchematic";
 export { Checklist } from "./Checklist";
 export { Details } from "./Details";

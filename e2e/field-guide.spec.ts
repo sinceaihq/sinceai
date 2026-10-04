@@ -246,20 +246,35 @@ test.describe("venue explorer", () => {
   });
 });
 
-test.describe("3D preview", () => {
-  test("loads on demand and flies to a company", async ({ page }) => {
-    test.setTimeout(150_000);
+test.describe("3D campus", () => {
+  test("loads on demand, finds a company and switches places", async ({ page }) => {
+    test.setTimeout(240_000);
     const problems = watchConsole(page);
     await page.goto(`${GUIDE}/venue`);
     await expect(page.locator("canvas")).toHaveCount(0); // nothing loaded until asked
-    await page.getByRole("button", { name: "Step inside in 3D" }).click();
-    await expect(page.getByRole("button", { name: "Show names" })).toBeVisible({ timeout: 120_000 });
-    await expect(page.locator("canvas")).toHaveCount(1);
+    await page.getByRole("button", { name: "Explore in 3D" }).click();
+    await expect(page.getByRole("button", { name: "Show names" })).toBeVisible({ timeout: 200_000 });
+    await expect(page.locator("canvas").first()).toBeVisible();
     await page.getByLabel("Go to").selectOption("elisa");
-    await expect(page.getByText("Joki floor 1 · Showroom", { exact: true }).first()).toBeVisible();
-    await page.getByRole("tab", { name: "BioCity build hall" }).click();
-    await expect(page.getByRole("button", { name: "Show names" })).toBeVisible({ timeout: 120_000 });
+    await expect(page.getByText("Joki floor 1 · Showroom · counter 4 of 6", { exact: true }).first()).toBeVisible();
+    await page.getByRole("tab", { name: "BioCity" }).click();
+    await expect(page.getByRole("tab", { name: "BioCity" })).toHaveAttribute("aria-selected", "true");
+    await expect(page.getByRole("group", { name: "BioCity views" })).toBeVisible({ timeout: 30_000 });
     expect(problems).toEqual([]);
+  });
+
+  test("route cards open their route in the 3D", async ({ page }) => {
+    await page.goto(`${GUIDE}/challenge-partners/elisa`);
+    await page.getByRole("link", { name: /Kupittaa station → EduCity company arrival/ }).click();
+    await expect(page).toHaveURL(/\/venue\?tour=partners-fri-train-edu#preview-3d$/);
+    await expect(page.locator("#preview-3d")).toContainText("Route: Kupittaa station → EduCity company arrival");
+  });
+
+  test("deep links open the right place and target", async ({ page }) => {
+    await page.goto(`${GUIDE}/venue?focus=red-hat#preview-3d`);
+    // The poster names the target before anything heavy loads.
+    await expect(page.locator("#preview-3d")).toContainText("Red Hat");
+    await expect(page.getByRole("tab", { name: "BioCity" })).toHaveAttribute("aria-selected", "true");
   });
 });
 

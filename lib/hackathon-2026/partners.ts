@@ -54,7 +54,7 @@ export const BIOCITY_STANDS: readonly PartnerStand[] = [
     id: "bc-2",
     rank: 2,
     venue: "biocity",
-    area: "Main lobby · east end",
+    area: "Main lobby · south-east end",
     location: "Where the build hall meets the passage to Joki",
     visibility: "Next to the main build tables and on the walking route between BioCity and Joki.",
     partnerId: "solita",

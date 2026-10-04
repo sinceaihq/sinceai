@@ -9,13 +9,14 @@ import {
   HelpSection,
   NowNext,
   RouteCard,
+  RouteLinks,
   Schedule,
   SectionHeading,
   SectionNav,
   StandPlan,
   VenueCards,
 } from "@/components/guide";
-import { Venue3DTeaser } from "@/components/guide/venue3d/Venue3DTeaser";
+import { TwinTeaser } from "@/components/guide/twin/TwinTeaser";
 import {
   CHECKLISTS,
   CRITICAL_PATH,
@@ -91,7 +92,7 @@ export default function PartnerGuidePage() {
         />
         <StandPlan />
         <div className="mt-10">
-          <Venue3DTeaser focus="biocity" />
+          <TwinTeaser place="biocity" view="stands" />
         </div>
       </GuideSection>
 
@@ -149,6 +150,12 @@ export default function PartnerGuidePage() {
           title="BioCity all weekend. EduCity for the opening and closing."
         />
         <VenueCards venues={["biocity", "educity", "joki"]} />
+        <div className="mt-10">
+          <RouteLinks
+            title="Getting to your stand, step by step in 3D"
+            ids={["partners-tykistokatu-to-stands", "companies-train-to-biocity", "companies-parkcity-to-biocity"]}
+          />
+        </div>
         <div className="mt-8">
           <RouteCard />
         </div>

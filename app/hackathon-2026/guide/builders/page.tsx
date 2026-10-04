@@ -9,6 +9,7 @@ import {
   HelpSection,
   NowNext,
   RouteCard,
+  RouteLinks,
   Schedule,
   SectionHeading,
   SectionNav,
@@ -17,7 +18,7 @@ import {
   ghostButtonClass,
   primaryButtonClass,
 } from "@/components/guide";
-import { Venue3DTeaser } from "@/components/guide/venue3d/Venue3DTeaser";
+import { TwinTeaser } from "@/components/guide/twin/TwinTeaser";
 import {
   CHECKLISTS,
   CRITICAL_PATH,
@@ -172,6 +173,18 @@ export default function BuilderGuidePage() {
         <div className="mt-8">
           <RouteCard />
         </div>
+        <div className="mt-10">
+          <RouteLinks
+            title="Your routes, step by step in 3D"
+            ids={[
+              "builders-train-checkin",
+              "builders-station-hall-checkin",
+              "builders-transfer-to-build",
+              "builders-build-to-joki",
+              "builders-back-to-educity",
+            ]}
+          />
+        </div>
       </GuideSection>
 
       <GuideSection id="bring">
@@ -200,7 +213,7 @@ export default function BuilderGuidePage() {
           label="Builder maps"
         />
         <div className="mt-10">
-          <Venue3DTeaser />
+          <TwinTeaser />
         </div>
       </GuideSection>
 

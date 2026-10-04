@@ -1,4 +1,5 @@
 import type { Publishability, Venue, VenueId } from "./types";
+import { ORG } from "@/lib/org";
 
 const mapsSearch = (query: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 
@@ -25,7 +26,8 @@ export const VENUES: readonly Venue[] = [
     entrances: [
       {
         label: "Main entrances",
-        detail: "Both ground-floor main entrances lead to registration.",
+        detail:
+          "Both main entrances (west and east) are in the glass entrance pavilion at deck level and lead to registration. From Joukahaisenkatu, take the wide outdoor stairs at the east corner — or the step-free lifts in the passage between ICT-City and EduCity.",
         status: "working",
       },
     ],
@@ -50,20 +52,26 @@ export const VENUES: readonly Venue[] = [
     openAroundTheClock: true,
     entrances: [
       {
+        label: "Company entrance",
+        detail:
+          "Tykistökatu 6 — the main entrance in the open recess next to the glass corner tower (level access). Companies and partners come in here.",
+        status: "working",
+      },
+      {
         label: "Event entrance",
-        detail: "Courtyard-side entrance from Jussin aukio, into the Aulagalleria.",
+        detail: "Builders: the courtyard-side entrance from Jussin aukio, into the Aulagalleria.",
         status: "working",
       },
       {
         label: "To Joki",
-        detail: "Joki connects to the east end of BioCity's main lobby.",
+        detail: "Indoors from the far (south-east) end of the main lobby, down a short stair (10 steps).",
         status: "confirmed",
       },
     ],
     mapsUrl: mapsSearch("BioCity, Tykistökatu 6, 20520 Turku"),
     image: {
       src: "/assets/guide/photos/biocity-exterior-card.webp",
-      alt: "BioCity at dusk: a large glass and dark-panelled office building on a street corner, seen from Tykistökatu.",
+      alt: "BioCity at dusk: a large glass and dark-panelled office building on a street corner, seen from the Tykistökatu–Lemminkäisenkatu junction.",
       width: 800,
       height: 506,
       credit: "Photo: Turun Teknologiakiinteistöt Oy",
@@ -87,13 +95,19 @@ export const VENUES: readonly Venue[] = [
     entrances: [
       {
         label: "From BioCity",
-        detail: "Joki connects to the east end of BioCity's main lobby — follow the event signs.",
+        detail:
+          "The event way in: from the far (south-east) end of BioCity's main lobby, down a short stair (10 steps) — follow the event signs.",
         status: "confirmed",
       },
       {
         label: "Street door",
-        detail: "Lemminkäisenkatu 12b. Door opening hours during the event are confirmed closer to the date.",
-        status: "pending",
+        detail: "Lemminkäisenkatu 12b is closed during the event — enter Joki through BioCity.",
+        status: "working",
+      },
+      {
+        label: "Step-free access",
+        detail: `The way in from BioCity has 10 steps. If you need step-free access to Joki, email ${ORG.contact.infoEmail} before the event so the organisers can arrange a step-free way in.`,
+        status: "working",
       },
     ],
     mapsUrl: mapsSearch("Vierailu- ja innovaatiokeskus Joki, Lemminkäisenkatu 12b, 20520 Turku"),
@@ -118,11 +132,11 @@ export function getVenue(id: VenueId): Venue {
 export const venueAddressLine = (venue: Venue) => `${venue.address}, ${venue.postalCode} ${venue.city}`;
 
 /**
- * EduCity → BioCity/Joki transfer. Organiser description (3 Oct 2026): a short
- * outdoor walk through the campus courtyard, entering BioCity from the
- * event-designated side. Doors and the exact distance are confirmed on site,
- * so the guide shows the organiser estimate as approximate and always offers a
- * map fallback between the official addresses.
+ * EduCity → BioCity/Joki transfer, measured on the City of Turku base map and
+ * OpenStreetMap (4 Oct 2026): EduCity's west entrance → raised deck past
+ * ICT-City → Jussin aukio → BioCity's courtyard-side event entrance, about
+ * 200 m. Doors are confirmed on site, so the guide keeps map fallbacks between
+ * the official addresses.
  */
 export const TRANSFER_ROUTE: {
   status: Publishability;
@@ -132,22 +146,23 @@ export const TRANSFER_ROUTE: {
   fallbacks: readonly { label: string; href: string }[];
 } = {
   status: "working",
-  summary: "A short outdoor walk across the campus courtyard.",
-  approxOutdoorDistance: "approx. 50 m outdoors (organiser estimate)",
+  summary: "A 3-minute outdoor walk along the raised campus deck to Jussin aukio.",
+  approxOutdoorDistance: "about 200 m outdoors · 3 min",
   steps: [
-    "Leave EduCity — after Friday's briefings, volunteers and event signs show the way.",
-    "Walk across the campus courtyard (Jussin aukio).",
+    "Leave EduCity by the west main entrance — after Friday's briefings, volunteers and event signs show the way.",
+    "Follow the raised deck past ICT-City to Jussin aukio and take the wide outdoor stairs down (about 10 steps).",
     "Enter BioCity through its courtyard-side event entrance.",
-    "Joki is connected to the east end of BioCity's main lobby.",
+    "Joki is indoors from BioCity: at the far (south-east) end of the main lobby, down a short stair (10 steps).",
   ],
   fallbacks: [
     {
-      label: "Walking directions EduCity → BioCity",
-      href: "https://www.google.com/maps/dir/?api=1&origin=Joukahaisenkatu+7,+Turku&destination=Tykist%C3%B6katu+6,+Turku&travelmode=walking",
+      // The courtyard-side event entrance (60.44939 N, 22.29367 E) — not the street address.
+      label: "Walking directions EduCity → BioCity event entrance (Jussin aukio)",
+      href: "https://www.google.com/maps/dir/?api=1&origin=Joukahaisenkatu+7,+Turku&destination=60.44939,22.29367&travelmode=walking",
     },
     {
-      label: "Walking directions EduCity → Joki",
-      href: "https://www.google.com/maps/dir/?api=1&origin=Joukahaisenkatu+7,+Turku&destination=Lemmink%C3%A4isenkatu+12b,+Turku&travelmode=walking",
+      label: "BioCity's street address on the map (Tykistökatu 6 · front door)",
+      href: "https://www.google.com/maps/search/?api=1&query=Tykist%C3%B6katu+6,+Turku",
     },
   ],
 };

@@ -1,5 +1,6 @@
 import { TRANSFER_ROUTE } from "@/lib/hackathon-2026";
 import { CampusSchematic } from "./CampusSchematic";
+import { twinHref } from "./twin/TwinTeaser";
 import { StatusTag, TextLink } from "./primitives";
 
 /** EduCity → BioCity / Joki: the organiser route, with a map fallback. */
@@ -24,6 +25,7 @@ export function RouteCard() {
           ))}
         </ol>
         <div className="guide-no-print mt-4 flex flex-col items-start">
+          <TextLink href={twinHref({ tour: "builders-transfer-to-build" })}>Walk the route in 3D</TextLink>
           {TRANSFER_ROUTE.fallbacks.map((f) => (
             <TextLink key={f.href} href={f.href}>
               {f.label}

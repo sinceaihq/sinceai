@@ -10,6 +10,7 @@ import {
   HelpSection,
   NowNext,
   RouteCard,
+  RouteLinks,
   Schedule,
   SectionHeading,
   SectionNav,
@@ -129,6 +130,16 @@ export default function ChallengePartnerGuidePage() {
           lede="The Company Lounge in Joki (floor 1, next to the Showroom) is yours all weekend."
         />
         <VenueCards venues={["educity", "joki", "biocity"]} />
+        <div className="mt-10 space-y-10">
+          <RouteLinks
+            title="Friday · getting to EduCity, step by step in 3D"
+            ids={["partners-fri-parkcity-edu", "partners-fri-train-edu", "partners-fri-stepfree-edu"]}
+          />
+          <RouteLinks
+            title="Saturday · getting to Joki, step by step in 3D"
+            ids={["companies-tykistokatu-to-showroom", "companies-train-to-biocity", "companies-parkcity-to-biocity"]}
+          />
+        </div>
         <div className="mt-8">
           <RouteCard />
         </div>

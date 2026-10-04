@@ -361,9 +361,9 @@ export const VENUE_MAPS: readonly VenueMap[] = [
     srcLarge: "/assets/guide/maps/biocity-lobby-large.webp",
     width: 1600,
     height: 1131,
-    alt: "BioCity ground floor plan: the long main lobby (build area) along Lemminkäisenkatu, the curved Aulagalleria with the north entrance from Jussin aukio, the restaurant serving lines to the east and the passage to Joki at the east end.",
+    alt: "BioCity ground floor plan: the long main lobby (build area) along Lemminkäisenkatu, the curved Aulagalleria with the north-east entrance from Jussin aukio, the restaurant serving lines and the passage to Joki at the south-east end.",
     caption:
-      "Planned event entrance on the courtyard side (Jussin aukio). Build tables fill the main lobby; Joki connects at its east end.",
+      "Planned event entrance on the courtyard side (Jussin aukio). Build tables fill the main lobby; Joki connects at its south-east end.",
     source: "Turun Teknologiakiinteistöt floor plan",
     glossary: [
       { fi: "Biocityn pääaula", en: "BioCity main lobby" },
@@ -399,7 +399,7 @@ export const VENUE_MAPS: readonly VenueMap[] = [
       hs({
         id: "bio-joki-passage",
         label: "To Joki",
-        description: "Passage to Joki at the east end",
+        description: "Passage to Joki at the south-east end (short stair down)",
         x: 0.844,
         y: 0.685,
         kind: "route",
@@ -426,7 +426,7 @@ export const VENUE_MAPS: readonly VenueMap[] = [
       { fi: "Aula", en: "Lobby — build area" },
       { fi: "Kulku BioCityyn", en: "Passage to BioCity" },
       { fi: "Luiska", en: "Ramp" },
-      { fi: "Kulku 2. kerroksen kokoustiloihin", en: "To the floor 2 meeting rooms" },
+      { fi: "Kulku 2. kerroksen kokoustiloihin", en: "To the 2nd-floor meeting rooms (DataCity)" },
     ],
     hotspots: [
       hs({
@@ -456,7 +456,14 @@ export const VENUE_MAPS: readonly VenueMap[] = [
       }),
       hs({ id: "joki1-cave", label: "Cave hall", description: "Build area", x: 0.622, y: 0.4, kind: "area" }),
       hs({ id: "joki1-aula", label: "Aula", description: "Build area", x: 0.4466, y: 0.595, kind: "area" }),
-      hs({ id: "joki1-stairs-2", label: "Stairs to floor 2", x: 0.357, y: 0.709, kind: "route" }),
+      hs({
+        id: "joki1-stairs-2",
+        label: "Spiral stair to meeting rooms",
+        description: "DataCity floor 2 — not the Q&A floors (use the tower stairs or lift by the Showroom)",
+        x: 0.357,
+        y: 0.709,
+        kind: "route",
+      }),
       hs({
         id: "joki1-biocity",
         label: "To BioCity",

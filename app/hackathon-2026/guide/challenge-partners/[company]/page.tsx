@@ -10,6 +10,7 @@ import {
   GuideSection,
   HelpSection,
   NowNext,
+  RouteLinks,
   Schedule,
   SectionHeading,
   SectionNav,
@@ -18,7 +19,7 @@ import {
   VenueExplorer,
   ghostButtonClass,
 } from "@/components/guide";
-import { Venue3DTeaser } from "@/components/guide/venue3d/Venue3DTeaser";
+import { TwinTeaser } from "@/components/guide/twin/TwinTeaser";
 import {
   briefingRoomLabel,
   CHECKLISTS,
@@ -117,6 +118,12 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
           lede={`EduCity floor ${company.briefing.floor}. Teams are released from the opening in groups from 18:00 and guided to your room — stay put, they come to you. Brief from 18:30 to 19:30.`}
         />
         <VenueExplorer mapIds={[maps.briefing]} highlight={[company.id]} label={`${company.name} briefing room`} />
+        <div className="mt-10">
+          <RouteLinks
+            title="Getting to EduCity, step by step in 3D"
+            ids={["partners-fri-parkcity-edu", "partners-fri-train-edu", "partners-fri-stepfree-edu"]}
+          />
+        </div>
       </GuideSection>
 
       <GuideSection id="saturday">
@@ -130,7 +137,13 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
         />
         <VenueExplorer mapIds={[maps.qa]} highlight={[company.id]} label={`${company.name} Q&A stand`} />
         <div className="mt-10">
-          <Venue3DTeaser focus={company.id} />
+          <RouteLinks
+            title="Getting to Joki, step by step in 3D"
+            ids={["companies-tykistokatu-to-showroom", "companies-train-to-biocity", "companies-parkcity-to-biocity"]}
+          />
+        </div>
+        <div className="mt-10">
+          <TwinTeaser focus={company.id} />
         </div>
       </GuideSection>
 

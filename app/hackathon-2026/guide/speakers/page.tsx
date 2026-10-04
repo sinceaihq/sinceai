@@ -163,8 +163,8 @@ export default function SpeakerGuidePage() {
         <SectionHeading
           id="venue-title"
           eyebrow="// where"
-          title="EduCity — and the build spaces next door."
-          lede="Stage moments are at EduCity. If you mentor or visit the build, BioCity and Joki are a short walk away."
+          title="EduCity — and the build spaces nearby."
+          lede="Stage moments are at EduCity. If you mentor or visit the build, BioCity and Joki are a 3-minute walk away."
         />
         <VenueCards venues={["educity", "biocity", "joki"]} />
         <div className="mt-8">

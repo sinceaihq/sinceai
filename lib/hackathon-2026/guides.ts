@@ -295,6 +295,10 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
   ],
   "challenge-partners": [
     {
+      q: "Arriving by car",
+      a: "Friday: park in ParkCity (Joukahaisenkatu 8, paid guest parking on floors 1–3) — EduCity is across the street, about 190 m to door B. Saturday: get dropped off on Tykistökatu at BioCity's entrance recess, where the supercars are on display, or walk about 360 m from ParkCity to BioCity's main entrance. Every route is in the 3D campus, step by step.",
+    },
+    {
       q: "Q&A hours vs. your presence",
       a: "The Q&A area at Joki is open Sat 09:00–12:00 and 14:00–18:00. Please be available for at least two hours across those windows and post your exact hours at your stand. You are welcome on site all weekend — even around the clock.",
     },
@@ -318,6 +322,10 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
   ],
   partners: [
+    {
+      q: "Arriving by car",
+      a: "Get dropped off on Tykistökatu at BioCity's entrance recess, where the supercars are on display — the stands are a 1–2 minute walk inside. To park, use ParkCity (Joukahaisenkatu 8, paid guest parking on floors 1–3), about 360 m from BioCity's main entrance.",
+    },
     {
       q: "Is my stand staffed around the clock?",
       a: "No requirement. Stands stay open for the whole event, but the stand being open does not mean it is staffed — tell us your presence hours and we share them with builders.",
@@ -353,7 +361,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
   speakers: [
     {
       q: "Getting to Turku",
-      a: "Kupittaa railway station is next to the campus — check VR for the current route and stops of your train. From Turku Airport, Föli bus 1 runs to the city centre, or take a taxi straight to EduCity. Always follow your personal itinerary.",
+      a: "Kupittaa railway station is next to the campus: about 350 m (5 min) on foot to EduCity, over the covered Kalevansilta footbridge and up the wide outdoor stairs at EduCity's east corner — check VR for the current route and stops of your train. From Turku Airport, Föli bus 1 runs to the city centre, or take a taxi straight to EduCity. Always follow your personal itinerary.",
     },
     {
       q: "Where do I meet my host?",

@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "file": "dtm.png",
+  "width": 1043,
+  "height": 973,
+  "resolution": 0.5,
+  "extent": {
+    "minX": -178.98,
+    "maxX": 342.52,
+    "minZ": -207.81,
+    "maxZ": 278.69
+  },
+  "scale": 0.001,
+  "offset": -8.2,
+  "minY": -6.35,
+  "maxY": 4.07,
+  "decoding": "16-bit grey PNG, big-endian samples, rows north (minZ) → south, columns west (minX) → east. y = value × scale + offset (N2000 = 15 + value / 1000; y = N2000 − 23.20). Sample (col, row) lies at x = minX + (col + 0.5) × resolution, z = minZ + (row + 0.5) × resolution; interpolate bilinearly between sample centres.",
+  "source": "City of Turku laser scanning 18 Apr 2021 (≥ 30 pts/m², ground classes 2 and 8 averaged per 0.5 m cell; cells without ground returns filled by iterative neighbour averaging)",
+  "measuredFraction": 0.67,
+  "corrections": [
+    "Kupittaa platform: 5161 unmeasured cells under the canopy raised to the measured platform surface (y -4.84 at the station building, -4.73 at the Kalevansilta stairs).",
+    "EduCity south-east walkway and pavilion plaza (1967 cells) and outdoor Main Stairs (388 cells): unmeasured deck filled at deck level − 0.15 m, edges anti-aliased over one cell.",
+    "Inside BioCity, Joki and EduCity the filled ground is capped 0.25 m below the ground floor (biocity 2827 cells, joki 5100 cells); arcades and overhangs are untouched."
+  ],
+  "caveat": "State of April 2021: areas rebuilt later (ParkCity 2022–23, CivilCity 2022, the station blocks 2023+, Jussin aukio edge works) may differ by a few decimetres. Decks, bridges and stairs other than those corrected above are objects, not terrain.",
+  "licence": "© Turun kaupunki, käyttölupa CC BY 4.0"
+}

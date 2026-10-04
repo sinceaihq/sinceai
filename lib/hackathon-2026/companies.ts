@@ -206,8 +206,8 @@ export function qaStandSentence(company: ChallengeCompany): string {
   const counter = showroomCounter(company);
   if (company.qa.floor === 1) {
     return counter
-      ? `Your stand is counter ${counter} of ${SHOWROOM_ORDER.length} along the curved LED wall in the round Showroom on Joki's first floor, counted from the entrance.`
-      : "Your stand is in the round Showroom on Joki's first floor, along the curved LED wall.";
+      ? `Your stand is counter ${counter} of ${SHOWROOM_ORDER.length} along the curved LED wall in the round Showroom on Joki floor 1 (up the ramp from the Aula), counted from the entrance.`
+      : "Your stand is in the round Showroom on Joki floor 1 (up the ramp from the Aula), along the curved LED wall.";
   }
   return `Your stand is on floor ${company.qa.floor} of the Joki tower — take the tower stairs or the lift from floor 1.`;
 }

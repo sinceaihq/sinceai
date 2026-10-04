@@ -72,7 +72,8 @@ export const VENUE_PHOTOS: readonly VenuePhoto[] = [
     cardWidth: 800,
     cardHeight: 506,
     alt: "BioCity at dusk: a large glass and dark-panelled office building on a street corner, with a Science Park sign on the roof.",
-    caption: "BioCity from Tykistökatu. The event entrance is on the opposite, courtyard side (Jussin aukio).",
+    caption:
+      "BioCity's west corner from the Tykistökatu–Lemminkäisenkatu junction. Companies enter from Tykistökatu, in the recess left of the glass tower; the builders' event entrance is on the far (north-east) courtyard side, from Jussin aukio.",
     credit: `Photo: ${TTK}`,
     creator: TTK,
     copyrightHolder: TTK,
@@ -87,7 +88,8 @@ export const VENUE_PHOTOS: readonly VenuePhoto[] = [
     cardWidth: 800,
     cardHeight: 533,
     alt: "Joki's round glass tower lit up at dusk, between brick and glass buildings on the campus courtyard.",
-    caption: "Joki's glass tower on the courtyard: the Showroom is on floor 1, the Q&A floors above it.",
+    caption:
+      "Joki's round tower from the courtyard deck at dusk. The two glass storeys are Q&A floors 2 and 3; the Showroom and Company Lounge are on floor 1, below the deck — reach them from the Aula up the ramp.",
     credit: `Photo: ${TTK}`,
     creator: TTK,
     copyrightHolder: TTK,
@@ -101,7 +103,7 @@ export const VENUE_PHOTOS: readonly VenuePhoto[] = [
     srcCard: "/assets/guide/photos/joki-lobby-card.webp",
     cardWidth: 800,
     cardHeight: 335,
-    alt: "Joki's empty lobby: a light floor, white pillars, long black high tables and a concrete reception counter.",
+    alt: "Joki's empty lobby: a light floor, white pillars, long black high tables and a light wood-look reception counter.",
     caption: "Joki's lobby (Aula) — one of the build areas, open around the clock.",
     credit: `Still from the Joki video · ${TTK}`,
     creator: "Visitor and Innovation Centre Joki",
@@ -140,5 +142,9 @@ export const IMAGE_CREDITS: readonly { what: string; credit: string }[] = [
   { what: "BioCity and Joki photos, Joki video stills", credit: TTK },
   { what: "BioCity and Joki floor plans", credit: `${TTK} (4 Jun 2026)` },
   { what: "EduCity and Joki event maps", credit: "Since AI (2 Oct 2026)" },
-  { what: "3D preview", credit: "Since AI — illustrative render, not to scale" },
+  {
+    what: "3D model",
+    credit:
+      "Since AI — built from City of Turku open data (© Turun kaupunki, CC BY 4.0), © OpenStreetMap contributors (ODbL) and TTK floor plans; textures ambientCG, Poly Haven (CC0)",
+  },
 ] as const;

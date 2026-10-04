@@ -1,69 +1,96 @@
 #!/usr/bin/env node
 /**
- * Renders the static posters for the Field Guide 3D preview (shown before the
- * WebGL scene loads, and in the teasers) plus the guide's Open Graph image.
+ * Renders the posters of the Field Guide's 3D campus (shown before the WebGL
+ * scene loads, and in the teasers) plus the guide's Open Graph image.
  *
- * Re-run after changing anything visible in a 3D scene — for example when the
- * approved Red Hat logo is added to lib/hackathon-2026/partners.ts.
+ * Re-run after changing anything visible in the 3D — a building, the event
+ * dressing, a partner logo, the default time of day.
  *
  *   npm run build && npx next start -p 3100 &
  *   node scripts/render-guide-posters.mjs http://localhost:3100
  *
- * Requires Playwright's Chromium (`npx playwright install chromium`).
+ * Renders on the real GPU where possible (Metal on macOS); elsewhere it falls
+ * back to SwiftShader, which is slow and has no high tier — prefer a Mac or a
+ * machine with a GPU. Requires Playwright's Chromium (`npx playwright install
+ * chromium`) and Python with Pillow for the WebP encode.
  */
 import { chromium } from "@playwright/test";
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
 const base = process.argv[2] ?? "http://localhost:3100";
-const outDir = path.resolve("public/assets/guide/3d");
-const tmpDir = fs.mkdtempSync(path.join(process.env.TMPDIR ?? "/tmp", "guide-posters-"));
+const outDir = path.resolve("public/assets/guide/3d/posters");
+const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "guide-posters-"));
 
-const SCENES = ["showroom", "joki-tower", "biocity"];
+/** Place → the view its poster shows (the view the 3D opens on). */
+const POSTERS = [
+  { place: "campus", view: "campus:default" },
+  { place: "educity", view: "educity:default" },
+  { place: "biocity", view: "biocity:default" },
+  { place: "joki", view: "joki:default" },
+];
+/** The Open Graph image uses this place's render. */
+const OG_PLACE = "campus";
+const WIDTH = 1920;
+const HEIGHT = 1200;
 
+const gpu =
+  process.env.POSTER_GPU ?? (process.platform === "darwin" ? "metal" : "swiftshader");
 const browser = await chromium.launch({
-  args: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"],
+  args:
+    gpu === "metal"
+      ? ["--use-angle=metal", "--enable-gpu", "--ignore-gpu-blocklist"]
+      : ["--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"],
 });
-// Canvas area = viewport − header (56 px) − bottom bar (~69 px) → 1920 × 1080.
-const context = await browser.newContext({ viewport: { width: 1920, height: 1205 }, deviceScaleFactor: 1 });
+const context = await browser.newContext({ viewport: { width: WIDTH, height: HEIGHT }, deviceScaleFactor: 1 });
 await context.addInitScript(() => {
   try {
     localStorage.setItem("cookie_consent", "denied");
   } catch {}
 });
-const page = await context.newPage();
 
-for (const scene of SCENES) {
-  await page.goto(`${base}/hackathon-2026/guide/venue?scene=${scene}#preview-3d`, { waitUntil: "networkidle" });
-  await page.getByRole("button", { name: "Show names", exact: true }).waitFor({ timeout: 180_000 });
-  await page.getByRole("button", { name: "Full screen", exact: true }).click();
-  await page.waitForTimeout(2500);
-  // Hide every overlay so only the rendered scene is captured.
-  await page.addStyleTag({
-    content: `[role=dialog] button, [role=dialog] select, [role=dialog] label { visibility: hidden !important; }
-              [role=dialog] [aria-roledescription="3D scene"] > div { display: none !important; }`,
+const quality = gpu === "metal" ? "ultra" : "low";
+for (const { place, view } of POSTERS) {
+  const page = await context.newPage();
+  const problems = [];
+  page.on("pageerror", (e) => problems.push(e.message));
+  // ?twin=debug starts the engine right away (full screen) and exposes window.__twin.
+  await page.goto(`${base}/hackathon-2026/guide/venue?place=${place}&quality=${quality}&twin=debug#preview-3d`, {
+    waitUntil: "domcontentloaded",
   });
-  await page.waitForTimeout(400);
-  const stage = page.locator('[aria-roledescription="3D scene"]');
-  const png = path.join(tmpDir, `${scene}.png`);
-  await stage.screenshot({ path: png });
-  console.log("rendered", scene);
-  await page
-    .getByRole("button", { name: "Close the 3D preview", exact: true })
-    .click({ force: true })
-    .catch(() => {});
+  await page.waitForFunction(() => typeof window.__twin?.ready === "function", null, { timeout: 240_000 });
+  await page.evaluate(() => window.__twin.ready());
+  await page.evaluate((v) => {
+    window.__twin.setLabels(false);
+    window.__twin.goto(v, false);
+  }, view);
+  // Every texture loaded, shadows and exposure settled.
+  await page.evaluate(() => window.__twin.ready());
+  await page.waitForTimeout(2500);
+  // Only the rendered scene: hide the controls and cards laid over it.
+  await page.addStyleTag({
+    content: `[aria-roledescription="3D scene"] ~ * { visibility: hidden !important; }`,
+  });
+  await page.waitForTimeout(300);
+  const errors = await page.evaluate(() => window.__twin.errors());
+  if (problems.length || errors.length) console.warn(place, "reported:", [...problems, ...errors.map((e) => JSON.stringify(e))]);
+  const png = path.join(tmpDir, `${place}.png`);
+  await page.locator('[aria-roledescription="3D scene"]').first().screenshot({ path: png });
+  console.log("rendered", place);
+  await page.close();
 }
 
-// Open Graph image: the Showroom render with the guide title.
-const showroom = fs.readFileSync(path.join(tmpDir, "showroom.png")).toString("base64");
+// Open Graph image: a campus render with the guide title.
+const render = fs.readFileSync(path.join(tmpDir, `${OG_PLACE}.png`)).toString("base64");
 const logo = fs.readFileSync(path.resolve("public/assets/logo/SINCE AI full white.png")).toString("base64");
 const og = await browser.newPage({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 1 });
 await og.setContent(`<!doctype html><html><head><style>
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=block');
   html,body{margin:0;width:1200px;height:630px;background:#000;overflow:hidden;font-family:'JetBrains Mono',monospace}
-  .bg{position:absolute;inset:0;background:url(data:image/png;base64,${showroom}) center/cover}
-  .shade{position:absolute;inset:0;background:linear-gradient(90deg,#000 0%,rgba(0,0,0,.86) 38%,rgba(0,0,0,.15) 75%,rgba(0,0,0,.35) 100%)}
+  .bg{position:absolute;inset:0;background:url(data:image/png;base64,${render}) 70% center/cover}
+  .shade{position:absolute;inset:0;background:linear-gradient(90deg,#000 0%,rgba(0,0,0,.86) 36%,rgba(0,0,0,.12) 72%,rgba(0,0,0,.25) 100%)}
   .c{position:absolute;left:64px;top:64px;bottom:64px;display:flex;flex-direction:column;justify-content:space-between;color:#fff}
   .k{font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:#8b7bff}
   h1{margin:18px 0 0;font-size:84px;line-height:.95;letter-spacing:-.03em}
@@ -77,14 +104,15 @@ await og.screenshot({ path: path.resolve("public/assets/guide/og-field-guide.jpg
 console.log("rendered og image");
 await browser.close();
 
-// Posters → WebP (via Pillow if available, else keep PNG next to it).
-for (const scene of SCENES) {
-  const src = path.join(tmpDir, `${scene}.png`);
-  const dst = path.join(outDir, `${scene}-poster.webp`);
+// Posters → WebP, 1600 px wide.
+fs.mkdirSync(outDir, { recursive: true });
+for (const { place } of POSTERS) {
+  const src = path.join(tmpDir, `${place}.png`);
+  const dst = path.join(outDir, `${place}.webp`);
   try {
     execFileSync("python3", [
       "-c",
-      `from PIL import Image; im=Image.open(${JSON.stringify(src)}).convert('RGB'); im=im.resize((1600, round(im.height*1600/im.width)), Image.LANCZOS); im.save(${JSON.stringify(dst)}, 'WEBP', quality=82, method=6)`,
+      `from PIL import Image; im=Image.open(${JSON.stringify(src)}).convert('RGB'); im=im.resize((1600, round(im.height*1600/im.width)), Image.LANCZOS); im.save(${JSON.stringify(dst)}, 'WEBP', quality=84, method=6)`,
     ]);
     console.log("wrote", path.relative(process.cwd(), dst));
   } catch {

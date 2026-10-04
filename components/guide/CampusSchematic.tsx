@@ -123,9 +123,9 @@ export function CampusSchematic() {
       <svg viewBox="0 0 540 420" role="img" aria-labelledby="campus-title campus-desc" className="h-auto w-full">
         <title id="campus-title">Schematic overview of the event venues</title>
         <desc id="campus-desc">
-          Seen from the north-east. EduCity on the left. A short outdoor walk across the campus courtyard leads to
-          BioCity&apos;s courtyard-side event entrance on the right. Joki is attached to BioCity, with its round
-          Showroom tower at the courtyard. Schematic, not to scale.
+          Seen from the north-east. EduCity on the left. About 200 m along the raised campus deck (3 min) leads to
+          BioCity&apos;s courtyard-side event entrance on the right. Joki is joined to BioCity; its round tower (the Q&amp;A
+          floors) stands on the courtyard. Schematic, not to scale.
         </desc>
         <defs>
           <marker

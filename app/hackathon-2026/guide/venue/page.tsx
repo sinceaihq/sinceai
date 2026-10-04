@@ -10,7 +10,7 @@ import {
 } from "@/components/guide";
 import StructuredData from "@/components/StructuredData";
 import { PhotoGallery } from "@/components/guide/PhotoGallery";
-import { Venue3D } from "@/components/guide/venue3d/Venue3D";
+import { Twin } from "@/components/guide/twin/Twin";
 import { getVenue, GUIDE_BASE_PATH, keepDots, VENUE_GUIDE, VENUE_MAPS, VENUE_PHOTOS, VENUES } from "@/lib/hackathon-2026";
 import { ORG } from "@/lib/org";
 
@@ -69,11 +69,11 @@ export default function VenueExplorerPage() {
       <GuideSection id="preview-3d" className="border-t-0 pt-8 md:pt-12">
         <SectionHeading
           id="preview-3d-title"
-          eyebrow="// step inside · illustrative 3D"
+          eyebrow="// the whole campus in 3D"
           title="See the space before you arrive."
-          lede="Explore the Joki Showroom, the Q&A floors and the BioCity build hall as they are planned for the event. Illustrative and not to scale — the floor plans below are the reference for rooms and stands."
+          lede="Walk the arrival routes, find your room or stand and see the campus at the hour you arrive: EduCity, BioCity and Joki, built to scale from City of Turku open data. The floor plans below stay the reference for rooms and stands."
         />
-        <Venue3D />
+        <Twin />
       </GuideSection>
 
       <GuideSection id="photos">

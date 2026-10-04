@@ -12,3 +12,6 @@ export * from "./venue3d";
 export * from "./photos";
 export * from "./calendar";
 export * from "./text";
+// The campus twin; its normaliseTarget (a superset of venue3d's) wins the name.
+export * from "./twin";
+export { normaliseTarget } from "./twin";
