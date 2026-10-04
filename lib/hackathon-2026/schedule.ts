@@ -48,7 +48,8 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     id: "fri-cp-arrival",
     start: at(FRI, "15:30"),
     title: "Arrive at EduCity",
-    detail: "Bring a laptop suitable for presenting your challenge materials.",
+    detail:
+      "Bring a laptop suitable for presenting your challenge materials — and your Q&A stand materials: hand them to the Since AI team, who set your stand up at Joki for Saturday.",
     place: "educity",
     audiences: ["challenge-partners"],
     kind: "milestone",
@@ -235,13 +236,13 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   {
     id: "sat-cp-arrival",
     start: at(SAT, "08:30"),
-    title: "Arrive at Joki — get your Q&A stand ready",
-    detail: "Each company's own page in this guide shows its exact floor and stand.",
+    title: "Arrive at Joki — your stand is ready",
+    detail:
+      "Since AI has set up your Q&A stand from the materials you brought on Friday. Come over after breakfast, before the Q&A opens at 09:00 — your company's page shows its exact floor and stand.",
     place: "joki",
     audiences: ["challenge-partners"],
     kind: "milestone",
-    status: "working",
-    note: "Whether Since AI sets up your stand on Friday night or you set it up at 08:30 is being confirmed.",
+    status: "confirmed",
   },
   {
     id: "sat-qa-morning",
@@ -369,13 +370,15 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     id: "sun-voting",
     start: at(SUN, "10:00"),
     end: at(SUN, "12:00"),
-    title: "Vote for your favourite submission",
-    detail: "Vote in sinceai.app. The five most-voted solutions present at the closing ceremony.",
+    title: "Vote for your favourite solutions",
+    detail:
+      "You have 10 votes in sinceai.app — give them to 10 different solutions. The five most-voted solutions present in the finals at 14:00.",
     place: "app",
     audiences: ["builders", "judges"],
     titleFor: { judges: "Participant voting window" },
     detailFor: {
-      judges: "Builders vote in sinceai.app; the five most-voted solutions become the finalists.",
+      judges:
+        "Every builder gives 10 votes to 10 different solutions in sinceai.app; the five most-voted solutions become the finalists.",
     },
     kind: "session",
     status: "working",
@@ -387,12 +390,15 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     end: at(SUN, "13:00"),
     title: "Challenge evaluation",
     titleFor: { judges: "Company challenge evaluation" },
-    detail: "Company evaluators review the submissions to their own challenge.",
+    detail: "Company evaluators review the submissions to their own challenge and choose its winner by 13:00.",
+    detailFor: {
+      "challenge-partners":
+        "Review the submissions to your challenge and hand over your winner by 13:00 — the winners are published at 13:30.",
+    },
     place: "educity",
     audiences: ["challenge-partners", "judges"],
     kind: "session",
-    status: "working",
-    note: "Deadline for handing over results is being confirmed.",
+    status: "confirmed",
   },
   {
     id: "sun-lunch",
@@ -410,23 +416,23 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   },
   {
     id: "sun-closing",
-    start: at(SUN, "13:00"),
-    title: "Closing ceremony + five finalist presentations",
-    detail: "The five most-voted solutions present. The jury selects the overall winner of Since AI Hackathon 2026.",
-    detailFor: {
-      judges: "Overall jury: be ready before 13:00 — your personal call time comes from Since AI.",
-    },
+    start: at(SUN, "13:30"),
+    title: "Closing: company challenge winners announced",
+    detail: "The closing programme opens at EduCity with the winners of all 15 company challenges.",
     place: "educity",
     audiences: ALL_AUDIENCES,
     kind: "milestone",
     status: "confirmed",
   },
   {
-    id: "sun-challenge-awards",
+    id: "sun-finals",
     start: at(SUN, "14:00"),
-    approx: true,
-    title: "Company challenge awards",
-    detail: "The winning teams of each company challenge are announced and awarded.",
+    title: "Finals: five finalist presentations",
+    detail:
+      "The five most-voted solutions present and the jury selects the overall winner of Since AI Hackathon 2026 — about an hour.",
+    detailFor: {
+      judges: "Overall jury: be ready before 14:00 — your personal call time comes from Since AI.",
+    },
     place: "educity",
     audiences: ALL_AUDIENCES,
     kind: "milestone",
@@ -435,6 +441,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   {
     id: "sun-end",
     start: at(SUN, "15:00"),
+    approx: true,
     title: "Since AI Hackathon 2026 ends",
     place: "educity",
     audiences: ALL_AUDIENCES,
@@ -496,6 +503,6 @@ export const HUB_MILESTONE_IDS = [
   "sat-qa-morning",
   "sun-submission-deadline",
   "sun-closing",
-  "sun-challenge-awards",
+  "sun-finals",
   "sun-end",
 ] as const;

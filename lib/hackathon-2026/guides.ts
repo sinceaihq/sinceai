@@ -44,7 +44,7 @@ export const GUIDES: readonly GuideDefinition[] = [
     slug: "judges",
     name: "Judge Guide",
     navLabel: "Judges",
-    lede: "Two roles, one Sunday: company challenge evaluation and the overall jury at the closing ceremony.",
+    lede: "Two roles, one Sunday: company challenge evaluation in the morning and the overall jury at the 14:00 finals.",
     forWho: "The overall jury and company challenge evaluators",
     firstMomentId: "sun-evaluator-arrival",
     metaDescription:
@@ -74,7 +74,7 @@ export const guidePath = (audience: Audience) => `${GUIDE_BASE_PATH}/${getGuide(
 export const HUB = {
   name: "Hackathon 2026 / Field Guide",
   shortName: "Field Guide",
-  lede: "Three venues, one event flow. Friday starts at EduCity with arrival, the opening and the challenge briefings. The build continues across BioCity and Joki. On Sunday, everyone returns to EduCity for the closing ceremony.",
+  lede: "Three venues, one event flow. Friday starts at EduCity with arrival, the opening and the challenge briefings. The build continues across BioCity and Joki. On Sunday, everyone returns to EduCity: the company challenge winners at 13:30, then the finals at 14:00.",
   openingNote:
     "The official opening is Friday 6 November at 17:00. Arrival times differ by role — your guide has yours.",
   metaDescription:
@@ -102,27 +102,27 @@ export const CRITICAL_PATH: Partial<Record<Audience, readonly { label: string; t
     { label: "Arrive", time: "Fri 15:30", text: "EduCity — weekend briefing at 15:40." },
     { label: "Brief", time: "18:30–19:30", text: "Your teams come to your EduCity room." },
     { label: "Q&A", time: "Sat 09–18", text: "At your Joki stand (lunch pause 12–14)." },
-    { label: "Evaluate", time: "Sun 08:15", text: "Evaluation briefing at EduCity." },
-    { label: "Awards", time: "Sun ~14:00", text: "Company challenge awards at EduCity." },
+    { label: "Evaluate", time: "Sun 10–13", text: "Briefing at 08:15, then pick your winner by 13:00." },
+    { label: "Winners", time: "Sun 13:30", text: "Company challenge winners announced at EduCity." },
   ],
   partners: [
     { label: "Opening", time: "Fri 17:00", text: "EduCity, Taidon portaat." },
     { label: "Set up", time: "Fri 18:00", text: "Your stand at BioCity." },
     { label: "Be seen", time: "All weekend", text: "Stands stay open for the whole event." },
-    { label: "Closing", time: "Sun 13:00", text: "EduCity — awards ~14:00." },
+    { label: "Closing", time: "Sun 13:30", text: "EduCity — company winners, finals at 14:00." },
     { label: "Teardown", time: "after 15:00", text: "In the agreed post-event window." },
   ],
   judges: [
     { label: "Deadline", time: "Sun 10:00", text: "Submissions close." },
-    { label: "Evaluate", time: "from 10:00", text: "Company evaluators review their challenge." },
+    { label: "Evaluate", time: "10:00–13:00", text: "Company evaluators pick their challenge's winner." },
     { label: "Finalists", time: "by 12:00", text: "Five most-voted solutions." },
-    { label: "Final", time: "13:00", text: "Jury selects the overall winner." },
+    { label: "Final", time: "14:00", text: "Five finalists present; the jury picks the overall winner." },
   ],
   speakers: [
     { label: "Run sheet", time: "Before travel", text: "Your host confirms every personal time." },
     { label: "Arrive", time: "Fri", text: "EduCity, Joukahaisenkatu 7." },
     { label: "Opening", time: "Fri 17:00", text: "Opening programme and keynote." },
-    { label: "Closing", time: "Sun 13:00", text: "Finalists, awards ~14:00, end 15:00." },
+    { label: "Closing", time: "Sun 13:30", text: "Company winners, finals 14:00, end ~15:00." },
   ],
 };
 
@@ -152,7 +152,7 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
         "Fri 15:00 — check in at EduCity.",
         "Fri 16:45 — team complete; changes close.",
         "Fri 17:00–17:30 — owner selects the challenge.",
-        "Sun 10:00 — owner submits. Then vote until 12:00.",
+        "Sun 10:00 — owner submits. Then vote until 12:00: 10 votes, 10 different solutions.",
       ],
     },
   ],
@@ -179,6 +179,7 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
         "A laptop suitable for presenting, charger and adapters",
         "An offline (PDF) copy of your briefing",
         "Anything teams need to start: access instructions, datasets, examples",
+        "Your Q&A stand materials (roll-up, table items) — Since AI sets your stand up at Joki for Saturday",
       ],
     },
     {
@@ -234,8 +235,8 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
       items: [
         "Company evaluators: evaluation briefing at EduCity from 08:15.",
         "Submissions close at 10:00 — review only what was submitted on time.",
-        "Hand over results by the agreed time so awards can start ~14:00.",
-        "Overall jury: be ready before the 13:00 closing ceremony.",
+        "Company evaluators: hand over your winner by 13:00 — winners are published at 13:30.",
+        "Overall jury: be ready before the 14:00 finals.",
       ],
     },
   ],
@@ -304,8 +305,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
     {
       q: "Stand setup at Joki",
-      a: "Either Since AI sets up your stand on Friday night from materials you leave at EduCity, or you set it up yourself on Saturday at 08:30. We will tell you which before the event.",
-      status: "pending",
+      a: "Since AI sets it up for you. Bring your stand materials when you arrive at EduCity on Friday and hand them to the Since AI team — when you come over to Joki after breakfast on Saturday, your stand is ready.",
     },
     {
       q: "NDA and confidential data",
@@ -317,8 +317,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
     {
       q: "Sunday results",
-      a: "Evaluation starts when submissions close at 10:00. The deadline for handing over your results is being confirmed so that awards can start around 14:00.",
-      status: "pending",
+      a: "Evaluate the submissions to your challenge from 10:00, when submissions close, until 13:00. The winners of all 15 company challenges are published at 13:30 at EduCity; the finals — the five most-voted solutions — follow at 14:00.",
     },
   ],
   partners: [
@@ -346,11 +345,11 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
   judges: [
     {
       q: "Overall jury vs. company evaluator",
-      a: "The overall jury watches the five finalist presentations at the 13:00 closing ceremony and selects the overall winner. A company evaluator reviews the submissions to one company's challenge and decides that company's result. One person can hold both roles — the responsibilities stay separate.",
+      a: "The overall jury watches the five finalist presentations at the 14:00 finals and selects the overall winner. A company evaluator reviews the submissions to one company's challenge between 10:00 and 13:00 and decides that company's winner, published at 13:30. One person can hold both roles — the responsibilities stay separate.",
     },
     {
       q: "How are the five finalists chosen?",
-      a: "Builders vote in sinceai.app between 10:00 and 12:00. The five most-voted solutions present at the closing ceremony.",
+      a: "Every builder has 10 votes in sinceai.app and gives them to 10 different solutions between 10:00 and 12:00. The five most-voted solutions present in the finals at 14:00.",
     },
     {
       q: "Scoring criteria",

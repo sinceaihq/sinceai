@@ -75,9 +75,9 @@ export default function SpeakerGuidePage() {
             { label: "Venue", value: "EduCity", sub: "Joukahaisenkatu 7, Turku" },
             { label: "Opening programme", value: "Fri 17:00", sub: "Opening + keynote", strong: true },
             { label: "Your times", value: "Run sheet", sub: "Confirmed by your host" },
-            { label: "Closing ceremony", value: "Sun 13:00", sub: "Five finalists" },
-            { label: "Awards", value: "Sun ~14:00", sub: "Company challenges" },
-            { label: "Event ends", value: "Sun 15:00", sub: "EduCity" },
+            { label: "Company winners", value: "Sun 13:30", sub: "Closing at EduCity" },
+            { label: "Finals", value: "Sun 14:00", sub: "Five finalists" },
+            { label: "Event ends", value: "Sun ~15:00", sub: "EduCity" },
           ]}
         />
         <NowNext items={schedule} audience={AUDIENCE} firstMoment={getScheduleItem(guide.firstMomentId)} />

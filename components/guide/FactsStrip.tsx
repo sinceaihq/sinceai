@@ -10,7 +10,7 @@ export interface Fact {
 }
 
 /**
- * Narrow cells wrap facts like "Sun ~14:00 · 15:00": keep the "·" at the end
+ * Narrow cells wrap facts like "Sun 13:30 · 14:00": keep the "·" at the end
  * of a line (never at the start) and never split a time range like 09–12.
  */
 function tidy(text: string): React.ReactNode {

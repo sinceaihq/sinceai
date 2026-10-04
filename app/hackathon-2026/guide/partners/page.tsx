@@ -64,8 +64,8 @@ export default function PartnerGuidePage() {
             { label: "Stand setup", value: "Fri 18:00", sub: "BioCity · window confirmed with you", strong: true },
             { label: "Stands open", value: "All weekend", sub: "BioCity" },
             { label: "Submissions close", value: "Sun 10:00", sub: "Stands stay open" },
-            { label: "Closing ceremony", value: "Sun 13:00", sub: "EduCity · awards ~14:00" },
-            { label: "Teardown", value: "After 15:00", sub: "Agreed post-event window", strong: true },
+            { label: "Closing", value: "Sun 13:30", sub: "EduCity · finals 14:00" },
+            { label: "Teardown", value: "After ~15:00", sub: "Agreed post-event window", strong: true },
           ]}
         />
         <NowNext items={schedule} audience={AUDIENCE} firstMoment={getScheduleItem(guide.firstMomentId)} />

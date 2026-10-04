@@ -32,8 +32,8 @@ export default function FieldGuideHubPage() {
             { label: "Official opening", value: "Fri 17:00", sub: "EduCity", strong: true },
             { label: "Build spaces", value: "BioCity + Joki", sub: "Around the clock" },
             { label: "Submissions close", value: "Sun 10:00", sub: "Hard deadline", strong: true },
-            { label: "Closing ceremony", value: "Sun 13:00", sub: "EduCity" },
-            { label: "Event ends", value: "Sun 15:00", sub: "Awards ~14:00" },
+            { label: "Company winners", value: "Sun 13:30", sub: "EduCity" },
+            { label: "Finals", value: "Sun 14:00", sub: "Five finalists · ends ~15:00" },
           ]}
         />
         <p className="text-sm text-neutral-400">{HUB.openingNote}</p>
@@ -93,7 +93,7 @@ export default function FieldGuideHubPage() {
               { label: "Opening", time: "Fri 17:00", text: "EduCity lobby, Taidon portaat." },
               { label: "Briefings", time: "Fri 18:30", text: "Company rooms at EduCity." },
               { label: "Build", time: "Fri 19:30 →", text: "BioCity + Joki, around the clock." },
-              { label: "Closing", time: "Sun 13:00", text: "EduCity — finalists and awards." },
+              { label: "Closing", time: "Sun 13:30", text: "EduCity — company winners, then the finals at 14:00." },
             ]}
           />
         </div>

@@ -39,8 +39,9 @@ describe("canonical event facts", () => {
     expect(formatTime(EVENT_2026.builderRegistration)).toBe("15:00");
     expect(formatTime(EVENT_2026.officialOpening)).toBe("17:00");
     expect(formatTime(EVENT_2026.submissionDeadline)).toBe("10:00");
-    expect(formatTime(EVENT_2026.closingCeremony)).toBe("13:00");
-    expect(formatTime(EVENT_2026.challengeAwardsApprox)).toBe("14:00");
+    expect(formatTime(EVENT_2026.evaluationEnd)).toBe("13:00");
+    expect(formatTime(EVENT_2026.closingCeremony)).toBe("13:30");
+    expect(formatTime(EVENT_2026.finals)).toBe("14:00");
     expect(formatTime(EVENT_2026.eventEnd)).toBe("15:00");
   });
 
@@ -54,10 +55,26 @@ describe("canonical event facts", () => {
     );
   });
 
-  it("marks the company challenge awards as approximate", () => {
-    const awards = getScheduleItem("sun-challenge-awards");
-    expect(awards.approx).toBe(true);
-    expect(awards.place).toBe("educity");
+  it("runs Sunday as evaluation 10–13, company winners 13:30, finals 14:00 and an approximate end", () => {
+    const evaluation = getScheduleItem("sun-evaluation");
+    expect([formatTime(evaluation.start), formatTime(evaluation.end!)]).toEqual(["10:00", "13:00"]);
+    expect(evaluation.status).toBe("confirmed");
+    const closing = getScheduleItem("sun-closing");
+    const finals = getScheduleItem("sun-finals");
+    const end = getScheduleItem("sun-end");
+    expect(formatTime(closing.start)).toBe("13:30");
+    expect(formatTime(finals.start)).toBe("14:00");
+    for (const item of [closing, finals, end]) expect(item.place).toBe("educity");
+    expect(end.approx).toBe(true);
+    expect(getScheduleItem("sun-voting").detail).toMatch(/10 votes.*10 different solutions/);
+  });
+
+  it("has Since AI set up the challenge partners' Joki stands", () => {
+    const saturday = getScheduleItem("sat-cp-arrival");
+    expect(saturday.status).toBe("confirmed");
+    expect(saturday.note).toBeUndefined();
+    expect(saturday.detail).toMatch(/Since AI has set up your Q&A stand/);
+    expect(getScheduleItem("fri-cp-arrival").detail).toMatch(/stand materials/);
   });
 
   it("puts the challenge partner Q&A at Joki, Sat 09–12 and 14–18", () => {
@@ -84,7 +101,7 @@ describe("canonical event facts", () => {
   it("assigns venue roles correctly", () => {
     const roles = Object.fromEntries(VENUES.map((v) => [v.id, v.roles.join(" ")]));
     expect(roles.educity).toMatch(/Opening ceremony/);
-    expect(roles.educity).toMatch(/Closing ceremony/);
+    expect(roles.educity).toMatch(/Closing: company challenge winners and the finals \(Sun from 13:30\)/);
     expect(roles.educity).toMatch(/briefings/);
     expect(roles.biocity).toMatch(/Build/);
     expect(roles.biocity).toMatch(/partner stands/);

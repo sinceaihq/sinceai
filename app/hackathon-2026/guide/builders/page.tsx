@@ -63,7 +63,7 @@ const APP_STEPS = [
     title: "Voting",
     who: "Everyone",
     when: "Sun 10:00–12:00",
-    text: "Vote for your favourite. The five most-voted solutions present at the closing ceremony.",
+    text: "Give your 10 votes to 10 different solutions. The five most-voted present in the finals at 14:00.",
   },
 ] as const;
 
@@ -85,8 +85,8 @@ export default function BuilderGuidePage() {
             { label: "Official opening", value: "Fri 17:00", sub: "EduCity · Taidon portaat" },
             { label: "Build spaces", value: "BioCity + Joki", sub: "From Fri 19:30, around the clock" },
             { label: "Submission deadline", value: "Sun 10:00", sub: "Team owner, in sinceai.app", strong: true },
-            { label: "Closing ceremony", value: "Sun 13:00", sub: "EduCity" },
-            { label: "Event ends", value: "Sun 15:00", sub: "Awards ~14:00" },
+            { label: "Company winners", value: "Sun 13:30", sub: "EduCity" },
+            { label: "Finals", value: "Sun 14:00", sub: "Five finalists · ends ~15:00" },
           ]}
         />
         <NowNext items={schedule} audience={AUDIENCE} firstMoment={getScheduleItem(guide.firstMomentId)} />

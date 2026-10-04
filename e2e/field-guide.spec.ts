@@ -81,8 +81,9 @@ test.describe("content", () => {
     const facts = page.getByRole("definition");
     await expect(facts.filter({ hasText: "Fri 17:00" })).toHaveCount(1);
     await expect(facts.filter({ hasText: "Sun 10:00" })).toHaveCount(1);
-    await expect(facts.filter({ hasText: "Sun 13:00" })).toHaveCount(1);
-    await expect(facts.filter({ hasText: "Sun 15:00" })).toHaveCount(1);
+    await expect(facts.filter({ hasText: "Sun 13:30" })).toHaveCount(1);
+    await expect(facts.filter({ hasText: "Sun 14:00" })).toHaveCount(1);
+    await expect(facts.filter({ hasText: "~15:00" })).toHaveCount(1);
     const body = await page.locator("main").innerText();
     expect(body).not.toMatch(/72[\s-]*(h\b|hours?)/i);
     expect(body).not.toContain("14:10");

@@ -31,8 +31,8 @@ describe("Schedule", () => {
 
   it("marks approximate times", () => {
     render(<Schedule items={scheduleFor("builders")} audience="builders" />);
-    const awards = document.getElementById("schedule-item-sun-challenge-awards")!;
-    expect(within(awards).getByText("Around 14:00")).toHaveClass("sr-only");
+    const end = document.getElementById("schedule-item-sun-end")!;
+    expect(within(end).getByText("Around 15:00")).toHaveClass("sr-only");
   });
 
   it("does not render items that are not for the audience", () => {

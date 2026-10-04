@@ -805,7 +805,7 @@ export const TIME_PRESETS: readonly TimePreset[] = [
   { id: "opening", label: "Opening · Fri 17:00", iso: wallClock(EVENT_2026.officialOpening) },
   { id: "night", label: "Night build · Sat 01:00", iso: "2026-11-07T01:00" },
   { id: "qa", label: "Q&A · Sat 11:00", iso: "2026-11-07T11:00" },
-  { id: "closing", label: "Closing · Sun 13:00", iso: wallClock(EVENT_2026.closingCeremony) },
+  { id: "closing", label: "Closing · Sun 13:30", iso: wallClock(EVENT_2026.closingCeremony) },
 ] as const;
 
 /** Friday 15:30 — challenge partners arrive, the sun is low in the south-west. */

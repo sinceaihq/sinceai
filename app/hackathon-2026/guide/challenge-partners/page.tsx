@@ -51,8 +51,8 @@ export default function ChallengePartnerGuidePage() {
             { label: "Official opening", value: "Fri 17:00", sub: "EduCity" },
             { label: "Your briefing", value: "Fri 18:30–19:30", sub: "Your EduCity room", strong: true },
             { label: "Q&A at Joki", value: "Sat 09–12 · 14–18", sub: "At least 2 h of presence" },
-            { label: "Evaluation", value: "Sun from 10:00", sub: "Briefing 08:15 at EduCity" },
-            { label: "Awards · end", value: "Sun ~14:00 · 15:00", sub: "EduCity" },
+            { label: "Evaluation", value: "Sun 10:00–13:00", sub: "Briefing 08:15 at EduCity" },
+            { label: "Winners · finals", value: "Sun 13:30 · 14:00", sub: "EduCity" },
           ]}
         />
         <NowNext items={schedule} audience={AUDIENCE} firstMoment={getScheduleItem(guide.firstMomentId)} />

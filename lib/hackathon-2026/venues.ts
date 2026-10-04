@@ -20,7 +20,7 @@ export const VENUES: readonly Venue[] = [
       "Arrival, registration and team formation (Fri from 15:00)",
       "Opening ceremony (Fri 17:00)",
       "Company challenge briefings (Fri 18:30–19:30)",
-      "Closing ceremony and awards (Sun from 13:00)",
+      "Closing: company challenge winners and the finals (Sun from 13:30)",
     ],
     openAroundTheClock: false,
     entrances: [

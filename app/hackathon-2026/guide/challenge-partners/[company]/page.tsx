@@ -83,8 +83,8 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
               sub: showroom ? "Floor 1 · Sat 09–12 · 14–18" : "Sat 09–12 · 14–18",
               strong: true,
             },
-            { label: "Evaluation briefing", value: "Sun 08:15", sub: "EduCity" },
-            { label: "Awards · end", value: "Sun ~14:00 · 15:00", sub: "EduCity" },
+            { label: "Evaluate", value: "Sun 10:00–13:00", sub: "Briefing 08:15 · EduCity" },
+            { label: "Winners · finals", value: "Sun 13:30 · 14:00", sub: "EduCity" },
           ]}
         />
         <p className="flex flex-wrap items-center gap-3 text-xs text-white/55">
