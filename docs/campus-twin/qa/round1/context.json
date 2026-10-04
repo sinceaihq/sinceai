@@ -1,0 +1,50 @@
+[
+ {
+  "impact": "high",
+  "owner": "context",
+  "what": "The Kupittaa platform canopies get their structure and lighting twice.\n- context.ts canopy(), in its 'station' branch for OSM 526090187 and 526090188 (around line 964), adds rust-red posts every ~6.5 m, 4.2 m bracket arms and emissive light strips.\n- ground.ts adds its own rust-red columns every 6.4 m, cross beams and a light soffit (canopyFrames, around line 2232), plus linear 'canopy' luminaires (around line 2487).\nTwo column sets stand side by side, with two layers of red beams at different heights. This is the first thing a train arrival sees.",
+  "where": "Platform at (218.9, -3.19, -111.5) looking SE at (265, -3, -48), Sat 11:00, high. Screenshots: <scratch>/qa-campus-ext/r1/s15-1100.png and …/r1/sheet-kb.png (kb-ground vs kb-context show the two different column sets).",
+  "fix": "Remove the station-specific posts, bracket arms and light strips from context.ts canopy(), keeping only the canopy slab. ground.ts canopyFrames is data-driven, lit and already wired to the canopy lamps, so it should own the structure. If you prefer the reverse, delete ground's columns, beams and lamps instead. Either way, there should be one owner.",
+  "critic": 3
+ },
+ {
+  "impact": "medium",
+  "owner": "context",
+  "what": "Several context roofs (ICT-City, DataCity, Pharmacity) carry dark diamond-lattice 'solar or skylight' patterns that look like chain-link fencing lying on the roof. The orthophotos show parallel solar rows and plain membranes. These patterns are prominent in every aerial orbit and in the overview.",
+  "where": "Aerial orbits at 150–190 m, Fri 15:30: <scratch>/qa-campus-ext/r1/a-joki-N-1530.png (centre), …/r1/a-joki-S-1530.png (bottom), …/r1/sheet-a-bio.png.",
+  "fix": "In world/context (bespoke ictSolar and the rooftop details), draw solar arrays as parallel rows of tilted, south-facing panels (about 1 × 1.7 m, ~1.5 m row gap). Give glazed roofs an orthogonal mullion grid. Use a diagonal lattice only where the orthophoto actually shows one.",
+  "critic": 3
+ },
+ {
+  "impact": "medium",
+  "owner": "context",
+  "what": "Electrocity's courtyard facade, the main backdrop of Jussin aukio, is a flat, untextured teal-green plane with simple punched windows: no panel joints, no reveal shadows, one uniform colour. It reads as a toy. The Jussin aukio photos show white metal panels with coloured stripe bands, plus a green panel section by the Joki tower.",
+  "where": "Jussin aukio, camera (38, 1.94, -12) looking at (58.9, 5, 15.9), Sat 11:00, ultra: <scratch>/qa-campus-ext/r1/u-s8-1100.png. Top of the stair at (63, 3.75, 2): …/r1/s9-1100.png. Right half of campus:courtyard: …/r1/v-courtyard-1530.png.",
+  "fix": "In world/context, give this face a panel facade style:\n- 1.2 × 3.6 m panel joints with slight per-panel colour variation (roughness 0.4–0.5);\n- recessed window frames with reveal shading;\n- lit-window variation at night.\nMatch the colours and stripe bands to ref/biocity/jussinaukio/*.",
+  "critic": 3
+ },
+ {
+  "impact": "medium",
+  "owner": "context",
+  "what": "ParkCity's tube-fin 'barcode' facade aliases at street distance: the fine vertical tubes break into shimmering moiré streaks at about 40 m. From the air the colours read pastel. The YLE photo shows crisp, saturated royal blue, orange and sky-blue stripes.",
+  "where": "Joukahaisenkatu, camera (262, 0.42, 40) looking at (225, 12, 0), Sat 11:00, high: <scratch>/qa-campus-ext/r1/d-parkcity-1100.png. Aerials: …/r1/sheet-a-park.png. Reference: ref/street/photos/yle_39-106068763c7cef293287.jpg.",
+  "fix": "In world/context/parkcity.ts, switch from tube geometry to the mip-mapped shell earlier, at 25 m or more, or render the tubes into a pre-filtered stripe texture with anisotropy 8. Push the fin colours toward #1e306f, #5ea0d4 and #d58e1e, a little more saturated.",
+  "critic": 3
+ },
+ {
+  "impact": "medium",
+  "owner": "context",
+  "what": "Several context facades look like block-outs next to the photos:\n- The ochre historic buildings on the north-west side of Tykistökatu at the Lemminkäisenkatu junction are plain boxes with dark holes. The photos show white-framed windows, a cornice and a hipped roof.\n- The nearest south-side building on Lemminkäisenkatu, around (15–40, 75–90), is a generic red-brick grid. The photo shows a white rendered upper volume cantilevered over a dark arcade, plus brick with glazed balconies.",
+  "where": "KartaView spot k3 at (-33, 1.33, -47) heading 214: <scratch>/qa-campus-ext/r1/cmp-k3-k4.png. k5: …/r1/cmp-k5-k8.png. k6 at (3, -0.31, 67) heading 130: …/r1/cmp-k6-k7.png.",
+  "fix": "In world/context recipes:\n- add a 'historic plaster' style with white window surrounds, a cornice band and a hipped roof for the ochre blocks;\n- restyle the Lemminkäisenkatu block from the k6 photo: a white render upper box cantilevered about 2 m over a dark ground floor, with a brick part and glazed balconies.",
+  "critic": 3
+ },
+ {
+  "impact": "medium",
+  "owner": "context",
+  "what": "At night the context glazing glow (uCtxNight·(0.0012 + 0.014·lit)) is also applied to near-horizontal roof glazing. DataCity's round roof skylights become roughly 10 m uniformly bright discs with a mesh pattern: conspicuous 'landing pads' in every night aerial.",
+  "where": "Top-down camera (60,140,40 → 60,0,41) at Fri 20:00, and all night aerials; desktop high. <scratch>/tod-r1/shots/m-roofs.png (all modules vs context only; the discs are in the context module)",
+  "fix": "For roof and sloped glazing use a much lower night value (about 0.002–0.004), add falloff toward the rim, show the frame structure, and light only a share of the skylights (by hash), so they read as faint glows rather than lit discs.",
+  "critic": 4
+ }
+]

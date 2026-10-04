@@ -1,0 +1,169 @@
+[
+ {
+  "impact": "medium",
+  "owner": "core",
+  "what": "The cut-away stays open at eye level outside. After the 'Aula & Cave' view, orbiting or zooming down to the north-east deck keeps Joki cut at floor 1. The tower disappears, the floor-2 door frame and steps stand alone, and 'Aula' and 'Showroom' labels float over the empty drum. applyOpen only changes on view, walk and tour switches, never on orbit.",
+  "where": "From joki:default, camera moved to the north-east deck (76,4,-5) and to Pihakansi (38.7,2.3,-0.4), 11:00 and 01:00. Shots: jokiqa/s2/e1-ne-deck-1100.png, jokiqa/s2/e3-nw-pihakansi-0100.png",
+  "fix": "index.ts: when the orbit camera drops below the cut height outside the opened building's footprint, or moves more than about 80 m from the active view's target, call applyOpen(null) (and restore it when the user returns to the view).",
+  "critic": 1
+ },
+ {
+  "impact": "medium",
+  "owner": "core",
+  "what": "On the low tier, total draw calls in Joki views are 260–311, over the ≤250 budget. Joki's own share is fine: about 109–125 calls with only(['joki']) against a baseline of about 65, so roughly 45–60 calls and 40–85k triangles (budget ≤80 / 150k).",
+  "where": "quality=low, 11:00: joki:default 297, joki:floors 292, joki:showroom 261, north-east deck exterior 260 draw calls (jokiqa/s10/low-all-*.png and the run stats). Phone run: jokiqa/s6 (274–308)",
+  "fix": "Scene-level budget on low: cull or LOD context/landscape/people while inside or over Joki (e.g. hide context beyond 150 m during interior views, and merge or halve the instanced props on low).",
+  "critic": 1
+ },
+ {
+  "impact": "high",
+  "owner": "core",
+  "what": "In the 'Eye level' (first-person) tour, the walker avatar stays rendered around the camera. tour-walker-body (people material, centre 0.77 m below the eye) and its ring show as a large flat beige diamond at the bottom centre of every frame, from the recess through the lobby to Joki.",
+  "where": "tour('companies-tykistokatu-to-showroom','first'), seek 0.2, Fri 15:30 (it is in every first-person frame). <scratch>/qa-biocity/s23/fp-crop.png, s23/fp-02.png, s5/co-02.png … co-06.png",
+  "fix": "index.ts startTour/stepTour: when tourMode==='first', set run.avatar.visible=false (or move it to a layer the main camera skips). Show it again in chase mode or on hand-back.",
+  "critic": 2
+ },
+ {
+  "impact": "high",
+  "owner": "core",
+  "what": "A plain concrete cube stands in front of the builders' event entrance. Standalone LOD2 record lod2-k50 (centre (29.3,-6.8), 6.5 m², 3.46 m tall, no osmId) is drawn by world/massing.ts as facade:none concreteFacade, so it reads as a placeholder block in every courtyard view; at night it glows beige. The same happens to lod2-k46 in the BioCity–Electrocity yard (centre (-5.7,-50.6)), seen from Tykistökatu. TTK photos show such boxes as technical/vent boxes: black louvred upper half, art-painted walls below.",
+  "where": "Focus entrance-biocity-courtyard. Eye camera (38.5,1.75,-4.4)→(27.61,1.8,-7.78) at 11:00 and Jussin aukio eye (43.6,2.2,-2.2) at 11:00 and 18:00. <scratch>/qa-biocity/s12/g-court.png, s6/court-box.png, s21/gal-1800.png. Yard: s13/yard-mouth.png, s2/e4-1100.png. Ref: research/ref/biocity/ttk_art/bf8421b0-biodiversiteetti-taide.jpeg",
+  "fix": "massing.ts: give small standalone LOD2 boxes (<15 m², <5 m tall) a 'tech box' style: vertical black louvre slats on the top ~1.2 m, light render or painted walls below, thin coping. Better still, let the biocity module claim lod2-k50 by LOD2 id and model it, with the massing skipping claimed LOD2 ids.",
+  "critic": 2
+ },
+ {
+  "impact": "medium",
+  "owner": "core",
+  "what": "Walk-mode labels ignore walls and overlap.\n- Standing at the event-entrance door, PHARMACITY and LEMMINKÄISENKATU show over the gallery ceiling, and 'BIOCITY MAIN ENTRANCE' (60 m away on the far side of the building) overlaps 'STAND 3'.\n- Inside, 'BUILD HALL · 56 TABLES · 280 SEATS' runs into the STAND 4 label over a blank wall.\n- From the recess, DATACITY, JOKI and LEMMINKÄISENKATU float through the gable.",
+  "where": "walk(true,'entrance-biocity-courtyard') and walk to bc-3, Fri 15:30. <scratch>/qa-biocity/s9/c1.png, s9/c2.png, s9/g-walkto.png (top left), s22/drum.png",
+  "fix": "In walk mode, show labels only within ~25 m or with line of sight (cheap raycast against building solids and the module colliders every ~0.3 s), and fade the rest. Run declutter every frame while walking, since the camera is always moving there.",
+  "critic": 2
+ },
+ {
+  "impact": "critical",
+  "owner": "core",
+  "what": "Occlusion and declutter hide the event-critical labels in the campus views while showing less useful ones. This defeats the overview's job for partners and builders.\n- campus:default hides: 'BioCity main entrance · companies & partners', 'BioCity event entrance · builders', 'EduCity east main entrance · registration', 'Door B · company arrivals → 1002', 'Drop-off · Tykistökatu', 'Station hall', 'Jussin aukio', 'Lemminkäisenkatu' and 'Joukahaisenkatu'.\n- campus:default shows instead: seven context building names (DataCity, ICT-City, Pharmacity, Eurocity, Electrocity, CivilCity, ParkCity) and 'Joki street door · closed during the event'.\n- campus:top hides both company destinations, the BioCity main entrance and Door B.\n- campus:courtyard hides the BioCity event entrance, the very thing that view exists to show.\nThe BioCity main entrance sits under the crown bridge (y 22.4–26.8), so it is occluded from every aerial angle.",
+  "where": "campus:default, campus:top and campus:courtyard at Fri 15:30, desktop and phone. Screenshots: <scratch>/qa-campus-ext/r1/v-default-1530.png, …/r1/v-top-1530.png, …/r1/v-courtyard-1530.png. Probe output from <scratch>/qa-campus-ext/labels.mjs.",
+  "fix": "In labels.ts and index.ts, add a pinned label set for campus:* views:\n- the three venue names;\n- every entrance-* target, drop-off, registration and door B.\nPinned labels are never hidden by occlusion. When behind geometry, draw them in an 'occluded' style (about 60 % opacity with a 1 px leader line to the true anchor). Declutter ranks pinned labels above context building and street names. Lift the BioCity main-entrance anchor to about y 27, just above the bridge band, whenever the camera is higher than 30 m. Hide or demote the closed Joki street-door label in campus views.",
+  "critic": 3
+ },
+ {
+  "impact": "high",
+  "owner": "core",
+  "what": "The far-city backdrop beyond the terrain data (world/massing.ts farCity) looks like SimCity filler: identical 3–8-storey white slabs with the same punched-window grid, scattered on a flat brown plain with no streets, trees or roof variety. It fills the top band of the default overview and the top third of every aerial orbit, so it is the first thing seen when the campus model opens.",
+  "where": "campus:default at Fri 15:30 and Sat 11:00 (top band): <scratch>/qa-campus-ext/r1/v-default-1530.png. Aerial orbits at 150–190 m: …/r1/sheet-a-bio.png, …/r1/sheet-a-edu.png, …/r1/sheet-a-park.png.",
+  "fix": "In world/massing.ts farCity():\n- Vary the blocks: height distribution, roof colour (dark bitumen, grey, red tin) and facade albedo, with mixed courtyard blocks and towers.\n- Add instanced tree clumps and visible street gaps on the generated grids.\n- Push the backdrop into aerial perspective: stronger exp2 fog and desaturation beyond about 400 m, so it reads as distant city haze rather than crisp toy blocks.",
+  "critic": 3
+ },
+ {
+  "impact": "medium",
+  "owner": "core",
+  "what": "Zoom-to-cursor ends up facing a wall. A ⌘+scroll aimed at BioCity's recess from the overview hits BioCity's facade at y 19.9, so the dolly heads for the wall. The target then drops to the ground about 20 m north-east of the recess, and the zoom ends 11 m from a dark facade on the cycle path instead of at the entrance. The final target is (-14.8, 1.6, -42.4) and the camera (-22.6, 9.1, -37.3).",
+  "where": "campus:default, cursor over the recess at screen point ≈(282, 577) in the 1022×638 canvas, Fri 15:30, high: <scratch>/qa-campus-ext/r1/z-recess-zoom.png and …/r1/z-recess-limit.png. Probe: <scratch>/qa-campus-ext/zoom.mjs.",
+  "fix": "In nav/orbit.ts, when the cursor ray hits a near-vertical surface (|normal.y| < 0.3), zoom toward the ground point in front of that facade instead: hit point + normal × 3 m, dropped to terrain height. Keep that point as the orbit target. Optionally, snap to a target view (such as supercars) when the cursor is within about 15 m of a target anchor.",
+  "critic": 3
+ },
+ {
+  "impact": "medium",
+  "owner": "core",
+  "what": "The default overview camera, from the south-west, shows the backs of the venues. BioCity's Tykistökatu recess (partners) faces north-west, its event entrance faces north-east and EduCity's door B faces south-east, so none of them is visible. The frame is also centred between ICT-City and EduCity at (120, 0, 38), leaving BioCity cut off at the lower left behind Pharmacity.",
+  "where": "campus:default (FALLBACK_VIEWS: position (-140, 280, 235), target (120, 0, 38)), Fri 15:30, desktop: <scratch>/qa-campus-ext/r1/v-default-1530.png.",
+  "fix": "Re-aim the overview from the west-north-west over Tykistökatu, for example position ≈(-230, 230, -40) and target ≈(90, 0, 40), hfov 58. That shows the recess, Jussin aukio, the deck and EduCity together, keeps the 15:30 sun as side light from the camera's left, and leaves ParkCity and the station in the upper right. Re-check the portrait framing. Alternatively, keep this camera but rely on the pinned x-ray labels from the label-visibility issue.",
+  "critic": 3
+ },
+ {
+  "impact": "medium",
+  "owner": "core",
+  "what": "A real object on the timber terrace by the event entrance is wrongly styled. world/massing.ts builds the unlinked base-map record lod2-k50 as a 3.46 m light-grey office-style cube, which screens BioCity's builders' entrance, its feather flags and the door from the Jussin aukio approach (the screenshot with massing removed shows the entrance clearly). The 2022 and 2025 orthophotos show a ~2.5 m dark square with a light rim next to five round vents, most likely a garage exit or skylight housing. The same unlinked-record handling applies to k46 and k51.",
+  "where": "lod2-k50 at (29.3, -6.8). Camera (50, 2.12, 7) looking at (22.05, 1.5, -7.54), Sat 11:00: <scratch>/qa-campus-ext/r1/iso2-s7.png (all modules vs without massing). Orthophotos: …/r1/sheet-o-k50.png.",
+  "fix": "In massing.ts, render small unlinked records (under 15 m²: k46, k50, k51) as dark glass-and-metal kiosks (dark glazing, light coping, no punched windows), with the height checked against the 2021 surface model. Alternatively, hand k50 to the biocity module as terrace furniture.",
+  "critic": 3
+ },
+ {
+  "impact": "high",
+  "owner": "core",
+  "what": "The walk simulation lets a walker drop 3.9 m without a connector, and it does not switch levels when the walker is inside a level's walk area. At E(8.27, 76.79) the walker is inside educity-1's pavilion area but stays 'outdoor' on the terrain beneath it. DESIGN §6 says entering a building through a door switches level automatically.",
+  "where": "Same run as the west-door issue: walk(true,'entrance-educity-west') + W, 11:00 → .../scratchpad/qa-educity-r1/q-west-2.png (camera y 1.17 vs deck 3.40), p18.out.",
+  "fix": "nav/walk.ts. Treat any outdoor floor step down of more than 0.45 m (not on a slope area or stair) as a ledge and block it. When the walker is inside an indoor level's walk area whose y is within 0.5 m of the floor the walker came from (the last stable floor), switch to that level before following the terrain. Add a unit test: deck at 3.40 → indoor area at 3.40 above terrain at −0.5.",
+  "critic": 5
+ },
+ {
+  "impact": "critical",
+  "owner": "core",
+  "what": "The chase camera goes inside overhead structures: the chase test only uses 2D wall colliders, so roofs and canopies are never checked. Kalevansilta footbridge: the camera sits at y 7.5 between the roof layers (7.05–7.83), so the top half of the screen is a flat grey slab and the avatar is invisible. On the covered platform stair, the stair roof blocks the head-to-camera line for 6 samples. At the Kupittaan asema bus stop the camera hovers 0.6 m above the shelter roof with the walker hidden under it. In the BioCity revolving door the camera ends up inside the drum's steel ceiling (−23.2, 2.36, −10.0). On the Joki ramp the camera rides 0.20 m under the 1.40 ceiling.",
+  "where": "Desktop 1280×800, high, 15:30. builders-train-checkin t 0.22–0.33 (camera e.g. (273.8,7.5,−21.8)); partners-fri-train-edu t 0.25–0.37; builders-station-hall-checkin t 0.14–0.15; companies-tykistokatu-to-showroom t 0.15, partners-tykistokatu-to-stands t 0.21–0.22, builders-build-to-joki t 0.05 (drum); builders-build-to-joki and companies-tykistokatu-to-showroom t 0.92–0.97 (ramp). Screenshots: <scratch>/twin/twqa/out/A/builders-train-checkin-0_3.png, …/out/S/train-0_31-kalev-roof.png, …/out/A/partners-fri-train-edu-0_3.png, …/out/S/stdoor-0_14-busstop.png, …/out/S/tyk-0_125-drum.png",
+  "fix": "In index.ts, pass a `constrain(camera, walker)` to createTourController that casts a ray up from the walker's head (ground, context, landscape and building roots, or a ceiling-height table built once per tour along the path) and clamps camera.y ≤ ceiling − 0.35. Under a roof, use the indoor chase preset (back 5, up = min(2.3, ceiling − floor − 0.4)). Also test the 3D head-to-camera segment against overhead meshes, not only the 2D walls.",
+  "critic": 6
+ },
+ {
+  "impact": "critical",
+  "owner": "core",
+  "what": "In walk mode the walker sinks through the raised deck at EduCity's pavilion doors. No deck or structure walk area covers the last ~3 m in front of the doors, so the outdoor floor there is the ground-level terrain under the deck. West main entrance (builders' transfer start): the eye drops 5.12 → 3.98 at (174.68,112.61), then to y 1.75 at (177.44,114.89), with nothing visible below. East entrance: the floor sits 0.15–0.5 m below the pavers and the walker can't step up into the lobby (stuck at (209.3,138.9)). The walkRoute probe agrees: out-arr-*-edu-east maxFloorError 0.49 at (219.26,3.40,137.87) and stuck at (208.3,137.9); out-xfer-edu-west-bio-event reaches only 2 % (stuck at (176.29,111.16)).",
+  "where": "Walk mode starting at 'entrance-educity-west' and 'entrance-educity-east', 11:00, 1280×800. Screenshots: …/out/W2/out-edu-west-door-inside.png, …/out/W2/out-edu-east-door-inside.png, …/out/W/edu-west-entrance-in-door.png; reports …/out/W/walk-report.json, …/out/W2/walk-report.json",
+  "fix": "In structureAreas() / structureWalkAreas, extend the EduCity deck areas (streets.json deckY polygons) to the door thresholds: grow them ~3 m towards the footprint and clip to it. Alternatively, accept outdoor 'apron' walk areas at y 3.40 supplied by the educity module at its three doors. Add walkRoute regressions requiring reached ≥ 0.98 and floor error ≤ 0.1 m for out-xfer-edu-west-bio-event and out-arr-train-edu-east.",
+  "critic": 6
+ },
+ {
+  "impact": "high",
+  "owner": "core",
+  "what": "The chase camera hard-cuts at doors. When the line of sight crosses a wall, nav/tour.ts frame() multiplies the camera offset by the clear fraction (castCircle → cam *= k, velocity zeroed). The camera jumps into the walker's head in one frame and springs back about 1 s later. Measured jumps: 7.06 m at the EduCity west door, 6.93 m at the east door, 7.03 m at the station door, 6.82 m on the BioCity terrace, 5.63 m leaving ParkCity, 5.11 m in the revolving-door drum, 5.03 m at the Joki ramp, 5.2–5.4 m on Kalevansilta. While the camera is collapsed the avatar is off-screen (43 of 1,212 samples); the reduced-motion still for step 2 of the transfer shows no avatar at all.",
+  "where": "Real playback, high, 1280×800: builders-transfer-to-build t 0.02 and 0.74, builders-train-checkin t 0.87 and 0.21–0.37, companies-train-to-biocity t 0, partners-fri-parkcity-edu t 0.03, companies-tykistokatu-to-showroom t 0.12 and 0.88. Data: …/out/play.json. Screenshots: …/out/S/xfer-0_022-westdoor.png, …/out/S/train-0_875-eastdoor.png, …/out/S/tyk-0_125-drum.png, …/out/F/rm-1.png",
+  "fix": "Pull in with a fast spring (ω ≈ 10–14) instead of k-scaling, and test 1.5–2 m ahead along the route so the pull starts before the door. When the route behind is clear, trail on it (the point s − back on the route). Never trail closer than ~2 m: switch to an over-the-shoulder offset (back 2, up 1.9, looking 6 m ahead) so the avatar stays in frame, then ease back out (ω ≈ 2).",
+  "critic": 6
+ },
+ {
+  "impact": "high",
+  "owner": "core",
+  "what": "Tours open with the camera inside or against a building. For s < back, desired() extrapolates the first leg backwards into the start building. Station-door starts: the camera at (157.3,6.1,−146.8) is inside the 39 m Joukahaisenkatu 6 / station complex, which has no ground colliders and whose walls are culled from inside. The first frame shows a lone black door box in a car park and no station hall, while the caption says 'From the station hall's street door…'. ParkCity starts: the camera collapses onto the avatar's head, so the avatar is off-screen and a column fills the view. Transfer start: an EduCity interior wall sits between camera and walker.",
+  "where": "t = 0 at 15:30 of builders-station-hall-checkin, companies-train-to-biocity, partners-fri-parkcity-edu, partners-fri-stepfree-edu, companies-parkcity-to-biocity and builders-transfer-to-build. Screenshots: …/out/A/companies-train-to-biocity-0.png, …/out/S/park-0-start.png, …/out/A/builders-transfer-to-build-0.png",
+  "fix": "In nav/tour.ts, for the first back + 2 m: if the extrapolated chase point is inside a closed footprint or blocked, frame from the open side. Put the camera ~6 m out along the first leg, look back at the door and the avatar, then swing behind as the walker passes. Give the tour controller the building volumes the engine already uses for orbit, not just the module walls.",
+  "critic": 6
+ },
+ {
+  "impact": "high",
+  "owner": "core",
+  "what": "The tour avatar doesn't stand on the modelled surfaces. index.ts creates the tour controller without heightAt, so the walker follows routes.json's straight-line heights while the ribbon is snapped to the actual surfaces. Results: the avatar sinks 0.30–0.71 m into the EduCity Main Stairs (legs cut off by the treads), 0.98 m into the Kalevansilta deck, 0.43 m into the BioCity terrace planter and 0.41 m into Joki's exterior stair treads, and floats 0.66 m at the foot of Kalevansilta's stair down to Joukahaisenkatu.",
+  "where": "15:30, high. partners-fri-parkcity-edu t 0.58–0.66, builders-train-checkin t 0.67–0.71 and 0.37, partners-fri-train-edu t 0.30 and 0.76–0.80, builders-transfer-to-build t 0.59 and 0.74–0.76. Screenshots: …/out/S/train-0_695-mainstairs.png, …/out/S/train-0_37-stair-foot-float.png, …/out/A/partners-fri-train-edu-0_3.png; data …/out/D/report.json",
+  "fix": "Pass heightAt to createTourController for outdoor points: the routes module's surface index (surfaceService.index.heightAt(x, z, routeY, 0.9, 0.6)) or the walk floor (structure areas / walkWorld().heightAt). Keep the route height as the hint so bridges never snap to the ground below, and keep the existing base spring so stairs glide.",
+  "critic": 6
+ },
+ {
+  "impact": "high",
+  "owner": "core",
+  "what": "routes.json legs cut through solid objects on the builders' transfer (out-xfer-edu-west-bio-event and its reverse). (a) For ~8 m the route runs through the concrete planter on BioCity's event-entrance terrace: planter top 0.65–0.73 vs route 0.26–0.30, at x 26–35, z −3.0…−5.3. (b) The last 2 m enter the vestibule through its south-east side wall at (23.7,−6.6) instead of the outer double doors at (22.69,−8.01), which face north-east (SPEC §3.1.4). The avatar's head is inside the black steel frame. (c) The route clips the bottom treads of Joki tower's exterior stair at (65.5–66.4, 6.6–7.4) by 0.4 m.",
+  "where": "builders-transfer-to-build t 0.59 and 0.73–0.79; builders-back-to-educity t 0.19–0.23 and 0.36; 15:30 / 16:45. Screenshots: …/out/A/builders-transfer-to-build-0_75.png, …/out/S/dusk-xfer-0_75.png, …/out/S/xfer-0_784-vestibule.png, …/out/S/jussin-stair-top-joki-tread.png",
+  "fix": "Regenerate both legs in routes.json. Follow the terrace walkway between the planters and benches; approach the vestibule from the north-east via (23.6,−9.2) → (22.69,−8.01) → (22.05,−7.54); keep the deck segment 1 m clear of Joki's stair. Add a unit test that sweeps every leg (0.3 m radius) against module and ground colliders.",
+  "critic": 6
+ },
+ {
+  "impact": "high",
+  "owner": "core",
+  "what": "First-person tour mode shows the avatar's own body. The avatar stays visible while the camera sits at eye height inside its head, so a large flat beige or white quad (the head or lanyard cut by the near plane) sits at the bottom of every frame.",
+  "where": "Tour camera set to first person, 11:00: builders-train-checkin t 0.3, builders-build-to-joki t 0.52, companies-tykistokatu-to-showroom t 0.1. Screenshots: …/out/S/fp-train-0_3.png, …/out/S/fp-joki-0_52.png, …/out/S/fp-tyk-0_1.png",
+  "fix": "In index.ts stepTour/startTour, hide the avatar's body when the tour camera mode is 'first', and whenever the camera is within ~1.2 m of the walker in chase mode. Keep only the ground ring.",
+  "critic": 6
+ },
+ {
+  "impact": "high",
+  "owner": "core",
+  "what": "At eye level in walk mode, labels pile up and show through walls. In the BioCity lobby, 'STAND 1 · RED HAT · AULAGALLERIA', 'RESTAURANT SERVING LINES · EVENT MEALS' and 'PARTNER STAND · AULAGALLERIA' sit on top of each other, and 'BUILD HALL · 56 TABLES' overlaps 'STAND 2 · SOLITA'. The Aulagalleria stands' labels show although they are behind the meeting rooms. Labels are also cut off at the canvas edge ('SIBILITY / TECH PARTNER STAND…', '…OBBY · WEST END').",
+  "where": "Walk mode, 'entrance-biocity-tykistokatu' → into the lobby, 11:00; tours companies-tykistokatu-to-showroom t 0.15. Screenshots: …/out/W/bio-entrance-in-inside.png, …/out/W/bio-entrance-in-door.png, …/out/A/companies-tykistokatu-to-showroom-0_15.png",
+  "fix": "In labels.ts, during walk mode: declutter on every walk step, hide labels whose anchor is occluded by walls (raycast or same-room test), cap the count to the ~3 nearest relevant ones, and hide labels instead of letting them clip at the canvas edge.",
+  "critic": 6
+ },
+ {
+  "impact": "medium",
+  "owner": "core",
+  "what": "The low tier is over its performance budget at the partner arrival: 334–337 draw calls and 0.73–0.74 M triangles in the BioCity Tykistökatu entrance recess, against the low budget of ≤ 250 draw calls and ≤ 700 k triangles. On high, the same spot is 476–490 draw calls and 1.44 M triangles.",
+  "where": "Mobile 412×915 @2×, quality low, 15:30, companies-tykistokatu-to-showroom t 0 and walk from 'supercars'. Data: …/out/M/multi.json",
+  "fix": "On low, tighten distance culling and instance limits for people, cars and furniture in the recess and lobby, and merge the event dressing (flags, totems, floor stickers) into one or two draws.",
+  "critic": 6
+ },
+ {
+  "impact": "high",
+  "owner": "core",
+  "what": "The campus overview (campus:default) frames the wrong things: BioCity and Joki sit in the lower-left corner, Pharmacity and generic apartment blocks dominate the foreground, and the BioCity label is not shown while the Joki street-door notice is one of the most prominent labels.",
+  "where": "campus:default at 15:30 and 16:45, desktop 1600x1000 and --mobile",
+  "fix": "Re-frame campus:default so EduCity, BioCity, Joki and the route between them fill the frame from a 3/4 aerial angle with BioCity's Tykistökatu entrance visible; event venues and event entrances must win the label priority; the Joki street-door notice only in close views."
+ }
+]

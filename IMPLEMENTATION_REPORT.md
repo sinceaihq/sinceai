@@ -3,7 +3,7 @@
 ## Git
 
 - Branch: `feature/hackathon-2026-field-guide` (from `main` @ `6ea8234`)
-- Commits: `d24332e` feature · `c75c775` tests + a11y fixes · `169ac2e` mobile 3D, print, polish · `6b02748` report · final QA round (photos, calendars, personalised company pages, guide 404, cross-browser fixes) — see `git log`
+- Commits: `d24332e` feature · `c75c775` tests + a11y fixes · `169ac2e` mobile 3D, print, polish · `6b02748` report · `589bb89` photos, calendars, personalised company pages · `83ab13d` campus twin (3D of the whole campus) · `ec50481` twin docs + reproducible data · `1ab7bab` Sunday programme + Joki stand setup · `ba9e882` previous 3D removed — see `git log`
 - Remote branch: `origin/feature/hackathon-2026-field-guide` — pushed, **not merged**. CI deploys only on pushes to `main`, so pushing this branch deploys nothing.
 - Untouched: the user's untracked files in `public/assets/sponsors/` and `public/assets/supports/` were left as they were and are not in any commit.
 
@@ -20,7 +20,7 @@ All public by direct link, `noindex`, not in the sitemap or the marketing nav/fo
 | `/hackathon-2026/guide/partners` | Partner & Tech Guide (BioCity stand plan) |
 | `/hackathon-2026/guide/judges` | Judge Guide (overall jury vs. company evaluators) |
 | `/hackathon-2026/guide/speakers` | Speaker & Guest Guide |
-| `/hackathon-2026/guide/venue` | Venue Explorer: 3D preview, venue photos, floor plans, route, text list of all locations |
+| `/hackathon-2026/guide/venue` | Venue Explorer: the 3D campus (places, views, Go to, walking routes, walk mode, time of day), venue photos, floor plans, route, text list of all locations |
 | `/hackathon-2026/guide/calendar/[guide]` | `.ics` calendar per guide (5) |
 | `/hackathon-2026/guide/calendar/challenge-partners/[company]` | `.ics` calendar per company (15) with its own room and stand |
 | any other `/hackathon-2026/guide/…` | Guide-styled 404 with links to every guide |
@@ -31,8 +31,11 @@ All public by direct link, `noindex`, not in the sitemap or the marketing nav/fo
 Owner instructions 3–4 Oct 2026:
 
 - **BioCity visibility & tech partner stands:** Stand 1 (most visible — Aulagalleria, facing the event entrance, on the route to every meal) = **Red Hat**. Stand 2 (main lobby east end, where the build hall meets the passage to Joki) = **Solita**. Stands 3 and 4 stay in the plan, marked **“Visibility / Tech Partner stand”** — on the stand cards, in the map location lists, in the 3D scene and in the text version. Edit in `lib/hackathon-2026/partners.ts`.
-- **BioCity event entrance:** the courtyard-side entrance from Jussin aukio (the official plan’s “Sisäänkäynti Jussinaukiolta”), shown as *Current plan*. Distance shown as “approx. 50 m outdoors (organiser estimate)” with Google Maps fallbacks between the official addresses.
-- **3D preview:** lazy-loaded three.js scenes of the Joki Showroom (dark room, violet light, black counters and bar stools, partner logos on the curved LED wall — after the supplied event render), the Joki Q&A floors 1–3, and the BioCity build hall (56 tables / 280 seats from the 3 Oct furniture plan, stands, route to Joki). Labelled “illustrative, not to scale”; the 2D floor plans remain the reference and every location is also listed as text.
+- **BioCity event entrance (builders):** the courtyard-side entrance from Jussin aukio (the official plan’s “Sisäänkäynti Jussinaukiolta”). Measured on the City of Turku base map, the walk from EduCity is **about 200 m / 3 min** along the raised campus deck (the earlier “approx. 50 m” organiser estimate is corrected everywhere), with a walking-directions link to the entrance itself.
+- **Companies and partners** come in through BioCity’s main entrance on Tykistökatu, through the open entrance recess where a G-Class supercar display stands (owner’s plan); Joki is reached indoors down a 10-step stair at the far end of BioCity’s lobby. Joki’s step-free street door is closed for the event, so step-free visitors are asked to email info@sinceai.fi.
+- **Campus twin (owner 4 Oct 2026):** the illustrative 3D preview is replaced by a to-scale 3D model of the whole event campus — EduCity, BioCity, Joki (incl. the round tower floors 2–3), the streets and the arrival routes — built from City of Turku open data (CC BY 4.0), OpenStreetMap (ODbL) and the venue owner’s floor plans; details below and in `docs/campus-twin/`.
+- **Sunday programme (organiser 4 Oct 2026):** company evaluation 10:00–13:00, the winners of all 15 company challenges published at 13:30, finals at 14:00 (the five most-voted solutions present, the jury picks the overall winner, about an hour), end around 15:00. Builders give 10 votes to 10 different solutions.
+- **Joki Q&A stands (organiser 4 Oct 2026):** companies bring their stand materials to EduCity on Friday; Since AI sets the stands up at Joki, ready when the companies arrive on Saturday.
 - **Venue photos and official plans are published with credits** (owner instruction 4 Oct 2026, see *Images and credits*).
 
 ## Architecture
@@ -46,10 +49,10 @@ Owner instructions 3–4 Oct 2026:
   - `seo.ts` (shared metadata) · `time.ts` (Europe/Helsinki formatting, now/next) · `types.ts`
 - **Components:** `components/guide/` — shell/header/footer (image credits), hero, facts strip, critical path, schedule, live now/next card, venue cards, route card + isometric campus schematic, checklist (ticks saved on device), details (native `<details>`), help, company directory, stand plan, photo gallery with lightbox, calendar and share buttons, section nav with scrollspy.
 - **Map viewer:** `components/guide/maps/` — floor tabs (arrow keys), contained preview with highlighted rooms, full-screen dialog (Radix) with pinch/drag/wheel/keyboard zoom & pan, focus trap, Escape, focus return, hotspot list + glossary. Deep links `#maps-joki`, `#map-educity-2`.
-- **3D:** `components/guide/venue3d/` — poster first; `three` loads only after “Step inside”; renders on demand, pauses off-screen, honours reduced motion, disposes on unmount, adapts framing to portrait phones, opens full screen on touch devices. Teasers on other pages show the scene they open (Showroom, Joki tower or BioCity). Posters/OG image regenerate with `scripts/render-guide-posters.mjs`.
+- **Campus twin (3D):** `components/guide/twin/` — poster first; `three` and the engine load only after “Explore in 3D”. Places (campus, EduCity, BioCity, Joki) with views, a “Go to” list of every company stand, briefing room, partner stand, entrance and area, 12 walking routes played by an avatar with captions (every arrival and move of the weekend), walk mode at eye level with collisions, stairs and lifts, the real sun for Turku at any hour of the weekend, labels, full screen and a complete text alternative. Physically based rendering (AgX, GTAO from the depth buffer, bloom, SMAA, two-cascade sun shadows, NaN-safe), three tiers with runtime downgrade, renders on demand. Teasers and “Walk it in 3D” route cards on the hub, builder, partner, challenge-partner and every company page. Runbook: `docs/campus-twin/README.md`; data pipeline `scripts/twin/` (inputs in `data/campus-twin/sources/`, reproduces the runtime data byte for byte). Posters/OG image regenerate with `scripts/render-guide-posters.mjs`.
 - **Live card:** “Starts in … / Live now / Next / That’s a wrap”, all-day items count for their whole day, only the rows are an ARIA live region (not the ticking clock). Preview any moment with `?now=2026-11-07T10:30` (Turku time).
 - **noindex / sitemap:** `<meta name="robots" content="noindex, nofollow, nocache">` + `googlebot` + `bingbot` on every page; `X-Robots-Tag: noindex, nofollow, noimageindex` for the route family, the calendars and `/assets/guide/*` (`next.config.ts` + `public/_headers` for Cloudflare static assets); excluded from `app/sitemap.ts`; robots.txt deliberately does **not** disallow it (crawlers must see the noindex). The marketing “Apply” popup is suppressed on guide pages.
-- **Dependencies added:** `three` (runtime, code-split to the 3D chunk only), `@types/three`, `@playwright/test`, `@axe-core/playwright` (dev).
+- **Dependencies added:** `three` (runtime, code-split to the 3D chunk only), `@types/three`, `@playwright/test`, `@axe-core/playwright` (dev). Textures are CC0 (ambientCG, Poly Haven — `public/assets/guide/3d/tex/LICENSES.md`).
 
 ## Images and credits
 
@@ -62,7 +65,7 @@ Published on the owner’s instruction (4 Oct 2026): use the venue images and of
 | Joki lobby, Joki amphitheatre (Company Lounge) | Still from the Joki video · Turun Teknologiakiinteistöt Oy | Joki video in the event pack; frames chosen without people |
 | BioCity and Joki floor 1 floor plans | Turun Teknologiakiinteistöt Oy (4 Jun 2026) | Official plans supplied for the event, used as-is |
 | EduCity and Joki event maps | Since AI (2 Oct 2026) | Since AI |
-| 3D preview and posters | Since AI — illustrative render | Original |
+| 3D campus and its posters | Since AI — built from City of Turku open data (© Turun kaupunki, käyttölupa CC BY 4.0), © OpenStreetMap contributors (ODbL) and TTK floor plans; textures ambientCG, Poly Haven (CC0) | Original; open data |
 | EduCity exterior (venue card) | — | Existing site asset already used on `/hackathon` |
 
 **Before production:** confirm the usage terms for the EduCity photos (photographer / Turku AMK media bank) and the TTK photos and video stills (TTK is the venue owner and a partner). Removing any photo is a one-line change in `lib/hackathon-2026/photos.ts` or `venues.ts`.
@@ -142,18 +145,18 @@ Modelled in data as *Current plan* / *To be confirmed* (or left out), easy to ch
 
 - Production lock of the 2 Oct room and stand placements (status `working` in `companies.ts`).
 - Red Hat’s approved logo file (the repo has none; the UI shows the name). Add it to `public/assets/sponsors/`, set `logo` in `partners.ts`, re-run the poster script.
-- Exact BioCity stand footprints vs. exit routes; the event doors and the accessible route EduCity → BioCity/Joki; which Joki street doors are open.
+- Exact BioCity stand footprints vs. exit routes (stands 1 and 3 sit close to the curved glass, stand 4 inside the reserved restaurant terrace); a step-free route into Joki during the event (the BioCity passage has 10 steps and Joki’s street door is closed).
 - Friday dinner end (22:15 vs 22:30) and Sunday breakfast end (09:00 vs 10:00) — start times only.
 - Visibility-partner setup window vs. all-weekend opening; teardown window.
-- Whether Since AI or the company sets up the Joki Q&A stand (Fri night vs Sat 08:30).
-- Company result hand-over deadline on Sunday; approved 2026 judging criteria (old 30/25/25/10/10 weighting **not** published); jury roster; personal call times.
-- Participant voting rules; challenge-selection change/rounding/no-selection rules (copy points to the app and event staff).
+- Approved 2026 judging criteria (old 30/25/25/10/10 weighting **not** published); jury roster; personal call times.
+- Challenge-selection change/rounding/no-selection rules (copy points to the app and event staff).
+- Supercar display: number and models beyond the G-Class; BioCity build-hall tables (52 in the drawing vs 56 in its legend — the 3D uses 56).
 - Speaker run sheets (Jason Mayes’ sample times **not** published), slide deadlines, hotels.
 - Wi-Fi instructions, named public contacts (guide uses `info@sinceai.fi`, Discord and `sinceai.app/report`), minors policy, final challenge briefs (none are linked).
 
 ## Public-site mismatches intentionally not changed
 
-- `lib/sinceai.ts` `UPCOMING_EVENT_2026`: 16:00 start / Sun 17:00 end and “November 6 16:00 – November 8 17:00” (drives `/hackathon`, its countdown and Event JSON-LD). Operational: registration 15:00, opening 17:00, end Sun 15:00.
+- ~~`lib/sinceai.ts` 16:00 start / Sun 17:00 end~~ — aligned on 4 Oct 2026 with the operational schedule (Fri 15:00 – Sun 15:00; drives `/hackathon`, its countdown and Event JSON-LD).
 - “72 hours / 72-hour” across `/hackathon` (metadata, hero, FAQ), `HackathonPopup`, `/for-builders`, `/partners`, `/press`, `/stats`, `/turku`, `/ai-hackathons`, `/production-support`, `lib/faqs.ts`, `lib/schema.ts` and blog posts.
 - `/hackathon` venue copy and JSON-LD name EduCity only; building happens in BioCity + Joki.
 - `/hackathon` metadata/FAQ list “Google for Developers, Bayer, Sandvik, Kongsberg, Valmet” as challenge partners; the 2026 challenge companies are the 15 in this guide.

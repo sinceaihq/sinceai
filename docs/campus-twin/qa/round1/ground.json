@@ -1,0 +1,114 @@
+[
+ {
+  "impact": "high",
+  "owner": "ground",
+  "what": "The timber terrace outside the Aulagalleria and the event entrance (mesh ground-deck) uses birch@2.8x1.4 (interior birch lamella, ≈#d9c9a8). In daylight it reads near-white, like snow or pale concrete, across the whole approach to the builders' door. SPEC §4.3 calls for weathered boards ≈#8a7560. The round concrete seats beside it (ground-concrete) are faceted, too-white cylinders.",
+  "where": "Jussin aukio eye (43.6,2.2,-2.2)→(22.1,2.0,-7.5) and courtyard eye (38.5,1.75,-4.4), Sat 11:00 / Fri 15:30. <scratch>/qa-biocity/s12/g-court.png (top row), s12/ak.png, s4/courtEye-1100.png",
+  "fix": "ground.ts: create an exterior timber variant: tint ≈#8a7560, roughness 0.8, 0.14 m boards with 6 mm dark gaps along the deck direction, damp darkening, leaf litter decals. Seats: ≥32 segments and grey concrete ≈#9a9792 with a slight chamfer.",
+  "critic": 2
+ },
+ {
+  "impact": "medium",
+  "owner": "ground",
+  "what": "The builders' approach to the event entrance is nearly unlit at dusk and night. The terrace and path from the Jussin aukio stair to the vestibule go black except for the route ribbon. SPEC §4.3 has black bollard lights (≈0.8 m) and warm pole-top lanterns (≈4 m), and the 19:30 transfer happens in the dark.",
+  "where": "Jussin aukio eye (43.6,2.2,-2.2), 16:45; courtyard focus at 18:00; courtyard eye at 01:00. <scratch>/qa-biocity/s4/aukioEye-1645.png, s21/gal-1800.png, s4/courtEye-0100.png",
+  "fix": "landscape.ts: instanced bollards every ~6 m along the terrace path and the deck edge, plus 2–3 warm lanterns, using emissive LUMINANCE.bollard with light pools. Ask biocity for 2 soffit downlights over the vestibule doors.",
+  "critic": 2
+ },
+ {
+  "impact": "medium",
+  "owner": "ground",
+  "what": "The BioCity–Electrocity yard is an empty pale plane. The bike racks and roofed shelter (-3…5, -56…-45), the e-scooter bay (-7,-49) and the waste containers (0…10, -49…-34) are missing (SPEC §4.4). Official directions route visitors through 'the courtyard between ElectroCity and BioCity'.",
+  "where": "Yard from Tykistökatu (-20,1.7,-62)→(5,2.5,-45) and yard eye (3.5,1.7,-55), Sat 11:00. <scratch>/qa-biocity/s13/yard-mouth.png, s13/yard-mural.png",
+  "fix": "landscape.ts: instanced green bike racks with a slim roofed shelter, a scooter bay with a few scooters, and 3–4 dark-green containers. Add leaf litter and wear on the yard paving.",
+  "critic": 2
+ },
+ {
+  "impact": "high",
+  "owner": "ground",
+  "what": "Kalevansilta is built twice, by two modules, in two different designs.\n- world/ground.ts (KALEVANSILTA) draws a closed tube: a solid 1.05 m lower band, a glazed band, an upper band and a roof, plus its own covered platform stair and street stair.\n- context/bridges.ts kalevansilta(), called from details.ts:196, draws an open white steel truss with glass balustrades, a light roof and the same two stairs.\nThe two interpenetrate. From the platform you see truss diagonals through a dark band. Walking the deck, you are inside a box with truss members cutting through it. This is on every builders' train-arrival tour (out-arr-train-*).",
+  "where": "From the platform at (255, -3.1, -60) looking at (285, 5, -35), and on the deck at (285, 5.95, -29.5) looking at (262, 5.9, -14), Sat 11:00, high. Comparison sheet: <scratch>/qa-campus-ext/r1/sheet-kb.png (kb-all vs kb-ground vs kb-context; kbi-all vs kbi-ground vs kbi-context). Also …/r1/s16-1100.png.",
+  "fix": "Keep one bridge. The YLE 2024 and Commons photos show a white steel truss with a light roof and glass, which matches context/bridges.ts. In ground.ts, remove the KALEVANSILTA superstructure: cladding, glass band, roof, portal frames and both stairs. Keep only the deck walking surface and the colliders, and coordinate with context so the stairs exist exactly once. Then re-run walkRoute on the out-arr-train-* legs.",
+  "critic": 3
+ },
+ {
+  "impact": "high",
+  "owner": "ground",
+  "what": "Late-autumn leaves render as regular dot lattices in tree crowns: grids of about 6×7 orange blobs, ~0.4 m apart, over 2–3 m patches, like polka-dot panels against the sky. Module isolation shows they come only from landscape/trees. The 2×3 leaf atlas (leaves_autumn_yellow) is a clean six-leaf atlas, so a tree card must be sampling the RepeatWrapping foliage texture with UVs beyond 0..1. Likely candidates are the LOD1/LOD2 haze cards or another card type that uses the foliage material.",
+  "where": "SW of EduCity, camera (195, 1, 175) looking at (205, 6, 128), Sat 11:00, high: <scratch>/qa-campus-ext/r1/d-edu-sw-1100.png. Close-up crop: …/r1/c-edu-dots.png. Isolation sheet: …/r1/sheet-dots.png (dots-landscape has the lattices, dots-educity and dots-context do not). Also in Jussin aukio trees: …/r1/s8-1100.png (right edge).",
+  "fix": "In props/trees.ts:\n- Make every card that uses the leaf texture keep its UVs inside a single atlas cell.\n- Alternatively, give cards a ClampToEdge copy of the foliage map.\n- Place leaves with mulberry32 jitter along the branches, never on a lattice.\n- Drop leaves from the LOD2 haze cards.\nCheck the result at 20–60 m against the sky.",
+  "critic": 3
+ },
+ {
+  "impact": "medium",
+  "owner": "ground",
+  "what": "Tykistökatu's asphalt, the partners' arrival street, is covered in large milky bluish-white puddle smears across the whole carriageway. They read like paint blotches, not damp asphalt with puddles in low spots. The road also measures cool and too light (RGB ≈95/105/114), against SPEC's #4a4a4a–#5c5c5a.",
+  "where": "Tykistökatu, KartaView spot k9 at (-4, 1.76, -95) heading 208 and k10 at (0, 1.82, -85) heading 36, Sat 11:00, high: <scratch>/qa-campus-ext/r1/k9-1100.png. Crop: …/r1/c-k9-road.png. Photo comparison: …/r1/cmp-k9-k10.png.",
+  "fix": "In world/ground.ts, drive the puddle mask from the terrain: low spots and gutters along the kerb, at most about 10 % coverage. Make puddles darker and more mirror-like rather than whiter. Darken and neutralise the base asphalt to about #505050 when damp.",
+  "critic": 3
+ },
+ {
+  "impact": "medium",
+  "owner": "ground",
+  "what": "Jussin aukio's surfaces don't match the 2025 orthophoto or SPEC §4.3. The upper plaza is cool mid-grey instead of light warm-beige 40 × 40 cm pavers (#d2c7bd). The timber terrace with curved, green-edged planters in front of BioCity's event entrance, around (20–49, −24…22), is rendered as grey paving with a single brown planter.",
+  "where": "Top-down over (50, 6) from 110 m, Sat 11:00, side by side with the 2025 orthophoto: <scratch>/qa-campus-ext/r1/cmp-jussin.png. Street level: …/r1/s7-1100.png.",
+  "fix": "In world/ground.ts:\n- Tint the upper plaza (OSM w1212594779) to the beige paver colour with a 0.4 m tile.\n- Build the terrace from the base-map polygon as weathered boards (#8a7560, about 0.14 m boards running along the long axis).\n- Add the curved planters with green edging and low shrubs, in world/landscape.ts.",
+  "critic": 3
+ },
+ {
+  "impact": "medium",
+  "owner": "ground",
+  "what": "The plan view shows the hard edge of the detailed world. campus:top (camera 620 m up, fov 38) covers x −223…459, but the terrain data ends at x 342.5. The right ~15 % of the frame is a flat beige far-ground with faint diagonal 'street' stripes behind a straight boundary, and a thinner strip shows on the left.",
+  "where": "campus:top, Fri 15:30 and Sat 11:00, desktop: <scratch>/qa-campus-ext/r1/v-top-1100.png (right edge). Crop: …/r1/c-top-right-1100.png.",
+  "fix": "Frame campus:top within the terrain extent: lower the camera to about 480 m or set fit to about 150, in GROUND_VIEWS['campus:top'] and the fallback view. In the far-ground shader, continue the same surface palette and texture scale across the border and blend over at least 150 m instead of 90 m.",
+  "critic": 3
+ },
+ {
+  "impact": "medium",
+  "owner": "ground",
+  "what": "Two of the three street-name labels never appear. 'Lemminkäisenkatu' at (-6, 0.5, 48) is decluttered by the Joki street-door label 15 m away. 'Joukahaisenkatu' at (150, 1, -20) is hidden in every campus view, probably occluded at 1 m height between ICT-City and Eurocity. Only 'Tykistökatu' ever shows, yet EduCity's address and the taxi and drop-off instructions use these street names.",
+  "where": "campus:default, campus:top, campus:courtyard and campus:arrival, Fri 15:30, desktop. Label probe: <scratch>/qa-campus-ext/labels.mjs. Screenshot: <scratch>/qa-campus-ext/r1/v-top-1530.png.",
+  "fix": "In world/ground.ts (around line 3091), place two or three street labels per street along the carriageway centreline, about 3 m above the road and at least 25 m from any entrance label. For example, Joukahaisenkatu at about (120, 3, -45) and (236, 2, 40), and Lemminkäisenkatu at about (-20, 2, 40) and (45, 1, 95). Ask core to give street labels a small minimum visibility in campus:top.",
+  "critic": 3
+ },
+ {
+  "impact": "medium",
+  "owner": "ground",
+  "what": "The Jussin aukio view (campus:courtyard) wastes its frame. The camera at (96, 13, −22) puts ICT-City's one-storey wing roof across the lower-left third and Electrocity's facade across the right half. The plaza, the main stair and BioCity's event entrance are small, and the entrance label is hidden.",
+  "where": "campus:courtyard, desktop and phone, Fri 15:30 and Sat 11:00: <scratch>/qa-campus-ext/r1/v-courtyard-1530.png, …/r1/cy-all.png, …/r1/mob-courtyard-1530.png.",
+  "fix": "In GROUND_VIEWS['campus:courtyard'], move the camera to the top of the Jussin aukio stair, for example position (74, 10, 6) and target (26, 1, -6), hfov 58. The stair, the plaza, the Joki drum and BioCity's event entrance (with its label) should then read in one frame. Re-check the portrait override.",
+  "critic": 3
+ },
+ {
+  "impact": "medium",
+  "owner": "ground",
+  "what": "Night and dusk lighting is sodium-orange with oversized glare. The Jussin aukio lanterns and the street lamps tint the whole plaza deep orange (roughly 2000 K), and the lantern heads bloom into glare discs about 40 px across. SPEC §8.3 calls for LED at about 3000 K (4000 K possible on main roads) and pools of 15–20 lux.",
+  "where": "Jussin aukio, camera (50, 2.12, 7) looking at (22.05, 1.5, -7.54), Sat 01:00 and Fri 16:45: <scratch>/qa-campus-ext/r1/s7-0100.png and …/r1/s7-1645.png. campus:courtyard at night: …/r1/v-courtyard-0100.png.",
+  "fix": "In world/landscape.ts lamp specs:\n- set lanterns and street lamps to 3000 K, and Tykistökatu masts to 4000 K;\n- cap the head luminance at LUMINANCE.lampHead (18).\nAsk core to raise the bloom threshold or lower its strength so a lamp head blooms to at most about 1.5× its size.",
+  "critic": 3
+ },
+ {
+  "impact": "medium",
+  "owner": "ground",
+  "what": "Street furniture that dominates the real Tykistökatu–Joukahaisenkatu junction is missing: the overhead signal gantry or mast arm (signal heads plus green and blue direction signs spanning the road) and the row of about 5 tall white flagpoles on the Electrocity corner.",
+  "where": "Tykistökatu heading north-east, KartaView spots k11 at (8, 1.93, -97) heading 58 and k10 at (0, 1.82, -85) heading 36, Sat 11:00: <scratch>/qa-campus-ext/r1/cmp-k11.png and …/r1/cmp-k9-k10.png.",
+  "fix": "In world/landscape.ts, add a galvanised gantry or mast arm with signal heads and blank green and blue sign panels (no text needed) over the north-east-bound approach at about (10–25, −110…−100). Add the 10–12 m white flagpole row at its orthophoto positions, and check both against ref/street/aerial.",
+  "critic": 3
+ },
+ {
+  "impact": "high",
+  "owner": "ground",
+  "what": "The far-ground ring ('ground-far' from world/ground.ts buildFarGeometry) uses computeVertexNormals over long, thin triangles between 8 m border spokes whose DTM edge heights differ. That tilts normals by up to about 20° (minimum normal.y 0.935). The grazing sun turns this into huge soft radial light/dark 'curtains' across the far field of the campus overview at the Saturday Q&A and Sunday closing presets, and faintly at 15:30. Forcing the ring's normals straight up removes it completely; sky, fog, GTAO, bloom, IBL, shadow range and the other modules were ruled out one by one.",
+  "where": "campus:default (the first view) at Sat 11:00 and Sun 13:00, faint at Fri 15:30; desktop high and ultra. <scratch>/tod-r1/shots/m-curtain9.png (as-is vs far-ring normals up), .../shots/m-curtain1530.png, .../shots/crop-smear-u.png, .../shots/ultra/campus-default_071100.png",
+  "fix": "After building the ring, set every normal to (0,1,0); the regional slope is under 1°. Alternatively, compute normals analytically from the smooth height blend instead of computeVertexNormals.",
+  "critic": 4
+ },
+ {
+  "impact": "high",
+  "owner": "ground",
+  "what": "Kalevansilta's two stairs are each modelled twice: ground.ts KALEVANSILTA.stair/streetStair and context/bridges.ts STAIRS, with different geometry. Platform stair tops are at (278.0,−26.0) vs (278.5,−25.2). The street stair's foot is y −2.2 with two flights in ground.ts vs a single flight ending at −0.68 in bridges.ts. One vertical ray at (277.1,−27.1) hits ground treads at 3.79, the context flight at 3.41/3.11 and the ground deck at 4.30. The route follows the bridges.ts profile and passes 1.1 m under the ground deck. The street-stair flight ends ≈0.8 m above the grass at (274.3,1.8): the bottom treads float. Ribbon on the train legs: 18 floating samples (max 0.79–0.88 m), 7 buried (max 0.34 m), and the deck 1.13 m above the ribbon at (276.8,3.2,−27.6).",
+  "where": "builders-train-checkin / partners-fri-train-edu t 0.20–0.40. Close-ups: camera (283,2.5,9)→(274.6,−0.8,1.4) and (292,6,−48)→(271,0,−33), 11:00 / 15:30. Screenshots: …/out/L/cu-kalev-street-foot.png, …/out/S/kalevansilta-stairs-side.png, …/out/S/train-0_255-kalev-stair.png",
+  "fix": "Keep one model per flight, in ground.ts or in bridges.ts but not both (coordinate with the context owner). Use the same head and foot points as routes.json: platform stair top (278.5, 4.26, −25.2); street stair down to (274.9, −0.68, 1.1). Trim the deck/landing back to the stair head, and land the street-stair foot on the terrain (−1.5) with a bottom landing or extra treads.",
+  "critic": 6
+ }
+]

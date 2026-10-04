@@ -1,0 +1,64 @@
+[
+ {
+  "impact": "medium",
+  "owner": "core",
+  "what": "In walk mode the lift offers only one destination. Joki places lift-1-2 and lift-1-3 (and the floor-2 and floor-3 pairs) at the same point, and nearestConnector keeps the last match. Floor 1 only ever shows 'Lift to floor 3', floor 2 only 'Lift to floor 3', and floor 3 only 'Lift to floor 2'. There is no step-free way from floor 2 or 3 back to floor 1.",
+  "where": "Walk mode in Joki (e.g. walk start at meyer-turku, which shows '→ Lift to floor 3'), 11:00. Shot: jokiqa/s4/w-walk-meyer-turku.png. Code: nav/walk.ts nearestConnector, joki.ts connectors lines 742–751",
+  "fix": "nav/walk.ts: return every connector within range on the current level (nearConnectors()), and in Twin.tsx render one button per destination (a lift panel: 'Floor 1 / 2 / 3'). As a stop-gap, Joki could offset the co-located lift connectors, but a proper multi-destination panel is the right fix.",
+  "critic": 1
+ },
+ {
+  "impact": "high",
+  "owner": "core",
+  "what": "The stand views fail their wayfinding job.\n- biocity:stands ('all four stands'): the STAND 3 label is decluttered away, and STAND 4 is cut at the right edge where it overlaps 'BIOCITY MAIN ENTRANCE'.\n- On the phone, biocity:stands labels only stands 1–2, and the main-entrance label is clipped at the bottom.\n- biocity:gallery: no STAND 3 label.\n- biocity:default: BUILDERS, AULAGALLERIA and JUSSIN AUKIO are cut at the left edge, and STAND 4 sits under the view chips.",
+  "where": "biocity:stands, gallery and default, Fri 15:30, desktop 1280×800 high and mobile 412×915 low. <scratch>/qa-biocity/s1/g-views.png, s1/v-stands.png, s15/g-mobile.png (4th), s15/m-stands.png",
+  "fix": "labels.ts / index.ts declutter: give the active view's own targets (stand ids in biocity:stands and gallery) priority over area and entrance labels. Never place a label partly outside the canvas or under the chip bar or HUD: nudge it inwards, or hide it with a leader dot. In dense views, use the short form ('Stand 4 · open').",
+  "critic": 2
+ },
+ {
+  "impact": "high",
+  "owner": "core",
+  "what": "The first visit to each area freezes the frame for up to about 1.5 s while shader programs compile lazily; the program count grows from 164 to 305. Second visits are smooth (at most 17 ms).\n- First click on the Arrival · Tykistökatu chip: one 1350 ms frame.\n- First Jussin aukio click: 150 ms. First Plan view click: 217 ms.\n- First ⌘+scroll zoom toward BioCity: a 1466 ms frame and about 13 fps for roughly a second.\nA burst like this risks tripping the 40 ms median frame monitor, which would permanently drop an M2 Pro to 'low'. One probe run logged 'frame time over budget — downgraded to \"low\"', although that run also had heavy raycasting.",
+  "where": "From campus:default to the Arrival, Jussin aukio and Plan view chips, then ⌘+wheel toward the recess. High tier, 1280×800, Fri 15:30. Frame data: <scratch>/qa-campus-ext/r1/interact-high.json and …/r1/zoom2-high.json.",
+  "fix": "In index.ts load(), once all modules are built and before resolving ready:\n- temporarily turn on every module's interior (setInterior(true)), all LODs, the night and day material variants and the display probe;\n- run renderer.compileAsync(scene, camera) plus a warm-up render of each post pass;\n- then restore the visibility state.\nAlso make createFrameMonitor ignore samples for about 2 s after renderer.info.programs.length grows.",
+  "critic": 3
+ },
+ {
+  "impact": "high",
+  "owner": "core",
+  "what": "On phones the route card covers the avatar. The card fills the bottom ~35 % of the stage, exactly where the chase framing puts the walker: feet at y ≈ 550–590 of 729 CSS px, card top ≈ 475. The avatar's body and the ribbon under it are hidden for most of each tour. On desktop the avatar is partly under the card in 12 % of samples.",
+  "where": "Mobile 412×915 @2×, quality low, 15:30: companies-tykistokatu-to-showroom t 0, 0.3, 0.6; builders-train-checkin t 0.5; partners-fri-parkcity-edu t 0.2. Screenshots: …/out/M/m-tyk-0.png, …/out/M/m-tyk-0_6.png, …/out/M/m-train-0_5.png",
+  "fix": "Set a view offset while a tour card is open (camera.setViewOffset, or shift the projection centre up by half the card height) so the walker sits in the middle of the free area. On phones, collapse the card to a single line while playing.",
+  "critic": 6
+ },
+ {
+  "impact": "high",
+  "owner": "core",
+  "what": "The first tour of a session freezes the UI for about 1.6 s. tour() returns in 19 ms, but the next frame takes 1,600–1,633 ms (measured twice, including after an 8 s idle); later tour starts hitch 50–150 ms. A click on Walk me there looks unresponsive. The likely cause is first-use shader compiles of the walker avatar and the active route ribbon, which are first drawn at tour start.",
+  "where": "Desktop, high, 11:00, first tour companies-tykistokatu-to-showroom. Data: …/out/F/final.json (firstTour) and …/out/play.json (start.firstFrames)",
+  "fix": "Warm up during load(): call renderer.compileAsync with a hidden avatar and with the route-active mesh visible but empty, and build the collider index used by setColliders ahead of time.",
+  "critic": 6
+ },
+ {
+  "impact": "high",
+  "owner": "core",
+  "what": "Starting walk mode from the 'Kupittaa station' target puts you in the railway cutting under the station hall at (194.06,−120.66). Eye height reads 0.78–1.06 m above the visible ground, you face retaining walls, and you cannot walk anywhere. Cause: fallback targets have no walkTo and no WALK_STARTS entry, so the start is '4 m back from the view target', which is under the station bridge.",
+  "where": "Walk mode starting at 'kupittaa-station', 11:00. Screenshot: …/out/W2/out-kalevansilta-start-ui.png; report …/out/W2/walk-report.json",
+  "fix": "Add WALK_STARTS entries in fallbacks.ts: 'kupittaa-station' on the platform's south-east end (218.9,−111.5) facing the Kalevansilta stair, or outside the station street door (155.4,−153.5); 'parkcity' (215.5,6.2) facing the zebra; 'jussin-aukio'. Use them before the generic 'step back from the target' rule.",
+  "critic": 6
+ },
+ {
+  "impact": "medium",
+  "owner": "core",
+  "what": "Twin.tsx does not follow a live change of the OS reduced-motion setting; the engine now has an optional setReducedMotion(on).",
+  "where": "components/guide/twin/Twin.tsx",
+  "fix": "Subscribe to the prefers-reduced-motion media query and call engine.setReducedMotion?.(on) on change; unit test."
+ },
+ {
+  "impact": "medium",
+  "owner": "core",
+  "what": "The UI time chip does not update when the engine time changes from outside the UI (window.__twin.setTime).",
+  "where": "Twin.tsx + engine/index.ts",
+  "fix": "Add an optional onTime(iso) callback fired by the engine setTime and update the UI time state from it; unit test. (UI side: core-ui; engine callback: core-engine)"
+ }
+]

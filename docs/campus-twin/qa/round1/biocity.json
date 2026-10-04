@@ -1,0 +1,170 @@
+[
+ {
+  "impact": "critical",
+  "owner": "biocity",
+  "what": "Walk mode cannot get a partner in through the Tykistökatu entrance. walk(true,'entrance-biocity-tykistokatu') starts at B(-34.55,0.40) facing 11° off the door axis: the engine takes the heading from the target view, pose([-58.5,5.6,5.5],[-31.0,4.6,0.2]). Holding W, the walker hits the gable glass, slides north-east and is stuck at local (-20.73,-14.75) = B(-30.35,-4.31) in the recess corner, outside the building. The drum mouth (opening z -0.1…1.26) leaves only a 0.76 m channel for the 0.3 m walker. The side door that nav.ts's doc comment and exterior.ts's section title mention is neither modelled nor given a gap. With an 11° manual turn the walker passes (s11), so heading plus channel width is the cause. walkRoute never tests the door crossing: it starts 1.5 m inside the leg.",
+  "where": "walk(true,'entrance-biocity-tykistokatu'), Fri 15:30, desktop 1280×800, high. <scratch>/qa-biocity/s8/w0.png … w5.png (stuck from w5 on). Passes with +11° turn: <scratch>/qa-biocity/s11/t3.png",
+  "fix": "1. views.ts: aim the entrance target view along the door axis, e.g. pose([-58.5,5.6,0.58],[-31.0,4.6,0.58]). Move walkTo to the drum centre line: walkTo(GABLE_W_X-4.5, 0.58).\n2. nav.ts: add the accessible side swing door from the TTK plan (beside the drum, ≥1.2 m gap in the gable collider) and model it in exterior.ts. Alternatively widen the drum's passable channel to ≈2.2 m (wings are not colliders).\n3. Ask core for a door assist in walk.ts: within 1.5 m of a gap and heading within 35°, steer onto the gap axis.\n4. Add a walkRoute/jest case that starts 4 m outside the threshold and must reach the lobby.",
+  "critic": 2
+ },
+ {
+  "impact": "high",
+  "owner": "biocity",
+  "what": "In every dollhouse view (open = biocity-1), the one-storey E-end connector roof (LEVEL.connectorRoof 3.5, B x 29.5…35.8, z -4.4…5.6) stays visible. It is mesh biocity-shell-roof (concreteFacade), added to the 'shell' layer. It covers the 10-step stair down to Joki, which the BioCity caption sends people to ('Joki is down a short stair at its far end'). Black dashes (wall caps at 3.5 m) also z-fight through the slab.",
+  "where": "biocity:default and focus bc-2, 11:00 and 15:30. Probe at B(33.5,0.5) y 3.5 hits biocity-shell-roof, visible in the open state. <scratch>/qa-biocity/s6/g-pass.png (top row), s6/pass-b.png, s6/pass-d.png, s1/v-default.png (grey slab top centre)",
+  "fix": "exterior.ts: put the connector roof (and its coping) in the 'upper' layer, or any layer setOpen hides, like the other roofs above the 4.5 m cut. Drop the wallCap polygons that lie under a roof, or lower them 2 cm, to end the z-fight.",
+  "critic": 2
+ },
+ {
+  "impact": "high",
+  "owner": "biocity",
+  "what": "The NE wing's SE end wall faces Joki and Jussin aukio (B x 36.1, z -31.4…-4.45, about 27 × 26 m). It is mesh biocity-upper-panelBlack with style 'facade:none', i.e. a blank black slab with no panel joints and no windows, so it stays black at night too. The Haroma photo of this facade shows: black ≈3.6 m square panels, a central curtain-wall field about 7 modules × 5 floors, the three-row crown, and three full-height black corrugated duct cylinders (Ø≈1.5) under a white louvred box (SPEC §3.1.2).",
+  "where": "Camera local (38.85,4.5,53.85)→(15.29,14,41.02), 11:00 and 15:30. Ray hit at B(36.1,-12.2). <scratch>/qa-biocity/s2/e5-1100.png, s6/g-pass.png (bottom right). Reference: <scratch>/qa-biocity/ref/g-mural.png (right) = research/ref/biocity/haroma/haroma_biocity_09.jpg",
+  "fix": "exterior.ts: give this run a panel style with 3.6 m joints and cut a 7×1.2 m curtain-wall field over F2–F6 (lit-window hash at night). Add three Ø1.5 m corrugated black cylinders on the outside face up to the roof plus the white louvre box, and keep the crown band.",
+  "critic": 2
+ },
+ {
+  "impact": "high",
+  "owner": "biocity",
+  "what": "The revolving door at the hero partner entrance reads as a white gazebo. Its curved enclosure and three wings use the near-invisible 'glassIn' material. The canopy disc (2.35–2.62 m) and floor ring are 'silver', which reads white on top and pale blue below. What you see is thin posts, a white disc roof and a pale-blue floor disc. Photos show a dark-framed glazed drum under the flat black canopy and a dark entrance mat.",
+  "where": "biocity:entrance and the recess. Eye on the door axis local (-26.38,1.65,-14.29)→drum, 11:00; inside (-21.67,1.65,-6.97), 11:00. <scratch>/qa-biocity/s22/g1.png (top row), s8/w0.png, s1/g-stands.png (bottom right). Ref: <scratch>/qa-biocity/ref/g-ent.png",
+  "fix": "exterior.ts section 12: build the drum arcs and wings from a visible glass (glassDoor/glassLow with Fresnel reflections and a faint tint), with 50 mm dark frames (#1E1E22) on the wing edges and a 0.35 m dark fascia ring instead of the silver disc. Use a dark recessed mat instead of the silver floor ring.",
+  "critic": 2
+ },
+ {
+  "impact": "medium",
+  "owner": "biocity",
+  "what": "The Presidentti auditorium walls are blank. The curved fan wall facing the BioCity–Electrocity yard is plain dark grey: the 5 × 25 m Biodiversiteetti mural on white (SPEC §3.1.1) is missing. Its flat east wall, seen from Jussin aukio on the builders' approach, is plain black 'facade:none' (ray at B(-11.6,-41.7)).",
+  "where": "Yard eye (3.5,1.7,-55)→(8,2.5,-33.5), 11:00: <scratch>/qa-biocity/s13/yard-mural.png. Jussin aukio at 16:45: s4/aukioEye-1645.png. Ref: <scratch>/qa-biocity/ref/g-mural.png (left)",
+  "fix": "exterior.ts: white render on the curved wall plus a canvas texture of abstract colourful nature and lab motifs in the photo's palette. Use our own drawing, not a copy of the artwork (copyright). Add panel joints and a coping to the east wall.",
+  "critic": 2
+ },
+ {
+  "impact": "medium",
+  "owner": "biocity",
+  "what": "In the dollhouse, the lift towers' X-braces stick about 3.4 m above the 4.5 m cut. liftTower() in interior.ts sends a brace to steelLo (shell layer) whenever y0 < CUT, so the braces from 4.2 to 7.85 stay visible as black X frames floating over the cut walls.",
+  "where": "biocity:default and stands, desktop and mobile, 15:30. <scratch>/qa-biocity/s15/m-default.png (black X frame centre right), s1/v-default.png",
+  "fix": "interior.ts liftTower: send braces with y1 > CUT to steelHi, or clip each bar at CUT (as push() already does for posts and glass).",
+  "critic": 2
+ },
+ {
+  "impact": "medium",
+  "owner": "biocity",
+  "what": "At night the atrium above the hall is a black void. Upper walls, window bands, bridges and the vault get no light, so looking up gives an all-black frame. The real atrium glows (SPEC §8.3: the atrium glows warm through the vault), and the exterior shots do show that glow.",
+  "where": "Eye (-14.68,1.65,0.96) and look-up (-10.11,1.65,7.52), Sat 01:00. <scratch>/qa-biocity/s22/g2.png (top row)",
+  "fix": "Add a cheap night lighting term to the atrium materials: an uplight gradient on the white atrium walls, emissive light lines under the bridges and lift-tower landings, about 10% lit office windows (hash), and faintly lit vault bars. setLighting should drive it with state.night.",
+  "critic": 2
+ },
+ {
+  "impact": "medium",
+  "owner": "biocity",
+  "what": "BioCity is over the phone budget. On the low tier the module draws 113–120 calls and 155–160k triangles; DESIGN §5 allows ≤80 calls and ≤150k per building. The supercars view totals 342 calls / 735k triangles against the low total of ≤250 / ≤700k (EduCity adds 52 calls while hidden behind BioCity).",
+  "where": "Mobile 412×915, quality=low, biocity:supercars and biocity:entrance. <scratch>/qa-biocity/s16/result.json, s15/result.json",
+  "fix": "In ALIAS_LOW, merge the glass family (glassIn, glassLow, glassClear, glassVault), the shop and office front facades and the dark steel. On low, drop lift cars, bridges and atrium window bands above F3. Merge the shell and ceiling layers per material where setOpen does not need them separate.",
+  "critic": 2
+ },
+ {
+  "impact": "medium",
+  "owner": "biocity",
+  "what": "'Walk me there' for the restaurant serving lines lands on a column. walkTo is B(18.15,-31.05), exactly on the gallery column B(18.16,-30.95). The walker gets pushed off it and half the frame is the black column; the counter is barely visible.",
+  "where": "walk(true,'serving-lines'), Fri 15:30. <scratch>/qa-biocity/s9/g-walkto.png (bottom right), s9/k-serv.png",
+  "fix": "views.ts: walkTo ≈ B(18.2,-27.4), on the open side of serving line 1, with the target view aimed at the counter (plan -z) so the derived heading faces it. Keep ≥0.6 m from columns, and add a unit test that walkTo points are not inside colliders.",
+  "critic": 2
+ },
+ {
+  "impact": "medium",
+  "owner": "biocity",
+  "what": "A stray dark box lies on the floor in front of open stand 3: biocity-interior-darkIn, ≈0.15 m tall, at local (16.03,0.15,-9.33) = B(-4.9,-31.4), rotated differently from the stand. It looks like a fallen sign base. Stand 1 (the mirror) has nothing equivalent.",
+  "where": "Focus bc-3 and walk to bc-3, Fri 15:30. <scratch>/qa-biocity/s1/g-stands.png (bottom left), s9/g-walkto.png (top left)",
+  "fix": "fitout.ts: check the mirrored stand-3 build. One sub-part (likely the counter foot or a floor plate) is not mirrored or rotated with the stand's 12° turn. Align it or remove it.",
+  "critic": 2
+ },
+ {
+  "impact": "medium",
+  "owner": "biocity",
+  "what": "The rooftop sign reads 'SC ENCE PARK'. The slim vertical 'TURKU' that replaces the I is too thin and small to register at any normal distance, day or night.",
+  "where": "West corner from the junction, local (-76.83,1.7,-14.25)→(-40.68,12,-5.31), 11:00 / 16:45 / 01:00. <scratch>/qa-biocity/s2/crop-sp.png, s2/e1-1100.png",
+  "fix": "Draw the vertical TURKU at full cap height (≈1.2 m) with a stroke at least as heavy as the other letters, or use a plain I bar if it can't be legible.",
+  "critic": 2
+ },
+ {
+  "impact": "medium",
+  "owner": "biocity",
+  "what": "The panoramic lift cars' ceiling light panels (panelLight at y 2.28–2.3) bloom into bright white slabs floating in the black lift towers at eye level. The thin glass car walls don't read, so the light seems to hang in mid-air.",
+  "where": "Lobby eye after entering from Tykistökatu, Fri 15:30. <scratch>/qa-biocity/s11/t3.png",
+  "fix": "interior.ts liftCar: use a dimmer emissive (≈0.3 × ceilingPanel) and add the car's back panel and floor edge so the light sits inside a readable car.",
+  "critic": 2
+ },
+ {
+  "impact": "medium",
+  "owner": "biocity",
+  "what": "The atrium vault reads as a white X-braced space-frame. Under the glass there is a dense diagonal lattice, and from the overview or aerial distance (high tier) the glass barely registers. The aerial ortho shows a plain rectangular bar grid (≈1.2 × 1.35 m) over bluish reflective glass with no diagonals. The ultra close-up is fine.",
+  "where": "Aerial from the west local (-130.46,110,-59.76)→(-6.93,10,12.62), 11:00, high: <scratch>/qa-biocity/s2/a1-1100.png. Interior look-up: s6/pass-a.png. Ultra close-up OK: s26/g.png. Ref: research/ref/biocity/rect_vault50.png",
+  "fix": "Remove the diagonals, or keep only slim arched ribs every 6 m. Raise the vault glass's sky reflection (env ≈1.5, faint #2F3D4A tint) so it reads as glazing from afar. Keep the white 1.2 × 1.35 m bar grid.",
+  "critic": 2
+ },
+ {
+  "impact": "medium",
+  "owner": "biocity",
+  "what": "The south-east end of the hall, where everyone turns down to Joki, is bland. The passage portal is a plain plaster box with a loose beige panel over the opening. The 10-tread stair has no balustrade, handrails or nosings, and there is no physical 'Joki ↓' sign, only the floating CSS label.",
+  "where": "Chase tour companies-tykistokatu-to-showroom at t=0.50 and 0.53, 15:30: <scratch>/qa-biocity/s23/g1.png (row 2 right, row 3 left). Walk at the stair top: s14/s2.png",
+  "fix": "Add glass balustrades with stainless handrails on both sides of the stair, contrasting nosings and a lit wall sign 'JOKI · Showroom ↓' above the 3.2 m opening. Give the Puro-kabinetti glazing beside it per the TTK plan, and trim the opening with a dark frame.",
+  "critic": 2
+ },
+ {
+  "impact": "medium",
+  "owner": "biocity",
+  "what": "The dollhouse has a low-contrast CAD look: beige walls, beige floors and thick black section caps (wallCap aliased to darkIn) everywhere. The hall, its stands and the routes don't pop, and the gallery view in particular reads as a maze.",
+  "where": "biocity:default, gallery and stands, Fri 15:30. <scratch>/qa-biocity/s1/g-views.png",
+  "fix": "Use light-grey section caps with a thin dark edge line instead of solid black. Darken the room floors outside the event zones by about 15% and keep the lobby tiles light so the hall reads as the hero space. Use a slightly darker wall top-band for depth.",
+  "critic": 2
+ },
+ {
+  "impact": "critical",
+  "owner": "biocity",
+  "what": "BioCity, the main venue and the partners' destination, has no building label anywhere on the campus. Once the biocity module loads, massing hides its own BioCity label for the claimed building, and buildings/biocity.ts never creates one. Joki (joki.ts:113) and EduCity (educity.ts:215) do create theirs. A label probe found exactly one 'BioCity' building label in the DOM, and it is hidden. The label is missing in campus:default, campus:top and campus:courtyard, after orbiting and panning, and on phones.",
+  "where": "campus:default and campus:top, Fri 15:30 and Sat 11:00, desktop 1280×800 (high and ultra) and phone 412×915 (low). Screenshots: <scratch>/qa-campus-ext/r1/v-default-1530.png, …/r1/v-top-1530.png, …/r1/sheet-mobile.png, …/r1/sheet-interact.png (i-orbit, i-pan). Probe script: <scratch>/qa-campus-ext/labels.mjs.",
+  "fix": "In buildings/biocity.ts, add makeLabel(\"BioCity\", \"building\", 2.7, 37.9, 1.4, \"campus\"), placed at the footprint centroid about 4 m above the vault crown (33.87). Add it to the exterior `labels` list, not to interiorLabels, so it shows in every campus view exactly like the Joki and EduCity building labels.",
+  "critic": 3
+ },
+ {
+  "impact": "high",
+  "owner": "biocity",
+  "what": "The rooftop SCIENCE PARK letters read as 'SC ENCE PARK'. The slim vertical TURKU that stands in for the I is drawn 46 px tall in a 2600 px canvas, so it vanishes beyond a few metres. The letters are pale grey-green (#5faa4e, roughness 0.85, envMapIntensity 0.4), and seen from the street their lower half is hidden behind the glass tower's parapet. The reference photo shows ~1.2 m bright green letters standing fully above the roof edge.",
+  "where": "From the NW sidewalk at (-47.5, 1.6, -42) looking at (-30, 11, -18.5), fov 62, Sat 11:00 and Fri 15:30. Crop: <scratch>/qa-campus-ext/r1/c-sp-1100.png. Full frame: …/r1/m-commons-1100.png. Against Haroma photo 04: …/r1/cmp-recess.png.",
+  "fix": "In biocity/fitout.ts and textures.ts sciencePark():\n- Set the letter base at parapet + 0.35 m so the whole word clears the parapet for a 1.65 m eye across Tykistökatu.\n- Draw the TURKU bar at full cap height, as a slim I that reads from a distance.\n- Extrude the letters about 0.15 m, or add a dark back plate.\n- Make the green read against an overcast sky: higher saturation, lower roughness, about 0.4 envMapIntensity, plus a small daytime emissive.",
+  "critic": 3
+ },
+ {
+  "impact": "high",
+  "owner": "biocity",
+  "what": "Along Lemminkäisenkatu, BioCity's SW arcade plinth is modelled as a ~2 m-wide sloped beige 'granite' bank that reads as a sand embankment. The KartaView photo shows a near-vertical beige granite plinth wall under a black steel railing, where the street drops 1.2–1.9 m below the arcade floor, with about 5 steps only at the south end by Joki's portal. Module isolation shows the slope is biocity geometry; ground draws only the flat sidewalk there.",
+  "where": "Lemminkäisenkatu, camera (-12, 0.4, 40.5) looking at (-22, 0, 30), fov 55, Sat 11:00, all modules: <scratch>/qa-campus-ext/r1/pl-all.png. Biocity only: …/r1/pl-bio.png. Isolation sheet: …/r1/sheet-pl.png. Spot s3 at (-25, 0.45, 33): …/r1/s3-1100.png. Photo comparison: …/r1/cmp-k6-k7.png (k7).",
+  "fix": "In buildings/biocity, build the plinth as a vertical wall on the arcade edge line (B z ≈ 17.4). It should run from the terrain height (heightAt per vertex) up to the arcade floor at +0.06, with the railing on top. Use granite at real scale (tile about 0.4–0.6 m, #A39885, roughness 0.8). Add the 5-step flight at the south end only.",
+  "critic": 3
+ },
+ {
+  "impact": "high",
+  "owner": "biocity",
+  "what": "BioCity's Tykistökatu ground-floor glazing (the colonnade and shopfronts left of the entrance recess, K-Market side) lights up after dusk as uniform flat white-grey panels with no interior, no ceiling lights and no variation. In the main partner arrival view they read as blank lightboxes behind pitch-black columns. From the entrance at 20:00 the lobby side panels are pure white.",
+  "where": "campus:arrival at 17:30–01:00 (left third of the frame); street camera (-10,1.7,-75 → -60,8,0) at 17:12–20:00; walk mode at entrance-biocity-tykistokatu at 20:00; desktop high and ultra, mobile low. <scratch>/tod-r1/shots/m-abnight.png (arrival row), .../shots/crop-ppl-grid.png, .../shots/m-shopfront.png, .../shots/m-walk.png (top-right tile)",
+  "fix": "Replace the uniform night glow on this glazing with an interior impression: an interior-mapped or parallax room, or a vertical gradient plus a row of ceiling lights and dark shelving or furniture silhouettes, varied per bay (K-Market cooler and brighter, office bays warmer and dimmer). Target about LUMINANCE.shopfront (0.25) with falloff toward the top, and keep some reflection of the street.",
+  "critic": 4
+ },
+ {
+  "impact": "high",
+  "owner": "biocity",
+  "what": "Both BioCity entrances are modelled shut across the route. The event entrance's outer glass leaves (biocity-shell-glassLow at (22.7, 1.0–1.7, −8.1)) stand in the walkable gap. At the Tykistökatu revolving door, the route's waypoint (−23.40,0.06,−10.01) is the drum centre, so the walker passes through the central post (biocity-shell-silver at (−23.4,1.7,−10.0)) and through the frame and glass at the threshold (biocity-upper-silver / -glassClear at (−24.6,1.0–1.7,−11.8)). In both walk mode and tours, the avatar ghosts through glass and steel at the companies' and builders' entrances. The leg also passes 0.10 m from the drum's inner wall at (−22.13,−9.25).",
+  "where": "Walk 'campus:arrival' → kerb → door, and 'entrance-biocity-courtyard' → vestibule; 11:00. Tours companies-tykistokatu-to-showroom t 0.10–0.13, builders-transfer-to-build t 0.78–0.80. Screenshots: …/out/W3/bio-event-door-in-door.png, …/out/W/bio-entrance-in-door.png, …/out/S/fp-tyk-0_1.png",
+  "fix": "Model the vestibule's outer leaves open for the event (or as sliding leaves parked in the jambs). Route int-bio-tyk-to-joki and int-bio-tyk-to-gallery through one quadrant of the drum (~0.7 m off the post), turn the wings so that quadrant is open (or animate them), and make the drum colliders match the visible enclosure.",
+  "critic": 6
+ },
+ {
+  "impact": "medium",
+  "owner": "biocity",
+  "what": "Walk mode from 'Restaurant serving lines' starts inside a collider: its walkTo (28.92,9.77), built from MAUNO.line1 centre with z0 − 1.3, has clearance −0.18 m, i.e. it is 0.18 m inside a counter or wall.",
+  "where": "Walk start 'serving-lines' on biocity-1 (pure check on biocityWalk() colliders). Script: …/scratchpad/twin/twqa/sl.mjs",
+  "fix": "Move the walkTo ≥ 0.6 m clear of the counters, in front of line 1 on the aisle side, and add it to the biocity test that every target's walkTo has clearance ≥ 0.4.",
+  "critic": 6
+ }
+]

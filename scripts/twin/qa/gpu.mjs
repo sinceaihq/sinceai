@@ -17,7 +17,11 @@ const LOCKS = path.join(os.tmpdir(), "sinceai-twin-gpu-locks");
 const SLOTS = Number(process.env.GPU_SLOTS ?? 2);
 const MIN_FREE_PCT = Number(process.env.GPU_MIN_FREE_PCT ?? 25);
 const WAIT_MS = Number(process.env.GPU_WAIT_MS ?? 15 * 60 * 1000);
-const GPU_ARGS = ["--use-angle=metal", "--enable-gpu", "--ignore-gpu-blocklist", "--enable-webgl"];
+// macOS: the real Apple GPU through ANGLE/Metal. Linux servers without a GPU: SwiftShader (slow, but correct).
+const GPU_ARGS =
+  process.platform === "darwin"
+    ? ["--use-angle=metal", "--enable-gpu", "--ignore-gpu-blocklist", "--enable-webgl"]
+    : ["--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist", "--enable-webgl"];
 
 fs.mkdirSync(LOCKS, { recursive: true });
 
@@ -31,6 +35,15 @@ const alive = (pid) => {
 };
 
 function freePct() {
+  if (process.platform === "linux") {
+    try {
+      const info = fs.readFileSync("/proc/meminfo", "utf8");
+      const kb = (k) => Number(new RegExp(`${k}:\\s+(\\d+)`).exec(info)?.[1] ?? 0);
+      return Math.round((100 * kb("MemAvailable")) / Math.max(1, kb("MemTotal")));
+    } catch {
+      return 100;
+    }
+  }
   try {
     const out = execSync("memory_pressure 2>/dev/null | grep 'free percentage'", { encoding: "utf8", timeout: 5000 });
     const m = /(\d+)%/.exec(out);

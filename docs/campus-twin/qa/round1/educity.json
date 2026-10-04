@@ -1,0 +1,178 @@
+[
+ {
+  "impact": "high",
+  "owner": "educity",
+  "what": "EduCity's brick looks like high-contrast streaks instead of handmade Kolumba brick. Close up in sun it turns beige-pink with long white plank-like strokes; in shade it is mid-grey with bright white dashes. SPEC §3.3.3 calls for dark grey-brown (#5f5854 overcast, #6a6564 in sun) with only small light speckles. This is at the doors every builder and company uses: both main entrances and door B.",
+  "where": "East entrance, camera (222, 4.9, 130) looking at (204, 4.5, 136.5): <scratch>/qa-campus-ext/r1/s11-1100.png. Door B walkway at (247, 4.9, 100): …/r1/s13-1100.png. NE facade from the Joukahaisenkatu zebra at (236, 0.06, 47): …/r1/s14-1100.png. Sat 11:00, high. Sunlit brick measures about RGB 170/152/142.",
+  "fix": "In buildings/educity/materials.ts:\n- Set the brick_dark albedo to ×0.8 with about 20 % less saturation (SPEC §9.1), aiming for roughly #6a6564 in sun after AgX tone mapping.\n- Cap speckle and highlight contrast at about 15 % and make the mortar dark grey.\n- Use the anisotropic tile of u 4.8 m × v 1.1 m (0.53 × 0.05 m courses) so the units read as long low bricks rather than streaks.\n- Check it at 2 m and at 30 m.",
+  "critic": 3
+ },
+ {
+  "impact": "medium",
+  "owner": "educity",
+  "what": "EduCity stays lit like an active venue around the clock. edInteriorLevel() returns 0.8 at 01:00 and edLitFraction() 0.74, so at 'Night build · Sat 01:00' (and Sat 11:00) the lobby, Taidon portaat and about three quarters of the windows glow exactly as at 20:00. But venues.ts sets openAroundTheClock: false: EduCity hosts only Fri 15:00–19:30 and Sun from 13:30, and the night build runs in BioCity and Joki. Visitors could read EduCity as open overnight.",
+  "where": "educity:default and the EduCity exteriors at Sat 01:00 (identical to Fri 20:00) and Sat 11:00; desktop high. <scratch>/tod-r1/shots/m-educity-default.png, .../shots/s2/educity-default_070100.png",
+  "fix": "Drive buildings/educity/lighting.ts from the event schedule: full light on Fri 14:30–20:30 and Sun 12:30–17:00; otherwise corridor or emergency level (about 0.1) with about 10–15 % of windows lit. Treat Saturday daytime as a closed weekend building.",
+  "critic": 4
+ },
+ {
+  "impact": "medium",
+  "owner": "educity",
+  "what": "At dusk and night EduCity's NE windows are identical flat light-grey patches (about 225 sRGB, all the same luminance and colour) punched into brick that is crushed to near-black (about 13/7/4). The real building at night shows depth in each reveal, ceiling lights, furniture and varied brightness, and the brick picks up spill from street lights and uplights.",
+  "where": "Camera (275,10,21 → 237,14,67) at Fri 16:45 and 20:00; desktop high. <scratch>/tod-r1/shots/m-eduwin.png (twin 16:45, twin 20:00, real photo research/ref/educity/crop_night_left.png), .../shots/m-s6.png (EDU row)",
+  "fix": "Vary each window (±30 % luminance, a 3500–4500 K mix, some blinds and dark rooms). Add interior depth: rows of ceiling lights, darker furniture silhouettes and lit reveal sides. Add light spill on the brick around the base and pavilion and from the plant-room uplight. Keep lit windows near LUMINANCE.windowLit rather than near-white.",
+  "critic": 4
+ },
+ {
+  "impact": "critical",
+  "owner": "educity",
+  "what": "Walk mode cannot enter either main entrance. West door: after the revolving door the walker stays on level 'outdoor' and drops about 3.9 m onto the terrain under the pavilion (camera y_E 1.72 → 0.62 → −2.23, floor ≈ y_E −3.9); it ends up under the deck looking at the SW lot. East door (registration): the walker stops at E(48.96, 74.73), the middle of the door gap (z 73.5–75.9) but 1.9 m in front of the CAD glass line x_E 47.1. That is the OSM/LOD2 pavilion outline at x_E ≈48.5–48.7. The educity-1 pavilion walk area only starts at glassSE+0.4 = 47.5, and the outdoor deck area ends at the OSM outline, so there is about 1 m with no deck-level floor at both doors.",
+  "where": "walk(true,'entrance-educity-west') + W 5 s, 11:00 high → .../scratchpad/qa-educity-r1/q-west-1.png, q-west-2.png. walk(true,'entrance-educity-east') + ArrowLeft 0.3 s + W 6 s → stuck at campus (208.5, 140.1): .../qa-educity-r1/v4-east-a.png. Data in .../qa-educity-r1/p18.out, p23.out.",
+  "fix": "nav.ts educityWalkAreas: (1) Extend the educity-1 pavilion area through both door openings to the deck: add f1 strips x_E 2.8–5.6 × z 72.6–76.6 (revolving door) and x_E 46.9–49.6 × z 73.2–76.2 (sliding door). (2) Add level 'outdoor' WalkAreas at y 3.40 covering the canopy zone between the CAD glass and the OSM outline: x_E 3.0–5.4 and 47.1–49.2 over the canopy z-range, plus in front of door B. Then the outdoor floor stays at deck height until the walker is inside educity-1 and the level switches at equal height. Re-run walkRoute('out-arr-train-edu-east') and 'out-xfer-edu-west-bio-event': both must reach 1.0.",
+  "critic": 5
+ },
+ {
+  "impact": "critical",
+  "owner": "educity",
+  "what": "The entrance pavilion's south-west wall has no inner face. From inside the lobby or pavilion you look straight out to the SW surface lot, cars, ParkCity and CivilCity, as if the wall were missing. This is next to registration and the café tables. swWall() builds the panel field with box(..., { pz: true, nx: true, px: true }), so only the outward face exists and it is back-face culled from inside.",
+  "where": "Walk: walk(true,'registration') + ArrowLeft 1.5 s + W 9 s → E(37.84, 67.04) facing SW, 11:00 → .../qa-educity-r1/v5-3.png (M-v5.png). Orbit at eye level: camera E(30,1.65,70)→(30,1.4,84) → .../qa-educity-r1/v2-pav-sw-1100.png.",
+  "fix": "outdoor.ts swWall(): emit the nz (inner) face of the panel box. Add an interior finish in group 'f1' at z_E ≈ 79.9 from the deck floor to the soffit: white plasterboard or the light metal-panel lining, with the lower-lobby stair/lift/slide openings and a glass balustrade where the floor opens to the lower lobby. Close the gap between the floor-1 slab edge and the wall.",
+  "critic": 5
+ },
+ {
+  "impact": "high",
+  "owner": "educity",
+  "what": "The Kolumba brick is far too dark, too cold and too contrasty. Render: NE facade at 11:00 (shade) mean sRGB 60/63/67; SE in sun 62/64/68; the luminance p95/p50 ratio is 1.6–1.9. Reference: ttk_educity NE facade ≈101/98/100; Vesa Loikas close-up in sun ≈159/151/148; p95/p50 ≈1.35–1.45. SPEC §3.3.3 gives the perceived average as #5f5854. From more than 30 m the facade reads as flat black paint, so the black window frames vanish. Up close it is a black/white 'barcode' with white pixel flecks. In the reference it is a warm taupe with a fine linear grain.",
+  "where": "x-ne-street-1100.png (camera [259.4,0.6,31.2]→[236.1,14.4,66.3]), x-se-walkway-1100.png, x-stairs-foot-1100.png, crop-stairs-brick.png, M-win-cmp.png vs research/ref/educity/pack_small/EduCity_Kuva_Vesa_Loikas_1920x1308px.jpg and ttk_educity.jpg (all in .../scratchpad/qa-educity-r1/). Visible at 11:00, 15:30, 16:45.",
+  "fix": "materials.ts BRICK_TONES / makeBrickMaterial. Raise the albedo about 1.5× and warm it, e.g. #5c524c 30 %, #6b6059 30 %, #786c64 20 %, #85786f 12 %, #9a8c82 6 %, #b3a69b 2 %. Reduce the per-unit streak from 0.84+0.3·n to 0.93+0.14·n. Halve the fleck mix (0.5→0.2) and make flecks smaller. Beyond the unit-resolve distance, fade to a pre-filtered horizontal course stripe (±6 % luminance at the 50 mm pitch) instead of the flat uBrAvg. Target: NE facade in shade ≈ sRGB 95/88/84 at 11:00, so the #1c1716 frames read clearly.",
+  "critic": 5
+ },
+ {
+  "impact": "high",
+  "owner": "educity",
+  "what": "By day the window glass shows almost no sky reflection. Every square window reads as a dull grey box with white blind bars. On the real facade every pane mirrors a bright blue or grey sky in a thick black frame, and that defines the building. Close-up reflections are also uniform from pane to pane.",
+  "where": "11:00 NE facade: .../qa-educity-r1/x-ne-street-1100.png, crop-ne-windows.png; comparison sheet M-win-cmp.png with research/ref/educity/pack_small/EduCity_Kuva_Vesa_Loikas_1920x1308px.jpg; also ttk_educity.jpg.",
+  "fix": "materials.ts makeWindowGlassMaterial. specularColor 0.075 → F0 ≈0.10–0.12 for coated triple glazing, with full Schlick Fresnel against scene.environment. Scale the interior-mapping emissive by day: radiance·0.72 → radiance·mix(0.72, 0.3, uFcDaylight). Increase the per-pane tilt to about ±1.2° so the sky gradient varies between panes.",
+  "critic": 5
+ },
+ {
+  "impact": "high",
+  "owner": "educity",
+  "what": "From the Joukahaisenkatu sidewalk, floor-1 chairs and tables (rooms 1001/1002) hang upside-down along the top of the street-storey shopfront and read as a torn dark fringe. They vanish when the 'educity:f1' group is hidden. The floor-1 slab has no underside and nothing closes the plenum between the shopfront head and the street-storey ceiling, so floor 1 is visible from below.",
+  "where": "Camera campus [228.4,0.4,53.6]→[225.3,2.4,57.5] (E (10,−3,−5)→(10,−1,0)), fov 40, 11:00 → .../qa-educity-r1/M-fr3.png (fr3-base vs fr3-nof1), crop-fringe2.png, v11-street-ncorner-1100.png; also at 16:45 (v11-street-ncorner-1645.png).",
+  "fix": "interior.ts floors(): add a down-facing soffit under the floor-1 slab, or make the slab double-sided, at least across the NE street-storey depth. outdoor.ts streetStorey(): add a dark bulkhead from the shopfront head transom back to the street ceiling edge so no ray from the street reaches y_E > −0.3.",
+  "critic": 5
+ },
+ {
+  "impact": "high",
+  "owner": "educity",
+  "what": "The 'Registration' Go-to view is framed on a blank slab. The lower right half of the frame is the featureless grey cap of the service-centre block. The registration desk sits behind its edge, only the top of the roll-up is visible, and the label is faint. This is the builders' number-one target.",
+  "where": "focus('registration'), 15:30, camera [213.75,14.4,130.54]→[212.26,4.2,116.47] → .../qa-educity-r1/t-registration-1530.png.",
+  "fix": "nav.ts educityTargets registration: look from the south-west over Kisälli so the block is behind the desk, e.g. lobby([28, 8.5, 66], [38.5, 0.9, 54.5], 'edu-lobby', 9). Check that both roll-ups, the desk LED edge and the east opening are in frame, desktop and portrait.",
+  "critic": 5
+ },
+ {
+  "impact": "high",
+  "owner": "educity",
+  "what": "The event-area labels (Registration · east entrance, Team formation, Taidon portaat · opening ceremony, Ravintola Kisälli · snacks, Työkahvila) use kind 'area'. That kind is max-sm:hidden, so on phones the 'Lobby & Taidon portaat' view shows only the two entrance labels. On desktop they are pale violet text with a thin halo over the light floor and are hard to read.",
+  "where": "Phone 412×915, quality low, view educity:default 15:30 → .../qa-educity-r1/mob-default-1530.png. Desktop crop .../qa-educity-r1/crop-default-labels.png (from v-default-1530.png).",
+  "fix": "interior.ts:241 makeLabel(text, 'area', …): use a boxed kind ('landmark' or 'open') for the five event places, so they show on phones and have a background plate. Alternatively core gives 'area' labels in the active labelGroup a backing plate and shows them on small screens.",
+  "critic": 5
+ },
+ {
+  "impact": "high",
+  "owner": "educity",
+  "what": "The 'Main entrances' view shows neither door. The camera looks squarely at the blank SW panel wall and the car park, while the doors are on the NW and SE faces. The east label is clipped under the control column on desktop ('…REGISTRATI'), and on phones both entrance labels are cut off at the screen edges.",
+  "where": "goto('educity:entrance') 15:30 desktop → .../qa-educity-r1/v-entrance-1530.png. Phone → .../qa-educity-r1/mob-entrance-1530.png.",
+  "fix": "nav.ts EDUCITY_VIEWS['educity:entrance']: move the camera to the south over the lot corner so the SE glass face with the east door and the NW end are both foreshortened in view, e.g. pose([66, 22, 112], [26, 1.5, 74]) with fit ≈36. Portrait: pose([44, 60, 120], [26, 1, 72]) with fit ≈40. Verify both labels are at least 60 px from the edges and clear of the right-hand control column.",
+  "critic": 5
+ },
+ {
+  "impact": "high",
+  "owner": "educity",
+  "what": "Interior white walls read beige or peach instead of neutral 4000 K white. Back wall of room 2004: 146/136/129 at 11:00, 13:00, 16:45 and 01:00, and 201/176/157 at the default 15:30, when the low orange sun rakes into the opened dollhouse (uEdSun 0.15 while open). The Taidon portaat concrete also looks beige. Every room, area and dollhouse view at the default time is tinted orange.",
+  "where": "focus('room-lindstrom') at 11:00/13:00/15:30/16:45/01:00 → .../qa-educity-r1/wall-1100.png … wall-0100.png. Also r-*-1530.png (M-rooms.png), t-taidon-portaat-1530.png, v-default-1530.png.",
+  "fix": "educity.ts updateInteriorLight: set uEdSun to 0 while the dollhouse is open, or below about 8° sun elevation. Adjust the env tint so #e9e8e4 renders with R−B ≤ 6 and L ≈ 190–200 at INTERIOR_EXPOSURE. Re-check that Taidon portaat reads #cacec8 light grey.",
+  "critic": 5
+ },
+ {
+  "impact": "high",
+  "owner": "educity",
+  "what": "Interiors seen from outside at dusk and night blow out to flat white. The pavilion floor and walls behind the east door clip at 16:45, contrary to DESIGN §12. The NE facade's lit windows are clipped flat white squares (sRGB 231/228/226) with no interior detail. The brick between them is near-black (29/21/17); in the night photo it is dark grey-brown under street light.",
+  "where": "focus('entrance-educity-east') 16:45 → .../qa-educity-r1/n-east-1645.png. NE facade 01:00 camera [259.4,0.6,31.2]→[236.1,14.4,66.3] → n-ne-street-0100.png, crop-night-win.png; door B dusk n-doorb-1645.png.",
+  "fix": "When the engine exposure exceeds INTERIOR_EXPOSURE (camera outside at dusk or night), scale interior emissives and env by (INTERIOR_EXPOSURE / exposure)^0.5. This needs the current exposure from ctx; request it from core if it is not available. Lower the night window radiance about 40 % so lit rooms land near sRGB 200 with visible ceiling panels and desks. Add the street-lamp bounce or a small ambient term so brick near the lamps reads dark grey-brown, not black.",
+  "critic": 5
+ },
+ {
+  "impact": "medium",
+  "owner": "educity",
+  "what": "Walk-mode starts face the wrong way or are blocked. entrance-educity-b: the start yaw follows the target view, so pressing W slides along the brick instead of entering. entrance-educity-gateway: the start lands at E(−3.18, 35.44), 3.1 m from the lift connector at E(−1.6, 32.75), facing away down the passage, and no 'Step-free lift up' button appears. taidon-portaat: the start is behind the side-flight handrail, which cuts through the middle of the frame. room-business-turku: the start is 0.5 m in front of the roll-up, which fills the view.",
+  "where": "walk(true, id), 11:00: .../qa-educity-r1/q-b-1.png and q-b-2.png (positions in p18.out), v10-gw-0.png (M-gw.png), i-walk-taidon-1100.png, i-walk-2072-1100.png (M-walk1.png).",
+  "fix": "nav.ts. Door B: make the target view look square-on (from E(60, 2.2, 33.5) to (51.6, 1.6, 32.7)) so the walk yaw faces the door. Gateway: walkTo ≈ P2(−1.9, 32.75) facing +x_E, within connector range. Taidon: walkTo P2(26, 47.8) (front of the tiers, facing north). 2072: offset walkTo 1.5 m from the roll-up or move the roll-up beside the café entrance. If view-derived yaw is too limiting, ask core for an optional TwinTarget walkYaw.",
+  "critic": 5
+ },
+ {
+  "impact": "medium",
+  "owner": "educity",
+  "what": "West-entrance Go-to view: its own label ('EduCity west main entrance' at y_E 6.6) sits just above the top edge. A street-lamp pole and the info totem stand between the camera and the revolving door, which is hard to recognise.",
+  "where": "focus('entrance-educity-west') 15:30, camera [166.29,5.7,98.57]→[174.74,5.3,112.61] → .../qa-educity-r1/t-entrance-educity-west-1530.png (M-targets1.png).",
+  "fix": "nav.ts entrance-educity-west: ext() from about E(−7, 1.9, 80.5) to (5.4, 2.2, 74.6), hfov 70, clear of the lamp and totem. educity.ts: lower the exterior label to y_E ≈5.7 so it sits just above the canopy within the frame.",
+  "critic": 5
+ },
+ {
+  "impact": "medium",
+  "owner": "educity",
+  "what": "The pavilion's 'brushed aluminium' fascia and corner piers clip to pure white in midday sun. At the east door at 11:00 they reach 253/251/249 even with bloom off, and bloom spreads the glare over about a quarter of the frame. At other times they read as matte light concrete. There are no panel joints, while the reference shows large brushed panels with visible joints.",
+  "where": "Camera E(56.5,1.65,74.7)→(47.1,1.6,74.7), 11:00 → .../qa-educity-r1/v8-east-door-1100.png; bloom off v9-east-nobloom.png; 15:30 t-entrance-educity-east-1530.png; ref research/ref/educity/thinglink/view_plaza_wide_s.jpg.",
+  "fix": "outdoor.ts pavilion(): b.metal.paint('#b2b9c0', 0.36, 0.35) → base #9fa6ad, roughness 0.55, metalness 0.8, so the sun lobe stays a highlight instead of a full-face white-out. Add 1.2 m vertical and fascia-height joints as recessed dark lines, as already done on the SW wall.",
+  "critic": 5
+ },
+ {
+  "impact": "medium",
+  "owner": "educity",
+  "what": "The builders' check-in tour overshoots registration. int-edu-east-to-registration passes the desk at about t = 0.93 and walks 22 m further, past the Taidon side flight, to the team-formation area. The final frame and the 'Finish · Registration' label therefore play away from the desk.",
+  "where": "tour('builders-train-checkin'), seekTour 0.93 / 0.97 / 1.0 at 15:30 → .../qa-educity-r1/tr-reg-t93.png, tr-reg-t97.png, tr-reg-t100.png (M-tour-end.png).",
+  "fix": "nav.ts educityRouteLegs: end int-edu-east-to-registration at the desk front E(38.3, 54.4), facing the desk. If team formation should stay in the tour, make it a separate leg and tour step, and tell the lead so lib TOURS_3D 'to' and the captions match.",
+  "critic": 5
+ },
+ {
+  "impact": "medium",
+  "owner": "educity",
+  "what": "In the dollhouse, unmodelled rooms and cores (the service centre east of registration, the NW and SE room bands) are solid beige blocks with flat caps. Floor 1 reads as a massing model rather than a cut-away building, and the caps dominate the Registration and Lobby views.",
+  "where": "educity:default 15:30 and 11:00 → .../qa-educity-r1/v-default-1530.png, g-default-1100.png; t-registration-1530.png.",
+  "fix": "Build these as hollow rooms: walls cut at the band height, door openings and plain floors (furniture optional). At minimum, render the cap as the dark poche used for the mantle cuts with 1F walls visible inside, so they read as rooms seen from above.",
+  "critic": 5
+ },
+ {
+  "impact": "medium",
+  "owner": "educity",
+  "what": "The clear window glass in front of modelled rooms looks smeared or cracked. The glass_smudge normal/roughness maps from lib.variant('glassInterior') show as swirls and dotted crack lines in every room close-up.",
+  "where": "focus('room-elisa') 15:30 → .../qa-educity-r1/r-elisa-1530.png, crop in M-glass.png (left).",
+  "fix": "materials.ts makeClearGlass: on the facade windows, drop the normalMap and roughnessMap from the variant or set normalScale ≈0.005, and use uniform roughness 0.03. Keep the smudge only on the low-coverage interior partitions if wanted.",
+  "critic": 5
+ },
+ {
+  "impact": "medium",
+  "owner": "educity",
+  "what": "In 'Floor 1 rooms' the 'Company arrival · Door B → 1002' label sits at the far right edge, under the control column, and is cut off.",
+  "where": "goto('educity:rooms1') 15:30, 1280×800 → .../qa-educity-r1/v-rooms1-1530.png, crop-rooms1-label.png.",
+  "fix": "Move the company-arrival label to room 1002's door, E(26.7, y, 8.6), or reframe rooms1 to pose([18, 34, 50], [28, 0, 14]) with fit 26 so door B's label stays inside the safe area.",
+  "critic": 5
+ },
+ {
+  "impact": "high",
+  "owner": "educity",
+  "what": "EduCity's door openings don't match the doors the routes use. The east main entrance legs (out-arr-*-edu-east; last points (211.8,137.2)→(204.0,136.5), the SPEC §3.3.4 door) cross the pavilion glass at ≈(208.7,137.0). That is 1–3 m south-east of the modelled opening (206.3,139.9)–(207.9,138.0), so the avatar and ribbon pass through glass on both builders' arrival tours. The west main entrance legs pass the glass V 0.3–0.6 m east of its opening at (175.7–176.3, 110.7–111.4); a 0.3 m-radius sweep along the leg is blocked there.",
+  "where": "builders-train-checkin and builders-station-hall-checkin t 0.86–0.90, builders-transfer-to-build t 0–0.03, builders-back-to-educity t 0.86–0.89; 15:30. Screenshots: …/out/S/train-0_865-eastdoor.png, …/out/S/train-0_875-eastdoor.png, …/out/S/xfer-0_012-westdoor.png; script …/scratchpad/twin/twqa/legwalk.mjs",
+  "fix": "Move the openings (glazing and colliders) to SPEC's door positions: east (204.0,136.5), west (177.8,115.1) → (176.1,108.8). If the CAD is right instead, ask the lead to move the leg end points through the modelled openings. Add a test that every routes.json leg crossing the EduCity footprint stays ≥ 0.3 m clear of EduCity colliders.",
+  "critic": 6
+ },
+ {
+  "impact": "high",
+  "owner": "educity",
+  "what": "There are holes in the floor at EduCity thresholds. A ~1 m strip along the west pavilion glass (x 176–181, z 104–113) has no visible surface between y 3.2 and 3.7; at (176.4,110.0) the only thing above is the canopy and nothing visible is below. At door B (237.2,109.2) the first visible surface under the walker is the terrain 3.3 m down, and a crack runs along the south-east facade at (236,110.5), (238.5,107.5), (240.5,105). In walk mode at door B you stand over a void with the 'B' sign at foot level. In tours the avatar has no ground under it at the transfer start (176.4,3.4,110.0), and the ribbon floats over nothing at (176.2,3.4,109.3) and (237.1,3.4,109.1).",
+  "where": "Walk from 'parkcity' → Main Stairs → door B, and from 'entrance-educity-west'; 11:00. builders-transfer-to-build t 0.02. Screenshots: …/out/W2/out-edu-mainstairs-door-b.png, …/out/L/cu-edu-west-gap.png; map tool …/scratchpad/twin/twqa/holes.mjs",
+  "fix": "Close the threshold slabs: run the pavilion and floor-1 slab under the facade line out to the deck pavers, or meet ground's pavers, and fill door B's recessed portal floor at y 3.40.",
+  "critic": 6
+ }
+]

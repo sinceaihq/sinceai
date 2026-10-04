@@ -1,0 +1,170 @@
+[
+ {
+  "impact": "high",
+  "owner": "joki",
+  "what": "The first view of Joki (place default, chip 'Aula & Cave') is a steep aerial from the north-east with three problems. BioCity's 32.6 m south-east end, 2–3 m from the Aula's north-west wall, hides the north-west third of the Aula, including the BioCity passage where everyone comes in. The Showroom drum, where the Q&A happens, is cut off by the bottom edge. The 'Company Lounge' and 'To BioCity' labels are clipped at the frame edges. fit 18 cannot hold the 63 m floor-1 plate.",
+  "where": "joki:default, 11:00 and 01:00, desktop 1280x800 (stage 1022x639), cam (80,56,13.6)->(44.6,-1.7,31.4) fov 38. Shots: jokiqa/s1/v-default.png, jokiqa/s7/p-only-default.png (Joki only, same framing), jokiqa/s2/n-v-default.png (night)",
+  "fix": "In joki.ts views['joki:default']: target the floor-1 centroid at about J(-2.5,-1.7,22) with fit about 32. Use a steeper pitch (65° or more) from the east/east-south-east, e.g. camera at about J(20,62,28), so BioCity sits behind the Aula, not in front of it. The drum, ramp, Cave and Aula should all be in frame with every label inside the safe area. Re-check the portrait override and 01:00.",
+  "critic": 1
+ },
+ {
+  "impact": "high",
+  "owner": "joki",
+  "what": "The 'aula' target view is half blocked. About 40 % of the frame is BioCity's dark south-east façade and a corner column. The Aula's north-west half (window tables, BioCity passage, the route in) is hidden.",
+  "where": "focus=aula (Go to -> Joki Aula), 11:00, cam (48.1,26,15)->(34.9,-1.7,40.3). Shot: jokiqa/s1/f-aula.png. A clean straight-down view for comparison: jokiqa/s8/aula-top-down.png",
+  "fix": "In joki.ts, aula target: raise the camera and steepen it from the Cave side (pitch 65° or more, e.g. camera at about J(6,40,26) looking at J(-5,-1.7,37), hfov about 60), or go near straight-down. Check that the passage opening and all 33 tables are visible and BioCity stays behind.",
+  "critic": 1
+ },
+ {
+  "impact": "high",
+  "owner": "joki",
+  "what": "The Showroom view does not show counter 1. It runs from DNA (half cut off, label clipped at the left edge) to Bayer. Meyer Turku is behind the camera, yet the route caption says the counters are 'counted from the entrance'. On phones about 70 % of the frame is black ceiling and carpet, with the counters in a thin band.",
+  "where": "joki:showroom (same as focus=showroom), 11:00. Shots: jokiqa/s5/u-v-showroom.png (ultra 1600x1000), jokiqa/s1/v-showroom.png (high), phone jokiqa/s6/m-v-showroom.png",
+  "fix": "Move the eye into the corridor at the top of the ramp and raise it to about J(0.6, F1+2.3, 7.4). Aim at about J(-5.0, F1+0.4, 4.0) with hfov about 100. Then bearings 186.7° to 341° all fit: Meyer about 35° left of centre, Bayer about 47° right. For portrait, pitch down about 8° and use hfov about 80.",
+  "critic": 1
+ },
+ {
+  "impact": "high",
+  "owner": "joki",
+  "what": "The Aula reads as a dim grey parking deck, not the bright white lobby in the photos. The ceiling renders #766d64 and the floor #91877e, against #dac4ad and #e3d6ca in the photo (about 1.5 stops darker and greyer). The spec's 'light seamless polished floor #d3cec6' renders as raw concrete with dark blotches.",
+  "where": "Aula at eye level, 11:00. Shots: jokiqa/s2/i5-aula-long.png, jokiqa/s2/i6-aula-reverse.png, jokiqa/s4/w-walk-aula.png. Side-by-side with ref/joki/img/arosuo_vierailukeskus_7-VESA_LOIKAS.jpg: jokiqa/sheet-aula-cmp.jpg",
+  "fix": "In probes.ts aulaProbe: raise floorKlux from 0.3 to about 0.7 (a lobby with the north-west glazing) and lift the ceiling bounce (#e6e4df at 0.15 or more). In floor1.ts/mats: swap the Aula floor to a smooth light satin resin (#d3cec6, roughness about 0.35, only low-contrast large-scale variation, no blotches). Keep the downlights and the linear LED.",
+  "critic": 1
+ },
+ {
+  "impact": "high",
+  "owner": "joki",
+  "what": "The Company Lounge is orange-tan. The board-formed concrete drum reads as plywood (#9a795b vs #928c80 in the photo). The birch tiers are #a8896b vs #d4b89e. The pit renders dark brown (#6a5542) where the photo has light grey carpet. The seat pads are flat colour panels and the back cushions read as thin tiles. Cause: the room probe and the track spots are both 3000 K, while the other rooms are white-balanced.",
+  "where": "joki:lounge (same as focus=lounge), 11:00 and 15:30. Shots: jokiqa/s1/v-lounge.png, jokiqa/s2/d-v-lounge-1530.png, jokiqa/s4/d-lounge-nw.png. Side-by-side with ref wb2018_1800x1800_950348_joki-amfiteatteri.jpg: jokiqa/sheet-lounge-cmp.jpg",
+  "fix": "In probes.ts loungeProbe, change cct(3000) to about 4000 K, and in floor1.ts change the spots from mats.lampColor(trackSpot, 3000) to about 3500 K. Raise the floor target to about 0.3 klux. Give the pit grey carpet (#8a8b8f). Make the seat pads 0.08–0.10 m thick slabs with rounded edges, and the back cushions about 0.12 m thick with navy piping.",
+  "critic": 1
+ },
+ {
+  "impact": "high",
+  "owner": "joki",
+  "what": "By day the fin screen shows blocky grey shadow-map texels. The sun's shadow map is far coarser than the 0.02 m fins at 0.142 m pitch, so the satin-aluminium comb reads as a mottled frosted curtain, with no sheen and no light/dark change around the drum. Confirmed: with fins.receiveShadow=false the blocks disappear and the sun glint returns.",
+  "where": "Closed tower from the north-east deck, cam (69,4,-5.8)->(58.9,5.2,15.9), 11:00, high and ultra. Shots: jokiqa/s9/fin-shadow-on.png vs jokiqa/s9/fin-shadow-off.png (crops in jokiqa/sheet-fin-shadow.jpg); jokiqa/s5/u-ne-deck-1100.png; jokiqa/sheet-fins-cmp.jpg",
+  "fix": "In shell.ts, set finSet.mesh.receiveShadow=false. Replace the received shadow with a cheap analytic self-shadow: the lit fraction of the fin face from the sun angle against the fin plane (depth 0.09 / pitch 0.142), plus AO darkening towards the glass. Keep castShadow onto the glass and deck. Add a fin LOD (alpha-tested ring texture) beyond about 40 m to stop shimmer.",
+  "critic": 1
+ },
+ {
+  "impact": "high",
+  "owner": "joki",
+  "what": "At dusk and at night the fin ring glows like an opaque, overexposed peach lampshade from bottom to top, and the interior behind it is blown white. In the reference photos the fins stay a silver comb with a soft warm uplight at the base, and the lit floors read clearly through them. The uplight (about 200 cd/m² at 3600 K, plus 0.55-metallic environment reflections) saturates under the night exposure (stats: 8.5 at 16:45, 33.9 at 01:00).",
+  "where": "Closed tower, 16:45 and 01:00, ultra. Shots: jokiqa/s5/u-nw-0100.png, jokiqa/s5/u-ne-deck-1645.png, jokiqa/s3/e1-ne-deck-0100.png. Side-by-side with ref joki-tower-dusk-large.png: jokiqa/sheet-ext-cmp.jpg",
+  "fix": "In the shell.ts uplight patch: cut the base to about 40–60 cd/m², shorten the falloff (e-folds about 0.6 m and 2.5 m) and use 4000 K. Lower the fins' envMapIntensity with the night factor so the fins above about 3 m stay mid-grey silver. Cap the interior ceiling-panel luminance seen through the glass at night so floors 2–3 are not clipped.",
+  "critic": 1
+ },
+ {
+  "impact": "high",
+  "owner": "joki",
+  "what": "The tower core, which fills most eye-level views on floors 2–3, looks like a placeholder. The walls are featureless light grey (#abaaaa), where the photos show charcoal (#504a4b) and SPEC says mid-grey #787c82 with screens ('näyttö' on the plan). The lift/WC doors are plain white slabs standing proud of the wall with no frame or handle. The exit sign is a blank green box.",
+  "where": "Floor 2 and 3 at eye level (open joki-2/joki-3), 11:00 and 01:00. Shots: jokiqa/s3/i1-f2-expo.png, jokiqa/s4/e-f2-east.png, jokiqa/s4/e-f3-east.png; door close-ups jokiqa/sheet-doors.jpg. Reference workshop photo: jokiqa/sheet-tower-ref.jpg",
+  "fix": "In jokiTower.ts: core walls charcoal #3a3b3f to #787c82 (spec), matte. Add the two wall screens on the east and west faces of the core (event Q&A content). Make the doors inset leaves in 50 mm steel frames with lever handles; the lift should get brushed-steel doors and a call panel. Give the exit sign a pictogram texture.",
+  "critic": 1
+ },
+ {
+  "impact": "high",
+  "owner": "joki",
+  "what": "Floor-1 labels show through walls. From inside the Showroom, every floor-1 label is drawn. 'TO BIOCITY · PASSAGE, 10 STEPS UP' sits over the Meyer/DNA logos, and 'Cave', 'Ramp' and 'Company Lounge' show through the drum wall. On the route up the ramp, five labels stack and overlap ('Finish · Showroom', 'Stairs & lift', 'Showroom · Q&A', 'Company Lounge', 'Ramp'), and one is drawn on the walker's back. Cause: the engine's occlusion only tests the building outline, and lblF1 is one group for the whole floor.",
+  "where": "Eye level in the Showroom, 11:00: jokiqa/s2/i10-showroom-from-bayer.png, jokiqa/s2/i11-showroom-from-elisa.png. Route companies-tykistokatu-to-showroom at t=0.82 and t=0.9: jokiqa/s4/t-co-showroom-0.9.png, jokiqa/sheet-tour.jpg",
+  "fix": "In joki.ts: split lblF1 into per-room groups (aula, cave, ramp, drum/showroom, lounge). While the camera is inside Joki, show only the room the camera is in plus its exits ('To BioCity' only in the Aula; 'Showroom' and 'Stairs & lift' from the ramp top). Ask core to declutter while a route plays and to hide labels whose anchor sits behind the walker avatar.",
+  "critic": 1
+ },
+ {
+  "impact": "medium",
+  "owner": "joki",
+  "what": "The tower interiors still differ from the photos in material and detail. There is one fat smooth white duct with a collar, where the photos show several galvanised spiral ducts (#c5c8ca, metallic, with seams). The ceiling reads as white mineral tiles; it should be light-grey wood-wool (#d0d2d2) with visible fibre. The floor-3 seating steps are flat tan boxes (#8c817a); they should be dark wood (#4a3a30) with distinct treads. The Chill Zone partition is a plain grey slab, missing the Futurescapes aerial-map graphic and screen. The poufs are small and pastel; the photos show large lime/blue/teal poufs.",
+  "where": "Floors 2–3 at eye level, 11:00. Shots: jokiqa/s3/i2-f2-chill.png, jokiqa/s4/e-f3-west.png, jokiqa/s4/e-f2-west.png. Compared with ref wb2018_1800x1800_603115_joki-workshop.jpg and tk_a3aa5edb-turkufuturescapes-joki.jpg: jokiqa/sheet-tower-ref.jpg",
+  "fix": "In jokiTower.ts / joki/textures.ts: 2–3 parallel spiral ducts Ø 0.45–0.6 in metallic galvanised material with a spiral-seam normal map. Wood-wool texture in long panels with more contrast and a grey tint. Seating steps in dark oak material with tread nosings. A map-graphic canvas plus a screen on the partition. Pouf diameters 0.9–1.3 m in lime #b1b13b, violet-blue #5a5ccc and teal #255d69.",
+  "critic": 1
+ },
+ {
+  "impact": "medium",
+  "owner": "joki",
+  "what": "Cut-away leftovers. When floor 1 is opened, the floor-2 north-east door frame (with its steps) and the floor-2 south-south-west door frame stay standing on the cut drum as free white 'goal posts'. Both are visible in the default Joki view and the Cave/Aula targets.",
+  "where": "joki:default and focus=cave, 11:00. Shots: jokiqa/s1/v-default.png, jokiqa/s4/a-dollhouse-nedoor.png, jokiqa/s1/f-cave.png (crops in jokiqa/sheet-frames.jpg)",
+  "fix": "In shell.ts setOpen('joki-1'): hide the floor-2 door frames and leaves together with the curtain wall above the cut. For open joki-2/joki-3, cut them at the same yTop as the glazing. Keep the deck steps, which are exterior.",
+  "critic": 1
+ },
+ {
+  "impact": "medium",
+  "owner": "joki",
+  "what": "In the floor-2 cut-away (floor 3 removed), the floor 2 to 3 stair keeps rising above the core walls, which are cut at 1.3 m. Its top flight ends in mid-air about 3.5 m above the floor and fills about a third of the Chill Zone target view.",
+  "where": "focus=chill-zone, 11:00. Shots: jokiqa/s1/f-chill-zone.png, wider: jokiqa/s9/chill-wide.png",
+  "fix": "In jokiTower.ts: when drawn === 'joki-2' and the camera is above the floor-2 ceiling, clip the floor 2→3 flight together with cutCore (hide the treads above Y.f2+1.3), or swap in a short stub.",
+  "critic": 1
+ },
+ {
+  "impact": "medium",
+  "owner": "joki",
+  "what": "insideLevel() treats the public walkway on the hall roof as 'inside floor 2'. insideJoki() accepts the whole footprint (Aula, Cave, ramp) and only checks the height band, so a camera at eye level on the walkway (y about 4.5) counts as joki-2. Floor-2 labels ('Revvity', 'Chill Zone') then appear on the tower, and the module hides floor 1 and the roof group for an outdoor camera.",
+  "where": "Outdoor eye level on the hall-roof walkway, 11:00 and 16:45, cam (46.2,4.5,36.3) and (29.9,4.9,44). Shots: jokiqa/s3/e2-sw-walkway-1100.png, jokiqa/s4/c-walkway-1100.png, jokiqa/s12/walkway-from-campus.png",
+  "fix": "In joki.ts insideLevel: for joki-2/joki-3 require hypot(x,z) < R.glassIn (inside the tower glass). For joki-1 over the low wing require y < Y.hallRoof (or the Aula ceiling). Add a unit test with a camera on the walkway.",
+  "critic": 1
+ },
+ {
+  "impact": "medium",
+  "owner": "joki",
+  "what": "'Walk me there' for the Cave starts outside the Cave. walkTo J(0.6,22.0) is west of the Cave wall (x0 1.59), so walk mode opens behind the hazy glass partition, next to a concrete pier that covers a quarter of the frame.",
+  "where": "walk(true,'cave'), 11:00. Shot: jokiqa/s4/w-walk-cave.png (bottom-right of jokiqa/sheet-walk.jpg)",
+  "fix": "In joki.ts, cave target: walkTo about J(8.0, 9.8), inside by the north-east wall, facing the stage (+z) so the rows of tables and the screen are in view.",
+  "critic": 1
+ },
+ {
+  "impact": "medium",
+  "owner": "joki",
+  "what": "The Showroom's floor and ceiling look CG. The carpet is a high-contrast chessboard of roughly 1 m dark-grey squares, where the photos show a subtle warm brown-grey patchwork. The ceiling is a flat black plane with one duct, where the photos show an open black ceiling with ducts, cable trays and track rails between the triangle LED lines.",
+  "where": "joki:showroom and the counter targets, 11:00. Shots: jokiqa/s5/u-v-showroom.png. Carpet crop vs ref raju_Joki-Showroom-studio-01.jpg: jokiqa/sheet-carpet.jpg",
+  "fix": "In showroom.ts: patchwork tiles of 0.5 m with lower contrast (±6 % luminance), a warm grey base #3e4146 to #4a4440, plus a fibre normal/roughness map. Add black trays, 2–3 ducts and track rails under the ceiling plane (instanced, a single material).",
+  "critic": 1
+ },
+ {
+  "impact": "high",
+  "owner": "joki",
+  "what": "Where BioCity's passage stair arrives in Joki's Aula, Joki has no ceiling or interior walls. From the stair, rays hit only joki-jk-membrane-ext: the exterior roof membrane at y 2.87, single-sided, so invisible from below. You look straight out at the sky, DataCity's brick, and the exterior aluminium panels of Joki's street canopy (joki-jk-alu-ext). This is the moment every partner enters Joki.",
+  "where": "Walk from bc-2 down the passage, Fri 15:30 (<scratch>/qa-biocity/s14/s3.png). Orbit camera (14.01,0.6,41.32)→(19.71,1.8,49.52): s25/stair.png",
+  "fix": "joki.ts: close the Aula ceiling (white acoustic tile, y ≈ -1.70+3.1) and the inner wall faces over the street end of the wedge around the BioCity opening (J ≈ x -23…-11, z 44…63). Make interior faces double-sided or add separate inner shells so no exterior membrane or canopy cladding is visible from inside.",
+  "critic": 2
+ },
+ {
+  "impact": "high",
+  "owner": "joki",
+  "what": "The closed Joki street door reads as an open entrance. Its label uses the 'entrance' style (violet door mark, highest declutter priority), and 'closed during the event' lives in the detail span, which labels.ts hides below the sm breakpoint. On phones it reads simply 'JOKI STREET DOOR'. On desktop it is the most prominent entrance label in the campus overview, while BioCity's real entrances are hidden.",
+  "where": "campus:default and campus:top on a phone (412×915, low tier): <scratch>/qa-campus-ext/r1/sheet-mobile.png. Desktop overview: …/r1/v-default-1530.png. Fri 15:30.",
+  "fix": "In joki.ts (around line 117), put the status in the main text, for example 'Joki street door — closed'. Use a neutral kind ('open': grey, no violet mark) or a struck-through door mark. Alternatively, attach the label only to joki:* views and to walk mode near Lemminkäisenkatu.",
+  "critic": 3
+ },
+ {
+  "impact": "medium",
+  "owner": "joki",
+  "what": "The Joki fin crown aliases into a moiré of broken dashed lines at normal viewing distances at all times; SMAA cannot resolve sub-pixel fins. At night, the uplight's 4.5 m tail term (0.2·e^(−h/4.5), about 9 cd/m² at 7 m) times the night exposure makes the fins a uniformly bright cream curtain to the top, instead of the base-strip gradient in the dusk photos.",
+  "where": "campus:courtyard (Jussin aukio) at Fri 15:30, 16:45 and 20:00; desktop high. <scratch>/tod-r1/shots/crop-fins-1530.png, .../shots/crop-fins-2000.png, .../shots/m-s5.png (court row); reference research/ref/joki/crop_dusk_bottom_grid.png",
+  "fix": "Add a fin LOD: beyond about 25 m, fade the instanced fins into a coverage-correct band shader (filtered anisotropic stripes), or use alpha-to-coverage with a mip-aware width. Drop the e^(−h/4.5) tail or cut it to about 0.05, so the uplight falls off within the first 2–3 m.",
+  "critic": 4
+ },
+ {
+  "impact": "critical",
+  "owner": "joki",
+  "what": "In walk mode you cannot walk up the ramp from the Aula to the Showroom. A collider runs across the ramp foot: segment (45.06,28.00)→(48.59,30.83), which is the ramp walk area's own foot edge. The double side-wall lines leave < 0.5 m clear, so the 0.3 m walker stops at (48.07,30.80). A flood fill over walkData() shows joki-1 split into two unconnected regions: Aula/Cave (231 m², with the BioCity stair arrivals) and Showroom/tower floor 1 (134 m², with all six counters, the lounge, lifts and stairs). Walking BioCity → Joki → Showroom is impossible; the Showroom can only be reached by starting walk mode there.",
+  "where": "Walk mode starting at 'aula', or 'build-hall' then Go down to Joki; 11:00. Stuck at (48.07,−1.70,30.80) twice. Module leg int-joki-aula-to-showroom has 0.03 m clearance at (47.80,30.23). Screenshots: …/out/W2/joki-aula-to-ramp-ramp.png, …/out/W/joki-ramp-showroom-ramp-top.png; script …/scratchpad/twin/twqa/reach.mjs",
+  "fix": "In walkData(), don't emit colliders for the ramp polygon's foot and top edges, end the side walls at the foot, and keep ≥ 1.2 m clear width. Add a joki.test.ts flood-fill check that the passage-stair arrival (14.34,44.02) reaches every Showroom counter walkTo on joki-1.",
+  "critic": 6
+ },
+ {
+  "impact": "medium",
+  "owner": "joki",
+  "what": "The exterior stair at the base of Joki's tower has no outdoor walk colliders: the walker passes through its balustrade (joki-jk-balustrade-ext at (66.6, 3.1–3.7, 8.2)). Its bottom treads sit on the builders' transfer line.",
+  "where": "Walk 'entrance-biocity-courtyard' → Jussin aukio stair → deck, 11:00. Screenshots: …/out/W2/out-terrace-to-jussin-stair-top.png, …/out/S/jussin-stair-top-joki-tread.png",
+  "fix": "Add outdoor colliders for the stair cheeks and balustrade, and check the stair's footprint against SPEC §3.2.3; coordinate the 1 m route offset with core.",
+  "critic": 6
+ },
+ {
+  "impact": "medium",
+  "owner": "joki",
+  "what": "Walk me there for the 12 floor-2 and floor-3 companies (e.g. Revvity) plays the drop-off → Showroom route, which ends on floor 1, then the camera jumps to the stand upstairs. The route never shows the stairs or lift climb that partners actually need.",
+  "where": "Go to 'revvity' → Walk me there, 11:00. Screenshot: …/out/F/wmt-revvity.png; …/out/F/final.json",
+  "fix": "Provide interior legs int-joki-showroom-to-f2 and int-joki-showroom-to-f3 (tower stair) in routeLegs; the lead adds the matching tours or extends the route for F2/F3 targets.",
+  "critic": 6
+ }
+]

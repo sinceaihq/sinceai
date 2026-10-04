@@ -11,7 +11,7 @@ there will be a few supercars (a Mercedes-Benz G-Wagon). Make it the easiest eve
 to arrive at. Test it to Google-level standards.
 
 Site facts live in `SITE-FACTS.md` (from the 4 Oct 2026 site research). This file is the engineering contract.
-Repo: `/Users/rikulauttia/Projects/sinceai.fi` (branch `feature/hackathon-2026-field-guide`, never touch `main`).
+Repo: this repository (`sinceaihq/sinceai`), branch `feature/hackathon-2026-field-guide`.
 
 ## 1. Quality bar
 

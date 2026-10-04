@@ -1,0 +1,82 @@
+[
+ {
+  "impact": "high",
+  "owner": "core",
+  "what": "At midday the build hall washes out. Indoors the exposure is locked at INTERIOR_EXPOSURE 3.2, while the sky through the vault and gable plus the module's daylight term (0.1·skyIlluminance) is many stops brighter. Bloom then veils the whole hall at eye level. Looking up into the atrium gives an almost pure white frame with the vault invisible. At 15:30 the same shot is fine. Saturday 09–18 is the partner Q&A day, so this is the most-visited lighting.",
+  "where": "Camera local (-14.68,1.65,0.96)→(look along the hall, B(10,2.6,-0.3)), Sat 11:00, high. Look-up from (-10.11,1.65,7.52). <scratch>/qa-biocity/s22/g1.png (bottom row), s22/hall-1100.png, s22/hall-up-1100.png. Fine at 15:30: s9/k-hall.png",
+  "fix": "Make indoor exposure adaptive by day, e.g. exposure_in = INTERIOR_EXPOSURE / (1 + k·daylight), tuned so the vault sky sits ≈2.5 stops over mid-grey. Tie the bloom threshold to the current exposure (only luminance > ~4× mid-grey blooms). Coordinate with biocity: cap light.daylight (setLighting) and give the vault glass a light frit, about 20% lower transmission.",
+  "critic": 2
+ },
+ {
+  "impact": "medium",
+  "owner": "core",
+  "what": "After dark the interiors burn out when seen from outside. From the courtyard at 18:00 (exterior exposure 29.3), the Aulagalleria behind the glass is a flat white box with no detail. DESIGN §12: an interior that looks right inside must not blow out from outside.",
+  "where": "Focus entrance-biocity-courtyard, Fri 18:00, high. <scratch>/qa-biocity/s21/gal-1800.png",
+  "fix": "When the camera is outside a hero building, scale its interior materials' envMapIntensity and emissive by about INTERIOR_EXPOSURE/currentExposure (clamped to ≤1.5× the inside look). Alternatively apply that factor in the glass shader for what is seen through it.",
+  "critic": 2
+ },
+ {
+  "impact": "medium",
+  "owner": "core",
+  "what": "Dusk renders as night. At Fri 16:45 the sun is about 3° below the horizon and civil twilight lasts until 17:10, yet the overview and the streets are almost night-dark: navy ground, a dark grey-violet sky and the lamps dominating. Real civil twilight in Turku is still fairly bright, with a light western sky.",
+  "where": "campus:default, campus:courtyard and Jussin aukio at 16:45, desktop high: <scratch>/qa-campus-ext/r1/sheet-views-1645.png, …/r1/v-default-1645.png, …/r1/sheet-dusk-a.png.",
+  "fix": "In sky/sky.ts, revisit the twilight illuminance curve and exposure target for sun elevations −1° to −6°. At −3° the scene should sit about 1–2 EV below day, with a bright horizon glow toward the sun's azimuth (uTwiHorizon). Street lights should only start to dominate after about −5°.",
+  "critic": 3
+ },
+ {
+  "impact": "medium",
+  "owner": "core",
+  "what": "Daylight looks milky and low in contrast. At Sat 11:00 and Fri 15:30 the street scenes have lifted blacks and a bluish-grey veil. Sunlit white facades clip to flat white, for example at the far end of the Ströget deck. The result reads as CG rather than a photograph, even where the geometry is right.",
+  "where": "Street spots s1, s5 and k9 at Sat 11:00, high: <scratch>/qa-campus-ext/r1/s1-1100.png, …/r1/s5-1100.png, …/r1/k9-1100.png.",
+  "fix": "In render/pipeline.ts (and the sky fog):\n- add a mild S-curve or the AgX 'punchy' look after tone mapping;\n- reduce the haze contribution within the hero zone (fog density about 0.0006 near the camera);\n- cap white facade albedo at about 0.75 linear so sunlit fronts keep their texture.\nCompare against the Commons and KartaView photos.",
+  "critic": 3
+ },
+ {
+  "impact": "high",
+  "owner": "core",
+  "what": "Night (sun below −6°) is lit by a strong uniform warm ambient instead of by its lights. The hemisphere fill is 0.005 klux (5 lux, ground colour 3200 K × 0.55). The PMREM night sky is about 0.36 cd/m² at the zenith and about 2 cd/m² at the horizon, and the ground term is 0.008·night. At the night exposure (33.9), every surface away from a lamp reads as dim beige-brown: white facades and the yellow building on Tykistökatu look evenly daylit, roofs are as bright as walls, and the whole frame has a sepia cast. The 16-lux street-light pools on Tykistökatu are invisible because the ambient is about a third of the pool peak, so the road is uniformly brown. A real overcast urban night has about 0.1–0.5 lux of ambient and a sky of about 0.03–0.1 cd/m²; lamps, lit windows and shopfronts carry the image.",
+  "where": "campus:arrival, campus:default, street camera (-10,1.7,-75 → -60,8,0), aerial (200,80,-200 → -50,0,50), top-down Tykistökatu (-20,140,-50 → -20,0,-49), campus:courtyard; Fri 17:30, Fri 20:00, Sat 01:00; desktop high and ultra, mobile low. A/B (as-is vs hemi ÷10, env ÷5, exposure ×1.5): <scratch>/tod-r1/shots/m-abnight.png and .../shots/m-abcourt.png. Also .../shots/m-tykpools.png, .../shots/m-cam0.png, .../shots/m-campus-default.png",
+  "fix": "In sky/sky.ts apply(): set hemi.intensity 0.005·night to about 0.0005–0.0008, and change groundColor from 3200 K × 0.55 to about 4000 K × 0.3. Scale uNightZenith by about 0.2, uNightHorizon and uCityGlow by about 0.25, and the 0.008·nightK term in uGround by about 0.25. Then expose the night like a night photo (about EV 5.4–5.6 at sun ≤ −12°; see the 'brightens after dusk' issue). Check that the Tykistökatu pools read about 3–5:1 against unlit asphalt. The B variant in m-abnight.png already reads like a real night: lit windows and lamps carry the scene and roofs go dark.",
+  "critic": 4
+ },
+ {
+  "impact": "high",
+  "owner": "core",
+  "what": "Low-sun exposure metering is a binary switch with no adaptation. index.ts frame() passes viewDir to sky.exposure() only when !occluded(sunPoint). Whenever the sun disc slips behind or out from a building edge, the exposure jumps −0.55 to −0.6 EV in a single frame (1.512 → 1.01 → 1.512). This happens on the default 15:30 company arrival routes, which walk SW along Tykistökatu straight into the sun. In eye-level walking along the street it toggles repeatedly: 1.512 → 1.031 → 1.512 → 1.114 between points about 4 m apart.",
+  "where": "Fri 15:30 (default time). Tour companies-train-to-biocity t 0.80 → 0.82 → 0.84; companies-parkcity-to-biocity t 0.86 → 0.88; eye-level camera on Tykistökatu (-40,-30) → (-43,-27) → (-54,-10) looking at the sun; desktop high. <scratch>/tod-r1/shots/m-tour-pop.png (tour-train-0.80.png exposure 1.51 vs tour-train-0.82.png exposure 1.01, mean luma 87 → 65)",
+  "fix": "Smooth the metering factor the same way as the indoor blend: meter += (target − meter)·(1 − e^(−dt·1.5)), and keep ask(true, 'exposure') running while it settles. Replace the single occlusion ray with a fractional visibility (5–9 rays over the sun disc and aureole), so a partly hidden sun gives a partial stop-down.",
+  "critic": 4
+ },
+ {
+  "impact": "high",
+  "owner": "core",
+  "what": "Opened-building views blend exposure 0.55 toward INTERIOR_EXPOSURE (orbitIndoor) at every time of day. After dusk this puts the exterior about 1.9 EV below the outdoor views (exposure 9.26 vs 33.9) and the interior about 1.5 EV above its nominal 3.2. From 16:45 the surroundings of EduCity, BioCity and Joki become a black void: 40–57 % of the Joki frame and 21–24 % of the EduCity frame is luma < 6 from 16:45 to 01:00. The interiors look slightly bleached (BioCity hall p50 122 → 145). At 16:45 the outdoor views are still blue dusk, so opening a building feels like jumping into deep night, and the streets, entrances and neighbours you orient by are lost.",
+  "where": "joki:default, educity:default, biocity:default at Fri 16:45, 17:30, 20:00 and Sat 01:00; desktop high. <scratch>/tod-r1/shots/m-joki-default.png, .../shots/m-educity-default.png, .../shots/m-biocity-default.png, .../shots/s2/joki-default_061730.png",
+  "fix": "Make the opened-view blend depend on night: 0.55 by day rising to about 0.8 at night, so the interior exposes correctly. Give the exterior its own legibility in opened views after dusk rather than relying on exposure: for example a cool, dim 'map' fill on context and ground (target luma about 20–35) on top of the lamp pools, lit windows and route ribbons. Alternatively, let these views set CameraView.indoor by time of day.",
+  "critic": 4
+ },
+ {
+  "impact": "medium",
+  "owner": "core",
+  "what": "The image gets brighter as the night deepens. EV_TABLE keeps adapting below −9° (EV 6.6 → 6.0, +0.64 EV), while the light is pinned at the constant night floor (nightFactor is 1 from −6° and the twilight term is negligible). From 17:30 to 20:00 the overview mean rises 29.6 → 37.2, the street view 37.7 → 43.4 and the sky 49 → 64 (sRGB). Dragging the slider from 17:30 to 19:00, the sky lightens.",
+  "where": "All outdoor views, Fri 17:30 vs 20:00 (and Sat 01:00); desktop high. <scratch>/tod-r1/shots/m-campus-default.png, .../shots/m-cam2.png, .../shots/m-cam0.png",
+  "fix": "Keep the exposure flat below about −10°, or fade the night floor and hemi fill in with depression from −6° to −12° so scene luminance falls at least as fast as exposure rises. Add a unit test that luminance × exposure of the sky and ground never increases after sunset. Tune together with the night-fill issue.",
+  "critic": 4
+ },
+ {
+  "impact": "high",
+  "owner": "core",
+  "what": "Sun patches and wide penumbrae indoors render as a regular screen-space halftone dot pattern (a 'screen door' look). It is unchanged with GTAO off and with bloom off, so it is the PCF soft-shadow sampling noise (radius 2, per-pixel rotated disk, no temporal resolve). It is very visible at eye level in the lobby by day.",
+  "where": "walk(true,'registration'), 11:00 high → .../qa-educity-r1/k-reg-base.png, zoom crop-dots-zoom.png; toggles k-sheet.png (base / gtao off / bloom off / 15:30); also v1-pav-sw-wall-c.png.",
+  "fix": "sky/sky.ts fitShadows: use radius ≤1 for walk and close views (viewDistance < 40), or switch to a fixed 3×3 PCF / VSMShadowMap with blur for the near cascade. Without TAA, do not use per-pixel rotated sample patterns.",
+  "critic": 5
+ },
+ {
+  "impact": "medium",
+  "owner": "core",
+  "what": "By day, from inside the pavilion or lobby at INTERIOR_EXPOSURE 3.2, everything seen through the glazing washes to a pinkish white with no detail. The deck, the surface lot and the neighbouring facades vanish. This is much stronger than a real camera.",
+  "where": "Orbit eye level E(22,1.65,75)→(2,1.6,74.6), 11:00 → .../qa-educity-r1/v2-pav-nw-1100.png; walk v5-3.png.",
+  "fix": "index.ts exposure blend: for views or walk positions inside heavily glazed spaces (the pavilion), cap indoor at about 0.6–0.7 or blend in log space by the visible glazing fraction, so the exterior keeps about 2 stops of headroom. CameraView.indoor can already be set per view, but walk mode needs it too.",
+  "critic": 5
+ }
+]

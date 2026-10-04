@@ -7,7 +7,7 @@ HARD=${HARD:-15}
 MINE="//"
 state=ok
 mine_shells() {
-  for p in $(pgrep -f "chrome-headless-shell" 2>/dev/null); do
+  for p in $(pgrep -f "chrome-headless-shell|headless_shell" 2>/dev/null); do
     q=$p
     for _ in 1 2 3 4 5 6; do
       q=$(ps -o ppid= -p "$q" 2>/dev/null | tr -d ' ')
@@ -17,7 +17,11 @@ mine_shells() {
   done
 }
 while true; do
-  free=$(memory_pressure 2>/dev/null | sed -n 's/.*free percentage: \([0-9]*\)%.*/\1/p')
+  if [ -r /proc/meminfo ]; then
+    free=$(awk '/MemTotal/ {t=$2} /MemAvailable/ {a=$2} END {printf "%d", 100*a/t}' /proc/meminfo)
+  else
+    free=$(memory_pressure 2>/dev/null | sed -n 's/.*free percentage: \([0-9]*\)%.*/\1/p')
+  fi
   free=${free:-100}
   if [ "$free" -lt "$HARD" ]; then
     pids=$(mine_shells | sort -rn | head -6 | tr '\n' ' ')

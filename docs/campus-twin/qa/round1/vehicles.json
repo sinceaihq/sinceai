@@ -1,0 +1,58 @@
+[
+ {
+  "impact": "medium",
+  "owner": "vehicles",
+  "what": "'Walk me there' for the supercars starts the eye 1–2.6 m behind a white flagpole, which then splits the frame centre. walkTo is [-33.2,-21.2] with the heading from SUPERCARS_VIEW (≈122°); flag pole 3 at (-31.37,-19.33) is dead ahead.",
+  "where": "walk(true,'supercars'), Fri 15:30. <scratch>/qa-biocity/s9/k-cars.png",
+  "fix": "vehicles.ts supercars target: start in the kept-free door corridor, e.g. walkTo (-32.0,-22.4) between poles 3 and 5. Aim the view along the door axis (compass ≈145°) so both cars and the entrance frame symmetrically.",
+  "critic": 2
+ },
+ {
+  "impact": "high",
+  "owner": "vehicles",
+  "what": "The ambient parked and moving cars are low-poly, flat-shaded boxes: estates and minivans with faceted panels, flat disc rims, no glazing depth and almost no lamp detail. The Föli bus is a bare yellow box with a black band, flat grey disc wheels and no doors, mirrors or lights. At street level these are the most obvious CG giveaway, made worse by sitting next to the excellent procedural G-Classes.",
+  "where": "Lemminkäisenkatu, KartaView spot k8 at (-41, 1.11, 8) heading 146: <scratch>/qa-campus-ext/r1/k8-1100.png. Junction with the bus: …/r1/k5-1530.png. Tykistökatu: …/r1/k11-1100.png and …/r1/k6-1100.png. Supercar viewpoint: …/r1/s1-1100.png. Photo comparison: …/r1/cmp-k5-k8.png. Sat 11:00 and Fri 15:30, high.",
+  "fix": "In props/vehicles.ts:\n- Give the traffic models bevelled body slabs (RoundedBox per section), a separate inset glasshouse and proper wheel and tyre geometry with rims (a cheap variant of the G-Class wheel).\n- Add lamp clusters and number-plate recesses, and reuse the clear-coat paint parameters from the display cars.\n- Model the Föli bus with door leaves, windscreen and mirrors, an LED destination display and wheel arches.\n- Keep everything instanced to stay within 30 draw calls.",
+  "critic": 3
+ },
+ {
+  "impact": "medium",
+  "owner": "vehicles",
+  "what": "Traffic regularly hides the supercar display in its hero shots. At the signal, south-west-bound cars queue exactly between the opposite sidewalk and the recess, and one stops on the zebra. In all three shots from the supercars viewpoint (15:30, 16:45, 01:00), a minivan or SUV covers the cars. A bus or taxi also crosses the campus:arrival foreground on ultra and at night.",
+  "where": "Viewpoint s1 at (-49, 1.53, -28.1) looking at (-27.5, 1, -16.5), the SPEC §5.5 supercars view: <scratch>/qa-campus-ext/r1/s1-1100.png and …/r1/s1-1645.png. campus:arrival on ultra: …/r1/u-arrival-1530.png. Night: …/r1/sheet-views-0100.png.",
+  "fix": "In props/vehicles.ts:\n- Stop queues at the stop line before the zebra, never on it.\n- Keep the south-west-bound queue clear of the recess sightline.\n- While the supercars target or campus:arrival is the active view, don't spawn or hold traffic in the near lanes for x −45…−25.",
+  "critic": 3
+ },
+ {
+  "impact": "medium",
+  "owner": "vehicles",
+  "what": "Pedestrians and event staff close to the camera are faceted low-poly mannequins, with flat-shaded faces and blocky hands. They stand at route waypoints, which are also where the street-level view cameras sit, so they often appear right in front of the lens.",
+  "where": "Jussin aukio at dusk, three staff 1–2 m from the camera: <scratch>/qa-campus-ext/r1/s7-1645.png. EduCity west entrance at (160, 5, 96): …/r1/s10-1100.png.",
+  "fix": "In props/people.ts:\n- fade or skip instances within about 4 m of the camera in the vertex shader;\n- smooth-shade the meshes;\n- keep static staff off the exact camera positions of target and view poses (offset them 3–5 m to the side of the entrance).\nThis stays inside the people budget.",
+  "critic": 3
+ },
+ {
+  "impact": "medium",
+  "owner": "vehicles",
+  "what": "Every time change that alters crowdPlan() re-runs assign() with a PRNG seeded by the new walker count, so all pedestrians are re-drawn on new paths. People pop in and out and jump along the colonnade on a 3-minute step, even with reduced motion. While dragging the slider this happens on Fri 14:00–15:18 and 17:00–17:36, and also Fri 19:00–21:00, Sat 07:30–09:30 and 18:30–22:00, and Sun 12:30–15:30.",
+  "where": "Street camera (-10,1.7,-75 → -60,8,0) at Fri 17:12, 17:15, 17:18, 17:21 (reduced motion); campus:arrival at 15:00–15:15; desktop high. <scratch>/tod-r1/shots/crop-ppl-grid.png, .../shots/m-ppl.png",
+  "fix": "Make the assignment stable: seed each walker's path and phase once by its index. On a plan change, only change activeWalkers (fading the added or removed walkers over about 1 s) and adjust the inbound share by flipping a few walkers' direction, without reshuffling the existing ones.",
+  "critic": 4
+ },
+ {
+  "impact": "medium",
+  "owner": "vehicles",
+  "what": "The standing groups block the main doors. 'edu-east' (5 people) is centred at E(47.6, 74.7), in the east sliding door. 'edu-west' (4 people) is at E(3.9, 75.8), with one person standing inside the revolving-door drum. The walk camera clips into a pedestrian at the east door, and the doors look blocked in every entrance view.",
+  "where": "v8-west-door-1100.png (camera E(−4,1.65,74.6)→(5.4,1.6,74.6)), v4-east-a.png, t-entrance-educity-east-1530.png, all under .../scratchpad/qa-educity-r1/.",
+  "fix": "props/people.ts GROUP_SPOTS: move edu-east to about [210.3, 145.1] (E 53.5, 77.5, on the plaza south of the door) and edu-west to about [172.0, 105.1] (E −1.5, 70.5, on the deck beside the drum). Keep at least 2.5 m clear in front of each door axis.",
+  "critic": 5
+ },
+ {
+  "impact": "high",
+  "owner": "vehicles",
+  "what": "Indoors at night the tour avatar renders as a solid black silhouette while the surrounding crowd is lit normally. The walker material from makeWalkerAvatar gets no interior light; in daytime it looks fine.",
+  "where": "01:00 (set via __twin.setTime, so the UI time chip still reads 11:00): builders-build-to-joki t 0.3 (build hall) and t 0.75 (Joki Aula), partners-fri-parkcity-edu t 0.86 (EduCity corridor), companies-tykistokatu-to-showroom t 0.6. Screenshots: …/out/L/night-joki-aula.png vs …/out/L/day-joki-aula.png, …/out/L/night-edu-corridor.png, …/out/L/night-bio-hall.png, …/out/S/night-tyk-0_6.png",
+  "fix": "Give the walker material the same interior lighting the instanced people get (the same indoor ambient term, uniforms and setLighting updates), or have the engine pass the current building's interior light into the avatar factory each frame.",
+  "critic": 6
+ }
+]

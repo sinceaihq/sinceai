@@ -1,0 +1,26 @@
+[
+ {
+  "impact": "medium",
+  "owner": "event",
+  "what": "SPEC §5.5 calls for event uplights to wash the white N-block wall of the supercar recess (3000 K) at dusk and night. Nothing lights that wall: at 20:00 it is a dim, uniform beige (only the night ambient) next to the brightly spot-lit cars, so the recess display reads unfinished.",
+  "where": "campus:arrival and biocity:entrance at Fri 16:45–Sat 01:00; desktop high and ultra. <scratch>/tod-r1/shots/s1/campus-arrival_062000.png, .../shots/ultra/campus-arrival_062000.png, .../shots/m-s5.png (BCentr row)",
+  "fix": "Add 3–4 floor-mounted wall-washers along the NE recess wall: 3000 K, an emissive lens, and a painted gradient or projected wash on the wall that fades over about 8–10 m. Switch them on at sunset with the other event lights.",
+  "critic": 4
+ },
+ {
+  "impact": "medium",
+  "owner": "event",
+  "what": "In 'Eye level' tours (a UI option) a large rhombus sits in the lower part of every frame. It belongs to the routes module: it disappears only when routes is hidden. It is lit by the scene, so it is white by day and a black hole at night.",
+  "where": "Eye-level tours partners-tykistokatu-to-stands t 0.35 and 0.70, partners-fri-train-edu t 0.90 and 0.97, companies-tykistokatu-to-showroom t 0.60 and 0.90, at Sat 11:00 and Fri 20:00; desktop high. <scratch>/tod-r1/shots/m-rh.png (as-is / routes, people and event hidden / routes shown again), .../shots/m-tf.png",
+  "fix": "In first-person mode, hide the walker pin or arrow within about 2 m of the camera, or place it at least 4 m ahead on the floor. Make route markers emissive in the event violet so they never turn black at night.",
+  "critic": 4
+ },
+ {
+  "impact": "medium",
+  "owner": "event",
+  "what": "Indoors the ribbon uses the route's own height instead of the surface under it. On the BioCity→Joki passage stair it is buried 0.07–0.10 m under the treads, (13.0,−1.5,42.1), so the guide line vanishes mid-stair and reappears off to the side of the avatar. On the EduCity deck an event-glow plane covers the ribbon 0.15 m above it at (169.3,3.5,102.8).",
+  "where": "companies-tykistokatu-to-showroom t 0.54–0.56, builders-build-to-joki t 0.47–0.51, builders-transfer-to-build t 0.03; 15:30. Screenshot: …/out/S/tyk-0_545-stair.png; ribbon report …/out/A/report.json",
+  "fix": "In routes.ts settleActive, also snap indoor samples to the surface where the index has data (stairs and ramps), with the envelope so it rides the nosings. Mark event-glow planes so they never sit above the walk surface on the route.",
+  "critic": 6
+ }
+]
