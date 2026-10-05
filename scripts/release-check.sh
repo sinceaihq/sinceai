@@ -14,8 +14,11 @@ PORT=${E2E_PORT:-3300}
 WPORT=${WRANGLER_PORT:-8799}
 mkdir -p "$OUT"
 step() { printf '\n== %s\n' "$*"; }
-cleanup() { [ -n "${NEXT_PID:-}" ] && kill "$NEXT_PID" 2>/dev/null || true; [ -n "${WR_PID:-}" ] && kill "$WR_PID" 2>/dev/null || true; }
+# Servers run in their own process group (setsid) so the whole tree (npx → next-server, wrangler → workerd) stops.
+stop() { [ -n "${1:-}" ] && kill -- "-$1" 2>/dev/null || true; }
+cleanup() { stop "${NEXT_PID:-}"; stop "${WR_PID:-}"; }
 trap cleanup EXIT
+free() { ! (exec 3<>"/dev/tcp/127.0.0.1/$1") 2>/dev/null || { echo "port $1 is already in use — stop that server first"; exit 1; }; }
 
 step "clean tree at $(git rev-parse --short HEAD)"
 test -z "$(git status --porcelain --untracked-files=no)" || { git status --short; echo "tracked changes present"; exit 1; }
@@ -27,7 +30,8 @@ step "unit tests"; npx jest --maxWorkers=${JEST_WORKERS:-6} > "$OUT/jest.log" 2>
 grep -E "^Tests:" "$OUT/jest.log"
 
 step "next build"; npm run build > "$OUT/build.log" 2>&1 || { tail -40 "$OUT/build.log"; exit 1; }
-npx next start -p "$PORT" > "$OUT/next.log" 2>&1 &
+free "$PORT"
+setsid npx next start -p "$PORT" > "$OUT/next.log" 2>&1 &
 NEXT_PID=$!
 for _ in $(seq 1 60); do curl -sf -o /dev/null "http://localhost:$PORT/hackathon-2026/guide" && break; sleep 1; done
 step "e2e on :$PORT"
@@ -38,10 +42,11 @@ if [ "${ALL_BROWSERS:-1}" = 1 ] && command -v docker > /dev/null; then
   E2E_PORT=$PORT scripts/e2e-browsers.sh --workers=${E2E_WORKERS:-6} > "$OUT/e2e-browsers.log" 2>&1 || { grep -E "✘|failed|Error:" "$OUT/e2e-browsers.log" | head -40; exit 1; }
   grep -E "passed|skipped|flaky" "$OUT/e2e-browsers.log" | tail -3
 fi
-kill "$NEXT_PID"; NEXT_PID=
+stop "$NEXT_PID"; NEXT_PID=
 
 step "cloudflare build"; npm run build:cloudflare > "$OUT/cf-build.log" 2>&1 || { tail -40 "$OUT/cf-build.log"; exit 1; }
-npx wrangler dev --port "$WPORT" --ip 127.0.0.1 > "$OUT/wrangler.log" 2>&1 &
+free "$WPORT"
+setsid npx wrangler dev --port "$WPORT" --ip 127.0.0.1 > "$OUT/wrangler.log" 2>&1 &
 WR_PID=$!
 for _ in $(seq 1 90); do curl -sf -o /dev/null "http://127.0.0.1:$WPORT/" && break; sleep 1; done
 step "worker routes on :$WPORT"
