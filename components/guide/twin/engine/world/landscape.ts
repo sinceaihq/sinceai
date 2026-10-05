@@ -2,10 +2,10 @@ import * as THREE from "three";
 import type { Collider2D, LightingState, TwinContext, V2, V3, WorldModule } from "../types";
 import { loadCampus, loadStreets, loadTerrain, type StreetsData, type StreetSign } from "../data/campus";
 import { clamp, hashString, mulberry32, pointInRing, smoothstep } from "../util";
-import { LUMINANCE, kelvinToLinear } from "../sky/sky";
+import { LUMINANCE } from "../sky/sky";
 import { boxUV } from "../render/uv";
 import { canvasTexture, makeCanvas } from "../render/canvas";
-import { MeshBuf, appendTinted, lampSpecs, linesOutside, prepareGround, type GroundPlan, type HeightModel, type LampSpec, HERO_PLANTERS } from "./ground";
+import { MeshBuf, appendTinted, lampColor, lampSpecs, linesOutside, prepareGround, type GroundPlan, type HeightModel, type LampSpec, HERO_PLANTERS } from "./ground";
 import { createTreeSystem, speciesFor, treeSize, type TreePlacement, type TreeSystem } from "../props/trees";
 
 /**
@@ -50,7 +50,9 @@ type KitMat =
   | "fenceWood"
   | "railFace"
   | "meshFace"
-  | "stone";
+  | "stone"
+  /** White painted metal (flagpoles). */
+  | "white";
 
 /**
  * Accumulates geometry per material; every primitive gets metre UVs and outward normals. `detail` < 1
@@ -184,6 +186,13 @@ const SIGN_CELLS: Record<string, number> = {
   TEXT: 24,
   STATION: 25,
   BLANK: 26,
+  /** Overhead direction signs (2 : 1, the middle half of the cell): blue local, green E18, white service. */
+  GUIDE_BLUE: 27,
+  GUIDE_GREEN: 28,
+  GUIDE_WHITE: 29,
+  /** Mandatory direction (D1): turn left; straight or right — over the lanes on a mast arm. */
+  "D1.L": 30,
+  "D1.SR": 31,
 };
 const SIGN_COLS = 8;
 const SIGN_ROWS = 4;
@@ -519,6 +528,101 @@ export function makeSignAtlas(cell = 128): THREE.CanvasTexture {
     ctx.fillStyle = "#e8e8e8";
     ctx.fillRect(x + 4, y + 4, s - 8, s - 8);
   }
+  // Overhead direction signs over Tykistökatu at the Joukahaisenkatu junction (KartaView 2020): white
+  // border, an arrow, place-name lines as bars (unreadable at this size anyway). Drawn in the middle
+  // half of the cell (2 : 1 plates).
+  const guide = (cell: number, fill: string, ink: string, arrow: "up" | "left", band?: string) => {
+    const [x, y0] = at(cell);
+    const y = y0 + s / 4;
+    const h = s / 2;
+    ctx.fillStyle = ink;
+    ctx.fillRect(x + 1, y + 1, s - 2, h - 2);
+    ctx.fillStyle = fill;
+    ctx.fillRect(x + 4, y + 4, s - 8, h - 8);
+    if (band) {
+      ctx.fillStyle = band;
+      ctx.fillRect(x + 4, y + h / 2, s - 8, h / 2 - 4);
+    }
+    ctx.fillStyle = ink;
+    ctx.strokeStyle = ink;
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    if (arrow === "up") {
+      ctx.moveTo(x + 18, y + h - 10);
+      ctx.lineTo(x + 18, y + 14);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x + 10, y + 20);
+      ctx.lineTo(x + 18, y + 9);
+      ctx.lineTo(x + 26, y + 20);
+      ctx.closePath();
+      ctx.fill();
+    } else {
+      ctx.moveTo(x + 30, y + h / 2);
+      ctx.lineTo(x + 12, y + h / 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x + 18, y + h / 2 - 8);
+      ctx.lineTo(x + 8, y + h / 2);
+      ctx.lineTo(x + 18, y + h / 2 + 8);
+      ctx.closePath();
+      ctx.fill();
+    }
+    for (let k = 0; k < 4; k++) {
+      const ly = y + 12 + k * ((h - 22) / 3);
+      const lineInk = band && ly > y + h / 2 ? "#111111" : ink;
+      ctx.fillStyle = lineInk;
+      ctx.fillRect(x + 40, ly - 3, 50 + ((k * 37) % 30), 6);
+    }
+  };
+  // Mandatory-direction discs over the lanes: a white arrow turning left; straight-or-right.
+  {
+    const [cx, cy] = roundSign(SIGN_CELLS["D1.L"], BLUE);
+    ctx.strokeStyle = "#ffffff";
+    ctx.fillStyle = "#ffffff";
+    ctx.lineWidth = 12;
+    ctx.lineCap = "butt";
+    ctx.beginPath();
+    ctx.moveTo(cx + 14, cy + 34);
+    ctx.lineTo(cx + 14, cy - 2);
+    ctx.quadraticCurveTo(cx + 14, cy - 16, cx, cy - 16);
+    ctx.lineTo(cx - 14, cy - 16);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx - 14, cy - 32);
+    ctx.lineTo(cx - 36, cy - 16);
+    ctx.lineTo(cx - 14, cy);
+    ctx.closePath();
+    ctx.fill();
+  }
+  {
+    const [cx, cy] = roundSign(SIGN_CELLS["D1.SR"], BLUE);
+    ctx.strokeStyle = "#ffffff";
+    ctx.fillStyle = "#ffffff";
+    ctx.lineWidth = 11;
+    ctx.beginPath();
+    ctx.moveTo(cx - 12, cy + 36);
+    ctx.lineTo(cx - 12, cy - 18);
+    ctx.moveTo(cx - 12, cy + 12);
+    ctx.quadraticCurveTo(cx - 12, cy - 2, cx + 4, cy - 2);
+    ctx.lineTo(cx + 14, cy - 2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx - 30, cy - 16);
+    ctx.lineTo(cx - 12, cy - 40);
+    ctx.lineTo(cx + 6, cy - 16);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(cx + 14, cy - 18);
+    ctx.lineTo(cx + 36, cy - 2);
+    ctx.lineTo(cx + 14, cy + 14);
+    ctx.closePath();
+    ctx.fill();
+  }
+  guide(SIGN_CELLS.GUIDE_BLUE, BLUE, "#ffffff", "up");
+  guide(SIGN_CELLS.GUIDE_GREEN, "#0f7a45", "#ffffff", "up", "#f2f2ee");
+  guide(SIGN_CELLS.GUIDE_WHITE, "#f2f2ee", "#111111", "left");
   const tex = canvasTexture(canvas, { anisotropy: 8 });
   return tex;
 }
@@ -569,8 +673,13 @@ function orientFor(plan: GroundPlan, at: V2, seed: number): number {
 function buildLamp(kit: Kit, l: LampSpec, colliders: Collider2D[]) {
   const [x, z] = l.at;
   const y = l.y;
-  if (l.style !== "canopy") colliders.push({ level: "outdoor", kind: "circle", c: l.at, r: 0.15 });
+  // Light spill from a lit glass wall: a pool on the ground, nothing to draw.
+  if (l.style === "spill") return;
+  if (l.style !== "canopy") colliders.push({ level: "outdoor", kind: "circle", c: l.at, r: l.style === "bollard" ? 0.12 : 0.15 });
   switch (l.style) {
+    case "bollard":
+      bollardLight(kit, l.at, y);
+      break;
     case "canopy": {
       // Linear LED luminaire on the canopy soffit: dark housing, opal diffuser facing down.
       const [ux, uz] = [Math.cos((l.bearing * Math.PI) / 180), Math.sin((l.bearing * Math.PI) / 180)];
@@ -795,8 +904,8 @@ function bicycle(kit: Kit, at: V2, y: number, yaw: number) {
 }
 
 /** Bike rack loops along a line, some bikes parked. */
-function bikeRack(kit: Kit, at: V2, y: number, yaw: number, capacity: number, color: KitMat, seed: number) {
-  const loops = clamp(Math.round((capacity || 8) / 2), 2, 10);
+function bikeRack(kit: Kit, at: V2, y: number, yaw: number, capacity: number, color: KitMat, seed: number, occupancy = 0.36) {
+  const loops = clamp(Math.round((capacity || 8) / 2), 2, 16);
   const ux = Math.cos(yaw);
   const uz = -Math.sin(yaw);
   const rnd = mulberry32(seed);
@@ -810,8 +919,8 @@ function bikeRack(kit: Kit, at: V2, y: number, yaw: number, capacity: number, co
     kit.tube(color, [cx - px * 0.35, y - 0.1, cz - pz * 0.35], [cx - px * 0.35, y + 0.75, cz - pz * 0.35], 0.025, 6);
     kit.tube(color, [cx + px * 0.35, y - 0.1, cz + pz * 0.35], [cx + px * 0.35, y + 0.75, cz + pz * 0.35], 0.025, 6);
     kit.tube(color, [cx - px * 0.35, y + 0.75, cz - pz * 0.35], [cx + px * 0.35, y + 0.75, cz + pz * 0.35], 0.025, 6);
-    // A bike in about a third of the places (November, weekday).
-    if (rnd() < 0.36) {
+    // A bike in about a third of the places (November, weekday) — busier where the orthophoto shows it.
+    if (rnd() < occupancy) {
       const turn = (rnd() - 0.5) * 0.1;
       // Phones skip the parked bikes (≈300 triangles each).
       if (kit.detail >= 1) bicycle(kit, [cx + ux * 0.22, cz + uz * 0.22], y, yaw + Math.PI / 2 + turn);
@@ -952,18 +1061,221 @@ function fence(kit: Kit, line: V2[], kind: string, material: string | undefined,
   }
 }
 
-// ── Module ───────────────────────────────────────────────────────────────────
+// ── Street furniture the registers lack ───────────────────────────────────────
 
-/** Bollard lights on the Joki NE deck and along the deck walk to the tower (SPEC §4.3, photos). */
-const DECK_BOLLARDS: V2[] = [
-  [66.7, 6.4],
-  [73.0, -3.1],
-  [78.2, 22.2],
-  [77.1, 27.9],
-  [82.6, 16.6],
-  [70.8, 2.0],
-  [69.0, 9.6],
+/**
+ * The signal gantry over Tykistökatu's north-east-bound lanes before the Joukahaisenkatu junction: masts
+ * and arm on the City's 2022 true orthophoto (masts ≈ (29.6, −128.6) and (38.2, −118.2)), four signal
+ * heads and three direction signs on the arm (KartaView, Jul 2020).
+ */
+const GANTRY = { a: [29.6, -128.6] as V2, b: [38.2, -118.2] as V2, height: 6.6, overhang: [1.0, 0.6] as [number, number] };
+
+/**
+ * The row of tall white flagpoles at Eurocity's corner of the junction (KartaView 2020; their long shadows
+ * on the 2022 orthophoto), ≈ 3.5 m in front of the facade.
+ */
+/** The lane-sign arm on the street-light mast at BioCity's west corner (register lamp at (−47, −31.5)). */
+const LANE_SIGN_ARM = {
+  at: [-47.0, -31.5] as V2,
+  /** The arm reaches across the carriageway (the lamp's road bearing). */
+  bearing: 132.6,
+  length: 9.0,
+  height: 6.3,
+  /** Distance along the arm (m) and the disc: right lane straight-or-right, left lane turn left. */
+  signs: [
+    [3.7, "D1.SR"],
+    [7.0, "D1.L"],
+  ] as [number, string][],
+};
+
+const JUNCTION_FLAGPOLES: V2[] = [
+  [44.1, -104.7],
+  [46.0, -105.2],
+  [48.0, -105.7],
+  [49.9, -106.2],
+  [51.8, -106.8],
 ];
+
+/**
+ * The BioCity–Electrocity yard (SPEC §4.4, City orthophoto 2025): two rows of green bike racks under and
+ * beside a small roofed shelter, and four deep-collection waste containers. The racks along Electrocity's
+ * south-east facade (green, full of bikes on the 2025 orthophoto) line the courtyard passage to Jussin aukio.
+ */
+const YARD_RACK_ROWS: { a: V2; b: V2 }[] = [
+  { a: [-4.3, -54.4], b: [3.9, -43.4] },
+  { a: [-2.7, -55.6], b: [5.5, -44.6] },
+];
+const YARD_SHELTER = { c: [1.9, -46.6] as V2, size: [4.4, 3.6] as [number, number] };
+const YARD_CONTAINERS: V2[] = [
+  [-3.6, -44.7],
+  [-0.3, -39.75],
+  [3.15, -34.9],
+  [8.0, -38.3],
+];
+const ELECTROCITY_RACKS: V2[] = [
+  [35.7, -20.8],
+  [38.9, -15.8],
+  [42.2, -10.8],
+  [45.5, -5.7],
+];
+
+function heroFurniture(kit: Kit, heights: HeightModel, colliders: Collider2D[], blocked: (p: V2) => boolean) {
+  // ── Signal gantry.
+  {
+    const { a, b, height } = GANTRY;
+    const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    const t: V2 = [(b[0] - a[0]) / len, (b[1] - a[1]) / len];
+    const ya = heights.y(a[0], a[1]);
+    const yb = heights.y(b[0], b[1]);
+    for (const [p, y] of [
+      [a, ya],
+      [b, yb],
+    ] as [V2, number][]) {
+      kit.cyl("galv", [p[0], y - 0.3, p[1]], 0.35, 0.3, 12, 0.3, true);
+      kit.cyl("galv", [p[0], y, p[1]], height + 0.25, 0.17, 12, 0.13, true);
+      colliders.push({ level: "outdoor", kind: "circle", c: p, r: 0.3 });
+    }
+    const top = Math.max(ya, yb) + height;
+    const e0: V3 = [a[0] - t[0] * GANTRY.overhang[0], top, a[1] - t[1] * GANTRY.overhang[0]];
+    const e1: V3 = [b[0] + t[0] * GANTRY.overhang[1], top, b[1] + t[1] * GANTRY.overhang[1]];
+    kit.tube("galv", e0, e1, 0.11, 10);
+    kit.tube("galv", [e0[0], top - 0.55, e0[2]], [e1[0], top - 0.55, e1[2]], 0.06, 8);
+    for (let k = 0; k <= 8; k++) {
+      const f = k / 8;
+      const p: V3 = [e0[0] + (e1[0] - e0[0]) * f, top, e0[2] + (e1[2] - e0[2]) * f];
+      kit.tube("galvSmall", [p[0], top - 0.55, p[2]], p, 0.025, 6);
+    }
+    // Faces the north-east-bound traffic coming from BioCity (bearing ≈ 216°).
+    const face: V2 = [-t[1], t[0]];
+    const toward: V2 = face[0] * -0.56 + face[1] * 0.83 > 0 ? face : [-face[0], -face[1]];
+    const yaw = yawOf(-toward[1], toward[0]);
+    const along = (s: number, dy: number): V3 => [a[0] + t[0] * s, top + dy, a[1] + t[1] * s];
+    // Signal heads hanging under the arm, one per lane (left-turn red, the others green).
+    [
+      [2.2, false],
+      [5.2, true],
+      [8.2, true],
+      [11.2, true],
+    ].forEach(([s, green]) => {
+      const c = along(s as number, -1.15);
+      kit.box("black", [c[0], c[1], c[2]], [0.3, 0.95, 0.22], yaw);
+      const lens = (dy: number, m: "red" | "amber" | "greenLight" | "black") => {
+        const cx = c[0] + toward[0] * 0.115;
+        const cz = c[2] + toward[1] * 0.115;
+        const px = toward[1];
+        const pz = -toward[0];
+        const r = 0.095;
+        const ly = c[1] + dy;
+        kit.quad(m, [
+          [cx - px * r, ly - r, cz - pz * r],
+          [cx + px * r, ly - r, cz + pz * r],
+          [cx + px * r, ly + r, cz + pz * r],
+          [cx - px * r, ly + r, cz - pz * r],
+        ]);
+      };
+      lens(0.75, green ? "black" : "red");
+      lens(0.47, "black");
+      lens(0.19, green ? "greenLight" : "black");
+      kit.tube("galvSmall", [c[0], c[1] + 0.95, c[2]], [c[0], top, c[2]], 0.025, 6);
+    });
+    // Direction signs standing on the arm (white service sign, blue local, green E18 over a white band).
+    const sign = (s: number, w: number, h: number, cell: number) => {
+      const c = along(s, 0.15 + h / 2);
+      const cx = c[0] + toward[0] * 0.12;
+      const cz = c[2] + toward[1] * 0.12;
+      const px = toward[1];
+      const pz = -toward[0];
+      kit.quad("signFace", [
+        [cx - px * (w / 2), c[1] - h / 2, cz - pz * (w / 2)],
+        [cx + px * (w / 2), c[1] - h / 2, cz + pz * (w / 2)],
+        [cx + px * (w / 2), c[1] + h / 2, cz + pz * (w / 2)],
+        [cx - px * (w / 2), c[1] + h / 2, cz - pz * (w / 2)],
+      ], cellUV(cell, false));
+      kit.box("galvSmall", [cx - toward[0] * 0.04, c[1] - h / 2, cz - toward[1] * 0.04], [w, h, 0.05], yaw);
+    };
+    sign(1.6, 1.9, 0.6, SIGN_CELLS.GUIDE_WHITE);
+    sign(4.6, 2.3, 1.15, SIGN_CELLS.GUIDE_BLUE);
+    sign(8.0, 2.5, 1.25, SIGN_CELLS.GUIDE_GREEN);
+  }
+  // ── Lane signs over the south-west-bound lanes before the Lemminkäisenkatu junction (KartaView 2020): an
+  // arm on the street-light mast at (−47, −31.5), reaching across the two lanes at ≈ 6.3 m.
+  {
+    const at = LANE_SIGN_ARM.at;
+    const y = heights.y(at[0], at[1]);
+    const b = (LANE_SIGN_ARM.bearing * Math.PI) / 180;
+    const d: V2 = [Math.sin(b), -Math.cos(b)];
+    const ay = y + LANE_SIGN_ARM.height;
+    const end: V3 = [at[0] + d[0] * LANE_SIGN_ARM.length, ay, at[1] + d[1] * LANE_SIGN_ARM.length];
+    kit.tube("galv", [at[0], ay, at[1]], end, 0.075, 8);
+    kit.tube("galvSmall", [at[0], ay - 0.9, at[1]], [at[0] + d[0] * 2.2, ay - 0.05, at[1] + d[1] * 2.2], 0.04, 6);
+    // Discs face the traffic coming from the north-east (bearing ≈ 34°).
+    const f: V2 = [Math.sin((34 * Math.PI) / 180), -Math.cos((34 * Math.PI) / 180)];
+    for (const [s, code] of LANE_SIGN_ARM.signs) {
+      const c: V3 = [at[0] + d[0] * s + f[0] * 0.06, ay - 0.42, at[1] + d[1] * s + f[1] * 0.06];
+      const px = f[1];
+      const pz = -f[0];
+      const r = 0.35;
+      kit.quad("signFace", [
+        [c[0] - px * r, c[1] - r, c[2] - pz * r],
+        [c[0] + px * r, c[1] - r, c[2] + pz * r],
+        [c[0] + px * r, c[1] + r, c[2] + pz * r],
+        [c[0] - px * r, c[1] + r, c[2] - pz * r],
+      ], cellUV(SIGN_CELLS[code]));
+      kit.tube("galvSmall", [c[0] - f[0] * 0.06, c[1] + r, c[2] - f[1] * 0.06], [c[0] - f[0] * 0.06, ay, c[2] - f[1] * 0.06], 0.02, 5);
+    }
+  }
+  // ── Flagpoles at Eurocity's corner (white, ≈ 12 m, ball finials).
+  for (const p of JUNCTION_FLAGPOLES) {
+    if (blocked(p)) continue;
+    const y = heights.y(p[0], p[1], "high");
+    kit.cyl("concrete", [p[0], y - 0.05, p[1]], 0.12, 0.16, 12, 0.14, true);
+    kit.cyl("white", [p[0], y, p[1]], 12, 0.075, 10, 0.04, true);
+    kit.sphere("galv", [p[0], y + 12.05, p[1]], 0.07, 10, 6);
+    colliders.push({ level: "outdoor", kind: "circle", c: p, r: 0.12 });
+  }
+  // ── Yard: green rack rows (busy: bikes at most places), the shelter roof, the containers.
+  YARD_RACK_ROWS.forEach((row, i) => {
+    const len = Math.hypot(row.b[0] - row.a[0], row.b[1] - row.a[1]);
+    const yaw = yawOf(row.b[0] - row.a[0], row.b[1] - row.a[1]);
+    const mid: V2 = [(row.a[0] + row.b[0]) / 2, (row.a[1] + row.b[1]) / 2];
+    bikeRack(kit, mid, heights.y(mid[0], mid[1], "high"), yaw, Math.round(len / 0.85) * 2, "green", 4100 + i, 0.7);
+    colliders.push({ level: "outdoor", kind: "segment", a: row.a, b: row.b });
+  });
+  {
+    const { c, size } = YARD_SHELTER;
+    const r = YARD_RACK_ROWS[0];
+    const yaw = yawOf(r.b[0] - r.a[0], r.b[1] - r.a[1]);
+    const y = heights.y(c[0], c[1], "high");
+    const ux = Math.cos(yaw);
+    const uz = -Math.sin(yaw);
+    for (const [s, d] of [
+      [-1, -1],
+      [-1, 1],
+      [1, -1],
+      [1, 1],
+    ]) {
+      const p: V2 = [c[0] + ux * s * (size[0] / 2 - 0.15) - uz * d * (size[1] / 2 - 0.15), c[1] + uz * s * (size[0] / 2 - 0.15) + ux * d * (size[1] / 2 - 0.15)];
+      kit.cyl("dark", [p[0], y - 0.05, p[1]], 2.35, 0.05, 8, 0.05, true);
+    }
+    kit.box("dark", [c[0], y + 2.3, c[1]], [size[0], 0.12, size[1]], yaw);
+  }
+  for (const p of YARD_CONTAINERS) {
+    const y = heights.y(p[0], p[1], "high");
+    // Deep-collection container: a square clad collar (≈ 1.7 m, 1.1 m above ground) and a dark lid.
+    kit.box("dark", [p[0], y - 0.05, p[1]], [1.7, 1.12, 1.7], 0.62);
+    kit.box("black", [p[0], y + 1.07, p[1]], [1.5, 0.08, 1.5], 0.62);
+    colliders.push({ level: "outdoor", kind: "circle", c: p, r: 0.95 });
+  }
+  // ── Green racks along Electrocity's south-east facade (yaw along the facade, bearing ≈ 147°).
+  ELECTROCITY_RACKS.forEach((p, i) => {
+    if (blocked(p)) return;
+    const yaw = yawOf(0.545, 0.838);
+    bikeRack(kit, p, heights.y(p[0], p[1], "high"), yaw, 10, "green", 4200 + i, 0.6);
+    colliders.push({ level: "outdoor", kind: "circle", c: p, r: 1.6 });
+  });
+}
+
+// ── Module ───────────────────────────────────────────────────────────────────
 
 export interface LandscapeModule extends WorldModule {
   trees: TreeSystem;
@@ -1008,11 +1320,16 @@ export async function buildLandscape(ctx: TwinContext): Promise<LandscapeModule>
     const xs = ring.map((q) => q[0]);
     const zs = ring.map((q) => q[1]);
     const ground = Math.max(...ring.map(([x, z]) => heights.y(x, z, "high")));
-    for (let k = 0; k < 60 && placements.length < 2000; k++) {
+    // About one shrub per 0.8 m² (a planter drum gets two or three, a long bed its fifteen).
+    let area = 0;
+    for (let i = 0; i < ring.length; i++) area += ring[i][0] * ring[(i + 1) % ring.length][1] - ring[(i + 1) % ring.length][0] * ring[i][1];
+    let budget = Math.max(2, Math.round(Math.abs(area) / 2 / 0.8));
+    for (let k = 0; k < 60 && placements.length < 2000 && budget > 0; k++) {
       const q: V2 = [Math.min(...xs) + rnd() * (Math.max(...xs) - Math.min(...xs)), Math.min(...zs) + rnd() * (Math.max(...zs) - Math.min(...zs))];
       if (!pointInRing(q, ring)) continue;
       const seed = hashString(`shrub${q[0].toFixed(2)},${q[1].toFixed(2)}`);
       placements.push({ at: q, y: ground + p.height - 0.08, species: "shrub", height: 0.7 + rnd() * 0.6, crown: 0.45 + rnd() * 0.35, seed });
+      budget--;
       k += 3;
     }
   }
@@ -1022,13 +1339,8 @@ export async function buildLandscape(ctx: TwinContext): Promise<LandscapeModule>
 
   // ── Street lights.
   const lamps = lampSpecs(streets, terrain, campus).filter((l) => !blocked(l.at));
-  for (const l of lamps) buildLamp(kit, l, colliders);
-  // Bollard lights on the Joki deck.
-  for (const b of DECK_BOLLARDS) {
-    if (blocked(b)) continue;
-    bollardLight(kit, b, heights.y(b[0], b[1], "high"));
-    colliders.push({ level: "outdoor", kind: "circle", c: b, r: 0.12 });
-  }
+  // Bollards stand on the walking surface (timber terrace, deck), not on the bare DTM.
+  for (const l of lamps) buildLamp(kit, l.style === "bollard" ? { ...l, y: heights.y(l.at[0], l.at[1], "high") } : l, colliders);
 
   // ── Signals and signs.
   buildSignals(kit, streets, heights, colliders, blocked);
@@ -1098,6 +1410,8 @@ export async function buildLandscape(ctx: TwinContext): Promise<LandscapeModule>
     }
   }
 
+  heroFurniture(kit, heights, colliders, blocked);
+
   // ── Bus shelters (stops with shelters) and stop poles.
   for (const s of streets.busStops) {
     if (blocked(s.at)) continue;
@@ -1130,9 +1444,10 @@ export async function buildLandscape(ctx: TwinContext): Promise<LandscapeModule>
     m.alphaToCoverage = tier !== "low";
     return m;
   };
-  const lampColor = kelvinToLinear(3000);
-  const lens = new THREE.MeshStandardMaterial({ color: "#1a1a1a", roughness: 0.3, emissive: lampColor, emissiveIntensity: 0 });
-  const diffuser = new THREE.MeshStandardMaterial({ color: "#d8d4cc", roughness: 0.5, emissive: kelvinToLinear(2900), emissiveIntensity: 0 });
+  // LED heads as they read at night (white-balanced, ground.ts lampColor): the street masts ≈3600 K, the
+  // diffusers of the pole-top lanterns and globes warm white ≈3000 K (SPEC §8.3) — never sodium orange.
+  const lens = new THREE.MeshStandardMaterial({ color: "#1a1a1a", roughness: 0.3, emissive: lampColor(3600, new THREE.Color()), emissiveIntensity: 0 });
+  const diffuser = new THREE.MeshStandardMaterial({ color: "#d8d4cc", roughness: 0.5, emissive: lampColor(3000, new THREE.Color()), emissiveIntensity: 0 });
   // Signal lenses: one material, the colour (red / amber / green) per vertex drives the emission.
   const signal = new THREE.MeshStandardMaterial({ color: "#151515", roughness: 0.35, emissive: "#ffffff", emissiveIntensity: LUMINANCE.bollard * 0.6, vertexColors: true });
   signal.onBeforeCompile = (shader) => {
@@ -1202,6 +1517,13 @@ export async function buildLandscape(ctx: TwinContext): Promise<LandscapeModule>
         ["concrete", "#a09d97"],
         ["stone", "#8d8780"],
       ],
+      cast: true,
+    },
+    {
+      name: "white",
+      mat: lib.variant("metalWhite", { color: "#e9ebec", roughness: 0.5 }),
+      base: null,
+      parts: [["white", null]],
       cast: true,
     },
     { name: "lens", mat: lens, base: null, parts: [["lens", null]], cast: false },

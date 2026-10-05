@@ -341,6 +341,20 @@ function recipeForOther(b: CampusBuilding, info: BuildingInfo): Recipe {
       },
     };
   }
+  if (name === "lenkkipolku 1 i") {
+    // The tower on the Lemminkäisenkatu corner: white render cantilevered over a dark, recessed glazed ground
+    // floor (KartaView 2020, from the DataCity bus stop).
+    return {
+      family: "res",
+      tint: "#e9e8e3",
+      arcade(span) {
+        if (span.coverSolid !== null || bearingDiff(spanFacing(span), 38.8) > 35) return null;
+        return { depth: 2.2, height: 3.4, pitch: 6.0, radius: 0.22, color: "#34373a", soffit: "#d9d7d1" };
+      },
+    };
+  }
+  // Its neighbour along the street: red brick with dark glazed balconies (same photo).
+  if (name === "lenkkipolku 1 h") return { family: "resBrick", tint: "#8e4a37" };
   if (/apartments|residential|dormitory|hotel/.test(use)) {
     if (year && year < 1930) return { family: "oldRender", tint: pick(OLD_TINTS, seed), pitchedRoof: "#5b4038" };
     if (year && year >= 2005) {
@@ -350,16 +364,18 @@ function recipeForOther(b: CampusBuilding, info: BuildingInfo): Recipe {
     return { family: "res", tint: pick(RENDER_TINTS, seed >> 2) };
   }
   if (name === "teutori") {
-    // The 1891 hospital building (ochre render) with the 2012–13 library extension in glass and black panels.
+    // The 1891 hospital building with the 2012–13 library extension in glass and black panels. The old
+    // block on the Tykistökatu–Lemminkäisenkatu corner is a strong yellow ochre with white window
+    // surrounds, string courses and cornice under a dark grey metal hipped roof (KartaView 2020).
     return {
       family: "oldRender",
-      tint: "#d9bf8f",
-      pitchedRoof: "#5b4038",
+      tint: "#d29f58",
+      pitchedRoof: "#4b4e52",
       solidFamily(s) {
         return (s.year ?? 0) >= 2000 ? "darkGlass" : "oldRender";
       },
       solidTint(s) {
-        return (s.year ?? 0) >= 2000 ? undefined : "#d9bf8f";
+        return (s.year ?? 0) >= 2000 ? undefined : "#d29f58";
       },
     };
   }

@@ -303,6 +303,48 @@ export const ROUTE_J: readonly V3[] = [
   [-3.5, Y.f1, 1.0],
 ];
 
+/** The tower stair (SPEC §7.0): 24 risers of 1/6 m per storey — 11, a landing, 12 — rising north. */
+const STAIR = { rise: 4.0 / 24, foot: 1.6, landing0: -1.6, landing1: -2.2, head: -6.1 };
+
+/** Up one storey of the tower stair from floor height y (J points, walking height 0). */
+function stairUp(y: number): V3[] {
+  return [
+    [0.5, y, STAIR.foot],
+    [0.5, y + STAIR.rise * 11, STAIR.landing0],
+    [0.5, y + STAIR.rise * 12, STAIR.landing1],
+    [0.5, y + 4.0, STAIR.head],
+    [0.55, y + 4.0, -6.95],
+  ];
+}
+
+/**
+ * int-joki-showroom-to-f2: from where int-joki-aula-to-showroom ends, back to the corridor and up the
+ * tower stair to floor 2, round the north end of the core into the Partner Expo (Revvity, Valmet,
+ * Traficom).
+ */
+export const ROUTE_F2_J: readonly V3[] = [
+  [-3.5, Y.f1, 1.0],
+  [-1.2, Y.f1, 3.3],
+  [0.45, Y.f1, 3.0],
+  ...stairUp(Y.f1),
+  [3.0, Y.f2, -6.95],
+  [3.6, Y.f2, -2.0],
+];
+
+/**
+ * int-joki-showroom-to-f3: up to floor 2 as above, round the west side of the core to the foot of the
+ * next flight, up to floor 3 and out to the middle of its north end (stands east and west of the core).
+ */
+export const ROUTE_F3_J: readonly V3[] = [
+  ...ROUTE_F2_J.slice(0, 3),
+  ...stairUp(Y.f1),
+  [-1.0, Y.f2, -6.95],
+  [-1.0, Y.f2, 2.3],
+  [0.5, Y.f2, 2.3],
+  ...stairUp(Y.f2),
+  [0.6, Y.f3, -7.6],
+];
+
 /** Clearance of a polyline from obstacles (min distance over sampled points). */
 export function polylineClearance(points: readonly V2[], obstacles: Obstacle[], step = 0.1): number {
   let best = Infinity;

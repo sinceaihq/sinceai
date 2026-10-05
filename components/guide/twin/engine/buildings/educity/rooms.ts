@@ -23,6 +23,8 @@ export interface BriefingRoom {
   glass?: boolean;
   /** Open plan (2072): no walls, a sign totem instead of a door. */
   open?: boolean;
+  /** Label offset [up, along z] from the room's centre (neighbours in a row are staggered). */
+  labelOffset?: [number, number];
 }
 
 const poly = (r: Rect): V2[] => [
@@ -40,9 +42,9 @@ export const BRIEFING_ROOMS: BriefingRoom[] = [
   { number: "1091", name: "Hammarbacka", level: "f1", polygon: poly(rect(17.5, 34.1, 16.56, 24.8)), door: [19.85, 24.8], out: [0, 1], glass: true },
   // ── Floor 2 (event map "2. kerros") ──
   { number: "2001", name: "Elias", level: "f2", polygon: poly(rect(0.45, 12.38, 0.45, 8.58)), door: [8.1, 8.58], out: [0, 1] },
-  { number: "2002", name: "Ivar", level: "f2", polygon: poly(rect(12.38, 22.34, 0.45, 8.58)), door: [18.3, 8.58], out: [0, 1] },
+  { number: "2002", name: "Ivar", level: "f2", polygon: poly(rect(12.38, 22.34, 0.45, 8.58)), door: [18.3, 8.58], out: [0, 1], labelOffset: [-1.2, 2.6] },
   { number: "2003", name: "Erik", level: "f2", polygon: poly(rect(22.34, 32.07, 0.45, 8.58)), door: [27.7, 8.58], out: [0, 1] },
-  { number: "2004", name: "Johannes", level: "f2", polygon: poly(rect(32.07, 42.5, 0.45, 8.58)), door: [38.1, 8.58], out: [0, 1] },
+  { number: "2004", name: "Johannes", level: "f2", polygon: poly(rect(32.07, 42.5, 0.45, 8.58)), door: [38.1, 8.58], out: [0, 1], labelOffset: [-1.2, 2.6] },
   { number: "2067", level: "f2", polygon: poly(rect(0.45, 7.4, 8.58, 20.7)), door: [7.4, 11.0], out: [1, 0] },
   {
     number: "2006 / 2007",
@@ -178,3 +180,48 @@ export function pointIn(p: V2, ring: readonly V2[]): boolean {
   }
   return inside;
 }
+
+/** Bounding rectangle of a plan polygon. */
+export function polygonRect(poly: readonly V2[]): Rect {
+  const xs = poly.map((p) => p[0]);
+  const zs = poly.map((p) => p[1]);
+  return rect(Math.min(...xs), Math.max(...xs), Math.min(...zs), Math.max(...zs));
+}
+
+/** A representative inside point of a room (largest rectangle's centre for L-shapes). */
+export function centroidOf(room: BriefingRoom): V2 {
+  const r = mainRect(room);
+  return [(r.x0 + r.x1) / 2, (r.z0 + r.z1) / 2];
+}
+
+/** The largest axis-aligned rectangle of a room polygon (rooms are rectangles or Ls). */
+export function mainRect(room: BriefingRoom): Rect {
+  const bb = polygonRect(room.polygon);
+  if (room.polygon.length === 4) return bb;
+  // L-shape: try the candidate rectangles from the polygon's coordinates.
+  const xs = [...new Set(room.polygon.map((p) => p[0]))].sort((a, b) => a - b);
+  const zs = [...new Set(room.polygon.map((p) => p[1]))].sort((a, b) => a - b);
+  let best = bb;
+  let bestArea = 0;
+  for (let i = 0; i < xs.length; i++)
+    for (let j = i + 1; j < xs.length; j++)
+      for (let k = 0; k < zs.length; k++)
+        for (let l = k + 1; l < zs.length; l++) {
+          const r = rect(xs[i], xs[j], zs[k], zs[l]);
+          const corners: V2[] = [
+            [r.x0 + 0.01, r.z0 + 0.01],
+            [r.x1 - 0.01, r.z0 + 0.01],
+            [r.x1 - 0.01, r.z1 - 0.01],
+            [r.x0 + 0.01, r.z1 - 0.01],
+            [(r.x0 + r.x1) / 2, (r.z0 + r.z1) / 2],
+          ];
+          if (!corners.every((c) => pointIn(c, room.polygon))) continue;
+          const a = (r.x1 - r.x0) * (r.z1 - r.z0);
+          if (a > bestArea) {
+            bestArea = a;
+            best = r;
+          }
+        }
+  return best;
+}
+

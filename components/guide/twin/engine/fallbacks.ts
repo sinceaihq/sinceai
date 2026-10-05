@@ -14,22 +14,25 @@ import type { CameraView, LevelId, V2 } from "./types";
 
 /** Camera views until the modules provide their own (every view of lib PLACES_3D has one). */
 export const FALLBACK_VIEWS: Record<string, CameraView> = {
-  // High oblique from the south-west, the low sun behind the camera's shoulder: BioCity, Joki (in the
-  // courtyard between BioCity and DataCity), DataCity, ICT-City, EduCity, ParkCity and the station.
+  // The event campus from the north-north-west, high (≈52°): BioCity in the lower right with its
+  // Tykistökatu entrance recess and the builders' courtyard facing the camera, Joki and Jussin aukio in
+  // the middle, EduCity in the upper left with its west main entrance, ParkCity on the left — the venues
+  // fill the frame on the diagonal they lie on, Pharmacity only at the right edge, the low afternoon sun
+  // from the side. Phones: from the north-west and steeper, the venues one above the other.
   "campus:default": {
-    position: [-140, 280, 235],
-    target: [120, 0, 38],
-    hfov: 58,
-    fit: 175,
-    portrait: { position: [-40, 360, 260], target: [110, 0, 30] },
+    position: [26, 355, -226],
+    target: [98, 0, 42],
+    hfov: 54,
+    portrait: { position: [-50, 339, -105], target: [100, 0, 45], fov: 58, hfov: undefined },
     labels: true,
     open: null,
   },
   "campus:top": {
-    position: [118, 620, 104],
-    target: [118, 0, 24],
+    // As the ground module's plan view (world/ground.ts GROUND_VIEWS): framed inside the terrain data.
+    position: [100, 470, 40],
+    target: [100, 0, -6],
     fov: 38,
-    fit: 200,
+    fit: 165,
     labels: true,
     open: null,
   },
@@ -41,9 +44,9 @@ export const FALLBACK_VIEWS: Record<string, CameraView> = {
     open: null,
   },
   "campus:courtyard": {
-    position: [92, 22, -42],
-    target: [44, 2, 6],
-    hfov: 64,
+    position: [54, 46, 36],
+    target: [38, 0, -2],
+    hfov: 60,
     open: null,
   },
   "biocity:default": {
@@ -130,10 +133,12 @@ export function legLevel(legId: string, outdoor: boolean, y: number): LevelId | 
 /**
  * Where walk mode starts for a place whose building module is not loaded (and for the campus
  * overviews, whose look-at points are rooftops): on the ground, facing something worth walking to.
+ * A target id here (the campus landmarks) wins over the target's own walkTo and the step back from it.
  */
 export const WALK_STARTS: Record<string, { position: V2; yawDeg: number }> = {
   // Jussin aukio at the foot of the stair down from the campus deck, facing BioCity's event entrance.
   campus: { position: [50.5, 6], yawDeg: 296 },
+  "jussin-aukio": { position: [50.5, 6], yawDeg: 296 },
   // The far (north-west) pavement of Tykistökatu, opposite the partner entrance recess (SPEC §5.5).
   "campus:arrival": { position: [-49, -28.1], yawDeg: 118 },
   // The drop-off kerb on Tykistökatu, facing BioCity's partner entrance (route out-co-kerb-bio-main).
@@ -143,6 +148,32 @@ export const WALK_STARTS: Record<string, { position: V2; yawDeg: number }> = {
   // On the campus deck (the builders' route), 11 m from EduCity's west main entrance, facing it.
   educity: { position: [165.6, 99.5], yawDeg: 131.5 },
 };
+
+/**
+ * Targets whose walk starts where people arrive, at the start of a route leg (routes.json): the
+ * station's walk starts on the island platform the trains stop at (not under the station hall in
+ * the cutting), facing the way out.
+ */
+export const WALK_START_LEGS: Record<string, string> = {
+  // The island platform at (218.9, −111.5), facing the way out to the Kalevansilta stairs.
+  "kupittaa-station": "out-arr-train-edu-east",
+  // ParkCity's street door at (215.5, 6.2), facing along Joukahaisenkatu to the zebra crossing.
+  parkcity: "out-parkcity-gw-zebra",
+};
+
+/** Walk start on a leg: a little way along it, at its floor, facing along it. */
+export function legStart(points: readonly [number, number, number][], along = 0.8): { position: V2; y: number; yawDeg: number } | null {
+  if (points.length < 2) return null;
+  const [x0, y0, z0] = points[0];
+  let k = 1;
+  while (k < points.length - 1 && Math.hypot(points[k][0] - x0, points[k][2] - z0) < 3) k++;
+  const [x1, , z1] = points[k];
+  const len = Math.hypot(x1 - x0, z1 - z0) || 1;
+  const ux = (x1 - x0) / len;
+  const uz = (z1 - z0) / len;
+  const yawDeg = ((Math.atan2(ux, -uz) * 180) / Math.PI + 360) % 360;
+  return { position: [x0 + ux * along, z0 + uz * along], y: y0, yawDeg };
+}
 
 /** Move a point inside a footprint ring out through its nearest wall, `margin` m beyond it. */
 export function pushOutOfRing(p: V2, ring: readonly V2[], margin = 0.6): V2 {

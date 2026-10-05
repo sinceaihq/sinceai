@@ -23,16 +23,19 @@ import { Bucket, box, splitBands } from "../geom";
 import { BAND_COUNT, CUTS, Kit, concatGeometries } from "../kit";
 import { Furnisher, classroomChair, pouf } from "../furniture";
 import { exposed } from "../volumes";
+import { doorOpenings, facadeStrips } from "../mantle";
 import { BRIEFING_ROOMS, modelledRoomAt, pointIn } from "../rooms";
 import { F1, F2, VOID_F2 } from "../plan";
 import { EDUCITY_VIEWS, buildNav, educityRouteLegs } from "../nav";
-import { edLitFraction } from "../lighting";
+import { LIT_CLOSED, edInUse, edInteriorLevel, edLitFraction } from "../lighting";
+import { BRICK_TONES, brickAverage } from "../materials";
 import { TIER_D, TIERS, tierTopAt } from "../taidon";
 import { galleryZMax } from "../atrium";
 import { CHALLENGE_COMPANIES } from "@/lib/hackathon-2026/companies";
 import { TARGETS_3D, PLACES_3D } from "@/lib/hackathon-2026/twin";
 import { pointInPolygon } from "../../../nav/collision";
-import { interiorScale } from "../../educity";
+import { daylight, exteriorViewScale, interiorScale, windowScale } from "../../educity";
+import { INTERIOR_EXPOSURE, exposureFor } from "../../../sky/sky";
 import type { V2 } from "../../../types";
 
 const close = (a: number, b: number, eps = 0.05) => Math.abs(a - b) <= eps;
@@ -291,13 +294,110 @@ describe("Taidon portaat", () => {
   });
 });
 
+describe("EduCity brick faces", () => {
+  it("triangulate exactly: brick only where the facade is, never over the pavilion's glass", () => {
+    const area = (pts: THREE.Vector2[]) => Math.abs(THREE.ShapeUtils.area(pts));
+    for (const f of ["NE", "SE", "SW", "NW"] as Facade[]) {
+      const holes = [
+        ...allWindows()
+          .filter((w) => w.facade === f)
+          .map((w) => ({ s0: w.s - w.size / 2, s1: w.s + w.size / 2, y0: w.y - w.size / 2, y1: w.y + w.size / 2 })),
+        ...doorOpenings(f),
+      ];
+      for (const strip of facadeStrips(f, holes)) {
+        const contour = strip.outline.map(([x, y]) => new THREE.Vector2(x, y));
+        const hs = strip.holes.map((h) => h.map(([x, y]) => new THREE.Vector2(x, y)));
+        const tris = THREE.ShapeUtils.triangulateShape(contour, hs);
+        const all = [...contour, ...hs.flat()];
+        const got = tris.reduce((a, [i, j, k]) => a + area([all[i], all[j], all[k]]), 0);
+        const expected = area(contour) - hs.reduce((a, h) => a + area(h), 0);
+        expect([f, Math.abs(got - expected) < 0.01]).toEqual([f, true]);
+      }
+    }
+    // Under the south-west facade the pavilion's roof is the base: no brick at deck level there.
+    const sw = facadeStrips("SW", []);
+    const covering = sw.filter((st) => pointIn([30, 2], st.outline));
+    expect(covering.length).toBe(0);
+  });
+});
+
+describe("Kolumba brick", () => {
+  it("is a calm grey-taupe: mid tones in a narrow range, nearly neutral, not black paint", () => {
+    const avg = brickAverage().clone().convertLinearToSRGB();
+    const [r, g, b] = [avg.r * 255, avg.g * 255, avg.b * 255];
+    // A mid-dark taupe wall (the black-bronze #1c1716 frames must read against it).
+    expect(g).toBeGreaterThan(100);
+    expect(g).toBeLessThan(150);
+    // Warm, barely: the low November sun adds the rest (no pink in sunlight).
+    expect(r - b).toBeGreaterThan(4);
+    expect(r - b).toBeLessThan(16);
+    // Lightest unit at most ≈ 1.6 × the darkest (sRGB) — light units, not white planks.
+    const lum = (hex: string) => {
+      const c = new THREE.Color(hex).convertLinearToSRGB();
+      return 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b;
+    };
+    const ls = BRICK_TONES.map(([hex]) => lum(hex));
+    expect(Math.max(...ls) / Math.min(...ls)).toBeLessThan(1.6);
+    // Shares add up.
+    expect(BRICK_TONES.reduce((a, [, p]) => a + p, 0)).toBeCloseTo(1, 6);
+  });
+});
+
 describe("EduCity lighting", () => {
-  it("lights nearly every window after dark, fewer by day", () => {
+  it("lights nearly every window after dark while the building is in use, fewer by day", () => {
     const night = edLitFraction("2026-11-06T18:00", 1);
-    const day = edLitFraction("2026-11-07T11:00", 0);
+    const day = edLitFraction("2026-11-06T13:00", 0);
     expect(night).toBeGreaterThan(0.85);
     expect(day).toBeLessThan(night);
-    expect(edLitFraction("2026-11-07T01:00", 1)).toBeGreaterThan(0.6);
+    expect(day).toBeGreaterThan(0.5);
+  });
+
+  it("follows the event schedule: open Friday from 15:00 and Sunday until the finals, closed in between", () => {
+    // Friday registration, opening, briefings (venues.ts / schedule.ts).
+    for (const t of ["2026-11-06T15:30", "2026-11-06T17:00", "2026-11-06T19:30"]) expect(edInUse(t)).toBe(1);
+    // The night build and Saturday's Q&A are in BioCity and Joki: EduCity is closed.
+    for (const t of ["2026-11-07T01:00", "2026-11-07T11:00", "2026-11-06T23:30"]) expect(edInUse(t)).toBe(0);
+    // Sunday: evaluation, winners 13:30, finals 14:00.
+    for (const t of ["2026-11-08T10:00", "2026-11-08T13:30", "2026-11-08T14:30"]) expect(edInUse(t)).toBe(1);
+    expect(edInUse("2026-11-08T20:00")).toBe(0);
+    // Closed at night: only corridors and a few offices.
+    expect(edLitFraction("2026-11-07T01:00", 1)).toBeLessThanOrEqual(LIT_CLOSED + 1e-9);
+    expect(edLitFraction("2026-11-07T01:00", 1)).toBeGreaterThan(0.05);
+    expect(edInteriorLevel("2026-11-07T01:00")).toBeCloseTo(0.1, 6);
+    expect(edInteriorLevel("2026-11-06T15:30")).toBe(1);
+    // Lights ramp over half an hour (no hard switch while dragging the time).
+    const mid = edInUse("2026-11-06T21:15");
+    expect(mid).toBeGreaterThan(0);
+    expect(mid).toBeLessThan(1);
+    // A bare "HH:MM" is Friday, as the engine reads it.
+    expect(edInUse("18:00")).toBe(1);
+  });
+});
+
+describe("interior light seen from outside", () => {
+  it("takes back most of the street exposure after dark, never brightens by day", () => {
+    expect(exteriorViewScale(12)).toBe(1);
+    expect(exteriorViewScale(4.5)).toBe(1);
+    const dusk = exteriorViewScale(-4.6);
+    const night = exteriorViewScale(-45);
+    expect(dusk).toBeLessThan(1);
+    expect(night).toBeLessThan(dusk);
+    expect(night).toBeGreaterThanOrEqual(0.05);
+    // Seen from the street at night the rooms still read brighter than from inside (≤ ≈ 2 stops).
+    const ext = exposureFor(-45);
+    expect(night * ext).toBeGreaterThan(INTERIOR_EXPOSURE);
+    expect(night * ext).toBeLessThan(INTERIOR_EXPOSURE * 4);
+    // Square windows: dimmed after dark, never by day.
+    expect(windowScale(12)).toBe(1);
+    expect(windowScale(-45)).toBeLessThan(1);
+    expect(windowScale(-45)).toBeGreaterThanOrEqual(0.1);
+  });
+
+  it("measures daylight in closed rooms from the sun's height", () => {
+    expect(daylight(-30)).toBe(0);
+    expect(daylight(12)).toBe(1);
+    expect(daylight(0)).toBeGreaterThan(0);
+    expect(daylight(0)).toBeLessThan(1);
   });
 });
 

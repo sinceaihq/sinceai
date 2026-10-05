@@ -560,6 +560,15 @@ class SurfaceService {
     return () => this.listeners.delete(fn);
   }
 
+  /**
+   * Probe again soon (debounced like a scene change): what is visible may have changed since the last
+   * scan — e.g. a building's interior, hidden while the camera was far, is on for a tour now.
+   */
+  refresh(): void {
+    this.dirty = true;
+    this.changedAt = performance.now();
+  }
+
   /** Hold re-probing (e.g. while a tour avatar walks — it is not a module). */
   pause(on: boolean): void {
     this.paused = on;
@@ -685,8 +694,9 @@ void main() {
 	vFade = aFade;
 	vIndoor = aIndoor;
 	vPxM = pxM;
-	// Subtle up close: dim within a few metres of the camera (you walk on it, you don't need it shouting).
-	vNear = mix( 0.38, 1.0, smoothstep( 2.0, 18.0, dist ) );
+	// Subtle up close: dim within a few metres of the camera (you walk on it, you don't need it shouting) —
+	// less so indoors, where the slim guide line on a light floor is all there is to follow.
+	vNear = mix( mix( 0.38, 0.75, aIndoor ), 1.0, smoothstep( 2.0, 18.0, dist ) );
 	#include <fog_vertex>
 }
 `;
@@ -727,7 +737,8 @@ void main() {
 	float lod = smoothstep( 7.0, 15.0, px );
 	// Soft band with a feathered edge, a little stronger along the middle.
 	float band = 1.0 - smoothstep( 1.0 - 2.5 * aaA, 1.0, a );
-	float fill = uFill * band * mix( 0.55, 1.0, 1.0 - a ) * mix( 0.6, 1.0, vNear );
+	// Indoors the line lies on light floors (terrazzo, concrete): a denser, deeper violet keeps it legible.
+	float fill = uFill * mix( 1.0, 2.6, vIndoor ) * band * mix( 0.55, 1.0, 1.0 - a ) * mix( 0.6, 1.0, vNear );
 	// Two thin edge lines (≈ 6 % of the width each), anti-aliased.
 	float e0 = 0.8;
 	float e1 = 0.91;
@@ -755,15 +766,13 @@ void main() {
 	float casing = far * band * 0.5;
 
 	vec4 acc = vec4( 0.0 );
-	acc = over( acc, uFillColor * uGlow * 0.7, fill );
+	acc = over( acc, uFillColor * uGlow * mix( 0.7, 0.45, vIndoor ), fill );
 	acc = over( acc, uEdgeColor * uGlow * 1.25, edge );
 	acc = over( acc, vec3( 0.012, 0.008, 0.035 ), casing );
 	acc = over( acc, mix( uEdgeColor, uGlowColor, 0.12 ) * uGlow * 1.3, core );
 	acc = over( acc, uGlowColor * uChevronGlow * mix( 0.65, 1.0, vNear ), chev );
 	float alpha = acc.a * vFade * uOpacity * mix( 1.0, vNear, lod );
 	vec3 color = acc.rgb / max( acc.a, 1e-4 );
-	// Indoors the floor guide is quieter.
-	color *= mix( 1.0, 0.75, vIndoor );
 	gl_FragColor = vec4( color * uGain, alpha );
 	#include <fog_fragment>
 }
@@ -1047,7 +1056,9 @@ interface Pin {
  * banners on the flagpoles, the revolving door under the canopy.
  */
 export const ARRIVAL_VIEW: CameraView = {
-  position: [-47, 6.5, -32.5],
+  // 2.3 m south-west of the street lamp at (−47, −31.5) (City lamp register): its mast and sign arm
+  // stay out of the frame.
+  position: [-48.8, 6.5, -30.0],
   target: [-28.5, 1.8, -17],
   hfov: 66,
   fit: 15,
@@ -1323,14 +1334,23 @@ export async function buildRoutes(ctx: TwinContext): Promise<WorldModule> {
   const settleActive = () => {
     if (!activeSamples.length) return;
     const index = surfaceService.index;
-    const ys = activeSamples.map((s) => (s.indoor < 0.5 && index ? (probeCross(index, s, s.route) ?? s.p[1]) : s.p[1]));
+    // Every sample on the surface drawn under it — indoors too (the passage stair to Joki, ramps, decks):
+    // the route's own height is only the hint. Indoors the probe stays within the slim guide line's width.
+    const ys = activeSamples.map((s) => (index ? (probeCross(index, s, s.route, s.indoor > 0.5 ? 0.16 : 0.4) ?? s.p[1]) : s.p[1]));
     const env = envelopeHeights(ys);
-    const samples = activeSamples.map((s, i) => ({ ...s, p: [s.p[0], s.indoor < 0.5 ? env[i] : s.p[1], s.p[2]] as V3 }));
+    const samples = activeSamples.map((s, i) => ({ ...s, p: [s.p[0], env[i], s.p[2]] as V3 }));
     active.geometry.dispose();
     active.geometry = ribbonGeometry([{ samples, fades: runFades(samples.map((s) => s.u), false, false, 0.8, 0.8) }]);
     activeProbe = samples.filter((_, i) => i % 8 === 0).map((s) => s.p);
   };
   const buildActive = (points: V3[]) => {
+    // Heights under the whole route, indoor legs included (cells already known cost nothing).
+    surfaceService.request(
+      points.map((p) => [p[0], p[2]] as V2),
+      1.5,
+    );
+    // Interiors far from the camera were hidden at the last scan; they are on for a tour.
+    if (points.some((p) => isIndoor(p[0], p[2]))) surfaceService.refresh();
     const samples = sampleRoute(points);
     for (const s of samples) s.indoor = isIndoor(s.p[0], s.p[2]) ? 1 : 0;
     // Ease the floor-guide width over ±1.5 m at doors.
@@ -1378,7 +1398,9 @@ export async function buildRoutes(ctx: TwinContext): Promise<WorldModule> {
   // ── Surface probe: settle every ribbon onto the modelled ground ──
   surfaceService.attach(root);
   const corridor: V2[] = [];
-  for (const leg of Object.values(routes.legs)) if (leg.mode === "outdoor") for (const p of leg.points) corridor.push([p[0], p[2]]);
+  // Every leg, indoor ones too (routes.json has them within ≈ 1 m of the buildings' own): a running
+  // tour's floor guide then settles at once.
+  for (const leg of Object.values(routes.legs)) for (const p of leg.points) corridor.push([p[0], p[2]]);
   for (const samples of legSamples) for (const s of samples) corridor.push([s.p[0], s.p[2]]);
   for (const p of pins) corridor.push([p.at[0], p.at[2]]);
   surfaceService.request(corridor, 2);
@@ -1486,10 +1508,10 @@ function dtmOrRoute(p: V3, groundAt: (x: number, z: number) => number): number {
   return Math.abs(g - p[1]) < 0.35 ? g : p[1];
 }
 
-/** Highest surface across the ribbon (centre and both edges), so neither edge sinks into a kerb or step. */
-function probeCross(index: SurfaceIndex, s: RouteSample, hint: number): number | null {
-  const lx = s.dir[1] * 0.4;
-  const lz = -s.dir[0] * 0.4;
+/** Highest surface across the ribbon (centre and both edges, `half` m out), so neither edge sinks into a kerb or step. */
+function probeCross(index: SurfaceIndex, s: RouteSample, hint: number, half = 0.4): number | null {
+  const lx = s.dir[1] * half;
+  const lz = -s.dir[0] * half;
   let best: number | null = null;
   for (const [x, z] of [
     [s.p[0], s.p[2]],

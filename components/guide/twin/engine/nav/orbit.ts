@@ -62,6 +62,25 @@ export interface OrbitOptions {
   damping?: number;
   /** Element whose arrow keys pan (default: dom). null = no keyboard. */
   keyEvents?: HTMLElement | null;
+  /**
+   * What the scene shows under a screen point (client px): the surface hit and its normal (world). A
+   * wheel zoom then heads for that point — for a wall, the ground 3 m in front of it — and makes it
+   * the orbit target. Without it, OrbitControls' own zoom-to-cursor (onto the target's plane).
+   */
+  cursorPoint?(clientX: number, clientY: number): { point: V3; normal: V3 | null } | null;
+}
+
+/**
+ * Where a wheel zoom aimed at a scene point should head: the point itself, or — for a near-vertical
+ * surface (a facade) — the ground `standOff` m in front of it, so the zoom ends looking at the
+ * building from the street instead of nose-to-wall. Pure (unit-tested).
+ */
+export function zoomAnchor(point: V3, normal: V3 | null, groundAt: (x: number, z: number) => number, standOff = 3): V3 {
+  if (!normal || Math.abs(normal[1]) >= 0.3) return [point[0], point[1], point[2]];
+  const l = Math.hypot(normal[0], normal[2]) || 1;
+  const x = point[0] + (normal[0] / l) * standOff;
+  const z = point[2] + (normal[2] / l) * standOff;
+  return [x, groundAt(x, z), z];
 }
 
 export interface Orbit {
@@ -345,6 +364,27 @@ export function createOrbit(
     dur: number;
   } | null = null;
   let dolly: number | null = null;
+  /** A wheel zoom towards a scene point (opts.cursorPoint): its anchor, held while the wheel keeps turning. */
+  let cursorZoom: { anchor: V3; until: number } | null = null;
+  const onWheel = (e: WheelEvent) => {
+    if (!controls.enabled || !opts.cursorPoint) return;
+    const now = performance.now();
+    if (cursorZoom && now < cursorZoom.until) {
+      cursorZoom.until = now + 260;
+      return;
+    }
+    const hit = opts.cursorPoint(e.clientX, e.clientY);
+    if (!hit) {
+      cursorZoom = null;
+      controls.zoomToCursor = true;
+      return;
+    }
+    cursorZoom = { anchor: zoomAnchor(hit.point, hit.normal, groundAt), until: now + 260 };
+    // OrbitControls dollies towards its target; update() then slides the target towards the anchor.
+    controls.zoomToCursor = false;
+  };
+  // Capture: decide before OrbitControls handles the same wheel event.
+  if (opts.cursorPoint) dom.addEventListener("wheel", onWheel, { capture: true, passive: true });
 
   function applyLimits(l: OrbitLimits) {
     controls.minDistance = l.minDistance;
@@ -529,7 +569,29 @@ export function createOrbit(
         if (Math.abs(next - dolly) < dolly * 1e-3) dolly = null;
         else dollyFrom = current;
       }
+      const cz = cursorZoom;
+      const c0 = cz ? [camera.position.x, camera.position.y, camera.position.z] : null;
+      const t0 = cz ? [controls.target.x, controls.target.y, controls.target.z] : null;
       const moved = controls.update(step);
+      if (cz && c0 && t0) {
+        // Zoom about the anchor: the target moves towards it by the ratio the distance shrank (or grew),
+        // keeping OrbitControls' new offset (dolly and any rotation) from the target.
+        const d0 = Math.hypot(c0[0] - t0[0], c0[1] - t0[1], c0[2] - t0[2]);
+        const off = offset();
+        const d1 = Math.hypot(off[0], off[1], off[2]);
+        const r = d1 / Math.max(d0, 1e-9);
+        if (Math.abs(r - 1) > 1e-5) {
+          const a = cz.anchor;
+          const t = controls.target;
+          t.set(a[0] + (t0[0] - a[0]) * r, a[1] + (t0[1] - a[1]) * r, a[2] + (t0[2] - a[2]) * r);
+          camera.position.set(t.x + off[0], t.y + off[1], t.z + off[2]);
+          camera.lookAt(t.x, t.y, t.z);
+        }
+        if (performance.now() > cz.until) {
+          cursorZoom = null;
+          controls.zoomToCursor = true;
+        }
+      }
       const fixed = constrain();
       if (dolly !== null && dollyFrom !== null && step > 0) {
         // A zoom the constraints keep undoing (towards a target inside a closed building, into the
@@ -542,6 +604,7 @@ export function createOrbit(
     },
     dispose() {
       cancel();
+      dom.removeEventListener("wheel", onWheel, { capture: true });
       controls.removeEventListener("start", cancel);
       controls.stopListenToKeyEvents();
       controls.dispose();

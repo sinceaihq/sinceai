@@ -1,7 +1,7 @@
 import type { CameraView, Collider2D, Connector, LevelId, TwinTarget, V2, V3, WalkArea } from "../../types";
 import { CHALLENGE_COMPANIES } from "@/lib/hackathon-2026/companies";
-import { BLOCK, PAVILION, TAIDON, Y0, eToLocal, eToLocal3, type Rect } from "./frame";
-import { BRIEFING_ROOMS, POINTS, type BriefingRoom } from "./rooms";
+import { BLOCK, MAIN_DOORS, PAVILION, PAVILION_STAIR, TAIDON, Y0, eToLocal, eToLocal3, type Rect } from "./frame";
+import { BRIEFING_ROOMS, POINTS, mainRect, type BriefingRoom } from "./rooms";
 import { F1, F2, IN, type FloorPlan, type WallSpec } from "./plan";
 import { DOOR_B } from "./data";
 
@@ -47,35 +47,37 @@ export const EDUCITY_VIEWS: Record<string, CameraView> = {
     labelGroup: "edu-lobby",
     open: OPEN1,
   },
-  // Floor 1's briefing rooms on the north-east side: 1001, 1002 and the glass box 1090 / 1091.
+  // Floor 1's briefing rooms on the north-east side: 1001, 1002 and the glass box 1090 / 1091, door B
+  // (company arrivals) and the corridor from it on the right.
   "educity:rooms1": {
-    ...pose([14, 34, 48], [24, 0, 12]),
+    ...pose([20, 40, 58], [32, 0, 18]),
     hfov: 60,
-    fit: 22,
-    portrait: { ...pose([22, 46, 42], [24, 0, 13]), fit: 18 },
+    fit: 30,
+    portrait: { ...pose([30, 62, 54], [30, 0, 17]), fit: 28 },
     labels: true,
     labelGroup: "edu-rooms1",
     open: OPEN1,
   },
   // All of floor 2 from above the south-west: eleven rooms round the atrium.
+  // Steep enough that the four rooms along the north-east facade keep their labels apart.
   "educity:rooms2": {
-    ...pose([20, 64, 98], [26, 5, 30]),
+    ...pose([22, 86, 88], [26, 5, 33]),
     hfov: 60,
-    fit: 34,
-    portrait: { ...pose([24, 92, 84], [26, 5, 32]), fit: 28 },
+    fit: 36,
+    portrait: { ...pose([24, 104, 80], [26, 5, 34]), fit: 30 },
     labels: true,
     labelGroup: "edu-rooms2",
     open: OPEN2,
   },
-  // The glass entrance pavilion from high over the surface lot: the west entrance at its left end
-  // (towards the campus deck and BioCity), the east entrance at its right end (the walkway from the
-  // station stairs; registration just inside), the brick building with its sloping edge above.
+  // The glass entrance pavilion from the south, over the corner of the surface lot: the east entrance
+  // (the walkway from the station stairs; registration just inside) in front on the right, the west
+  // entrance (towards the campus deck and BioCity) at the far end, the brick building above.
   "educity:entrance": {
-    ...pose([24, 38, 132], [25, 1.5, 73]),
+    ...pose([64, 22, 110], [32, 1.5, 74]),
     hfov: 64,
-    fit: 30,
-    // Portrait: both entrance labels sit just beyond the pavilion's ends (≈54 m apart) — fit them all.
-    portrait: { ...pose([25.8, 56, 128], [25.8, 1, 72]), fit: 34 },
+    fit: 36,
+    // Portrait: higher and further back so both entrance labels (≈54 m apart) stay on screen.
+    portrait: { ...pose([44, 60, 120], [26, 1, 72]), fit: 40 },
     labels: true,
     labelGroup: "edu-entrance",
     open: null,
@@ -87,15 +89,12 @@ export const EDUCITY_VIEWS: Record<string, CameraView> = {
 /** Briefing room of a company room number. */
 const roomByNumber = (n: string): BriefingRoom | undefined => BRIEFING_ROOMS.find((r) => r.number === n);
 
-function roomRect(room: BriefingRoom): Rect {
-  const xs = room.polygon.map((p) => p[0]);
-  const zs = room.polygon.map((p) => p[1]);
-  return { x0: Math.min(...xs), x1: Math.max(...xs), z0: Math.min(...zs), z1: Math.max(...zs) };
-}
-
-/** Dollhouse close-up of a room: from the corridor side, up and back, looking into it. */
+/**
+ * Dollhouse close-up of a room: from the corridor side, up and back, looking into it — at its main
+ * rectangle (an L-shaped room's notch holds lifts and stairs, not the room).
+ */
 export function roomView(room: BriefingRoom): CameraView {
-  const r = roomRect(room);
+  const r = mainRect(room);
   const cx = (r.x0 + r.x1) / 2;
   const cz = (r.z0 + r.z1) / 2;
   const y = room.level === "f1" ? F1.y : F2.y;
@@ -121,7 +120,8 @@ export function educityTargets(): TwinTarget[] {
     const room = roomByNumber(c.briefing.room);
     if (!room) continue;
     const level: LevelId = room.level === "f1" ? "educity-1" : "educity-2";
-    const walk = room.open ? P2(room.door[0], room.door[1] + 1.2) : P2(room.door[0] + room.out[0] * 1.1, room.door[1] + room.out[1] * 1.1);
+    // Open plan (the work café): start inside it, past its sign totem, looking into the room.
+    const walk = room.open ? P2(room.door[0] + 2.5, room.door[1] - 1.6) : P2(room.door[0] + room.out[0] * 1.1, room.door[1] + room.out[1] * 1.1);
     out.push({ id: `room-${c.id}`, view: roomView(room), level, walkTo: walk });
   }
   const lobby = (p: V3, t: V3, group = "edu-lobby", fit = 10): CameraView => ({ ...pose(p, t), hfov: 62, fit, labels: true, labelGroup: group, open: OPEN1 });
@@ -129,11 +129,14 @@ export function educityTargets(): TwinTarget[] {
     id: "taidon-portaat",
     view: lobby([26, 10.5, 58], [26, 2.0, 40], "edu-lobby", 11),
     level: "educity-1",
-    walkTo: P2(18.6, 45.2),
+    // At the foot of the seating tiers, in front of the stage, looking up the steps.
+    walkTo: P2(26, 44.35),
   });
   out.push({
     id: "registration",
-    view: lobby([47, 11, 64], [37, 0.8, 54], "edu-lobby", 8),
+    // From the south-west over Kisälli: the desks with their LED edge and both roll-ups, the east
+    // opening in front (where builders come in), the service centre beyond the desks.
+    view: lobby([25, 10.5, 71], [38.0, 0.8, 56.5], "edu-lobby", 9),
     level: "educity-1",
     walkTo: P2(38.3, 54.4),
   });
@@ -151,21 +154,43 @@ export function educityTargets(): TwinTarget[] {
   });
   out.push({
     id: "company-arrival",
-    view: lobby([40, 13, 22], [28, 0.6, 6], "edu-rooms1", 12),
+    // Room 1002 and its door from the corridor partners come along from door B (look-at at the door,
+    // so the "Company arrival" label is this target's own).
+    view: lobby([42, 13, 26], [31.0, 0.6, 9.2], "edu-rooms1", 12),
     level: "educity-1",
     walkTo: P2(26.7, 9.4),
   });
   // Entrances (exterior, deck level).
   const ext = (p: V3, t: V3, fov = 66, group = "edu-entrance"): CameraView => ({ ...pose(p, t), hfov: fov, labels: true, labelGroup: group, open: null });
-  out.push({ id: "entrance-educity-west", view: ext([-10, 2.3, 69], [5.4, 1.9, 74.6]), walkTo: P2(1.8, 74.6) });
+  // From the campus deck, nearly square to the revolving door (clear of the lamp and the info totem).
+  out.push({ id: "entrance-educity-west", view: ext([-6.5, 1.9, 77.6], [5.4, 2.0, 74.6], 70, "edu-entrance-west"), walkTo: P2(1.6, 74.6) });
   // On the walkway's plaza, south-east of the doors (the way builders arrive from the Main Stairs).
-  out.push({ id: "entrance-educity-east", view: ext([57.2, 1.75, 79.4], [47.1, 1.7, 74.4], 72), walkTo: P2(50.5, 74.7) });
-  out.push({ id: "entrance-educity-b", view: ext([57.6, 3.6, 41.5], [51.6, 1.6, 32.7], 70), walkTo: P2(54.6, 32.7) });
-  out.push({ id: "entrance-educity-gateway", view: ext([-7, -3.0, 14], [0.2, -3.7, 32.8], 70, "edu-gateway"), walkTo: P2(-3.2, 32.8) });
+  out.push({ id: "entrance-educity-east", view: ext([60.5, 2.2, 78.4], [47.1, 2.3, 75.0], 70, "edu-entrance-east"), walkTo: P2(50.5, 74.95) });
+  // Square to door B from the walkway's railing: walk mode starts facing the portal.
+  out.push({ id: "entrance-educity-b", view: ext([60, 2.2, 33.5], [51.6, 1.6, 32.7], 70, "edu-entrance-b"), walkTo: P2(54.6, 32.7) });
+  // In the passage, north of the bridges (the way the step-free route comes), facing the door and its
+  // lift lobby; walk mode starts within reach of the "Step-free lift up" button.
+  out.push({
+    id: "entrance-educity-gateway",
+    view: ext([-7.5, -3.2, 22.5], [0.3, -3.6, 32.6], 70, "edu-gateway"),
+    walkTo: P2(-1.7, 30.4),
+  });
   return out;
 }
 
 // ── Walk areas ──────────────────────────────────────────────────────────────
+
+/** Outdoor deck-level floors round the building (E rectangles; see educityWalkAreas). */
+export const DECK_AREAS: readonly Rect[] = [
+  // North-west canopy and the deck in front of the revolving door.
+  { x0: 1.0, x1: PAVILION.glassNW + 0.05, z0: BLOCK.d + 0.05, z1: PAVILION.wallSW },
+  // South-east walkway (Main Stairs' top → the plaza) and the plaza under the south-east canopy.
+  { x0: BLOCK.w, x1: 58.0, z0: 14.2, z1: PAVILION.z1 },
+  { x0: PAVILION.glassSE - 0.05, x1: BLOCK.w + 0.05, z0: BLOCK.d, z1: PAVILION.z1 },
+  // Door B's portal and the side door's recess, to their glass.
+  { x0: BLOCK.w - DOOR_B.depth, x1: BLOCK.w + 0.05, z0: DOOR_B.z0, z1: DOOR_B.z1 },
+  { x0: BLOCK.w - 0.3, x1: BLOCK.w + 0.05, z0: DOOR_B.side.z0, z1: DOOR_B.side.z1 },
+];
 
 const ring = (x0: number, x1: number, z0: number, z1: number): V2[] => [
   P2(x0, z0),
@@ -185,13 +210,19 @@ export function educityWalkAreas(): WalkArea[] {
     f1(IN.x0, TAIDON.x0, TAIDON.zTop, TAIDON.zFoot),
     f1(TAIDON.x1, IN.x1, TAIDON.zTop, TAIDON.zFoot),
     f1(IN.x0, IN.x1, TAIDON.zFoot, IN.z1),
-    f1(BLOCK.w - 0.8, BLOCK.w + 0.3, DOOR_B.z0, DOOR_B.z1),
-    f1(PAVILION.glassNW - 0.4, PAVILION.glassSE + 0.4, IN.z1 - 0.05, PAVILION.wallSW - 0.1),
+    // Door B's portal counts as inside (the walker changes level at the facade line).
+    f1(BLOCK.w - 0.8, BLOCK.w + 0.02, DOOR_B.z0, DOOR_B.z1),
+    // The pavilion: the level changes at the glass line, where the doors are.
+    f1(PAVILION.glassNW - 0.05, PAVILION.glassSE + 0.05, IN.z1 - 0.05, PAVILION.wallSW - 0.1),
     // Floor 2: round the atrium void (the terrace is outside).
     f2(IN.x0, IN.x1, IN.z0, TAIDON.zTop),
     f2(IN.x0, 17.75, TAIDON.zTop, IN.z1),
     f2(34.21, IN.x1, TAIDON.zTop, 48.7),
     f2(17.6, 34.93, 48.87, IN.z1),
+    // Outdoors at deck level (y 3.40): the threshold under the north-west canopy and the deck before it,
+    // the south-east walkway with the plaza at the east entrance and door B's portal. The campus
+    // outline (and the ground's surface) stops 1.3 m outside the glass; these keep the floor there.
+    ...DECK_AREAS.map((r): WalkArea => ({ level: "outdoor", y: y1, polygon: ring(r.x0, r.x1, r.z0, r.z1) })),
     // Taidon portaat: a ramp in walk mode from the lobby (y 3.4) to floor 2 (y 8.4).
     {
       level: "educity-2",
@@ -274,9 +305,30 @@ function outline(level: LevelId, includeStreetDoor: boolean): Collider2D[] {
   out.push(seg(level, [P.glassNW, BLOCK.d], [0, BLOCK.d]));
   out.push(...lineWithGaps(level, [[0, BLOCK.d], [0, 0]], includeStreetDoor ? [[BLOCK.d - 34.0, BLOCK.d - 31.5]] : []));
   // Pavilion: west face with the revolving door, south-west wall, east face with the sliding door.
-  out.push(...lineWithGaps(level, [[P.glassNW, BLOCK.d], [P.glassNW, P.wallSW]], [[73.1 - BLOCK.d, 76.1 - BLOCK.d]]));
+  const W = MAIN_DOORS.west;
+  const Ed = MAIN_DOORS.east;
+  out.push(...lineWithGaps(level, [[P.glassNW, BLOCK.d], [P.glassNW, P.wallSW]], [[W.z - W.r - BLOCK.d, W.z + W.r - BLOCK.d]]));
   out.push(seg(level, [P.glassNW, P.wallSW], [P.glassSE, P.wallSW]));
-  out.push(...lineWithGaps(level, [[P.glassSE, P.wallSW], [P.glassSE, BLOCK.d]], [[P.wallSW - 75.9, P.wallSW - 73.5]]));
+  out.push(...lineWithGaps(level, [[P.glassSE, P.wallSW], [P.glassSE, BLOCK.d]], [[P.wallSW - Ed.z1, P.wallSW - Ed.z0]]));
+  out.push(...drum(level));
+  return out;
+}
+
+/**
+ * The revolving door: its two curved glass walls (open towards the deck and the hall) and the centre
+ * post. The wings turn, so they are no obstacle — a walker passes on either side of the post.
+ */
+export function drum(level: LevelId): Collider2D[] {
+  const W = MAIN_DOORS.west;
+  const out: Collider2D[] = [];
+  for (const a0 of [Math.PI * 0.25, Math.PI * 1.25]) {
+    const pts: V2[] = [0, 1, 2, 3].map((k) => {
+      const a = a0 + (k / 3) * (Math.PI / 2);
+      return [W.x + Math.cos(a) * W.r, W.z + Math.sin(a) * W.r];
+    });
+    for (let k = 0; k < 3; k++) out.push(seg(level, pts[k], pts[k + 1]));
+  }
+  out.push({ level, kind: "circle", c: P2(W.x, W.z), r: 0.08 });
   return out;
 }
 
@@ -301,6 +353,9 @@ export function educityColliders(): Collider2D[] {
   out.push(...rectSegments("educity-1", { x0: rx - 0.4, x1: rx + 0.4, z0: rz - 1.85, z1: rz + 1.85 }));
   // Sermi (dividers) behind the stage.
   out.push(seg("educity-1", POINTS.screen.a, POINTS.screen.b));
+  // The stair well down to the lower lobby in the pavilion (balustrades; its open top end too: the
+  // lower lobby is not part of the twin).
+  out.push(...rectSegments("educity-1", PAVILION_STAIR));
   // Floor 2.
   out.push(...outline("educity-2", false));
   out.push(...planColliders("educity-2", F2));
@@ -320,7 +375,8 @@ export function educityConnectors(): Connector[] {
     { id: "edu-lift-e-down", label: "Lift down to floor 1", from: "educity-2", to: "educity-1", at: P2(48.6, 33.4), arrive: P2(48.6, 33.4) },
     { id: "edu-taidon-up", label: "Up Taidon portaat to floor 2", from: "educity-1", to: "educity-2", at: P2(18.6, 45.0), arrive: P2(18.6, 34.6) },
     { id: "edu-taidon-down", label: "Down Taidon portaat to floor 1", from: "educity-2", to: "educity-1", at: P2(18.6, 34.6), arrive: P2(18.6, 45.0) },
-    { id: "edu-gateway-up", label: "Step-free lift up to EduCity floor 1", from: "outdoor", to: "educity-1", at: P2(-1.6, 32.75), arrive: P2(2.6, 31.6) },
+    // The street-level door's hotspot sits at its north jamb, within reach of the passage walk start.
+    { id: "edu-gateway-up", label: "Step-free lift up to EduCity floor 1", from: "outdoor", to: "educity-1", at: P2(-1.4, 31.7), arrive: P2(2.6, 31.6) },
     { id: "edu-gateway-down", label: "Lift down to the street (ICT-City gateway)", from: "educity-1", to: "outdoor", at: P2(2.6, 31.6), arrive: P2(-1.6, 32.75) },
   ];
 }
@@ -331,19 +387,16 @@ const leg = (pts: [number, number][], y = 0): V3[] => pts.map(([x, z]) => P3(x, 
 
 export function educityRouteLegs(): Record<string, V3[]> {
   return {
-    // East main entrance → through the pavilion and the east opening → registration (west side of the
-    // service centre) → past Taidon portaat → the team formation area.
+    // East main entrance → through the pavilion and the east opening → registration: the walk ends at
+    // the desks (west side of the service centre), turned towards them — the check-in tour's goal.
     "int-edu-east-to-registration": leg([
       [43.19, 74.73],
       [42.0, 72.4],
       [38.6, 67.2],
       [37.6, 65.2],
       [38.3, 60.0],
-      [38.3, 54.0],
-      [38.6, 46.0],
-      [37.6, 38.5],
-      [34.6, 34.6],
-      [29.9, 33.0],
+      [38.6, 55.2],
+      [37.85, 54.4],
     ]),
     // West main entrance → round the pub → the west opening → the snack counter → the foot of Taidon portaat.
     "int-edu-west-to-taidon": leg([

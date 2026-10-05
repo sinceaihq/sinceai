@@ -27,7 +27,9 @@ import {
   LEVEL,
   MAUNO,
   NBLOCK_FACE,
+  PASSAGE_MOUTH,
   STANDS,
+  STAND_LABEL_GROUP,
   VESTIBULE,
   along,
   buildTables,
@@ -37,7 +39,7 @@ import {
   type StandPose,
 } from "./plan";
 import { Buckets, box, mergeAll, segmentBox } from "./geom";
-import { doorASign, lettering, mapBoard, sciencePark, standAtlas, totemAtlas, type AtlasTexture } from "./textures";
+import { doorASign, lettering, mapBoard, passageSign, sciencePark, standAtlas, totemAtlas, type AtlasTexture } from "./textures";
 
 /**
  * BioCity's event fit-out and signage (SPEC §7.1): the build hall's 56 tables
@@ -251,14 +253,16 @@ export function buildFitout(b: Buckets, ctx: TwinContext): FitoutResult {
         light.push(box(-s.width / 2, 2.3, s.depth / 2 - 0.05, s.width / 2, 2.34, s.depth / 2 + 0.03));
         light.push(box(-s.width / 2, 0.01, s.depth / 2 - 0.06, s.width / 2, 0.03, s.depth / 2 - 0.036));
         light.push(box(-0.76, 0.02, -0.5, 0.76, 0.04, -0.47));
-        // A roll-up beside the wall (partner graphic) and a bar stool behind the counter.
-        const rs = roll.stand.clone();
-        rs.translate(s.width / 2 + 0.55, 0, 0.1);
-        solid.push(rs);
+        // A partner's roll-up beside the wall, on the open side (stand 3 mirrors stand 1), and a bar
+        // stool behind the counter. An open stand has no roll-up (a bare cassette read as debris).
         if (partner) {
+          const side = s.face[0] > 0.05 ? -1 : 1;
+          const rs = roll.stand.clone();
+          rs.translate(side * (s.width / 2 + 0.55), 0, 0.1);
+          solid.push(rs);
           const rp = atlasPlane(0.85, 2.0, uv, [0.1, 0.06, 0.9, 0.95]);
           rp.rotateY(Math.PI);
-          rp.translate(s.width / 2 + 0.55, 1.09, 0.095);
+          rp.translate(side * (s.width / 2 + 0.55), 1.09, 0.095);
           parts.push(rp);
         }
         const st = stool.frame.clone();
@@ -280,14 +284,19 @@ export function buildFitout(b: Buckets, ctx: TwinContext): FitoutResult {
       proxy.userData.pickId = s.id;
       interior.push(proxy);
       pickables.push(proxy);
+      // Short on the map ("Stand 3 · open"). Stands 1 and 3 flank the event entrance 13 m apart and
+      // read on one line from the courtyard: their labels sit over the stands' outer halves and leave
+      // the area to the Aulagalleria's own label, so neither hides the other.
+      const gallery = s.id === "bc-1" || s.id === "bc-3";
       const label = makeLabel(
-        partner ? `Stand ${stand?.rank} · ${partner.name}` : `Stand ${stand?.rank} · ${OPEN_STAND_LABEL}`,
+        partner ? `Stand ${stand?.rank} · ${partner.name}` : `Stand ${stand?.rank} · open`,
         partner ? "stand" : "open",
-        s.x,
+        s.x + (gallery ? Math.sign(s.x) * 0.6 : 0),
         s.markerOnly ? 2.6 : 3.0,
         s.z,
-        undefined,
-        stand?.area,
+        // The partner-stands view shows this group in full, phones included (open stands too).
+        STAND_LABEL_GROUP,
+        gallery ? undefined : stand?.area,
       );
       labels.push({ label, interior: true });
     });
@@ -422,15 +431,30 @@ export function buildFitout(b: Buckets, ctx: TwinContext): FitoutResult {
     const posts: THREE.BufferGeometry[] = [];
     for (const x of [L1.x0 + 0.15, (L1.x0 + L1.x1) / 2, L1.x1 - 0.15]) posts.push(box(x - 0.012, 0.9, L1.z0 + 0.3, x + 0.012, 1.26, L1.z0 + 0.33));
     b.add("interior", "stainless", mergeAll(posts));
-    // Food trays (warm colours under the heat lamps).
-    const trays: THREE.BufferGeometry[] = [];
-    for (let x = L1.x0 + 0.3; x < L1.x1 - 0.3; x += 0.62) trays.push(box(x, 0.9, L1.z0 + 0.35, x + 0.5, 0.96, L1.z1 - 0.15));
-    for (let z = L2.z0 + 0.3; z < L2.z1 - 0.3; z += 0.62) trays.push(box(L2.x0 + 0.2, 0.9, z, L2.x1 - 0.2, 0.96, z + 0.5));
-    const trayMat = new THREE.MeshStandardMaterial({ color: new THREE.Color("#b8743f"), roughness: 0.55 });
+    // Gastronorm pans (stainless rims) set into the counters, the food in them in a few muted colours
+    // (vertex colours, one draw call): a buffet line, not a row of orange slabs.
+    const pans: THREE.BufferGeometry[] = [];
+    const food: THREE.BufferGeometry[] = [];
+    const foodColours = ["#7a4f2c", "#9a8a4a", "#5d7a3a", "#b07a3c", "#c9b48a", "#6b3f2a"].map((c) => new THREE.Color(c));
+    let fi = 0;
+    const pan = (x0: number, z0: number, x1: number, z1: number) => {
+      pans.push(box(x0, 0.9, z0, x1, 0.925, z1));
+      const g = box(x0 + 0.03, 0.9, z0 + 0.03, x1 - 0.03, 0.935, z1 - 0.03);
+      const col = foodColours[fi++ % foodColours.length];
+      const n = g.getAttribute("position").count;
+      const arr = new Float32Array(n * 3);
+      for (let i = 0; i < n; i++) col.toArray(arr, i * 3);
+      g.setAttribute("color", new THREE.Float32BufferAttribute(arr, 3));
+      food.push(g);
+    };
+    for (let x = L1.x0 + 0.3; x < L1.x1 - 0.3; x += 0.56) pan(x, L1.z0 + 0.35, x + 0.5, L1.z1 - 0.15);
+    for (let z = L2.z0 + 0.3; z < L2.z1 - 0.3; z += 0.56) pan(L2.x0 + 0.2, z, L2.x1 - 0.2, z + 0.5);
+    b.add("interior", "stainless", mergeAll(pans));
+    const trayMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.62 });
     if (ctx.envInterior) trayMat.envMap = ctx.envInterior;
     owned.push(trayMat);
-    const trayMesh = new THREE.Mesh(mergeAll(trays), trayMat);
-    trayMesh.name = "serving-trays";
+    const trayMesh = new THREE.Mesh(mergeAll(food), trayMat);
+    trayMesh.name = "serving-food";
     interior.push(trayMesh);
     b.add("interior", "steelIn", box(MAUNO.hood.x0 - 0.1, 2.1, MAUNO.hood.z0, MAUNO.hood.x1 + 0.2, 2.6, MAUNO.hood.z1));
     // Bistro U-bar.
@@ -454,6 +478,22 @@ export function buildFitout(b: Buckets, ctx: TwinContext): FitoutResult {
     }
     b.add("interior", "curtain", mergeAll(cur));
     labels.push({ label: makeLabel("Restaurant serving lines", "area", (L1.x0 + L1.x1) / 2, 2.6, L1.z0 - 0.6, undefined, "event meals"), interior: true });
+  }
+
+  // ── Sign over the passage to Joki (on the bulkhead over the corridor's mouth, facing the hall) ──
+  {
+    const tex = passageSign();
+    textures.push(tex);
+    const mat = new THREE.MeshStandardMaterial({ map: tex, emissiveMap: tex, emissive: new THREE.Color(1, 1, 1), emissiveIntensity: LUMINANCE.signLit * 0.12, roughness: 0.5 });
+    if (ctx.envInterior) mat.envMap = ctx.envInterior;
+    mat.name = "biocity-passage-sign";
+    owned.push(mat);
+    const g = new THREE.PlaneGeometry(2.0, 0.5);
+    g.rotateY(-Math.PI / 2);
+    g.translate(JOKI_PASSAGE.threshold - 0.012, 3.06, (PASSAGE_MOUTH.z0 + PASSAGE_MOUTH.z1) / 2);
+    const sign = new THREE.Mesh(g, mat);
+    sign.name = "biocity-joki-sign";
+    interior.push(sign);
   }
 
   // ── Info desk (timber) and its moss wall in the cloakroom / info point ──
@@ -502,38 +542,55 @@ export function buildFitout(b: Buckets, ctx: TwinContext): FitoutResult {
     const s1 = along(CORNER.north, CORNER.recessN, F.sign[1]);
     b.add("upper", "signPanel", segmentBox(s0, s1, 0.14, 4.7, 21.2, { offset: 0.07 }));
 
-    // SCIENCE PARK on the glass tower's NW roof edge (green, lit at night).
+    // SCIENCE PARK on the glass tower's NW roof edge (SPEC §3.1.6: green, ≈1.2 m capitals, lit at night).
+    // Its foot 0.35 m over the coping, so the whole word clears the parapet seen from across
+    // Tykistökatu; a darker second layer 0.12 m behind gives the letters their depth at an angle.
     const sp = sciencePark();
     textures.push(sp.texture);
     const green = new THREE.MeshStandardMaterial({
       map: sp.texture,
       transparent: true,
       alphaTest: 0.4,
-      color: new THREE.Color("#5faa4e"),
-      // Painted aluminium letters: matte, so the sky does not wash the green out at grazing angles.
-      roughness: 0.85,
+      // Painted letters, saturated enough to stay green against an overcast sky.
+      color: new THREE.Color("#4fae3a"),
+      roughness: 0.5,
       envMapIntensity: 0.4,
-      emissive: new THREE.Color("#d2f06a"),
+      emissive: new THREE.Color("#c8ee5c"),
       emissiveMap: sp.texture,
-      emissiveIntensity: 0,
+      emissiveIntensity: LUMINANCE.signLit * 0.04,
       side: THREE.DoubleSide,
     });
-    owned.push(green);
-    nightSigns.push({ material: green, day: 0, night: LUMINANCE.signLit });
+    const greenBack = new THREE.MeshStandardMaterial({ map: sp.texture, transparent: true, alphaTest: 0.4, color: new THREE.Color("#1d3d17"), roughness: 0.6, side: THREE.DoubleSide });
+    owned.push(green, greenBack);
+    nightSigns.push({ material: green, day: LUMINANCE.signLit * 0.04, night: LUMINANCE.signLit });
     const a = CORNER.recessS;
     const w = CORNER.west;
     const len = dist2(a, w);
-    const signLen = Math.min(len - 0.4, 9.2);
+    // ≈1.05 m capitals: "SCIENCE PARK" fits the 9.8 m edge condensed to ≈75 % (SPEC: ≈1.2 m overall).
+    const capH = 1.05;
+    const plateH = capH / sp.cap;
+    // As wide as the edge allows (the capitals condense slightly to fit the 9.8 m edge).
+    const signLen = Math.min(len - 0.4, plateH * sp.aspect);
     const mid = along(a, w, len / 2);
     const nn = runNormal(a, w);
-    const hgt = signLen / sp.aspect;
-    const g = new THREE.PlaneGeometry(signLen, hgt);
-    g.rotateY(Math.atan2(nn[0], nn[1]));
-    g.translate(mid[0] - nn[0] * 0.5, LEVEL.parapet + 0.18 + hgt / 2, mid[1] - nn[1] * 0.5);
-    const gm = new THREE.Mesh(g, green);
+    const spYaw = Math.atan2(nn[0], nn[1]);
+    const foot = LEVEL.parapet + 0.08 + 0.35;
+    const spPlane = (inset: number) => {
+      const g = new THREE.PlaneGeometry(signLen, plateH);
+      g.rotateY(spYaw);
+      g.translate(mid[0] - nn[0] * inset, foot - (plateH - capH) / 2 + plateH / 2, mid[1] - nn[1] * inset);
+      return g;
+    };
+    const gm = new THREE.Mesh(spPlane(0.45), green);
     gm.name = "science-park-letters";
     exterior.push({ layer: "upper", object: gm });
-    b.add("upper", "blackSteel", segmentBox(along(a, w, 0.4), along(a, w, len - 0.4), 0.1, LEVEL.parapet + 0.05, LEVEL.parapet + 0.2, { offset: -0.55 }));
+    if (!low) {
+      const gb = new THREE.Mesh(spPlane(0.57), greenBack);
+      gb.name = "science-park-letters-back";
+      exterior.push({ layer: "upper", object: gb });
+    }
+    // The rail the letters stand on, and two low posts down to the roof behind the parapet.
+    b.add("upper", "blackSteel", segmentBox(along(a, w, 0.5), along(a, w, len - 0.5), 0.12, LEVEL.parapet, foot, { offset: -0.51 }));
 
     // Small BIOCITY lettering and the "BioCity A" board on the black tile wall; the green A sign.
     const small = lettering("BIOCITY", { px: 160, weight: 500, color: "#e6e8ea" });
@@ -543,7 +600,9 @@ export function buildFitout(b: Buckets, ctx: TwinContext): FitoutResult {
     const sl = new THREE.PlaneGeometry(1.3, 1.3 / small.aspect);
     sl.rotateY(-Math.PI / 2);
     sl.translate(-30.02 - 0.012, 3.6, 6.6);
-    exterior.push({ layer: "shell", object: new THREE.Mesh(sl, smallMat) });
+    // Small wall lettering and the map board are close-up detail: not on phones.
+    if (!low) exterior.push({ layer: "shell", object: new THREE.Mesh(sl, smallMat) });
+    else sl.dispose();
     const mb = mapBoard();
     textures.push(mb);
     const boardMat = new THREE.MeshStandardMaterial({ map: mb, roughness: 0.4, emissive: new THREE.Color(1, 1, 1), emissiveMap: mb, emissiveIntensity: 0 });
@@ -552,7 +611,8 @@ export function buildFitout(b: Buckets, ctx: TwinContext): FitoutResult {
     const bd = new THREE.PlaneGeometry(1.0, 0.75);
     bd.rotateY(-Math.PI / 2);
     bd.translate(-30.02 - 0.02, 1.55, 12.1);
-    exterior.push({ layer: "shell", object: new THREE.Mesh(bd, boardMat) });
+    if (!low) exterior.push({ layer: "shell", object: new THREE.Mesh(bd, boardMat) });
+    else bd.dispose();
     const aTex = doorASign();
     textures.push(aTex);
     const aMat = new THREE.MeshStandardMaterial({ map: aTex, roughness: 0.4, emissive: new THREE.Color(1, 1, 1), emissiveMap: aTex, emissiveIntensity: 0 });

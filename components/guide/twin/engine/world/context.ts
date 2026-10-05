@@ -5,7 +5,6 @@ import { loadCampus, loadLod2, loadTerrain, type CampusBuilding, type Lod2Buildi
 import { makeLabel } from "../labels";
 import { FACADE_GLOBALS, facadeSeed } from "../render/facade";
 import { TwinMaterialLibrary } from "../render/materials";
-import { LUMINANCE } from "../sky/sky";
 import { cleanRing, ensureCCW, hashString, mulberry32, overlapArea, pointInRing, polygonBounds, polygonCentroid, ringArea } from "../util";
 import { insetRing, makeSolid, pilasterCentres, SolidIndex, storeyScale, wallSpans, type Solid, type WallSpan } from "./context/envelope";
 import { FacadeBuilder, MeshBuilder, box, capRing, column, disc, lin, pipe } from "./context/kit";
@@ -268,6 +267,7 @@ export async function buildContext(ctx: TwinContext): Promise<WorldModule> {
     paint: new MeshBuilder(),
     metal: new MeshBuilder(),
     glazing: new MeshBuilder(),
+    clearGlass: new MeshBuilder(),
     emissive: new MeshBuilder(),
     pools: new MeshBuilder(),
     heightAt,
@@ -474,6 +474,9 @@ export async function buildContext(ctx: TwinContext): Promise<WorldModule> {
   addMesh(kit.paint, paintMat, "context-paint", true);
   addMesh(kit.metal, metalMat, "context-metal", true);
   addMesh(kit.glazing, glazingMat, "context-glazing", false);
+  // Shared library glass (not owned): reflections over a dimmed view through it.
+  const clear = addMesh(kit.clearGlass, lib.get("glassInterior"), "context-clear-glass", false, false);
+  if (clear) clear.renderOrder = 1;
   addMesh(solarB, solarMat, "context-solar", false);
   const lights = addMesh(kit.emissive, emissiveMat, "context-lights", false, false);
   const pools = addMesh(kit.pools, poolMat, "context-light-pools", false, false);
@@ -840,10 +843,26 @@ function slopedCap(mb: MeshBuilder, s: Solid, color: Rgb) {
   const e2 = new THREE.Vector3(0, s.top(p0[0], p0[1] + 1) - y0, 1);
   const nn = new THREE.Vector3().crossVectors(e2, e1).normalize();
   if (nn.y < 0) nn.negate();
+  // UVs along the face's longest edge (metres): the glazing's mullion grid then runs with the building, not
+  // diagonally across it (round 1: atrium glazing read as chain-link fencing on the roofs).
+  let best = 0;
+  let ax: V2 = [1, 0];
+  for (let i = 0; i < s.ring.length; i++) {
+    const a = s.ring[i];
+    const b = s.ring[(i + 1) % s.ring.length];
+    const l = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    if (l > best) {
+      best = l;
+      ax = [(b[0] - a[0]) / l, (b[1] - a[1]) / l];
+    }
+  }
   for (const [x, z] of s.ring) {
-    positions.push(x, s.top(x, z), z);
+    const y = s.top(x, z);
+    positions.push(x, y, z);
     normals.push(nn.x, nn.y, nn.z);
-    uvs.push(x, -z);
+    // Along the edge, and across it measured on the slope (so panes keep their size on steep glass).
+    const across = -x * ax[1] + z * ax[0];
+    uvs.push(x * ax[0] + z * ax[1], across * Math.hypot(1, Math.abs(nn.y) > 1e-3 ? Math.sqrt(1 - nn.y * nn.y) / nn.y : 0));
   }
   const idx: number[] = [];
   for (const [a, b, c] of faces) {
@@ -961,13 +980,15 @@ function canopy(kit: DetailKit, c: CampusBuilding, heightAt: (x: number, z: numb
   const ground = c.groundY ?? Math.min(...ring.map(([x, z]) => heightAt(x, z)));
   const top = c.roofY ?? ground + c.height;
   const base = Math.max(c.baseY ?? top - 0.4, top - 0.6);
-  // Station platform canopies: rust-red columns, light soffit, lit strips (SPEC §4.5).
+  // Station platform canopies: only the slab here — their rust-red columns, beams, light soffit and lamps are
+  // world/ground.ts's (canopyFrames, the "canopy" lamp specs), so the structure exists once (SPEC §4.5).
   const station = c.osmId === 526090187 || c.osmId === 526090188;
   kit.paint.add(prismGeometry(ring, base, top), lin(station ? "#dfe2e2" : "#c4c7c8"));
-  const posts: Rgb = lin(station ? "#8e3b2a" : "#3d4043");
+  if (station) return;
+  const posts: Rgb = lin("#3d4043");
   const a = Math.abs(ringArea(ring));
   if (a < 6) return;
-  // Posts along the longest axis, every ~6.5 m on the centre line (platforms), or at the ends.
+  // Posts along the longest axis, every ~6.5 m on the centre line, or at the ends.
   let best = 0;
   let pa: V2 = ring[0];
   let pb: V2 = ring[1];
@@ -993,8 +1014,6 @@ function canopy(kit: DetailKit, c: CampusBuilding, heightAt: (x: number, z: numb
     hi = Math.max(hi, t);
   }
   const steps = Math.max(1, Math.round((hi - lo - 2) / 6.5));
-  const yaw = -Math.atan2(dz, dx);
-  const lamp: Rgb = lin("#f4f6ff").map((v) => v * LUMINANCE.ceilingPanel * 0.5) as Rgb;
   for (let i = 0; i <= steps; i++) {
     const t = lo + 1 + ((hi - lo - 2) * i) / steps;
     const x = cx + dx * t;
@@ -1002,12 +1021,7 @@ function canopy(kit: DetailKit, c: CampusBuilding, heightAt: (x: number, z: numb
     if (!pointInRing([x, z], ring)) continue;
     const g = heightAt(x, z);
     if (base - g < 1.8 || base - g > 12) continue;
-    column(kit.paint, x, z, station ? 0.14 : 0.08, g, base, posts, 8);
-    if (station) {
-      // Bracket arms under the roof and a light strip between columns.
-      box(kit.paint, x, base - 0.25, z, 0.12, 0.3, 4.2, yaw, posts);
-      if (i < steps) box(kit.emissive, x + (dx * (hi - lo - 2)) / steps / 2, base - 0.03, z + (dz * (hi - lo - 2)) / steps / 2, 2.4, 0.02, 0.14, yaw, lamp);
-    }
+    column(kit.paint, x, z, 0.08, g, base, posts, 8);
   }
 }
 
@@ -1098,19 +1112,24 @@ function makeGlazingMaterial(lib: TwinContext["materials"]): THREE.MeshStandardM
   m.name = "context-glazing";
   const uniforms = { uCtxNight: { value: 0 } };
   m.userData.uniforms = uniforms;
-  m.customProgramCacheKey = () => "context-glazing";
+  m.customProgramCacheKey = () => "context-glazing-v2";
   m.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, uniforms);
     // Lit share of offices for the time of day (weekend nights are mostly dark).
     shader.uniforms.uFcOccupancy = FACADE_GLOBALS.uFcOccupancy;
     shader.vertexShader = shader.vertexShader
-      .replace("#include <common>", "#include <common>\nvarying vec3 vCtxGW;")
-      .replace("#include <worldpos_vertex>", "#include <worldpos_vertex>\nvCtxGW = ( modelMatrix * vec4( transformed, 1.0 ) ).xyz;");
+      .replace("#include <common>", "#include <common>\nvarying vec3 vCtxGW;\nvarying float vCtxUp;\nvarying vec2 vCtxUv;")
+      .replace(
+        "#include <worldpos_vertex>",
+        "#include <worldpos_vertex>\nvCtxGW = ( modelMatrix * vec4( transformed, 1.0 ) ).xyz;\nvCtxUp = normalize( mat3( modelMatrix ) * objectNormal ).y;\nvCtxUv = uv;",
+      );
     shader.fragmentShader = shader.fragmentShader
       .replace(
         "#include <common>",
         `#include <common>
 varying vec3 vCtxGW;
+varying float vCtxUp;
+varying vec2 vCtxUv;
 uniform float uCtxNight;
 uniform vec4 uFcOccupancy;
 float ctxGrid;
@@ -1120,8 +1139,8 @@ float ctxGH( vec3 p ) { p = fract( p * vec3( 0.1031, 0.1030, 0.0973 ) ); p += do
         "#include <color_fragment>",
         `#include <color_fragment>
 	{
-		// Mullion grid ≈ 1.2 × 1.5 m in plan, box-filtered.
-		vec2 g = vCtxGW.xz / vec2( 1.2, 1.5 );
+		// Mullion grid ≈ 1.2 × 1.5 m on the pane's own metre UVs (aligned with the building), box-filtered.
+		vec2 g = vCtxUv / vec2( 1.2, 1.5 );
 		vec2 fw = max( fwidth( g ), vec2( 1e-3 ) );
 		vec2 w = vec2( 0.05 );
 		vec2 a = clamp( ( w - abs( fract( g ) - 0.5 ) * 2.0 * 0.5 + 0.5 * fw ) / fw, 0.0, 1.0 );
@@ -1143,7 +1162,16 @@ float ctxGH( vec3 p ) { p = fract( p * vec3( 0.1031, 0.1030, 0.0973 ) ); p += do
 		float n = mix( mix( ctxGH( vec3( i, 1.0 ) ), ctxGH( vec3( i + vec2( 1.0, 0.0 ), 1.0 ) ), u.x ),
 			mix( ctxGH( vec3( i + vec2( 0.0, 1.0 ), 1.0 ) ), ctxGH( vec3( i + vec2( 1.0, 1.0 ), 1.0 ) ), u.x ), u.y );
 		float lit = smoothstep( 1.0 - occ - 0.12, 1.0 - occ + 0.12, n );
-		totalEmissiveRadiance += vec3( 1.0, 0.87, 0.7 ) * uCtxNight * ( 0.0012 + 0.014 * lit ) * ( 1.0 - ctxGrid );
+		// Roof lights and sloped glazing are seen from above: the room below shows as a faint glow, not a lit
+		// disc (round 1: DataCity's round skylights read as 10 m landing pads in every night aerial). Only a
+		// share of them is lit (per 4 m cell), dimmer towards the edges of each cell.
+		float roofK = smoothstep( 0.45, 0.8, vCtxUp );
+		vec2 rc = floor( vCtxGW.xz / 4.0 );
+		vec2 rf = fract( vCtxGW.xz / 4.0 ) - 0.5;
+		float roofLit = step( 0.62, ctxGH( vec3( rc, 7.0 ) ) ) * ( 1.0 - smoothstep( 0.15, 0.5, length( rf ) ) );
+		float wallGlow = 0.0012 + 0.014 * lit;
+		float roofGlow = 0.0003 + 0.0032 * roofLit * lit;
+		totalEmissiveRadiance += vec3( 1.0, 0.87, 0.7 ) * uCtxNight * mix( wallGlow, roofGlow, roofK ) * ( 1.0 - ctxGrid );
 	}`,
       );
   };

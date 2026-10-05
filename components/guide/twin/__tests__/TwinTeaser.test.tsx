@@ -1,6 +1,8 @@
+import fs from "node:fs";
+import path from "node:path";
 import { render, screen } from "@testing-library/react";
 import { getPlace3D, PLACES_3D, TARGETS_3D } from "@/lib/hackathon-2026/twin";
-import { posterFor, TWIN_POSTERS, twinHref, TwinTeaser } from "@/components/guide/twin/TwinTeaser";
+import { portraitPosterFor, posterFor, TWIN_POSTERS, twinHref, TwinTeaser } from "@/components/guide/twin/TwinTeaser";
 
 const VENUE = "/hackathon-2026/guide/venue";
 
@@ -43,6 +45,13 @@ describe("TwinTeaser", () => {
 
   it("links a route", () => {
     expect(twinHref({ tour: "builders-transfer-to-build" })).toBe(`${VENUE}?tour=builders-transfer-to-build#preview-3d`);
+    // With where it leads: a company's own room or stand (the route's own end adds nothing).
+    expect(twinHref({ tour: "partners-fri-train-edu", focus: "room-elisa" })).toBe(
+      `${VENUE}?tour=partners-fri-train-edu&focus=room-elisa#preview-3d`,
+    );
+    expect(twinHref({ tour: "partners-fri-train-edu", focus: "company-arrival" })).toBe(
+      `${VENUE}?tour=partners-fri-train-edu#preview-3d`,
+    );
     // Unknown routes fall back to the plain link.
     expect(twinHref({ tour: "nope" })).toBe(`${VENUE}#preview-3d`);
   });
@@ -57,6 +66,12 @@ describe("TwinTeaser", () => {
     for (const p of PLACES_3D) {
       expect(posterFor(p)).toBe(TWIN_POSTERS[p.id] ?? p.poster);
       expect(posterFor(p)).toMatch(/^\/assets\/guide\/3d\/.+\.(webp|png|jpg)$/);
+      // The twin's own posters come with a portrait framing for phones; previous-preview posters do not.
+      expect(portraitPosterFor(p)).toBe(TWIN_POSTERS[p.id] ? null : p.poster.replace(".webp", "-portrait.webp"));
+      // Every poster the page asks for is in public/ (a missing one would show an empty box before the 3D).
+      for (const src of [posterFor(p), portraitPosterFor(p)].filter((x): x is string => !!x)) {
+        expect(fs.existsSync(path.join(process.cwd(), "public", src))).toBe(true);
+      }
     }
   });
 });

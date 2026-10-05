@@ -44,6 +44,21 @@ export interface StripeSpec {
   bottomZone: number;
 }
 
+/**
+ * Historic render ornament (grid windows): light window surrounds, a string course at every upper floor
+ * and a cornice band under the eaves (Teutori, Verstas: ochre render, white trim — KartaView 2020).
+ */
+export interface OrnamentSpec {
+  /** Surround width round each window (m). */
+  surround: number;
+  /** String course height at each upper floor line (m), 0 = none. */
+  course: number;
+  /** Cornice band under the eaves (m). */
+  cornice: number;
+  /** Trim colour (sRGB). */
+  color: string;
+}
+
 /** Window subdivision (grid windows): lights across and up, bar width (m). */
 export interface LightsSpec {
   cols: number;
@@ -57,6 +72,7 @@ export interface Family {
   ribs?: RibSpec;
   stripes?: StripeSpec;
   lights?: LightsSpec;
+  ornament?: OrnamentSpec;
   /** Channel glass: glow colour (sRGB) and night luminance (scene units). */
   glow?: { color: string; luminance: number };
   /** Parapet height above the roof (m) and its coping/inner-face colour. */
@@ -96,7 +112,8 @@ export const FAMILIES: Record<string, Family> = {
     stripes: {
       top: ["#b5306f", "#e283b1"],
       bottom: ["#7db33a", "#4f9a55"],
-      base: "#2f6b55",
+      // The dark green base (KartaView 2020: up to the first-floor sills) carries runs of the lighter stripes.
+      base: "#2c5d47",
       baseHeight: 7.6,
       topZone: 6.0,
       bottomZone: 6.5,
@@ -481,7 +498,8 @@ export const FAMILIES: Record<string, Family> = {
     style: facadeStyle("whitePanelGrid", {
       pattern: "ribbon",
       wall: "metalWhite",
-      wallColor: "#dfe1e0",
+      // Light grey concrete spandrels between long ribbon windows (KartaView 2020, Tykistökatu).
+      wallColor: "#d3d2cc",
       storey: 3.6,
       groundStorey: 4.4,
       bay: 1.35,
@@ -489,10 +507,10 @@ export const FAMILIES: Record<string, Family> = {
       sill: 0.95,
       frame: 0.05,
       mullion: 0.06,
-      frameColor: "#7a8187",
+      frameColor: "#5f666c",
       glassColor: "#22384c",
       glassTransmittance: 0.5,
-      ribbonGroups: { units: 7, gap: 1.0 },
+      ribbonGroups: { units: 16, gap: 0.45 },
       panelJoints: { w: 2.7, h: 3.6, width: 0.012, color: "#c3c7c8" },
       coping: { height: 0.4, color: "#c9cdcd" },
       groundFloor: { kind: "storefront" },
@@ -842,16 +860,18 @@ export const FAMILIES: Record<string, Family> = {
       bay: 2.8,
       window: [1.2, 1.9],
       sill: 0.9,
-      frame: 0.08,
-      frameColor: "#ece9e2",
+      frame: 0.09,
+      frameColor: "#f1efe9",
       glassColor: "#1f262c",
       interior: "office",
       warmth: 0.6,
-      coping: { height: 0.35, color: "#c9c3b7" },
-      streaks: 0.5,
+      coping: { height: 0.35, color: "#ece8de" },
+      streaks: 0.35,
     }),
+    lights: { cols: 2, rows: 2, bar: 0.05 },
+    ornament: { surround: 0.16, course: 0.24, cornice: 0.55, color: "#ece8de" },
     parapet: 0.3,
-    coping: "#bdb6a8",
+    coping: "#e3dfd5",
     roof: "#6d4a3c",
     low: "lowRes",
   }),
@@ -975,6 +995,8 @@ uniform vec3 uCtxStripeBase;
 uniform vec4 uCtxStripeParams;    // top zone, bottom zone, base height, -
 uniform vec4 uCtxLights;          // cols, rows, bar width, on
 uniform vec4 uCtxGlow;         // rgb, luminance
+uniform vec4 uCtxOrn;          // surround, course, cornice, -
+uniform vec3 uCtxOrnColor;
 `;
 
 /** Inserted after the facade's surface code (color_fragment): tint, rib shading, stripes. */
@@ -1023,10 +1045,30 @@ const EXT_SURFACE = /* glsl */ `
 			vec3 wallC = diffuseColor.rgb;
 			wallC = mix( wallC, cTop, clamp( wTop, 0.0, 1.0 ) * fcWallCov );
 			wallC = mix( wallC, mix( cBot, avgBot, far ), clamp( wBot, 0.0, 1.0 ) * fcWallCov );
-			// Solid base band up to the first-floor sills (level, on the storey grid).
+			// Base band up to the first-floor sills (level, on the storey grid): dark green panels crossed by
+			// runs of the lighter green stripes (KartaView 2020, the yard corner) — not a flat colour; averaged
+			// far away.
 			float base = 1.0 - fcBox( fcV, fcFw.y, uCtxStripeParams.z, 1e4 );
-			wallC = mix( wallC, uCtxStripeBase, base * fcWallCov );
+			float onBase = step( hOn, 0.34 );
+			vec3 baseC = mix( uCtxStripeBase, cBot, stripe * onBase );
+			vec3 avgBase = mix( uCtxStripeBase, avgBot, 0.34 * 0.62 );
+			wallC = mix( wallC, mix( baseC, avgBase, far ), base * fcWallCov );
 			diffuseColor.rgb = wallC;
+		}
+		#endif
+		#ifdef CTX_ORNAMENT
+		{
+			// Historic render: light surrounds round the windows (where windows exist), a string course at every
+			// upper floor line, a cornice under the eaves — box-filtered, so it settles to a tint far away.
+			vec2 ol = fc.local;
+			vec2 os = fc.cell;
+			float sw = uCtxOrn.x;
+			float grown = fcBox( ol.x, fcFw.x, -sw, os.x + sw ) * fcBox( ol.y, fcFw.y, -sw * 1.8, os.y + sw );
+			float surround = grown * fcAllowed;
+			float course = fcStoreyIdx > 0.5 ? fcBox( fcVs, fcFw.y, -0.02, uCtxOrn.y - 0.02 ) : 0.0;
+			float cornice = fcBox( fcV, fcFw.y, fcTop - uCtxOrn.z, fcTop + 1.0 );
+			float orn = clamp( max( max( surround, course ), cornice ), 0.0, 1.0 ) * fcWallCov;
+			diffuseColor.rgb = mix( diffuseColor.rgb, uCtxOrnColor, orn );
 		}
 		#endif
 		#ifdef CTX_LIGHTS
@@ -1105,6 +1147,8 @@ export function makeFamilyMaterial(lib: MaterialLibrary, family: Family, tier: T
     uCtxStripeBase: { value: linear(stripes?.base ?? "#ffffff") },
     uCtxStripeParams: { value: new THREE.Vector4(stripes?.topZone ?? 4, stripes?.bottomZone ?? 6, stripes?.baseHeight ?? 0, 0) },
     uCtxLights: { value: new THREE.Vector4(family.lights?.cols ?? 1, family.lights?.rows ?? 1, family.lights?.bar ?? 0.05, family.lights ? 1 : 0) },
+    uCtxOrn: { value: new THREE.Vector4(family.ornament?.surround ?? 0, family.ornament?.course ?? 0, family.ornament?.cornice ?? 0, 0) },
+    uCtxOrnColor: { value: linear(family.ornament?.color ?? "#ffffff") },
     uCtxGlow: {
       value: (() => {
         const c = linear(family.glow?.color ?? "#ffffff");
@@ -1112,7 +1156,7 @@ export function makeFamilyMaterial(lib: MaterialLibrary, family: Family, tier: T
       })(),
     },
   };
-  const flags = `${family.ribs ? "r" : ""}${family.stripes ? "s" : ""}${family.glow ? "g" : ""}${family.lights ? "l" : ""}`;
+  const flags = `${family.ribs ? "r" : ""}${family.stripes ? "s" : ""}${family.glow ? "g" : ""}${family.lights ? "l" : ""}${family.ornament ? "o" : ""}`;
   const baseCompile = m.onBeforeCompile;
   const baseKey = m.customProgramCacheKey();
   m.userData.contextUniforms = uniforms;
@@ -1124,6 +1168,7 @@ export function makeFamilyMaterial(lib: MaterialLibrary, family: Family, tier: T
     if (family.stripes) shader.defines.CTX_STRIPES = "";
     if (family.glow) shader.defines.CTX_GLOW = "";
     if (family.lights) shader.defines.CTX_LIGHTS = "";
+    if (family.ornament) shader.defines.CTX_ORNAMENT = "";
     shader.vertexShader = shader.vertexShader
       .replace("#include <common>", `#include <common>\n${EXT_VERTEX_PARS}`)
       .replace("#include <worldpos_vertex>", `#include <worldpos_vertex>\n${EXT_VERTEX_MAIN}`);

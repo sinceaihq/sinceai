@@ -18,7 +18,7 @@ jest.mock("three/addons/objects/Lensflare.js", () => nodeRequire()("three/addons
 import fs from "node:fs";
 import path from "node:path";
 import type { CampusBuilding, Lod2Building, TerrainMeta } from "../../data/campus";
-import { buildFromLod2, buildFromOutline, farCity, planeThrough, soffitGeometry, styleFor } from "../massing";
+import { buildFromLod2, buildFromOutline, farCity, farTreeGeometry, gableRoof, offsetRing, planeThrough, soffitGeometry, styleFor, techBoxGeometry, TECH_BOX_AREA, TECH_BOX_HEIGHT } from "../massing";
 
 const building = (over: Partial<CampusBuilding>): CampusBuilding => ({
   id: "osm-1",
@@ -182,5 +182,99 @@ describe("far city backdrop", () => {
       if (Math.abs((pos0[0] - 217) * 0.57 + (pos0[1] + 128) * 0.82) < 45) across++;
     }
     expect(across).toBeGreaterThan(10);
+  });
+});
+
+describe("far city variety", () => {
+  const ext = { minX: -179, maxX: 343, minZ: -208, maxZ: 279 };
+  it("mixes heights, facade families, flat and gabled roofs and tree clumps (deterministic)", () => {
+    const a = farCity(ext, 4242);
+    const b = farCity(ext, 4242);
+    expect(a.roofs.length).toBe(b.roofs.length);
+    expect(a.trees.length).toBe(b.trees.length);
+    // Every facade family is used, none dominates.
+    const counts = a.families.map((f) => f.length);
+    const total = counts.reduce((x, y) => x + y, 0);
+    for (const c of counts) {
+      expect(c).toBeGreaterThan(total * 0.04);
+      expect(c).toBeLessThan(total * 0.5);
+    }
+    // Flat bitumen, flat membrane, red and dark tin gables.
+    const kinds = new Set(a.roofKinds);
+    expect([...kinds].sort()).toEqual([0, 1, 2, 3]);
+    expect(a.roofKinds.filter((k) => k >= 2).length).toBeGreaterThan(a.roofKinds.length * 0.05);
+    // Heights: from 2-storey houses to the odd 10–12 storey tower.
+    const tops = a.roofs.map((g) => {
+      g.computeBoundingBox();
+      return g.boundingBox!.max.y;
+    });
+    expect(Math.min(...tops)).toBeLessThan(5);
+    expect(Math.max(...tops)).toBeGreaterThan(28);
+    expect(a.trees.length).toBeGreaterThan(800);
+    expect(farCity(ext, 4242, { trees: 0.5 }).trees.length).toBeLessThan(a.trees.length * 0.7);
+  });
+
+  it("builds gabled roofs with outward faces and the trees as one coloured geometry", () => {
+    const g = gableRoof(0, 0, 30, 12, 0, 10, 3);
+    g.computeBoundingBox();
+    expect(g.boundingBox!.max.y).toBeCloseTo(13, 6);
+    const n = g.getAttribute("normal");
+    let up = 0;
+    for (let i = 0; i < n.count; i++) up += n.getY(i);
+    expect(up).toBeGreaterThan(0);
+    const trees = farTreeGeometry([{ x: 0, z: 0, r: 3, h: 12, conifer: false }, { x: 10, z: 0, r: 2, h: 14, conifer: true }], 1)!;
+    expect(trees.getAttribute("color").count).toBe(trees.getAttribute("position").count);
+  });
+});
+
+describe("technical boxes (small LOD records)", () => {
+  it("are vent/stair housings: a dark louvre band at the top, a light coping, no windows", () => {
+    // lod2-k50 on BioCity's terrace: a 2.55 m diamond, 3.46 m tall (2021 surface model: 3.4 m).
+    const ring: [number, number][] = [
+      [29.3, -8.6],
+      [31.1, -6.8],
+      [29.3, -5.0],
+      [27.5, -6.8],
+    ];
+    const g = techBoxGeometry(ring, -0.09, 3.67);
+    g.computeBoundingBox();
+    expect(g.boundingBox!.min.y).toBeCloseTo(-0.09, 6);
+    expect(g.boundingBox!.max.y).toBeGreaterThan(3.67);
+    expect(g.boundingBox!.max.y).toBeLessThan(3.8);
+    expect(Object.keys(g.attributes).sort()).toEqual(["color", "normal", "position"]);
+    // The top 1.2 m is dark (louvres), the walls below are lighter.
+    const pos = g.getAttribute("position");
+    const col = g.getAttribute("color");
+    let topLum = 0;
+    let topN = 0;
+    let lowLum = 0;
+    let lowN = 0;
+    for (let i = 0; i < pos.count; i++) {
+      const y = pos.getY(i);
+      const lum = col.getX(i) + col.getY(i) + col.getZ(i);
+      if (y > 2.6 && y < 3.55) {
+        topLum += lum;
+        topN++;
+      } else if (y < 1.5) {
+        lowLum += lum;
+        lowN++;
+      }
+    }
+    expect(topLum / topN).toBeLessThan((lowLum / lowN) * 0.6);
+    expect(TECH_BOX_AREA).toBeGreaterThan(9.5);
+    expect(TECH_BOX_HEIGHT).toBeGreaterThan(3.5);
+  });
+
+  it("offsets rings outwards whichever their orientation", () => {
+    const ccw: [number, number][] = [
+      [0, 0],
+      [2, 0],
+      [2, 2],
+      [0, 2],
+    ];
+    for (const ring of [ccw, [...ccw].reverse()]) {
+      const out = offsetRing(ring, 0.1);
+      for (const [x, z] of out) expect(Math.hypot(x - 1, z - 1)).toBeGreaterThan(Math.SQRT2);
+    }
   });
 });

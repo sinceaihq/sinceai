@@ -243,6 +243,32 @@ export const GALLERY = { cx: 0, cz: -14.4, rInner: 19.82, rGlass: 20.2, rOuter: 
 /** Event entrance vestibule (Jussin aukio), glazed box. */
 export const VESTIBULE = { x0: -1.75, x1: 1.8, z0: -36.1, z1: -34.55, roof: LEVEL.vestibuleRoof } as const;
 
+/**
+ * The vestibule's doors (TTK plan): a double door pair in its front (≈1.8–1.9 m clear) and double
+ * doors into the Aulagalleria (2.4 m) at innerZ. Both stand open for the event.
+ */
+export const VESTIBULE_DOOR = { half: 0.95, head: 2.43, innerZ: -34.6, innerHalf: 1.2, leaf: 0.92, innerLeaf: 1.15 } as const;
+
+/** The open door leaves (plan B, hinge → free edge): the outer pair swung out 92°, the inner pair in. */
+export function vestibuleLeaves(): [V2, V2][] {
+  const out: [V2, V2][] = [];
+  const swing = (92 * Math.PI) / 180;
+  for (const side of [-1, 1]) {
+    const hx = side * VESTIBULE_DOOR.half;
+    // Outwards = −z; a leaf turns from lying along the opening (towards x = 0) out of the vestibule.
+    out.push([
+      [hx, VESTIBULE.z0 - 0.04],
+      [hx - side * VESTIBULE_DOOR.leaf * Math.cos(swing), VESTIBULE.z0 - 0.04 - VESTIBULE_DOOR.leaf * Math.sin(swing)],
+    ]);
+    const ix = side * VESTIBULE_DOOR.innerHalf;
+    out.push([
+      [ix, VESTIBULE_DOOR.innerZ + 0.04],
+      [ix - side * VESTIBULE_DOOR.innerLeaf * Math.cos(swing), VESTIBULE_DOOR.innerZ + 0.04 + VESTIBULE_DOOR.innerLeaf * Math.sin(swing)],
+    ]);
+  }
+  return out;
+}
+
 /** Auditorium fan: outer back-wall arc around this centre. */
 export const AUDITORIUM = { cx: -11.31, cz: -29.87, r: 18.3 } as const;
 
@@ -367,6 +393,9 @@ export const JOKI_PASSAGE = {
   bottom: -1.7,
 } as const;
 
+/** The passage corridor's mouth on the lobby (between the TTK plan's wall stubs at x 30.11–30.21). */
+export const PASSAGE_MOUTH = { x: 30.16, z0: -0.53, z1: 1.58 } as const;
+
 /** Maunon sali (meals) and the serving lines (SPEC §7.1). */
 export const MAUNO = {
   hall: [
@@ -471,6 +500,9 @@ export const STANDS: StandPose[] = [
   { id: "bc-4", x: -24.46, z: -3.62, face: [1, 0], width: 2.0, depth: 1.0, markerOnly: true },
 ];
 
+/** Label group of the four stand labels: the biocity:stands view shows the group in full (phones too). */
+export const STAND_LABEL_GROUP = "biocity-stands";
+
 // ── Event route legs inside BioCity (DESIGN §12) ────────────────────────────
 
 /** The build hall's central walkway between the table blocks (plan z). */
@@ -481,12 +513,26 @@ export const WALKWAY_Z = -0.32;
  * (Tykistökatu threshold, event-entrance vestibule, Joki Aula); the corridor path round the
  * meeting-room block follows the research team's wall-checked line (SPEC §6.3).
  */
+/**
+ * Through the revolving door: in at the recess mouth, round the centre post on its +z side (keep
+ * right; the wings turn with the walker, door.ts), out at the lobby mouth. ≥ 0.3 m from the curved
+ * walls and the mouths' edges, ≥ 0.8 m from the post.
+ */
+export const DOOR_PATH_B: V3[] = [
+  [-30.05, LEVEL.gf, 0.5],
+  [-29.35, LEVEL.gf, 0.85],
+  [-28.6, LEVEL.gf, 1.3],
+  [-27.98, LEVEL.gf, 1.42],
+  [-27.36, LEVEL.gf, 1.3],
+  [-26.61, LEVEL.gf, 0.85],
+  [-25.8, LEVEL.gf, 0.45],
+];
+
 export const ROUTE_LEGS_B: Record<string, V3[]> = {
   // Tykistökatu threshold → revolving door → the build hall's central walkway → passage stair → Joki Aula.
   "int-bio-tyk-to-joki": [
-    [-30.05, LEVEL.gf, 0.5],
-    [-27.98, LEVEL.gf, 0.58],
-    [-26.0, LEVEL.gf, WALKWAY_Z],
+    ...DOOR_PATH_B,
+    [-24.8, LEVEL.gf, WALKWAY_Z],
     [29.2, LEVEL.gf, WALKWAY_Z],
     [30.6, LEVEL.gf, 0.5],
     [33.0, LEVEL.gf, 0.5],
@@ -495,9 +541,8 @@ export const ROUTE_LEGS_B: Record<string, V3[]> = {
   ],
   // Tykistökatu → build hall → east ring corridor → Aulagalleria → beside Red Hat's stand (bc-1).
   "int-bio-tyk-to-gallery": [
-    [-30.05, LEVEL.gf, 0.5],
-    [-27.98, LEVEL.gf, 0.58],
-    [-26.0, LEVEL.gf, WALKWAY_Z],
+    ...DOOR_PATH_B,
+    [-24.8, LEVEL.gf, WALKWAY_Z],
     [18.4, LEVEL.gf, WALKWAY_Z],
     [19.9, LEVEL.gf, -1.8],
     [19.9, LEVEL.gf, -20.0],

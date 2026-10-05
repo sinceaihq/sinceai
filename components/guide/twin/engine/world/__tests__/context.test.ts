@@ -286,3 +286,65 @@ describe("context geometry kit", () => {
     for (let i = 0; i < nd.count; i++) expect(nd.getY(i)).toBeLessThan(-0.99);
   });
 });
+
+describe("Kalevansilta (context/bridges)", () => {
+  // Imported lazily: bridges.ts pulls in the sky module (LUMINANCE).
+  const { stairFlights, kalevansilta } = jest.requireActual("../context/bridges") as typeof import("../context/bridges");
+
+  it("splits a stair into equal flights with landings, comfortable risers and the exact rise", () => {
+    // Platform stair: −4.72 → 4.30 over 19.6 m in three flights with 1.5 m landings.
+    const f = stairFlights(19.6, 9.02, 3, 1.5);
+    expect(f).toHaveLength(3);
+    const risers = f.reduce((s, x) => s + x.risers, 0);
+    expect(9.02 / risers).toBeLessThan(0.18);
+    expect(f[f.length - 1].y1).toBeCloseTo(9.02, 6);
+    expect(f[f.length - 1].s1).toBeCloseTo(19.6, 6);
+    for (let i = 1; i < f.length; i++) {
+      expect(f[i].s0 - f[i - 1].s1).toBeCloseTo(1.5, 6);
+      expect(f[i].y0).toBeCloseTo(f[i - 1].y1, 6);
+    }
+    // Goings between 0.28 and 0.45 m.
+    for (const x of f) {
+      const going = (x.s1 - x.s0) / x.risers;
+      expect(going).toBeGreaterThan(0.28);
+      expect(going).toBeLessThan(0.45);
+    }
+    // Street stair with a head landing: the last flight stops `head` metres short of the top.
+    const g = stairFlights(13.7, 4.98, 2, 1.6, 1.0);
+    expect(g[1].s1).toBeCloseTo(13.7 - 1.0, 6);
+    expect(g[1].y1).toBeCloseTo(4.98, 6);
+  });
+
+  it("builds the bridge once, with its stairs, colliders and see-through glazing", () => {
+    const mb = () => new MeshBuilder();
+    const kit = {
+      tier: "high" as const,
+      concrete: mb(),
+      paint: mb(),
+      metal: mb(),
+      glazing: mb(),
+      clearGlass: mb(),
+      emissive: mb(),
+      pools: mb(),
+      roofs: mb(),
+      trims: mb(),
+      heightAt: () => -2,
+      facadeFor: () => new FacadeBuilder(),
+      calibrate: () => [1, 1, 1] as [number, number, number],
+      paintCap: () => {},
+      emissiveCap: () => {},
+      solar: () => {},
+    };
+    const colliders = kalevansilta(kit);
+    expect(colliders.length).toBeGreaterThan(2);
+    expect(kit.clearGlass.vertexCount).toBeGreaterThan(100);
+    // Opaque glazing is not used for the bridge (its sides must be see-through).
+    expect(kit.glazing.vertexCount).toBe(0);
+    const paint = kit.paint.build();
+    expect(paint).not.toBeNull();
+    // The roof sits ≈ 3.4 m over the 4.3 m deck (laser roof 7.5–8.9 m).
+    const bb = paint!.boundingBox!;
+    expect(bb.max.y).toBeGreaterThan(7.5);
+    expect(bb.max.y).toBeLessThan(8.2);
+  });
+});

@@ -341,7 +341,8 @@ describe("Go to groups", () => {
     const ids = TARGET_GROUPS.flatMap((g) => g.targets.map((t) => t.id));
     expect(new Set(ids).size).toBe(ids.length);
     expect(ids.sort()).toEqual(TARGETS_3D.map((t) => t.id).sort());
-    expect(TARGET_GROUPS[0].label).toBe("Companies · Q&A stands");
+    expect(TARGET_GROUPS[0].label).toBe("Companies · Saturday Q&A stand (Joki)");
+    expect(TARGET_GROUPS[1].label).toBe("Companies · Friday briefing room (EduCity)");
   });
 });
 
@@ -374,7 +375,10 @@ describe("Twin", () => {
     expect(opts.reducedMotion).toBe(false);
     act(() => opts.onProgress?.({ loaded: 4, total: 10 }));
     expect(screen.getByText("4/10")).toBeInTheDocument();
-    expect(screen.getByRole("progressbar", { name: "Building the campus" })).toHaveAttribute("aria-valuenow", "4");
+    // One bar for the whole wait: the code, the modules (here 4 of 10 → 8 + 72 × 0.4 %), then light.
+    const bar = screen.getByRole("progressbar", { name: "Loading the 3D campus" });
+    expect(bar).toHaveAttribute("aria-valuenow", "37");
+    expect(bar).toHaveAttribute("aria-valuetext", "Building the campus… 4 of 10 parts");
     await act(async () => finish());
     await screen.findByRole("button", { name: "Show names" });
     expect(engine.goto).toHaveBeenCalledWith(viewKey(DEFAULT_PLACE, defaultView(getPlace3D(DEFAULT_PLACE))), false);
@@ -787,7 +791,7 @@ describe("Twin", () => {
     render(<Twin />);
     await userEvent.click(screen.getByRole("button", { name: /Explore in 3D/ }));
     expect(await screen.findByText(/can't show the 3D model/, { selector: "p:not([role])" })).toBeInTheDocument();
-    expect(announcer()).toHaveTextContent(/This device can't show the 3D model/);
+    expect(announcer()).toHaveTextContent("No 3D on this device: showing the text version.");
     expect(mockCreated).toHaveLength(0);
   });
 
@@ -798,7 +802,7 @@ describe("Twin", () => {
     render(<Twin />);
     await userEvent.click(screen.getByRole("button", { name: /Explore in 3D/ }));
     await screen.findByRole("button", { name: "Try again" });
-    expect(announcer()).toHaveTextContent(/The 3D model stopped/);
+    expect(announcer()).toHaveTextContent(/3D stopped — showing the text version/);
     expect(last().engine.dispose).toHaveBeenCalled();
     mockLoad = async () => undefined;
     await userEvent.click(screen.getByRole("button", { name: "Try again" }));
@@ -811,7 +815,7 @@ describe("Twin", () => {
     const { opts } = await startEngine();
     act(() => opts.onContextLost?.());
     expect(screen.getByText(/The 3D model stopped/, { selector: "p:not([role])" })).toBeInTheDocument();
-    expect(announcer()).toHaveTextContent(/The 3D model stopped/);
+    expect(announcer()).toHaveTextContent(/3D stopped — showing the text version/);
     expect(screen.getByRole("button", { name: "Try again" })).toBeInTheDocument();
   });
 
@@ -995,16 +999,23 @@ describe("Twin while the 3D loads", () => {
     await user.click(screen.getByRole("button", { name: /Explore in 3D/ }));
     await screen.findByText(/can't show the 3D model/, { selector: "p:not([role])" });
     await user.click(screen.getByRole("button", { name: "Close the 3D view" }));
-    // The poster keeps saying so; the dock (which only drives the 3D) is gone.
+    // The poster keeps saying so, and the 3D is not offered again.
     expect(screen.getByText(/can't show the 3D model/, { selector: "p:not([role])" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Explore in 3D/ })).not.toBeInTheDocument();
-    expect(screen.queryByLabelText("Go to")).not.toBeInTheDocument();
-    const place = TARGETS_3D[0].place;
-    await user.click(screen.getByRole("tab", { name: getPlace3D(place).tab }));
-    await user.click(screen.getByRole("button", { name: `Show ${TARGETS_3D[0].label} in 3D` }));
+    const t0 = TARGETS_3D[0];
+    await user.click(screen.getByRole("tab", { name: getPlace3D(t0.place).tab }));
+    // Show and Go to answer with the target's card over the poster, as text.
+    await user.click(screen.getByRole("button", { name: `Show ${t0.label} in 3D` }));
+    expect(screen.getByText(t0.detail, { selector: "p" })).toBeInTheDocument();
+    const stand = firstWith(TARGETS_3D, (t) => t.kind === "stand");
+    await user.selectOptions(screen.getByLabelText("Go to"), stand.id);
+    expect(screen.getByText(stand.detail, { selector: "p" })).toBeInTheDocument();
+    // A route shows its steps as text.
     await user.click(screen.getByRole("button", { name: new RegExp(`^Play in 3D.*${escapeRe(TOURS_3D[0].label)}$`) }));
+    expect(screen.getByText(`Route: ${TOURS_3D[0].label}`, { selector: "p" })).toBeInTheDocument();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(mockWebGL.checks).toBe(1);
+    expect(mockCreated).toHaveLength(0);
   });
 
   it("tries again with what the 3D showed when it stopped", async () => {
@@ -1316,5 +1327,274 @@ describe("Twin full screen and sharing", () => {
     expect(within(header).getByRole("button", { name: "Show names" })).toBeInTheDocument();
     // The dialog keeps its name (the title is still there for screen readers).
     expect(screen.getByRole("dialog", { name: getPlace3D(DEFAULT_PLACE).title })).toBeInTheDocument();
+  });
+});
+
+/* ── Round 2: wayfinding, the text version, live engine settings ── */
+
+type Extras = TwinOptions & {
+  onSlow?(): void;
+  onTime?(iso: string): void;
+  onConnectors?(list: { id: string; label: string }[]): void;
+};
+
+describe("Twin wayfinding", () => {
+  it("shows a company's Friday room and Saturday stand side by side, and switches between them", async () => {
+    render(<Twin />);
+    const { user, engine } = await startEngine();
+    await user.selectOptions(screen.getByLabelText("Go to"), "elisa");
+    const pair = screen.getByRole("group", { name: "Elisa: Friday room and Saturday stand" });
+    const [fri, sat] = within(pair).getAllByRole("button");
+    expect(fri).toHaveTextContent("Fri · briefing");
+    expect(fri).toHaveTextContent("EduCity · room 1001");
+    expect(sat).toHaveTextContent("Sat · Q&A stand");
+    expect(sat).toHaveAttribute("aria-pressed", "true");
+    await user.click(fri);
+    expect(engine.focus).toHaveBeenLastCalledWith("room-elisa", true);
+    expect(screen.getByText("Elisa briefing room", { selector: "p" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "EduCity" })).toHaveAttribute("aria-selected", "true");
+    // Both are in Go to, saying where.
+    expect(screen.getByRole("option", { name: "Elisa — Joki · Showroom counter 4" })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "Elisa — EduCity · room 1001" })).toBeInTheDocument();
+  });
+
+  it("links a target to its floor plan on this page", async () => {
+    render(<Twin />);
+    const { user } = await startEngine();
+    await user.selectOptions(screen.getByLabelText("Go to"), "showroom");
+    expect(screen.getByRole("link", { name: "Floor plan" })).toHaveAttribute("href", "#map-joki-showroom");
+    // The area's own link is that floor plan: no second "Details" link to the same place.
+    expect(screen.queryByRole("link", { name: /Details/ })).not.toBeInTheDocument();
+    await user.selectOptions(screen.getByLabelText("Go to"), "takomo-golf");
+    expect(screen.getByRole("link", { name: "Floor plan" })).toHaveAttribute("href", "#map-joki-2-3");
+    expect(screen.getByRole("link", { name: /Details/ })).toHaveAttribute(
+      "href",
+      "/hackathon-2026/guide/challenge-partners/takomo-golf",
+    );
+  });
+
+  it("on phones, keeps the target card to one row of actions (plan and details as named icon buttons)", async () => {
+    setMedia({ coarse: true });
+    render(<Twin />);
+    const { user } = await startEngine();
+    await user.selectOptions(screen.getByLabelText("Go to"), "elisa");
+    expect(screen.getByRole("link", { name: "Floor plan" })).toHaveAttribute("href", "#map-joki-showroom");
+    expect(screen.getByRole("link", { name: "Details: Elisa" })).toHaveAttribute(
+      "href",
+      "/hackathon-2026/guide/challenge-partners/elisa",
+    );
+    expect(screen.getByRole("button", { name: /Walk me there/ })).toBeInTheDocument();
+  });
+
+  it("walks a company to its own stand, saying where it is now and what comes next", async () => {
+    render(<Twin />);
+    const { user, engine, opts } = await startEngine();
+    await user.selectOptions(screen.getByLabelText("Go to"), "takomo-golf");
+    await user.click(screen.getByRole("button", { name: /Walk me there/ }));
+    const tour = TOURS_3D.find((t) => t.id === "companies-tykistokatu-to-showroom")!;
+    expect(engine.tour).toHaveBeenLastCalledWith(tour.id, "chase");
+    // The engine reports its captions in the route's own words; the card shows Takomo Golf's version.
+    act(() => opts.onTour?.({ id: tour.id, t: 0.2, caption: tour.steps[1].text }));
+    expect(screen.getByText(/Step 2 of 5/, { selector: "p:not([role])" })).toHaveTextContent("Entrance recess");
+    expect(screen.getByText(/^To/, { selector: "p" })).toHaveTextContent("To Takomo Golf · Joki · floor 3");
+    expect(screen.getByText(/^Next/, { selector: "p" })).toHaveTextContent("Next → Build hall");
+    const lastStep = tour.steps[tour.steps.length - 1].text;
+    act(() => opts.onTour?.({ id: tour.id, t: 0.9, caption: lastStep }));
+    expect(screen.getAllByText(/go up to floor 3, where your stand is ready/).length).toBeGreaterThan(0);
+    // Only the text list of all routes below the 3D still has the general wording.
+    expect(screen.getAllByText(lastStep)).toHaveLength(1);
+    expect(screen.getByText(/^Arriving/, { selector: "p" })).toHaveTextContent("Arriving → Takomo Golf");
+    expect(announcer()).toHaveTextContent(/Step 5 of 5: .*floor 3, where your stand is ready/);
+    // Arriving shows the stand's card.
+    act(() => opts.onTour?.({ id: tour.id, t: 1, caption: lastStep }));
+    await act(async () => opts.onTour?.(null));
+    expect(screen.getByText(getTarget("takomo-golf").detail, { selector: "p" })).toBeInTheDocument();
+    expect(announcer()).toHaveTextContent("You have arrived: Takomo Golf.");
+  });
+
+  it("plays a company's route from a link and settles on that company's room", async () => {
+    const tour = TOURS_3D.find((t) => t.id === "partners-fri-train-edu")!;
+    setUrl(`?tour=${tour.id}&focus=room-elisa`);
+    render(<Twin />);
+    await screen.findByRole("button", { name: "Show names" });
+    const { engine, opts } = last();
+    expect(engine.goto).toHaveBeenCalledWith(viewKey(tour.place, "default"), false);
+    expect(engine.tour).toHaveBeenLastCalledWith(tour.id, "chase");
+    expect(screen.getByText(/^To/, { selector: "p" })).toHaveTextContent("To Elisa briefing room · EduCity · room 1001");
+    // The steps end at Elisa's own room, not at another company's.
+    expect(screen.getByText(/your room 1001 Dromberg is on this floor/)).toBeInTheDocument();
+    act(() => opts.onTour?.({ id: tour.id, t: 1, caption: null }));
+    await act(async () => opts.onTour?.(null));
+    expect(engine.focus).toHaveBeenLastCalledWith("room-elisa", true);
+  });
+
+  it("names a deep-linked route and where it leads on the poster", () => {
+    setMedia({ coarse: true }); // phones wait for a tap
+    setUrl("?tour=companies-train-to-biocity&focus=elisa");
+    render(<Twin />);
+    expect(screen.getByText(/Route: Kupittaa station → BioCity main entrance/)).toHaveTextContent(
+      "counter 4 of 6 in the Showroom",
+    );
+    expect(describeIntent({ place: "biocity", tour: "companies-train-to-biocity", focus: "elisa" })).toBe(
+      "Route: Kupittaa station → BioCity main entrance → Elisa",
+    );
+  });
+});
+
+const getTarget = (id: string) => firstWith(TARGETS_3D, (t) => t.id === id);
+
+describe("Twin text version", () => {
+  afterEach(() => jest.useRealTimers());
+
+  it("offers the text version when loading takes long, then works without the 3D", async () => {
+    jest.useFakeTimers({ advanceTimers: true });
+    mockLoad = () => new Promise<void>(() => undefined);
+    render(<Twin />);
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+    await user.click(screen.getByRole("button", { name: /Explore in 3D/ }));
+    await waitFor(() => expect(mockCreated).toHaveLength(1));
+    expect(screen.queryByRole("button", { name: "Show as text" })).not.toBeInTheDocument();
+    act(() => jest.advanceTimersByTime(20_000));
+    await user.click(screen.getByRole("button", { name: "Show as text" }));
+    expect(last().engine.dispose).toHaveBeenCalled();
+    expect(screen.getByRole("group", { name: "Text version" })).toHaveFocus();
+    // Go to and Routes answer as text over the poster.
+    const stand = firstWith(TARGETS_3D, (t) => t.kind === "stand");
+    await user.selectOptions(screen.getByLabelText("Go to"), stand.id);
+    expect(screen.getByText(stand.detail, { selector: "p" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Floor plan" })).toHaveAttribute("href", "#map-biocity-lobby");
+    await user.click(screen.getByRole("button", { name: /Route there/ }));
+    const route = tourForTarget(stand)!;
+    expect(screen.getByText(`Route: ${route.label}`, { selector: "p" })).toBeInTheDocument();
+    for (const s of route.steps) expect(screen.getAllByText(s.text).length).toBeGreaterThan(0);
+    expect(screen.getByRole("link", { name: /on the floor plan/ })).toHaveAttribute("href", "#map-biocity-lobby");
+    expect(mockCreated).toHaveLength(1);
+    // And back to the 3D.
+    mockLoad = async () => undefined;
+    await user.click(screen.getByRole("button", { name: "Try the 3D again" }));
+    await screen.findByRole("button", { name: "Show names" });
+    expect(mockCreated).toHaveLength(2);
+  });
+
+  it("after the WebGL context is lost, keeps finding things as text", async () => {
+    render(<Twin />);
+    const { user, opts } = await startEngine();
+    act(() => opts.onContextLost?.());
+    const t = getTarget("room-bayer");
+    await user.selectOptions(screen.getByLabelText("Go to"), t.id);
+    expect(screen.getByText(t.detail, { selector: "p" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Floor plan" })).toHaveAttribute("href", "#map-educity-1");
+    expect(screen.getByRole("button", { name: "Try again" })).toBeInTheDocument();
+  });
+});
+
+describe("Twin engine extras", () => {
+  it("follows a time set on the engine from elsewhere", async () => {
+    render(<Twin />);
+    const { opts } = await startEngine();
+    act(() => (opts as Extras).onTime?.("2026-11-07T11:00"));
+    expect(screen.getByRole("button", { name: /change the time of day/ })).toHaveTextContent(
+      describeTime("2026-11-07T11:00").short,
+    );
+  });
+
+  it("offers every floor a lift reaches in walk mode", async () => {
+    render(<Twin />);
+    const { user, engine, opts } = await startEngine();
+    await user.click(screen.getByRole("button", { name: "Walk mode" }));
+    act(() =>
+      (opts as Extras).onConnectors?.([
+        { id: "lift-1-2", label: "Lift to floor 2" },
+        { id: "lift-1-3", label: "Lift to floor 3" },
+      ]),
+    );
+    const group = screen.getByRole("group", { name: "Change level" });
+    expect(within(group).getAllByRole("button").map((b) => b.textContent)).toEqual(["Lift to floor 2", "Lift to floor 3"]);
+    await user.click(within(group).getByRole("button", { name: "Lift to floor 3" }));
+    expect(engine.useConnector).toHaveBeenCalledWith("lift-1-3");
+  });
+
+  it("tells a running engine when Reduce Motion changes; routes started after it are stills", async () => {
+    render(<Twin />);
+    const { user, engine } = await startEngine();
+    engine.setReducedMotion = jest.fn();
+    await playFromSheet(user, TOURS_3D[0]);
+    changeMedia({ reduced: true });
+    expect(engine.setReducedMotion).toHaveBeenLastCalledWith(true);
+    // The running route keeps moving…
+    expect(screen.getByRole("button", { name: "Pause the route" })).toBeInTheDocument();
+    // …the next one is a series of stills.
+    await playFromSheet(user, TOURS_3D[1]);
+    expect(screen.getByRole("button", { name: /Next step/ })).toBeInTheDocument();
+    changeMedia({ reduced: false });
+    expect(engine.setReducedMotion).toHaveBeenLastCalledWith(false);
+  });
+
+  it("tells the engine which edges of the scene the controls cover", async () => {
+    jest.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(
+      () => ({ top: 0, left: 0, right: 800, bottom: 600, width: 800, height: 600, x: 0, y: 0 }) as DOMRect,
+    );
+    render(<Twin />);
+    const { user, engine } = await startEngine();
+    const setInsets = jest.fn();
+    (engine as unknown as { setInsets: jest.Mock }).setInsets = setInsets;
+    await user.selectOptions(screen.getByLabelText("Go to"), "elisa");
+    expect(setInsets).toHaveBeenCalled();
+    const insets = setInsets.mock.calls.at(-1)[0];
+    expect(Object.keys(insets).sort()).toEqual(["bottom", "left", "right", "top"]);
+    for (const v of Object.values(insets)) expect(typeof v).toBe("number");
+  });
+
+  it("offers the text version when the engine says the 3D is far too slow here", async () => {
+    render(<Twin />);
+    const { user, engine, opts } = await startEngine();
+    act(() => (opts as Extras).onSlow?.());
+    expect(announcer()).toHaveTextContent(/runs slowly on this device/);
+    const offer = screen.getByRole("group", { name: "The 3D is slow" });
+    await user.click(within(offer).getByRole("button", { name: "Keep the 3D" }));
+    expect(screen.queryByRole("group", { name: "The 3D is slow" })).not.toBeInTheDocument();
+    act(() => (opts as Extras).onSlow?.());
+    await user.click(screen.getByRole("button", { name: "Show as text" }));
+    expect(engine.dispose).toHaveBeenCalled();
+    expect(screen.getByRole("group", { name: "Text version" })).toBeInTheDocument();
+  });
+});
+
+describe("Twin without WebGL 2, from a link", () => {
+  it("on a desktop, opens the linked route as text directions to the company's own room", async () => {
+    mockWebGL.available = false;
+    const tour = TOURS_3D.find((t) => t.id === "partners-fri-train-edu")!;
+    setUrl(`?tour=${tour.id}&focus=room-elisa#preview-3d`);
+    render(<Twin />);
+    expect(await screen.findByText(`Route: ${tour.label}`, { selector: "p" })).toBeInTheDocument();
+    expect(screen.getByText(/your room 1001 Dromberg is on this floor/, { selector: "span" })).toBeInTheDocument();
+    expect(announcer()).toHaveTextContent(`Route: ${tour.label}.`);
+    // The visible notice and the announcement never say the same sentence (no echo for screen readers).
+    expect(announcer().textContent).not.toContain("This device can't show the 3D model");
+    // The route list below marks it.
+    expect(screen.getByRole("heading", { level: 3, name: tour.label }).closest("li")).toHaveAttribute("aria-current", "true");
+    expect(mockCreated).toHaveLength(0);
+  });
+
+  it("on a phone, shows the linked target as text without waiting for a tap", async () => {
+    mockWebGL.available = false;
+    setMedia({ coarse: true });
+    setUrl("?focus=elisa#preview-3d");
+    render(<Twin />);
+    const t = getTarget("elisa");
+    expect(await screen.findByText(t.detail, { selector: "p" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Explore in 3D/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: `Show ${t.label} in 3D` }).closest("li")).toHaveAttribute("aria-current", "true");
+    expect(mockCreated).toHaveLength(0);
+  });
+
+  it("on a phone with WebGL 2, still waits for the tap", async () => {
+    setMedia({ coarse: true });
+    setUrl("?focus=elisa#preview-3d");
+    render(<Twin />);
+    await waitFor(() => expect(mockWebGL.checks).toBe(1));
+    expect(screen.getByRole("button", { name: /Explore in 3D/ })).toBeInTheDocument();
+    expect(mockCreated).toHaveLength(0);
   });
 });

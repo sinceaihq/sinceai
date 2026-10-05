@@ -9,7 +9,7 @@ Since AI community website (sinceai.fi) — a Next.js 16 marketing site for an A
 ## Commands
 
 - `npm run dev` — Start development server
-- `npm run build` — Production build
+- `npm run build` — Production build (webpack: Turbopack's production chunking duplicated framer-motion three times, so public pages shipped ~35 % more JS; same pixels, smaller worker — measured 5 Oct 2026. `npm run dev` stays on Turbopack.)
 - `npm run lint` — Run ESLint
 - `npm start` — Start production server
 - `npm ci --legacy-peer-deps` — Install dependencies (legacy-peer-deps required for CI)

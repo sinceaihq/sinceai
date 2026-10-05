@@ -240,37 +240,64 @@ export function lettering(
 
 /**
  * The rooftop "SCIENCE PARK" letters with a slim vertical "TURKU" standing in
- * for the I (TTK campus brand, SPEC §3.1.6) — green by day, lit at night.
+ * for the I (TTK campus brand, SPEC §3.1.6) — green by day, lit at night. The
+ * canvas is cropped to the capitals (`cap` = cap height / canvas height), so the
+ * mesh can be sized by the real letter height. The I is a full-height bar with
+ * TURKU running up it in a darker green: an I from the street, TURKU up close.
  */
-export function sciencePark(): { texture: THREE.CanvasTexture; aspect: number } {
-  const px = 220;
+export function sciencePark(): { texture: THREE.CanvasTexture; aspect: number; cap: number } {
   const family = sansFont();
-  const W = 2600;
-  const H = 340;
+  const capPx = 240;
+  // Cap height of a heavy grotesque ≈ 0.72 em.
+  const px = Math.round(capPx / 0.72);
+  const padY = 34;
+  const H = capPx + padY * 2;
+  const probe = makeCanvas(8, 8).ctx;
+  probe.font = `800 ${px}px ${family}`;
+  const gap = px * 0.06;
+  const space = px * 0.32;
+  const stem = px * 0.2;
+  const parts: ({ t: string } | { bar: true } | { space: true })[] = [
+    { t: "S" },
+    { t: "C" },
+    { bar: true },
+    { t: "E" },
+    { t: "N" },
+    { t: "C" },
+    { t: "E" },
+    { space: true },
+    { t: "P" },
+    { t: "A" },
+    { t: "R" },
+    { t: "K" },
+  ];
+  const widthOf = (q: (typeof parts)[number]) => ("t" in q ? probe.measureText(q.t).width : "bar" in q ? stem : space);
+  const pad = 24;
+  const W = Math.ceil(parts.reduce((a, q) => a + widthOf(q) + gap, 0) - gap + pad * 2);
   const { canvas, ctx } = makeCanvas(W, H);
   ctx.fillStyle = "#ffffff";
   ctx.textBaseline = "alphabetic";
   ctx.font = `800 ${px}px ${family}`;
-  const base = H - 70;
-  let x = 30;
-  const draw = (t: string) => {
-    ctx.fillText(t, x, base);
-    x += ctx.measureText(t).width + 18;
-  };
-  draw("SC");
-  // The slim vertical TURKU in place of the I.
-  ctx.save();
-  ctx.translate(x + 22, base);
-  ctx.rotate(-Math.PI / 2);
-  ctx.font = `800 ${46}px ${family}`;
-  ctx.fillText("TURKU", 0, 0);
-  ctx.restore();
-  x += 62;
-  ctx.font = `800 ${px}px ${family}`;
-  draw("ENCE");
-  x += 70;
-  draw("PARK");
-  return { texture: canvasTexture(canvas, { anisotropy: 8 }), aspect: W / H };
+  const base = padY + capPx;
+  let x = pad;
+  for (const q of parts) {
+    if ("t" in q) ctx.fillText(q.t, x, base);
+    else if ("bar" in q) {
+      ctx.fillRect(x, padY, stem, capPx);
+      // TURKU up the bar (reads bottom to top), a darker tone of the same paint.
+      ctx.save();
+      ctx.translate(x + stem * 0.5, base - capPx * 0.06);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillStyle = "#9a9a9a";
+      ctx.font = `700 ${Math.round(stem * 0.72)}px ${family}`;
+      ctx.textAlign = "left";
+      ctx.textBaseline = "middle";
+      ctx.fillText("TURKU", 0, 0, capPx * 0.88);
+      ctx.restore();
+    }
+    x += widthOf(q) + gap;
+  }
+  return { texture: canvasTexture(canvas, { anisotropy: 8 }), aspect: W / H, cap: capPx / H };
 }
 
 /** "Turun Tiedepuisto – BioCity A" board: a small green campus map with the A marked. */
@@ -322,4 +349,167 @@ export function doorASign(): THREE.CanvasTexture {
   ctx.textBaseline = "middle";
   ctx.fillText("A", 64, 70);
   return canvasTexture(canvas, { anisotropy: 4 });
+}
+
+/**
+ * The curved auditorium wall facing the BioCity–Electrocity yard carries a large colourful mural on
+ * white render (SPEC §3.1.1: 5 × 25 m). This is our own abstract drawing in that spirit — leaves,
+ * cells, helices, plankton-like branches — not a copy of the artwork. `height` metres of wall map
+ * onto the canvas; the painting fills `y0…y1` of it, white render above and below.
+ */
+export function muralTexture(height: number, y0: number, y1: number, W = 2048, H = 448): THREE.CanvasTexture {
+  const { canvas, ctx } = makeCanvas(W, H);
+  const rnd = mulberry32(2014);
+  ctx.fillStyle = "#eeece6";
+  ctx.fillRect(0, 0, W, H);
+  const top = H * (1 - y1 / height);
+  const bottom = H * (1 - y0 / height);
+  const mh = bottom - top;
+  const palette = ["#2e9e5b", "#1f7a8c", "#f2c14e", "#f78154", "#e5446d", "#6a3d9a", "#3a86ff", "#8ac926", "#ff9f1c", "#0b6e4f"];
+  const pick = () => palette[Math.floor(rnd() * palette.length)];
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(0, top, W, mh);
+  ctx.clip();
+  // Soft colour fields.
+  for (let i = 0; i < 26; i++) {
+    const x = rnd() * W;
+    const y = top + rnd() * mh;
+    const r = mh * (0.25 + rnd() * 0.5);
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+    const c = pick();
+    g.addColorStop(0, `${c}cc`);
+    g.addColorStop(1, `${c}00`);
+    ctx.fillStyle = g;
+    ctx.fillRect(x - r, y - r, r * 2, r * 2);
+  }
+  // Leaves.
+  for (let i = 0; i < 70; i++) {
+    const x = rnd() * W;
+    const y = top + rnd() * mh;
+    const l = mh * (0.12 + rnd() * 0.22);
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rnd() * Math.PI * 2);
+    ctx.fillStyle = pick();
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.quadraticCurveTo(l * 0.5, -l * 0.32, l, 0);
+    ctx.quadraticCurveTo(l * 0.5, l * 0.32, 0, 0);
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,0.55)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(l * 0.05, 0);
+    ctx.lineTo(l * 0.92, 0);
+    ctx.stroke();
+    ctx.restore();
+  }
+  // Cells: rings with nuclei.
+  for (let i = 0; i < 46; i++) {
+    const x = rnd() * W;
+    const y = top + rnd() * mh;
+    const r = mh * (0.03 + rnd() * 0.09);
+    ctx.fillStyle = `${pick()}d0`;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.lineWidth = Math.max(2, r * 0.18);
+    ctx.strokeStyle = pick();
+    ctx.stroke();
+    ctx.fillStyle = "#1d1d2b";
+    ctx.beginPath();
+    ctx.arc(x + r * 0.2, y - r * 0.15, r * 0.32, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  // Helices.
+  for (let i = 0; i < 6; i++) {
+    const x0 = rnd() * W;
+    const yc = top + mh * (0.25 + rnd() * 0.5);
+    const len = W * (0.06 + rnd() * 0.08);
+    const amp = mh * 0.1;
+    const c1 = pick();
+    const c2 = pick();
+    for (let s = 0; s < len; s += 6) {
+      const ph = (s / len) * Math.PI * 6;
+      const ya = yc + Math.sin(ph) * amp;
+      const yb = yc - Math.sin(ph) * amp;
+      if (s % 24 === 0) {
+        ctx.strokeStyle = "rgba(30,30,40,0.5)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x0 + s, ya);
+        ctx.lineTo(x0 + s, yb);
+        ctx.stroke();
+      }
+      ctx.fillStyle = c1;
+      ctx.fillRect(x0 + s, ya - 3, 6, 6);
+      ctx.fillStyle = c2;
+      ctx.fillRect(x0 + s, yb - 3, 6, 6);
+    }
+  }
+  // Branching plankton / roots in dark ink.
+  ctx.strokeStyle = "rgba(25,30,40,0.75)";
+  ctx.lineCap = "round";
+  const branch = (x: number, y: number, a: number, l: number, d: number) => {
+    if (d > 4 || l < 6) return;
+    const x2 = x + Math.cos(a) * l;
+    const y2 = y + Math.sin(a) * l;
+    ctx.lineWidth = Math.max(1.2, 5 - d);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+    branch(x2, y2, a - 0.5 + rnd() * 0.2, l * 0.7, d + 1);
+    branch(x2, y2, a + 0.5 - rnd() * 0.2, l * 0.7, d + 1);
+  };
+  for (let i = 0; i < 14; i++) branch(rnd() * W, top + mh * (0.6 + rnd() * 0.4), -Math.PI / 2 + (rnd() - 0.5) * 0.6, mh * 0.18, 0);
+  ctx.restore();
+  // A thin painted border line top and bottom.
+  ctx.fillStyle = "#2b2b33";
+  ctx.fillRect(0, top - 2, W, 2);
+  ctx.fillRect(0, bottom, W, 2);
+  const t = canvasTexture(canvas, { anisotropy: 8 });
+  t.wrapS = THREE.ClampToEdgeWrapping;
+  t.wrapT = THREE.ClampToEdgeWrapping;
+  return t;
+}
+
+/** Since AI wayfinding sign over the passage to Joki (event dressing): "JOKI ↓ · Showroom · Q&A". */
+export function passageSign(): THREE.CanvasTexture {
+  const W = 1024;
+  const H = 256;
+  const { canvas, ctx } = makeCanvas(W, H);
+  ctx.fillStyle = "#0d0c16";
+  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = EVENT_VIOLET;
+  ctx.fillRect(0, H - 14, W, 14);
+  const mono = monoFont();
+  ctx.fillStyle = "#ffffff";
+  ctx.textBaseline = "middle";
+  ctx.textAlign = "left";
+  ctx.font = `800 128px ${mono}`;
+  ctx.fillText("JOKI", 56, H / 2 - 6);
+  const jw = ctx.measureText("JOKI").width;
+  // Down arrow (10 steps down) in the event violet.
+  ctx.fillStyle = "#a99cff";
+  const ax = 56 + jw + 70;
+  const ay = H / 2 - 6;
+  ctx.beginPath();
+  ctx.moveTo(ax - 16, ay - 52);
+  ctx.lineTo(ax + 16, ay - 52);
+  ctx.lineTo(ax + 16, ay + 6);
+  ctx.lineTo(ax + 42, ay + 6);
+  ctx.lineTo(ax, ay + 54);
+  ctx.lineTo(ax - 42, ay + 6);
+  ctx.lineTo(ax - 16, ay + 6);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = "rgba(255,255,255,0.88)";
+  ctx.font = `600 40px ${mono}`;
+  ctx.fillText("SHOWROOM · Q&A", ax + 86, H / 2 - 30);
+  ctx.fillStyle = "rgba(220,214,255,0.75)";
+  ctx.font = `500 32px ${mono}`;
+  ctx.fillText("10 STEPS DOWN", ax + 86, H / 2 + 26);
+  return canvasTexture(canvas, { anisotropy: 8 });
 }

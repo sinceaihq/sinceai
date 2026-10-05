@@ -18,7 +18,7 @@ import fs from "node:fs";
 import path from "node:path";
 import type { CampusData, StreetsData } from "../../data/campus";
 import type { V2 } from "../../types";
-import { FACES, ITEMS, featherEdges, featherSailGeometry, fromDoor, itemsInside, regionUV, type Item } from "../event";
+import { FACES, ITEMS, WALL_WASHERS, type FaceDesign, featherEdges, featherSailGeometry, fromDoor, itemsInside, regionUV, type Item } from "../event";
 import { pointInRing } from "../../util";
 
 const DATA = path.join(process.cwd(), "public/assets/guide/3d/data");
@@ -72,6 +72,45 @@ describe("event dressing placements", () => {
     // Facing east: 2 m east, 1 m to the right (south, +z).
     expect(p[0]).toBeCloseTo(2, 6);
     expect(p[1]).toBeCloseTo(1, 6);
+  });
+
+  it("washes the white recess wall from the floor, clear of car A and the walkway", () => {
+    const washers = ITEMS.filter((i) => i.kind === "wallWash");
+    expect(washers.length).toBe(WALL_WASHERS.length);
+    // SPEC §5.3 footprint of car A and the recess floor (§5.2).
+    const carA: V2[] = [
+      [-26.25, -22.1],
+      [-27.88, -20.97],
+      [-25.09, -16.97],
+      [-23.47, -18.11],
+    ];
+    const floor: V2[] = [
+      [-27.62, -25.13],
+      [-20.08, -14.84],
+      [-28.7, -8.84],
+      [-29.01, -9.29],
+      [-35.17, -13.41],
+    ];
+    for (const w of washers) {
+      if (w.kind !== "wallWash") continue;
+      expect(pointInRing(w.at, floor)).toBe(true);
+      expect(pointInRing(w.at, carA)).toBe(false);
+      expect(w.wallDist).toBeLessThan(0.5);
+    }
+  });
+
+  it("marks the closed Joki street door as closed — a plain notice, nothing that reads as an entrance", () => {
+    const joki = ITEMS.filter((i) => i.id.startsWith("joki-"));
+    for (const it of joki) {
+      if (it.kind !== "totem") continue;
+      expect(it.style).toBe("notice");
+      expect(it.uplights).toBeFalsy();
+      expect((FACES[it.front] as FaceDesign).notice && (FACES[it.back] as FaceDesign).notice).toBe(true);
+    }
+    // No violet or event dressing (flags, banners, stickers, line lights) near it.
+    const door: V2 = [8.58, 50.94];
+    const near = ITEMS.filter((i) => i.kind !== "stanchions" && i.kind !== "totem" && "at" in i && Math.hypot(i.at[0] - door[0], i.at[1] - door[1]) < 12);
+    expect(near.map((i) => i.id)).toEqual([]);
   });
 
   it("gives every totem face a design", () => {

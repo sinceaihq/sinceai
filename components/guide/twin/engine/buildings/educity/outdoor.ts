@@ -1,5 +1,7 @@
 import type { V2 } from "../../types";
-import { BRIDGES, MAIN_STAIRS, PAVILION } from "./frame";
+import { BLOCK, BRIDGES, MAIN_DOORS, MAIN_STAIRS, PAVILION, WALKWAY_IN } from "./frame";
+
+const BLOCK_W = BLOCK.w;
 import { DOOR_B } from "./data";
 import { Bucket, box, cylinder, quadN, rectSlab, ring, slab, type Vec3 } from "./geom";
 import { railing } from "./volumes";
@@ -123,13 +125,29 @@ export function buildOutdoor(b: OutdoorBuckets, signs: SignRects): void {
 
 const SOFFIT = PAVILION.roof - PAVILION.fascia;
 
+/** Black-bronze window and curtain-wall frames (the frame bucket's own paint, SPEC §3.3.3). */
+export const FRAME_DARK: [string, number, number] = ["#1f1a18", 0.45, 0];
+
+/** Brushed aluminium of the fascia and the corner piers: a satin metal, so the low sun leaves a highlight, not a white-out. */
+const ALU: [string, number, number] = ["#9fa6ad", 0.55, 0.8];
+
 function pavilion(b: OutdoorBuckets, signs: SignRects): void {
   const P = PAVILION;
-  // Fascia (brushed aluminium) on the three free sides, 1.3 m deep band.
-  b.metal.paint("#b2b9c0", 0.36, 0.35);
+  // Fascia (brushed aluminium) on the three free sides, 1.3 m deep band, in 1.2 m panels.
+  b.metal.paint(...ALU);
   box(b.metal, P.x0, SOFFIT, P.z0, P.x0 + 0.06, P.roof, P.z1, { nx: true, py: true });
   box(b.metal, P.x1 - 0.06, SOFFIT, P.z0, P.x1, P.roof, P.z1, { px: true, py: true });
   box(b.metal, P.x0, SOFFIT, P.z1 - 0.06, P.x1, P.roof, P.z1, { pz: true, py: true });
+  b.frame.paint("#4a4f54", 0.6, 0.3);
+  for (let z = P.z0 + 1.2; z < P.z1 - 0.3; z += 1.2) {
+    box(b.frame, P.x0 - 0.004, SOFFIT, z - 0.008, P.x0, P.roof - 0.01, z + 0.008, { nx: true });
+    box(b.frame, P.x1, SOFFIT, z - 0.008, P.x1 + 0.004, P.roof - 0.01, z + 0.008, { px: true });
+  }
+  for (let x = P.x0 + 1.2; x < P.x1 - 0.3; x += 1.2) box(b.frame, x - 0.008, SOFFIT, P.z1, x + 0.008, P.roof - 0.01, P.z1 + 0.004, { pz: true });
+  b.frame.paint(...FRAME_DARK);
+  // Threshold under the north-west canopy: deck paving from the campus deck to the glass line (the
+  // campus outline stands 1.3 m outside the glass; 1 cm low so the ground's deck wins where it exists).
+  rectSlab(b.pavers, 3.6, P.glassNW, P.z0, P.z1 - 0.06, -0.01, true);
   // Roof: sedum, with the slab edge hidden behind the fascia.
   rectSlab(b.sedum, P.x0 + 0.06, P.x1 - 0.06, P.z0, P.z1 - 0.06, P.roof - 0.04, true);
   // Canopy soffits outside the glass (light, with downlights).
@@ -151,23 +169,25 @@ function pavilion(b: OutdoorBuckets, signs: SignRects): void {
   }
   // Glazed walls under the canopy (y 0 → soffit).
   // North-west face: glass, the revolving door, glass, then the aluminium corner pier.
-  const drumZ = 74.6;
-  const drumR = 1.5;
+  const drumZ = MAIN_DOORS.west.z;
+  const drumR = MAIN_DOORS.west.r;
   curtainX(b, P.glassNW, P.z0 + 0.05, drumZ - drumR, 0, SOFFIT, -1);
   curtainX(b, P.glassNW, drumZ + drumR, 77.6, 0, SOFFIT, -1);
   revolvingDoor(b, P.glassNW, drumZ, drumR);
   glassX(b.glassClear, P.glassNW, drumZ - drumR, drumZ + drumR, 2.6, SOFFIT, -1);
   glassX(b.glassStandIn, P.glassNW - 0.004, drumZ - drumR, drumZ + drumR, 2.6, SOFFIT, -1, [-2.6, 4.2, 0.37, 2]);
-  b.metal.paint("#b2b9c0", 0.36, 0.35);
+  b.metal.paint(...ALU);
   box(b.metal, P.x0 + 0.06, 0, 77.6, P.glassNW, SOFFIT, P.z1);
+  pierJoints(b, P.x0 + 0.06, P.glassNW, 77.6, P.z1);
   // South-east face: glass, the sliding door "B", glass, pier.
-  const doorZ0 = 73.5;
-  const doorZ1 = 75.9;
+  const doorZ0 = MAIN_DOORS.east.z0;
+  const doorZ1 = MAIN_DOORS.east.z1;
   curtainX(b, P.glassSE, P.z0 + 0.05, doorZ0, 0, SOFFIT, 1);
   curtainX(b, P.glassSE, doorZ1, 77.6, 0, SOFFIT, 1);
-  slidingDoor(b, P.glassSE, doorZ0, doorZ1, signs.B);
-  b.metal.paint("#b2b9c0", 0.36, 0.35);
+  slidingDoor(b, P.glassSE, doorZ0, doorZ1);
+  b.metal.paint(...ALU);
   box(b.metal, P.glassSE, 0, 77.6, P.x1 - 0.06, SOFFIT, P.z1);
+  pierJoints(b, P.glassSE, P.x1 - 0.06, 77.6, P.z1);
   // South-west wall over the surface lot: large grey metal panels (1.2 × 1.5 m grid) above a concrete
   // plinth, an exit door from the lower lobby with a steel stair down to the lot (thinglink "parking wall").
   swWall(b);
@@ -176,6 +196,13 @@ function pavilion(b: OutdoorBuckets, signs: SignRects): void {
   const lh = lw / signs.educity.aspect;
   signQuad(b.signs, [P.x0 - 0.012, (SOFFIT + P.roof) / 2, drumZ], [0, 0, 1], [-1, 0, 0], lw, lh, signs.educity);
   signQuad(b.signs, [P.x1 + 0.012, (SOFFIT + P.roof) / 2, (doorZ0 + doorZ1) / 2], [0, 0, -1], [1, 0, 0], lw, lh, signs.educity);
+}
+
+/** Horizontal panel joints (recessed dark lines) round a corner pier's three outer faces. */
+function pierJoints(b: OutdoorBuckets, x0: number, x1: number, z0: number, z1: number): void {
+  b.frame.paint("#4a4f54", 0.6, 0.3);
+  for (const y of [1.3, 2.6]) box(b.frame, x0 - 0.004, y - 0.008, z0 - 0.004, x1 + 0.004, y + 0.008, z1 + 0.004, { nx: true, px: true, nz: true, pz: true });
+  b.frame.paint(...FRAME_DARK);
 }
 
 /** Height of the surface lot along the pavilion's south-west face (y_E; DTM ≈ −3.4 campus). */
@@ -301,7 +328,12 @@ function revolvingDoor(b: OutdoorBuckets, x: number, cz: number, r: number): voi
   box(b.frame, x - 0.05, 0, cz - 0.05, x + 0.05, h, cz + 0.05);
 }
 
-function slidingDoor(b: OutdoorBuckets, x: number, z0: number, z1: number, B: AtlasRect): void {
+/**
+ * The east main entrance: an automatic sliding double door. No door letter — "door B", the company
+ * entrance, is the brick portal on the south-east facade, and a second "B" here would send partners
+ * to the wrong door.
+ */
+function slidingDoor(b: OutdoorBuckets, x: number, z0: number, z1: number): void {
   const h = 2.45;
   glassX(b.glassClear, x, z0, z1, 0.03, h, 1);
   glassX(b.glassStandIn, x + 0.004, z0, z1, 0.03, h, 1, [-0.03, 4.2, 0.61, 2]);
@@ -312,8 +344,10 @@ function slidingDoor(b: OutdoorBuckets, x: number, z0: number, z1: number, B: At
   for (const z of [z0, mid, z1]) box(b.metal, x - 0.02, 0, z - 0.04, x + 0.06, h, z + 0.04);
   box(b.metal, x - 0.02, h, z0, x + 0.08, h + 0.08, z1);
   box(b.metal, x - 0.02, 0, z0, x + 0.06, 0.06, z1);
-  // Door letter on the left leaf (seen from outside: left = +z side).
-  signQuad(b.signs, [x + 0.012, 1.25, (mid + z1) / 2], [0, 0, -1], [1, 0, 0], 0.42, 0.42, B);
+  // Safety manifestation band on the leaves (a frosted strip at eye height).
+  b.frame.paint("#c9cdd0", 0.5, 0);
+  box(b.frame, x + 0.006, 1.38, z0 + 0.06, x + 0.01, 1.46, z1 - 0.06, { px: true });
+  b.frame.paint(...FRAME_DARK);
 }
 
 // ── Door B (south-east facade, recessed brick portal) ──────────────────────
@@ -461,15 +495,19 @@ function walkway(b: OutdoorBuckets): void {
   const xOut = 58.0;
   const zStart = MAIN_STAIRS.zTop;
   const zEnd = PAVILION.z1;
+  // The paving runs under the brick to door B's glass line: the portal and the side door get their
+  // threshold, and no slot opens along the facade where the campus outline stands off the brick.
   const ring2: V2[] = [
-    [xIn, zStart],
-    [xIn, 65.2],
+    [WALKWAY_IN, zStart],
+    [WALKWAY_IN, 65.2],
     [PAVILION.glassSE, 65.2],
     [PAVILION.glassSE, zEnd],
     [xOut, zEnd],
     [xOut, zStart],
   ];
   slab(b.pavers, ring2, 0.0, true);
+  // Door B's portal floor, out from its glass (0.7 m deep) to the walkway.
+  rectSlab(b.pavers, BLOCK_W - DOOR_B.depth, WALKWAY_IN, DOOR_B.z0, DOOR_B.z1, 0.0, true);
   // Outer faces of the deck down to the yard and the surface lot.
   b.render.color("#8d8a86");
   quadN(b.render, [[xOut + 0.25, -5.0, zStart], [xOut + 0.25, -5.0, zEnd], [xOut + 0.25, 0.25, zEnd], [xOut + 0.25, 0.25, zStart]], [1, 0, 0], [
@@ -566,37 +604,36 @@ function streetStorey(b: OutdoorBuckets, signs: SignRects): void {
   glassZ(b.glassAlways, zG, 39.1, 44.5, yF + 0.05, yT, -1);
   for (let x = 39.1; x <= 44.5 + 1e-6; x += 1.35) box(b.frame, x - 0.035, yF, zG - 0.06, x + 0.035, yT, zG + 0.02);
   box(b.frame, 39.1, yT - 0.08, zG - 0.06, 44.5, yT, zG + 0.02);
-  // Shallow lit interiors behind the glass (floor, ceiling with panels, back and side walls).
+  // Shallow lit interiors behind the glass: floor, ceiling with panels, back and end walls — a closed
+  // box up to the glazing's head, so no view from the street reaches the floor-1 slab (and the
+  // furniture standing on it) above.
+  const yC = yT - 0.05;
   b.streetWalls.color("#7d7e7f");
   rectSlab(b.streetWalls, 0.7, 44.5, zG, depth, yF + 0.01, true);
-  rectSlab(b.streetCeiling, 0.7, 44.5, zG, depth, -1.1, false);
+  rectSlab(b.streetCeiling, 0.7, 44.5, zG, depth, yC, false);
   b.streetWalls.color("#d9dad8");
-  quadN(b.streetWalls, [[0.7, yF, depth], [29.9, yF, depth], [29.9, -1.1, depth], [0.7, -1.1, depth]], [0, 0, -1], [
-    [0, yF],
-    [29.2, yF],
-    [29.2, -1.1],
-    [0, -1.1],
-  ]);
-  for (const x of [8.4, 16.9, 23.6]) box(b.streetWalls, x - 0.1, yF, zG + 1.2, x + 0.1, -1.1, depth);
+  const wallZ = (x0: number, x1: number) =>
+    quadN(b.streetWalls, [[x0, yF, depth], [x1, yF, depth], [x1, yC, depth], [x0, yC, depth]], [0, 0, -1], [
+      [0, yF],
+      [x1 - x0, yF],
+      [x1 - x0, yC],
+      [0, yC],
+    ]);
+  const wallX = (x: number, nx: 1 | -1) =>
+    quadN(b.streetWalls, [[x, yF, zG], [x, yF, depth], [x, yC, depth], [x, yC, zG]], [nx, 0, 0], [
+      [0, yF],
+      [depth - zG, yF],
+      [depth - zG, yC],
+      [0, yC],
+    ]);
+  wallZ(0.7, 29.9);
+  wallX(0.7, 1);
+  wallX(29.9, -1);
+  for (const x of [8.4, 16.9, 23.6]) box(b.streetWalls, x - 0.1, yF, zG + 1.2, x + 0.1, yC, depth);
   b.streetWalls.color("#a8c93a");
-  quadN(b.streetWalls, [[39.1, yF, depth], [44.5, yF, depth], [44.5, -1.1, depth], [39.1, -1.1, depth]], [0, 0, -1], [
-    [0, yF],
-    [5.4, yF],
-    [5.4, -1.1],
-    [0, -1.1],
-  ]);
-  quadN(b.streetWalls, [[44.5, yF, zG], [44.5, yF, depth], [44.5, -1.1, depth], [44.5, -1.1, zG]], [-1, 0, 0], [
-    [0, yF],
-    [4.75, yF],
-    [4.75, -1.1],
-    [0, -1.1],
-  ]);
-  quadN(b.streetWalls, [[39.1, yF, depth], [39.1, yF, zG], [39.1, -1.1, zG], [39.1, -1.1, depth]], [1, 0, 0], [
-    [0, yF],
-    [4.75, yF],
-    [4.75, -1.1],
-    [0, -1.1],
-  ]);
+  wallZ(39.1, 44.5);
+  wallX(44.5, -1);
+  wallX(39.1, 1);
   // Wall lights over the storefront and the "EduCity" letters near the north corner.
   for (const x of [5.5, 12.5, 19.5, 26.5, 33.5, 41.5]) {
     box(b.lights, x - 0.12, -0.3, -0.12, x + 0.12, -0.2, 0.0);

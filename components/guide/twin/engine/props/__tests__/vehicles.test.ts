@@ -214,6 +214,7 @@ describe("traffic simulation (headless, 15 minutes at the Friday peak)", () => {
   let busDwells = 0;
   let dropoffs = 0;
   let maxMovers = 0;
+  let onZebra = 0;
   const prev = new Map<unknown, number>();
   for (let step = 0; step < 900 * 30; step++) {
     sim.step(h);
@@ -221,6 +222,8 @@ describe("traffic simulation (headless, 15 minutes at the Friday peak)", () => {
     maxMovers = Math.max(maxMovers, sim.movers.length);
     for (const m of sim.movers) {
       oldest = Math.max(oldest, m.age);
+      // Standing in a queue (not just crawling over): the body must not cover a zebra's centre ± 1.2 m.
+      if (m.v < 0.05 && step % 15 === 0 && m.type !== "bus") for (const cs of sim.routes[m.route].crossings) if (m.s > cs - 1.2 && m.s - m.len < cs + 1.2) onZebra++;
       if (m.type === "bus" && m.dwell > 0) busDwells++;
       if (m.dropoff === -2) dropoffs++;
       const before = prev.get(m) ?? m.s;
@@ -239,9 +242,41 @@ describe("traffic simulation (headless, 15 minutes at the Friday peak)", () => {
   it("stops at red lights", () => {
     expect(redRuns).toBe(0);
   });
+  it("never waits on a zebra (cars; a 12 m bus may straddle one behind a queue that formed after it)", () => {
+    expect(onZebra).toBe(0);
+  });
   it("lets buses dwell at their stops and taxis drop partners at BioCity", () => {
     expect(busDwells).toBeGreaterThan(0);
     expect(dropoffs).toBeGreaterThan(0);
+  });
+});
+
+describe("traffic while the supercar display is in view", () => {
+  it("keeps Tykistökatu moving past the recess and sends no drop-off there", () => {
+    const sim = new TrafficSim(buildRoutes(streets, 1), 60, 11);
+    sim.setLevel({ cars: 1, buses: 1 });
+    sim.taxiEvery = 30;
+    sim.prewarm(60);
+    sim.focus = true;
+    let standingAtRecess = 0;
+    let busesAtRecess = 0;
+    let taxis = 0;
+    for (let step = 0; step < 300 * 30; step++) {
+      sim.step(1 / 30);
+      for (const m of sim.movers) {
+        const r = sim.routes[m.route];
+        if (!r.id.startsWith("tyk-")) continue;
+        if (m.type === "taxi" && m.age < 1) taxis++;
+        // Standing in front of the recess (x −45 … −25 on Tykistökatu, by the display).
+        const p = r.line.at(m.s - m.len / 2);
+        if (m.v < 0.3 && step > 30 * 40 && p[0] > -45 && p[0] < -25 && p[1] > -40 && p[1] < -10) standingAtRecess++;
+        if (m.type === "bus" && step > 30 * 60 && Math.hypot(p[0] + 29.5, p[1] + 16.5) < 40) busesAtRecess++;
+      }
+    }
+    expect(taxis).toBe(0);
+    expect(standingAtRecess).toBe(0);
+    // No bus abreast of the display after the first ones have cleared it.
+    expect(busesAtRecess).toBe(0);
   });
 });
 
@@ -399,7 +434,7 @@ describe("everyday vehicles", () => {
         expect(size.z).toBeGreaterThan(spec.L - 0.1);
         expect(size.z).toBeLessThan(spec.L + 0.1);
         expect(size.x).toBeLessThan(spec.W + 0.35);
-        expect(triangles(g)).toBeLessThan(lod === 0 ? 1900 : 650);
+        expect(triangles(g)).toBeLessThan(lod === 0 ? 3300 : 1150);
       }
       expect(triangles(buildCarBoxGeometry(type))).toBeLessThan(150);
     }

@@ -117,24 +117,48 @@ const lin = (hex: string) => new THREE.Color(hex);
 
 // ── Kolumba brick ───────────────────────────────────────────────────────────
 
-/** Brick palette (sRGB) and shares — perceived average ≈ #5f5854 overcast (SPEC §3.3.3). */
+/**
+ * Brick palette (sRGB) and shares. Petersen Kolumba as built on EduCity: a
+ * grey-taupe mix (photographs: ≈ #656262 in shade, ≈ #9f9794 in low sun; the
+ * low November sun adds the warmth, so the albedo stays nearly neutral), mostly
+ * mid tones within a narrow range — a calm fine linear grain, light units a
+ * shade lighter rather than white planks (close-up p95/p50 ≈ 1.4).
+ */
 export const BRICK_TONES: [string, number][] = [
-  // Dark grey-brown mix, close to neutral (the photos' Kolumba reads grey with brown hints).
-  ["#433e3c", 0.31],
-  ["#55504e", 0.32],
-  ["#615a55", 0.14],
-  ["#6b6866", 0.135],
-  ["#8f8b89", 0.075],
-  ["#b7b1ad", 0.02],
+  ["#7a736d", 0.22],
+  ["#857d77", 0.3],
+  ["#8f8780", 0.24],
+  ["#9a928b", 0.14],
+  ["#a89f98", 0.07],
+  ["#b9b0a9", 0.03],
 ];
 
-export function makeBrickMaterial(): THREE.MeshStandardMaterial {
+/** Mortar: dark grey, recessed (SPEC §3.3.3) — close to the darker units, so joints read as fine lines. */
+export const BRICK_MORTAR = "#66615c";
+
+/** Average albedo of the wall (linear): units and the 13 mm joints (26 % of a 50 mm course). */
+export function brickAverage(): THREE.Color {
+  const avg = new THREE.Color(0, 0, 0);
+  for (const [hex, p] of BRICK_TONES) avg.add(lin(hex).multiplyScalar(p));
+  const jointShare = 0.013 / 0.05 + (0.013 / 0.541) * (1 - 0.013 / 0.05);
+  return avg.multiplyScalar(1 - jointShare).add(lin(BRICK_MORTAR).multiplyScalar(jointShare));
+}
+
+/**
+ * After dark the brick is not black: the street lights on Joukahaisenkatu, the walkway's wall lamps
+ * and the deck lanterns wash its lower storeys (≈15 lux at the foot, fading upwards) and the city's
+ * sky glow keeps the rest a dark grey-brown (SPEC §8.3: ≈ #3c3429 under street light). As E/π
+ * multipliers of the albedo (klux → scene luminance), warm 3000 K LED light.
+ */
+export const BRICK_NIGHT = { foot: 0.0048, falloff: 4.0, sky: 0.0006 } as const;
+
+export function makeBrickMaterial(night: { value: number } = { value: 0 }): THREE.MeshStandardMaterial {
   const m = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.92, metalness: 0 });
   m.name = "educity:kolumba";
   const tones = BRICK_TONES.map(([hex]) => lin(hex));
   let acc = 0;
   const cdf = BRICK_TONES.map(([, p]) => (acc += p));
-  // Average tone for far distances (linear).
+  // Average unit tone for far distances (linear).
   const avg = new THREE.Color(0, 0, 0);
   BRICK_TONES.forEach(([, p], i) => avg.add(tones[i].clone().multiplyScalar(p)));
   return patch(m, {
@@ -149,7 +173,8 @@ export function makeBrickMaterial(): THREE.MeshStandardMaterial {
       uBrCdf: { value: new THREE.Vector4(cdf[0], cdf[1], cdf[2], cdf[3]) },
       uBrCdf2: { value: cdf[4] },
       uBrAvg: { value: avg },
-      uBrMortar: { value: lin("#38353a") },
+      uBrMortar: { value: lin(BRICK_MORTAR) },
+      uBrNight: night,
     },
     vertexPars: UV_VARYING,
     vertexMain: UV_MAIN,
@@ -157,7 +182,7 @@ export function makeBrickMaterial(): THREE.MeshStandardMaterial {
 ${UV_VARYING}
 uniform vec3 uBrT0; uniform vec3 uBrT1; uniform vec3 uBrT2; uniform vec3 uBrT3; uniform vec3 uBrT4; uniform vec3 uBrT5;
 uniform vec4 uBrCdf; uniform float uBrCdf2;
-uniform vec3 uBrAvg; uniform vec3 uBrMortar;
+uniform vec3 uBrAvg; uniform vec3 uBrMortar; uniform float uBrNight;
 const float BR_COURSE = 0.05;
 const float BR_BED = 0.013;
 const float BR_UNIT = 0.541;
@@ -187,23 +212,36 @@ float brCover; float brFar; float brRough;
 		float h1 = edHash( vec2( unit * 1.37, course ) );
 		float h2 = edHash( vec2( unit + 17.0, course * 1.31 ) );
 		vec3 tone = brTone( h1 );
-		// Hand-made units: tone drifts along the brick and fine light flecks.
+		// Hand-made units: a gentle tone drift along each brick and a few small light flecks.
 		float along = fract( bx / BR_UNIT );
-		float streak = edNoise( vec2( bx * 9.0 + h2 * 40.0, course * 3.0 ) );
-		tone *= 0.84 + 0.3 * streak;
-		float fleck = step( 0.93, edNoise( bp * vec2( 70.0, 160.0 ) ) );
-		tone = mix( tone, uBrT5 * 1.1, fleck * 0.5 );
-		tone *= 0.94 + 0.12 * h2 - 0.05 * smoothstep( 0.85, 1.0, along );
+		float drift = edNoise( vec2( bx * 5.0 + h2 * 40.0, course * 3.0 ) );
+		tone *= 0.94 + 0.12 * drift;
+		float fleck = step( 0.965, edNoise( bp * vec2( 120.0, 260.0 ) ) );
+		tone = mix( tone, uBrT5, fleck * 0.22 );
+		tone *= 0.97 + 0.06 * h2 - 0.03 * smoothstep( 0.88, 1.0, along );
+		// Units resolve below ≈ 2 cm a pixel; further out they average — through a faint course
+		// banding (±4 %, gone before it could alias) instead of a flat paint.
+		float unitFar = smoothstep( 0.015, 0.07, max( bfw.x, bfw.y ) );
+		float band = 1.0 + 0.08 * ( edHash( vec2( course, 7.7 ) ) - 0.5 ) * ( 1.0 - smoothstep( 0.02, 0.045, bfw.y ) );
+		tone = mix( tone, uBrAvg * band, unitFar );
+		// Large-scale mottling of the hand-made batches (metres: it never aliases).
+		float mott = edNoise( bp * vec2( 0.45, 1.3 ) + 3.1 ) * 0.6 + edNoise( bp * vec2( 1.7, 4.0 ) ) * 0.4;
+		tone *= 0.95 + 0.1 * mott;
 		brFar = smoothstep( 0.006, 0.03, max( bfw.x, bfw.y ) );
-		tone = mix( tone, uBrAvg, smoothstep( 0.02, 0.09, max( bfw.x, bfw.y ) ) );
-		float cover = mix( brCover, 0.7, smoothstep( 0.03, 0.12, bfw.y ) );
-		vec3 brick = mix( uBrMortar, tone, cover );
+		// brCover is box-filtered (edPulse): it averages to the joint share at any distance.
+		vec3 brick = mix( uBrMortar * ( 0.95 + 0.1 * mott ), tone, brCover );
 		diffuseColor.rgb *= brick;
-		brRough = mix( 1.0, 0.86 + 0.1 * h2, cover );
+		brRough = mix( 1.0, 0.86 + 0.1 * h2, brCover );
 	}
 `,
       roughnessmap_fragment: /* glsl */ `
 	float roughnessFactor = roughness * brRough;
+`,
+      emissivemap_fragment: /* glsl */ `
+	{
+		float wash = ${BRICK_NIGHT.foot} * exp( - max( vEdUv.y, 0.0 ) / ${BRICK_NIGHT.falloff.toFixed(1)} ) + ${BRICK_NIGHT.sky};
+		totalEmissiveRadiance += diffuseColor.rgb * vec3( 1.0, 0.84, 0.66 ) * wash * uBrNight;
+	}
 `,
       normal_fragment_maps: /* glsl */ `
 	{
@@ -221,6 +259,8 @@ float brCover; float brFar; float brRough;
 /** Shared per-module window uniforms (lit fraction follows the time of day). */
 export interface WindowUniforms {
   uEdLit: { value: number };
+  /** Scale of the rooms' own light seen from outside (the street exposure; see windowScale). */
+  uEdWinK: { value: number };
 }
 
 /**
@@ -235,7 +275,7 @@ export function makeWindowGlassMaterial(shared: WindowUniforms, tier: TwinContex
   const detailed = tier !== "low";
   return patch(m, {
     key: `window-${detailed ? 1 : 0}`,
-    uniforms: { ...FACADE_GLOBALS, uEdLit: shared.uEdLit },
+    uniforms: { ...FACADE_GLOBALS, uEdLit: shared.uEdLit, uEdWinK: shared.uEdWinK },
     defines: detailed ? { ED_ROOM_DETAIL: 1 } : {},
     vertexPars: /* glsl */ `
 attribute vec4 aWinA;
@@ -262,6 +302,7 @@ varying vec3 vWinNor;
 uniform float uFcNight;
 uniform float uFcDaylight;
 uniform float uEdLit;
+uniform float uEdWinK;
 `,
     replace: {
       normal_fragment_maps: /* glsl */ `
@@ -270,7 +311,8 @@ uniform float uEdLit;
 		vec2 tilt = vec2( edHash( vec2( vWinB.z * 91.0, 3.1 ) ), edHash( vec2( vWinB.z * 57.0, 8.3 ) ) ) - 0.5;
 		vec3 Nw = normalize( vWinNor );
 		vec3 Tw = edRight( Nw );
-		vec3 tw = Tw * tilt.x * 0.018 + vec3( 0.0, 1.0, 0.0 ) * tilt.y * 0.012;
+		// ±1.2° about both axes: neighbouring panes mirror different parts of the sky gradient.
+		vec3 tw = Tw * tilt.x * 0.042 + vec3( 0.0, 1.0, 0.0 ) * tilt.y * 0.036;
 		normal = normalize( normal + ( viewMatrix * vec4( tw, 0.0 ) ).xyz );
 	}
 `,
@@ -299,8 +341,10 @@ uniform float uEdLit;
 		vec3 roomId = vec3( seed * 113.0, cell, sIdx );
 		float r1 = edHash3( roomId + 1.7 );
 		float r2 = edHash3( roomId + 5.3 );
-		float lit = kind > 2.5 ? 0.0 : step( r1, uEdLit * ( kind > 0.5 ? 1.15 : 1.0 ) );
-		vec3 lightCol = mix( vec3( 1.05, 1.0, 0.93 ), vec3( 1.12, 0.98, 0.84 ), r2 * 0.5 );
+		// Lit rooms vary (dimmed, a lamp or two, daylight-white panels): ±30 % and 3500–4500 K.
+		float r3 = edHash3( roomId + 3.3 );
+		float lit = kind > 2.5 ? 0.0 : step( r1, uEdLit * ( kind > 0.5 ? 1.15 : 1.0 ) ) * ( 0.7 + 0.6 * r3 ) * uEdWinK;
+		vec3 lightCol = mix( vec3( 1.02, 1.0, 0.97 ), vec3( 1.12, 0.98, 0.84 ), r2 );
 		// ≈ LUMINANCE.windowLit seen from outside (rooms at ≈ 250–300 lux, light walls).
 		float art = kind > 1.5 ? 0.3 : ( kind > 0.5 ? 0.21 : 0.24 );
 		float day = uFcDaylight;
@@ -405,13 +449,15 @@ uniform float uEdLit;
 		vec3 Vv = normalize( vViewPosition );
 		float cosT = clamp( abs( dot( Vv, normal ) ), 0.0, 1.0 );
 		float F = 0.05 + 0.95 * pow( 1.0 - cosT, 5.0 );
-		totalEmissiveRadiance += radiance * 0.72 * ( 1.0 - F );
+		// By day the sky reflection dominates (rooms behind glass read dark, as in the photographs).
+		totalEmissiveRadiance += radiance * mix( 0.72, 0.3, uFcDaylight ) * ( 1.0 - F );
 	}
 `,
       lights_physical_fragment: /* glsl */ `
 	#include <lights_physical_fragment>
-	material.specularColor = vec3( 0.075 );
-	material.specularColorBlended = vec3( 0.075 );
+	// Coated triple glazing: F0 ≈ 0.11, full Fresnel against the sky (scene.environment).
+	material.specularColor = vec3( 0.11 );
+	material.specularColorBlended = vec3( 0.11 );
 	material.diffuseContribution *= 0.15;
 `,
     },
@@ -420,13 +466,23 @@ uniform float uEdLit;
 
 // ── Clear glass (in front of the modelled interiors) ────────────────────────
 
-/** Transparent glazing that shows the real interior: reflections at full strength over a dimmed view. */
-export function makeClearGlass(lib: MaterialLibrary, coverage = 0.16, tint = "#0e1418"): THREE.MeshStandardMaterial {
+/**
+ * Transparent glazing that shows the real interior: reflections at full strength over a dimmed view.
+ * Facade and door glass is clean float glass (uniform roughness, no normal map — the library's
+ * smudge read as swirls and cracks in every room close-up); `smudge` keeps it for low-coverage
+ * interior partitions.
+ */
+export function makeClearGlass(lib: MaterialLibrary, coverage = 0.16, tint = "#0e1418", smudge = false): THREE.MeshStandardMaterial {
   // glass_smudge has no colour map: set the albedo directly (a calibrated override would exceed 1).
   const m = lib.variant("glassInterior", {});
   m.color.set(tint);
   m.opacity = coverage;
   m.name = "educity:clear-glass";
+  if (!smudge) {
+    m.normalMap = null;
+    m.roughnessMap = null;
+    m.roughness = 0.03;
+  }
   m.needsUpdate = true;
   return m;
 }
@@ -578,9 +634,12 @@ export function makeCeilingMaterial(ctx: Pick<TwinContext, "envInterior">, pitch
   const m = new THREE.MeshStandardMaterial({ color: "#e9e8e4", roughness: 0.92, emissive: "#ffffff", emissiveIntensity: 1 });
   m.name = "educity:ceiling";
   interior(m, ctx);
+  // The panels' luminance (switched with the building's use: see lighting.ts).
+  const lum = { value: LUMINANCE.ceilingPanel };
+  m.userData.edPanelLum = lum;
   return patch(m, {
     key: "ceiling",
-    uniforms: { uCePitch: { value: new THREE.Vector2(pitch[0], pitch[1]) }, uCeLum: { value: LUMINANCE.ceilingPanel } },
+    uniforms: { uCePitch: { value: new THREE.Vector2(pitch[0], pitch[1]) }, uCeLum: lum },
     vertexPars: UV_VARYING,
     vertexMain: UV_MAIN,
     fragmentPars: `${UV_VARYING}\nuniform vec2 uCePitch; uniform float uCeLum;`,

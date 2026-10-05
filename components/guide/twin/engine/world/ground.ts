@@ -10,6 +10,7 @@ import {
   type Terrain,
 } from "../data/campus";
 import { cleanRing, clamp, ensureCCW, mulberry32, pointInRing, polygonBounds, polygonCentroid, ringArea, smoothstep } from "../util";
+import { setStreetLightMap } from "../render/facade";
 import { boxUV } from "../render/uv";
 import { makeLabel } from "../labels";
 
@@ -1163,17 +1164,17 @@ export type SurfaceGroup = "asphalt" | "footway" | "pavers" | "setts" | "deck" |
  * others are vertex tints (linear ratio of the albedos).
  */
 export const SURFACE_LOOK: Record<SurfaceKind, { group: SurfaceGroup; albedo: string; uvScale?: [number, number] }> = {
-  road: { group: "asphalt", albedo: "#4b4946" },
+  road: { group: "asphalt", albedo: "#474644" },
   yard: { group: "asphalt", albedo: "#53514d" },
   footway: { group: "footway", albedo: "#57575a" },
   red: { group: "footway", albedo: "#6a4a43" },
   slabs: { group: "pavers", albedo: "#8f8b85" },
-  plaza: { group: "pavers", albedo: "#b9afa5" },
+  plaza: { group: "pavers", albedo: "#c6bcb1" },
   plazaGrey: { group: "pavers", albedo: "#8a8884", uvScale: [1.2 / 1.8, 1.2 / 1.8] },
   setts: { group: "setts", albedo: "#77777a" },
   verge: { group: "setts", albedo: "#7f7670", uvScale: [2.2 / 1.6, 1.1 / 0.8] },
   platform: { group: "setts", albedo: "#857d76", uvScale: [2.2 / 1.3, 1.1 / 1.3] },
-  deck: { group: "deck", albedo: "#857b6e" },
+  deck: { group: "deck", albedo: "#7b7166" },
   concrete: { group: "concrete", albedo: "#8d8c88" },
 };
 
@@ -1241,6 +1242,18 @@ const CAMPUS_GROUND: V2[] = [
   [100, 140],
   [20, 70],
   [0, 40],
+];
+
+/**
+ * Kupittaa's island platform: the full 10.5 m between the two tracks. OSM maps it as two half-platforms
+ * (one per track; only w856064136, the south-west half, is in the extract), so the north-east half was drawn
+ * as track-side gravel; the flat −4.8 m top of the 2021 DTM gives both edges.
+ */
+export const ISLAND_PLATFORM: V2[] = [
+  [153.6, -196.8],
+  [316.3, 39.4],
+  [324.9, 33.5],
+  [162.2, -202.8],
 ];
 
 const OSM_AREA_KIND: Record<string, SurfaceKind> = {
@@ -1370,6 +1383,24 @@ export const HERO_SURFACES: HeroSurface[] = [
     ],
   },
   {
+    kind: "platform",
+    note: "Kupittaa's whole island platform (both halves; OSM has only the south-west one)",
+    ring: ISLAND_PLATFORM,
+  },
+  {
+    kind: "slabs",
+    note: "light concrete pavers along ParkCity's east side to the foot of Kalevansilta's street stair (2025 orthophoto)",
+    ring: [
+      [258.5, -12.0],
+      [262.5, -14.0],
+      [276.5, 2.0],
+      [277.5, 5.0],
+      [274.5, 15.0],
+      [270.5, 15.0],
+      [271.5, 7.0],
+    ],
+  },
+  {
     kind: "plazaGrey",
     note: "BioCity entrance recess floor (CAD, SPEC §5.2), light-grey slabs #7F7D79",
     ring: [
@@ -1387,6 +1418,19 @@ export const HERO_SURFACES: HeroSurface[] = [
  * least this level.
  */
 export const HERO_FILLS: { ring: V2[]; minY: number; note: string }[] = [
+  {
+    note: "paved walk along ParkCity's east side where Kalevansilta's street stair lands (built 2022–23, after the 2021 laser: the DTM still has the old hollow there)",
+    minY: -0.9,
+    ring: [
+      [258.5, -12.0],
+      [262.5, -14.0],
+      [276.5, 2.0],
+      [277.5, 5.0],
+      [274.5, 15.0],
+      [270.5, 15.0],
+      [271.5, 7.0],
+    ],
+  },
   {
     note: "deck over the garage tunnel mouth (the 2021 laser looked into the opening)",
     minY: 1.72,
@@ -1460,6 +1504,23 @@ export const HERO_PLANTERS: { ring: V2[]; height: number; edge: "steel" | "concr
       [44.4, 8.6],
     ],
   },
+  // Round planter drums on the terrace, planted (dark tops on the 2025 orthophoto; round 1 drew them as
+  // faceted solid white cylinders).
+  ...([
+    [25.9, -5.6],
+    [26.1, -3.3],
+    [28.7, -3.3],
+    [31.7, -3.4],
+    [34.8, -3.6],
+  ] as V2[]).map((c) => ({
+    note: `round planter drum on the terrace at (${c[0]}, ${c[1]})`,
+    height: 0.45,
+    edge: "concrete" as const,
+    ring: Array.from({ length: 40 }, (_, i): V2 => {
+      const a = (i / 40) * Math.PI * 2;
+      return [c[0] + Math.cos(a) * 0.775, c[1] + Math.sin(a) * 0.775];
+    }),
+  })),
   {
     note: "round bed by Pihakansi with a small tree",
     height: 0.45,
@@ -1542,20 +1603,6 @@ export const HERO_BOXES: {
     height: 0.9,
     material: "dark",
   },
-  ...([
-    [25.9, -5.6],
-    [26.1, -3.3],
-    [28.7, -3.3],
-    [31.7, -3.4],
-    [34.8, -3.6],
-  ] as V2[]).map((center) => ({
-    note: "round planter drum on the terrace",
-    center,
-    size: 1.55,
-    y0: "ground" as const,
-    height: 0.45,
-    material: "concrete" as const,
-  })),
 ];
 
 /** Stairs the City data lacks (SPEC §2.2). Same shape as streets.json stairs. */
@@ -1952,25 +1999,14 @@ function boxUVGeometry(g: THREE.BufferGeometry) {
 /** Finnish broad gauge (m). */
 const GAUGE = 1.524;
 
-/** The island platform at Kupittaa (OSM) and the canopies over it (OSM building=roof). */
-const PLATFORM_ID = "osm-856064136";
 const CANOPY_IDS = ["osm-526090188", "osm-526090187"];
 
-/** Kalevansilta (covered timber footbridge, 2005): deck level, centre lines of the covered parts (SPEC §4.5). */
-const KALEVANSILTA = {
-  deckY: 4.3,
-  /** Main span, ParkCity end → Itäharju end. */
-  span: [
-    [261.6, -13.6],
-    [278.5, -25.2],
-    [333.6, -64.0],
-  ] as V2[],
-  /** Covered stair from the platform's south-east end (bottom) up to the span (top). */
-  stair: { bottom: [265.5, -43.9] as V2, top: [278.0, -26.0] as V2, yBottom: -4.72 },
-  /** Open steel stair down to the street at the ParkCity end: two flights and a landing. */
-  streetStair: { top: [267.3, -9.9] as V2, bottom: [274.6, 1.6] as V2, yBottom: -2.2 },
-  width: 3.4,
-};
+/**
+ * Kalevansilta's stair down to Joukahaisenkatu at the ParkCity end (head on the deck, foot on the street):
+ * the City's flights there carry DTM levels from under the bridge, so the ground skips them — the stair is
+ * world/context/bridges.ts's.
+ */
+const KALEVANSILTA_STREET_STAIR = { top: [267.4, -10.4] as V2, bottom: [274.9, 1.1] as V2 };
 
 export interface RailwayParts {
   ballast: MeshBuf;
@@ -1981,11 +2017,6 @@ export interface RailwayParts {
   edge: MeshBuf;
   red: MeshBuf;
   sleepers: THREE.Matrix4[];
-  bridgeFrame: MeshBuf;
-  bridgeClad: MeshBuf;
-  bridgeGlass: MeshBuf;
-  bridgeRoof: MeshBuf;
-  bridgeWood: MeshBuf;
   soffit: MeshBuf;
   colliders: Collider2D[];
   /** Breaklines for the platform edges (the DTM smooths the 0.9 m step). */
@@ -2082,17 +2113,11 @@ function buildRailway(campus: CampusData, terrain: Terrain): RailwayParts {
     edge: new MeshBuf(),
     red: new MeshBuf(),
     sleepers: [],
-    bridgeFrame: new MeshBuf(),
-    bridgeClad: new MeshBuf(),
-    bridgeGlass: new MeshBuf(),
-    bridgeRoof: new MeshBuf(),
-    bridgeWood: new MeshBuf(),
     soffit: new MeshBuf(),
     colliders: [],
     breaks: [],
   };
-  const platform = campus.areas.find((a) => a.id === PLATFORM_ID);
-  const platformRing = platform ? ensureCCW(cleanRing(platform.polygon)) : null;
+  const platformRing = ensureCCW(cleanRing(ISLAND_PLATFORM));
   const ext = terrain.extent;
   const inside = (p: V2) => p[0] > ext.minX + 1 && p[0] < ext.maxX - 1 && p[1] > ext.minZ + 1 && p[1] < ext.maxZ - 1;
 
@@ -2265,147 +2290,8 @@ function buildRailway(campus: CampusData, terrain: Terrain): RailwayParts {
     }
   }
 
-  // ── Kalevansilta: covered span and stair (white frames, light cladding, glazed band, dark roof), deck underside, piers.
-  const K = KALEVANSILTA;
-  const covered = (centre: V3[], width: number) => {
-    const plan: V2[] = centre.map(([x, , z]) => [x, z]);
-    const left = offsetPolyline(plan, width / 2);
-    const right = offsetPolyline(plan, -width / 2);
-    for (const [side, sgn] of [
-      [left, 1],
-      [right, -1],
-    ] as [V2[], number][]) {
-      const base = centre.map(([, y], i): V3 => [side[i][0], y, side[i][1]]);
-      // Lower solid band 1.05 m, glazed band to 2.25 m, upper band to 2.75 m.
-      sweptBox(out.bridgeClad, base, 0.08, 1.05, 0);
-      sweptBox(out.bridgeGlass, base.map(([x, y, z]): V3 => [x, y + 1.05, z]), 0.03, 1.2, 0);
-      sweptBox(out.bridgeClad, base.map(([x, y, z]): V3 => [x, y + 2.25, z]), 0.08, 0.5, 0);
-      void sgn;
-    }
-    // Roof: slab 0.16 m, 0.25 m overhang, gently pitched (crown +0.25).
-    const roofL = offsetPolyline(plan, width / 2 + 0.25);
-    const roofR = offsetPolyline(plan, -width / 2 - 0.25);
-    const baseR = out.bridgeRoof.vertexCount;
-    centre.forEach(([x, y, z], i) => {
-      const top = y + 2.75;
-      out.bridgeRoof.vertex(roofL[i][0], top, roofL[i][1], [0, 1, 0], 0, 0);
-      out.bridgeRoof.vertex(x, top + 0.25, z, [0, 1, 0], 0, 0);
-      out.bridgeRoof.vertex(roofR[i][0], top, roofR[i][1], [0, 1, 0], 0, 0);
-      out.bridgeRoof.vertex(roofL[i][0], top - 0.16, roofL[i][1], [0, -1, 0], 0, 0);
-      out.bridgeRoof.vertex(roofR[i][0], top - 0.16, roofR[i][1], [0, -1, 0], 0, 0);
-    });
-    for (let i = 1; i < centre.length; i++) {
-      const a = baseR + (i - 1) * 5;
-      const b = baseR + i * 5;
-      // top left, top right, soffit, fascias
-      out.bridgeRoof.tri(a, b, a + 1);
-      out.bridgeRoof.tri(b, b + 1, a + 1);
-      out.bridgeRoof.tri(a + 1, b + 1, a + 2);
-      out.bridgeRoof.tri(b + 1, b + 2, a + 2);
-      out.bridgeRoof.tri(a + 3, a + 4, b + 3);
-      out.bridgeRoof.tri(b + 3, a + 4, b + 4);
-      out.bridgeRoof.tri(a, a + 3, b);
-      out.bridgeRoof.tri(b, a + 3, b + 3);
-      out.bridgeRoof.tri(a + 2, b + 2, a + 4);
-      out.bridgeRoof.tri(b + 2, b + 4, a + 4);
-    }
-    // White portal frames every 3.2 m.
-    const total = polylineLength(plan);
-    for (let s = 0.2; s <= total; s += 3.2) {
-      const f = s / total;
-      const k = Math.min(centre.length - 2, Math.floor(f * (centre.length - 1)));
-      const g = f * (centre.length - 1) - k;
-      const y = centre[k][1] + (centre[k + 1][1] - centre[k][1]) * g;
-      const sp = samplePolyline(plan, total, s)[0] ?? { p: plan[0], t: unit([plan[1][0] - plan[0][0], plan[1][1] - plan[0][1]]) };
-      const n: V2 = [sp.t[1], -sp.t[0]];
-      const L: V2 = [sp.p[0] + n[0] * (width / 2 + 0.06), sp.p[1] + n[1] * (width / 2 + 0.06)];
-      const R: V2 = [sp.p[0] - n[0] * (width / 2 + 0.06), sp.p[1] - n[1] * (width / 2 + 0.06)];
-      beam(out.bridgeFrame, [L[0], y - 0.05, L[1]], [L[0] + sp.t[0] * 0.14, y - 0.05, L[1] + sp.t[1] * 0.14], 0.14, 2.65);
-      beam(out.bridgeFrame, [R[0], y - 0.05, R[1]], [R[0] + sp.t[0] * 0.14, y - 0.05, R[1] + sp.t[1] * 0.14], 0.14, 2.65);
-      beam(out.bridgeFrame, [L[0], y + 2.45, L[1]], [R[0], y + 2.45, R[1]], 0.12, 0.16);
-    }
-  };
-  // Main span (flat deck).
-  const spanPts: V3[] = [];
-  for (const { p } of samplePolyline(K.span, 2, 0)) spanPts.push([p[0], K.deckY, p[1]]);
-  const last = K.span[K.span.length - 1];
-  spanPts.push([last[0], K.deckY, last[1]]);
-  covered(spanPts, K.width);
-  // Deck underside (steel box girder look) and piers every ~18 m down to the ground.
-  sweptBox(out.bridgeFrame, spanPts.map(([x, y, z]): V3 => [x, y - 0.75, z]), K.width + 0.3, 0.7);
-  for (const { p } of samplePolyline(K.span, 18, 9)) {
-    const y0 = terrain.heightAt(p[0], p[1]);
-    if (K.deckY - y0 < 2.5) continue;
-    tube(out.bridgeFrame, [p[0], y0 - 0.2, p[1]], [p[0], K.deckY - 0.75, p[1]], 0.32, 12);
-    out.colliders.push({ level: "outdoor", kind: "circle", c: p, r: 0.4 });
-  }
-  // Covered stair from the platform: wooden treads under the same roof.
-  const st = K.stair;
-  const stairLen = Math.hypot(st.top[0] - st.bottom[0], st.top[1] - st.bottom[1]);
-  const stairPts: V3[] = [];
-  for (let k = 0; k <= 12; k++) {
-    const f = k / 12;
-    stairPts.push([st.bottom[0] + (st.top[0] - st.bottom[0]) * f, st.yBottom + (K.deckY - st.yBottom) * f, st.bottom[1] + (st.top[1] - st.bottom[1]) * f]);
-  }
-  covered(stairPts, 3.0);
-  const risers = Math.round((K.deckY - st.yBottom) / 0.17);
-  const su = unit([st.top[0] - st.bottom[0], st.top[1] - st.bottom[1]]);
-  const sv: V2 = [-su[1], su[0]];
-  for (let k = 0; k < risers; k++) {
-    const s0 = (stairLen * k) / risers;
-    const s1 = (stairLen * (k + 1)) / risers;
-    const y = st.yBottom + ((K.deckY - st.yBottom) * (k + 1)) / risers;
-    const ring: V2[] = [
-      [st.bottom[0] + su[0] * s0 + sv[0] * 1.45, st.bottom[1] + su[1] * s0 + sv[1] * 1.45],
-      [st.bottom[0] + su[0] * s1 + sv[0] * 1.45, st.bottom[1] + su[1] * s1 + sv[1] * 1.45],
-      [st.bottom[0] + su[0] * s1 - sv[0] * 1.45, st.bottom[1] + su[1] * s1 - sv[1] * 1.45],
-      [st.bottom[0] + su[0] * s0 - sv[0] * 1.45, st.bottom[1] + su[1] * s0 - sv[1] * 1.45],
-    ];
-    prism(out.bridgeWood, ring, y - 0.06, y);
-  }
-  // Stair stringers / underside.
-  sweptBox(
-    out.bridgeFrame,
-    stairPts.map(([x, y, z]): V3 => [x, y - 0.5, z]),
-    3.1,
-    0.42,
-  );
-  // Open steel stair to the street at the ParkCity end: two flights and a landing.
-  const ss = K.streetStair;
-  const sLen = Math.hypot(ss.bottom[0] - ss.top[0], ss.bottom[1] - ss.top[1]);
-  const du = unit([ss.top[0] - ss.bottom[0], ss.top[1] - ss.bottom[1]]);
-  const dv: V2 = [-du[1], du[0]];
-  const rise = K.deckY - ss.yBottom;
-  const n1 = Math.round(rise / 2 / 0.172);
-  const landing = 1.6;
-  const flight = (sLen - landing) / 2;
-  const tread = (s0: number, s1: number, y: number) => {
-    const ring: V2[] = [
-      [ss.bottom[0] + du[0] * s0 + dv[0] * 1.2, ss.bottom[1] + du[1] * s0 + dv[1] * 1.2],
-      [ss.bottom[0] + du[0] * s1 + dv[0] * 1.2, ss.bottom[1] + du[1] * s1 + dv[1] * 1.2],
-      [ss.bottom[0] + du[0] * s1 - dv[0] * 1.2, ss.bottom[1] + du[1] * s1 - dv[1] * 1.2],
-      [ss.bottom[0] + du[0] * s0 - dv[0] * 1.2, ss.bottom[1] + du[1] * s0 - dv[1] * 1.2],
-    ];
-    prism(out.masts, ring, y - 0.05, y);
-  };
-  for (let k = 0; k < n1; k++) tread((flight * k) / n1, (flight * (k + 1)) / n1, ss.yBottom + ((rise / 2) * (k + 1)) / n1);
-  tread(flight, flight + landing, ss.yBottom + rise / 2);
-  for (let k = 0; k < n1; k++) tread(flight + landing + (flight * k) / n1, flight + landing + (flight * (k + 1)) / n1, ss.yBottom + rise / 2 + ((rise / 2) * (k + 1)) / n1);
-  // Stringers and railings on both sides.
-  for (const side of [1.25, -1.25]) {
-    const at = (s: number, y: number): V3 => [ss.bottom[0] + du[0] * s + dv[0] * side, y, ss.bottom[1] + du[1] * s + dv[1] * side];
-    const prof: V3[] = [at(0, ss.yBottom), at(flight, ss.yBottom + rise / 2), at(flight + landing, ss.yBottom + rise / 2), at(sLen, K.deckY)];
-    sweptBox(out.masts, prof.map(([x, y, z]): V3 => [x, y - 0.3, z]), 0.08, 0.3);
-    sweptBox(out.masts, prof.map(([x, y, z]): V3 => [x, y + 0.95, z]), 0.05, 0.05);
-    for (const p of prof) tube(out.masts, [p[0], p[1] - 0.3, p[2]], [p[0], p[1] + 0.95, p[2]], 0.03, 6);
-    out.colliders.push({ level: "outdoor", kind: "segment", a: [prof[0][0], prof[0][2]], b: [prof[3][0], prof[3][2]] });
-  }
-  // Landing posts down to the ground.
-  const lp: V2 = [ss.bottom[0] + du[0] * (flight + landing / 2), ss.bottom[1] + du[1] * (flight + landing / 2)];
-  for (const side of [1.1, -1.1]) {
-    const p: V2 = [lp[0] + dv[0] * side, lp[1] + dv[1] * side];
-    tube(out.masts, [p[0], terrain.heightAt(p[0], p[1]) - 0.1, p[1]], [p[0], ss.yBottom + rise / 2, p[1]], 0.07, 8);
-  }
+  // Kalevansilta itself (truss, glazing, roof, piers and both stairs) is world/context/bridges.ts's; the
+  // ground only draws its walking deck (the street register's bridge area, a "deck" surface).
   return out;
 }
 
@@ -2419,7 +2305,7 @@ export interface GroundModule extends WorldModule {
 // ── Street lights (positions shared with world/landscape.ts) ─────────────────
 
 /** "canopy": linear luminaires under the Kupittaa platform canopies (no pole). */
-export type LampStyle = "street" | "path" | "lantern" | "globe" | "deck" | "canopy";
+export type LampStyle = "street" | "path" | "lantern" | "globe" | "deck" | "canopy" | "bollard" | "spill";
 
 export interface LampSpec {
   at: V2;
@@ -2475,6 +2361,26 @@ export const HERO_LAMPS: { at: V2; style: LampStyle }[] = [
     [152.6, 88.6],
     [168.0, 101.3],
   ] as V2[]).map((at) => ({ at, style: "deck" as const })),
+  // Black bollard lights (≈0.8 m): along the timber terrace's edge by the courtyard passage (round heads on
+  // the City's 2022 true orthophoto) and on the Joki NE deck (SPEC §4.3).
+  ...([
+    [29.6, -17.9],
+    [33.1, -12.75],
+    [43.4, 1.9],
+    [66.7, 6.4],
+    [73.0, -3.1],
+    [78.2, 22.2],
+    [77.1, 27.9],
+    [82.6, 16.6],
+    [70.8, 2.0],
+    [69.0, 9.6],
+  ] as V2[]).map((at) => ({ at, style: "bollard" as const })),
+  // Light spilling onto the terrace from the Aulagalleria's glass wall (the build area is lit all night):
+  // just outside the glass arc (centre (4.9, 4.4), glass r ≈ 20.5 m) in front of the event entrance.
+  ...[-58, -46, -34, -22, -10].map((deg): { at: V2; style: LampStyle } => ({
+    at: [4.9 + 22.6 * Math.cos((deg * Math.PI) / 180), 4.4 + 22.6 * Math.sin((deg * Math.PI) / 180)],
+    style: "spill",
+  })),
 ];
 
 /**
@@ -2497,9 +2403,10 @@ export function lampSpecs(streets: StreetsData, terrain: Terrain, campus?: Campu
   }
   const hero = HERO_LAMPS.map((l): LampSpec => {
     const y = terrain.heightAt(l.at[0], l.at[1]);
-    return l.style === "deck"
-      ? { at: l.at, y, style: "deck", head: [l.at[0], y + 3.6, l.at[1]], bearing: 0, lux: 0.008, kelvin: 3500 }
-      : { at: l.at, y, style: "lantern", head: [l.at[0], y + 4.0, l.at[1]], bearing: 0, lux: 0.01, kelvin: 3000 };
+    if (l.style === "deck") return { at: l.at, y, style: "deck", head: [l.at[0], y + 3.6, l.at[1]], bearing: 0, lux: 0.008, kelvin: 3500 };
+    if (l.style === "bollard") return { at: l.at, y, style: "bollard", head: [l.at[0], y + 0.7, l.at[1]], bearing: 0, lux: 0.007, kelvin: 3000 };
+    if (l.style === "spill") return { at: l.at, y, style: "spill", head: [l.at[0], y + 2.6, l.at[1]], bearing: 0, lux: 0.0085, kelvin: 3500 };
+    return { at: l.at, y, style: "lantern", head: [l.at[0], y + 4.0, l.at[1]], bearing: 0, lux: 0.01, kelvin: 3000 };
   });
   return [...hero, ...canopy, ...streets.lamps.map((l): LampSpec => {
     const y = terrain.heightAt(l.at[0], l.at[1]);
@@ -2534,7 +2441,7 @@ export function buildPoolMap(lamps: LampSpec[], ext: { minX: number; maxX: numbe
   const col = new THREE.Color();
   for (const l of lamps) {
     const hgt = Math.max(2, l.head[1] - l.y);
-    kelvinRGB(l.kelvin, col);
+    lampColor(l.kelvin, col);
     const I0 = l.lux * hgt * hgt;
     const reach = hgt * 3.2;
     const b = (l.bearing * Math.PI) / 180;
@@ -2577,6 +2484,23 @@ export function buildPoolMap(lamps: LampSpec[], ext: { minX: number; maxX: numbe
     data[i * 4 + 3] = 255;
   }
   return { data, w, h };
+}
+
+/** White point the night street scene is seen at (a camera at night balances to ≈ 4100 K, not daylight). */
+const NIGHT_WHITE_K = 4100;
+const nightWhite = new THREE.Color();
+
+/**
+ * Colour of an LED street light (linear sRGB, luminance 1) as it reads at night: its blackbody colour
+ * relative to the night white point, so 3000 K reads warm white and 4000 K near neutral — not the
+ * sodium orange the raw 3000 K blackbody gives against the daylight (D65) white.
+ */
+export function lampColor(kelvin: number, target: THREE.Color): THREE.Color {
+  kelvinRGB(kelvin, target);
+  kelvinRGB(NIGHT_WHITE_K, nightWhite);
+  target.setRGB(target.r / nightWhite.r, target.g / nightWhite.g, target.b / nightWhite.b);
+  const lum = 0.2126 * target.r + 0.7152 * target.g + 0.0722 * target.b;
+  return lum > 0 ? target.multiplyScalar(1 / lum) : target;
 }
 
 /** Blackbody colour (linear sRGB, luminance 1) — same fit as sky/sky.ts kelvinToLinear. */
@@ -2717,7 +2641,7 @@ export function prepareGround(campus: CampusData, streets: StreetsData, terrain:
   // Kalevansilta's street stair is modelled with the bridge (the City's flights carry DTM levels from under it).
   const nearStreetStair = (ring: V2[]) => {
     const c = polygonCentroid(ring);
-    return distSeg(c, KALEVANSILTA.streetStair.top, KALEVANSILTA.streetStair.bottom) < 4;
+    return distSeg(c, KALEVANSILTA_STREET_STAIR.top, KALEVANSILTA_STREET_STAIR.bottom) < 4;
   };
   const stairSpecs: StairSpec[] = [
     ...streets.stairs
@@ -2884,8 +2808,8 @@ export function buildGroundGeometry(campus: CampusData, streets: StreetsData, te
       ],
     },
     {
-      // Shadow casters only where the shadow reads: the garage portal and boxes, the canopy columns, the
-      // bridge roof (every caster is drawn again into each shadow cascade it touches).
+      // Shadow casters only where the shadow reads: the garage portal and boxes, the canopy columns
+      // (every caster is drawn again into each shadow cascade it touches).
       name: "metal",
       lib: "metalDark",
       base: "#2a2b2e",
@@ -2894,7 +2818,6 @@ export function buildGroundGeometry(campus: CampusData, streets: StreetsData, te
       parts: [
         [structures.dark, "#08090b"],
         [railway.red, "#a2472f"],
-        [railway.bridgeRoof, "#4b4d50"],
       ],
     },
     {
@@ -2930,14 +2853,10 @@ export function buildGroundGeometry(campus: CampusData, streets: StreetsData, te
       cast: true,
       parts: [
         [structures.coping, "#e4e6e7"],
-        [railway.bridgeFrame, "#e8e9e6"],
       ],
     },
-    { name: "cladding", lib: "panelGrey", base: "#c9ccce", rough: 0.7, cast: true, parts: [[railway.bridgeClad, "#c9ccce"]] },
-    { name: "glass", lib: "glassFacade", base: "#151b22", cast: false, parts: [[railway.bridgeGlass, "#151b22"]] },
     { name: "ballast", lib: "gravel", base: "#625c55", rough: 1, cast: false, parts: [[railway.ballast, "#625c55"]] },
     { name: "beds", lib: "mulch", base: "#3e2c1c", cast: false, parts: [[structures.soil, "#3e2c1c"]] },
-    { name: "treads", lib: "birch", base: "#7a6f60", rough: 0.92, cast: true, tile: [2.8, 1.4], parts: [[railway.bridgeWood, "#7a6f60"]] },
   ];
   const parts: GroundGeometry["parts"] = [];
   for (const g of mergedParts) {
@@ -2983,21 +2902,24 @@ export function buildGroundGeometry(campus: CampusData, streets: StreetsData, te
 // ── Views and targets (SPEC §6, DESIGN §7). Every camera stays at least a metre clear of the camera
 // volumes of data/campus.ts buildingVolumes() (tested): the orbit pushes a camera inside one onto its roof.
 export const GROUND_VIEWS: Readonly<Record<string, CameraView>> = {
-  // Jussin aukio down the gap between Eurocity and ICT-City (over ICT-City's one-storey wing): the Joki
-  // drum, the plaza with its stairs and BioCity's courtyard entrance beyond. (East of the plaza the
-  // volume of ICT-City's tall wing reaches 29 m.)
+  // Jussin aukio from above its south-east corner (over Joki's hall roof, clear of BioCity's south-east end):
+  // the plaza and its main stair down from the campus deck, the Joki drum at the bottom right, the timber
+  // terrace and BioCity's event entrance at the apex of the curved Aulagalleria, Electrocity's striped wall
+  // behind (round 1: the pose over ICT-City's one-storey wing spent a third of the frame on its roof).
   "campus:courtyard": {
-    position: [96, 13, -22],
-    target: [44, 0.5, 8],
-    hfov: 50,
-    portrait: { position: [92, 18, -18], target: [46, 0.5, 6] },
+    position: [54, 46, 36],
+    target: [38, 0, -2],
+    hfov: 60,
+    portrait: { position: [52, 60, 42], target: [38, 0, 0], fit: 34 },
     open: null,
   },
+  // Plan view framed inside the terrain data (x −179…343): from the station's platform in the north to
+  // EduCity in the south, BioCity on Tykistökatu in the west to ParkCity and Kalevansilta in the east.
   "campus:top": {
-    position: [118, 620, 104],
-    target: [118, 0, 24],
+    position: [100, 470, 40],
+    target: [100, 0, -6],
     fov: 38,
-    fit: 200,
+    fit: 165,
     labels: true,
     open: null,
   },
@@ -3047,8 +2969,11 @@ export async function buildGround(ctx: TwinContext): Promise<GroundModule> {
   poolTex.colorSpace = THREE.NoColorSpace;
   poolTex.flipY = false;
   poolTex.needsUpdate = true;
-  owned.push(poolTex);
   mats.setPoolMap(poolTex, ext);
+  // Lamp light on the lower storeys of facade-shader buildings next to a pool.
+  setStreetLightMap(poolTex, ext, POOL_SCALE);
+  owned.push({ dispose: () => setStreetLightMap(null, ext, 0) });
+  owned.push(poolTex);
   const detailTex = buildAsphaltDetail(plan, terrain, kerbLines(streets, terrain), geo.tracks, tier === "low" ? 0.5 : 0.25);
   if (detailTex) {
     owned.push(detailTex);
@@ -3075,6 +3000,7 @@ export async function buildGround(ctx: TwinContext): Promise<GroundModule> {
   // ── Terrain and land cover.
   const splat = buildSplat(campus, streets, terrain, plan.mask, vegetationMask().data);
   owned.push(splat);
+  mats.setLeafMap(splat, ext);
   const terrainMat = makeTerrainMaterial(ctx, splat, ext, mats.pools);
   owned.push(terrainMat);
   add(geo.terrain, terrainMat, "ground-terrain");
@@ -3085,12 +3011,20 @@ export async function buildGround(ctx: TwinContext): Promise<GroundModule> {
   // ── Views and targets: copies, so the engine may annotate them per build.
   const views: Record<string, CameraView> = structuredClone(GROUND_VIEWS) as Record<string, CameraView>;
   const targets: TwinTarget[] = structuredClone(GROUND_TARGETS) as TwinTarget[];
+  // Street names on the carriageway centre lines, 3 m up, at least 25 m from the entrance labels (the
+  // EduCity address, the taxi and drop-off instructions use them).
+  const street = (name: string, x: number, z: number) => makeLabel(name, "street", x, heights.y(x, z, "low") + 3, z, "campus");
   const labels = [
     makeLabel("Jussin aukio", "landmark", 52, 6, 6, "campus"),
     makeLabel("Kupittaa station", "landmark", 212, 4, -122, "campus"),
-    makeLabel("Tykistökatu", "street", -38, 1.5, -38, "campus"),
-    makeLabel("Lemminkäisenkatu", "street", -6, 0.5, 48, "campus"),
-    makeLabel("Joukahaisenkatu", "street", 150, 1, -20, "campus"),
+    street("Tykistökatu", -38, -38),
+    street("Tykistökatu", 4, -95),
+    street("Lemminkäisenkatu", -36, 16),
+    street("Lemminkäisenkatu", 28, 88),
+    street("Lemminkäisenkatu", 88, 136),
+    street("Joukahaisenkatu", 121, -46),
+    street("Joukahaisenkatu", 170, -6.5),
+    street("Joukahaisenkatu", 252, 62),
   ];
   for (const l of labels) root.add(l);
 
@@ -3569,7 +3503,7 @@ function makeTerrainMaterial(ctx: TwinContext, splat: THREE.Texture, ext: { minX
     uGrLeaves: { value: leaves.map },
     uGrLeavesC: { value: leaves.color.clone() },
   };
-  m.customProgramCacheKey = () => "ground-terrain-v1";
+  m.customProgramCacheKey = () => "ground-terrain-v2";
   m.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, uniforms, pools);
     shader.vertexShader = shader.vertexShader
@@ -3613,7 +3547,13 @@ vec4 grW; float grLeaf; float grRough;`,
 	vec3 cGrass = mix( g1, g2, worn * 0.65 ) * uGrGrassC * ( 0.82 + 0.36 * grFbm( vGrWorld.xz / 23.0 ) );
 	vec3 cSoil = texture2D( uGrSoil, gp / 2.0 ).rgb * uGrSoilC;
 	// Track ballast and site gravel: dark crushed granite, rust-stained.
-	vec3 cGravel = texture2D( uGrGravel, gp ).rgb * uGrGravelC * vec3( 0.62, 0.6, 0.58 );
+	// Track ballast and the cutting's slopes (2025 orthophoto): grey crushed granite, rust-stained near the
+	// rails, with patches of dry brown weeds — not sand (round 2: it read as desert dunes under the low sun).
+	vec3 cGravel = texture2D( uGrGravel, gp ).rgb * uGrGravelC;
+	cGravel = mix( cGravel, vec3( dot( cGravel, vec3( 0.2126, 0.7152, 0.0722 ) ) ), 0.65 ) * vec3( 0.4, 0.4, 0.41 );
+	cGravel *= 0.8 + 0.4 * grNoise( vGrWorld.xz * 6.0 + 2.0 );
+	float weeds = smoothstep( 0.52, 0.75, grFbm( vGrWorld.xz / 3.7 + 5.0 ) );
+	cGravel = mix( cGravel, cGrass * vec3( 0.75, 0.62, 0.45 ), weeds * 0.55 );
 	vec3 cPaved = texture2D( uGrPaved, gp / 2.1 ).rgb * uGrPavedC * ( 0.85 + 0.3 * grFbm( vGrWorld.xz / 15.0 ) );
 	vec3 col = cGrass * grW.a + cSoil * grW.r + cGravel * grW.g + cPaved * grW.b;
 	// Fallen leaves: scattered decal texture where the splat says so (and a few everywhere on the lawn).
@@ -3690,18 +3630,23 @@ function buildFarGeometry(terrain: Terrain): THREE.BufferGeometry {
       index.push(a, b, c, b, d, c);
     }
   }
+  // Face the triangles up (+y seen from above).
+  for (let i = 0; i < index.length; i += 3) {
+    const a = index[i] * 3;
+    const b = index[i + 1] * 3;
+    const c = index[i + 2] * 3;
+    const ny = (positions[b + 2] - positions[a + 2]) * (positions[c] - positions[a]) - (positions[b] - positions[a]) * (positions[c + 2] - positions[a + 2]);
+    if (ny < 0) [index[i + 1], index[i + 2]] = [index[i + 2], index[i + 1]];
+  }
   const geo = new THREE.BufferGeometry();
   geo.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
   geo.setIndex(index);
-  geo.computeVertexNormals();
-  const nrm = geo.getAttribute("normal");
-  let up = 0;
-  for (let i = 0; i < nrm.count; i++) up += nrm.getY(i);
-  if (up < 0) {
-    for (let i = 0; i < index.length; i += 3) [index[i + 1], index[i + 2]] = [index[i + 2], index[i + 1]];
-    geo.setIndex(index);
-    geo.computeVertexNormals();
-  }
+  // Normals straight up: the ring's long, thin triangles between border spokes of different edge heights
+  // would tilt computed normals by up to ≈20° and the low sun turns that into radial light/dark curtains;
+  // the regional slope out here is under 1°.
+  const normals = new Float32Array(positions.length);
+  for (let i = 1; i < normals.length; i += 3) normals[i] = 1;
+  geo.setAttribute("normal", new THREE.BufferAttribute(normals, 3));
   return geo;
 }
 
@@ -3709,7 +3654,7 @@ function buildFarGeometry(terrain: Terrain): THREE.BufferGeometry {
 function makeFarGroundMaterial(ext: { minX: number; maxX: number; minZ: number; maxZ: number }): THREE.MeshStandardMaterial {
   const m = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.92, metalness: 0 });
   m.name = "ground-far";
-  m.customProgramCacheKey = () => "ground-far-v1";
+  m.customProgramCacheKey = () => "ground-far-v2";
   const uExt = { value: new THREE.Vector4(ext.minX, ext.minZ, ext.maxX, ext.maxZ) };
   m.onBeforeCompile = (shader) => {
     shader.uniforms.uFgExt = uExt;
@@ -3747,7 +3692,8 @@ float fgStreets( vec2 p, float theta, float s, float w ) {
 	float st = max( fgStreets( p + warp, radians( 55.3 ), 96.0, 14.0 ), fgStreets( p - warp, radians( 38.8 ), 112.0, 12.0 ) );
 	col = mix( col, vec3( 0.06, 0.061, 0.063 ), st * 0.6 );
 	vec2 outside = max( max( uFgExt.xy - p, p - uFgExt.zw ), vec2( 0.0 ) );
-	float edge = smoothstep( 0.0, 90.0, length( outside ) );
+	// Blend over 160 m from the data's edge (round 1: a hard border showed in the plan view).
+	float edge = smoothstep( 0.0, 160.0, length( outside ) );
 	col = mix( mix( vec3( 0.085, 0.088, 0.068 ), vec3( 0.12, 0.118, 0.11 ), n1 * 0.5 ), col, edge );
 	diffuseColor.rgb *= col;
 `,
@@ -4289,7 +4235,50 @@ export function paintRoads({ campus, streets, heights, carr }: MarkingInput): { 
     const long = e[0].l + e[2].l >= e[1].l + e[3].l ? [e[0], e[2]] : [e[1], e[3]];
     for (const s of long) paint.line([s.a, s.b], 0.1);
   }
+  // ── Bicycle symbols on the two-way cycle path in front of BioCity's entrance recess (SPEC §5.2).
+  for (const c of CYCLE_SYMBOLS) bicycleSymbol(paint, c.at, c.bearing);
   return { buf: paint.buf, tracks };
+}
+
+/**
+ * White bicycle symbols on the two-way cycle path along BioCity's Tykistökatu side (SPEC §5.2, "white
+ * bicycle symbols on the adjacent two-way cycle path"): a pair per spot, one per direction, each in the
+ * right-hand half of the 2.3 m asphalt path (centre line traced on the City's register polygon).
+ */
+const CYCLE_SYMBOLS: { at: V2; bearing: number }[] = (() => {
+  const t: V2 = [Math.sin((34 * Math.PI) / 180), -Math.cos((34 * Math.PI) / 180)];
+  const right: V2 = [-t[1], t[0]];
+  const out: { at: V2; bearing: number }[] = [];
+  for (const c of [
+    [-29.7, -26.3],
+    [-34.9, -17.8],
+  ] as V2[]) {
+    out.push({ at: [c[0] + right[0] * 0.55, c[1] + right[1] * 0.55], bearing: 34 });
+    out.push({ at: [c[0] - right[0] * 0.55, c[1] - right[1] * 0.55], bearing: 214 });
+  }
+  return out;
+})();
+
+/**
+ * A painted bicycle (≈ 0.95 × 0.7 m) read upright by a cyclist riding along `bearing`: the wheels side by
+ * side across the path, the frame "up" pointing ahead.
+ */
+export function bicycleSymbol(paint: { line(pts: readonly V2[], width: number): void }, at: V2, bearing: number) {
+  const b = (bearing * Math.PI) / 180;
+  const up: V2 = [Math.sin(b), -Math.cos(b)];
+  const rx: V2 = [-up[1], up[0]];
+  const P = (x: number, y: number): V2 => [at[0] + rx[0] * x + up[0] * y, at[1] + rx[1] * x + up[1] * y];
+  const w = 0.055;
+  for (const cx of [-0.34, 0.34]) {
+    const ring: V2[] = [];
+    for (let k = 0; k <= 16; k++) ring.push(P(cx + Math.cos((k / 16) * Math.PI * 2) * 0.2, -0.12 + Math.sin((k / 16) * Math.PI * 2) * 0.2));
+    paint.line(ring, w);
+  }
+  paint.line([P(-0.34, -0.12), P(-0.05, 0.2), P(0.24, 0.2), P(0.34, -0.12)], w);
+  paint.line([P(-0.34, -0.12), P(0.02, -0.12), P(-0.05, 0.2)], w);
+  paint.line([P(0.02, -0.12), P(0.24, 0.2)], w);
+  paint.line([P(-0.13, 0.3), P(0.03, 0.3)], w * 1.3);
+  paint.line([P(0.24, 0.2), P(0.2, 0.34), P(0.31, 0.36)], w);
 }
 
 /** The detail map covers the hero and arrival zones (SPEC §2.1). */
@@ -4344,33 +4333,48 @@ function buildAsphaltDetail(plan: GroundPlan, terrain: Terrain, lines: KerbLine[
   // Wheel paths.
   for (const tr of tracks) stroke(tr, 0.55, "rgba(0,255,0,0.38)");
   ctx.filter = "none";
-  // Puddles in the hollows of carriageways and yards.
-  for (let z = E.minZ + 1; z < E.maxZ - 1; z += 1.6) {
-    for (let x = E.minX + 1; x < E.maxX - 1; x += 1.6) {
-      if (!plan.paved(x, z)) continue;
-      const y = terrain.heightAt(x, z);
-      let ring = 0;
-      for (let k = 0; k < 8; k++) {
-        const a = (k / 8) * Math.PI * 2;
-        ring += terrain.heightAt(x + Math.cos(a) * 2.5, z + Math.sin(a) * 2.5);
-      }
-      const hollow = ring / 8 - y;
-      if (hollow < 0.018 || rnd() > 0.3) continue;
-      const r = (0.4 + rnd() * 0.9 + Math.min(0.9, hollow * 20)) / res;
-      ctx.save();
-      ctx.translate(X(x + (rnd() - 0.5)), Z(z + (rnd() - 0.5)));
-      ctx.rotate(rnd() * Math.PI);
-      ctx.scale(1, 0.45 + rnd() * 0.5);
-      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, r);
-      g.addColorStop(0, "rgba(255,0,0,0.95)");
-      g.addColorStop(0.55, "rgba(255,0,0,0.55)");
-      g.addColorStop(1, "rgba(255,0,0,0)");
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.arc(0, 0, r, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
+  // Puddles in the true low spots of carriageways and yards: the hollow is measured on the smoothed DTM (a
+  // 1.5 m disc against a 4 m ring, so the laser's ±2 cm noise does not count), the deepest win, and they
+  // cover at most ≈ 4 % of the paved ground (round 1: milky blotches everywhere on Tykistökatu).
+  const disc = (x: number, z: number, r: number) => {
+    let sum = terrain.heightAt(x, z);
+    for (let k = 0; k < 6; k++) {
+      const a = (k / 6) * Math.PI * 2;
+      sum += terrain.heightAt(x + Math.cos(a) * r, z + Math.sin(a) * r);
     }
+    return sum / 7;
+  };
+  const candidates: { x: number; z: number; depth: number }[] = [];
+  let pavedCells = 0;
+  for (let z = E.minZ + 2; z < E.maxZ - 2; z += 1.6) {
+    for (let x = E.minX + 2; x < E.maxX - 2; x += 1.6) {
+      if (!plan.paved(x, z)) continue;
+      pavedCells++;
+      const depth = disc(x, z, 4) - disc(x, z, 0.75);
+      if (depth >= 0.025) candidates.push({ x, z, depth });
+    }
+  }
+  candidates.sort((a, b) => b.depth - a.depth);
+  const budget = pavedCells * 1.6 * 1.6 * 0.04;
+  let used = 0;
+  for (const c of candidates) {
+    if (used > budget) break;
+    const r = Math.min(2.2, 0.5 + rnd() * 0.6 + c.depth * 18);
+    const sy = 0.45 + rnd() * 0.45;
+    used += Math.PI * r * r * sy * 0.6;
+    ctx.save();
+    ctx.translate(X(c.x + (rnd() - 0.5)), Z(c.z + (rnd() - 0.5)));
+    ctx.rotate(rnd() * Math.PI);
+    ctx.scale(1, sy);
+    const g = ctx.createRadialGradient(0, 0, 0, 0, 0, r / res);
+    g.addColorStop(0, "rgba(255,0,0,0.95)");
+    g.addColorStop(0.5, "rgba(255,0,0,0.6)");
+    g.addColorStop(1, "rgba(255,0,0,0)");
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(0, 0, r / res, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
   }
   // Patch repairs: utility trenches and strips, aligned with the nearest kerb.
   for (let z = E.minZ + 2; z < E.maxZ - 2; z += 5) {
@@ -4463,6 +4467,24 @@ export interface GroundPatch {
   pools?: boolean;
   /** Asphalt detail map: wet gutters and puddles, wheel-track polish, patch repairs. */
   detail?: boolean;
+  /**
+   * Weathered timber decking drawn over the wood grain from the metre UVs (u along the boards): 0.145 m
+   * boards with dark 6 mm gaps, staggered butt joints, per-board tone, damp patches.
+   */
+  boards?: boolean;
+  /**
+   * Fallen leaves (early November) from the terrain splat's leaf channel: under the crowns, drifted
+   * downwind, swept thinner on carriageways. The value scales the density (1 = as on the lawns).
+   */
+  leaves?: number;
+}
+
+/** Leaf channel of the terrain splat and the scattered-leaves decal shared by the paved materials. */
+export interface LeafUniforms {
+  uGrLeafSplat: THREE.IUniform<THREE.Texture | null>;
+  uGrLeafExt: THREE.IUniform<THREE.Vector4>;
+  uGrLeafTex: THREE.IUniform<THREE.Texture | null>;
+  uGrLeafC: THREE.IUniform<THREE.Color>;
 }
 
 /** Asphalt detail map (R wet, G wheel-track polish, B patch repairs) over the hero and arrival zones. */
@@ -4479,19 +4501,23 @@ export interface DetailUniforms {
  * street-light pools added as diffuse light (irradiance × albedo / π) so
  * asphalt, paving and grass each brighten by their own albedo.
  */
-export function patchGroundMaterial(m: THREE.MeshStandardMaterial, pools: PoolUniforms, o: GroundPatch, detail?: DetailUniforms): void {
+export function patchGroundMaterial(m: THREE.MeshStandardMaterial, pools: PoolUniforms, o: GroundPatch, detail?: DetailUniforms, leafU?: LeafUniforms): void {
   const prev = m.onBeforeCompile;
   const prevKey = m.customProgramCacheKey();
   const wear = { value: o.wear ?? 0 };
+  const leafAmt = { value: o.leaves ?? 0 };
   const useDetail = !!(o.detail && detail);
-  m.customProgramCacheKey = () => `${prevKey}|gr-${o.wear ? "w" : ""}${o.pools ? "p" : ""}${useDetail ? "d" : ""}`;
+  const useLeaves = !!(o.leaves && leafU);
+  m.customProgramCacheKey = () => `${prevKey}|gr-${o.wear ? "w" : ""}${o.pools ? "p" : ""}${useDetail ? "d" : ""}${o.boards ? "b" : ""}${useLeaves ? "l" : ""}`;
   m.onBeforeCompile = (shader, renderer) => {
     prev.call(m, shader, renderer);
     shader.uniforms.uGrWear = wear;
+    shader.uniforms.uGrLeafAmt = leafAmt;
     if (o.pools) Object.assign(shader.uniforms, pools);
     if (useDetail && detail) Object.assign(shader.uniforms, detail);
+    if (useLeaves && leafU) Object.assign(shader.uniforms, leafU);
     shader.vertexShader = shader.vertexShader
-      .replace("#include <common>", "#include <common>\nvarying vec3 vGrWorld;")
+      .replace("#include <common>", `#include <common>\nvarying vec3 vGrWorld;${o.boards ? "\nvarying vec2 vGrBoardUv;" : ""}`)
       .replace(
         "#include <worldpos_vertex>",
         `#include <worldpos_vertex>
@@ -4501,15 +4527,20 @@ export function patchGroundMaterial(m: THREE.MeshStandardMaterial, pools: PoolUn
 			grWp = instanceMatrix * grWp;
 		#endif
 		vGrWorld = ( modelMatrix * grWp ).xyz;
+		${o.boards ? "vGrBoardUv = uv;" : ""}
 	}`,
       );
     shader.fragmentShader = shader.fragmentShader.replace(
       "#include <common>",
       `#include <common>
 varying vec3 vGrWorld;
+${o.boards ? "varying vec2 vGrBoardUv;\nfloat grGapR = 0.0;" : ""}
 uniform float uGrWear;
 ${o.pools ? "uniform sampler2D uGrPool; uniform vec4 uGrPoolExt; uniform float uGrPoolGain;" : ""}
 ${useDetail ? "uniform sampler2D uGrDetail; uniform vec4 uGrDetailExt;" : ""}
+${useLeaves ? "uniform sampler2D uGrLeafSplat; uniform vec4 uGrLeafExt; uniform sampler2D uGrLeafTex; uniform vec3 uGrLeafC; uniform float uGrLeafAmt;" : ""}
+float grLeafCov = 0.0;
+float grDampG = 0.0;
 float grWet = 0.0;
 float grPolish = 0.0;
 float grPatch = 0.0;
@@ -4525,6 +4556,40 @@ ${GR_NOISE}`,
 		diffuseColor.rgb *= 0.86 + 0.22 * smoothstep( uGrWear, uGrWear + 0.3, grW );
 	}`;
     }
+    if (o.boards) {
+      albedo += `
+	{
+		// Boards along u: 0.145 m pitch, 6 mm gaps; butt joints every 2.4–4.8 m, staggered per board.
+		vec2 q = vGrBoardUv;
+		float pitch = 0.145;
+		float row = floor( q.y / pitch );
+		float fy = fract( q.y / pitch );
+		float lenB = 2.4 + 2.4 * grHash( vec2( row, 1.7 ) );
+		float xb = q.x + grHash( vec2( row, 5.3 ) ) * lenB;
+		float colB = floor( xb / lenB );
+		float fx = fract( xb / lenB );
+		float tone = grHash( vec2( row, colB ) );
+		vec2 fw = max( fwidth( q ), vec2( 1e-4 ) );
+		// Gap coverage, box-filtered; far away it becomes the average darkening of the gaps.
+		float gw = 0.006 / pitch;
+		float fyw = fw.y / pitch;
+		float edgeY = min( fy, 1.0 - fy );
+		float gapY = 1.0 - smoothstep( gw * 0.5 - fyw * 0.5, gw * 0.5 + fyw * 0.5, edgeY );
+		float edgeX = min( fx, 1.0 - fx ) * lenB;
+		float gapX = 1.0 - smoothstep( 0.003 - fw.x * 0.5, 0.003 + fw.x * 0.5, edgeX );
+		float near = 1.0 - smoothstep( 0.25, 0.7, fyw );
+		float gap = mix( gw, max( gapY, gapX ), near );
+		// Weathering: per-board tone (silver-grey to brown), streaks along the grain, damp patches.
+		float streak = grNoise( vec2( q.x * 0.6, q.y * 9.0 ) );
+		float damp = smoothstep( 0.45, 0.8, grFbm( vGrWorld.xz * 0.35 ) );
+		diffuseColor.rgb *= mix( 0.82, 1.14, tone ) * mix( 0.92, 1.06, streak );
+		diffuseColor.rgb = mix( diffuseColor.rgb, diffuseColor.rgb * vec3( 0.93, 0.95, 1.0 ), 0.5 * tone );
+		diffuseColor.rgb *= mix( 1.0, 0.72, damp );
+		diffuseColor.rgb *= 1.0 - 0.75 * gap;
+		grGapR = gap;
+		grPolish = max( grPolish, damp * 1.4 );
+	}`;
+    }
     if (useDetail) {
       albedo += `
 	{
@@ -4538,19 +4603,49 @@ ${GR_NOISE}`,
 		float grR = grD.r * ( 0.7 + 0.6 * grN );
 		grWet = smoothstep( 0.6, 0.95, grR );
 		float grDamp = smoothstep( 0.08, 0.4, grR );
+		grDampG = grDamp;
 		grPolish = grD.g;
 		grPatch = smoothstep( 0.35, 0.6, grD.b + ( grN - 0.5 ) * 0.25 );
-		diffuseColor.rgb *= mix( 1.0, 0.8, grDamp ) * mix( 1.0, 0.85, grWet ) * mix( 1.0, 0.8, grPatch ) * ( 1.0 + 0.09 * grPolish );
+		diffuseColor.rgb *= mix( 1.0, 0.8, grDamp ) * mix( 1.0, 0.6, grWet ) * mix( 1.0, 0.8, grPatch ) * ( 1.0 + 0.09 * grPolish );
 		grPolish = max( grPolish, grDamp * 2.0 );
 	}`;
     }
+    if (useLeaves) {
+      albedo += `
+	{
+		// Fallen leaves: the splat's leaf channel (under the crowns) and the damp gutters where they collect.
+		float sA = texture2D( uGrLeafSplat, ( vGrWorld.xz - uGrLeafExt.xy ) * uGrLeafExt.zw ).a;
+		float lAmt = sA * uGrLeafAmt;
+		// Gutters near trees catch what the traffic and the wind sweep off the carriageway.
+		lAmt = max( lAmt, grDampG * min( 1.0, sA * 2.5 + 0.12 ) * 0.75 );
+		float lN = grFbm( vGrWorld.xz * 0.45 + 17.0 );
+		vec4 lv = texture2D( uGrLeafTex, vec2( vGrWorld.x, -vGrWorld.z ) * 0.9 );
+		grLeafCov = lv.a * smoothstep( 0.22, 0.62, lAmt + ( lN - 0.5 ) * 0.45 );
+		// Wet leaves: darker and glossier than dry ones.
+		diffuseColor.rgb = mix( diffuseColor.rgb, lv.rgb * uGrLeafC * 0.85, grLeafCov );
+	}`;
+    }
     if (albedo) shader.fragmentShader = shader.fragmentShader.replace("#include <color_fragment>", `#include <color_fragment>${albedo}`);
+    if (o.boards && !useDetail) {
+      shader.fragmentShader = shader.fragmentShader.replace(
+        "#include <metalnessmap_fragment>",
+        `#include <metalnessmap_fragment>
+	roughnessFactor = clamp( roughnessFactor * mix( 1.0, 0.78, min( grPolish, 1.0 ) ) * mix( 1.0, 1.1, grGapR ), 0.05, 1.0 );`,
+      );
+    }
     if (useDetail) {
       shader.fragmentShader = shader.fragmentShader
         .replace(
           "#include <metalnessmap_fragment>",
           `#include <metalnessmap_fragment>
-	roughnessFactor = clamp( roughnessFactor * mix( 1.0, 0.3, grWet ) * mix( 1.0, 0.82, min( grPolish, 1.0 ) ) * mix( 1.0, 1.08, grPatch ), 0.05, 1.0 );`,
+	roughnessFactor = clamp( mix( roughnessFactor * mix( 1.0, 0.82, min( grPolish, 1.0 ) ) * mix( 1.0, 1.08, grPatch ), 0.07, grWet ), 0.05, 1.0 );`,
+        )
+        .replace(
+          "#include <lights_fragment_maps>",
+          `#include <lights_fragment_maps>
+	// Standing water mirrors the street canyon (facades, trees), not the open sky the env map holds: dim
+	// the sky reflection in puddles so they read dark and glassy rather than milky.
+	radiance *= mix( 1.0, 0.45, grWet );`,
         )
         .replace(
           "#include <normal_fragment_maps>",
@@ -4582,6 +4677,8 @@ interface SurfaceMaterials {
   pools: PoolUniforms;
   setPoolMap(tex: THREE.Texture, ext: { minX: number; maxX: number; minZ: number; maxZ: number }): void;
   setDetailMap(tex: THREE.Texture, ext: { minX: number; maxX: number; minZ: number; maxZ: number }): void;
+  /** The terrain splat (its alpha = fallen leaves) for the paved materials. */
+  setLeafMap(tex: THREE.Texture, ext: { minX: number; maxX: number; minZ: number; maxZ: number }): void;
   setLighting(state: LightingState): void;
   dispose(): void;
 }
@@ -4601,26 +4698,40 @@ function createSurfaceMaterials(ctx: TwinContext): SurfaceMaterials {
     uGrDetail: { value: black },
     uGrDetailExt: { value: new THREE.Vector4(0, 0, 1, 1) },
   };
+  // Fallen leaves: the terrain splat (set later, setLeafMap) and the scattered-leaves decal.
+  const clear = new THREE.DataTexture(new Uint8Array([0, 0, 0, 0]), 1, 1);
+  clear.needsUpdate = true;
+  const leafLib = lib.get("leafLitter");
+  const leafU: LeafUniforms = {
+    uGrLeafSplat: { value: clear },
+    uGrLeafExt: { value: new THREE.Vector4(0, 0, 1, 1) },
+    uGrLeafTex: { value: leafLib.map },
+    uGrLeafC: { value: leafLib.color.clone() },
+  };
   const own = (m: THREE.MeshStandardMaterial, patch: GroundPatch = { pools: true }) => {
-    patchGroundMaterial(m, pools, patch, detail);
+    patchGroundMaterial(m, pools, patch, detail, leafU);
     made.push(m);
     return m;
   };
-  const asphalt = { pools: true, detail: true };
+  // Carriageways: leaves swept to the gutters; footways and paving under the crowns keep more.
+  const asphalt = { pools: true, detail: true, leaves: 0.35 };
   const base = (group: SurfaceGroup): THREE.MeshStandardMaterial => {
     const albedo = SURFACE_LOOK[GROUP_BASE[group]].albedo;
     switch (group) {
       // Street canyons hide most of the sky the asphalt would mirror (no screen-space reflections): envMapIntensity < 1.
       case "asphalt":
-        return own(lib.variant("asphalt", { color: albedo, roughness: 0.97, envMapIntensity: 0.7 }), asphalt);
+        // (0.5: the street read cool and light, RGB ≈ 95/105/114, against SPEC's #4a4a4a–#5c5c5a.)
+        return own(lib.variant("asphalt", { color: albedo, roughness: 0.97, envMapIntensity: 0.5 }), asphalt);
       case "footway":
-        return own(lib.variant("asphaltFootway", { color: albedo, roughness: 0.92, envMapIntensity: 0.75 }), asphalt);
+        return own(lib.variant("asphaltFootway", { color: albedo, roughness: 0.92, envMapIntensity: 0.55 }), { pools: true, detail: true, leaves: 0.8 });
       case "pavers":
-        return own(lib.variant("pavers", { color: albedo, tile: [1.2, 1.2] }));
+        return own(lib.variant("pavers", { color: albedo, tile: [1.2, 1.2] }), { pools: true, leaves: 0.8 });
       case "setts":
-        return own(lib.variant("setts", { color: albedo, tile: [2.2, 1.1] }));
+        return own(lib.variant("setts", { color: albedo, tile: [2.2, 1.1] }), { pools: true, leaves: 0.8 });
       case "deck":
-        return own(lib.variant("birch", { color: albedo, roughness: 0.96, tile: [2.8, 1.4] }));
+        // Weathered outdoor timber (SPEC §4.3 ≈#8a7560; the 2025 orthophoto reads silver-grey): the pale oak
+        // grain under procedural boards — never the interior birch lamella, which read snow-white outdoors.
+        return own(lib.variant("oak", { color: albedo, roughness: 0.9, tile: [1.3, 1.3] }), { pools: true, boards: true, leaves: 0.7 });
       case "concrete":
         return own(lib.variant("concreteFacade", { color: albedo, roughness: 0.9 }));
     }
@@ -4653,6 +4764,10 @@ function createSurfaceMaterials(ctx: TwinContext): SurfaceMaterials {
       detail.uGrDetail.value = tex;
       detail.uGrDetailExt.value.set(ext.minX, ext.minZ, 1 / (ext.maxX - ext.minX), 1 / (ext.maxZ - ext.minZ));
     },
+    setLeafMap(tex, ext) {
+      leafU.uGrLeafSplat.value = tex;
+      leafU.uGrLeafExt.value.set(ext.minX, ext.minZ, 1 / (ext.maxX - ext.minX), 1 / (ext.maxZ - ext.minZ));
+    },
     setLighting(state) {
       // Street lights switch on at sunset and are full by civil dusk (SPEC §8.3).
       pools.uGrPoolGain.value = smoothstep(1.0, -4.0, state.sunElevationDeg) * POOL_SCALE;
@@ -4660,6 +4775,7 @@ function createSurfaceMaterials(ctx: TwinContext): SurfaceMaterials {
     dispose() {
       for (const m of made) m.dispose();
       black.dispose();
+      clear.dispose();
     },
   };
 }

@@ -427,21 +427,89 @@ describe("createTourController", () => {
     expect(prev!.heading).toBeCloseTo(0, 3);
   });
 
-  it("pulls the camera in rather than through a wall", () => {
-    // The tour starts at a door with a wall right behind it.
+  it("frames a start at a door from the open side, then swings behind without crossing the wall", () => {
+    // The tour starts at a door with a wall right behind it: no camera behind the walker can see it.
     const wall: Collider2D = { level: "outdoor", kind: "segment", a: [-2, -10], b: [-2, 10] };
     const tour = createTourController({ ease: 0, colliders: [wall] });
     tour.start(straight, "chase");
     const f = tour.update(1 / 60)!;
-    expect(f.position.x).toBeGreaterThan(-2 + 0.2);
-    expect(f.position.x).toBeLessThan(f.walker.x);
+    expect(f.framing).toBe("front");
+    // Out on the route ahead, to one side, looking back at the walker (never behind the wall).
+    expect(f.position.x).toBeGreaterThan(f.walker.x + 2);
+    expect(Math.abs(f.position.z)).toBeGreaterThan(1.5);
+    expect(f.target.x).toBeLessThan(f.position.x);
     // Walls on another level don't count.
     const other = createTourController({ ease: 0, colliders: [{ ...wall, level: "biocity-1" }] });
     other.start({ ...straight, levels: ["outdoor", "outdoor"] }, "chase");
     expect(other.update(1 / 60)!.position.x).toBeCloseTo(-7 + 1.6 / 60, 2);
-    // Once clear of the wall the camera eases back out to 7 m.
-    const later = run(tour, 12)!;
-    expect(hdist(later.position, later.walker)).toBeCloseTo(7, 1);
+    // It swings behind as the walker passes — smoothly, and never through the wall.
+    let prev = f;
+    let worstJump = 0;
+    for (let i = 0; i < 60 * 12; i++) {
+      const g = tour.update(1 / 60)!;
+      worstJump = Math.max(worstJump, hdist(g.position, prev.position));
+      expect(g.position.x).toBeGreaterThan(-2);
+      prev = g;
+    }
+    expect(worstJump).toBeLessThan(0.3);
+    expect(prev.framing).toBe("chase");
+    expect(hdist(prev.position, prev.walker)).toBeCloseTo(7, 1);
+    expect(prev.position.x).toBeLessThan(prev.walker.x);
+  });
+
+  it("starts out of a closed building (the station's street door): never inside it, the walker in view", () => {
+    // A building fills x < 0 (no walls known, only its volume): the camera may never be in it.
+    const solidAt = (x: number, y: number) => x < 0 && y < 20;
+    const tour = createTourController({ ease: 0, solidAt });
+    tour.start(straight, "chase");
+    let f = tour.update(1 / 60)!;
+    expect(f.framing).toBe("front");
+    for (let i = 0; i < 60 * 15; i++) {
+      expect(solidAt(f.position.x, f.position.y)).toBe(false);
+      f = tour.update(1 / 60)!;
+    }
+    expect(f.framing).toBe("chase");
+  });
+
+  it("sees over railings: only the given sight walls pull the camera in", () => {
+    // A railing along the route's left (a collider for walking) never pulls the camera in when sight walls say so.
+    const railing: Collider2D = { level: "outdoor", kind: "segment", a: [-20, -0.8], b: [120, -0.8] };
+    const tour = createTourController({ ease: 0, colliders: [railing], sightClear: () => true });
+    tour.start({ ...straight, points: flat([[0, 0], [30, 0], [30, -40]]), levels: ["outdoor", "outdoor", "outdoor"] }, "chase");
+    let pulled = 0;
+    for (let i = 0; i < 60 * 30; i++) if (tour.update(1 / 60)!.clamped) pulled++;
+    expect(pulled).toBe(0);
+  });
+
+  it("pulls in before a door instead of cutting, and never sees through the wall", () => {
+    // A wall across the route with a 1.6 m door at x = 30; right after it the route turns left.
+    const walls: Collider2D[] = [
+      { level: "outdoor", kind: "segment", a: [30, -40], b: [30, -0.8] },
+      { level: "outdoor", kind: "segment", a: [30, 0.8], b: [30, 40] },
+    ];
+    const tour = createTourController({ ease: 0, colliders: walls });
+    tour.start({ id: "door", points: flat([
+      [0, 0],
+      [33, 0],
+      [33, -30],
+    ]), captions: [] }, "chase");
+    let prev: TourFrame | null = null;
+    let worstJump = 0;
+    let pulled = false;
+    for (let i = 0; i < 60 * 40; i++) {
+      const g = tour.update(1 / 60)!;
+      if (prev) worstJump = Math.max(worstJump, hdist(g.position, prev.position));
+      if (g.framing !== "chase") pulled = true;
+      // The camera and the walker are never on opposite sides of the wall except through the door.
+      if ((g.position.x - 30) * (g.walker.x - 30) < 0) {
+        const t = (30 - g.walker.x) / (g.position.x - g.walker.x);
+        expect(Math.abs(g.walker.z + (g.position.z - g.walker.z) * t)).toBeLessThan(0.8);
+      }
+      prev = g;
+    }
+    expect(pulled).toBe(true);
+    // No hard cut: at most ~0.4 m per frame at 60 fps while pulling in (the walker moves 0.027 m).
+    expect(worstJump).toBeLessThan(0.4);
   });
 
   it("rides at eye height in first person and can switch modes mid-tour", () => {
@@ -567,6 +635,34 @@ describe("createTourController", () => {
     expect(g!.position.y).toBeCloseTo(-1.7 + 1.65, 3);
     // 1.76 m down a 10-tread stair without a single jolt.
     expect(worst).toBeLessThan(0.02);
+  });
+
+  it("stands the walker on the modelled surfaces and keeps the camera under ceilings", () => {
+    // A covered bridge: deck at 4.5 over x 20…60 (the route data says 3.6), roof at 7.2 over it.
+    const surfaces = {
+      floorAt: (x: number, _z: number, hint: number) => (x >= 20 && x <= 60 ? 4.5 : Math.abs(hint) < 1.2 ? 0 : null),
+      ceilingAt: (x: number, _z: number, floor: number) => (x >= 18 && x <= 62 && 7.2 >= floor + 1.9 ? 7.2 : null),
+    };
+    const tour = createTourController({ ease: 0 });
+    tour.start({ id: "bridge", points: [[0, 0, 0], [20, 3.6, 0], [60, 3.6, 0], [100, 3.6, 0]], captions: [], levels: [
+      "outdoor", "outdoor", "outdoor", "outdoor",
+    ] }, "chase");
+    tour.setSurfaces!(surfaces);
+    tour.seek(0.4);
+    const f = tour.update(0)!;
+    expect(f.walker.x).toBeGreaterThan(25);
+    expect(f.walker.x).toBeLessThan(55);
+    expect(f.walker.y).toBeCloseTo(4.5, 6);
+    // Under the roof: below it with a gap, still over the walker's head height.
+    let worst = -Infinity;
+    for (let i = 0; i < 60 * 12; i++) {
+      const g = tour.update(1 / 60)!;
+      if (g.walker.x > 24 && g.walker.x < 58) {
+        worst = Math.max(worst, g.position.y);
+        expect(g.position.y).toBeGreaterThan(g.walker.y + 0.9);
+      }
+    }
+    expect(worst).toBeLessThanOrEqual(7.2 - 0.35 + 1e-6);
   });
 
   it("is deterministic for a given dt sequence", () => {

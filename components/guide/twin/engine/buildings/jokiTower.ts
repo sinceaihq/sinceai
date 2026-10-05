@@ -9,7 +9,7 @@ import { Batcher, R, Y, box, cylinder, glow, instanceMatrix, merge, metreUV, pbr
 import type { JokiMaterials } from "./joki/mats";
 import { JOKI_LUMINANCE } from "./joki/mats";
 import { barStoolPbr, bleacher, counter, downlightDisc, eggChair, pouf, softBox, trackSpot, wallScreen } from "./joki/furniture";
-import { mapWall, patchworkCarpet, rollupAtlas, screenContent, woodWool } from "./joki/textures";
+import { exitSign, floorScreen, mapWall, patchworkCarpet, rollupAtlas, screenContent, spiralSeamNormal, woodWool } from "./joki/textures";
 
 /**
  * Joki tower floors 2 and 3 (SPEC §7.3) — round plates inside the glass
@@ -37,6 +37,15 @@ export const TOWER_STANDS: Record<string, { floor: 2 | 3; x: number; z: number }
   "bo-lkv": { floor: 3, x: -5.45, z: -1.32 },
   "business-turku": { floor: 3, x: -3.39, z: 4.27 },
 };
+
+/** The Chill Zone's poufs (J x, z, radius, colour). */
+export const CHILL_POUFS: readonly [number, number, number, string][] = [
+  [-4.6, -1.5, 0.55, "#b1b13b"],
+  [-3.3, 0.2, 0.62, "#5a5ccc"],
+  [-5.6, -0.1, 0.5, "#255d69"],
+  [-2.5, -1.9, 0.45, "#8a8f94"],
+  [-4.3, 1.0, 0.45, "#b1b13b"],
+];
 
 /** Stand furniture pose: the counter faces the tower centre, the roll-up stands behind it. */
 export function standPose(id: string): { x: number; z: number; yaw: number; floor: 2 | 3 } {
@@ -122,6 +131,42 @@ export function slabHides(cam: { x: number; y: number; z: number }, x: number, y
   return false;
 }
 
+/** Does the core (stair walls, shaft, lift + WC) stand between a camera on the floor and a point (J plan)? */
+export function coreHides(cam: { x: number; z: number }, x: number, z: number): boolean {
+  for (const poly of CORE) {
+    const xs = poly.map((p) => p[0]);
+    const zs = poly.map((p) => p[1]);
+    if (segmentHitsRect(cam.x, cam.z, x, z, Math.min(...xs), Math.max(...xs), Math.min(...zs), Math.max(...zs))) return true;
+  }
+  // The stairwell between the two core walls is open above the treads but its glass and the stair
+  // itself hide little: not counted.
+  return false;
+}
+
+/** 2D segment (a → b) against an axis-aligned rectangle (slab test). */
+function segmentHitsRect(ax: number, az: number, bx: number, bz: number, x0: number, x1: number, z0: number, z1: number): boolean {
+  let t0 = 0;
+  let t1 = 1;
+  const dx = bx - ax;
+  const dz = bz - az;
+  for (const [p, q] of [
+    [-dx, ax - x0],
+    [dx, x1 - ax],
+    [-dz, az - z0],
+    [dz, z1 - az],
+  ] as [number, number][]) {
+    if (Math.abs(p) < 1e-12) {
+      if (q < 0) return false;
+      continue;
+    }
+    const r = q / p;
+    if (p < 0) t0 = Math.max(t0, r);
+    else t1 = Math.min(t1, r);
+    if (t0 > t1) return false;
+  }
+  return true;
+}
+
 /** Where a stand label goes for a camera: the highest anchor no slab hides, or null (hidden). */
 export function standLabelHeight(cam: { x: number; y: number; z: number }, floor: 2 | 3, x: number, z: number, f3Drawn: boolean, heights = STAND_LABEL_HEIGHTS): number | null {
   const fy = floor === 2 ? Y.f2 : Y.f3;
@@ -173,7 +218,7 @@ export function buildJokiTower(
 
   // ── Materials (zone "tower": daylight through the glass + the sun) ──
   // Grey carpet tiles with subtle tone changes (photos: Workshop, Partner Expo).
-  const carpetTex = patchworkCarpet(["#8a8b8f", "#84858a", "#909196", "#7f8085"], { px: low ? 512 : 1024, seed: 29 });
+  const carpetTex = patchworkCarpet(["#8c8d91", "#87888c", "#919296", "#84858a"], { px: low ? 512 : 1024, seed: 29 });
   owned.push(carpetTex.texture);
   const carpet = mats.get("carpetGrey", "tower", {}, "jk-tower-carpet");
   carpet.map = carpetTex.texture;
@@ -184,13 +229,17 @@ export function buildJokiTower(
   // Flat-painted parts of both floors (slab edges, core, counters, ducts, furniture): one uber material.
   const uber = mats.uber("tower");
   const SLAB = (g: THREE.BufferGeometry) => pbr(g, "#a8a7a3", 0.9, 0);
-  const CORE_PAINT = (g: THREE.BufferGeometry) => pbr(g, "#787c82", 0.82, 0);
+  // The core is painted a dark charcoal grey (photos: Workshop / Partner Expo, ≈ #504a4b under the room
+  // light; SPEC mid-grey #787c82), matte.
+  const CORE_PAINT = (g: THREE.BufferGeometry) => pbr(g, "#3f3d3e", 0.9, 0);
   const DUCT = (g: THREE.BufferGeometry) => pbr(g, "#c5c8ca", 0.45, 1);
+  const DOOR_LEAF = (g: THREE.BufferGeometry) => pbr(g, "#d4d4d0", 0.55, 0);
+  const BRUSHED = (g: THREE.BufferGeometry) => pbr(g, "#b9bcbe", 0.38, 1);
+  const FRAME = (g: THREE.BufferGeometry) => pbr(g, "#2b2d30", 0.5, 0.6);
   const BLACK = (g: THREE.BufferGeometry) => pbr(g, "#0b0b0d", 0.5, 0);
   const GLOSS = (g: THREE.BufferGeometry) => pbr(g, "#09090b", 0.14, 0);
   const WHITE = (g: THREE.BufferGeometry) => pbr(g, "#eeeeec", 0.5, 0);
   const CHARCOAL = (g: THREE.BufferGeometry) => pbr(g, "#2b2c30", 0.85, 0);
-  const DARK_WOOD = (g: THREE.BufferGeometry) => pbr(g, "#4a3a30", 0.7, 0);
   const STEEL = (g: THREE.BufferGeometry) => pbr(g, "#c9cbcc", 0.32, 1);
   const FABRIC = (g: THREE.BufferGeometry, hex: string) => pbr(g, hex, 0.95, 0);
   const balustrade = mats.glass("tower", { opacity: 0.09 }, "jk-tower-balustrade");
@@ -198,12 +247,26 @@ export function buildJokiTower(
   const glowMat = mats.glow("tower");
   const VIOLET = mats.lampColor(JOKI_LUMINANCE.violetLine, undefined, EVENT_VIOLET);
   const SPOT = mats.lampColor(JOKI_LUMINANCE.trackSpot, 3000);
-  const EXIT = mats.lampColor(JOKI_LUMINANCE.exitSign, undefined, "#21b35a");
   const DOWN = mats.lampColor(JOKI_LUMINANCE.downlight, 3500);
   const screenTex = screenContent({ seed: 21 });
   owned.push(screenTex);
   const screenMat = new THREE.MeshBasicMaterial({ map: screenTex, color: new THREE.Color(1, 1, 1).multiplyScalar(JOKI_LUMINANCE.screen) });
   owned.push(screenMat);
+  // Galvanised spiral-seam ducts (SPEC #c5c8ca): a seam normal map on duct UVs (u round, v along, in tiles).
+  const seam = spiralSeamNormal({ px: low ? 128 : 256 });
+  owned.push(seam);
+  const ductMat = mats.plain("tower-duct", "tower", { color: "#c5c8ca", metalness: 1, roughness: 0.36, normalMap: seam });
+  ductMat.normalScale.set(0.8, 0.8);
+  // Emergency-exit signs (lit pictogram).
+  const exitTex = exitSign();
+  owned.push(exitTex);
+  const exitMat = new THREE.MeshBasicMaterial({ map: exitTex, color: new THREE.Color(1, 1, 1).multiplyScalar(JOKI_LUMINANCE.exitSign) });
+  exitMat.name = "joki-exit-signs";
+  owned.push(exitMat);
+  /** Upper part of the floor 2 → 3 flight: hidden with the floor-2 core cut (it would end in mid-air). */
+  const stairHigh = new THREE.Group();
+  stairHigh.name = "joki-stair-2-3-upper";
+  f2.add(stairHigh);
 
   for (const [floor, group, ceilGroup] of [
     [2, f2, f2Ceil],
@@ -229,25 +292,95 @@ export function buildJokiTower(
     // Glass balustrade along the stairwell (west edge) and its handrail.
     batch.add(group, balustrade, wallSeg([-0.15, -6.0], [-0.15, 1.5], 0.012, y, y + 1.05));
     batch.add(group, uber, STEEL(rod([-0.15, y + 1.05, -6.0], [-0.15, y + 1.05, 1.5], 0.02, 8)), { receive: true });
-    // Stair flight up to the next floor (floor 2 → 3) or the roof stair stops (floor 3).
+    // Stair flight up to the next floor (floor 2 → 3): black steel treads on sloped stringer plates,
+    // a landing half way; the treads above 1.3 m sit in their own group (dollhouse cut).
     if (floor === 2) {
       const risers = 24;
       const rise = (Y.f3 - Y.f2) / risers;
-      const treads: THREE.BufferGeometry[] = [];
+      const lowParts: THREE.BufferGeometry[] = [];
+      const highParts: THREE.BufferGeometry[] = [];
+      const put = (top: number, g: THREE.BufferGeometry) => (top - y <= 1.3 ? lowParts : highParts).push(g);
       const n1 = 11;
       const g1 = 3.2 / n1;
-      for (let i = 0; i < n1; i++) treads.push(box(1.45, 0.06, g1 + 0.01, 0.55, y + rise * (i + 1) - 0.06, 1.6 - g1 * (i + 0.5)));
-      treads.push(box(1.45, 0.06, 0.6, 0.55, y + rise * (n1 + 1) - 0.06, -1.9));
+      // Each step a closed steel tread-and-riser (no see-through slats).
+      for (let i = 0; i < n1; i++) put(rise * (i + 1) + y, box(1.42, rise + 0.02, g1 + 0.02, 0.55, y + rise * i - 0.02, 1.6 - g1 * (i + 0.5)));
+      put(y + rise * (n1 + 1), box(1.42, 0.2, 0.62, 0.55, y + rise * (n1 + 1) - 0.2, -1.9));
       const n2 = risers - n1 - 1;
       const g2 = 3.9 / n2;
-      for (let i = 0; i < n2; i++) treads.push(box(1.45, 0.06, g2 + 0.01, 0.55, y + rise * (n1 + 2 + i) - 0.06, -2.2 - g2 * (i + 0.5)));
-      // Stringers.
-      for (const x of [-0.17, 1.27]) treads.push(wallSeg([x, 1.6], [x, -6.1], 0.04, y, y + 0.3));
-      batch.add(group, uber, treads.map(BLACK), { receive: true });
+      for (let i = 0; i < n2; i++) put(y + rise * (n1 + 2 + i), box(1.42, rise + 0.02, g2 + 0.02, 0.55, y + rise * (n1 + 1 + i) - 0.02, -2.2 - g2 * (i + 0.5)));
+      // Stringers along both sides of each flight (the lower flight split where the cut falls).
+      const cutZ = 1.6 - g1 * 7;
+      for (const x of [-0.18, 1.28]) {
+        lowParts.push(slopedPlate(x, 1.6, y, cutZ, y + rise * 7, 0.3, 0.035));
+        highParts.push(slopedPlate(x, cutZ, y + rise * 7, -1.6, y + rise * (n1 + 1), 0.3, 0.035));
+        highParts.push(slopedPlate(x, -1.6, y + rise * (n1 + 1), -2.2, y + rise * (n1 + 1), 0.3, 0.035));
+        highParts.push(slopedPlate(x, -2.2, y + rise * (n1 + 1), -6.1, Y.f3, 0.3, 0.035));
+      }
+      batch.add(group, uber, lowParts.map(BLACK), { receive: true });
+      batch.add(stairHigh, uber, highParts.map(BLACK), { receive: true });
     }
-    // Lift doors (south side), the WC door and the exit sign — on the core, cut with it.
-    batch.add(coreCut[floor].group, uber, [STEEL(box(1.0, 2.1, 0.04, 2.5, 0, 5.99)), WHITE(box(0.85, 2.05, 0.04, 5.0, 0, 5.99))], { receive: true });
-    batch.add(coreCut[floor].group, glowMat, glow(box(0.36, 0.14, 0.03, 2.5, 2.35, 6.0), EXIT));
+    // Doors on the core's south face (z 5.97): the lift (brushed steel, two leaves, call panel) and the
+    // WC (light laminate leaf with a lever), each inset in a 50 mm dark steel frame — cut with the core.
+    {
+      const fz = 5.97;
+      const doorParts: { g: THREE.BufferGeometry; paint: (g: THREE.BufferGeometry) => THREE.BufferGeometry }[] = [];
+      const framed = (cx: number, w: number, h: number) => {
+        for (const s2 of [-1, 1]) doorParts.push({ g: box(0.05, h + 0.05, 0.07, cx + s2 * (w / 2 + 0.025), 0, fz + 0.015), paint: FRAME });
+        doorParts.push({ g: box(w + 0.1, 0.05, 0.07, cx, h, fz + 0.015), paint: FRAME });
+      };
+      framed(2.5, 1.0, 2.1);
+      for (const s2 of [-1, 1]) doorParts.push({ g: box(0.495, 2.1, 0.03, 2.5 + s2 * 0.2525, 0, fz - 0.005), paint: BRUSHED });
+      doorParts.push({ g: box(0.12, 0.3, 0.02, 3.22, 1.0, fz + 0.01), paint: BRUSHED });
+      framed(5.0, 0.85, 2.05);
+      doorParts.push({ g: box(0.85, 2.05, 0.035, 5.0, 0, fz - 0.008), paint: DOOR_LEAF });
+      doorParts.push({ g: box(0.13, 0.02, 0.02, 5.32, 1.02, fz + 0.04), paint: BRUSHED });
+      doorParts.push({ g: box(0.02, 0.02, 0.05, 5.37, 1.02, fz + 0.02), paint: BRUSHED });
+      batch.add(coreCut[floor].group, uber, doorParts.map((d) => d.paint(d.g)), { receive: true });
+      // Lift call buttons.
+      batch.add(coreCut[floor].group, glowMat, [glow(box(0.03, 0.03, 0.01, 3.22, 1.1, fz + 0.022), DOWN), glow(box(0.03, 0.03, 0.01, 3.22, 1.2, fz + 0.022), DOWN)]);
+    }
+    // Exit signs hung under the ceiling by this floor's outside doors, facing the room.
+    {
+      const signs: THREE.BufferGeometry[] = [];
+      for (const b of floor === 2 ? [0.5, 158] : [90.5]) {
+        const [x, z] = polar(8.1, b);
+        const g = new THREE.PlaneGeometry(0.4, 0.16);
+        g.rotateY(Math.atan2(-x, -z));
+        g.translate(x, ceilY - 0.32, z);
+        signs.push(g);
+        const back = g.clone();
+        signs.push(back.applyMatrix4(new THREE.Matrix4().makeTranslation(-x, 0, -z).premultiply(new THREE.Matrix4().makeRotationY(Math.PI)).premultiply(new THREE.Matrix4().makeTranslation(x, 0, z))));
+        batch.add(group, uber, BLACK(box(0.42, 0.18, 0.03, x, ceilY - 0.41, z, Math.atan2(-x, -z))));
+        batch.add(group, uber, BLACK(rod([x, ceilY - 0.23, z], [x, ceilY, z], 0.006, 4)));
+      }
+      const mesh = new THREE.Mesh(merge(signs), exitMat);
+      mesh.name = `joki:exit-signs-f${floor}`;
+      group.add(mesh);
+    }
+    // The Q&A screens on the core (east face of the shaft, west face of the stair wall).
+    {
+      const names = CHALLENGE_COMPANIES.filter((c) => c.qa.floor === floor).map((c) => c.name);
+      const fs = floorScreen(floor, names);
+      owned.push(fs.texture);
+      readies.push(fs.ready);
+      const mat = new THREE.MeshBasicMaterial({ map: fs.texture, color: new THREE.Color(1, 1, 1).multiplyScalar(JOKI_LUMINANCE.screen * 1.2) });
+      mat.name = `joki-floor-screen-${floor}`;
+      owned.push(mat);
+      const ws = wallScreen(1.6, 0.9);
+      const scr: THREE.BufferGeometry[] = [];
+      for (const [x, yaw] of [
+        [2.4, Math.PI / 2],
+        [-0.42, -Math.PI / 2],
+      ] as [number, number][]) {
+        batch.add(coreCut[floor].group, uber, BLACK(place(ws.bezel.clone(), x, 2.15, -2.3, yaw)), { receive: true });
+        scr.push(place(ws.screen.clone(), x, 2.15, -2.3, yaw));
+      }
+      ws.bezel.dispose();
+      ws.screen.dispose();
+      const mesh = new THREE.Mesh(merge(scr), mat);
+      mesh.name = `joki:floor-screens-f${floor}`;
+      coreCut[floor].group.add(mesh);
+    }
     // Low dark sill along the foot of the glazing (convector channel; photos: Workshop,
     // Futurescapes), broken at this floor's doors.
     const doors = floor === 2 ? [0.5, 158] : [90.5];
@@ -259,19 +392,34 @@ export function buildJokiTower(
       sills.push(ringPrism(8.97, R.glassIn - 0.01, a, b, y, y + 0.11, { seg: Math.ceil((b - a) / 3), ends: true }));
     }
     batch.add(group, uber, sills.map(CHARCOAL), { receive: true });
-    // Exposed spiral ducts and diffusers; track spots on tracks.
+    // Exposed galvanised spiral ducts (photos: Workshop — parallel runs under the wood-wool ceiling)
+    // on hangers, with round diffusers; track spots on tracks.
     const ducts: THREE.BufferGeometry[] = [];
-    ducts.push(rod([-6.5, ceilY - 0.35, -3.5], [6.5, ceilY - 0.35, -3.5], 0.22, low ? 10 : 18));
-    ducts.push(rod([-6.0, ceilY - 0.35, 3.0], [1.2, ceilY - 0.35, 3.0], 0.2, low ? 10 : 18));
-    ducts.push(rod([5.0, ceilY - 0.35, -6.5], [5.0, ceilY - 0.35, 2.4], 0.18, low ? 10 : 18));
+    const hangers: THREE.BufferGeometry[] = [];
+    const runs: [number, number, number, number][] = [
+      // x0, x1, z, radius — west and east halves (the core stands in between), two parallel runs each.
+      [-8.3, -0.75, -2.9, 0.25],
+      [-8.6, -0.75, -1.9, 0.2],
+      [2.75, 8.3, -2.9, 0.25],
+      [2.75, 8.6, -1.9, 0.2],
+    ];
+    for (const [x0, x1, z, r] of runs) {
+      const half = Math.sqrt(Math.max(0, 8.95 * 8.95 - z * z));
+      const a = Math.max(x0, -half + 0.4);
+      const b = Math.min(x1, half - 0.4);
+      ducts.push(spiralDuct([a, ceilY - 0.42, z], [b, ceilY - 0.42, z], r, low ? 12 : 20));
+      for (let x = a + 0.6; x < b; x += 1.8) hangers.push(rod([x, ceilY - 0.42 + r, z], [x, ceilY, z], 0.008, 4));
+    }
+    batch.add(ceilGroup, ductMat, ducts);
+    const diffusers: THREE.BufferGeometry[] = [];
     for (const [x, z] of [
-      [-4.5, -3.5],
-      [3.5, -3.5],
-      [-3.0, 3.0],
-      [5.0, -1.0],
+      [-5.0, -2.9],
+      [-2.4, -2.9],
+      [4.0, -2.9],
+      [6.6, -2.9],
     ] as V2[])
-      ducts.push(cylinder(0.3, ceilY - 0.62, ceilY - 0.55, x, z, 16));
-    batch.add(ceilGroup, uber, ducts.map(DUCT));
+      diffusers.push(cylinder(0.17, ceilY - 0.74, ceilY - 0.67, x, z, 16));
+    batch.add(ceilGroup, uber, [...diffusers.map(DUCT), ...hangers.map(DUCT)]);
     const sp = trackSpot();
     const bodies: THREE.BufferGeometry[] = [];
     const lenses: THREE.BufferGeometry[] = [];
@@ -397,13 +545,27 @@ export function buildJokiTower(
     const { texture: map, ready: mapReady } = mapWall({ px: low ? 512 : 1024 });
     owned.push(map);
     readies.push(mapReady);
-    const mapMat = mats.plain("tower-map", "tower", { map, roughness: 0.7, emissiveMap: map, emissive: new THREE.Color(0.05, 0.05, 0.05) });
-    // Charcoal partition with the map graphic on its north face, a screen on the kiosk.
+    // The aerial-map print is backlit a little (exhibition lighting): it reads from across the floor.
+    const mapMat = mats.plain("tower-map", "tower", { map, roughness: 0.6, emissiveMap: map, emissive: new THREE.Color(0.14, 0.14, 0.14) });
+    // Charcoal partition with the Futurescapes aerial-map graphic on both faces, a screen on the south
+    // face, and a screen on the kiosk.
     batch.add(f2, uber, CHARCOAL(wallSeg([-6.5, 2.62], [-1.95, 2.62], 0.14, y, y + 2.7)), { receive: true });
-    const face = new THREE.PlaneGeometry(4.2, 2.2);
-    face.rotateY(Math.PI);
-    face.translate(-4.22, y + 1.35, 2.545);
-    batch.add(f2, mapMat, metreUV(face));
+    for (const [z, yaw] of [
+      [2.545, Math.PI],
+      [2.695, 0],
+    ] as [number, number][]) {
+      const face = new THREE.PlaneGeometry(4.2, 2.2);
+      face.rotateY(yaw);
+      face.translate(-4.22, y + 1.35, z);
+      batch.add(f2, mapMat, face);
+    }
+    {
+      const pws = wallScreen(1.1, 0.62);
+      batch.add(f2, uber, BLACK(place(pws.bezel.clone(), -3.0, y + 1.75, 2.72, 0)), { receive: true });
+      batch.add(f2, screenMat, place(pws.screen.clone(), -3.0, y + 1.75, 2.72, 0));
+      pws.bezel.dispose();
+      pws.screen.dispose();
+    }
     // White kiosk with a display, two digital tables by the glass.
     batch.add(f2, uber, WHITE(box(1.2, 0.95, 0.7, -5.58, y, 1.86)), { receive: true });
     const ws = wallScreen(1.2, 0.68);
@@ -432,19 +594,11 @@ export function buildJokiTower(
     }
     egg.shell.dispose();
     egg.inner.dispose();
-    const pf = pouf(0.36, 0.42);
-    const big = pouf(0.75, 0.42);
-    for (const [x, z, col, b] of [
-      [-4.4, -1.4, "#b1b13b", false],
-      [-3.4, 0.3, "#5a5ccc", true],
-      [-5.3, -0.2, "#255d69", false],
-      [-2.4, -1.7, "#8a8f94", false],
-      [-4.9, 0.9, "#b1b13b", false],
-    ] as [number, number, string, boolean][]) {
-      batch.add(f2, uber, FABRIC(place((b ? big : pf).clone(), x, y, z), col), { receive: true });
+    // Big round poufs, 0.9–1.3 m across (photos: lime, violet-blue, teal).
+    for (const [x, z, r, col] of CHILL_POUFS) {
+      const pf = pouf(r, 0.42);
+      batch.add(f2, uber, FABRIC(place(pf, x, y, z), col), { receive: true });
     }
-    pf.dispose();
-    big.dispose();
     const lw = opts.toWorld(-4.65, y + 1.6, -0.17);
     addPlaced(makeLabel("Chill Zone", "area", lw.x, lw.y, lw.z, "joki-floors"), 2, [-4.65, -0.17], [1.6, 1.2, 0.9]);
     // Invisible pick proxy for the Chill Zone.
@@ -470,14 +624,20 @@ export function buildJokiTower(
   // ── Floor 3 west: four dark timber bleachers, ottomans, coat racks ──
   {
     const y = Y.f3;
+    // Dark oak (SPEC #4a3a30) with a black nosing on every tread.
+    const oak = mats.get("oak", "tower", { color: "#4a3a30", roughness: 0.55 }, "jk-bleacher-oak");
     const bl = bleacher(1.6, 0.45, 0.42);
     for (const b of [315, 293, 270, 247]) {
       const [x, z] = polar(7.75, b);
+      const yaw = yawToBearing(b) + Math.PI;
       // Steps rise towards the glass (the back); people face the middle.
-      batch.add(f3, uber, DARK_WOOD(place(bl.clone(), x, y, z, yawToBearing(b) + Math.PI)), { receive: true });
+      batch.add(f3, oak, place(bl.clone(), x, y, z, yaw), { receive: true });
+      const nosings: THREE.BufferGeometry[] = [];
+      for (let i = 0; i < 3; i++) nosings.push(box(1.6, 0.02, 0.025, 0, 0.42 * (i + 1) - 0.012, 0.45 * (1 - i) + 0.2125));
+      batch.add(f3, uber, BLACK(place(merge(nosings), x, y, z, yaw)), { receive: true });
     }
     bl.dispose();
-    const ott = pouf(0.4, 0.42);
+    const ott = pouf(0.45, 0.42);
     const colours = ["#b1b13b", "#5a5ccc", "#255d69", "#8a8f94"];
     let k = 0;
     for (const b of [336, 342, 222, 228]) {
@@ -496,6 +656,7 @@ export function buildJokiTower(
     cutCore(floor, on) {
       const c = coreCut[floor];
       c.group.scale.y = on ? Math.min(1, 1.3 / c.height) : 1;
+      if (floor === 2) stairHigh.visible = !on;
     },
     f2,
     f2Ceil,
@@ -514,7 +675,9 @@ export function buildJokiTower(
           if (!state.inside && ll > 1e-3) spot = [(left.x / ll) * FLOOR_TAG_R, fy + p.heights[0], (left.z / ll) * FLOOR_TAG_R];
         } else {
           const h = standLabelHeight(cam, p.floor, p.at[0], p.at[1], state.f3, p.heights);
-          if (h !== null) spot = [p.at[0], fy + h, p.at[1]];
+          // Standing on the floor, a stand round the other side of the core is out of sight.
+          const onFloor = state.inside && cam.y > fy && cam.y < fy + 3.5;
+          if (h !== null && !(onFloor && coreHides(cam, p.at[0], p.at[1]))) spot = [p.at[0], fy + h, p.at[1]];
         }
         const key = spot ? `${spot[0].toFixed(2)},${spot[1].toFixed(2)},${spot[2].toFixed(2)}` : "-";
         if (key === p.key) continue;
@@ -561,6 +724,38 @@ function plateWithHole(r: number, hole: V2[], y0: number, y1: number, edge: bool
     parts.push(metreUV(side));
   }
   return merge(parts);
+}
+
+/**
+ * A stair stringer: a steel plate (thickness `t`, at plan x) whose top edge runs from (zA, yA) to
+ * (zB, yB), `depth` deep below it.
+ */
+function slopedPlate(x: number, zA: number, yA: number, zB: number, yB: number, depth: number, t: number): THREE.BufferGeometry {
+  const shape = new THREE.Shape([new THREE.Vector2(zA, yA), new THREE.Vector2(zB, yB), new THREE.Vector2(zB, yB - depth), new THREE.Vector2(zA, yA - depth)]);
+  const g = new THREE.ExtrudeGeometry(shape, { depth: t, bevelEnabled: false });
+  // Shape x = plan z, shape y = height, extruded along +z → turn the extrusion onto plan x.
+  g.rotateY(-Math.PI / 2);
+  g.translate(x + t / 2, 0, 0);
+  return metreUV(g);
+}
+
+/** Spiral-seam duct between two points (radius r): UVs in seam tiles — u once round, v every 0.15 m along. */
+function spiralDuct(a: [number, number, number], b: [number, number, number], r: number, radial: number): THREE.BufferGeometry {
+  const va = new THREE.Vector3(...a);
+  const vb = new THREE.Vector3(...b);
+  const len = va.distanceTo(vb);
+  const g = new THREE.CylinderGeometry(r, r, len, radial, 1, true);
+  const uv = g.getAttribute("uv");
+  const pos = g.getAttribute("position");
+  for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i), (pos.getY(i) + len / 2) / 0.15);
+  // End caps (closed duct ends at the glass).
+  const caps = [new THREE.CircleGeometry(r, radial), new THREE.CircleGeometry(r, radial)];
+  caps[0].rotateX(-Math.PI / 2).translate(0, len / 2, 0);
+  caps[1].rotateX(Math.PI / 2).translate(0, -len / 2, 0);
+  const merged = merge([g, ...caps]);
+  const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), vb.clone().sub(va).normalize());
+  merged.applyMatrix4(new THREE.Matrix4().compose(va.clone().add(vb).multiplyScalar(0.5), q, new THREE.Vector3(1, 1, 1)));
+  return merged;
 }
 
 /** Turn an up-facing cap into a down-facing one (ceilings). */

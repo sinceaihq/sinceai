@@ -388,6 +388,70 @@ describe("tours", () => {
   });
 });
 
+describe("company routes", () => {
+  const FRI = ["partners-fri-parkcity-edu", "partners-fri-train-edu", "partners-fri-stepfree-edu"];
+  const SAT = ["companies-tykistokatu-to-showroom", "companies-train-to-biocity", "companies-parkcity-to-biocity"];
+  const roomNumbers = (c: (typeof CHALLENGE_COMPANIES)[number]) => c.briefing.room.split(/\s*\/\s*/);
+
+  it("name no single company's room in the routes everyone sees", () => {
+    for (const t of TOURS_3D) {
+      for (const text of [t.summary, ...t.steps.map((s) => s.text)]) expect(text).not.toMatch(/\broom \d{4}\b/);
+    }
+    for (const id of ["company-arrival", "entrance-educity-b"]) {
+      expect(getTarget3D(id)!.label).not.toMatch(/\d{4}/);
+      expect(getTarget3D(id)!.detail).not.toMatch(/\d{4}/);
+    }
+  });
+
+  it("lead each company to its own Friday room and Saturday stand, keeping the steps' anchors", () => {
+    for (const c of CHALLENGE_COMPANIES) {
+      for (const id of [...FRI, ...SAT]) {
+        const base = getTour3D(id)!;
+        const t = twin.tourForCompany(base, c.id)!;
+        expect(t.id).toBe(base.id);
+        expect(t.steps.map((s) => s.at)).toEqual(base.steps.map((s) => s.at));
+        expect(t.steps.slice(0, -1)).toEqual(base.steps.slice(0, -1));
+        const text = `${t.summary} ${t.steps.at(-1)!.text}`;
+        expect(t.steps.at(-1)!.text).toMatch(/^[A-Z].*[.)]$/);
+        if (FRI.includes(id)) {
+          expect(t.arrival).toBe(`room-${c.id}`);
+          expect(text).toContain(`room ${briefingRoomLabel(c)}`);
+          expect(text).toContain(`floor ${c.briefing.floor}`);
+          for (const o of CHALLENGE_COMPANIES.filter((x) => x.briefing.room !== c.briefing.room))
+            for (const n of roomNumbers(o)) expect(text).not.toContain(n);
+        } else {
+          expect(t.arrival).toBe(c.id);
+          const counter = showroomCounter(c);
+          expect(text).toContain(counter ? `counter ${counter} of ${SHOWROOM_ORDER.length}` : `floor ${c.qa.floor}`);
+          // Saturday: the stand is ready — the Since AI team set it up from what the partner brought on Friday.
+          expect(t.steps.at(-1)!.text).toMatch(/ready, set up by the Since AI team from the materials you brought on Friday/);
+        }
+      }
+    }
+  });
+
+  it("leave other routes and unknown companies alone", () => {
+    expect(twin.tourForCompany(getTour3D("builders-train-checkin")!, "elisa")).toBeNull();
+    expect(twin.tourForCompany(getTour3D(FRI[0])!, "nope")).toBeNull();
+    expect(twin.tourForCompany(getTour3D(FRI[0])!, null)).toBeNull();
+  });
+
+  it("give every step a short place name for the route card's now / next", () => {
+    for (const t of TOURS_3D) for (const s of t.steps) expect(s.where?.trim()).toBeTruthy();
+  });
+
+  it("pair each company's Q&A stand with its Friday room and point at their floor plans", () => {
+    for (const c of CHALLENGE_COMPANIES) {
+      const stand = getTarget3D(c.id)!;
+      const room = getTarget3D(`room-${c.id}`)!;
+      expect(stand).toMatchObject({ company: c.id, day: "Sat", map: c.qa.floor === 1 ? "joki-showroom" : "joki-2-3" });
+      expect(room).toMatchObject({ company: c.id, day: "Fri", map: c.briefing.floor === 1 ? "educity-1" : "educity-2" });
+      expect(room.where).toBe(`EduCity · room ${c.briefing.room}`);
+    }
+    for (const t of TARGETS_3D) if (t.href?.includes("#map-")) expect(t.href).toBe(twin.mapHref(t.map!));
+  });
+});
+
 describe("time presets", () => {
   it("are valid Turku wall-clock times during the event weekend", () => {
     expect(unique(TIME_PRESETS.map((p) => p.id))).toBe(true);

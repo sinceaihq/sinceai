@@ -4,17 +4,21 @@ import {
   ATRIUM,
   COLUMN_ROWS,
   COLUMN_X,
+  DOOR_PATH_B,
   ENTRANCE_TYK,
   GALLERY,
   ISLANDS,
   JOKI_PASSAGE,
   LEVEL,
   OVAL_COLUMNS,
+  PASSAGE_MOUTH,
   RETAIL_FRONT,
   ROUTE_LEGS_B,
   STANDS,
   TERRACE,
   VAULT,
+  VESTIBULE,
+  VESTIBULE_DOOR,
   WALKWAY_Z,
   bToLocal,
   buildTables,
@@ -22,7 +26,9 @@ import {
   localToB,
   routeLegsLocal,
   vaultY,
+  vestibuleLeaves,
 } from "../plan";
+import { QUIET_ROOMS } from "../rooms";
 import { GF_WALLS } from "../walls";
 import { biocityWalk } from "../nav";
 import { BIOCITY_VIEWS, biocityTargets } from "../views";
@@ -246,8 +252,13 @@ describe("BioCity walk data", () => {
         const s4 = d(c.a, c.b, q);
         return s1 * s2 < 0 && s3 * s4 < 0;
       });
-    // Through the revolving door (along its axis, plan z 0.58) from the recess into the lobby.
-    expect(blocked(bToLocal(-33, 0.58), bToLocal(-25.5, 0.58))).toBe(false);
+    // Through the revolving door round its centre post (the route's line) from the recess into the lobby;
+    // straight down the axis, the post is in the way.
+    for (let i = 0; i + 1 < DOOR_PATH_B.length; i++) {
+      expect(blocked(bToLocal(DOOR_PATH_B[i][0], DOOR_PATH_B[i][2]), bToLocal(DOOR_PATH_B[i + 1][0], DOOR_PATH_B[i + 1][2]))).toBe(false);
+    }
+    expect(blocked(bToLocal(-33, DOOR_PATH_B[0][2]), bToLocal(DOOR_PATH_B[0][0], DOOR_PATH_B[0][2]))).toBe(false);
+    expect(blocked(bToLocal(-33, 0.58), bToLocal(-25.5, 0.58))).toBe(true);
     // In through the vestibule from the courtyard.
     expect(blocked(bToLocal(0.02, -38.5), bToLocal(0.02, -33.5))).toBe(false);
     // The gable glass beside the doors is a wall.
@@ -274,5 +285,47 @@ describe("BioCity views and targets", () => {
       if (t.level !== "biocity-1" || !t.walkTo) continue;
       expect(walk.walkAreas.some((a) => pointInPolygon(t.walkTo!, a.polygon))).toBe(true);
     }
+  });
+});
+
+describe("BioCity doors and rooms", () => {
+  it("stands the event entrance's doors open: leaves swung clear of a ≥ 1.8 m opening, the route between them", () => {
+    const leaves = vestibuleLeaves();
+    expect(leaves).toHaveLength(4);
+    for (const [a, c] of leaves) {
+      // Open ≈ 90°: the leaf runs across the facade line (mostly along z).
+      expect(Math.abs(c[1] - a[1])).toBeGreaterThan(0.85);
+      expect(Math.abs(c[0] - a[0])).toBeLessThan(0.1);
+    }
+    const outer = leaves.filter(([a]) => Math.abs(a[1] - VESTIBULE.z0) < 0.1);
+    const clear = Math.min(...outer.map(([a, c]) => Math.min(Math.abs(a[0]), Math.abs(c[0])))) * 2;
+    expect(clear).toBeGreaterThanOrEqual(1.8);
+    for (const p of ROUTE_LEGS_B["int-bio-event-to-lobby"].slice(0, 2)) expect(Math.abs(p[0])).toBeLessThan(VESTIBULE_DOOR.half - 0.3);
+  });
+
+  it("routes to Joki through the passage's mouth between the plan's wall stubs", () => {
+    const leg = ROUTE_LEGS_B["int-bio-tyk-to-joki"];
+    for (let i = 0; i + 1 < leg.length; i++) {
+      const [x0, , z0] = leg[i];
+      const [x1, , z1] = leg[i + 1];
+      if ((x0 - PASSAGE_MOUTH.x) * (x1 - PASSAGE_MOUTH.x) > 0) continue;
+      const z = z0 + ((z1 - z0) * (PASSAGE_MOUTH.x - x0)) / (x1 - x0);
+      expect(z).toBeGreaterThan(PASSAGE_MOUTH.z0 + 0.3);
+      expect(z).toBeLessThan(PASSAGE_MOUTH.z1 - 0.3);
+    }
+  });
+
+  it("keeps the event's spaces out of the darker 'quiet' rooms (stands, tables, routes)", () => {
+    const rings = QUIET_ROOMS.map((r) => {
+      const ring: V2[] = [];
+      for (let i = 0; i + 1 < r.ring.length; i += 2) ring.push([r.ring[i], r.ring[i + 1]]);
+      return { id: r.id, ring };
+    });
+    const pts: V2[] = [
+      ...STANDS.map((s): V2 => [s.x, s.z]),
+      ...buildTables().map((t): V2 => [t.x, t.z]),
+      ...Object.values(ROUTE_LEGS_B).flat().map((p): V2 => [p[0], p[2]]),
+    ];
+    for (const p of pts) for (const r of rings) if (pointInPolygon(p, r.ring)) throw new Error(`${p} lies in ${r.id}`);
   });
 });

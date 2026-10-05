@@ -152,6 +152,42 @@ export function patchworkCarpet(tones: string[], opts: { tile?: number; tiles?: 
   return tiled(canvas, [tile * n, tile * n], true, 8);
 }
 
+/**
+ * Seamless satin resin floor (the Aula, SPEC #d3cec6): only soft, low-contrast tone drift over metres
+ * (±3 %) and a few faint trowel arcs — no blotches. Tiles every 6 m.
+ */
+export function resinFloor(opts: { base?: string; px?: number; seed?: number } = {}): Tiled {
+  const size = opts.px ?? 512;
+  const { canvas, ctx } = makeCanvas(size, size);
+  const rnd = mulberry32(opts.seed ?? 5);
+  ctx.fillStyle = opts.base ?? "#d3cec6";
+  ctx.fillRect(0, 0, size, size);
+  // Large soft clouds, drawn wrapped so the tile repeats seamlessly.
+  for (let i = 0; i < 26; i++) {
+    const x = rnd() * size;
+    const y = rnd() * size;
+    const r = size * (0.12 + rnd() * 0.25);
+    const light = rnd() < 0.5;
+    for (const ox of [-size, 0, size])
+      for (const oy of [-size, 0, size]) {
+        const g = ctx.createRadialGradient(x + ox, y + oy, 0, x + ox, y + oy, r);
+        g.addColorStop(0, light ? "rgba(255,255,255,0.035)" : "rgba(60,52,44,0.03)");
+        g.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = g;
+        ctx.fillRect(x + ox - r, y + oy - r, 2 * r, 2 * r);
+      }
+  }
+  // Faint trowel arcs.
+  ctx.lineWidth = size / 300;
+  for (let i = 0; i < 14; i++) {
+    ctx.strokeStyle = `rgba(${rnd() < 0.5 ? "255,255,255" : "70,62,54"},0.025)`;
+    ctx.beginPath();
+    ctx.arc(rnd() * size, rnd() * size, size * (0.1 + rnd() * 0.2), rnd() * 6.28, rnd() * 6.28 + 1.2);
+    ctx.stroke();
+  }
+  return tiled(canvas, [6, 6]);
+}
+
 /** White mineral acoustic tiles (600 mm grid) with a fine fissured speckle. */
 export function acousticCeiling(opts: { base?: string; grid?: number; px?: number; seed?: number } = {}): Tiled {
   const grid = opts.grid ?? 0.6;
@@ -176,33 +212,140 @@ export function acousticCeiling(opts: { base?: string; grid?: number; px?: numbe
   return tiled(canvas, [grid * n, grid * n]);
 }
 
-/** Light-grey wood-wool acoustic panels (floors 2–3): fibre texture, 1.2 × 0.6 m panels. */
+/**
+ * Light-grey wood-wool acoustic panels (floors 2–3, SPEC #d0d2d2): long 2.4 × 0.6 m boards of coarse
+ * cement-bound wood strands — dense light and dark fibres, a little tone change board to board, dark
+ * joints. Tiles every 2.4 × 2.4 m.
+ */
 export function woodWool(opts: { base?: string; px?: number; seed?: number } = {}): Tiled {
   const size = opts.px ?? 1024;
   const { canvas, ctx } = makeCanvas(size, size);
   const rnd = mulberry32(opts.seed ?? 19);
-  const base = opts.base ?? "#d0d2d2";
+  const base = opts.base ?? "#c9cbca";
   ctx.fillStyle = base;
   ctx.fillRect(0, 0, size, size);
-  // Fibres: short random strokes in light and dark.
+  // Board-to-board tone.
+  for (let j = 0; j < 4; j++) {
+    ctx.fillStyle = `rgba(${rnd() < 0.5 ? "255,255,255" : "40,40,40"},${0.03 + rnd() * 0.04})`;
+    ctx.fillRect(0, (j * size) / 4, size, size / 4);
+  }
+  // Strands: short curved strokes, mostly along the board, dark and light.
   ctx.lineCap = "round";
-  for (let i = 0; i < size * 7; i++) {
+  for (let i = 0; i < size * 12; i++) {
     const x = rnd() * size;
     const y = rnd() * size;
-    const a = rnd() * Math.PI;
-    const l = size * (0.006 + rnd() * 0.012);
-    ctx.strokeStyle = rnd() < 0.5 ? `rgba(255,255,255,${0.12 + rnd() * 0.2})` : `rgba(40,40,40,${0.06 + rnd() * 0.12})`;
-    ctx.lineWidth = size / 900;
+    const a = (rnd() - 0.5) * 2.2;
+    const l = size * (0.008 + rnd() * 0.016);
+    const dark = rnd() < 0.5;
+    ctx.strokeStyle = dark ? `rgba(70,68,62,${0.12 + rnd() * 0.2})` : `rgba(250,250,246,${0.15 + rnd() * 0.25})`;
+    ctx.lineWidth = (size / 1024) * (1 + rnd() * 1.4);
     ctx.beginPath();
     ctx.moveTo(x, y);
-    ctx.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l);
+    ctx.quadraticCurveTo(x + Math.cos(a) * l * 0.5 + (rnd() - 0.5) * l * 0.3, y + Math.sin(a) * l * 0.5, x + Math.cos(a) * l, y + Math.sin(a) * l);
     ctx.stroke();
   }
-  // 2.4 × 2.4 m canvas: panels 1.2 × 0.6.
-  ctx.fillStyle = "rgba(60,60,60,0.5)";
-  for (let i = 0; i <= 2; i++) ctx.fillRect((i * size) / 2 - 1, 0, 2, size);
-  for (let j = 0; j <= 4; j++) ctx.fillRect(0, (j * size) / 4 - 1, size, 2);
+  // Joints: boards 2.4 × 0.6 m (four rows on the 2.4 m canvas).
+  ctx.fillStyle = "rgba(55,55,52,0.55)";
+  for (let j = 0; j <= 4; j++) ctx.fillRect(0, (j * size) / 4 - 1.5, size, 3);
+  ctx.fillRect(0, 0, 3, size);
   return tiled(canvas, [2.4, 2.4]);
+}
+
+/**
+ * Normal map of spiral-seam duct (galvanised, lock-seam every 0.15 m): one seam crossing the tile
+ * diagonally. With u = metres round the duct (tile π·Ø) and v = metres along (tile 0.15) the seam
+ * winds once per turn.
+ */
+export function spiralSeamNormal(opts: { px?: number } = {}): THREE.CanvasTexture {
+  const w = opts.px ?? 256;
+  const h = Math.max(16, Math.round(w / 8));
+  const { canvas, ctx } = makeCanvas(w, h);
+  const img = ctx.createImageData(w, h);
+  for (let y = 0; y < h; y++)
+    for (let x = 0; x < w; x++) {
+      // Distance across the seam (in tile-v units): the seam runs along u + v = const.
+      let d = (y / h + x / w) % 1;
+      if (d > 0.5) d -= 1;
+      // A raised round bead ±0.08 of the pitch, normal tilting along v.
+      const t = d / 0.08;
+      const slope = Math.abs(t) < 1 ? -t * 0.9 : 0;
+      const k = (y * w + x) * 4;
+      img.data[k] = 128;
+      img.data[k + 1] = Math.round(128 + slope * 110);
+      img.data[k + 2] = 235;
+      img.data[k + 3] = 255;
+    }
+  ctx.putImageData(img, 0, 0);
+  const t = canvasTexture(canvas, { repeat: true, srgb: false, anisotropy: 8 });
+  return t;
+}
+
+/** Emergency-exit sign face (ISO 7010 style, our own drawing): white running figure and arrow on green. */
+export function exitSign(): THREE.CanvasTexture {
+  const { canvas, ctx } = makeCanvas(256, 104);
+  ctx.fillStyle = "#1c9a4e";
+  ctx.fillRect(0, 0, 256, 104);
+  ctx.strokeStyle = "#ffffff";
+  ctx.fillStyle = "#ffffff";
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  // Door frame.
+  ctx.lineWidth = 6;
+  ctx.strokeRect(150, 16, 50, 74);
+  // Running figure.
+  ctx.beginPath();
+  ctx.arc(104, 24, 9, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.lineWidth = 9;
+  ctx.beginPath();
+  ctx.moveTo(98, 38);
+  ctx.lineTo(88, 62);
+  ctx.lineTo(102, 76);
+  ctx.lineTo(96, 94);
+  ctx.moveTo(88, 62);
+  ctx.lineTo(74, 78);
+  ctx.lineTo(62, 76);
+  ctx.moveTo(96, 42);
+  ctx.lineTo(116, 54);
+  ctx.lineTo(128, 48);
+  ctx.moveTo(96, 42);
+  ctx.lineTo(80, 50);
+  ctx.lineTo(70, 42);
+  ctx.stroke();
+  // Arrow.
+  ctx.beginPath();
+  ctx.moveTo(214, 52);
+  ctx.lineTo(240, 52);
+  ctx.moveTo(230, 40);
+  ctx.lineTo(242, 52);
+  ctx.lineTo(230, 64);
+  ctx.stroke();
+  return canvasTexture(canvas, { anisotropy: 4 });
+}
+
+/**
+ * The Q&A screen on a tower floor's core (event content, our own): "Challenge Q&A · floor N" and the
+ * companies on that floor. Lettering after the web fonts load (`ready`).
+ */
+export function floorScreen(floor: number, names: string[]): { texture: THREE.CanvasTexture; ready: Promise<void> } {
+  const W = 640;
+  const H = 360;
+  const { canvas, ctx } = makeCanvas(W, H);
+  const g = ctx.createLinearGradient(0, 0, W, H);
+  g.addColorStop(0, "#120e30");
+  g.addColorStop(1, "#2a1d70");
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = EVENT_VIOLET;
+  ctx.fillRect(0, H - 12, W, 12);
+  const texture = canvasTexture(canvas, { anisotropy: 4 });
+  const ready = Promise.all([fontReady("mono"), fontReady("sans")]).then(() => {
+    wordmark(ctx, `CHALLENGE Q&A · FLOOR ${floor}`, W / 2, 62, 30, "rgba(207,199,255,0.95)");
+    names.forEach((n, i) => wordmark(ctx, n.toUpperCase(), W / 2, 130 + i * 62, n.length > 16 ? 34 : 42, "#ffffff", "sans"));
+    wordmark(ctx, "SATURDAY · SINCE AI HACKATHON 2026", W / 2, H - 36, 18, "rgba(207,199,255,0.7)");
+    texture.needsUpdate = true;
+  });
+  return { texture, ready };
 }
 
 /**

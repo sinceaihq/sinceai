@@ -635,14 +635,17 @@ function installPatch(
   const key = patchKey(spec);
   material.userData.twPatch = { spec, uniforms };
   material.customProgramCacheKey = () => `tw-${key}`;
+  // Defines go on the material once, here: written into shader.defines (the material's own object)
+  // inside onBeforeCompile they changed the program cache key after the first compile, so every
+  // patched material compiled twice and warmed-up programs were never reused.
+  const defines = material.defines ?? (material.defines = {});
+  if (spec.macro) defines.TW_MACRO = "";
+  if (spec.antiTile) defines.TW_ANTITILE = "";
+  if (spec.saturation !== undefined) defines.TW_SATURATION = "";
+  if (spec.grout) defines.TW_GROUT = "";
+  if (spec.blend && extraTextures.blendMap) defines.TW_BLEND = "";
   material.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, uniforms);
-    const defines = shader.defines ?? (shader.defines = {});
-    if (spec.macro) defines.TW_MACRO = "";
-    if (spec.antiTile) defines.TW_ANTITILE = "";
-    if (spec.saturation !== undefined) defines.TW_SATURATION = "";
-    if (spec.grout) defines.TW_GROUT = "";
-    if (spec.blend && extraTextures.blendMap) defines.TW_BLEND = "";
 
     shader.vertexShader = shader.vertexShader
       .replace("#include <common>", "#include <common>\nvarying vec3 vTwWorldPos;")

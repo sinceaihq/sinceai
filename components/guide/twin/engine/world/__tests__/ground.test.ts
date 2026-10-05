@@ -543,10 +543,12 @@ describe("campus data", () => {
     for (const h of [...HERO_SURFACES, ...HERO_PLANTERS]) {
       expect(h.ring.length).toBeGreaterThanOrEqual(3);
       expect(Math.abs(ringArea(h.ring))).toBeGreaterThan(1);
+      // Hero zone (SPEC §2.1); the station's island platform lies in the arrival zone (x −60…340, z −260…150).
+      const arrival = "kind" in h && h.kind === "platform";
       for (const [x, z] of h.ring) {
         expect(x).toBeGreaterThan(-60);
-        expect(x).toBeLessThan(280);
-        expect(z).toBeGreaterThan(-90);
+        expect(x).toBeLessThan(arrival ? 345 : 280);
+        expect(z).toBeGreaterThan(arrival ? -260 : -90);
         expect(z).toBeLessThan(160);
       }
     }
@@ -558,9 +560,16 @@ describe("campus data", () => {
     expect(lamps.some((l) => l.style === "street")).toBe(true);
     expect(lamps.some((l) => l.style === "lantern")).toBe(true);
     for (const l of lamps) {
-      expect(l.head[1] - l.y).toBeGreaterThan(3.5);
+      // Poles ≥ 3.5 m; bollards ≈ 0.7 m; the light spilling from the Aulagalleria's glass ≈ 2.6 m.
+      if (l.style === "bollard") expect(l.head[1] - l.y).toBeCloseTo(0.7, 6);
+      else if (l.style === "spill") expect(l.head[1] - l.y).toBeCloseTo(2.6, 6);
+      else expect(l.head[1] - l.y).toBeGreaterThan(3.5);
       expect(Number.isFinite(l.head[0] + l.head[2])).toBe(true);
     }
+    // The builders' way along the timber terrace to the event entrance is lit after dark (round 1: black).
+    const nearTerrace = lamps.filter((l) => Math.hypot(l.at[0] - 30, l.at[1] + 8) < 16);
+    expect(nearTerrace.filter((l) => l.style === "bollard").length).toBeGreaterThanOrEqual(2);
+    expect(nearTerrace.filter((l) => l.style === "spill").length).toBeGreaterThanOrEqual(3);
     // With the campus: linear luminaires under the Kupittaa platform canopies, between the columns.
     const withCanopies = lampSpecs(streets, terrain, campus);
     const canopy = withCanopies.filter((l) => l.style === "canopy");
@@ -572,5 +581,57 @@ describe("campus data", () => {
       expect(l.head[1] - l.y).toBeLessThan(7);
       expect(Math.hypot(l.at[0] - 212, l.at[1] + 122)).toBeLessThan(160);
     }
+  });
+});
+
+describe("round 2 ground fixes", () => {
+  const campus = readJson<CampusData>("data/campus.json");
+  const streets = readJson<StreetsData>("data/streets.json");
+  let terrain: Terrain;
+  beforeAll(async () => {
+    const meta = readJson<TerrainMeta>("terrain/dtm.json");
+    const png = await decodePng(new Uint8Array(fs.readFileSync(path.join(ASSETS, "terrain/dtm.png"))), (d) => new Uint8Array(zlib.inflateSync(d)));
+    terrain = createTerrain(meta, png.data);
+  });
+
+  it("lays the far ring flat-shaded (normals straight up, every triangle facing up)", () => {
+    const g = buildGroundGeometry(campus, streets, terrain, "high");
+    const pos = g.far.getAttribute("position").array as Float32Array;
+    const nor = g.far.getAttribute("normal").array as Float32Array;
+    for (let i = 0; i < nor.length; i += 3) expect([nor[i], nor[i + 1], nor[i + 2]]).toEqual([0, 1, 0]);
+    const idx = g.far.getIndex()!.array;
+    let down = 0;
+    for (let t = 0; t < idx.length; t += 3) {
+      const a = idx[t] * 3;
+      const b = idx[t + 1] * 3;
+      const c = idx[t + 2] * 3;
+      const ny = (pos[b + 2] - pos[a + 2]) * (pos[c] - pos[a]) - (pos[b] - pos[a]) * (pos[c + 2] - pos[a + 2]);
+      if (ny < 0) down++;
+    }
+    expect(down).toBe(0);
+    // Kalevansilta is no longer built by the ground (context/bridges.ts owns it).
+    for (const name of ["cladding", "glass", "treads"]) expect(g.parts.some((p) => p.name === name)).toBe(false);
+  });
+
+  it("frames the plan view inside the terrain data", () => {
+    const v = GROUND_VIEWS["campus:top"];
+    const d = v.position[1] - v.target[1];
+    const halfH = d * Math.tan(((v.fov ?? 38) * Math.PI) / 360);
+    const halfW = halfH * 1.6;
+    const ext = terrain.extent;
+    expect(v.target[0] + halfW).toBeLessThan(ext.maxX + 25);
+    expect(v.target[0] - halfW).toBeGreaterThan(ext.minX);
+  });
+
+  it("colours LED street lights warm white, not sodium orange", async () => {
+    const THREE = await import("three");
+    const { lampColor } = await import("../ground");
+    const c3 = lampColor(3000, new THREE.Color());
+    const c4 = lampColor(4000, new THREE.Color());
+    // Warm, but blue well above a sodium lamp's (b/r ≈ 0.05).
+    expect(c3.b / c3.r).toBeGreaterThan(0.3);
+    expect(c3.b / c3.r).toBeLessThan(0.8);
+    // 4000 K reads close to neutral under the night white balance.
+    expect(c4.b / c4.r).toBeGreaterThan(0.8);
   });
 });

@@ -61,6 +61,8 @@ export interface WalkController {
   update(dt: number): boolean;
   state(): WalkState;
   nearConnector(): Connector | null;
+  /** Every connector within reach on the walker's level, nearest first (a lift: one per floor). */
+  nearConnectors?(): Connector[];
   useConnector(id: string): void;
   /** Reduced motion changed (live): no head bob, connectors without the fade. */
   setReducedMotion?(on: boolean): void;
@@ -72,6 +74,8 @@ export interface WalkOptions {
   eyeHeight?: number;
   onLevel?(level: LevelId): void;
   onConnector?(c: Connector | null): void;
+  /** Every connector within reach on the walker's level, nearest first; called when the set changes. */
+  onConnectors?(list: Connector[]): void;
 }
 
 /** Tunables (SI units). */
@@ -92,6 +96,11 @@ export const WALK = {
   wheelStep: 0.75,
   /** On a terrain override, refuse floors that rise or drop more than this within the next 0.35 m. */
   maxStep: 0.5,
+  /**
+   * …or more than this within the next metre: a bank in the height model steeper than a stair (≈33°)
+   * is a ledge — the edge of a deck over lower ground, a retaining wall — not a slope to walk down.
+   */
+  maxRise: 0.65,
   /** Standing this high above the terrain (a bridge deck, a stair up to it), the ground's own walls, fences and posts are below. */
   elevated: 1.8,
   /** Head bob: dip per step (m) and stride (m). */
@@ -222,6 +231,7 @@ function nearby(world: PreparedWalkWorld, level: LevelId, from: V2, to: V2, r: n
   const maxZ = from[1] + reach;
   // Up on a deck (a bridge over the railway cutting) the obstacles of the ground below — fences,
   // posts, the platform's columns — are not in the way; the deck's own edges are its walk area's.
+  // (No floor hint: the ground under a deck, not the deck the walker stands on.)
   const ground = floor !== undefined ? world.world.heightAt?.(from[0], from[1], level) : undefined;
   const elevated = floor !== undefined && ground !== null && ground !== undefined && floor - ground > WALK.elevated;
   const out = elevated ? [] : world.colliders(level).query(minX, minZ, maxX, maxZ);
@@ -229,7 +239,7 @@ function nearby(world: PreparedWalkWorld, level: LevelId, from: V2, to: V2, r: n
   const seen: LevelId[] = [level];
   for (const area of world.areasIn(minX, minZ, maxX, maxZ)) {
     if (seen.includes(area.level)) continue;
-    if (Math.abs(areaFloor(area, from, world.world.heightAt) - floor) > WALK.levelTolerance) continue;
+    if (Math.abs(areaFloor(area, from, world.world.heightAt, floor) - floor) > WALK.levelTolerance) continue;
     seen.push(area.level);
     for (const c of world.colliders(area.level).query(minX, minZ, maxX, maxZ)) out.push(c);
   }
@@ -269,7 +279,7 @@ export function startSim(start: WalkState, world: PreparedWalkWorld, params: Wal
       : null) ?? levelAt(p, areas, { level: start.level, heightAt });
   const level = hit?.level ?? start.level;
   const floor =
-    hit?.y ?? world.world.heightAt?.(p[0], p[1], level) ?? nearestFloor(world, level, p) ?? 0;
+    hit?.y ?? world.world.heightAt?.(p[0], p[1], level, undefined, start.y) ?? nearestFloor(world, level, p) ?? 0;
   const position = moveCircle(p, p, params.radius, nearby(world, level, p, p, params.radius, floor));
   return {
     position,
@@ -307,26 +317,33 @@ function tryMove(sim: WalkSim, to: V2, world: PreparedWalkWorld, params: WalkPar
   if (!hit) {
     // Off the map (or a world without walk areas): free movement until it enters an area.
     if (sim.area) return null;
-    return { position, hit: { level: sim.level, y: heightAt?.(position[0], position[1], sim.level) ?? sim.floor, area: null } };
+    return { position, hit: { level: sim.level, y: heightAt?.(position[0], position[1], sim.level, undefined, sim.floor) ?? sim.floor, area: null } };
   }
   if (heightAt && hit.level === sim.level) {
     // On the terrain (not a deck or a stair with a floor of its own): refuse to climb walls or walk off
     // ledges the height field shows as steep ramps — unless a walkable floor carries on within a step
     // there (the foot of a stair up to a bridge).
-    const own = hit.area ? heightAt(position[0], position[1], hit.level, hit.area) : hit.y;
+    const own = hit.area ? heightAt(position[0], position[1], hit.level, hit.area, sim.floor) : hit.y;
     const dx = position[0] - from[0];
     const dz = position[1] - from[1];
     const len = Math.hypot(dx, dz);
     if (own !== null && own !== undefined && len > 1e-6) {
-      const probe: V2 = [position[0] + (dx / len) * 0.35, position[1] + (dz / len) * 0.35];
-      const ahead = heightAt(probe[0], probe[1], hit.level);
-      if (
-        ahead !== null &&
-        ahead !== undefined &&
-        Math.abs(ahead - hit.y) > WALK.maxStep &&
-        !levelAt(probe, world.areasAt(probe), { level: hit.level, y: hit.y, tolerance: WALK.maxStep, heightAt })
-      ) {
-        return null;
+      for (const [reach, limit] of [
+        [0.35, WALK.maxStep],
+        [1, WALK.maxRise],
+      ] as const) {
+        const probe: V2 = [position[0] + (dx / len) * reach, position[1] + (dz / len) * reach];
+        const ahead = heightAt(probe[0], probe[1], hit.level, undefined, hit.y);
+        if (
+          ahead !== null &&
+          ahead !== undefined &&
+          Math.abs(ahead - hit.y) > limit &&
+          // …unless a walkable floor carries on there (a stair or a ramp with a floor of its own, a door).
+          !levelAt(probe, world.areasAt(probe), { level: hit.level, y: hit.y, tolerance: limit + 0.45, heightAt })?.area?.slope &&
+          !levelAt(probe, world.areasAt(probe), { level: hit.level, y: hit.y, tolerance: WALK.maxStep, heightAt })
+        ) {
+          return null;
+        }
       }
     }
   }
@@ -469,6 +486,23 @@ export function nearestConnector(sim: WalkSim, connectors: Connector[], range: n
     }
   }
   return best;
+}
+
+/**
+ * Every connector on the walker's level within range, nearest first — a lift lobby offers each floor
+ * the lift serves, not only the nearest button. One entry per id.
+ */
+export function nearConnectors(sim: WalkSim, connectors: Connector[], range: number = WALK.connectorRange): Connector[] {
+  const found: { c: Connector; d: number }[] = [];
+  const seen = new Set<string>();
+  for (const c of connectors) {
+    if (c.from !== sim.level || seen.has(c.id)) continue;
+    const d = Math.hypot(c.at[0] - sim.position[0], c.at[1] - sim.position[1]);
+    if (d > range) continue;
+    seen.add(c.id);
+    found.push({ c, d });
+  }
+  return found.sort((a, b) => a.d - b.d).map((x) => x.c);
 }
 
 /** Arrive through a connector: on its target level at `arrive`, clear of walls, at rest. Mutates `sim`. */
@@ -692,6 +726,9 @@ export function createWalkController(
   const drag = { x: 0, y: 0, moved: 0, captured: false };
   let joystick: Joystick | null = null;
   let near: Connector | null = null;
+  /** Every connector within reach (ids joined: what the UI last heard). */
+  let nearAll: Connector[] = [];
+  let nearKey = "";
   let fade: { connector: Connector; phase: "out" | "in"; t: number } | null = null;
   let fadeEl: HTMLDivElement | null = null;
   const last = [NaN, NaN, NaN, NaN, NaN, NaN, NaN];
@@ -870,7 +907,17 @@ export function createWalkController(
     return moved;
   }
 
+  /** Tell the UI every connector in reach when the set changes (and the nearest, for older UIs). */
+  function reportAll(list: Connector[]) {
+    const key = list.map((c) => c.id).join("|");
+    nearAll = list;
+    if (key === nearKey) return;
+    nearKey = key;
+    opts.onConnectors?.(list);
+  }
+
   function updateNear() {
+    reportAll(sim && enabled ? nearConnectors(sim, world.world.connectors) : []);
     const next = sim && enabled ? nearestConnector(sim, world.world.connectors) : null;
     if (next?.id === near?.id) return;
     near = next;
@@ -959,6 +1006,8 @@ export function createWalkController(
       // connector here — or that there is none — at once, not when the walker first moves.
       near = nearestConnector(sim, world.world.connectors);
       opts.onConnector?.(near);
+      nearKey = "\u0000";
+      reportAll(nearConnectors(sim, world.world.connectors));
     },
     disable() {
       if (!enabled) return;
@@ -976,6 +1025,7 @@ export function createWalkController(
         near = null;
         opts.onConnector?.(null);
       }
+      reportAll([]);
     },
     setWorld(next) {
       world = prepareWalkWorld(next);
@@ -1034,6 +1084,7 @@ export function createWalkController(
       return { position: [sim.position[0], sim.position[1]], level: sim.level, yawDeg: sim.yawDeg, pitchDeg: sim.pitchDeg };
     },
     nearConnector: () => near,
+    nearConnectors: () => nearAll.slice(),
     useConnector(id) {
       const c = world.world.connectors.find((x) => x.id === id);
       if (!c || !sim || fade) return;

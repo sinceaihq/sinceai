@@ -73,3 +73,28 @@ describe("procedural trees", () => {
     expect(treeSize("acer", "large", 7.5, 2).crown).toBeCloseTo(7.5, 6);
   });
 });
+
+describe("late leaves", () => {
+  it("map each leaf quad to one cell of the 2 × 3 leaf atlas and keep leaves leaf-sized", () => {
+    for (const sp of ["tilia", "betula", "quercus", "acer", "sorbus"] as TreeSpecies[]) {
+      const t = generateTree(sp, 11, 0);
+      const uv = t.leaves.uv;
+      const pos = t.leaves.pos;
+      for (let q = 0; q < uv.length / 8; q++) {
+        const us = [uv[q * 8], uv[q * 8 + 2], uv[q * 8 + 4], uv[q * 8 + 6]];
+        const vs = [uv[q * 8 + 1], uv[q * 8 + 3], uv[q * 8 + 5], uv[q * 8 + 7]];
+        expect(Math.max(...us) - Math.min(...us)).toBeLessThanOrEqual(0.5 + 1e-6);
+        expect(Math.max(...vs) - Math.min(...vs)).toBeLessThanOrEqual(1 / 3 + 1e-6);
+        expect(Math.min(...us)).toBeGreaterThanOrEqual(-1e-6);
+        expect(Math.max(...vs)).toBeLessThanOrEqual(1 + 1e-6);
+        // Quad diagonal: a leaf, not a card (≤ 0.3 m).
+        const a = q * 12;
+        const d = Math.hypot(pos[a] - pos[a + 6], pos[a + 1] - pos[a + 7], pos[a + 2] - pos[a + 8]);
+        expect(d).toBeLessThan(0.3);
+      }
+    }
+    // November: birches and maples nearly bare.
+    expect(generateTree("acer", 3, 0).leaves.idx.length / 6).toBeLessThan(80);
+    expect(generateTree("betula", 3, 0).leaves.idx.length / 6).toBeLessThan(160);
+  });
+});

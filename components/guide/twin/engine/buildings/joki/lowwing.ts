@@ -133,6 +133,9 @@ export function buildLowWing(ctx: TwinContext, mats: JokiMaterials): LowWing {
   // ── Hall roof: slab from the ceiling to the membrane, parapets on the free edges ──
   const outline = hallRoofOutline();
   batch.add(roof, membrane, prism(outline, Y.aulaCeil + 0.02, Y.hallRoof, { top: true, sides: true }), { cast: true, receive: true });
+  // The roof void's underside, a metre over the ceilings: wherever a gap shows past a ceiling's edge, it
+  // closes on dark structure instead of the sky through the membrane's back face.
+  batch.add(roof, membrane, prism(outline, Y.hallRoof - 0.45, Y.hallRoof - 0.44, { top: false, bottom: true, sides: false }));
   // Parapets on the free edges stay with the walls when the roof is lifted off (dollhouse).
   for (const [a, b] of FREE_EDGES) {
     batch.add(ext, alu, wallSeg(a, b, 0.25, Y.aulaCeil - 0.05, Y.hallEdge), { cast: true, receive: true });

@@ -16,7 +16,7 @@ import {
 } from "../data/campus";
 import { makeLabel } from "../labels";
 import { boxUV } from "../render/uv";
-import { FACADE_PRESETS, facadeSeed, facadeStyle, facadeWalls, flatRoofGeometry, makeFacadeMaterial, type FacadeStyle } from "../render/facade";
+import { facadeSeed, facadeStyle, facadeWalls, flatRoofGeometry, makeFacadeMaterial, type FacadeStyle } from "../render/facade";
 import {
   cleanRing,
   ensureCCW,
@@ -48,7 +48,7 @@ import { CAMPUS_BOUNDS } from "../frame";
 
 export interface MassingModule extends WorldModule {
   /** Rebuild without the buildings other modules model; drop the terrain when "ground" is loaded. */
-  applyClaims(claimed: ReadonlySet<number>, opts: { ground: boolean; context: boolean }): void;
+  applyClaims(claimed: ReadonlySet<number>, opts: { ground: boolean; context: boolean; lod2?: ReadonlySet<string> }): void;
   /** Terrain height (DTM; 0 where the DTM is missing). */
   heightAt(x: number, z: number): number;
   /** Data that could not be loaded (shown in the engine's errors()). */
@@ -672,23 +672,113 @@ function noise2(x: number, z: number, seed: number): number {
   return a + (b - a) * ux + (c - a) * uz + (a - b - c + d) * ux * uz;
 }
 
+/** Facade families of the far-city backdrop (index = FarCity.families). */
+export const FAR_FAMILIES = 5;
+/** Roof colours of the backdrop (index = FarCity.roofKinds): dark bitumen, grey membrane, red tin, dark tin. */
+const FAR_ROOF_COLORS = ["#3d3d3c", "#8b8a85", "#7a3b2d", "#4a4e51"];
+
+export interface FarTree {
+  x: number;
+  z: number;
+  /** Crown radius and total height (m). */
+  r: number;
+  h: number;
+  conifer: boolean;
+}
+
+export interface FarCity {
+  /** Wall geometries per facade family (light render, brick, concrete, ochre render, pale pink render). */
+  families: THREE.BufferGeometry[][];
+  /** One roof geometry per building (flat or gabled). */
+  roofs: THREE.BufferGeometry[];
+  /** FAR_ROOF_COLORS index of each roof. */
+  roofKinds: number[];
+  /** Tree clumps in the parks, courtyards and along the streets. */
+  trees: FarTree[];
+}
+
+/** A gabled roof over a w × d slab (ridge along w): two planes and two gables, outward normals. */
+export function gableRoof(x0: number, z0: number, w: number, d: number, ang: number, y: number, rise: number): THREE.BufferGeometry {
+  const ca = Math.cos(ang);
+  const sa = Math.sin(ang);
+  const at = (u: number, v: number, h: number): [number, number, number] => [x0 + u * ca - v * sa, y + h, z0 + u * sa + v * ca];
+  const hw = w / 2;
+  const hd = d / 2;
+  const A = at(-hw, -hd, 0);
+  const B = at(hw, -hd, 0);
+  const C = at(hw, hd, 0);
+  const D = at(-hw, hd, 0);
+  const R0 = at(-hw, 0, rise);
+  const R1 = at(hw, 0, rise);
+  const tris: [number, number, number][][] = [
+    [A, R1, B], [A, R0, R1],
+    [C, R0, D], [C, R1, R0],
+    [D, R0, A],
+    [B, R1, C],
+  ];
+  const pos: number[] = [];
+  for (const t of tris) for (const v of t) pos.push(...v);
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+  g.computeVertexNormals();
+  // Outward: every face's normal points away from the slab's centre line (flip the ones that don't).
+  const n = g.getAttribute("normal");
+  const p = g.getAttribute("position");
+  const idx: number[] = [];
+  for (let f = 0; f < tris.length; f++) {
+    const i = f * 3;
+    const cx = (p.getX(i) + p.getX(i + 1) + p.getX(i + 2)) / 3 - x0;
+    const cy = (p.getY(i) + p.getY(i + 1) + p.getY(i + 2)) / 3 - y;
+    const cz = (p.getZ(i) + p.getZ(i + 1) + p.getZ(i + 2)) / 3 - z0;
+    const out = n.getX(i) * cx + n.getY(i) * (cy + 2) + n.getZ(i) * cz > 0;
+    idx.push(...(out ? [i, i + 1, i + 2] : [i, i + 2, i + 1]));
+  }
+  g.setIndex(idx);
+  g.computeVertexNormals();
+  return g;
+}
+
 /**
  * A hazy city backdrop beyond the modelled ring (generic massing — it only has
- * to read as "Turku" through the haze): perimeter blocks and slabs on the two
- * campus street grids, denser and taller towards the city centre (west),
- * with park gaps and the railway corridor left open. Exported for tests.
+ * to read as "Turku" through the haze, never as toy blocks): perimeter blocks
+ * round planted courtyards towards the city centre (west), lamella slabs and a
+ * few point towers in the suburbs, 3–8 storeys (rarely 10–12), five facade
+ * families (light, ochre and pale pink render, brick, concrete), flat bitumen
+ * or membrane roofs and red or dark tin gables on the lower slabs, tree clumps
+ * in parks, courtyards and along the streets; the railway corridor and the
+ * Kupittaa park left open. Deterministic. Exported for tests.
  */
-export function farCity(ext: { minX: number; maxX: number; minZ: number; maxZ: number }, seed: number) {
+export function farCity(ext: { minX: number; maxX: number; minZ: number; maxZ: number }, seed: number, opts: { trees?: number } = {}): FarCity {
   const rnd = mulberry32(seed);
-  const families: THREE.BufferGeometry[][] = [[], [], []];
+  const families: THREE.BufferGeometry[][] = Array.from({ length: FAR_FAMILIES }, () => []);
   const roofs: THREE.BufferGeometry[] = [];
+  const roofKinds: number[] = [];
+  const trees: FarTree[] = [];
+  const treeDensity = opts.trees ?? 1;
   const cx = (ext.minX + ext.maxX) / 2;
   const cz = (ext.minZ + ext.maxZ) / 2;
   const margin = 25;
   const cell = 72;
   /** Signed distance (m) from the Rantarata track through the station (direction (−0.57, −0.82), bearing ≈ 325°). */
   const railSide = (x: number, z: number) => (x - 217) * 0.82 - (z + 128) * 0.57;
-  const addSlab = (x0: number, z0: number, w: number, d: number, ang: number, h: number, family: number) => {
+  const onTracks = (ring: V2[]) => {
+    // Nothing on the tracks: the two tracks lie 0 … −15.5 m off that line; keep 12 m clear either side.
+    const sides = ring.map(([x, z]) => railSide(x, z));
+    return Math.max(...sides) > -27.5 && Math.min(...sides) < 12;
+  };
+  const pick = <T,>(items: [T, number][]): T => {
+    let r = rnd() * items.reduce((t, [, w]) => t + w, 0);
+    for (const [v, w] of items) if ((r -= w) <= 0) return v;
+    return items[items.length - 1][0];
+  };
+  const addTree = (x: number, z: number, big = 1) => {
+    if (rnd() > treeDensity) return;
+    if (Math.abs(railSide(x, z) + 7.75) < 20) return;
+    const conifer = rnd() < 0.22;
+    const h = (conifer ? 10 + rnd() * 8 : 8 + rnd() * 9) * big;
+    trees.push({ x, z, r: (conifer ? 2 + rnd() * 1.2 : 3 + rnd() * 2.5) * big, h, conifer });
+  };
+  const addSlab = (x0: number, z0: number, w: number, d: number, ang: number, h: number, family: number, roof: { kind: number; pitched: boolean }) => {
     const ca = Math.cos(ang);
     const sa = Math.sin(ang);
     const ring: V2[] = [
@@ -697,12 +787,13 @@ export function farCity(ext: { minX: number; maxX: number; minZ: number; maxZ: n
       [w / 2, d / 2],
       [-w / 2, d / 2],
     ].map(([u, v]) => [x0 + u * ca - v * sa, z0 + u * sa + v * ca] as V2);
-    // Nothing on the tracks: the two tracks lie 0 … −15.5 m off that line; keep 12 m clear either side.
-    const sides = ring.map(([x, z]) => railSide(x, z));
-    if (Math.max(...sides) > -27.5 && Math.min(...sides) < 12) return;
+    if (onTracks(ring)) return false;
     const base = -4.5;
-    families[family].push(facadeWalls(ring, base, base + h + 1, { vRef: base + 1, seed: Math.floor(rnd() * 9000) }));
-    roofs.push(flatRoofGeometry(ring, [], base + h + 1));
+    const top = base + h + 1;
+    families[family].push(facadeWalls(ring, base, top, { vRef: base + 1, seed: Math.floor(rnd() * 9000) }));
+    roofs.push(roof.pitched ? gableRoof(x0, z0, w, d, ang, top, Math.min(4.5, d * 0.24)) : flatRoofGeometry(ring, [], top));
+    roofKinds.push(roof.kind);
+    return true;
   };
   for (let gx = -1900; gx <= 1900; gx += cell) {
     for (let gz = -1900; gz <= 1900; gz += cell) {
@@ -711,23 +802,30 @@ export function farCity(ext: { minX: number; maxX: number; minZ: number; maxZ: n
       if (x0 > ext.minX - margin && x0 < ext.maxX + margin && z0 > ext.minZ - margin && z0 < ext.maxZ + margin) continue;
       const r = Math.hypot(x0 - cx, z0 - cz);
       if (r > 1900) continue;
-      // Kupittaa park (south-west), the railway cutting (north-east), noise parks elsewhere.
+      // Kupittaa park (south-west), the railway cutting (north-east), noise parks elsewhere: trees.
       const park = x0 < cx - 120 && z0 > cz + 120 && x0 > cx - 950 && z0 < cz + 760;
-      // The railway cutting along the Rantarata line (the block's centre within 45 m of it).
       const rail = Math.abs(railSide(x0, z0)) < 45;
-      if (park || rail || noise2(x0 / 260, z0 / 260, seed) < 0.27) continue;
+      if (park || rail || noise2(x0 / 260, z0 / 260, seed) < 0.27) {
+        if (!rail) for (let k = 0, n = 5 + Math.floor(rnd() * 9); k < n; k++) addTree(x0 + (rnd() - 0.5) * cell * 0.9, z0 + (rnd() - 0.5) * cell * 0.9, 1.1);
+        continue;
+      }
       const west = x0 < cx - 150;
-      const fill = (west ? 0.92 : 0.78) - Math.min(0.3, r / 6000);
-      if (rnd() > fill) continue;
+      const fill = (west ? 0.92 : 0.8) - Math.min(0.3, r / 6000);
+      if (rnd() > fill) {
+        for (let k = 0, n = 2 + Math.floor(rnd() * 5); k < n; k++) addTree(x0 + (rnd() - 0.5) * cell * 0.8, z0 + (rnd() - 0.5) * cell * 0.8);
+        continue;
+      }
       const ang = ((rnd() < (west ? 0.75 : 0.5) ? 145.3 : 128.8) - 90) * (Math.PI / 180);
-      const storeys = west ? 5 + Math.floor(rnd() * 4) : 3 + Math.floor(rnd() * 4);
-      const h = storeys * 3.1;
-      const family = rnd() < (west ? 0.35 : 0.15) ? 1 : rnd() < 0.3 ? 2 : 0;
       const ca = Math.cos(ang);
       const sa = Math.sin(ang);
       const at = (u: number, v: number): V2 => [x0 + u * ca - v * sa, z0 + u * sa + v * ca];
-      if (west && rnd() < 0.55) {
-        // Perimeter block round a courtyard (city-centre "umpikortteli").
+      // Street trees along one side of the block.
+      if (rnd() < 0.6) for (let u = -cell / 2 + 6; u < cell / 2 - 4; u += 9 + rnd() * 4) addTree(...at(u, cell / 2 - 3), 0.8);
+      if (west && rnd() < 0.6) {
+        // Perimeter block round a planted courtyard (city-centre "umpikortteli"): render or brick, flat roofs.
+        const storeys = pick<number>([[5, 0.3], [6, 0.35], [7, 0.25], [8, 0.1]]);
+        const family = pick<number>([[0, 0.35], [3, 0.2], [4, 0.15], [1, 0.25], [2, 0.05]]);
+        const roofKind = rnd() < 0.7 ? 0 : 1;
         const s2 = cell - 14;
         const depth = 12;
         const half = s2 / 2;
@@ -739,22 +837,184 @@ export function farCity(ext: { minX: number; maxX: number; minZ: number; maxZ: n
         ] as [number, number, number, number][]) {
           if (rnd() < 0.12) continue;
           const [px, pz] = at(u, v);
-          addSlab(px, pz, w, d, ang, h + (rnd() < 0.3 ? 3.1 : 0), family);
+          const extra = rnd() < 0.3 ? 1 : rnd() < 0.15 ? -1 : 0;
+          addSlab(px, pz, w, d, ang, (storeys + extra) * 3.1, rnd() < 0.8 ? family : pick<number>([[0, 1], [1, 1], [3, 1], [4, 1]]), { kind: roofKind, pitched: false });
         }
+        for (let k = 0, n = 2 + Math.floor(rnd() * 4); k < n; k++) addTree(...at((rnd() - 0.5) * (s2 - 2 * depth - 6), (rnd() - 0.5) * (s2 - 2 * depth - 6)), 0.85);
+      } else if (!west && rnd() < 0.07) {
+        // A point tower (1970s), concrete or render.
+        const storeys = 9 + Math.floor(rnd() * 4);
+        const size = 17 + rnd() * 5;
+        addSlab(x0 + (rnd() - 0.5) * 10, z0 + (rnd() - 0.5) * 10, size, size, ang, storeys * 2.95, pick<number>([[2, 0.5], [0, 0.3], [4, 0.2]]), { kind: 0, pitched: false });
+        for (let k = 0; k < 4; k++) addTree(...at((rnd() - 0.5) * cell * 0.8, cell / 2 - 6 - rnd() * 8));
       } else {
-        // One or two slabs (1960s–80s apartments, offices).
-        const count = rnd() < 0.45 ? 2 : 1;
+        // One to three lamella slabs (1950s–80s apartments, offices); the lower ones often under tin gables.
+        const count = rnd() < 0.35 ? 3 : rnd() < 0.55 ? 2 : 1;
         for (let k = 0; k < count; k++) {
-          const w = 26 + rnd() * 30;
-          const d = 11 + rnd() * 4;
-          const off = count === 2 ? (k ? 1 : -1) * (14 + rnd() * 6) : (rnd() - 0.5) * 10;
+          const storeys = west ? pick<number>([[4, 0.2], [5, 0.3], [6, 0.3], [7, 0.2]]) : pick<number>([[2, 0.12], [3, 0.28], [4, 0.28], [5, 0.12], [6, 0.1], [8, 0.1]]);
+          const w = 24 + rnd() * 32;
+          const d = 10.5 + rnd() * 3.5;
+          const spacing = count === 3 ? 21 : 26;
+          const off = count === 1 ? (rnd() - 0.5) * 10 : (k - (count - 1) / 2) * spacing + (rnd() - 0.5) * 3;
           const [px, pz] = at((rnd() - 0.5) * 8, off);
-          addSlab(px, pz, w, d, ang, h, family);
+          const pitched = storeys <= 4 && rnd() < 0.55;
+          const family = west ? pick<number>([[0, 0.3], [3, 0.25], [4, 0.15], [1, 0.2], [2, 0.1]]) : pick<number>([[0, 0.35], [2, 0.25], [1, 0.2], [3, 0.12], [4, 0.08]]);
+          const kind = pitched ? (rnd() < 0.55 ? 2 : 3) : rnd() < 0.6 ? 0 : 1;
+          addSlab(px, pz, w, d, ang, storeys * 3.0, family, { kind, pitched });
         }
+        // Yard trees between the slabs.
+        for (let k = 0, n = 1 + Math.floor(rnd() * 4); k < n; k++) addTree(...at((rnd() - 0.5) * cell * 0.85, (rnd() - 0.5) * cell * 0.85));
       }
     }
   }
-  return { families, roofs };
+  return { families, roofs, roofKinds, trees };
+}
+
+/** Low-poly crowns for the backdrop's trees (vertex colours: bare November birches/maples, dark conifers). */
+export function farTreeGeometry(trees: readonly FarTree[], seed: number): THREE.BufferGeometry | null {
+  if (!trees.length) return null;
+  const rnd = mulberry32(seed);
+  const parts: THREE.BufferGeometry[] = [];
+  const bare = new THREE.Color();
+  const color = new THREE.Color();
+  for (const t of trees) {
+    const g = t.conifer ? new THREE.ConeGeometry(t.r, t.h * 0.85, 6, 1) : new THREE.IcosahedronGeometry(t.r, 0);
+    if (t.conifer) g.translate(t.x, -4.5 + t.h * 0.15 + (t.h * 0.85) / 2, t.z);
+    else {
+      g.scale(1, 0.85 + rnd() * 0.3, 1);
+      g.translate(t.x, -4.5 + t.h - t.r * 0.9, t.z);
+    }
+    const ng = g.index ? g.toNonIndexed() : g;
+    if (ng !== g) g.dispose();
+    if (t.conifer) color.set("#26332a");
+    else color.copy(bare.set(rnd() < 0.5 ? "#4d463d" : "#5a5045")).offsetHSL(0, 0, (rnd() - 0.5) * 0.04);
+    const n = ng.getAttribute("position").count;
+    const cols = new Float32Array(n * 3);
+    for (let i = 0; i < n; i++) color.toArray(cols, i * 3);
+    ng.setAttribute("color", new THREE.Float32BufferAttribute(cols, 3));
+    ng.deleteAttribute("uv");
+    parts.push(ng);
+  }
+  const merged = mergeGeometries(parts, false);
+  parts.forEach((g) => g.dispose());
+  return merged;
+}
+
+/** Roofs of the backdrop in one geometry, coloured per kind (FAR_ROOF_COLORS). */
+function farRoofGeometry(city: FarCity): THREE.BufferGeometry | null {
+  const color = new THREE.Color();
+  const parts = city.roofs.map((g, i) => {
+    const ng = g.index ? g.toNonIndexed() : g.clone();
+    color.set(FAR_ROOF_COLORS[city.roofKinds[i] ?? 0]);
+    const n = ng.getAttribute("position").count;
+    const cols = new Float32Array(n * 3);
+    for (let k = 0; k < n; k++) color.toArray(cols, k * 3);
+    ng.setAttribute("color", new THREE.Float32BufferAttribute(cols, 3));
+    if (ng.getAttribute("uv")) ng.deleteAttribute("uv");
+    return ng;
+  });
+  const merged = parts.length ? mergeGeometries(parts, false) : null;
+  parts.forEach((g) => g.dispose());
+  return merged;
+}
+
+/**
+ * Aerial perspective for the backdrop: beyond ≈300 m it fades towards the fog colour and loses
+ * saturation (on top of the scene's own fog) — distant city haze, not crisp blocks. Chains onto the
+ * material's own shader changes and program key.
+ */
+export function hazeFar(m: THREE.Material): THREE.Material {
+  const prev = m.onBeforeCompile.bind(m);
+  const prevKey = m.customProgramCacheKey.bind(m);
+  m.onBeforeCompile = (shader, renderer) => {
+    prev(shader, renderer);
+    shader.fragmentShader = shader.fragmentShader.replace(
+      "#include <fog_fragment>",
+      `#ifdef USE_FOG
+	{
+		float farHaze = smoothstep( 300.0, 1600.0, vFogDepth );
+		float farLum = dot( gl_FragColor.rgb, vec3( 0.2126, 0.7152, 0.0722 ) );
+		gl_FragColor.rgb = mix( gl_FragColor.rgb, vec3( farLum ), farHaze * 0.5 );
+		gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, farHaze * 0.42 );
+	}
+#endif
+#include <fog_fragment>`,
+    );
+  };
+  m.customProgramCacheKey = () => `${prevKey()}|far-haze`;
+  return m;
+}
+
+// ── Small technical boxes (vents, stair and skylight housings) ──────────────
+
+/** LOD records smaller than this (m²) and lower than TECH_BOX_HEIGHT are technical boxes, not buildings. */
+export const TECH_BOX_AREA = 15;
+export const TECH_BOX_HEIGHT = 5;
+
+/**
+ * A ventilation / stair-housing box (the ones on BioCity's terrace and yard): painted render walls,
+ * a black louvre band round the top, a dark roof with a light metal coping — never an office block with
+ * punched windows. One geometry with vertex colours. Exported for tests.
+ */
+export function techBoxGeometry(ring: V2[], base: number, top: number): THREE.BufferGeometry {
+  const r = ensureCCW(cleanRing(ring));
+  const h = top - base;
+  const band = Math.min(1.2, h * 0.35);
+  const parts: { g: THREE.BufferGeometry; color: string }[] = [];
+  // Walls up to the louvre band, and the louvre band's dark backing.
+  parts.push({ g: facadeWalls(r, base, top - band), color: "#5c5d5a" });
+  parts.push({ g: facadeWalls(r, top - band, top), color: "#151617" });
+  // Louvre blades: a thin sloped ring every 0.15 m, standing 4 cm proud of the wall.
+  const blades = Math.max(3, Math.floor(band / 0.15));
+  for (let i = 0; i < blades; i++) {
+    const y = top - band + 0.08 + i * ((band - 0.16) / Math.max(1, blades - 1));
+    const out = offsetRing(r, 0.045);
+    parts.push({ g: facadeWalls(out, y - 0.025, y + 0.025), color: "#232426" });
+  }
+  // Roof and coping.
+  parts.push({ g: flatRoofGeometry(r, [], top + 0.02), color: "#2b2b2a" });
+  const coping = offsetRing(r, 0.06);
+  parts.push({ g: facadeWalls(coping, top - 0.08, top + 0.08), color: "#b9bcbd" });
+  const color = new THREE.Color();
+  const geos = parts.map(({ g, color: c }) => {
+    const ng = g.index ? g.toNonIndexed() : g;
+    if (ng !== g) g.dispose();
+    color.set(c);
+    const n = ng.getAttribute("position").count;
+    const cols = new Float32Array(n * 3);
+    for (let i = 0; i < n; i++) color.toArray(cols, i * 3);
+    ng.setAttribute("color", new THREE.Float32BufferAttribute(cols, 3));
+    for (const name of Object.keys(ng.attributes)) if (name !== "position" && name !== "normal" && name !== "color") ng.deleteAttribute(name);
+    return ng;
+  });
+  const merged = mergeGeometries(geos, false) as THREE.BufferGeometry;
+  geos.forEach((g) => g.dispose());
+  return merged;
+}
+
+/** A (convex) ring moved `d` m outwards along the averaged edge normals, whichever its orientation. */
+export function offsetRing(ring: V2[], d: number): V2[] {
+  const n = ring.length;
+  const [ccx, ccz] = polygonCentroid(ring);
+  return ring.map((p, i) => {
+    const a = ring[(i + n - 1) % n];
+    const b = ring[(i + 1) % n];
+    const e1 = [p[0] - a[0], p[1] - a[1]];
+    const e2 = [b[0] - p[0], b[1] - p[1]];
+    const l1 = Math.hypot(e1[0], e1[1]) || 1;
+    const l2 = Math.hypot(e2[0], e2[1]) || 1;
+    let nx = e1[1] / l1 + e2[1] / l2;
+    let nz = -e1[0] / l1 - e2[0] / l2;
+    const l = Math.hypot(nx, nz) || 1;
+    nx /= l;
+    nz /= l;
+    // Pointing inwards (the other orientation): flip.
+    if (nx * (p[0] - ccx) + nz * (p[1] - ccz) < 0) {
+      nx = -nx;
+      nz = -nz;
+    }
+    return [p[0] + nx * d, p[1] + nz * d] as V2;
+  });
 }
 
 /** Urban fabric for the far ring: asphalt, paving and lawn patches and street grids on the campus bearings. */
@@ -927,10 +1187,15 @@ export async function buildMassing(ctx: TwinContext): Promise<MassingModule> {
     }
   }
 
-  // Unmatched LOD2 records: plain massing that no module claims.
+  // Unmatched LOD2 records: plain massing that no module claims — the small ones as technical boxes.
+  const techBoxes: { id: string; geometry: THREE.BufferGeometry; colliders: Collider2D[] }[] = [];
   for (const rec of standalone) {
     try {
       const ring = rec.footprint[0];
+      if (Math.abs(ringArea(ring)) < TECH_BOX_AREA && rec.roofY - rec.groundY < TECH_BOX_HEIGHT) {
+        techBoxes.push({ id: rec.id, geometry: techBoxGeometry(ring, rec.baseY, rec.roofY), colliders: ringColliders(ensureCCW(cleanRing(ring))) });
+        continue;
+      }
       const pseudo: CampusBuilding = {
         id: rec.id,
         osmId: rec.osmId ?? -1,
@@ -963,7 +1228,10 @@ export async function buildMassing(ctx: TwinContext): Promise<MassingModule> {
     }
   }
 
-  function rebuild(claimed: ReadonlySet<number>, skipHeroes: Set<string>) {
+  const techMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.78, metalness: 0.05 });
+  techMat.name = "massing-techbox";
+
+  function rebuild(claimed: ReadonlySet<number>, skipHeroes: Set<string>, claimedLod2: ReadonlySet<string> = new Set()) {
     clearMerged();
     const byStyle = new Map<string, THREE.BufferGeometry[]>();
     const byRoof = new Map<StyleChoice["roof"], THREE.BufferGeometry[]>();
@@ -1015,6 +1283,19 @@ export async function buildMassing(ctx: TwinContext): Promise<MassingModule> {
         merged.add(mesh);
       }
     }
+    // Technical boxes no module models (a module may claim one by its LOD2 id).
+    const boxes = techBoxes.filter((t) => !claimedLod2.has(t.id));
+    for (const t of boxes) colliders.push(...t.colliders);
+    if (boxes.length) {
+      const g = mergeGeometries(boxes.map((t) => t.geometry), false);
+      if (g) {
+        const mesh = new THREE.Mesh(g, techMat);
+        mesh.name = "massing-techboxes";
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        merged.add(mesh);
+      }
+    }
     ctx.invalidate();
   }
 
@@ -1030,35 +1311,55 @@ export async function buildMassing(ctx: TwinContext): Promise<MassingModule> {
   terrainGroup.add(farGround(terrain, farMat));
   root.add(terrainGroup);
 
-  const city = farCity(ext, 4242);
+  // The far-city backdrop: facades per family (low: three), roofs and tree clumps in one draw each,
+  // all pushed into aerial perspective.
+  const low = ctx.tier === "low";
+  const city = farCity(ext, 4242, { trees: low ? 0.5 : 1 });
   const cityGroup = new THREE.Group();
   cityGroup.name = "far-city";
   const cityStyles: FacadeStyle[] = [
-    FACADE_PRESETS.residentialRender,
+    facadeStyle("residentialRender", { wallColor: "#d3ccbc" }),
     facadeStyle("brickGrid", { interior: "residential", warmth: 0.85, storey: 3.1, bay: 3.3, window: [1.4, 1.45], blinds: 0.45 }),
-    facadeStyle("concreteGrid", { wallColor: "#aeaba4", storey: 3.1 }),
+    facadeStyle("concreteGrid", { wallColor: "#a9a69f", storey: 3.1 }),
+    facadeStyle("residentialRender", { wallColor: "#c7aa72" }),
+    facadeStyle("residentialRender", { wallColor: "#cba296" }),
   ];
+  // Phones: the two extra render tints join the light render (fewer draws).
+  const familyOf = (i: number) => (low && (i === 3 || i === 4) ? 0 : i);
+  const familyGeos: THREE.BufferGeometry[][] = cityStyles.map(() => []);
+  city.families.forEach((geos, i) => familyGeos[familyOf(i)].push(...geos));
   const cityMats: THREE.Material[] = [];
-  city.families.forEach((geos, i) => {
+  familyGeos.forEach((geos, i) => {
     if (!geos.length) return;
     const g = mergeGeometries(geos, false);
     geos.forEach((x) => x.dispose());
     if (!g) return;
-    const mat = makeFacadeMaterial(lib, cityStyles[i], { tier: ctx.tier === "ultra" ? "high" : ctx.tier });
+    const mat = hazeFar(makeFacadeMaterial(lib, cityStyles[i], { tier: ctx.tier === "ultra" ? "high" : ctx.tier }));
     cityMats.push(mat);
     const mesh = new THREE.Mesh(g, mat);
     mesh.name = `far-city-walls-${i}`;
     mesh.receiveShadow = true;
     cityGroup.add(mesh);
   });
-  if (city.roofs.length) {
-    const r = mergeGeometries(city.roofs, false);
-    city.roofs.forEach((x) => x.dispose());
-    if (r) {
-      const mesh = new THREE.Mesh(r, roofMats.bitumen);
-      mesh.name = "far-city-roofs";
-      cityGroup.add(mesh);
-    }
+  const roofGeo = farRoofGeometry(city);
+  city.roofs.forEach((x) => x.dispose());
+  if (roofGeo) {
+    const mat = hazeFar(new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9, metalness: 0 }));
+    mat.name = "far-city-roofs";
+    cityMats.push(mat);
+    const mesh = new THREE.Mesh(roofGeo, mat);
+    mesh.name = "far-city-roofs";
+    mesh.receiveShadow = true;
+    cityGroup.add(mesh);
+  }
+  const treeGeo = farTreeGeometry(city.trees, 77);
+  if (treeGeo) {
+    const mat = hazeFar(new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1, metalness: 0, flatShading: true }));
+    mat.name = "far-city-trees";
+    cityMats.push(mat);
+    const mesh = new THREE.Mesh(treeGeo, mat);
+    mesh.name = "far-city-trees";
+    cityGroup.add(mesh);
   }
   root.add(cityGroup);
 
@@ -1079,7 +1380,7 @@ export async function buildMassing(ctx: TwinContext): Promise<MassingModule> {
     applyClaims(claimed, opts) {
       terrainGroup.visible = !opts.ground;
       // The far-city backdrop lies beyond the data extent: it stays even when world/context.ts is loaded.
-      rebuild(claimed, new Set());
+      rebuild(claimed, new Set(), opts.lod2);
     },
     heightAt,
     warnings: [],
@@ -1092,6 +1393,8 @@ export async function buildMassing(ctx: TwinContext): Promise<MassingModule> {
       }
       facadeMats.forEach((m) => m.dispose());
       cityMats.forEach((m) => m.dispose());
+      techBoxes.forEach((t) => t.geometry.dispose());
+      techMat.dispose();
       Object.values(roofMats).forEach((m) => m.dispose());
       unitMat.dispose();
       groundMat.dispose();

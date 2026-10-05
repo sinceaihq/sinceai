@@ -122,6 +122,7 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
           <RouteLinks
             title="Getting to EduCity, step by step in 3D"
             ids={["partners-fri-parkcity-edu", "partners-fri-train-edu", "partners-fri-stepfree-edu"]}
+            company={company.id}
           />
         </div>
       </GuideSection>
@@ -140,6 +141,7 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
           <RouteLinks
             title="Getting to Joki, step by step in 3D"
             ids={["companies-tykistokatu-to-showroom", "companies-train-to-biocity", "companies-parkcity-to-biocity"]}
+            company={company.id}
           />
         </div>
         <div className="mt-10">

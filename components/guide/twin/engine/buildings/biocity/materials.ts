@@ -4,6 +4,7 @@ import { facadeStyle, makeFacadeMaterial, type FacadeStyle } from "../../render/
 import { canvasTexture, makeCanvas } from "../../render/canvas";
 import { LUMINANCE, kelvinToLinear } from "../../sky/sky";
 import { GROUND_STOREY, LEVEL, STOREY } from "./plan";
+import { muralTexture } from "./textures";
 
 /**
  * BioCity's materials (SPEC §3.1.2–3.1.3 colours): facade-shader styles for
@@ -150,6 +151,19 @@ function tileTexture(base: string, grout: string, tilesPerSide: number, size = 2
   return t;
 }
 
+/** The vault's white bar grid (one 1.2 × 1.35 m cell per repeat): bars opaque, glass clear. */
+function vaultGridTexture(size = 128): THREE.CanvasTexture {
+  const { canvas, ctx } = makeCanvas(size, size);
+  ctx.clearRect(0, 0, size, size);
+  ctx.fillStyle = "#ffffff";
+  // Rib (along the arch, u = 0) ≈ 60 mm of 1.2 m; purlin (along the atrium, v = 0) ≈ 70 mm of 1.35 m.
+  const rib = Math.max(2, Math.round(size * (0.06 / 1.2)));
+  const purlin = Math.max(2, Math.round(size * (0.07 / 1.35)));
+  ctx.fillRect(0, 0, rib, size);
+  ctx.fillRect(0, 0, size, purlin);
+  return canvasTexture(canvas, { repeat: true, anisotropy: 8, srgb: true });
+}
+
 /** Ceiling: 600 mm acoustic tiles with a darker grid (repeat 0.6 m). */
 function ceilingTexture(size = 128): THREE.CanvasTexture {
   const { canvas, ctx } = makeCanvas(size, size);
@@ -164,6 +178,40 @@ function ceilingTexture(size = 128): THREE.CanvasTexture {
   return canvasTexture(canvas, { repeat: true, anisotropy: 8 });
 }
 
+/**
+ * Beige granite ashlar for the Lemminkäisenkatu plinth (SPEC #A39885): one stone 1.2 × 0.6 m per
+ * repeat with dark joints, a little tone variation between stones and a fine speckled grain.
+ */
+function ashlarTexture(w = 512, h = 256): THREE.CanvasTexture {
+  const { canvas, ctx } = makeCanvas(w, h);
+  let seed = 11;
+  const rnd = () => {
+    seed = (seed * 16807) % 2147483647;
+    return seed / 2147483647;
+  };
+  ctx.fillStyle = "#6f675b";
+  ctx.fillRect(0, 0, w, h);
+  // Two half stones offset by half a stone per course (running bond) — two courses per tile.
+  const courses = [
+    { y: 0, x: 0 },
+    { y: h / 2, x: w / 2 },
+  ];
+  for (const c of courses) {
+    for (const dx of [-w, 0, w]) {
+      const t = new THREE.Color("#ffffff").offsetHSL(0, 0, (rnd() - 0.5) * 0.08);
+      ctx.fillStyle = `#${t.getHexString()}`;
+      ctx.fillRect(c.x + dx + 2, c.y + 2, w - 4, h / 2 - 4);
+    }
+  }
+  // Grain: dark and light specks (feldspar/mica).
+  for (let i = 0; i < 9000; i++) {
+    const v = rnd();
+    ctx.fillStyle = v < 0.5 ? `rgba(60,52,44,${0.08 + rnd() * 0.14})` : `rgba(255,250,240,${0.06 + rnd() * 0.12})`;
+    ctx.fillRect(rnd() * w, rnd() * h, 1 + rnd() * 1.5, 1 + rnd() * 1.5);
+  }
+  return canvasTexture(canvas, { repeat: true, anisotropy: 8 });
+}
+
 export interface BioStyles {
   ribbonBlack: FacadeStyle;
   crown: FacadeStyle;
@@ -173,6 +221,8 @@ export interface BioStyles {
   ribbonWhite: FacadeStyle;
   whiteGrid: FacadeStyle;
   shopfront: FacadeStyle;
+  kmarket: FacadeStyle;
+  groundOffice: FacadeStyle;
   atrium: FacadeStyle;
   atriumPlain: FacadeStyle;
   slotGlass: FacadeStyle;
@@ -255,7 +305,8 @@ export function bioStyles(): BioStyles {
     panelBlack: facadeStyle("plain", {
       wall: "panelBlack",
       storey: STOREY,
-      panelJoints: { w: 3.6, h: STOREY, width: 0.014, color: "#141417" },
+      // Joints wide and dark enough to read as 3.6 m panels from across the street (Haroma photos).
+      panelJoints: { w: 3.6, h: STOREY, width: 0.024, color: "#0c0c0e" },
       coping: { height: 0.18, color: "#1e1e22" },
     }),
     // White recess wall: white panels, ribbons with white frames (black louvres are geometry).
@@ -289,7 +340,8 @@ export function bioStyles(): BioStyles {
       groundFloor: { kind: "solid" },
       coping: { height: 0.2, color: "#d8dadd" },
     }),
-    // Ground-storey shopfronts behind the arcades.
+    // Ground-storey shopfronts behind the arcades: tinted glass, a share of blinds and dark bays, so
+    // after dusk they read as a row of different shops, not a lightbox.
     shopfront: facadeStyle("plain", {
       wall: "metalDark",
       wallColor: "#1e1e22",
@@ -300,7 +352,42 @@ export function bioStyles(): BioStyles {
       roomDepth: 8,
       coping: undefined,
       glassColor: "#1b2228",
-      glassTransmittance: 0.7,
+      glassTransmittance: 0.36,
+      occupancy: 0.75,
+      blinds: 0.4,
+      warmth: 0.4,
+    }),
+    // The K-Market's windows on Tykistökatu: open, brighter and cooler than its neighbours.
+    kmarket: facadeStyle("plain", {
+      wall: "metalDark",
+      wallColor: "#1e1e22",
+      storey: STOREY,
+      groundStorey: 3.95,
+      groundFloor: { kind: "storefront" },
+      interior: "retail",
+      roomDepth: 10,
+      coping: undefined,
+      glassColor: "#1b2228",
+      glassTransmittance: 0.44,
+      occupancy: 1,
+      blinds: 0.05,
+      warmth: 0.1,
+    }),
+    // Office-type ground-floor bays (desks, warm light, blinds).
+    groundOffice: facadeStyle("plain", {
+      wall: "metalDark",
+      wallColor: "#1e1e22",
+      storey: STOREY,
+      groundStorey: 3.95,
+      groundFloor: { kind: "storefront" },
+      interior: "office",
+      roomDepth: 6,
+      coping: undefined,
+      glassColor: "#1b2228",
+      glassTransmittance: 0.34,
+      occupancy: 0.7,
+      blinds: 0.5,
+      warmth: 0.55,
     }),
     // Atrium inner walls: white panels with white-framed window bands (office floors F2–F7).
     atrium: facadeStyle("blackPanelRibbon", {
@@ -405,6 +492,36 @@ export function createBioMaterials(ctx: TwinContext): { materials: BioMaterials;
   ceilingTex.repeat.set(1 / 0.6, 1 / 0.6);
   textures.push(ceilingTex);
 
+  const ashlar = ashlarTexture();
+  // One texture repeat = two courses of 1.2 × 0.6 m stones (metre UVs).
+  ashlar.repeat.set(1 / 1.2, 1 / 1.2);
+  textures.push(ashlar);
+  const plinth = lib.variant("granite", { roughness: 0.8 });
+  plinth.map = ashlar;
+  // The canvas replaces the library's colour map: the colour is the albedo itself (canvas mean ≈ 0.93).
+  plinth.color.set("#ab9f8b");
+  plinth.needsUpdate = true;
+
+  // Mural on white render (auditorium's curved wall): wall 5.39 m, painting 0.25 → 5.15 m.
+  const muralTex = muralTexture(LEVEL.auditoriumRoof, 0.25, 5.15);
+  textures.push(muralTex);
+  const mural = new THREE.MeshStandardMaterial({ map: muralTex, roughness: 0.9, metalness: 0 });
+  mural.name = "biocity-mural";
+
+  const gridTex = vaultGridTexture();
+  gridTex.repeat.set(1 / 1.2, 1 / 1.35);
+  textures.push(gridTex);
+  const vaultGrid = new THREE.MeshStandardMaterial({
+    map: gridTex,
+    color: new THREE.Color("#e9ebec"),
+    roughness: 0.45,
+    metalness: 0,
+    transparent: true,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  });
+  vaultGrid.name = "biocity-vault-grid";
+
   const tileWall = lib.variant("blackMatte", { color: "#ffffff", roughness: 0.32 });
   tileWall.map = tiles;
   tileWall.needsUpdate = true;
@@ -433,6 +550,8 @@ export function createBioMaterials(ctx: TwinContext): { materials: BioMaterials;
     ribbonWhite: facade(S.ribbonWhite),
     whiteGrid: facade(S.whiteGrid),
     shopfront: facade(S.shopfront),
+    kmarket: facade(S.kmarket),
+    groundOffice: facade(S.groundOffice),
     slotGlass: withReflectance(facade(S.slotGlass), 0.2),
     atrium: indoor(facade(S.atrium), 1.0),
     shopfrontIn: indoor(facade(S.shopClosed), 1.0),
@@ -448,7 +567,9 @@ export function createBioMaterials(ctx: TwinContext): { materials: BioMaterials;
     silver: lib.variant("steel", { color: "#a8b0b6", roughness: 0.45 }),
     whiteSteel: lib.variant("metalWhite", { color: "#e9ebec", roughness: 0.45 }),
     tileWall,
-    granite: lib.variant("granite", { color: "#a39885" }),
+    granite: lib.variant("granite", { color: "#b3aa98" }),
+    plinth,
+    mural,
     paving: (() => {
       // Light-grey slabs (SPEC #7F7D79); wins over the street paving it overlaps at the recess edges.
       const m = lib.variant("pavers", { color: "#7f7d79" });
@@ -467,8 +588,13 @@ export function createBioMaterials(ctx: TwinContext): { materials: BioMaterials;
     // buildings across the street, not open sky, so its sky reflection is turned down (no milky veil).
     glassClear: glass(0.2, "#0e1418", 0.5),
     glassLow: glass(0.24, "#0e1418", 0.26),
-    glassVault: glass(0.2, "#101820", 1.0),
-    glassDoor: glass(0.1, "#0c1013", 0.75),
+    // Vault glazing: reads as glass from afar — the sky's reflection up, a faint blue-grey body.
+    glassVault: glass(0.26, "#1c2833", 1.5),
+    vaultGrid,
+    // Doors and the revolving drum: clearly there (tint + reflections), still see-through.
+    glassDoor: glass(0.22, "#18232b", 0.45),
+    // Dark entrance mats (coir/rubber look).
+    doorMat: lib.variant("carpetDark", { color: "#2a2b2d", roughness: 1 }),
     plantGrey: lib.variant("metalWhite", { color: "#b9bec1", roughness: 0.7 }),
     signPanel: lib.variant("metalDark", { color: "#121214", roughness: 0.6 }),
     lightWarm: new THREE.MeshBasicMaterial({ color: warm.clone().multiplyScalar(LUMINANCE.bollard) }),
@@ -484,7 +610,16 @@ export function createBioMaterials(ctx: TwinContext): { materials: BioMaterials;
       return m;
     })(),
     plaster: indoor(lib.variant("plasterWhite", { color: "#e6e6e8" }), 0.8),
-    wallCap: indoor(lib.variant("plasterGrey", { color: "#3b3c40", roughness: 0.9 }), 0.8),
+    // Dollhouse section caps: light grey (the dark edge is a band on the walls' tops).
+    wallCap: indoor(lib.variant("plasterGrey", { color: "#a9abae", roughness: 0.95 }), 0.8),
+    // Rooms the event does not use: ≈15 % darker than the lobby tiles.
+    floorRoom: (() => {
+      const m = indoor(lib.variant("stoneFloor", { color: "#a7a5a0", roughness: 0.6 }), 0.85);
+      m.polygonOffset = true;
+      m.polygonOffsetFactor = -1;
+      m.polygonOffsetUnits = -2;
+      return m;
+    })(),
     plasterGrey: indoor(lib.variant("plasterGrey", { color: "#9a9ca0" }), 1),
     ceiling,
     soffit: indoor(lib.variant("metalDark", { color: "#1c1c1f", roughness: 0.8 }), 0.6),
@@ -509,6 +644,10 @@ export function createBioMaterials(ctx: TwinContext): { materials: BioMaterials;
     standBlack: indoor(lib.variant("blackMatte", { color: "#0e0e10", roughness: 0.45 }), 1),
     violetLine: new THREE.MeshBasicMaterial({ color: new THREE.Color("#8b7bff").multiplyScalar(LUMINANCE.eventLight * 0.5) }),
     panelLight: new THREE.MeshBasicMaterial({ color: neutral.clone().multiplyScalar(LUMINANCE.ceilingPanel) }),
+    // Atrium LED lines (slab edges, under the bridges): warm, a ceiling panel's luminance.
+    lineLight: new THREE.MeshBasicMaterial({ color: kelvinToLinear(3300).multiplyScalar(LUMINANCE.ceilingPanel * 0.8) }),
+    // Lift car ceilings: a third of a ceiling panel (diffused, seen through the car glass).
+    liftLight: new THREE.MeshBasicMaterial({ color: neutral.clone().multiplyScalar(LUMINANCE.ceilingPanel * 0.3) }),
   };
   return { materials, textures, light };
 }
