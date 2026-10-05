@@ -21,12 +21,12 @@ describe("Schedule", () => {
     expect(screen.getAllByText("Your challenge briefing").length).toBeGreaterThan(0);
   });
 
-  it("shows start-only times with 'end TBC' when the end is unresolved", () => {
+  it("shows start-only times as 'onwards' when the end is open", () => {
     render(<Schedule items={scheduleFor("builders")} audience="builders" />);
     const dinner = document.getElementById("schedule-item-fri-dinner")!;
     expect(within(dinner).getByText("21:00", { selector: ".font-bold" })).toBeInTheDocument();
-    expect(within(dinner).getByText("end TBC")).toBeInTheDocument();
-    expect(within(dinner).getByText("21:00, end time to be confirmed")).toHaveClass("sr-only");
+    expect(within(dinner).getByText("onwards")).toBeInTheDocument();
+    expect(within(dinner).getByText("From 21:00")).toHaveClass("sr-only");
   });
 
   it("marks approximate times", () => {

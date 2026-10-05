@@ -224,7 +224,7 @@ export function CampusSchematic() {
       <figcaption className="mt-4 space-y-1.5 text-xs text-neutral-400">
         <p>
           <span className="font-semibold text-white">EduCity</span>
-          {" — "}arrival, opening, briefings, closing
+          {" — "}arrival, opening, briefings, Sunday winners and finals
         </p>
         <p>
           <span className="font-semibold text-white">BioCity</span>

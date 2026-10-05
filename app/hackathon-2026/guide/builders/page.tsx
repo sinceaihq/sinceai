@@ -119,7 +119,7 @@ export default function BuilderGuidePage() {
           id="schedule-title"
           eyebrow="// schedule"
           title="Friday to Sunday."
-          lede="Local Turku time (EET, UTC+2). Times marked “end TBC” have a confirmed start only."
+          lede="Local Turku time (EET, UTC+2)."
         />
         <div className="mb-8 flex flex-wrap gap-3">
           <CalendarButton audience={AUDIENCE} />

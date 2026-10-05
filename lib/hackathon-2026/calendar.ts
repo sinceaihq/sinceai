@@ -80,7 +80,7 @@ function eventLines(item: ScheduleItem, audience: Audience, url: string, uidScop
     detailFor(item, audience),
     placeDetailFor(item, audience),
     noteFor(item, audience),
-    item.endPending ? "End time to be confirmed." : undefined,
+    item.endPending ? "Starts at this time — no fixed end." : undefined,
     item.approx ? "Time is approximate." : undefined,
     `Field Guide: ${url}`,
   ]

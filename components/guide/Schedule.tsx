@@ -16,7 +16,7 @@ function spokenTime(item: ScheduleItem): string {
   if (item.allDay) return "All day";
   const start = `${item.approx ? "Around " : ""}${formatTime(item.start)}`;
   if (item.end) return `${start} to ${formatTime(item.end)}`;
-  return item.endPending ? `${start}, end time to be confirmed` : start;
+  return item.endPending ? `From ${start}` : start;
 }
 
 function TimeCell({ item }: { item: ScheduleItem }) {
@@ -37,7 +37,7 @@ function TimeCell({ item }: { item: ScheduleItem }) {
             <span className="block font-mono text-xs tabular-nums text-white/55">–{formatTime(item.end)}</span>
           )}
           {item.endPending && (
-            <span className="block font-mono text-[11px] uppercase tracking-widest text-white/55">end TBC</span>
+            <span className="block font-mono text-[11px] uppercase tracking-widest text-white/55">onwards</span>
           )}
         </span>
       )}

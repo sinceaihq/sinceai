@@ -103,7 +103,7 @@ export const CRITICAL_PATH: Partial<Record<Audience, readonly { label: string; t
     { label: "Brief", time: "18:30–19:30", text: "Your teams come to your EduCity room." },
     { label: "Q&A", time: "Sat 09–18", text: "At your Joki stand (lunch pause 12–14)." },
     { label: "Evaluate", time: "Sun 10–13", text: "Briefing at 08:15, then pick your winner by 13:00." },
-    { label: "Winners", time: "Sun 13:30", text: "Company challenge winners announced at EduCity." },
+    { label: "Winners · finals", time: "Sun 13:30", text: "Company challenge winners announced at EduCity, then the 14:00 finals." },
   ],
   partners: [
     { label: "Opening", time: "Fri 17:00", text: "EduCity, Taidon portaat." },
