@@ -196,7 +196,7 @@ export default function HackathonPage() {
               Registration is open — apply now
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
               <TrackedLink
                 href={APPLY_URL}
                 analyticsEvent="register_click"
@@ -204,6 +204,12 @@ export default function HackathonPage() {
               >
                 Apply now — free →
               </TrackedLink>
+              <Link
+                href="/hackathon-2026/guide"
+                className="inline-block border border-white/20 text-white rounded-none px-6 py-3 font-semibold hover:border-white transition-colors cursor-pointer text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              >
+                Hackathon 2026 guide <span aria-hidden="true">→</span>
+              </Link>
               <Link
                 href="/partners"
                 className="inline-block border border-white/20 text-white rounded-none px-6 py-3 font-semibold hover:border-white transition-colors cursor-pointer text-sm"
