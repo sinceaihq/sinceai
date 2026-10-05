@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { acceptNoCookies, COMPANY_IDS, GUIDE, GUIDE_ROUTES, horizontalOverflow, watchConsole } from "./helpers";
 
 test.beforeEach(async ({ page }) => {
@@ -247,6 +247,8 @@ test.describe("venue explorer", () => {
   });
 });
 
+const hasWebGL2 = (page: Page) => page.evaluate(() => !!document.createElement("canvas").getContext("webgl2"));
+
 test.describe("3D campus", () => {
   test("loads on demand, finds a company and switches places", async ({ page }) => {
     // Software GL on a busy machine can take minutes to build the campus.
@@ -254,6 +256,14 @@ test.describe("3D campus", () => {
     const problems = watchConsole(page);
     await page.goto(`${GUIDE}/venue`);
     await expect(page.locator("canvas")).toHaveCount(0); // nothing loaded until asked
+    if (!(await hasWebGL2(page))) {
+      // No WebGL 2 (e.g. headless Firefox without a GPU): the text fallback carries every place and route.
+      await expect(page.locator("#preview-3d").getByText(/can.t show the 3D model/).first()).toBeVisible();
+      await expect(page.locator("#preview-3d")).toContainText("Elisa briefing room");
+      await expect(page.locator("#preview-3d")).toContainText("Kupittaa station → EduCity company arrival");
+      expect(problems).toEqual([]);
+      return;
+    }
     await page.getByRole("button", { name: "Explore in 3D" }).click();
     await expect(page.getByRole("button", { name: "Show names" })).toBeVisible({ timeout: 420_000 });
     await expect(page.locator("canvas").first()).toBeVisible();
@@ -269,6 +279,10 @@ test.describe("3D campus", () => {
     await page.goto(`${GUIDE}/challenge-partners/elisa`);
     await page.getByRole("link", { name: /Kupittaa station → EduCity company arrival/ }).click();
     await expect(page).toHaveURL(/\/venue\?tour=partners-fri-train-edu#preview-3d$/);
+    if (!(await hasWebGL2(page))) {
+      await expect(page.locator("#preview-3d")).toContainText("Kupittaa station → EduCity company arrival");
+      return;
+    }
     await expect(page.locator("#preview-3d")).toContainText("Route: Kupittaa station → EduCity company arrival");
   });
 
