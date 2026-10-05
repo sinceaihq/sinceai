@@ -16,7 +16,7 @@ Since AI community website (sinceai.fi) — a Next.js 16 marketing site for an A
 
 Jest is configured (`npm run test`). Add tests when introducing testable logic.
 
-- `npm run test:e2e` — Playwright browser tests for the Hackathon 2026 Field Guide (run `npm run build` first; reuses a server on port 3100)
+- `npm run test:e2e` — Playwright browser tests for the Hackathon 2026 Field Guide and the public site (run `npm run build` first; reuses a server on port 3100). `E2E_BASE=https://sinceai.ai npm run test:e2e` runs them against the deployed site.
 
 ## Architecture
 
