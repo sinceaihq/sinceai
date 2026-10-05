@@ -61,6 +61,15 @@ export const PAVILION = {
   fascia: 1.3,
 } as const;
 
+/** The two main entrances in the pavilion's glass (E): the revolving west door's drum, the sliding east door. */
+export const MAIN_DOORS = {
+  west: { x: PAVILION.glassNW, z: 74.6, r: 1.5 },
+  east: { x: PAVILION.glassSE, z0: 73.5, z1: 75.9 },
+} as const;
+
+/** The stair down to the lower lobby in the pavilion (glass balustrade on two sides, SPEC §7.4). */
+export const PAVILION_STAIR = { x0: 31.0, x1: 38.8, z0: 76.8, z1: 79.6 } as const;
+
 const RAD = Math.PI / 180;
 const COS = Math.cos(E.theta * RAD);
 const SIN = Math.sin(E.theta * RAD);
@@ -203,3 +212,6 @@ export const BRIDGES = {
 /** Outdoor Main Stairs at the east corner (Joukahaisenkatu → south-east walkway) and the walkway. */
 export const MAIN_STAIRS = { x0: 52.0, x1: 58.0, zFoot: -0.9, zTop: 14.2, yFoot: -5.2, yTop: 0 } as const;
 export const SE_WALKWAY = { x0: 51.8, x1: 58.0, z0: 14.2, z1: 80.2 } as const;
+
+/** Inner edge of the walkway paving (x_E): just inside the brick's inner face (hidden by the wall). */
+export const WALKWAY_IN = 51.36;

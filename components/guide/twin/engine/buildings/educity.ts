@@ -3,7 +3,7 @@ import type { CSS2DObject } from "three/addons/renderers/CSS2DRenderer.js";
 import type { BuildingModule, LevelId, LightingState, TwinContext, V2 } from "../types";
 import { INTERIOR_EXPOSURE, LUMINANCE, exposureFor, kelvinToLinear } from "../sky/sky";
 import { makeLabel } from "../labels";
-import { E, Y0, eToLocal3 } from "./educity/frame";
+import { BLOCK, E, PAVILION, Y0, eToLocal3, localToE } from "./educity/frame";
 import { allWindows, facadeLength, facadeTop, type Facade } from "./educity/data";
 import { BAND_COUNT, CUTS, Kit } from "./educity/kit";
 import { FACADES, WALL, brickBase, buildMantle, fp, type WindowInfo } from "./educity/mantle";
@@ -67,8 +67,11 @@ export async function buildEduCity(ctx: TwinContext): Promise<BuildingModule> {
 
   // ── Materials ──
   const night = { value: ctx.lighting().night };
-  const winUniforms = { uEdLit: { value: edLitFraction(ctx.lighting().iso, ctx.lighting().night) } };
-  const brick = makeBrickMaterial();
+  const winUniforms = {
+    uEdLit: { value: edLitFraction(ctx.lighting().iso, ctx.lighting().night) },
+    uEdWinK: { value: windowScale(ctx.lighting().sunElevationDeg) },
+  };
+  const brick = makeBrickMaterial(night);
   const uber = makeUberMaterial(lib, { textured: "concreteFacade", name: "shell" });
   const uberInt = makeUberMaterial(lib, { name: "interior", env: ctx.envInterior });
   const winGlass = makeWindowGlassMaterial(winUniforms, tier);
@@ -213,17 +216,23 @@ export async function buildEduCity(ctx: TwinContext): Promise<BuildingModule> {
     return l;
   };
   const nameLabel = exterior("EduCity", "building", 26, 37.6, 32, "campus");
-  // Entrance labels stand just outside the building's outline (and above the pavilion canopy), so
-  // the engine's occlusion test hides them whenever the building is between the camera and the door.
-  exterior("EduCity west main entrance", "entrance", -1.0, 6.6, 74.6, "edu-entrance", "builders · to BioCity");
-  exterior("EduCity east main entrance", "entrance", 52.6, 6.6, 74.7, "edu-entrance", "registration");
-  exterior("Door B", "entrance", 53.4, 4.2, 32.7, "edu-entrance", "company arrivals → 1002");
+  // Entrance labels stand just outside the building's outline, at the canopy (pavilion) or the portal's
+  // head (door B): the engine's occlusion test hides them whenever the building is between the camera
+  // and the door, and each is the label nearest its door — the one a focused entrance shows.
+  // Each twice: for the "Main entrances" view (all three), and for its own door's view only — at
+  // eye level the engine dims (never hides) an event entrance's label behind a building, and the
+  // west door's label must not float in the glass of the east door's view.
+  // The door's own copy is the one nearest the door (the focused target's label); the shared copy
+  // stands 0.2 m further out, so a focused entrance never shows both.
+  for (const [group, d] of [["edu-entrance", 0.2], ["edu-entrance-west", 0]] as const) exterior("EduCity west main entrance", "entrance", 2.4 - d, 4.6, 74.6, group, "builders · to BioCity");
+  for (const [group, d] of [["edu-entrance", 0.2], ["edu-entrance-east", 0]] as const) exterior("EduCity east main entrance", "entrance", 50.2 + d, 4.6, 74.7, group, "registration");
+  for (const [group, d] of [["edu-entrance", 0.2], ["edu-entrance-b", 0]] as const) exterior("Door B", "entrance", 53.2 + d, 3.4, 32.7, group, "company arrivals → 1002");
   exterior("Step-free entrance", "entrance", -2.0, -1.4, 29.4, "edu-gateway", "lifts in the passage");
   // Inside counterparts for the lobby / rooms views.
   for (const [text, x, z, group] of [
-    ["West main entrance", 9.4, 75.8, "edu-lobby"],
-    ["East main entrance", 43.2, 76.0, "edu-lobby"],
-    ["Door B", 50.2, 32.7, "edu-rooms1"],
+    ["West main entrance", 11.0, 75.8, "edu-lobby"],
+    ["East main entrance", 41.5, 76.0, "edu-lobby"],
+    ["Door B", 48.4, 32.7, "edu-rooms1"],
   ] as const) {
     const p = eToLocal3(x, 2.6, z);
     const l = makeLabel(text, "entrance", p[0], p[1], p[2], group);
@@ -262,33 +271,54 @@ export async function buildEduCity(ctx: TwinContext): Promise<BuildingModule> {
     ctx.invalidate();
   };
 
-  // ── Interior light: designed for INTERIOR_EXPOSURE; rescaled while the dollhouse is open ──
+  // ── Interior light: designed for INTERIOR_EXPOSURE, rescaled for the exposure it is seen at ──
   let sunElevation = ctx.lighting().sunElevationDeg;
-  let lateNight = edInteriorLevel(ctx.lighting().iso);
+  let inUse = edInteriorLevel(ctx.lighting().iso);
+  let cameraInside = false;
   // The engine's interior environment is a 3500 K office; EduCity's LEDs are 4000 K and photographs of
-  // the building are white-balanced for them — shift the environment to read neutral (≈5000 K/3500 K).
-  const kOut = kelvinToLinear(5000);
+  // the building are white-balanced for them — shift the environment so its white walls read neutral.
+  const kOut = kelvinToLinear(6000);
   const k35 = kelvinToLinear(3500);
   const tint = new THREE.Color(kOut.r / k35.r, kOut.g / k35.g, kOut.b / k35.b);
+  const panelLum = (ceiling.userData.edPanelLum as { value: number } | undefined) ?? { value: 0 };
+  /** Exposure compensation now (eased towards target() in tick, as the engine eases its exposure). */
+  let k = 1;
+  const target = () => (openLevel !== null ? interiorScale(sunElevation) * OPEN_GAIN : cameraInside ? 1 : exteriorViewScale(sunElevation));
   function updateInteriorLight() {
-    const k = openLevel === null ? 1 : interiorScale(sunElevation);
-    // Open: the rooms read as lit by their own (4000 K) lights, the low sun only grazes them.
-    light.uEdSun.value = openLevel === null ? 1 : 0.15;
-    light.uEdEnv.value.set(tint.r * k, tint.g * k, tint.b * k);
-    for (const e of inside.emissives) e.material.emissiveIntensity = e.base * k * lateNight;
+    // No direct sun on the open dollhouse: with the shell cut away the low November sun would rake
+    // orange across every room — the rooms read as lit by their own 4000 K lights.
+    light.uEdSun.value = openLevel === null ? 1 : 0;
+    // Closed by day the rooms still get daylight through the windows; closed at night only the
+    // corridor and emergency lights.
+    const env = Math.max(inUse, 0.55 * daylight(sunElevation));
+    light.uEdEnv.value.set(tint.r * k * env, tint.g * k * env, tint.b * k * env);
+    const on = Math.max(0, (inUse - 0.1) / 0.9);
+    panelLum.value = LUMINANCE.ceilingPanel * k * on;
+    for (const e of inside.emissives) e.material.emissiveIntensity = e.base * k * on;
   }
 
   // ── Lighting (time of day) ──
   const setLighting = (s: LightingState) => {
     night.value = s.night;
     sunElevation = s.sunElevationDeg;
-    lateNight = edInteriorLevel(s.iso);
+    inUse = edInteriorLevel(s.iso);
+    k = target();
     updateInteriorLight();
     winUniforms.uEdLit.value = edLitFraction(s.iso, s.night);
+    winUniforms.uEdWinK.value = windowScale(s.sunElevationDeg);
     lights.emissiveIntensity = LUMINANCE.bollard * 0.6 * s.night;
     signsExt.emissiveIntensity = LUMINANCE.signLit * 0.2 * s.night;
     inside.setLighting(s);
     ctx.invalidate();
+  };
+
+  /** Is the camera inside the building (main block or pavilion, below the roofs)? */
+  const inBuilding = (p: THREE.Vector3) => {
+    const [x, z] = localToE(p.x, p.z);
+    const y = p.y - Y0;
+    if (y < -5.2 || y > 25) return false;
+    if (x >= 0 && x <= BLOCK.w && z >= 0 && z <= BLOCK.d) return true;
+    return y < PAVILION.roof && x >= PAVILION.glassNW && x <= PAVILION.glassSE && z >= BLOCK.d && z <= PAVILION.wallSW;
   };
 
   const nav = buildNav();
@@ -325,6 +355,16 @@ export async function buildEduCity(ctx: TwinContext): Promise<BuildingModule> {
       apply();
     },
     setLighting,
+    tick(dt, _elapsed, camera) {
+      cameraInside = inBuilding(camera.position);
+      const goal = target();
+      if (Math.abs(goal - k) < 1e-3) return false;
+      // Eased like the engine's exposure; snapped when the clock stands still (reduced motion).
+      const step = dt > 0 ? 1 - Math.exp(-Math.min(dt, 0.1) * 5) : 1;
+      k = Math.abs(goal - k) < 0.004 ? goal : k + (goal - k) * step;
+      updateInteriorLight();
+      return true;
+    },
     dispose() {
       atlas.texture.dispose();
       inside.dispose();
@@ -332,6 +372,39 @@ export async function buildEduCity(ctx: TwinContext): Promise<BuildingModule> {
     },
   };
   return edu;
+}
+
+/**
+ * The open dollhouse looks down into rooms lit for the eye inside them (≈ 400 lux); seen from above,
+ * next to the bright campus, they read a stop too grey — white walls land near sRGB 190 with this.
+ */
+export const OPEN_GAIN = 1.6;
+
+/** 0 at night … 1 by day (sun 6° above the horizon), for the daylight that reaches closed rooms. */
+export function daylight(sunElevationDeg: number): number {
+  const t = Math.min(1, Math.max(0, (sunElevationDeg + 4) / 10));
+  return t * t * (3 - 2 * t);
+}
+
+/**
+ * Interior light scale for a camera outside the closed building: the engine exposes for the street,
+ * which after dark is up to ≈ 30 × the interior's exposure, so lit rooms would clip to flat white
+ * (DESIGN §12). Most of that (80 % in log space) is taken back — at night the rooms still read about
+ * a stop brighter than from inside, glowing over the street, with ceilings, desks and walls legible.
+ * Never brightened by day.
+ */
+export function exteriorViewScale(sunElevationDeg: number): number {
+  const ext = exposureFor(sunElevationDeg);
+  return Math.min(1, Math.max(0.05, Math.pow(INTERIOR_EXPOSURE / ext, 0.8)));
+}
+
+/**
+ * The same for the interior-mapped square windows (always seen from outside): lit rooms land near
+ * LUMINANCE.windowLit after the street exposure — sRGB ≈ 200 with their ceiling lights and desks
+ * visible — instead of clipped white squares.
+ */
+export function windowScale(sunElevationDeg: number): number {
+  return Math.min(1, Math.max(0.1, 4.5 * exteriorViewScale(sunElevationDeg)));
 }
 
 /**

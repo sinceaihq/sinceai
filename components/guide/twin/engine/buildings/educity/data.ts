@@ -263,7 +263,8 @@ export function scatterWindows(f: Facade, seed: number, perStorey: number): Wind
       const hi = y + size / 2;
       // Fits under the (sloped) brick top at both edges and above the base.
       if (hi > Math.min(facadeTop(f, s - size / 2), facadeTop(f, s + size / 2)) - 0.55) continue;
-      if (lo < scatterBase(f, s) + 0.45) continue;
+      // …at both edges too: a window must not hang over the pavilion's roof line (its base steps there).
+      if (lo < Math.max(scatterBase(f, s - size / 2), scatterBase(f, s + size / 2), scatterBase(f, s)) + 0.45) continue;
       // Clear of other windows (0.7 m), within this storey and the next.
       const clash = [...placed, ...out].some(
         (w) => Math.abs(w.s - s) < (w.size + size) / 2 + 0.7 && Math.abs(w.y - y) < (w.size + size) / 2 + 0.5,

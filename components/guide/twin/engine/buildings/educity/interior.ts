@@ -7,10 +7,13 @@ import { makeLabel } from "../../labels";
 import { LUMINANCE } from "../../sky/sky";
 import { EVENT_VIOLET, makeBannerTexture } from "../../render/canvas";
 import { mulberry32 } from "../../util";
-import { ATRIUM_ROOF, BLOCK, PAVILION, TAIDON, eToLocal3, inRect, rect, type Rect } from "./frame";
+import { ATRIUM_ROOF, BLOCK, PAVILION, PAVILION_STAIR, TAIDON, WALKWAY_IN, eToLocal3, inRect, rect, type Rect } from "./frame";
 import type { Kit } from "./kit";
 import { Bucket, box, cylinder, orientedBox, quadN, rectSlab, ring, slab, type Vec3 } from "./geom";
-import { BRIEFING_ROOMS, POINTS, type BriefingRoom } from "./rooms";
+import { BRIEFING_ROOMS, POINTS, centroidOf, mainRect, type BriefingRoom } from "./rooms";
+
+export { centroidOf, mainRect };
+import { DOOR_B } from "./data";
 import { F1, F2, IN, VOID_F2, type FloorPlan, type WallSpec } from "./plan";
 import type { DoorSignSpec, SignAtlas, AtlasRect } from "./signs";
 import { makeStageScreen } from "./signs";
@@ -92,6 +95,7 @@ interface Buckets {
   roomCarpet: Bucket;
   ceil: Bucket;
   slats: Bucket;
+  ceilSlats: Bucket;
   signs: Bucket;
   screens: Bucket;
   fabric: Bucket;
@@ -123,7 +127,9 @@ export function buildInterior(
   const roomCarpetMat = interiorVariant(ctx, "carpetGrey", { color: "#6c7076" });
   const ceilMat = opts.ceiling;
   const slatMat = opts.slats;
-  const glassMat = interior(makeClearGlass(lib, 0.1, "#10161a"), ctx, 1);
+  // Interior partitions reflect the (generic office) interior environment only faintly: at grazing
+  // angles a full-strength reflection read as a striped wall in the dollhouse views.
+  const glassMat = interior(makeClearGlass(lib, 0.1, "#10161a"), ctx, 0.35);
   // Upholstery: the vertex colour is the fabric colour (poufs, cushions, sofas, niches).
   const fabricVc = interiorVariant(ctx, "fabricDark", { color: "#ffffff" });
   fabricVc.vertexColors = true;
@@ -162,6 +168,8 @@ export function buildInterior(
     roomCarpet: kit.bucket("room-carpet", roomCarpetMat, { group }),
     ceil: kit.bucket("ceiling", ceilMat, { group: ceilGroup }),
     slats: kit.bucket("slats", slatMat, { group }),
+    // Above the suspended ceiling (the skylight funnels): hidden with the ceiling in the dollhouse.
+    ceilSlats: kit.bucket("slats", slatMat, { group: ceilGroup }),
     signs: kit.bucket("signs", signMat, { group }),
     screens: kit.bucket("screens", screenMat, { group }),
     fabric: kit.bucket("fabric-vc", fabricVc, { group, extra: { color: 3 } }).color("#3f464e"),
@@ -216,7 +224,9 @@ export function buildInterior(
     pickBoxes.push({ level: room.level, mesh });
     // Label (campus frame).
     const [cx, cz] = centroidOf(room);
-    const p = eToLocal3(cx, plan.y + 2.9, cz);
+    // Neighbours along the north-east facade get their labels staggered (they would overlap).
+    const [ly, lz] = room.labelOffset ?? [0, 0];
+    const p = eToLocal3(cx, plan.y + 2.9 + ly, cz + lz);
     const label = makeLabel(c.name, "company", p[0], p[1], p[2], room.level === "f1" ? "edu-rooms1" : "edu-rooms2", `Room ${briefingRoomLabel(c)}`);
     label.userData.level = room.level === "f1" ? "educity-1" : "educity-2";
     label.userData.interior = true;
@@ -235,20 +245,24 @@ export function buildInterior(
   // ── Atrium above floor 2 ──
   const atrium = buildAtrium(kit, ctx, { uber, glassMat, slatMat, winGlass: opts.winGlass, led: ledMat, low });
 
-  // Area labels (shown in the open dollhouse).
+  // Event places (shown in the open dollhouse): boxed event labels, so they read over the light floors
+  // and stay on phones too (the plain "area" kind is hidden on small screens).
   const area = (text: string, x: number, y: number, z: number, group: string, level: string, detail?: string) => {
     const p = eToLocal3(x, y, z);
-    const l = makeLabel(text, "area", p[0], p[1], p[2], group, detail);
+    const l = makeLabel(text, "landmark", p[0], p[1], p[2], group, detail);
     l.userData.level = level;
     l.userData.interior = true;
     labels.push(l);
   };
-  area("Registration", POINTS.registration[0], 2.6, POINTS.registration[1], "edu-lobby", "educity-1", "east entrance");
+  // Above the printed REGISTRATION sign over the desks (event module, 2.7–3.4 m).
+  area("Registration", POINTS.registration[0], 4.0, POINTS.registration[1], "edu-lobby", "educity-1", "east entrance");
   area("Team formation", POINTS.teamFormation[0] - 4, 2.6, POINTS.teamFormation[1] - 1.5, "edu-lobby", "educity-1");
   area("Taidon portaat", (TAIDON.x0 + TAIDON.x1) / 2, 4.2, 40.0, "edu-lobby", "educity-1", "opening ceremony");
   area("Ravintola Kisälli", 26.0, 2.4, 58.0, "edu-lobby", "educity-1", "snacks");
-  area("Company arrival", 44.7, 2.4, 19.0, "edu-rooms1", "educity-1", "door B → room 1002");
-  area("Työkahvila · aula", 22.0, 7.4, 21.0, "edu-rooms2", "educity-2");
+  // In the corridor in front of room 1002, where the walk from door B ends (the room's own company
+  // label is inside the room, so the two stay apart).
+  area("Company arrival", 32.0, 1.9, 9.4, "edu-rooms1", "educity-1", "door B → room 1002");
+  area("Työkahvila", 22.0, 7.4, 21.0, "edu-rooms2", "educity-2", "aula");
 
   // ── Instanced furniture ──
   // Furniture bakes into the level's meshes: plain parts into the interior's vertex-coloured material
@@ -304,43 +318,6 @@ function bounds(poly: readonly V2[]): Rect {
   return rect(Math.min(...xs), Math.max(...xs), Math.min(...zs), Math.max(...zs));
 }
 
-/** A representative inside point of a room (largest rectangle's centre for L-shapes). */
-export function centroidOf(room: BriefingRoom): V2 {
-  const r = mainRect(room);
-  return [(r.x0 + r.x1) / 2, (r.z0 + r.z1) / 2];
-}
-
-/** The largest axis-aligned rectangle of a room polygon (rooms are rectangles or Ls). */
-export function mainRect(room: BriefingRoom): Rect {
-  const bb = bounds(room.polygon);
-  if (room.polygon.length === 4) return bb;
-  // L-shape: try the candidate rectangles from the polygon's coordinates.
-  const xs = [...new Set(room.polygon.map((p) => p[0]))].sort((a, b) => a - b);
-  const zs = [...new Set(room.polygon.map((p) => p[1]))].sort((a, b) => a - b);
-  let best = bb;
-  let bestArea = 0;
-  for (let i = 0; i < xs.length; i++)
-    for (let j = i + 1; j < xs.length; j++)
-      for (let k = 0; k < zs.length; k++)
-        for (let l = k + 1; l < zs.length; l++) {
-          const r = rect(xs[i], xs[j], zs[k], zs[l]);
-          const corners: V2[] = [
-            [r.x0 + 0.01, r.z0 + 0.01],
-            [r.x1 - 0.01, r.z0 + 0.01],
-            [r.x1 - 0.01, r.z1 - 0.01],
-            [r.x0 + 0.01, r.z1 - 0.01],
-            [(r.x0 + r.x1) / 2, (r.z0 + r.z1) / 2],
-          ];
-          if (!corners.every((c) => inPoly(c, room.polygon))) continue;
-          const a = (r.x1 - r.x0) * (r.z1 - r.z0);
-          if (a > bestArea) {
-            bestArea = a;
-            best = r;
-          }
-        }
-  return best;
-}
-
 function inPoly(p: V2, ring2: readonly V2[]): boolean {
   let inside = false;
   for (let i = 0, j = ring2.length - 1; i < ring2.length; j = i++) {
@@ -371,12 +348,28 @@ function floors(b1: Buckets, b2: Buckets): void {
   // carpets go; holes never touch each other or the outline (earcut needs that).
   const aula = inset(rect(13.2, 39.2, 24.95, 35.2));
   const rooms1 = [inset(rect(IN.x0, 39.4, IN.z0, 8.5)), inset(rect(17.5, 34.1, 10.2, 24.8))];
-  const main: V2[] = rr(rect(0.2, BLOCK.w - 0.2, 0.2, BLOCK.d - 0.2));
-  slab(b1.floor, main, F1.y, true, [...rooms1.map(rr), rr(aula), rr(inset(rect(TAIDON.x0, TAIDON.x1, 35.2, 44.0)))]);
+  // Under the walls to their middle, except at door B, whose portal floor (outdoor.ts) starts at its glass.
+  const xE = WALKWAY_IN - 0.06;
+  const xB = BLOCK.w - DOOR_B.depth;
+  const main: V2[] = [
+    [0.2, 0.2],
+    [xE, 0.2],
+    [xE, DOOR_B.z0],
+    [xB, DOOR_B.z0],
+    [xB, DOOR_B.z1],
+    [xE, DOOR_B.z1],
+    [xE, BLOCK.d - 0.2],
+    [0.2, BLOCK.d - 0.2],
+  ];
+  // The closed blocks (WCs, small rooms, cores) are rooms too: their own floors, seen in the cut.
+  const blocks1 = blockRects(F1.blocks, xE);
+  slab(b1.floor, main, F1.y, true, [...rooms1.map(rr), rr(aula), rr(inset(rect(TAIDON.x0, TAIDON.x1, 35.2, 44.0))), ...blocks1.map((b) => rr(b.r))]);
   for (const r of rooms1) rectSlab(b1.roomCarpet, r.x0, r.x1, r.z0, r.z1, F1.y, true);
+  blockFloors(b1, blocks1, F1.y);
   rectSlab(b1.carpet, aula.x0, aula.x1, aula.z0, aula.z1, F1.y, true);
-  // Pavilion floor (deck level).
-  rectSlab(b1.floor, PAVILION.glassNW, PAVILION.glassSE, BLOCK.d - 0.2, PAVILION.wallSW, F1.y, true);
+  // Pavilion floor (deck level), open over the stair down to the lower lobby.
+  const well = PAVILION_STAIR;
+  slab(b1.floor, rr(rect(PAVILION.glassNW, PAVILION.glassSE, BLOCK.d - 0.2, PAVILION.wallSW)), F1.y, true, [rr(rect(well.x0, well.x1, well.z0, well.z1))]);
 
   // Floor 2: concrete corridors, the triangle floor in the open work café (2072), carpet in the rooms.
   const cafe = inset(rect(14.15, 37.2, 16.8, 35.3));
@@ -402,10 +395,41 @@ function floors(b1: Buckets, b2: Buckets): void {
     [34.93, BLOCK.d - 0.2],
     [0.2, BLOCK.d - 0.2],
   ];
-  const holes = [VOID_F2, rr(cafe), ...roomRects2.map(rr)];
+  const blocks2 = blockRects(F2.blocks, BLOCK.w - 0.2);
+  const holes = [VOID_F2, rr(cafe), ...roomRects2.map(rr), ...blocks2.map((b) => rr(b.r))];
   slab(b2.floor, f2Outline, F2.y, true, holes);
+  blockFloors(b2, blocks2, F2.y);
   rectSlab(b2.carpet, cafe.x0, cafe.x1, cafe.z0, cafe.z1, F2.y, true);
   for (const r of roomRects2) rectSlab(b2.roomCarpet, r.x0, r.x1, r.z0, r.z1, F2.y, true);
+}
+
+/** Stairs and lifts (drawn in their grey core colours) — the rest are small rooms and WCs. */
+const isCore = (b: { color?: string }) => b.color !== undefined;
+
+/**
+ * Floor rectangles inside the closed blocks of the main block (the pavilion's lift stands on the
+ * pavilion floor), clamped clear of the slab's outline so they can be its holes.
+ */
+function blockRects(blocks: readonly (Rect & { color?: string })[], xMax: number): { r: Rect; core: boolean }[] {
+  return blocks
+    .filter((b) => b.z1 <= BLOCK.d + 0.01)
+    .map((b) => {
+      const r = inset(b, BLOCK_WALL);
+      return { r: rect(Math.max(r.x0, 0.25), Math.min(r.x1, xMax - 0.05), Math.max(r.z0, 0.25), Math.min(r.z1, BLOCK.d - 0.25)), core: isCore(b) };
+    })
+    .filter(({ r }) => r.x1 - r.x0 > 0.1 && r.z1 - r.z0 > 0.1);
+}
+
+/** Floors inside the closed blocks: grey carpet in the small rooms, concrete in stair and lift cores. */
+function blockFloors(b: Buckets, blocks: { r: Rect; core: boolean }[], y: number): void {
+  for (const { r, core } of blocks) {
+    if (r.x1 - r.x0 < 0.1 || r.z1 - r.z0 < 0.1) continue;
+    if (core) {
+      b.concrete.paint("#9c9e9b", 0.8);
+      rectSlab(b.concrete, r.x0, r.x1, r.z0, r.z1, y, true);
+    } else rectSlab(b.roomCarpet, r.x0, r.x1, r.z0, r.z1, y, true);
+  }
+  b.concrete.paint("#c3c5c0", 0.88);
 }
 
 function ceilings(b1: Buckets, b2: Buckets): void {
@@ -458,7 +482,7 @@ function funnelWalls(b1: Buckets): void {
       const n: Vec3 = [inward[0] / l, inward[1] / l, inward[2] / l];
       const w = Math.hypot(c[0] - a[0], c[2] - a[2]);
       const slope = Math.hypot(yt - yb, Math.hypot(mid[0] - cx, mid[2] - cz));
-      quadN(b1.slats, [a, c, d, e], n, [
+      quadN(b1.ceilSlats, [a, c, d, e], n, [
         [0, 0],
         [w, 0],
         [w * 0.6, slope],
@@ -599,14 +623,38 @@ function glassPane(b: Buckets, alongX: boolean, c: number, s0: number, s1: numbe
   }
 }
 
+/** Thickness of a closed block's walls (WCs, small rooms, cores). */
+const BLOCK_WALL = 0.14;
+
 function buildBlock(b: Buckets, plan: FloorPlan, blk: { x0: number; x1: number; z0: number; z1: number; color?: string; doors?: { side: "x0" | "x1" | "z0" | "z1"; at: number }[] }): void {
   const y0 = plan.y;
   const y1 = plan.y + plan.ceiling;
+  const t = BLOCK_WALL;
   b.wall.paint(blk.color ?? "#e4e3df", 0.85);
   box(b.wall, blk.x0, y0, blk.z0, blk.x1, y1, blk.z1, { px: true, nx: true, pz: true, nz: true });
-  // Flat grey top (visible in the open dollhouse).
-  b.wall.paint("#8e8f8c", 0.9);
-  rectSlab(b.wall, blk.x0, blk.x1, blk.z0, blk.z1, y1, true);
+  // Hollow, like the rooms they are: inner faces and the wall section cut at the ceiling (the dark
+  // poche of the dollhouse cut), the floor showing inside — not a solid block with a lid.
+  b.wall.paint("#eceae6", 0.88);
+  const ix0 = blk.x0 + t;
+  const ix1 = blk.x1 - t;
+  const iz0 = blk.z0 + t;
+  const iz1 = blk.z1 - t;
+  const face = (a: V2, c: V2, n: Vec3) =>
+    quadN(b.wall, [[a[0], y0, a[1]], [c[0], y0, c[1]], [c[0], y1, c[1]], [a[0], y1, a[1]]], n, [
+      [0, y0],
+      [Math.hypot(c[0] - a[0], c[1] - a[1]), y0],
+      [Math.hypot(c[0] - a[0], c[1] - a[1]), y1],
+      [0, y1],
+    ]);
+  face([ix0, iz0], [ix0, iz1], [1, 0, 0]);
+  face([ix1, iz0], [ix1, iz1], [-1, 0, 0]);
+  face([ix0, iz0], [ix1, iz0], [0, 0, 1]);
+  face([ix0, iz1], [ix1, iz1], [0, 0, -1]);
+  b.wall.paint("#2b2b2d", 0.9);
+  rectSlab(b.wall, blk.x0, blk.x1, blk.z0, blk.z0 + t, y1, true);
+  rectSlab(b.wall, blk.x0, blk.x1, blk.z1 - t, blk.z1, y1, true);
+  rectSlab(b.wall, blk.x0, blk.x0 + t, blk.z0 + t, blk.z1 - t, y1, true);
+  rectSlab(b.wall, blk.x1 - t, blk.x1, blk.z0 + t, blk.z1 - t, y1, true);
   // Closed doors on the block faces (light grey leaves with a dark frame).
   for (const d of blk.doors ?? []) {
     const w = 0.95;
@@ -688,7 +736,8 @@ function furnishRoom(fur: Furnisher, b: Buckets, room: BriefingRoom, plan: Floor
   signQuadE(b.screens, [scx, y + 1.55, scz], nScreen, sw, sh, sign);
   b.frame.paint("#111214", 0.3, 0.2);
   const frame = (alongX ? [0.06, sh + 0.08, sw + 0.08] : [sw + 0.08, sh + 0.08, 0.06]) as [number, number, number];
-  const [fx, fz] = P(screenS - faceSign * 0.025, (across0 + across1) / 2);
+  // The frame sits between the screen and the wall (it hid the logo when it stood in front of it).
+  const [fx, fz] = P(screenS + faceSign * 0.035, (across0 + across1) / 2);
   box(b.frame, fx - frame[0] / 2, y + 1.55 - frame[1] / 2, fz - frame[2] / 2, fx + frame[0] / 2, y + 1.55 + frame[1] / 2, fz + frame[2] / 2);
   // Roll-up with the logo near the front corner.
   const [rx, rz] = P(frontS - faceSign * 0.9, across1 - 0.9);
@@ -909,9 +958,22 @@ function pavilionHall(fur: Furnisher, b: Buckets, rnd: () => number): void {
   // Phone booths (dark felt cabinets with glass doors).
   b.frame.paint("#2e2a33", 0.9);
   for (const x of [39.2, 40.6]) box(b.frame, x - 0.6, y, 64.0 - 1.2, x + 0.6, y + 2.25, 64.0);
+  // Inside face of the south-west wall (the panel wall over the surface lot): white plasterboard from
+  // the deck floor to the ceiling.
+  const P = PAVILION;
+  const zIn = P.wallSW - 0.02;
+  b.wall.paint("#ecebe7", 0.88);
+  quadN(b.wall, [[P.glassNW, y, zIn], [P.glassSE, y, zIn], [P.glassSE, y + F1.ceiling, zIn], [P.glassNW, y + F1.ceiling, zIn]], [0, 0, -1], [
+    [-P.glassNW, y],
+    [-P.glassSE, y],
+    [-P.glassSE, y + F1.ceiling],
+    [-P.glassNW, y + F1.ceiling],
+  ]);
+  b.wall.paint("#e9e8e4", 0.85);
+  stairWell(b);
   // Stair down to the lower lobby: opening with a glass balustrade.
   b.frame.paint("#18191b", 0.45, 0.3);
-  const op = rect(31.0, 38.8, 76.8, 79.6);
+  const op = PAVILION_STAIR;
   for (const [a, c] of [
     [
       [op.x0, op.z0],
@@ -928,6 +990,39 @@ function pavilionHall(fur: Furnisher, b: Buckets, rnd: () => number): void {
     else box(b.frame, a[0] - 0.03, y + 1.07, a[1], a[0] + 0.03, y + 1.12, c[1]);
   }
   void inRect;
+}
+
+/**
+ * The stair down to the lower lobby (street level, y_E −5) in the pavilion's floor opening: one
+ * straight flight of 28 risers falling west, with the well's plastered walls round it.
+ */
+function stairWell(b: Buckets): void {
+  const W = PAVILION_STAIR;
+  const y0 = F1.y;
+  const drop = 5.0;
+  const risers = 28;
+  const rise = drop / risers;
+  const run = (W.x1 - W.x0 - 0.2) / risers;
+  const za = W.z0 + 0.12;
+  const zb = W.z1 - 0.12;
+  b.concrete.paint("#c3c5c0", 0.8);
+  for (let i = 0; i < risers; i++) {
+    const xa = W.x1 - i * run;
+    const yTop = y0 - (i + 1) * rise;
+    // Tread and the riser above it (facing up the flight, +x).
+    box(b.concrete, xa - run, yTop - 0.05, za, xa, yTop, zb, { py: true });
+    box(b.concrete, xa - 0.001, yTop, za, xa, yTop + rise, zb, { px: true });
+  }
+  // Walls of the well (facing into it) and a dark doorway to the lower lobby at the foot.
+  b.wall.paint("#e6e5e1", 0.88);
+  box(b.wall, W.x0, y0 - drop, W.z0 - 0.02, W.x1, y0, W.z0, { pz: true });
+  box(b.wall, W.x0, y0 - drop, W.z1, W.x1, y0, W.z1 + 0.02, { nz: true });
+  box(b.wall, W.x0 - 0.02, y0 - drop, W.z0, W.x0, y0, W.z1, { px: true });
+  box(b.wall, W.x1, y0 - drop + 0.3, W.z0, W.x1 + 0.02, y0, W.z1, { nx: true });
+  b.frame.paint("#1a1b1d", 0.9, 0);
+  box(b.frame, W.x0, y0 - drop, za + 0.3, W.x0 + 0.01, y0 - drop + 2.4, zb - 0.3, { px: true });
+  b.wall.paint("#e9e8e4", 0.85);
+  b.frame.paint("#18191b", 0.45, 0.3);
 }
 
 function stageArea(b: Buckets, screenMat: THREE.Material, kit: Kit): void {
@@ -1037,26 +1132,30 @@ function workCafe(fur: Furnisher, b: Buckets, rnd: () => number, low: boolean): 
   }
   // Faceted upholstered niches along the west corridor wall (blue / teal / plum).
   niches(b, y);
-  // Pale green lockers in the north corridor.
+  // Pale green lockers along the west corridor (against the small rooms' block, x 5.5), out of the
+  // way of the views into the rooms on the north-east side.
   b.wall.paint("#bcd7c0", 0.55);
-  for (let x = 2.0; x < 6.8; x += 0.6) box(b.wall, x, y, 9.0, x + 0.58, y + 1.9, 9.5);
+  for (let z = 21.0; z < 24.3; z += 0.6) box(b.wall, 5.5, y, z, 6.0, y + 1.9, z + 0.58);
   b.wall.paint("#e9e8e4", 0.85);
 }
 
-/** Faceted niches: little upholstered alcoves with triangular facets (photos 05 / ss_011). */
+/**
+ * Faceted niches: little upholstered alcoves with triangular facets (photos 05 / ss_011), along the
+ * west corridor's wall (the WC block, x 9.0), facing west — out of the sight lines into the rooms.
+ */
 function niches(b: Buckets, y: number): void {
   const sets: [number, string[]][] = [
-    [37.0, ["#1e2f65", "#687eb9", "#2b3f78"]],
-    [40.6, ["#15292d", "#3c6168", "#629ead"]],
-    [44.2, ["#3f2128", "#70374a", "#d9968d"]],
+    [20.6, ["#1e2f65", "#687eb9", "#2b3f78"]],
+    [24.0, ["#15292d", "#3c6168", "#629ead"]],
+    [27.4, ["#3f2128", "#70374a", "#d9968d"]],
   ];
-  const z0 = 9.1;
-  for (const [x, cols] of sets) {
-    const w = 3.2;
-    const d = 1.2;
-    const h = 2.6;
-    const pts = (fx: number, fy: number): Vec3 => [x + fx * w, y + fy * h, z0];
-    // Back wall in facets (triangles alternating colours), floor seat bench.
+  const x0 = 9.0;
+  const w = 3.2;
+  const d = 1.2;
+  const h = 2.6;
+  for (const [z, cols] of sets) {
+    // Back wall in facets (triangles alternating colours, bulging into the corridor), a seat bench.
+    const pts = (fz: number, fy: number): Vec3 => [x0, y + fy * h, z + fz * w];
     const rows = 3;
     const colsN = 4;
     for (let i = 0; i < colsN; i++) {
@@ -1066,7 +1165,7 @@ function niches(b: Buckets, y: number): void {
         const e = pts((i + 1) / colsN, (j + 1) / rows);
         const f = pts(i / colsN, (j + 1) / rows);
         const bulge = ((i + j) % 2) * 0.12;
-        const mid: Vec3 = [(a[0] + e[0]) / 2, (a[1] + e[1]) / 2, z0 + 0.1 + bulge];
+        const mid: Vec3 = [x0 - 0.1 - bulge, (a[1] + e[1]) / 2, (a[2] + e[2]) / 2];
         const tris: [Vec3, Vec3][] = [
           [a, c],
           [c, e],
@@ -1075,16 +1174,15 @@ function niches(b: Buckets, y: number): void {
         ];
         tris.forEach(([p, q], k) => {
           b.fabric.color(cols[(i + j + k) % cols.length]);
-          const n: Vec3 = [0, 0, 1];
-          b.fabric.tri(p, q, mid, n, [p[0], p[1]], [q[0], q[1]], [mid[0], mid[1]]);
-          b.fabric.tri(p, mid, q, [0, 0, -1], [p[0], p[1]], [mid[0], mid[1]], [q[0], q[1]]);
+          b.fabric.tri(p, mid, q, [-1, 0, 0], [p[2], p[1]], [mid[2], mid[1]], [q[2], q[1]]);
+          b.fabric.tri(p, q, mid, [1, 0, 0], [p[2], p[1]], [q[2], q[1]], [mid[2], mid[1]]);
         });
       }
     }
     b.fabric.color(cols[0]);
-    box(b.fabric, x, y, z0, x + w, y + 0.44, z0 + d * 0.5);
+    box(b.fabric, x0 - d * 0.5, y, z, x0, y + 0.44, z + w);
     // Warm LED cove under the bench.
-    box(b.led, x + 0.05, y + 0.02, z0 + d * 0.5, x + w - 0.05, y + 0.04, z0 + d * 0.5 + 0.01);
+    box(b.led, x0 - d * 0.5 - 0.01, y + 0.02, z + 0.05, x0 - d * 0.5, y + 0.04, z + w - 0.05);
   }
   b.fabric.color("#3f464e");
 }

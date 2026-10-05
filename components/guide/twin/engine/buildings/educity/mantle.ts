@@ -93,6 +93,49 @@ export function facadeOutline(f: Facade): V2[] {
   return out;
 }
 
+/**
+ * The outer face of a facade as vertical strips, cut at its breakpoints (base steps, top kinks) where
+ * no opening crosses: each strip's outline runs along the brick base and back along the (sloped) top,
+ * with the openings inside it. Pure — the strips' areas add up to the facade minus its openings.
+ */
+export function facadeStrips(f: Facade, holes: readonly { s0: number; s1: number; y0: number; y1: number }[]): { outline: V2[]; holes: V2[][] }[] {
+  const bs = breaks(f);
+  const len = facadeLength(f);
+  // Cut only where no opening (with a margin) spans the breakpoint: holes must never touch an outline.
+  const cuts = [0, ...bs.filter((v) => v > 1e-6 && v < len - 1e-6 && !holes.some((h) => v > h.s0 - 0.05 && v < h.s1 + 0.05)), len];
+  const out: { outline: V2[]; holes: V2[][] }[] = [];
+  for (let i = 0; i + 1 < cuts.length; i++) {
+    const s0 = cuts[i];
+    const s1 = cuts[i + 1];
+    const inner = bs.filter((v) => v > s0 + 1e-6 && v < s1 - 1e-6);
+    const xs = [s0, ...inner, s1];
+    const bottom: V2[] = [];
+    for (let k = 0; k + 1 < xs.length; k++) {
+      const y = brickBase(f, (xs[k] + xs[k + 1]) / 2);
+      bottom.push([xs[k], y], [xs[k + 1], y]);
+    }
+    const top: V2[] = xs
+      .slice()
+      .reverse()
+      .map((v) => [v, facadeTop(f, v)] as V2);
+    const outline: V2[] = [];
+    for (const p of [...bottom, ...top]) {
+      const q = outline[outline.length - 1];
+      if (!q || Math.hypot(p[0] - q[0], p[1] - q[1]) > 1e-6) outline.push(p);
+    }
+    const mine = holes
+      .filter((h) => h.s0 >= s0 - 1e-6 && h.s1 <= s1 + 1e-6)
+      .map((h) => [
+        [h.s0, h.y0],
+        [h.s1, h.y0],
+        [h.s1, h.y1],
+        [h.s0, h.y1],
+      ] as V2[]);
+    out.push({ outline, holes: mine });
+  }
+  return out;
+}
+
 /** Rectangular openings that are not windows (doors, bridges). */
 export function doorOpenings(f: Facade): { s0: number; s1: number; y0: number; y1: number; kind: string }[] {
   if (f === "SE")
@@ -149,21 +192,17 @@ export function buildMantle(b: MantleBuckets, windows: WindowInfo[]): void {
     const F = FACADES[f];
     const mine = windows.filter((w) => w.facade === f);
     const doors = doorOpenings(f);
-    const outline = facadeOutline(f);
     const holeRects = [
       ...mine.map((w) => ({ s0: w.s - w.size / 2, s1: w.s + w.size / 2, y0: w.y - w.size / 2, y1: w.y + w.size / 2 })),
       ...doors,
     ];
-    const holes = holeRects.map((h) => [
-      [h.s0, h.y0],
-      [h.s1, h.y0],
-      [h.s1, h.y1],
-      [h.s0, h.y1],
-    ] as V2[]);
     // Outer face (brick). wallPlane: normal on the left of s-travel for NE/SE, on the right for SW/NW.
+    // In vertical strips between the base steps and top kinks — each a simple quad with its own holes:
+    // one outline with a notch (the pavilion under the south-west facade) triangulated badly and
+    // filled the notch with brick in front of the pavilion's glass.
     const a = F.o;
     const e: V2 = [F.o[0] + F.sAxis[0] * F.len, F.o[1] + F.sAxis[1] * F.len];
-    wallPlane(b.brick, a, e, outline, holes, f === "NE" || f === "SE");
+    for (const strip of facadeStrips(f, holeRects)) wallPlane(b.brick, a, e, strip.outline, strip.holes, f === "NE" || f === "SE");
 
     for (const w of mine) emitWindow(b, F, w);
     for (const d of doors) {
