@@ -1,5 +1,5 @@
 import type { CameraView, TwinTarget, V3 } from "../../types";
-import { ENTRANCE_TYK, MAUNO, STANDS, VESTIBULE, bToLocal, bToLocal3, round2 } from "./plan";
+import { ENTRANCE_TYK, MAUNO, STANDS, STAND_LABEL_GROUP, VESTIBULE, bToLocal, bToLocal3, round2 } from "./plan";
 
 /**
  * Camera views and "Go to" targets of BioCity (lib/hackathon-2026/twin.ts ids):
@@ -35,9 +35,10 @@ function standView(id: string): CameraView {
 }
 
 export const BIOCITY_VIEWS: Record<string, CameraView> = {
-  // The build hall from above its Tykistökatu end, the roof lifted: tables, stands bc-2/bc-4, the stair to Joki.
+  // The build hall down its length from over the Tykistökatu end, the roof lifted: the 56 tables, stands
+  // bc-4 and bc-2 at its ends, the passage to Joki beyond (the hall leads, not the walls round it).
   "biocity:default": {
-    ...pose([-37, 16.5, 9.5], [3, 0, -1.2]),
+    ...pose([-40, 12, 2.5], [4, 0, -0.5]),
     hfov: 62,
     fit: 32,
     portrait: { ...pose([-42, 30, 0.4], [2, 0, -0.4]), fit: 14 },
@@ -70,6 +71,8 @@ export const BIOCITY_VIEWS: Record<string, CameraView> = {
     // Phones: nearly straight down with the hall running up the screen (all four stands in view).
     portrait: { ...pose([-22, 76, -17], [1.5, 0, -17]), fit: 17 },
     labels: true,
+    // All four stand labels, open stands included, also on phones (which drop "open" labels elsewhere).
+    labelGroup: STAND_LABEL_GROUP,
     open: OPEN,
   },
 };
@@ -87,13 +90,21 @@ export function biocityTargets(): TwinTarget[] {
     // Stands 1 and 3 have the curved glass close in front: walking ends just inside the event
     // entrance, looking at the stand (the view's direction); 2 and 4 in front of the stand.
     const gallery = s.id === "bc-1" || s.id === "bc-3";
-    const w = gallery ? walkTo(Math.sign(s.x) * 0.4, -32.9) : walkTo(s.x + s.face[0] * 1.6, s.z + s.face[1] * 1.6);
+    // 3.6 m out: the whole stand (wall graphic, counter, roll-up) in view, not a counter in the face.
+    const w = gallery ? walkTo(Math.sign(s.x) * 0.4, -32.9) : walkTo(s.x + s.face[0] * 3.6, s.z + s.face[1] * 3.6);
     out.push({ id: s.id, view: standView(s.id), level: "biocity-1", walkTo: w });
   }
+  // From across Tykistökatu straight down the revolving door's axis (the walk-mode heading comes from
+  // this view): "Walk me there" starts 5.5 m out in the recess, on the door's keep-right side.
   out.push({
     id: "entrance-biocity-tykistokatu",
-    view: { ...pose([-58.5, 5.6, 5.5], [-31.0, 4.6, 0.2]), hfov: 66, labels: true, open: null },
-    walkTo: walkTo(ENTRANCE_TYK.threshold[0] - 4.5, 0.4),
+    view: {
+      ...pose([-58.5, 5.2, ENTRANCE_TYK.drum.z + 0.25], [-31.0, 3.2, ENTRANCE_TYK.drum.z + 0.25]),
+      hfov: 54,
+      labels: true,
+      open: null,
+    },
+    walkTo: walkTo(ENTRANCE_TYK.threshold[0] - 5.5, ENTRANCE_TYK.drum.z + 0.25),
   });
   out.push({
     id: "entrance-biocity-courtyard",
@@ -106,17 +117,21 @@ export function biocityTargets(): TwinTarget[] {
     level: "biocity-1",
     walkTo: walkTo(-17.5, -0.3),
   });
+  // Looking at serving line 1 across its open (+z) side, Maunon sali beyond; walking ends on that
+  // side, clear of the gallery columns, facing the counter (the view's direction).
+  const L1 = MAUNO.line1;
+  const servingX = (L1.x0 + L1.x1) / 2;
   out.push({
     id: "serving-lines",
     view: {
-      ...pose([8.0, 13.5, -45.5], [21.5, 0.5, -26.5]),
+      ...pose([servingX + 0.6, 11.5, -15.5], [servingX - 0.4, 0.6, -31.0]),
       hfov: 62,
       fit: 12,
       labels: true,
       open: OPEN,
     },
     level: "biocity-1",
-    walkTo: walkTo((MAUNO.line1.x0 + MAUNO.line1.x1) / 2, MAUNO.line1.z0 - 1.3),
+    walkTo: walkTo(servingX, L1.z1 + 1.45),
   });
   return out;
 }

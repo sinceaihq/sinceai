@@ -17,13 +17,16 @@ import {
   STANDS,
   SW_FACADE_Z,
   VESTIBULE,
+  VESTIBULE_DOOR,
   bToLocal,
   buildTables,
   groundFloorRing,
   round2,
+  vestibuleLeaves,
   wingOutline,
 } from "./plan";
 import { GF_WALLS } from "./walls";
+import { DOOR } from "./door";
 
 /**
  * Walking in BioCity (DESIGN §6, §12): the ground floor is level "biocity-1"
@@ -32,7 +35,8 @@ import { GF_WALLS } from "./walls";
  * Aula. Colliders: the TTK plan's walls, the columns, the glazed unit fronts,
  * the lift/stair islands, the kiosk, the build tables (with their chairs),
  * the stands and counters, and the building's ground-storey envelope with
- * gaps at the real doors (the Tykistökatu revolving and side doors, the
+ * gaps at the real doors (the Tykistökatu revolving door — its curved walls
+ * and centre post; the wings turn with the walker, door.ts — and the
  * event-entrance vestibule) so a walker comes in from the street or the
  * courtyard and the level switches automatically. Pure data (unit-tested).
  */
@@ -162,6 +166,9 @@ export function biocityWalk(): BiocityWalk {
     }
     colliders.push(...polyline(pts));
   }
+  // Centre post + wing hub. Set 3 cm towards −z, so a walker heading dead-centre slides round on the
+  // +z side (keep right; the side the route takes and the wings turn for).
+  colliders.push(circle([DOOR.x, DOOR.z - 0.03], DOOR.post));
   colliders.push(seg([-30.0, 5.6], [-30.0, 14.6]));
   colliders.push(seg([-30.0, 14.6], [36.6, 14.6]));
   colliders.push(seg([-43.3, -4.62], [GABLE_W_X, -4.62]));
@@ -183,7 +190,11 @@ export function biocityWalk(): BiocityWalk {
     if (t >= 0 && t <= 1 && Math.hypot(px - doorMid[0], pz - doorMid[1]) < 0.05) doorAt = s + t * len;
     s += len;
   }
-  colliders.push(...polyline(wing, doorAt >= 0 ? [[doorAt - 0.95, doorAt + 0.95]] : []));
+  colliders.push(...polyline(wing, doorAt >= 0 ? [[doorAt - VESTIBULE_DOOR.half, doorAt + VESTIBULE_DOOR.half]] : []));
+  // Its open door leaves and the inner screen beside the inner doors.
+  for (const [a, b] of vestibuleLeaves()) colliders.push(seg(a, b));
+  colliders.push(seg([VESTIBULE.x0, VESTIBULE_DOOR.innerZ], [-VESTIBULE_DOOR.innerHalf, VESTIBULE_DOOR.innerZ]));
+  colliders.push(seg([VESTIBULE_DOOR.innerHalf, VESTIBULE_DOOR.innerZ], [VESTIBULE.x1, VESTIBULE_DOOR.innerZ]));
   // East side: kitchen and the Joki wall, open at the passage.
   colliders.push(seg([36.2, -31.85], [36.2, -12.75]));
   colliders.push(seg([36.2, -12.75], [36.92, -12.75]));

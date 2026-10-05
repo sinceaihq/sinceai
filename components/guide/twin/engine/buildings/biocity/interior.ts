@@ -16,12 +16,14 @@ import {
   LOBBY_FRONTS,
   MAUNO_FLOORS,
   OVAL_COLUMNS,
+  PASSAGE_MOUTH,
   RETAIL_FRONT,
   UPPER_FLOORS,
   ceilingRings,
   groundFloorRing,
 } from "./plan";
 import { GF_WALLS } from "./walls";
+import { QUIET_ROOMS } from "./rooms";
 import { Buckets, bar, box, facadeRun, flatPolygon, mergeAll, ovalColumn, prism, rod, wallQuad, type Layer } from "./geom";
 
 /**
@@ -172,7 +174,8 @@ function liftTower(b: Buckets, t: { x0: number; x1: number; z0: number; z1: numb
         [t.z0, zm],
         [zm, t.z1],
       ]) {
-        const target = y0 < CUT ? steelLo : steelHi;
+        // A brace reaching above the dollhouse cut belongs to the upper layer (never floats over the cut).
+        const target = y1 <= CUT ? steelLo : steelHi;
         target.push(bar({ x, y: y0, z: za }, { x, y: y1, z: zb }, 0.06, 0.06));
         target.push(bar({ x, y: y0, z: zb }, { x, y: y1, z: za }, 0.06, 0.06));
       }
@@ -193,8 +196,12 @@ function liftTower(b: Buckets, t: { x0: number; x1: number; z0: number; z1: numb
   b.add("upper", "glassIn", mergeAll(glassHi));
 }
 
-/** Panoramic lift car (glass box, steel frame, lit ceiling) with its floor at y. */
-function liftCar(b: Buckets, x0: number, x1: number, z0: number, z1: number, y: number) {
+/**
+ * Panoramic lift car with its floor at y: a steel back wall on the shaft's middle side (`backZ`),
+ * glass on the other three sides, a steel frame, floor and roof, and a softly lit ceiling inside
+ * the car (a dim panel — it reads as a lit car, not a lamp hanging in the black tower).
+ */
+function liftCar(b: Buckets, x0: number, x1: number, z0: number, z1: number, y: number, backZ: number) {
   const layer: Layer = y < CUT - 2.4 ? "shell" : "upper";
   const frame: THREE.BufferGeometry[] = [];
   frame.push(box(x0, y - 0.12, z0, x1, y, z1));
@@ -205,9 +212,14 @@ function liftCar(b: Buckets, x0: number, x1: number, z0: number, z1: number, y: 
     [x0, z1],
     [x1, z1],
   ]) frame.push(box(x - 0.04, y, z - 0.04, x + 0.04, y + 2.3, z + 0.04));
-  frame.push(box(x0, y + 0.95, z0 - 0.02, x1, y + 1.0, z0 + 0.02), box(x0, y + 0.95, z1 - 0.02, x1, y + 1.0, z1 + 0.02));
+  const front = Math.abs(backZ - z0) < Math.abs(backZ - z1) ? z1 : z0;
+  frame.push(box(x0, y + 0.95, front - 0.02, x1, y + 1.0, front + 0.02));
+  // Back wall (steel, with a darker inner face band) and the ceiling's fascia.
+  frame.push(box(x0, y, backZ - 0.03, x1, y + 2.3, backZ + 0.03));
+  frame.push(box(x0, y + 2.18, z0, x1, y + 2.3, z1));
   b.add(layer, "liftCar", mergeAll(frame));
-  b.add(layer, "panelLight", box(x0 + 0.2, y + 2.28, z0 + 0.2, x1 - 0.2, y + 2.3, z1 - 0.2));
+  b.add(layer, "glassIn", wallQuad([x0, front], [x1, front], y, y + 2.3, { doubleSided: true }), wallQuad([x0, z0], [x0, z1], y, y + 2.3, { doubleSided: true }), wallQuad([x1, z1], [x1, z0], y, y + 2.3, { doubleSided: true }));
+  b.add(layer, "liftLight", box(x0 + 0.25, y + 2.16, z0 + 0.25, x1 - 0.25, y + 2.18, z1 - 0.25));
 }
 
 export function buildInteriorStructure(b: Buckets, env: InteriorEnv): void {
@@ -216,22 +228,37 @@ export function buildInteriorStructure(b: Buckets, env: InteriorEnv): void {
   // ── Floors ──
   b.add("shell", "floorLobby", flatPolygon(groundFloorRing(), L.gf));
   for (const ring of MAUNO_FLOORS) b.add("shell", "floorMauno", flatPolygon(ring, L.gf + 0.002));
+  // Rooms the event does not use get a darker floor: the hall, the gallery and the restaurant lead.
+  if (!low) {
+    const rooms: THREE.BufferGeometry[] = [];
+    for (const r of QUIET_ROOMS) {
+      const ring: V2[] = [];
+      for (let i = 0; i + 1 < r.ring.length; i += 2) ring.push([r.ring[i], r.ring[i + 1]]);
+      if (ring.length >= 3) rooms.push(flatPolygon(ring, L.gf + 0.002));
+    }
+    b.add("shell", "floorRoom", mergeAll(rooms));
+  }
 
   // ── Walls of the TTK plan (partitions, cores, shop walls); dark section caps on top for the dollhouse ──
   {
     const sides: THREE.BufferGeometry[] = [];
+    const bands: THREE.BufferGeometry[] = [];
     const caps: THREE.BufferGeometry[] = [];
     for (const flat of GF_WALLS) {
       const ring: V2[] = [];
       for (let i = 0; i + 1 < flat.length; i += 2) ring.push([flat[i], flat[i + 1]]);
       if (ring.length < 3) continue;
       const wingSide = ring.some(([, z]) => z < -31.7);
-      const top = wingSide ? L.wingCeiling : L.sideCeiling;
-      sides.push(prism(ring, L.gf - 0.02, top, { top: false }));
+      // 2 cm under the ceilings and roofs (both at these heights): no z-fight with the caps.
+      const top = (wingSide ? L.wingCeiling : L.sideCeiling) - 0.02;
+      sides.push(prism(ring, L.gf - 0.02, top - 0.05, { top: false }));
+      bands.push(prism(ring, top - 0.05, top, { top: false }));
       caps.push(flatPolygon(ring, top));
     }
     b.add("shell", "plaster", mergeAll(sides));
+    // Section look in the dollhouse: light-grey cut faces outlined by a thin dark band.
     b.add("shell", "wallCap", mergeAll(caps));
+    b.add("shell", "darkIn", mergeAll(bands));
   }
 
   // ── Columns ──
@@ -284,10 +311,10 @@ export function buildInteriorStructure(b: Buckets, env: InteriorEnv): void {
     const Bt = ISLANDS.liftsB;
     const zA = (A.z0 + A.z1) / 2;
     const zB = (Bt.z0 + Bt.z1) / 2;
-    liftCar(b, A.x0 + 0.25, A.x1 - 0.25, A.z0 + 0.25, zA - 0.12, L.gf);
-    liftCar(b, A.x0 + 0.25, A.x1 - 0.25, zA + 0.12, A.z1 - 0.25, L.f4);
-    liftCar(b, Bt.x0 + 0.25, Bt.x1 - 0.25, Bt.z0 + 0.25, zB - 0.12, L.f3);
-    liftCar(b, Bt.x0 + 0.25, Bt.x1 - 0.25, zB + 0.12, Bt.z1 - 0.25, L.gf);
+    liftCar(b, A.x0 + 0.25, A.x1 - 0.25, A.z0 + 0.25, zA - 0.12, L.gf, zA - 0.12);
+    liftCar(b, A.x0 + 0.25, A.x1 - 0.25, zA + 0.12, A.z1 - 0.25, L.f4, zA + 0.12);
+    liftCar(b, Bt.x0 + 0.25, Bt.x1 - 0.25, Bt.z0 + 0.25, zB - 0.12, L.f3, zB - 0.12);
+    liftCar(b, Bt.x0 + 0.25, Bt.x1 - 0.25, zB + 0.12, Bt.z1 - 0.25, L.gf, zB + 0.12);
     const floors = [L.gf, ...UPPER_FLOORS];
     const storeys = low ? 2 : floors.length - 1;
     for (let i = 0; i < storeys; i++) {
@@ -319,6 +346,15 @@ export function buildInteriorStructure(b: Buckets, env: InteriorEnv): void {
     b.add("upper", "whiteIn", mergeAll(slab));
     b.add("upper", "glassIn", mergeAll(glass));
     b.add("upper", "stainless", mergeAll(rail));
+    // LED lines under the bridges' edges and along the atrium walls' floor edges (each floor's
+    // slab edge carries a light line): the atrium reads, lit, all the way up after dark.
+    const lines: THREE.BufferGeometry[] = [];
+    for (const br of BRIDGES) for (const x of [br.x0 + 0.08, br.x1 - 0.08]) lines.push(box(x - 0.025, br.y - 0.32, ATRIUM_NE_Z + 0.2, x + 0.025, br.y - 0.3, ATRIUM_SW_Z - 0.2));
+    for (const y of UPPER_FLOORS) {
+      lines.push(box(ATRIUM.x0 + 0.5, y - 0.12, ATRIUM_NE_Z + 0.005, ATRIUM.x1 - 0.5, y - 0.09, ATRIUM_NE_Z + 0.03));
+      lines.push(box(ATRIUM.x0 + 0.5, y - 0.12, ATRIUM_SW_Z - 0.03, ATRIUM.x1 - 0.5, y - 0.09, ATRIUM_SW_Z - 0.005));
+    }
+    b.add("upper", "lineLight", mergeAll(lines));
   }
 
   // ── Glazed lean-to over the retail front (SW side) ──
@@ -394,17 +430,31 @@ export function buildInteriorStructure(b: Buckets, env: InteriorEnv): void {
     if (discs.length) b.add("ceiling", "downlight", mergeAll(discs));
   }
 
-  // ── Passage to Joki: corridor walls, ceiling, the stair down (10 treads) ──
+  // ── Passage to Joki: corridor, Purokabinetti's glass wall, the stair down (10 treads) ──
   {
     const P = JOKI_PASSAGE;
     const walls: THREE.BufferGeometry[] = [];
     // The east wall shared with Joki, seen from BioCity's rooms (Joki models its own face).
     walls.push(wallQuad([P.wallX0, -12.75], [P.wallX0, P.z0], P.bottom, L.sideCeiling));
     walls.push(wallQuad([P.wallX0, P.z1], [P.wallX0, 14.55], P.bottom, L.sideCeiling));
-    walls.push(wallQuad([P.threshold, P.z0], [P.wallX0, P.z0], P.bottom, 3.0));
+    // −z side: the stair well's wall up to the lobby floor; above it Purokabinetti's glass wall (the TTK
+    // plan draws no wall fill there). +z side: a wall (plan fill z 2.13–2.29).
+    walls.push(wallQuad([P.stairX0, P.z0], [P.wallX0, P.z0], P.bottom, L.gf));
     walls.push(wallQuad([P.wallX0, P.z1], [P.threshold, P.z1], P.bottom, 3.0));
+    // Bulkhead over the corridor's mouth (from the 2.6 m head to the lobby ceiling); it carries the sign.
+    walls.push(box(P.threshold, 2.6, P.z0, P.threshold + 0.1, L.sideCeiling - 0.02, P.z1));
     b.add("shell", "plaster", mergeAll(walls));
+    b.add("shell", "officeFront", facadeRun([[P.threshold + 0.1, P.z0], [P.wallX0, P.z0]], L.gf - 0.02, 3.0, { vRef: L.gf, seed: 0.77 }).geometry);
     b.add("ceiling", "ceiling", flatPolygon([[P.threshold, P.z0], [P.wallX1, P.z0], [P.wallX1, P.z1], [P.threshold, P.z1]], 3.0, { down: true }));
+    // Downlights along the corridor and over the stair.
+    const lights: THREE.BufferGeometry[] = [];
+    for (const x of [31.0, 32.6, 34.2, 35.8]) {
+      const g = new THREE.CircleGeometry(0.09, 12);
+      g.rotateX(Math.PI / 2);
+      g.translate(x, 2.994, (P.z0 + P.z1) / 2);
+      lights.push(g);
+    }
+    b.add("ceiling", "downlight", mergeAll(lights));
     const treads: THREE.BufferGeometry[] = [];
     const going = (36.0 - P.stairX0) / P.treads;
     const riser = (L.gf - P.bottom) / (P.treads + 1);
@@ -415,17 +465,40 @@ export function buildInteriorStructure(b: Buckets, env: InteriorEnv): void {
     }
     treads.push(box(36.0, P.bottom - 0.3, P.z0, P.wallX1 + 0.6, P.bottom, P.z1));
     b.add("shell", "concreteIn", mergeAll(treads));
-    // Nosings and handrails.
-    const steel: THREE.BufferGeometry[] = [];
-    for (let i = 0; i < P.treads; i++) {
-      const x0 = P.stairX0 + going * i;
+    // Contrasting (dark) nosings on every tread and the top landing's edge.
+    const nosing: THREE.BufferGeometry[] = [];
+    for (let i = -1; i < P.treads; i++) {
+      const x0 = P.stairX0 + going * (i + 1);
       const top = L.gf - riser * (i + 1);
-      steel.push(box(x0 - 0.01, top - 0.01, P.z0 + 0.05, x0 + 0.04, top + 0.005, P.z1 - 0.05));
+      nosing.push(box(x0 - 0.06, top - 0.012, P.z0 + 0.04, x0 + 0.005, top + 0.004, P.z1 - 0.04));
     }
-    for (const z of [P.z0 + 0.06, P.z1 - 0.06]) {
-      steel.push(rod(new THREE.Vector3(P.stairX0 - 0.3, L.gf + 0.9, z), new THREE.Vector3(36.0, P.bottom + 0.9, z), 0.022, 8));
+    b.add("shell", "stairTread", mergeAll(nosing));
+    // Wall-mounted handrails on both sides (brackets every metre), running on past the top and bottom.
+    const steel: THREE.BufferGeometry[] = [];
+    for (const z of [P.z0 + 0.09, P.z1 - 0.09]) {
+      const a = new THREE.Vector3(P.stairX0, L.gf + 0.9, z);
+      const c = new THREE.Vector3(36.0, P.bottom + 0.9, z);
+      steel.push(rod(a, c, 0.022, 8));
+      steel.push(rod(new THREE.Vector3(P.stairX0 - 0.3, a.y, z), a, 0.022, 8), rod(c, new THREE.Vector3(36.3, c.y, z), 0.022, 8));
+      const wallZ = z < 0.5 ? P.z0 : P.z1;
+      for (let t = 0; t <= 1.001; t += 1 / 3) {
+        const x = P.stairX0 + (36.0 - P.stairX0) * t;
+        const y = L.gf + 0.9 + (P.bottom - L.gf) * t - 0.03;
+        steel.push(box(x - 0.012, y - 0.07, Math.min(z, wallZ), x + 0.012, y, Math.max(z, wallZ)));
+      }
     }
     b.add("shell", "stainless", mergeAll(steel));
+    // Dark steel frame round the corridor's mouth (between the plan's wall stubs, z −0.53…1.58), a
+    // portal seen from the build hall.
+    const m0 = PASSAGE_MOUTH.z0;
+    const m1 = PASSAGE_MOUTH.z1;
+    b.add(
+      "shell",
+      "steelIn",
+      box(P.threshold - 0.06, L.gf, m0 - 0.1, P.threshold + 0.12, 2.6, m0),
+      box(P.threshold - 0.06, L.gf, m1, P.threshold + 0.12, 2.6, m1 + 0.1),
+      box(P.threshold - 0.06, 2.6, m0 - 0.1, P.threshold + 0.12, 2.72, m1 + 0.1),
+    );
     // Joki-side jambs of the wall opening.
     b.add("shell", "concreteIn", box(P.wallX0, P.bottom, P.z0 - 0.6, P.wallX1, 3.0, P.z0), box(P.wallX0, P.bottom, P.z1, P.wallX1, 3.0, P.z1 + 0.6));
     b.add("shell", "concreteIn", box(P.wallX0, 2.6, P.z0, P.wallX1, 3.0, P.z1));

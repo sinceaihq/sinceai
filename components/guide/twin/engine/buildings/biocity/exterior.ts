@@ -25,12 +25,14 @@ import {
   TECH_SW,
   VAULT,
   VESTIBULE,
+  VESTIBULE_DOOR,
   along,
   arcPoints,
   dist2,
   lerp2,
   runNormal,
   vaultY,
+  vestibuleLeaves,
   wingOutline,
 } from "./plan";
 import {
@@ -43,6 +45,7 @@ import {
   flatPolygon,
   mergeAll,
   polylineWall,
+  rod,
   prism,
   segmentBox,
   wallQuad,
@@ -50,6 +53,7 @@ import {
   type Layer,
 } from "./geom";
 import { mulberry32 } from "../../util";
+import { DOOR, bearingDir } from "./door";
 
 /**
  * BioCity's exterior shell (SPEC §3.1): the black ribbon facades with blade
@@ -206,6 +210,8 @@ export interface ExteriorResult {
   extra: { layer: Layer; object: THREE.Object3D }[];
   /** Downlight discs on soffits (emissive) — positions for night pools. */
   soffitLights: V2[];
+  /** The revolving door's wings in the drum's frame (plan B, origin on the post): the module turns them. */
+  door: { centre: V2; glass: THREE.BufferGeometry; frame: THREE.BufferGeometry };
 }
 
 export function buildExterior(b: Buckets, env: ExteriorEnv): ExteriorResult {
@@ -268,7 +274,10 @@ export function buildExterior(b: Buckets, env: ExteriorEnv): ExteriorResult {
     // Ground storey: shop glazing set back under the overhang, black soffit.
     const g0: V2 = [-52.3, -31.7];
     const g1: V2 = [-41.4, -4.9];
-    addFacade(b, "shopfront", [g0, g1], -0.3, L.arcadeSoffit, { vRef, seed: 0.33, ground: 0 });
+    // K-Market's windows at the north end, office-type bays towards the recess.
+    const gm = along(g0, g1, 14.4);
+    const uK = addFacade(b, "kmarket", [g0, gm], -0.3, L.arcadeSoffit, { vRef, seed: 0.33, ground: 0 });
+    addFacade(b, "groundOffice", [gm, g1], -0.3, L.arcadeSoffit, { vRef, seed: 0.34, ground: 0, uOffset: uK });
     b.add("ceiling", "soffitExt", flatPolygon([CORNER.north, CORNER.recessN, g1, g0], L.arcadeSoffit, { down: true }));
     for (let s = 2; s < F.length - 1; s += 3.4) {
       const p = lerp2(along(CORNER.north, CORNER.recessN, s), lerp2(g0, g1, s / F.length), 0.5);
@@ -360,37 +369,61 @@ export function buildExterior(b: Buckets, env: ExteriorEnv): ExteriorResult {
     addFacade(b, "shopfront", [[-30.0, 14.6], [CORNER.south[0] + 0.3, 14.6]], 0, L.arcadeSoffit, { vRef, seed: 0.37 });
     b.add("ceiling", "soffitExt", flatPolygon([[-24.0, 14.6], [CORNER.south[0] + 0.3, 14.6], [CORNER.south[0] + 0.3, z], [-24.0, z]], L.arcadeSoffit, { down: true }));
     for (let x = -21; x < 35; x += 3) soffitLights.push([x, 16.0]);
-    // Arcade floor (level with the lobby) on a granite plinth with a black railing where the street falls away.
+    // Arcade floor (level with the lobby). Where Lemminkäisenkatu falls away (0.2 m at the west corner,
+    // 1.8 m at the south corner) its edge is a near-vertical beige granite plinth wall (ashlar, joints
+    // every 1.2 × 0.6 m) under a granite coping and the black steel railing (SPEC §3.1.2).
     const x0 = -24.0;
     const x1 = CORNER.south[0] + 0.3;
     b.add("shell", "paving", flatPolygon([[x0, 14.6], [x1, 14.6], [x1, z + 0.15], [x0, z + 0.15]], L.gf - 0.005));
-    const step = 1.5;
+    const step = 1.2;
     const plinth: THREE.BufferGeometry[] = [];
+    const coping: THREE.BufferGeometry[] = [];
     const rail: THREE.BufferGeometry[] = [];
+    // The face stands just outside the arcade's overhang line; the street's own paving meets it.
+    const face = z + 0.3;
     for (let x = x0; x < x1 - 0.01; x += step) {
       const xe = Math.min(x1, x + step);
-      const g = Math.min(env.groundB(x, z + 0.5), env.groundB(xe, z + 0.5));
-      if (L.gf - g > 0.18) {
-        plinth.push(box(x, g - 0.3, z - 0.05, xe, L.gf, z + 0.25));
-        // Railing: top rail, mid rail, posts.
-        rail.push(box(x, 1.02, z + 0.06, xe, 1.06, z + 0.12));
-        rail.push(box(x, 0.5, z + 0.08, xe, 0.52, z + 0.1));
-        rail.push(box(x, 0.06, z + 0.07, x + 0.04, 1.04, z + 0.11));
-      }
+      const g = Math.min(env.groundB(x, face + 0.4), env.groundB(xe, face + 0.4));
+      if (L.gf - g < 0.12) continue;
+      plinth.push(box(x, g - 0.4, z - 0.05, xe, L.gf - 0.06, face));
+      coping.push(box(x, L.gf - 0.06, z - 0.05, xe, L.gf + 0.04, face + 0.04));
+      // Railing: posts every 1.2 m, a top rail and two mid rails.
+      rail.push(box(x + 0.02, L.gf + 0.04, z + 0.1, x + 0.07, 1.1, z + 0.15));
+      rail.push(box(x, 1.08, z + 0.08, xe, 1.13, z + 0.17));
+      for (const y of [0.42, 0.78]) rail.push(box(x, y, z + 0.11, xe, y + 0.02, z + 0.14));
     }
-    if (plinth.length) b.add("shell", "granite", mergeAll(plinth));
+    if (plinth.length) b.add("shell", "plinth", mergeAll(plinth));
+    if (coping.length) b.add("shell", "granite", mergeAll(coping));
     if (rail.length) b.add("shell", "blackSteel", mergeAll(rail));
-    // Steps down to the street at the SE end (next to Joki's portal).
-    const gS = env.groundB(34.5, z + 1.5);
-    const rise = L.gf - gS;
-    if (rise > 0.3) {
-      const n = Math.max(2, Math.round(rise / 0.16));
-      const steps: THREE.BufferGeometry[] = [];
-      for (let i = 0; i < n; i++) {
-        const top = L.gf - (rise * (i + 1)) / n;
-        steps.push(box(32.6, gS - 0.3, z + 0.25 + i * 0.32, 36.0, top, z + 0.25 + (i + 1) * 0.32));
+    // Steps down at the south end, along the footway that continues past the corner to Joki's portal
+    // (OSM w1232461480); risers from the measured fall (≈0.16 m each), cheeks and a handrail.
+    {
+      const gS = env.groundB(x1 + 3.5, 16.0);
+      const rise = L.gf - gS;
+      if (rise > 0.3) {
+        const n = Math.max(2, Math.round(rise / 0.165));
+        const going = 0.3;
+        const za = 14.85;
+        const zb = 17.25;
+        const steps: THREE.BufferGeometry[] = [];
+        for (let i = 0; i < n; i++) {
+          const top = L.gf - (rise * (i + 1)) / n;
+          steps.push(box(x1 + i * going, gS - 0.3, za, x1 + (i + 1) * going, top, zb));
+        }
+        b.add("shell", "granite", mergeAll(steps));
+        const xe = x1 + n * going;
+        b.add("shell", "plinth", box(x1, gS - 0.3, zb, xe, L.gf - 0.06, zb + 0.25));
+        const hr: THREE.BufferGeometry[] = [];
+        for (const zz of [za + 0.06, zb - 0.06]) {
+          hr.push(rod(new THREE.Vector3(x1 - 0.2, L.gf + 0.9, zz), new THREE.Vector3(xe + 0.2, gS + 0.9, zz), 0.022, 8));
+          for (const t of [0, 0.5, 1]) {
+            const px = x1 + (xe - x1) * t;
+            const py = L.gf - rise * t;
+            hr.push(box(px - 0.02, py, zz - 0.02, px + 0.02, py + 0.9, zz + 0.02));
+          }
+        }
+        b.add("shell", "blackSteel", mergeAll(hr));
       }
-      b.add("shell", "granite", mergeAll(steps));
     }
   }
 
@@ -418,9 +451,10 @@ export function buildExterior(b: Buckets, env: ExteriorEnv): ExteriorResult {
     addFacade(b, "whiteGrid", [[29.8, CORNER.eastNE[1]], CORNER.eastNE], L.connectorRoof, 26.1, { vRef, seed: 0.43 });
     b.add("upper", "coping", segmentBox(CORNER.eastSW, [29.5, 5.6], 0.35, 26.36, 26.46, { offset: -0.15 }));
     b.add("upper", "coping", segmentBox([29.8, CORNER.eastNE[1]], CORNER.eastNE, 0.35, 26.1, 26.2, { offset: -0.15 }));
-    // Connector roof (Joki side, 1 storey).
-    b.add("shell", "roof", flatPolygon([[29.5, CORNER.eastNE[1]], [CORNER.eastSW[0], CORNER.eastNE[1]], CORNER.eastSW, [29.5, 5.6]], L.connectorRoof));
-    b.add("shell", "coping", box(29.5, L.connectorRoof, CORNER.eastNE[1], CORNER.eastSW[0] + 0.15, L.connectorRoof + 0.25, CORNER.eastNE[1] + 0.25));
+    // Connector roof (Joki side, 1 storey): a roof like the others, so the dollhouse lifts it off the
+    // passage stair down to Joki.
+    b.add("upper", "roof", flatPolygon([[29.5, CORNER.eastNE[1]], [CORNER.eastSW[0], CORNER.eastNE[1]], CORNER.eastSW, [29.5, 5.6]], L.connectorRoof));
+    b.add("upper", "coping", box(29.5, L.connectorRoof, CORNER.eastNE[1], CORNER.eastSW[0] + 0.15, L.connectorRoof + 0.25, CORNER.eastNE[1] + 0.25));
     // NE wing's SE face (Haroma 09): black 3.6 m panels, a glass field 7 modules wide from the ground
     // to F6 next to the three duct cylinders at the north end, a black band, the crown band on top.
     const a = CORNER.eastNE;
@@ -487,30 +521,108 @@ export function buildExterior(b: Buckets, env: ExteriorEnv): ExteriorResult {
         current = [];
       }
       const top = kind === "vestibule" ? L.vestibuleRoof - 0.25 : L.wingRoof - 0.55;
-      glassParts.push(wallQuad(p, q, L.gf, top, { doubleSided: false }));
       fascia.push(segmentBox(p, q, 0.22, top, h + 0.08, { offset: -0.08, extend: 0.02 }));
       // Mullions at the segment start and a transom at door height for the gallery.
       mull.push(segmentBox(p, along(p, q, 0.07), 0.14, L.gf, top, { offset: -0.04 }));
       if (kind !== "mauno") mull.push(segmentBox(p, q, 0.1, 2.55, 2.62, { offset: -0.04 }));
-      mull.push(segmentBox(p, q, 0.14, L.gf - 0.05, L.gf + 0.08, { offset: -0.04 }));
+      const front = kind === "vestibule" && Math.abs(p[1] - VESTIBULE.z0) < 0.05 && Math.abs(q[1] - VESTIBULE.z0) < 0.05;
+      if (front) {
+        // The vestibule's front: side lites, the open double door (1.9 m), glass over its head.
+        const len = dist2(p, q);
+        const d0 = Math.abs(p[0] - VESTIBULE_DOOR.half);
+        const d1 = len - Math.abs(q[0] + VESTIBULE_DOOR.half);
+        glassParts.push(wallQuad(p, along(p, q, d0), L.gf, top), wallQuad(along(p, q, d1), q, L.gf, top));
+        glassParts.push(wallQuad(along(p, q, d0), along(p, q, d1), VESTIBULE_DOOR.head, top));
+        mull.push(segmentBox(p, along(p, q, d0), 0.14, L.gf - 0.05, L.gf + 0.08, { offset: -0.04 }));
+        mull.push(segmentBox(along(p, q, d1), q, 0.14, L.gf - 0.05, L.gf + 0.08, { offset: -0.04 }));
+      } else {
+        glassParts.push(wallQuad(p, q, L.gf, top, { doubleSided: false }));
+        mull.push(segmentBox(p, q, 0.14, L.gf - 0.05, L.gf + 0.08, { offset: -0.04 }));
+      }
     }
     if (current.length) solid.push(current);
+    // The auditorium's curved back wall (towards the BioCity–Electrocity yard) is white render with
+    // the mural; the other closed walls are black panels with joints and a coping.
+    const onArc = (p: V2) => Math.abs(Math.hypot(p[0] - AUDITORIUM.cx, p[1] - AUDITORIUM.cz) - AUDITORIUM.r) < 0.05;
     for (const run of solid) {
       const h = run.length > 2 ? L.auditoriumRoof : L.wingRoof;
-      addFacade(b, "panelBlack", run, 0, h, { vRef: 0.55, seed: 0.45 });
+      // Split into the arc and the straight walls.
+      const parts: { arc: boolean; pts: V2[] }[] = [];
+      for (let i = 0; i + 1 < run.length; i++) {
+        const arc = onArc(run[i]) && onArc(run[i + 1]);
+        const last = parts[parts.length - 1];
+        if (last && last.arc === arc) last.pts.push(run[i + 1]);
+        else parts.push({ arc, pts: [run[i], run[i + 1]] });
+      }
+      for (const part of parts) {
+        if (!part.arc) {
+          addFacade(b, "panelBlack", part.pts, -0.3, h, { vRef: 0.55, seed: 0.45 });
+          continue;
+        }
+        let len = 0;
+        for (let i = 0; i + 1 < part.pts.length; i++) len += dist2(part.pts[i], part.pts[i + 1]);
+        const lo: THREE.BufferGeometry[] = [];
+        const hi: THREE.BufferGeometry[] = [];
+        let u = 0;
+        for (let i = 0; i + 1 < part.pts.length; i++) {
+          const a = part.pts[i];
+          const c = part.pts[i + 1];
+          const l = dist2(a, c);
+          for (const [y0, y1, list] of [
+            [-0.3, CUT, lo],
+            [CUT, h, hi],
+          ] as [number, number, THREE.BufferGeometry[]][]) {
+            const g = wallQuad(a, c, y0, y1);
+            const uv = g.getAttribute("uv") as THREE.BufferAttribute;
+            // u 0…1 along the whole arc, v 0…1 up the wall (the mural texture is one picture).
+            for (let k = 0; k < uv.count; k++) uv.setXY(k, (u + (k === 1 || k === 2 ? l : 0)) / len, Math.max(0, uv.getY(k)) / h);
+            list.push(g);
+          }
+          u += l;
+        }
+        b.add("shell", "mural", mergeAll(lo));
+        b.add("upper", "mural", mergeAll(hi));
+      }
       b.add("shell", "coping", polylineWall(run, h, h + 0.1));
     }
     b.add("shell", "glassLow", mergeAll(glassParts));
     b.add("shell", "blackSteel", mergeAll(mull), mergeAll(fascia));
-    // Event-entrance vestibule doors (double doors, silver frames) on its outer face.
-    const door: THREE.BufferGeometry[] = [];
-    door.push(box(-0.92, L.gf, VESTIBULE.z0 - 0.06, 0.92, 2.35, VESTIBULE.z0 - 0.02));
-    b.add("shell", "glassDoor", mergeAll(door));
-    const dframe: THREE.BufferGeometry[] = [];
-    for (const x of [-0.95, 0, 0.95]) dframe.push(box(x - 0.04, L.gf, VESTIBULE.z0 - 0.09, x + 0.04, 2.4, VESTIBULE.z0));
-    dframe.push(box(-0.95, 2.35, VESTIBULE.z0 - 0.09, 0.95, 2.43, VESTIBULE.z0));
-    for (const x of [-0.45, 0.45]) dframe.push(box(x - 0.012, 0.95, VESTIBULE.z0 - 0.12, x + 0.012, 1.25, VESTIBULE.z0 - 0.08));
-    b.add("shell", "silver", mergeAll(dframe));
+    // Event-entrance vestibule (TTK plan: a double door pair in its front, double doors into the
+    // Aulagalleria): both pairs stand open for the event — the outer leaves swung out, the inner ones
+    // in — glass in silver frames; the inner screen with side lites and a glazed head.
+    {
+      const V = VESTIBULE_DOOR;
+      const z0 = VESTIBULE.z0;
+      const zi = V.innerZ;
+      const leaves: THREE.BufferGeometry[] = [];
+      const frames: THREE.BufferGeometry[] = [];
+      for (const leaf of vestibuleLeaves()) {
+        const [a, c] = leaf;
+        leaves.push(wallQuad(a, c, L.gf + 0.1, V.head - 0.08, { doubleSided: true }));
+        frames.push(segmentBox(a, c, 0.05, L.gf + 0.02, L.gf + 0.12), segmentBox(a, c, 0.05, V.head - 0.1, V.head - 0.02));
+        frames.push(box(c[0] - 0.03, L.gf + 0.02, c[1] - 0.03, c[0] + 0.03, V.head - 0.02, c[1] + 0.03));
+        frames.push(box(a[0] - 0.03, L.gf + 0.02, a[1] - 0.03, a[0] + 0.03, V.head - 0.02, a[1] + 0.03));
+        // Pull handle (vertical bar) near the leaf's free edge.
+        const hp = along(a, c, dist2(a, c) - 0.12);
+        frames.push(box(hp[0] - 0.015, 0.8, hp[1] - 0.015, hp[0] + 0.015, 1.6, hp[1] + 0.015));
+      }
+      // Outer door frame: jambs and head.
+      for (const x of [-V.half, V.half]) frames.push(box(x - 0.05, L.gf, z0 - 0.09, x + 0.05, V.head + 0.05, z0));
+      frames.push(box(-V.half, V.head - 0.02, z0 - 0.09, V.half, V.head + 0.05, z0));
+      // Inner screen: side lites, the door opening (2.4 m), glass over the head, up to the vestibule ceiling.
+      const glassIn: THREE.BufferGeometry[] = [
+        wallQuad([VESTIBULE.x0, zi], [-V.innerHalf, zi], L.gf, 2.86, { doubleSided: true }),
+        wallQuad([V.innerHalf, zi], [VESTIBULE.x1, zi], L.gf, 2.86, { doubleSided: true }),
+        wallQuad([-V.innerHalf, zi], [V.innerHalf, zi], V.head, 2.86, { doubleSided: true }),
+      ];
+      for (const x of [-V.innerHalf, V.innerHalf]) frames.push(box(x - 0.05, L.gf, zi - 0.05, x + 0.05, 2.86, zi + 0.05));
+      frames.push(box(-V.innerHalf, V.head - 0.02, zi - 0.05, V.innerHalf, V.head + 0.05, zi + 0.05));
+      frames.push(box(VESTIBULE.x0, L.gf, zi - 0.05, -V.innerHalf, L.gf + 0.1, zi + 0.05), box(V.innerHalf, L.gf, zi - 0.05, VESTIBULE.x1, L.gf + 0.1, zi + 0.05));
+      b.add("shell", "glassDoor", mergeAll(leaves), mergeAll(glassIn));
+      b.add("shell", "silver", mergeAll(frames));
+      // Dark entrance mat across the vestibule floor.
+      b.add("shell", "doorMat", flatPolygon([[VESTIBULE.x0 + 0.08, z0 + 0.06], [VESTIBULE.x1 - 0.08, z0 + 0.06], [VESTIBULE.x1 - 0.08, zi - 0.06], [VESTIBULE.x0 + 0.08, zi - 0.06]], L.gf + 0.004));
+    }
     // Roofs: gallery + Maunon sali at 4.57, auditorium at 5.39, vestibule at 3.14.
     const gallRoof: V2[] = [];
     for (const p of pts) if (p[0] > -7.3 && !(p[1] < VESTIBULE.z1 + 0.05 && p[0] > VESTIBULE.x0 - 0.05 && p[0] < VESTIBULE.x1 + 0.05)) gallRoof.push(p);
@@ -614,19 +726,15 @@ export function buildExterior(b: Buckets, env: ExteriorEnv): ExteriorResult {
     const angles: number[] = [];
     for (let i = 0; i <= segs; i++) angles.push(-VAULT.halfAngle + (2 * VAULT.halfAngle * i) / segs);
     const pt = (x: number, a: number) => new THREE.Vector3(x, VAULT.cy + VAULT.radius * Math.cos(a), VAULT.cz + VAULT.radius * Math.sin(a));
+    // Structure: a deep rib every 6 m and the eaves/crown purlins as geometry; the fine 1.2 × 1.35 m
+    // white bar grid is a mipmapped texture just under the glass (vaultGrid) — crisp from the hall,
+    // an even light tone from afar instead of a moiré of sub-pixel bars.
     const nRibs = Math.round((VAULT.x1 - VAULT.x0) / 1.2);
-    for (let r = 0; r <= nRibs; r++) {
+    for (let r = 0; r <= nRibs; r += 5) {
       const x = VAULT.x0 + ((VAULT.x1 - VAULT.x0) * r) / nRibs;
-      const heavy = r % 5 === 0;
-      for (let i = 0; i < segs; i++) ribs.push(bar(pt(x, angles[i]), pt(x, angles[i + 1]), heavy ? 0.12 : 0.06, heavy ? 0.26 : 0.14));
+      for (let i = 0; i < segs; i++) ribs.push(bar(pt(x, angles[i]), pt(x, angles[i + 1]), 0.12, 0.26));
     }
-    // Purlins every ≈1.35 m along the arch.
-    const arcLen = 2 * VAULT.halfAngle * VAULT.radius;
-    const nP = Math.max(4, Math.round(arcLen / 1.35));
-    for (let j = 0; j <= nP; j++) {
-      const a = -VAULT.halfAngle + (2 * VAULT.halfAngle * j) / nP;
-      purl.push(bar(pt(VAULT.x0, a), pt(VAULT.x1, a), 0.07, 0.09));
-    }
+    for (const a of [-VAULT.halfAngle, 0, VAULT.halfAngle]) purl.push(bar(pt(VAULT.x0, a), pt(VAULT.x1, a), 0.1, 0.12));
     // Glass skin (slightly above the bars' outer face).
     const R = VAULT.radius + 0.02;
     for (let i = 0; i < segs; i++) {
@@ -658,11 +766,24 @@ export function buildExterior(b: Buckets, env: ExteriorEnv): ExteriorResult {
     const pos = gGeo.getAttribute("position");
     const uv = new Float32Array(pos.count * 2);
     for (let i = 0; i < pos.count; i++) {
-      uv[i * 2] = pos.getX(i);
-      uv[i * 2 + 1] = pos.getZ(i);
+      // u = metres along the atrium, v = metres along the arch (the grid's two pitches).
+      uv[i * 2] = pos.getX(i) - VAULT.x0;
+      uv[i * 2 + 1] = Math.atan2(pos.getZ(i) - VAULT.cz, pos.getY(i) - VAULT.cy) * R + VAULT.halfAngle * R;
     }
     gGeo.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
     b.add("upper", "whiteSteel", mergeAll(ribs), mergeAll(purl));
+    // The bar grid 3 cm under the glass (same uv), then the glass.
+    const grid = gGeo.clone();
+    const gp = grid.getAttribute("position") as THREE.BufferAttribute;
+    for (let i = 0; i < gp.count; i++) {
+      const dy = gp.getY(i) - VAULT.cy;
+      const dz = gp.getZ(i) - VAULT.cz;
+      const k = (R - 0.05) / Math.hypot(dy, dz);
+      gp.setXYZ(i, gp.getX(i), VAULT.cy + dy * k, VAULT.cz + dz * k);
+    }
+    // Phones: plain glass (the grid would be one more transparent layer to draw).
+    if (!low) b.add("upper", "vaultGrid", grid);
+    else grid.dispose();
     b.add("upper", "glassVault", gGeo);
     // Eaves gutters along both sides.
     b.add("upper", "whiteSteel", box(VAULT.x0, L.vaultEaves - 0.25, VAULT.cz - VAULT.half - 0.3, VAULT.x1, L.vaultEaves + 0.05, VAULT.cz - VAULT.half + 0.05));
@@ -709,8 +830,9 @@ export function buildExterior(b: Buckets, env: ExteriorEnv): ExteriorResult {
     };
     // West gable (Tykistökatu, in the recess): faces −x.
     {
-      const g = gable(GABLE_W_X, L.gf, ATRIUM.z0, 5.5, -1);
-      // Split the glass at the cut for the dollhouse.
+      // From the cut up: the ground storey (glass beside the door, the door opening itself) is the
+      // shell's own glazing (section 12), so no pane or mullion of the tall gable crosses the doorway.
+      const g = gable(GABLE_W_X, CUT, ATRIUM.z0, 5.5, -1);
       b.add("upper", "glassClear", g.glassGeo);
       b.add("upper", "silver", mergeAll(g.frames));
       // Ground storey of the gable stays with the shell (the entrance), as a separate low pane.
@@ -737,55 +859,79 @@ export function buildExterior(b: Buckets, env: ExteriorEnv): ExteriorResult {
     b.add("shell", "blackSteel", mergeAll(cols), mergeAll(tall));
   }
 
-  // ── 12. Tykistökatu entrance: canopy, revolving door, side door, threshold ──
+  // ── 12. Tykistökatu entrance: canopy, revolving door, threshold ──────────
+  // The drum reads as in the photos: a dark-framed glazed cylinder with a dark fascia ring and a dark
+  // entrance mat, under the flat black canopy. Its three wings turn (door.ts) — they are built here
+  // in the drum's own frame and handed to the module as `door`.
+  let door: ExteriorResult["door"];
   {
     const C = ENTRANCE_TYK.canopy;
     b.add("shell", "blackSteel", box(C.x0, C.under, C.z0, C.x1, C.top, C.z1));
     // White LED line along the canopy's front edge and downlights under it.
     b.add("shell", "lightStrip", box(C.x0 - 0.01, C.under + 0.02, C.z0 + 0.05, C.x0 + 0.01, C.under + 0.07, C.z1 - 0.05));
     for (const z of [C.z0 + 0.8, (C.z0 + C.z1) / 2, C.z1 - 0.8]) soffitLights.push([(C.x0 + C.x1) / 2, z]);
-    // Recess floor (light-grey slabs, level access) and the pilotis paving.
     const D = ENTRANCE_TYK.drum;
     const r = D.r;
+    const H = 2.3;
     const drum: THREE.BufferGeometry[] = [];
-    const drumFrame: THREE.BufferGeometry[] = [];
-    // Curved glass enclosure (two arcs, open towards ±x), canopy disc and floor ring.
-    for (const [b0, b1] of [
-      [-62, 62],
-      [118, 242],
-    ]) {
-      const arc = arcPoints(D.x, D.z, r, b0, b1, 0.35);
-      for (let i = 0; i + 1 < arc.length; i++) drum.push(wallQuad(arc[i], arc[i + 1], L.gf, 2.35, { doubleSided: true }));
-      for (const p of [arc[0], arc[arc.length - 1]]) drumFrame.push(cylinder(p[0], p[1], 0.04, L.gf, 2.4, 8));
+    const dark: THREE.BufferGeometry[] = [];
+    // Curved glass walls (open towards the recess and the lobby), with 50 mm dark mullions every
+    // ≈30°, a kick rail and a head rail.
+    for (const [b0, b1] of DOOR.walls) {
+      const arc = arcPoints(D.x, D.z, r, b0, b1, 0.3);
+      for (let i = 0; i + 1 < arc.length; i++) {
+        drum.push(wallQuad(arc[i], arc[i + 1], L.gf, H, { doubleSided: true }));
+        dark.push(segmentBox(arc[i], arc[i + 1], 0.06, L.gf, L.gf + 0.12, { extend: 0.01 }));
+        dark.push(segmentBox(arc[i], arc[i + 1], 0.06, H - 0.06, H, { extend: 0.01 }));
+      }
+      const n = Math.max(2, Math.round((b1 - b0) / 31));
+      for (let k = 0; k <= n; k++) {
+        const p = arcPoints(D.x, D.z, r, b0 + ((b1 - b0) * k) / n, b0 + ((b1 - b0) * k) / n, 1)[0];
+        dark.push(cylinder(p[0], p[1], k === 0 || k === n ? 0.045 : 0.03, L.gf, H, 8));
+      }
     }
-    drumFrame.push(cylinder(D.x, D.z, r + 0.06, 2.35, 2.62, 32));
-    drumFrame.push(cylinder(D.x, D.z, r + 0.02, L.gf - 0.01, L.gf + 0.03, 32));
-    // Three wings (120°), at rest with one wing across the door's axis.
-    for (let i = 0; i < 3; i++) {
-      const a = ((i * 120) * Math.PI) / 180;
-      const end: V2 = [D.x + Math.sin(a) * (r - 0.03), D.z - Math.cos(a) * (r - 0.03)];
-      drum.push(wallQuad([D.x, D.z], end, L.gf + 0.04, 2.3, { doubleSided: true }));
-      drumFrame.push(bar({ x: D.x, y: 2.3, z: D.z }, { x: end[0], y: 2.3, z: end[1] }, 0.05));
-      drumFrame.push(bar({ x: end[0], y: L.gf + 0.04, z: end[1] }, { x: end[0], y: 2.3, z: end[1] }, 0.05));
+    // Dark fascia ring with its lid (the drum's "canopy"), a soffit with three downlights under it.
+    dark.push(cylinder(D.x, D.z, r + 0.07, H, H + 0.35, 40));
+    for (let k = 0; k < 3; k++) {
+      const p = arcPoints(D.x, D.z, 0.75, k * 120 + 60, k * 120 + 60, 1)[0];
+      soffitLights.push(p);
     }
-    drumFrame.push(cylinder(D.x, D.z, 0.06, L.gf, 2.35, 10));
-    // The drum stands inside the gable: interior glass (lit like the lobby, no sun glare in the dollhouse).
-    b.add("shell", "glassIn", mergeAll(drum));
-    b.add("shell", "silver", mergeAll(drumFrame));
-    // Glass cheeks from the gable opening to the drum's mouth, with a lintel over the opening.
+    b.add("shell", "glassDoor", mergeAll(drum));
+    b.add("shell", "blackSteel", mergeAll(dark));
+    // Dark recessed entrance mats: inside the drum and under the canopy outside.
+    const mat: V2[] = arcPoints(D.x, D.z, r - 0.02, 0, 360, 0.25);
+    b.add("shell", "doorMat", flatPolygon(mat, L.gf + 0.004));
+    b.add("shell", "doorMat", box(C.x0 + 0.15, 0.03, -0.75, GABLE_W_X - 0.06, 0.045, 1.9));
+    // The wings (drum frame: origin on the post, bearing 0 = −z): glass leaves in dark frames.
+    const wingGlass: THREE.BufferGeometry[] = [];
+    const wingFrame: THREE.BufferGeometry[] = [];
+    for (let i = 0; i < DOOR.wings; i++) {
+      const [dx, dz] = bearingDir((i * 360) / DOOR.wings);
+      const tip: V2 = [dx * (r - 0.04), dz * (r - 0.04)];
+      const hub: V2 = [dx * 0.08, dz * 0.08];
+      wingGlass.push(wallQuad(hub, tip, L.gf + 0.13, H - 0.12, { doubleSided: true }));
+      wingFrame.push(segmentBox(hub, tip, 0.05, H - 0.12, H - 0.04));
+      wingFrame.push(segmentBox(hub, tip, 0.05, L.gf + 0.02, L.gf + 0.13));
+      wingFrame.push(box(tip[0] - 0.025, L.gf + 0.02, tip[1] - 0.025, tip[0] + 0.025, H - 0.04, tip[1] + 0.025));
+      // Brush seal along the tip and a push bar across the leaf.
+      wingFrame.push(segmentBox(along(hub, tip, 0.35), along(hub, tip, r - 0.25), 0.07, 1.0, 1.04));
+    }
+    wingFrame.push(cylinder(0, 0, 0.075, L.gf, H, 12));
+    door = { centre: [D.x, D.z], glass: mergeAll(wingGlass), frame: mergeAll(wingFrame) };
+    // Glass cheeks from the gable opening to the drum's mouths, dark frames, a lintel over the opening.
     const O = ENTRANCE_TYK.opening;
     const mouthX = D.x - D.r * Math.sin((62 * Math.PI) / 180);
-    b.add("shell", "glassIn", wallQuad([mouthX, O.z0], [GABLE_W_X, O.z0], L.gf, 2.45, { doubleSided: true }), wallQuad([GABLE_W_X, O.z1], [mouthX, O.z1], L.gf, 2.45, { doubleSided: true }));
+    b.add("shell", "glassDoor", wallQuad([mouthX, O.z0], [GABLE_W_X, O.z0], L.gf, H + 0.15, { doubleSided: true }), wallQuad([GABLE_W_X, O.z1], [mouthX, O.z1], L.gf, H + 0.15, { doubleSided: true }));
     b.add(
       "shell",
-      "silver",
-      box(GABLE_W_X - 0.06, L.gf, O.z0 - 0.06, mouthX, 2.5, O.z0),
-      box(GABLE_W_X - 0.06, L.gf, O.z1, mouthX, 2.5, O.z1 + 0.06),
-      box(GABLE_W_X - 0.08, 2.45, O.z0 - 0.06, mouthX, 2.62, O.z1 + 0.06),
+      "blackSteel",
+      box(GABLE_W_X - 0.06, L.gf, O.z0 - 0.06, mouthX, H + 0.2, O.z0),
+      box(GABLE_W_X - 0.06, L.gf, O.z1, mouthX, H + 0.2, O.z1 + 0.06),
+      box(GABLE_W_X - 0.08, H + 0.15, O.z0 - 0.06, mouthX, H + 0.35, O.z1 + 0.06),
     );
     // Green "A" sign by the door (lettering is a canvas plane added by the caller).
-    // Threshold strip.
-    b.add("shell", "silver", box(GABLE_W_X - 0.5, L.gf - 0.01, -1.2, GABLE_W_X + 0.3, L.gf + 0.012, 2.3));
+    // Threshold strip (stainless) at the glass line.
+    b.add("shell", "silver", box(GABLE_W_X - 0.06, L.gf - 0.01, O.z0, GABLE_W_X + 0.06, L.gf + 0.008, O.z1));
     // Ground-storey gable glass (separate from the tall upper pane, stays in the dollhouse), open at the drum.
     const top = CUT;
     const panes: [V2, V2][] = [
@@ -797,7 +943,7 @@ export function buildExterior(b: Buckets, env: ExteriorEnv): ExteriorResult {
       b.add("shell", "silver", mergeAll(glazingGrid(a, c, L.gf, () => top, { pitch: 1.2, rowPitch: 2.45, width: 0.08, depth: 0.16, offset: 0.08 })));
     }
     // Over the opening: glass above the lintel.
-    b.add("shell", "glassLow", wallQuad([GABLE_W_X, O.z1], [GABLE_W_X, O.z0], 2.62, top));
+    b.add("shell", "glassLow", wallQuad([GABLE_W_X, O.z1], [GABLE_W_X, O.z0], H + 0.35, top));
   }
 
   // ── 13. Recess paving (syvänne) and the pilotis floor ──────────────────────
@@ -900,13 +1046,14 @@ export function buildExterior(b: Buckets, env: ExteriorEnv): ExteriorResult {
       const pilotis = x < -29.5 && z > 5;
       const canopy = x < -29.9 && x > -31.7 && z > -1.6 && z < 2.1;
       const vestibule = x > VESTIBULE.x0 && x < VESTIBULE.x1 && z > VESTIBULE.z0 && z < VESTIBULE.z1;
-      const y = canopy ? ENTRANCE_TYK.canopy.under : pilotis ? L.towerSoffit - 0.45 : vestibule ? 2.86 : L.arcadeSoffit;
-      const g = new THREE.CircleGeometry(canopy ? 0.06 : 0.09, 12);
+      const drum = Math.hypot(x - ENTRANCE_TYK.drum.x, z - ENTRANCE_TYK.drum.z) < ENTRANCE_TYK.drum.r;
+      const y = canopy ? ENTRANCE_TYK.canopy.under : drum ? 2.3 : pilotis ? L.towerSoffit - 0.45 : vestibule ? 2.86 : L.arcadeSoffit;
+      const g = new THREE.CircleGeometry(canopy || drum ? 0.06 : 0.09, 12);
       g.rotateX(Math.PI / 2);
       g.translate(x, y - 0.006, z);
       discs.push(g);
     }
     if (discs.length) b.add("ceiling", "lightWarm", mergeAll(discs));
   }
-  return { extra, soffitLights };
+  return { extra, soffitLights, door };
 }
