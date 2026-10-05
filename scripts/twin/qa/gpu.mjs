@@ -17,11 +17,35 @@ const LOCKS = path.join(os.tmpdir(), "sinceai-twin-gpu-locks");
 const SLOTS = Number(process.env.GPU_SLOTS ?? 2);
 const MIN_FREE_PCT = Number(process.env.GPU_MIN_FREE_PCT ?? 25);
 const WAIT_MS = Number(process.env.GPU_WAIT_MS ?? 15 * 60 * 1000);
-// macOS: the real Apple GPU through ANGLE/Metal. Linux servers without a GPU: SwiftShader (slow, but correct).
-const GPU_ARGS =
-  process.platform === "darwin"
-    ? ["--use-angle=metal", "--enable-gpu", "--ignore-gpu-blocklist", "--enable-webgl"]
-    : ["--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist", "--enable-webgl"];
+// macOS: the real Apple GPU through ANGLE/Metal. Linux servers without a GPU: Mesa's multi-threaded software
+// rasterisers when a Mesa tree is available (TWIN_MESA, default ~/mesa-local/root — see docs/SERVER-SETUP.md),
+// else SwiftShader (slow, but correct). TWIN_GL=swiftshader|llvmpipe|lavapipe forces one.
+const MESA = process.env.TWIN_MESA ?? path.join(os.homedir(), "mesa-local", "root");
+const MESA_LIB = path.join(MESA, "usr/lib/x86_64-linux-gnu");
+const HAS_MESA = process.platform === "linux" && fs.existsSync(path.join(MESA_LIB, "libEGL_mesa.so.0"));
+const GL = process.env.TWIN_GL ?? (process.platform === "darwin" ? "metal" : HAS_MESA ? "lavapipe" : "swiftshader");
+const GPU_ARGS = {
+  metal: ["--use-angle=metal", "--enable-gpu", "--ignore-gpu-blocklist", "--enable-webgl"],
+  swiftshader: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist", "--enable-webgl"],
+  llvmpipe: ["--use-gl=angle", "--use-angle=gl-egl", "--enable-gpu", "--ignore-gpu-blocklist", "--enable-webgl"],
+  lavapipe: ["--use-gl=egl", "--enable-gpu", "--ignore-gpu-blocklist", "--enable-webgl"],
+}[GL];
+if (!GPU_ARGS) throw new Error(`TWIN_GL=${GL}: expected swiftshader, llvmpipe, lavapipe or metal`);
+
+/** Environment that points Chromium at the local Mesa tree (no root install needed). */
+export function mesaEnv() {
+  if (!HAS_MESA || GL === "metal" || GL === "swiftshader") return undefined;
+  const icd = path.join(MESA, "..", "lvp_icd.json");
+  const egl = path.join(MESA, "..", "50_mesa.json");
+  return {
+    ...process.env,
+    LD_LIBRARY_PATH: [MESA_LIB, process.env.LD_LIBRARY_PATH].filter(Boolean).join(":"),
+    VK_ICD_FILENAMES: icd,
+    VK_DRIVER_FILES: icd,
+    __EGL_VENDOR_LIBRARY_FILENAMES: egl,
+    LP_NUM_THREADS: process.env.LP_NUM_THREADS ?? String(Math.min(16, os.cpus().length)),
+  };
+}
 
 fs.mkdirSync(LOCKS, { recursive: true });
 
@@ -104,7 +128,7 @@ export async function launchGpu(options = {}) {
   held.add(slot);
   let browser;
   try {
-    browser = await chromium.launch({ ...options, args: [...GPU_ARGS, ...(options.args ?? [])] });
+    browser = await chromium.launch({ env: mesaEnv(), ...options, args: [...GPU_ARGS, ...(options.args ?? [])] });
   } catch (e) {
     held.delete(slot);
     fs.rmSync(slot, { recursive: true, force: true });

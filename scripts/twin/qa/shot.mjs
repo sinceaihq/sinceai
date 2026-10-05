@@ -8,7 +8,8 @@
 //
 // Options: --base (default $TWIN_BASE or http://localhost:3000), --mobile (Pixel-like 412x915 @2x touch),
 // --quality=ultra|high|low, --labels=0|1, --wait=ms (extra settle time), --stats (print stats JSON),
-// --full (screenshot the whole stage incl. UI overlays instead of the canvas only).
+// --full (screenshot the whole stage incl. UI overlays instead of the canvas only), --settle=ms (max wait for the
+// engine to settle; default 60 s). Many shots: shots.mjs loads the page once.
 import { launchGpu } from "./gpu.mjs";
 
 const args = Object.fromEntries(
@@ -62,12 +63,29 @@ if (args.camera) {
 if (args.labels !== undefined) await page.evaluate((on) => window.__twin.setLabels?.(on === "1"), args.labels);
 if (args.tourAt) await page.evaluate((t) => window.__twin.seekTour?.(Number(t)), args.tourAt);
 await page.waitForTimeout(Number(args.wait ?? 1200));
+// Software GL renders a frame in a fraction of a second to seconds: wait until only the always-animated modules
+// (people, traffic, route pulses) still ask for frames, so the shot shows the settled view rather than the middle
+// of a flight or texture swap.
+await page.evaluate(async (maxMs) => {
+  const animated = ["people", "vehicles", "routes", "event", "traffic"];
+  const quiet = () => (window.__twin.stats?.().busy ?? []).every((b) => animated.includes(b));
+  const t0 = performance.now();
+  let ok = 0;
+  while (performance.now() - t0 < maxMs && ok < 3) {
+    await new Promise((r) => setTimeout(r, 400));
+    ok = quiet() ? ok + 1 : 0;
+  }
+}, Number(args.settle ?? 60_000));
 
 const out = args.out ?? "/tmp/twin.png";
-if (args.full === "1") await page.screenshot({ path: out });
+// page.screenshot with a clip: an element screenshot waits for two equal animation frames, which never comes in
+// time on a software-GL server while the engine is still drawing.
+if (args.full === "1") await page.screenshot({ path: out, timeout: 120_000 });
 else {
   const stage = page.locator('[aria-roledescription="3D scene"]').first();
-  await stage.screenshot({ path: out });
+  await stage.evaluate((el) => el.scrollIntoView({ block: "center" }));
+  const box = await stage.boundingBox();
+  await page.screenshot({ path: out, clip: box ?? undefined, timeout: 120_000 });
 }
 const stats = await page.evaluate(() => window.__twin.stats?.());
 const errors = await page.evaluate(() => window.__twin.errors?.() ?? []);

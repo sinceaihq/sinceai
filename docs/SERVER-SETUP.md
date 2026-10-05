@@ -8,8 +8,10 @@ For continuing the Hackathon 2026 Field Guide / campus twin work on a new Ubuntu
   always install with `--legacy-peer-deps`).
 - **git**. No Docker, database or other service is needed to develop, build, test or run the site.
 - For browser tests: Playwright's Chromium with its system libraries (`npx playwright install --with-deps chromium`).
-  The 3D renders with SwiftShader on a GPU-less server — correct but slow; real-GPU visual checks need a Mac
-  (`scripts/twin/qa/gpu.mjs` picks Metal on macOS, SwiftShader on Linux).
+  On a GPU-less server run `scripts/twin/qa/setup-mesa.sh` once (no root): it unpacks Mesa's lavapipe under
+  `~/mesa-local`, and `scripts/twin/qa/gpu.mjs` then renders the 3D with it — about 7× faster frames than
+  SwiftShader, pixel-identical. Without it gpu.mjs falls back to SwiftShader (correct but slow); `TWIN_GL` forces
+  `lavapipe`, `llvmpipe` or `swiftshader`. Many 3D screenshots from one page load: `scripts/twin/qa/shots.mjs`.
 - RAM: 8 GB+ recommended (Next build ~3 GB peak; each 3D test browser ~1 GB).
 
 ## Environment variables (names only)

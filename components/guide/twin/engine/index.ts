@@ -447,6 +447,8 @@ export function createTwinEngine(container: HTMLElement, opts: TwinOptions): Twi
   let secondStart = performance.now();
   const monitor = createFrameMonitor({
     onSlow: () => {
+      // An explicit ?quality= is a request (QA, comparisons): keep it even when frames are slow.
+      if (opts.tier) return;
       const next = lowerTier(tier);
       if (!next) return;
       tier = next;
