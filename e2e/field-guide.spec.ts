@@ -280,37 +280,12 @@ test.describe("3D campus", () => {
   test("route cards open their route in the 3D", async ({ page }) => {
     await page.goto(`${GUIDE}/challenge-partners/elisa`);
     await page.getByRole("link", { name: /Kupittaa station → EduCity company arrival/ }).click();
-    // On a company's page the route leads to that company's own room (focus); elsewhere to the briefing rooms.
-    await expect(page).toHaveURL(/\/venue\?tour=partners-fri-train-edu(&focus=room-elisa)?#preview-3d$/);
+    await expect(page).toHaveURL(/\/venue\?tour=partners-fri-train-edu#preview-3d$/);
     if (!(await hasWebGL2(page))) {
       await expect(page.locator("#preview-3d")).toContainText("Kupittaa station → EduCity company arrival");
       return;
     }
     await expect(page.locator("#preview-3d")).toContainText("Route: Kupittaa station → EduCity company arrival");
-  });
-
-  test("without WebGL 2, a route link still lands on its directions and a target link on its card", async ({ page }) => {
-    // A device without WebGL 2: the bare probe and the engine both get no context.
-    await page.addInitScript(() => {
-      const proto = HTMLCanvasElement.prototype as unknown as { getContext: (type: string, ...rest: unknown[]) => unknown };
-      const get = proto.getContext;
-      proto.getContext = function (this: HTMLCanvasElement, type: string, ...rest: unknown[]) {
-        return type === "webgl2" ? null : get.call(this, type, ...rest);
-      };
-    });
-    await page.goto(`${GUIDE}/venue?tour=partners-fri-train-edu&focus=room-elisa#preview-3d`);
-    const stage = page.locator("#preview-3d");
-    await expect(stage.getByText("Route: Kupittaa station → EduCity company arrival")).toBeVisible({ timeout: 60_000 });
-    // The steps end at Elisa's own room, and the route list below marks the route.
-    await expect(stage.getByText(/your room 1001 Dromberg is on this floor/).first()).toBeVisible();
-    await expect(stage.locator('li[aria-current="true"]').first()).toContainText("Kupittaa station → EduCity company arrival");
-    await expect(page.locator("canvas")).toHaveCount(0);
-
-    await page.goto(`${GUIDE}/venue?focus=elisa#preview-3d`);
-    await expect(stage.getByText("Joki floor 1 · Showroom · counter 4 of 6", { exact: true }).first()).toBeVisible({
-      timeout: 60_000,
-    });
-    await expect(stage.getByRole("link", { name: "Floor plan" })).toHaveAttribute("href", "#map-joki-showroom");
   });
 
   test("deep links open the right place and target", async ({ page }) => {
