@@ -1,8 +1,6 @@
 import { ImageResponse } from "next/og";
 import { getPostBySlug, BLOG_CATEGORIES } from "@/lib/blog";
 
-export const runtime = "edge";
-
 const WIDTH = 1200;
 const HEIGHT = 630;
 
