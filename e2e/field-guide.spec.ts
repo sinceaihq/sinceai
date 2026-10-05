@@ -258,6 +258,8 @@ test.describe("3D campus", () => {
     await expect(page.locator("canvas")).toHaveCount(0); // nothing loaded until asked
     if (!(await hasWebGL2(page))) {
       // No WebGL 2 (e.g. headless Firefox without a GPU): the text fallback carries every place and route.
+      const explore = page.getByRole("button", { name: "Explore in 3D" });
+      if (await explore.count()) await explore.click();
       await expect(page.locator("#preview-3d").getByText(/can.t show the 3D model/).first()).toBeVisible();
       await expect(page.locator("#preview-3d")).toContainText("Elisa briefing room");
       await expect(page.locator("#preview-3d")).toContainText("Kupittaa station → EduCity company arrival");
