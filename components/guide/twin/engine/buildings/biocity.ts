@@ -8,7 +8,7 @@ import { DOOR, doorTargetAngle, stepDoorAngle } from "./biocity/door";
 import { makeLabel } from "../labels";
 import { Buckets, LAYERS, type Layer } from "./biocity/geom";
 import { createBioMaterials, neutralise, withSunScale } from "./biocity/materials";
-import { kelvinToLinear, skyIlluminance } from "../sky/sky";
+import { kelvinToLinear, openedInteriorScale, outsideInteriorScale, skyIlluminance } from "../sky/sky";
 import { buildExterior } from "./biocity/exterior";
 import { buildInteriorStructure } from "./biocity/interior";
 import { buildFitout } from "./biocity/fitout";
@@ -256,23 +256,32 @@ export async function buildBioCity(ctx: TwinContext): Promise<BuildingModule> {
     return true;
   };
 
-  // ── The hall seen from outside after dark ──
-  // The engine exposes the night street ≈ 25× brighter than a lit interior: seen through the gables,
-  // the vault or the gallery glass from outside, a hall lit for the inside would burn to white. While
-  // the camera is outside (or over the open dollhouse) at night, the artificial light is scaled to what
-  // a night photo of the street shows: a strong glow that keeps its structure. Eased, so walking in
-  // through a door blends with the engine's own exposure change.
-  let night = 0;
+  // ── The hall seen from outside or opened ──
+  // The engine exposes the street, not the lit hall: seen through the gables, the vault or the gallery
+  // glass from outside, a hall lit for the inside would burn to white after dark. Its own light (the
+  // interior environment, the daylight term, the light panels and the interior-mapped fronts) follows
+  // sky.ts's outsideInteriorScale while the camera is outside the closed building, and
+  // openedInteriorScale over the dollhouse; 1 inside. Eased, so walking in through a door blends with
+  // the engine's own exposure change.
+  let sunElev = 0;
   let art = 1;
+  let skyKlux = 0;
   let outsideDim = 1;
   /** The lobby's interior-mapped fronts (meeting rooms, shops, atrium windows): their rooms glow too. */
   const indoorGlass: { u: THREE.IUniform<number>; base: number }[] = [];
+  /** The interior's light panels (emissive basic materials) with their full colours. */
+  const panels = (["panelLight", "liftLight", "lineLight", "pendant"] as const)
+    .map((k) => materials[k])
+    .filter((m): m is THREE.MeshBasicMaterial => m instanceof THREE.MeshBasicMaterial)
+    .map((m) => ({ m, base: m.color.clone() }));
   const applyInteriorLight = () => {
     for (const m of lit) m.envMapIntensity = (m.userData.bioEnv as number) * art * outsideDim;
     for (const g of indoorGlass) g.u.value = g.base * outsideDim;
+    for (const p of panels) p.m.color.copy(p.base).multiplyScalar(outsideDim);
+    light.daylight.value.copy(daylightColor).multiplyScalar(0.1 * skyKlux * outsideDim);
   };
   const easeOutsideDim = (dt: number): boolean => {
-    const target = inside ? 1 : open !== null ? 1 - 0.65 * night : 1 - 0.95 * night;
+    const target = inside ? 1 : open !== null ? openedInteriorScale(sunElev) : outsideInteriorScale(sunElev);
     if (Math.abs(target - outsideDim) < 1e-3) return false;
     const next = outsideDim + (target - outsideDim) * (1 - Math.exp(-6 * Math.max(dt, 1 / 60)));
     outsideDim = Math.abs(target - next) < 2e-3 ? target : next;
@@ -394,11 +403,10 @@ export async function buildBioCity(ctx: TwinContext): Promise<BuildingModule> {
     },
     setLighting(state: LightingState) {
       const n = state.night;
-      night = n;
+      sunElev = state.sunElevationDeg;
       // Daylight through the glass vault and the glazing (daylight factor ≈ 10 % under the vault,
       // less at the edges) and the 3000–3500 K LEDs, which carry the hall once it gets dark.
-      const sky = skyIlluminance(state.sunElevationDeg);
-      light.daylight.value.copy(daylightColor).multiplyScalar(0.1 * sky);
+      skyKlux = skyIlluminance(state.sunElevationDeg);
       art = 0.45 + 0.55 * n;
       applyInteriorLight();
       for (const g of glassUniforms) g.u.value = g.range[0] + (g.range[1] - g.range[0]) * n;

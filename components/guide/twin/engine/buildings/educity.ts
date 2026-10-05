@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import type { CSS2DObject } from "three/addons/renderers/CSS2DRenderer.js";
 import type { BuildingModule, LevelId, LightingState, TwinContext, V2 } from "../types";
-import { INTERIOR_EXPOSURE, LUMINANCE, exposureFor, kelvinToLinear } from "../sky/sky";
+import { LUMINANCE, kelvinToLinear, openedInteriorScale, outsideInteriorScale } from "../sky/sky";
 import { makeLabel } from "../labels";
 import { BLOCK, E, PAVILION, Y0, eToLocal3, localToE } from "./educity/frame";
 import { allWindows, facadeLength, facadeTop, type Facade } from "./educity/data";
@@ -394,8 +394,7 @@ export function daylight(sunElevationDeg: number): number {
  * Never brightened by day.
  */
 export function exteriorViewScale(sunElevationDeg: number): number {
-  const ext = exposureFor(sunElevationDeg);
-  return Math.min(1, Math.max(0.05, Math.pow(INTERIOR_EXPOSURE / ext, 0.8)));
+  return outsideInteriorScale(sunElevationDeg);
 }
 
 /**
@@ -408,14 +407,12 @@ export function windowScale(sunElevationDeg: number): number {
 }
 
 /**
- * Interior light scale while the dollhouse is open: the engine then exposes for
- * a blend of exterior and interior (55 % interior, in log space), so the
- * interior is rescaled to read as it would at INTERIOR_EXPOSURE — brighter
- * by day (it is open to the sky), calmer at night (it still glows).
+ * Interior light scale while the dollhouse is open: the engine then exposes for a blend of exterior
+ * and interior (sky/sky.ts openedInteriorScale — shared by the building modules), so the interior is
+ * rescaled to read as it would at INTERIOR_EXPOSURE — brighter by day (it is open to the sky).
  */
 export function interiorScale(sunElevationDeg: number): number {
-  const ext = exposureFor(sunElevationDeg);
-  return Math.min(2.2, Math.max(0.3, Math.pow(INTERIOR_EXPOSURE / ext, 0.45)));
+  return openedInteriorScale(sunElevationDeg);
 }
 
 /** Plan point of a facade coordinate (exported for tests). */
