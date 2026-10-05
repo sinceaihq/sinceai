@@ -1,7 +1,4 @@
 import { defineConfig, devices } from "@playwright/test";
-import fs from "node:fs";
-import os from "node:os";
-import path from "node:path";
 
 /**
  * Browser tests for the Hackathon 2026 Field Guide and the public site.
@@ -16,23 +13,9 @@ import path from "node:path";
 const PORT = Number(process.env.E2E_PORT ?? 3100);
 const BASE = process.env.E2E_BASE;
 
-// Software WebGL so the 3D renders headless: Mesa lavapipe when scripts/twin/qa/setup-mesa.sh has unpacked it
-// (several times faster, so the 3D tests hold under load), else SwiftShader.
-const MESA_LIB = path.join(process.env.TWIN_MESA ?? path.join(os.homedir(), "mesa-local", "root"), "usr/lib/x86_64-linux-gnu");
-const lavapipe = process.platform === "linux" && fs.existsSync(path.join(MESA_LIB, "libEGL_mesa.so.0"));
-const webglArgs = lavapipe
-  ? ["--use-gl=egl", "--enable-gpu", "--ignore-gpu-blocklist"]
-  : ["--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"];
-const webglEnv = lavapipe
-  ? {
-      ...Object.fromEntries(Object.entries(process.env).filter((e): e is [string, string] => e[1] !== undefined)),
-      LD_LIBRARY_PATH: [MESA_LIB, process.env.LD_LIBRARY_PATH].filter(Boolean).join(":"),
-      VK_ICD_FILENAMES: path.join(MESA_LIB, "../../../../lvp_icd.json"),
-      __EGL_VENDOR_LIBRARY_FILENAMES: path.join(MESA_LIB, "../../../../50_mesa.json"),
-      LP_NUM_THREADS: process.env.LP_NUM_THREADS ?? "8",
-    }
-  : undefined;
-const launchOptions = { args: webglArgs, env: webglEnv };
+// Software WebGL (SwiftShader) so the 3D renders headless. (Mesa lavapipe is faster for QA screenshots — see
+// scripts/twin/qa/gpu.mjs — but crashed the renderer under the test runner, so the tests stay on SwiftShader.)
+const launchOptions = { args: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"] };
 
 export default defineConfig({
   testDir: "./e2e",

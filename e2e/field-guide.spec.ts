@@ -249,12 +249,13 @@ test.describe("venue explorer", () => {
 
 test.describe("3D campus", () => {
   test("loads on demand, finds a company and switches places", async ({ page }) => {
-    test.setTimeout(240_000);
+    // Software GL on a busy machine can take minutes to build the campus.
+    test.setTimeout(480_000);
     const problems = watchConsole(page);
     await page.goto(`${GUIDE}/venue`);
     await expect(page.locator("canvas")).toHaveCount(0); // nothing loaded until asked
     await page.getByRole("button", { name: "Explore in 3D" }).click();
-    await expect(page.getByRole("button", { name: "Show names" })).toBeVisible({ timeout: 200_000 });
+    await expect(page.getByRole("button", { name: "Show names" })).toBeVisible({ timeout: 420_000 });
     await expect(page.locator("canvas").first()).toBeVisible();
     await page.getByLabel("Go to").selectOption("elisa");
     await expect(page.getByText("Joki floor 1 · Showroom · counter 4 of 6", { exact: true }).first()).toBeVisible();
