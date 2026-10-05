@@ -304,7 +304,7 @@ test.describe("3D campus", () => {
     });
     await page.goto(`${GUIDE}/venue?tour=partners-fri-train-edu&focus=room-elisa#preview-3d`);
     const stage = page.locator("#preview-3d");
-    await expect(stage.getByText("Route: Kupittaa station → EduCity company arrival")).toBeVisible({ timeout: 60_000 });
+    await expect(stage.getByText("Route: Kupittaa station → EduCity company arrival", { exact: true })).toBeVisible({ timeout: 60_000 });
     // The steps end at Elisa's own room, and the route list below marks the route.
     await expect(stage.getByText(/your room 1001 Dromberg is on this floor/).first()).toBeVisible();
     await expect(stage.locator('li[aria-current="true"]').first()).toContainText("Kupittaa station → EduCity company arrival");
