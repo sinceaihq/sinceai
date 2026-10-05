@@ -258,8 +258,8 @@ test.describe("3D campus", () => {
     await expect(page.locator("canvas").first()).toBeVisible();
     await page.getByLabel("Go to").selectOption("elisa");
     await expect(page.getByText("Joki floor 1 · Showroom · counter 4 of 6", { exact: true }).first()).toBeVisible();
-    await page.getByRole("tab", { name: "BioCity" }).click();
-    await expect(page.getByRole("tab", { name: "BioCity" })).toHaveAttribute("aria-selected", "true");
+    await page.locator("#preview-3d").getByRole("tab", { name: "BioCity", exact: true }).click();
+    await expect(page.locator("#preview-3d").getByRole("tab", { name: "BioCity", exact: true })).toHaveAttribute("aria-selected", "true");
     await expect(page.getByRole("group", { name: "BioCity views" })).toBeVisible({ timeout: 30_000 });
     expect(problems).toEqual([]);
   });
@@ -275,7 +275,7 @@ test.describe("3D campus", () => {
     await page.goto(`${GUIDE}/venue?focus=red-hat#preview-3d`);
     // The poster names the target before anything heavy loads.
     await expect(page.locator("#preview-3d")).toContainText("Red Hat");
-    await expect(page.getByRole("tab", { name: "BioCity" })).toHaveAttribute("aria-selected", "true");
+    await expect(page.locator("#preview-3d").getByRole("tab", { name: "BioCity", exact: true })).toHaveAttribute("aria-selected", "true");
   });
 });
 
