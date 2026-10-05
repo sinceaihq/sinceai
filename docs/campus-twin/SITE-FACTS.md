@@ -451,7 +451,7 @@ courtyard between ElectroCity and BioCity". No registered vehicle access across 
   columns** with light soffit; warm-grey concrete pavers with darker edge band; green-glass shelters; navy VR name
   signs. Station building on a bridge over the tracks (190–219, −143…−117); escalators (202,−137)→(190,−154) and
   (219,−112)→(211,−125); lifts (162,−196), (206,−131). Waiting room Mon–Fri 05:00–23:15.
-- **Kalevansilta:** covered timber footbridge (2005, 85 m) (264,−15)→(334,−65) from the platform's SE end (stairs
+- **Kalevansilta:** covered footbridge (2005, 85 m) — white steel Warren side trusses with glazed sides, a light ribbed metal roof and a timber deck (KartaView photos, 2022/2025 orthophotos; round-2 correction — not a timber bridge); covered stair down to the platform, open steel street stair with pram channels; 2021 DSM roof 7.5 (ParkCity end) → 8.9 mid-span, so the deck runs ≈3.4 → 4.6 (modelled flat at 4.3) (264,−15)→(334,−65) from the platform's SE end (stairs
   at (265.5,−43.9)) to ParkCity (bridge door (256.3,−15.7)) and Itäharju; deck ≈y +4.3 [E], roof y ≈8 (laser 31.0–31.5).
 - **ParkCity** (Aimo, opened 19 Jan 2023, Schauman Arkkitehdit/YIT): 10 floors, 990 places, clearance 2.2 m, guests on
   floors 1–3 (€1.60/30 min, €15/24 h), entry 06–24, exit 24/7. Vehicle portals (201,−32) [driveway from (169,−8)] and

@@ -532,7 +532,7 @@ export const TOURS_3D: readonly Tour3D[] = [
     minutes: 5,
     steps: [
       step(
-        "On the platform, walk away from the station building to the stairs up to Kalevansilta, the covered wooden footbridge.",
+        "On the platform, walk away from the station building to the stairs up to Kalevansilta, the covered footbridge.",
         [218.9, -111.5],
         "Platform",
       ),
@@ -631,7 +631,7 @@ export const TOURS_3D: readonly Tour3D[] = [
     minutes: 4.3,
     steps: [
       step(
-        "On the platform, walk away from the station building to the stairs up to Kalevansilta, the covered wooden footbridge.",
+        "On the platform, walk away from the station building to the stairs up to Kalevansilta, the covered footbridge.",
         [218.9, -111.5],
         "Platform",
       ),
