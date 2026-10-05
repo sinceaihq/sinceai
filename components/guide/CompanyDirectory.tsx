@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Search } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   briefingRoomLabel,
   companyMapIds,
@@ -24,6 +24,11 @@ const normalise = (s: string) => s.toLowerCase().normalize("NFD").replace(/[Ì€-Í
  */
 export function CompanyDirectory({ companies }: { companies: readonly ChallengeCompany[] }) {
   const [query, setQuery] = useState("");
+  const input = useRef<HTMLInputElement>(null);
+  // Text typed before hydration (slow phones) is in the DOM but not in state yet: pick it up.
+  useEffect(() => {
+    if (input.current?.value) setQuery(input.current.value);
+  }, []);
   const [viewer, setViewer] = useState<{ map: VenueMap; highlight: string[]; opener: HTMLElement } | null>(null);
 
   const visible = useMemo(() => {
@@ -41,6 +46,7 @@ export function CompanyDirectory({ companies }: { companies: readonly ChallengeC
           className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/55"
         />
         <input
+          ref={input}
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}

@@ -1,4 +1,6 @@
-import { render, screen, within } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
+import { hydrateRoot } from "react-dom/client";
+import { renderToString } from "react-dom/server";
 import userEvent from "@testing-library/user-event";
 import { CompanyDirectory } from "@/components/guide/CompanyDirectory";
 import { CHALLENGE_COMPANIES } from "@/lib/hackathon-2026";
@@ -38,5 +40,18 @@ describe("CompanyDirectory", () => {
     await userEvent.type(screen.getByRole("searchbox", { name: "Find your company" }), "zzz");
     expect(screen.queryAllByRole("listitem")).toHaveLength(0);
     expect(screen.getByText(/No match/)).toBeInTheDocument();
+  });
+
+  it("keeps text typed before hydration (slow phones)", async () => {
+    const container = document.createElement("div");
+    container.innerHTML = renderToString(<CompanyDirectory companies={CHALLENGE_COMPANIES} />);
+    document.body.appendChild(container);
+    (container.querySelector('input[type="search"]') as HTMLInputElement).value = "traficom";
+    await act(async () => {
+      hydrateRoot(container, <CompanyDirectory companies={CHALLENGE_COMPANIES} />);
+    });
+    expect(container.querySelectorAll('[id^="company-"]')).toHaveLength(1);
+    expect(container.querySelector("#company-traficom")).not.toBeNull();
+    container.remove();
   });
 });
