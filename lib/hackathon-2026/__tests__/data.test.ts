@@ -103,7 +103,7 @@ describe("canonical event facts", () => {
   it("assigns venue roles correctly", () => {
     const roles = Object.fromEntries(VENUES.map((v) => [v.id, v.roles.join(" ")]));
     expect(roles.educity).toMatch(/Opening ceremony/);
-    expect(roles.educity).toMatch(/Closing: company challenge winners and the finals \(Sun from 13:30\)/);
+    expect(roles.educity).toMatch(/Company challenge winners \(Sun 13:30\) and the finals \(Sun 14:00\)/);
     expect(roles.educity).toMatch(/briefings/);
     expect(roles.biocity).toMatch(/Build/);
     expect(roles.biocity).toMatch(/partner stands/);

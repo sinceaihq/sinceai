@@ -393,7 +393,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     detail: "Company evaluators review the submissions to their own challenge and choose its winner by 13:00.",
     detailFor: {
       "challenge-partners":
-        "Review the submissions to your challenge and hand over your winner by 13:00 — the winners are published at 13:30.",
+        "Review the submissions to your challenge and hand over your winner by 13:00 — the winners are announced from 13:30.",
     },
     place: "educity",
     audiences: ["challenge-partners", "judges"],
@@ -417,8 +417,8 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   {
     id: "sun-closing",
     start: at(SUN, "13:30"),
-    title: "Closing: company challenge winners announced",
-    detail: "The closing programme opens at EduCity with the winners of all 15 company challenges.",
+    title: "Company challenge winners announced",
+    detail: "The winners of all 15 company challenges are announced at EduCity.",
     place: "educity",
     audiences: ALL_AUDIENCES,
     kind: "milestone",

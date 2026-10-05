@@ -109,7 +109,7 @@ export const CRITICAL_PATH: Partial<Record<Audience, readonly { label: string; t
     { label: "Opening", time: "Fri 17:00", text: "EduCity, Taidon portaat." },
     { label: "Set up", time: "Fri 18:00", text: "Your stand at BioCity." },
     { label: "Be seen", time: "All weekend", text: "Stands stay open for the whole event." },
-    { label: "Closing", time: "Sun 13:30", text: "EduCity — company winners, finals at 14:00." },
+    { label: "Winners · finals", time: "Sun 13:30", text: "EduCity — company winners, then the finals at 14:00." },
     { label: "Teardown", time: "after 15:00", text: "In the agreed post-event window." },
   ],
   judges: [
@@ -122,7 +122,7 @@ export const CRITICAL_PATH: Partial<Record<Audience, readonly { label: string; t
     { label: "Run sheet", time: "Before travel", text: "Your host confirms every personal time." },
     { label: "Arrive", time: "Fri", text: "EduCity, Joukahaisenkatu 7." },
     { label: "Opening", time: "Fri 17:00", text: "Opening programme and keynote." },
-    { label: "Closing", time: "Sun 13:30", text: "Company winners, finals 14:00, end ~15:00." },
+    { label: "Winners · finals", time: "Sun 13:30", text: "Company winners, finals 14:00, end ~15:00." },
   ],
 };
 
@@ -235,7 +235,7 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
       items: [
         "Company evaluators: evaluation briefing at EduCity from 08:15.",
         "Submissions close at 10:00 — review only what was submitted on time.",
-        "Company evaluators: hand over your winner by 13:00 — winners are published at 13:30.",
+        "Company evaluators: hand over your winner by 13:00 — winners are announced from 13:30.",
         "Overall jury: be ready before the 14:00 finals.",
       ],
     },
@@ -317,7 +317,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
     {
       q: "Sunday results",
-      a: "Evaluate the submissions to your challenge from 10:00, when submissions close, until 13:00. The winners of all 15 company challenges are published at 13:30 at EduCity; the finals — the five most-voted solutions — follow at 14:00.",
+      a: "Evaluate the submissions to your challenge from 10:00, when submissions close, until 13:00. The winners of all 15 company challenges are announced from 13:30 at EduCity; the finals — the five most-voted solutions — follow at 14:00.",
     },
   ],
   partners: [
@@ -345,7 +345,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
   judges: [
     {
       q: "Overall jury vs. company evaluator",
-      a: "The overall jury watches the five finalist presentations at the 14:00 finals and selects the overall winner. A company evaluator reviews the submissions to one company's challenge between 10:00 and 13:00 and decides that company's winner, published at 13:30. One person can hold both roles — the responsibilities stay separate.",
+      a: "The overall jury watches the five finalist presentations at the 14:00 finals and selects the overall winner. A company evaluator reviews the submissions to one company's challenge between 10:00 and 13:00 and decides that company's winner, announced from 13:30. One person can hold both roles — the responsibilities stay separate.",
     },
     {
       q: "How are the five finalists chosen?",

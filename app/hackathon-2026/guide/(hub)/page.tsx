@@ -93,7 +93,7 @@ export default function FieldGuideHubPage() {
               { label: "Opening", time: "Fri 17:00", text: "EduCity lobby, Taidon portaat." },
               { label: "Briefings", time: "Fri 18:30", text: "Company rooms at EduCity." },
               { label: "Build", time: "Fri 19:30 →", text: "BioCity + Joki, around the clock." },
-              { label: "Closing", time: "Sun 13:30", text: "EduCity — company winners, then the finals at 14:00." },
+              { label: "Winners · finals", time: "Sun 13:30", text: "EduCity — company winners, then the finals at 14:00." },
             ]}
           />
         </div>

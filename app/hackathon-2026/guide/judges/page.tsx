@@ -46,7 +46,7 @@ const ROLES = [
       "Reviews the submissions to one company's challenge.",
       "Evaluation briefing at EduCity from 08:15; reviewing starts when submissions close at 10:00.",
       "Uses the company's agreed criteria and decides that challenge's winner by 13:00.",
-      "The winners of all 15 company challenges are published at 13:30 at EduCity.",
+      "The winners of all 15 company challenges are announced from 13:30 at EduCity.",
     ],
   },
 ] as const;
@@ -79,7 +79,7 @@ export default function JudgeGuidePage() {
             { label: "Submissions close", value: "Sun 10:00", sub: "Hard deadline", strong: true },
             { label: "Company evaluation", value: "10:00–13:00", sub: "Briefing 08:15 · EduCity" },
             { label: "Builder voting", value: "10:00–12:00", sub: "Top five become finalists" },
-            { label: "Company winners", value: "Sun 13:30", sub: "Published at EduCity" },
+            { label: "Company winners", value: "Sun 13:30", sub: "Announced at EduCity" },
             { label: "Finals", value: "Sun 14:00", sub: "EduCity · jury decides", strong: true },
             { label: "Event ends", value: "Sun ~15:00", sub: "EduCity" },
           ]}
