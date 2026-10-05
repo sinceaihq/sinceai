@@ -14,3 +14,5 @@ export * from "./calendar";
 export * from "./text";
 // The campus twin (places, targets, routes and texts of the 3D).
 export * from "./twin";
+export * from "./discord";
+export * from "./accommodation";

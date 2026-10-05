@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  AccommodationSection,
   CriticalPath,
   FactsStrip,
   GuideCards,
@@ -44,6 +45,7 @@ export default function FieldGuideHubPage() {
           { id: "guides", label: "Your guide" },
           { id: "weekend", label: "Weekend" },
           { id: "venues", label: "Venues" },
+          { id: "accommodation", label: "Hotels" },
           { id: "preview", label: "3D preview" },
           { id: "help", label: "Help" },
         ]}
@@ -112,6 +114,8 @@ export default function FieldGuideHubPage() {
           <RouteCard />
         </div>
       </GuideSection>
+
+      <AccommodationSection />
 
       <GuideSection id="preview">
         <SectionHeading

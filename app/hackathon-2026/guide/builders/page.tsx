@@ -1,4 +1,5 @@
 import {
+  AccommodationSection,
   CalendarButton,
   Checklist,
   CriticalPath,
@@ -98,6 +99,7 @@ export default function BuilderGuidePage() {
           { id: "schedule", label: "Schedule" },
           { id: "app", label: "sinceai.app" },
           { id: "venues", label: "Venues" },
+          { id: "accommodation", label: "Hotels" },
           { id: "bring", label: "Checklist" },
           { id: "maps", label: "Maps" },
           { id: "details", label: "Details" },
@@ -186,6 +188,8 @@ export default function BuilderGuidePage() {
           />
         </div>
       </GuideSection>
+
+      <AccommodationSection />
 
       <GuideSection id="bring">
         <SectionHeading id="bring-title" eyebrow="// checklist" title="Bring and do." />

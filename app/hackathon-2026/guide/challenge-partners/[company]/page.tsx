@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
+  AccommodationSection,
   CalendarButton,
   Checklist,
   CompanyLogo,
   Details,
+  DiscordSection,
   FactsStrip,
   GuideHero,
   GuideSection,
@@ -105,6 +107,8 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
           { id: "saturday", label: "Saturday stand" },
           { id: "schedule", label: "Schedule" },
           { id: "prepare", label: "Prepare" },
+          { id: "discord", label: "Discord" },
+          { id: "accommodation", label: "Hotels" },
           { id: "details", label: "Details" },
           { id: "help", label: "Help" },
         ]}
@@ -166,6 +170,10 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
         <SectionHeading id="prepare-title" eyebrow="// prepare" title="Before the event." />
         <Checklist storageKey={`challenge-partners:${company.id}`} groups={CHECKLISTS["challenge-partners"]} />
       </GuideSection>
+
+      <DiscordSection audience={AUDIENCE} company={company.name} />
+
+      <AccommodationSection />
 
       <GuideSection id="details">
         <SectionHeading id="details-title" eyebrow="// details" title="Good to know." />

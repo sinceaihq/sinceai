@@ -1,9 +1,11 @@
 import {
+  AccommodationSection,
   CalendarButton,
   Checklist,
   CompanyDirectory,
   CriticalPath,
   Details,
+  DiscordSection,
   FactsStrip,
   GuideHero,
   GuideSection,
@@ -64,7 +66,9 @@ export default function ChallengePartnerGuidePage() {
           { id: "steps", label: "Steps" },
           { id: "schedule", label: "Schedule" },
           { id: "prepare", label: "Prepare" },
+          { id: "discord", label: "Discord" },
           { id: "venues", label: "Venues" },
+          { id: "accommodation", label: "Hotels" },
           { id: "maps", label: "Maps" },
           { id: "details", label: "Details" },
           { id: "help", label: "Help" },
@@ -122,6 +126,8 @@ export default function ChallengePartnerGuidePage() {
         <Checklist storageKey="challenge-partners" groups={CHECKLISTS["challenge-partners"]} />
       </GuideSection>
 
+      <DiscordSection audience={AUDIENCE} />
+
       <GuideSection id="venues">
         <SectionHeading
           id="venues-title"
@@ -144,6 +150,8 @@ export default function ChallengePartnerGuidePage() {
           <RouteCard />
         </div>
       </GuideSection>
+
+      <AccommodationSection />
 
       <GuideSection id="maps">
         <SectionHeading

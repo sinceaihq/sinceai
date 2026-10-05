@@ -110,15 +110,54 @@ test.describe("content", () => {
     await expect(page.locator("#company-traficom")).toContainText("1091 Hammarbacka");
   });
 
-  test("partner guide puts Red Hat first and Solita second", async ({ page }) => {
+  test("partner guide groups the stands in the partner corner: Red Hat, Solita, Pruna AI", async ({ page }) => {
     await page.goto(`${GUIDE}/partners#stands`);
     const stands = page.locator('[id^="stand-bc-"]');
-    await expect(stands).toHaveCount(4);
+    await expect(stands).toHaveCount(5);
     await expect(page.locator("#stand-bc-1")).toContainText("Stand 1 · most visible");
     await expect(page.locator("#stand-bc-1")).toContainText("Red Hat");
     await expect(page.locator("#stand-bc-2")).toContainText("Solita");
-    await expect(page.locator("#stand-bc-3")).toContainText("Visibility / Tech Partner stand");
+    await expect(page.locator("#stand-bc-3")).toContainText("Pruna AI");
     await expect(page.locator("#stand-bc-4")).toContainText("Visibility / Tech Partner stand");
+    await expect(page.locator("#stand-bc-5")).toContainText("Visibility / Tech Partner stand");
+    for (let i = 1; i <= 5; i++) await expect(page.locator(`#stand-bc-${i}`)).toContainText("partner corner");
+  });
+
+  test("partner Discord onboarding: challenge partners vs tech / visibility partners", async ({ page }) => {
+    await page.goto(`${GUIDE}/challenge-partners#discord`);
+    const cp = page.locator("#discord");
+    await expect(cp.getByRole("link", { name: /Join the Since AI Discord/ })).toHaveAttribute("href", "https://discord.gg/vMWdrVUPws");
+    await expect(cp).toContainText("Your challenge channel");
+    await cp.getByText("First time using Discord?").click();
+    await expect(cp).toContainText("Anna | Valmet");
+    await page.goto(`${GUIDE}/challenge-partners/elisa#discord`);
+    await page.locator("#discord").getByText("First time using Discord?").click();
+    await expect(page.locator("#discord")).toContainText("Anna | Elisa");
+    await page.goto(`${GUIDE}/partners#discord`);
+    const tech = page.locator("#discord");
+    await expect(tech.getByRole("link", { name: /Join the Since AI Discord/ })).toHaveAttribute("href", "https://discord.gg/vMWdrVUPws");
+    await expect(tech).toContainText("How partners use Discord");
+    await expect(tech).not.toContainText(/challenge channel|judg/i);
+  });
+
+  test("accommodation: the four confirmed offers on every partner and builder page", async ({ page }) => {
+    for (const path of [GUIDE, `${GUIDE}/builders`, `${GUIDE}/challenge-partners`, `${GUIDE}/partners`, `${GUIDE}/challenge-partners/elisa`]) {
+      await page.goto(`${path}#accommodation`);
+      const acc = page.locator("#accommodation");
+      await expect(acc.locator("[data-offer]")).toHaveCount(4);
+      await expect(acc).toContainText("SINCEAI2026");
+      await expect(acc).not.toContainText(/Bob W|Centro/);
+      await expect(acc.getByRole("link", { name: /View discounted Scandic rates/ })).toHaveAttribute(
+        "href",
+        "https://www.scandichotels.com/fi?bookingCode=CGRO",
+      );
+      await expect(acc.locator('[data-offer="scandic-turku"]')).not.toContainText("%");
+    }
+    // After the Sokos deadline the rate is marked ended, never offered.
+    await page.goto(`${GUIDE}/partners?now=2026-10-06T17:00#accommodation`);
+    const sokos = page.locator('[data-offer="sokos-kupittaa"]');
+    await expect(sokos).toContainText("Ended");
+    await expect(sokos).not.toContainText("BSINCEAI");
   });
 
   test("company page shows its own room and stand", async ({ page }) => {

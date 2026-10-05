@@ -8,7 +8,16 @@ import type { ChecklistGroup } from "@/lib/hackathon-2026";
  * Uncontrolled inputs: it works and prints without JavaScript; JS only
  * restores and saves state.
  */
-export function Checklist({ storageKey, groups }: { storageKey: string; groups: readonly ChecklistGroup[] }) {
+export function Checklist({
+  storageKey,
+  groups,
+  single = false,
+}: {
+  storageKey: string;
+  groups: readonly ChecklistGroup[];
+  /** One column at every width (a single list in a narrow column). */
+  single?: boolean;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const uid = useId();
   const key = `sinceai-guide-checklist:${storageKey}`;
@@ -46,7 +55,7 @@ export function Checklist({ storageKey, groups }: { storageKey: string; groups: 
 
   return (
     <div ref={ref}>
-      <div className="grid grid-cols-1 gap-x-10 gap-y-10 md:grid-cols-2">
+      <div className={single ? "grid grid-cols-1 gap-y-10" : "grid grid-cols-1 gap-x-10 gap-y-10 md:grid-cols-2"}>
         {groups.map((group, gi) => (
           <fieldset key={group.title} className="guide-avoid-break min-w-0">
             <legend className="mb-3 text-lg font-bold tracking-tight text-white">{group.title}</legend>
