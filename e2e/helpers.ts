@@ -65,5 +65,10 @@ export async function acceptNoCookies(page: Page) {
 }
 
 export async function horizontalOverflow(page: Page) {
-  return page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+  // Measure the settled layout: text set in a fallback font can be a pixel wider until the web fonts swap in.
+  return page.evaluate(async () => {
+    await document.fonts.ready;
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    return document.documentElement.scrollWidth - window.innerWidth;
+  });
 }
