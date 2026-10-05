@@ -470,7 +470,7 @@ export function chairsFor(t: TableSpot): { x: number; z: number; ry: number }[] 
   return out;
 }
 
-// ── Visibility / tech partner stands (SPEC §7.1) ────────────────────────────
+// ── Visibility / tech partner stands: the partner corner (organiser, 6 Oct 2026) ──
 
 export interface StandPose {
   id: string;
@@ -482,25 +482,52 @@ export interface StandPose {
   /** Long side (m) and depth (m). */
   width: number;
   depth: number;
-  /** Render as an open spot marker only (no counter) — bc-4 sits in the reserved terrace. */
+  /** Render as an open spot marker only (no counter): a position without a partner yet. */
   markerOnly?: boolean;
+  /** A partner roll-up beside the back wall (off for the row, where it would stand in the next stand). */
+  rollup?: boolean;
+  /** Label height (m above the floor); the row's labels alternate so neighbours never overlap. */
+  labelY?: number;
+  /** Where "Walk me there" ends (plan B), when 3.6 m straight out from the front is not clear. */
+  walk?: V2;
 }
 
-/** Stands 1 and 3 turn 12° from the curved glass towards the event entrance (all that fits: column behind, glass in front). */
-const TURN = (12 * Math.PI) / 180;
-
-export const STANDS: StandPose[] = [
-  // Red Hat: back to the double column, front turned towards the event-entrance vestibule (glass ≈0.3–0.9 m away).
-  { id: "bc-1", x: 6.45, z: -31.82, face: [-Math.sin(TURN), -Math.cos(TURN)], width: 2.0, depth: 1.0 },
-  // Solita: lobby east end by the Joki passage, facing the build hall.
-  { id: "bc-2", x: 26.35, z: -2.81, face: [-1, 0], width: 2.0, depth: 1.0 },
-  // Open stand mirrored at the west side of the event entrance.
-  { id: "bc-3", x: -6.45, z: -31.82, face: [Math.sin(TURN), -Math.cos(TURN)], width: 2.0, depth: 1.0 },
-  // Open stand at the lobby's west end (inside the reserved restaurant terrace — organiser to resolve).
-  { id: "bc-4", x: -24.46, z: -3.62, face: [1, 0], width: 2.0, depth: 1.0, markerOnly: true },
+/**
+ * The partner corner at the main lobby's south-east end (where Solita's stand was): a row of four
+ * stands along the corner's north-east side, backs 0.9 m off the bistro bar and the corner room,
+ * fronts facing the walkway to Joki; Solita in its own position facing the build hall. Kept clear:
+ * the corridor to the meals and the Aulagalleria (route at x 19.9; the row starts 1.25 m east of it),
+ * the walkway to Joki (z ≥ −1.3), the side door in the east wall (z −3.58…−2.67) and the column at
+ * (24.16, −4.95), which stands in the row's visitor zone, 1.65 m in front of stand 3's counter.
+ */
+const ROW_Z = -7.1;
+const ROW: { id: string; x: number; markerOnly?: boolean; labelY: number; walk: V2 }[] = [
+  { id: "bc-1", x: 22.15, labelY: 3.0, walk: [22.15, -4.4] },
+  { id: "bc-3", x: 24.35, labelY: 3.55, walk: [25.0, -4.4] },
+  { id: "bc-4", x: 26.55, markerOnly: true, labelY: 2.6, walk: [26.55, -5.0] },
+  { id: "bc-5", x: 28.75, markerOnly: true, labelY: 3.15, walk: [28.6, -5.0] },
 ];
 
-/** Label group of the four stand labels: the biocity:stands view shows the group in full (phones too). */
+export const STANDS: StandPose[] = [
+  ...ROW.map(
+    (r): StandPose => ({
+      id: r.id,
+      x: r.x,
+      z: ROW_Z,
+      face: [0, 1],
+      width: 2.0,
+      depth: 1.0,
+      markerOnly: r.markerOnly,
+      rollup: false,
+      labelY: r.labelY,
+      walk: r.walk,
+    }),
+  ),
+  // Solita: the lobby's east end by the Joki passage, facing the build hall (unchanged).
+  { id: "bc-2", x: 26.35, z: -2.81, face: [-1, 0], width: 2.0, depth: 1.0, rollup: true },
+];
+
+/** Label group of the stand labels: the biocity:stands view shows the group in full (phones too). */
 export const STAND_LABEL_GROUP = "biocity-stands";
 
 // ── Event route legs inside BioCity (DESIGN §12) ────────────────────────────
@@ -539,17 +566,13 @@ export const ROUTE_LEGS_B: Record<string, V3[]> = {
     [36.0, JOKI_PASSAGE.bottom, 0.5],
     [37.4, JOKI_PASSAGE.bottom, 0.5],
   ],
-  // Tykistökatu → build hall → east ring corridor → Aulagalleria → beside Red Hat's stand (bc-1).
-  "int-bio-tyk-to-gallery": [
+  // Tykistökatu → build hall's central walkway → the partner corner at its south-east end, in front of
+  // the partner row (clear of the column at (24.16, −4.95) and Solita's stand).
+  "int-bio-tyk-to-stands": [
     ...DOOR_PATH_B,
     [-24.8, LEVEL.gf, WALKWAY_Z],
-    [18.4, LEVEL.gf, WALKWAY_Z],
-    [19.9, LEVEL.gf, -1.8],
-    [19.9, LEVEL.gf, -20.0],
-    [20.1, LEVEL.gf, -26.3],
-    [15.0, LEVEL.gf, -28.0],
-    [10.01, LEVEL.gf, -29.6],
-    [8.3, LEVEL.gf, -31.55],
+    [21.6, LEVEL.gf, WALKWAY_Z],
+    [23.3, LEVEL.gf, -4.0],
   ],
   // Event entrance (Jussin aukio) → Aulagalleria → east ring corridor → the build hall's walkway.
   "int-bio-event-to-lobby": [

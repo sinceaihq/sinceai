@@ -25,8 +25,6 @@ const EDUCITY_DECK_Y = 3.4;
 /** SPEC §7.0 ground floors reached from the outdoor legs. */
 const HERO_FLOOR = { w48381050: 0.06, w731925812: 3.4 };
 const JOKI_HALL_FLOOR = -1.7;
-/** SPEC §7.1: Stand 1 (bc-1) centre — the partner-stand leg ends in front of it. */
-const STAND_1 = [22.78, -0.28];
 
 /** Tours (ids, legs and end targets match lib/hackathon-2026/twin.ts TOURS_3D; a unit test checks it). */
 export const TOURS = [
@@ -69,7 +67,7 @@ export const TOURS = [
     "partners-tykistokatu-to-stands",
     "visibility and tech partners",
     "Fri 6 Nov from 18:00",
-    ["out-co-kerb-bio-main", "int-bio-tyk-to-gallery"],
+    ["out-co-kerb-bio-main", "int-bio-tyk-to-stands"],
     "bc-1",
   ],
   [
@@ -311,24 +309,13 @@ export function buildRoutes({ specRoutes, osm, heights, streets, terrain, educit
     };
   }
   {
-    // Tykistökatu door → lobby walkway → east ring corridor → Aulagalleria, ending in front of Stand 1.
+    // Tykistökatu door → lobby walkway → the partner corner at the hall's south-east end (organiser,
+    // 6 Oct 2026): the walkway to plan-B x 21.6, then into the corner in front of the partner row
+    // (B (23.3, −4.0)); campus-frame points of components/guide/twin/engine/buildings/biocity/plan.ts.
     const tyk = spec["int-bio-tyk-to-joki"].points_xyz;
-    const ev = [...spec["int-bio-event-to-lobby"].points_xyz].reverse();
-    const join = ev[0]; // (1.44, 0.06, 23.85) lies on the lobby walkway segment of the Tykistökatu leg
-    const hit = nearestOnLine(
-      [join[0], join[2]],
-      [tyk[2], tyk[3]].map(([x, , z]) => [x, z]),
-    );
-    if (hit.d > 0.05) throw new Error("routes: the event leg does not join the lobby walkway");
-    // Last segment: stop at the point nearest to Stand 1.
-    const k = ev.findIndex(([x, , z]) => x === 19.57 && z === -2.18);
-    const last = nearestOnLine(
-      STAND_1,
-      [ev[k - 1], ev[k]].map(([x, , z]) => [x, z]),
-    ).point;
-    derived3d["int-bio-tyk-to-gallery"] = {
-      title: "BioCity Tykistökatu door → main lobby → east ring corridor → Aulagalleria (Stand 1)",
-      points: [...tyk.slice(0, 3), ...ev.slice(0, k), [r2(last[0]), ev[k][1], r2(last[1])]],
+    derived3d["int-bio-tyk-to-stands"] = {
+      title: "BioCity Tykistökatu door → main lobby walkway → partner corner (stands)",
+      points: [...tyk.slice(0, 3), [5.68, 0.06, 30.16], [9.67, 0.06, 29.45]],
     };
   }
 

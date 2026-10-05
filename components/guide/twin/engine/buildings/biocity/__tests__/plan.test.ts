@@ -10,6 +10,7 @@ import {
   ISLANDS,
   JOKI_PASSAGE,
   LEVEL,
+  MAUNO,
   OVAL_COLUMNS,
   PASSAGE_MOUTH,
   RETAIL_FRONT,
@@ -53,6 +54,22 @@ function segSegDist(a: V2, b: V2, c: V2, d: V2): number {
     best = Math.min(best, segDist([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t], c, d));
   }
   return best;
+}
+
+/** A stand's footprint corners in order (plan B). */
+function standRing(s: (typeof STANDS)[number]): V2[] {
+  const [fx, fz] = s.face;
+  const ax = -fz;
+  const az = fx;
+  const out: V2[] = [];
+  for (const [u, v] of [
+    [-1, -1],
+    [1, -1],
+    [1, 1],
+    [-1, 1],
+  ])
+    out.push([s.x + ax * u * (s.width / 2) + fx * v * (s.depth / 2), s.z + az * u * (s.width / 2) + fz * v * (s.depth / 2)]);
+  return out;
 }
 
 const wallRings: V2[][] = GF_WALLS.map((flat) => {
@@ -156,25 +173,72 @@ describe("BioCity build tables (SPEC §7.1)", () => {
 });
 
 describe("BioCity stands (SPEC §7.1)", () => {
-  it("stands 1 and 3 fit between the double column and the curved glass", () => {
-    for (const id of ["bc-1", "bc-3"]) {
-      const s = STANDS.find((x) => x.id === id)!;
-      const [fx, fz] = s.face;
-      const ax = -fz;
-      const az = fx;
-      const corners: V2[] = [];
-      for (const u of [-1, 1]) for (const v of [-1, 1]) corners.push([s.x + ax * u * (s.width / 2) + fx * v * (s.depth / 2), s.z + az * u * (s.width / 2) + fz * v * (s.depth / 2)]);
-      for (const c of corners) {
-        const r = Math.hypot(c[0] - GALLERY.cx, c[1] - GALLERY.cz);
-        expect(r).toBeLessThan(GALLERY.rInner - 0.2);
-        // Clear of the double column (centre x ±6.16, z −30.95, 0.38 + 0.38 wide).
-        const inColumn = Math.abs(Math.abs(c[0]) - 6.16) < 0.38 && Math.abs(c[1] + 30.95) < 0.19;
-        expect(inColumn).toBe(false);
+  it("groups every stand in the partner corner, Solita where it was", () => {
+    const solita = STANDS.find((s) => s.id === "bc-2")!;
+    expect([solita.x, solita.z, ...solita.face]).toEqual([26.35, -2.81, -1, 0]);
+    expect(STANDS).toHaveLength(5);
+    for (const s of STANDS) {
+      for (const [x, z] of standRing(s)) {
+        expect(x).toBeGreaterThan(20.9);
+        expect(x).toBeLessThan(30.0);
+        expect(z).toBeGreaterThan(-8.5);
+        expect(z).toBeLessThan(-1.3);
       }
-      // Turned towards the event entrance (front points to −z and towards x = 0).
-      expect(fz).toBeLessThan(-0.9);
-      expect(Math.sign(fx)).toBe(-Math.sign(s.x));
     }
+  });
+
+  it("never overlaps another stand (≥ 0.15 m apart)", () => {
+    for (let i = 0; i < STANDS.length; i++)
+      for (let j = i + 1; j < STANDS.length; j++) {
+        const a = standRing(STANDS[i]);
+        const b = standRing(STANDS[j]);
+        let d = Infinity;
+        for (let k = 0; k < 4; k++) for (let m = 0; m < 4; m++) d = Math.min(d, segSegDist(a[k], a[(k + 1) % 4], b[m], b[(m + 1) % 4]));
+        expect(d).toBeGreaterThanOrEqual(0.15);
+      }
+  });
+
+  it("keeps 0.3 m from every CAD wall and column and 0.8 m from the bistro bar", () => {
+    for (const s of STANDS) {
+      const ring = standRing(s);
+      const c = clearance([...ring, ring[0]]);
+      if (c.d < 0.3) throw new Error(`${s.id}: ${c.d.toFixed(2)} m from ${c.where}`);
+      const bar = MAUNO.bar;
+      const barRing: V2[] = [
+        [bar.x0, bar.z0],
+        [bar.x1, bar.z0],
+        [bar.x1, bar.z1],
+        [bar.x0, bar.z1],
+      ];
+      let d = Infinity;
+      for (let k = 0; k < 4; k++) for (let m = 0; m < 4; m++) d = Math.min(d, segSegDist(ring[k], ring[(k + 1) % 4], barRing[m], barRing[(m + 1) % 4]));
+      expect(d).toBeGreaterThanOrEqual(0.8);
+    }
+  });
+
+  it("leaves every walking route at least 1 m clear", () => {
+    for (const [id, pts] of Object.entries(ROUTE_LEGS_B)) {
+      const line = pts.map((p): V2 => [p[0], p[2]]);
+      for (const s of STANDS) {
+        const ring = standRing(s);
+        for (let i = 0; i + 1 < line.length; i++)
+          for (let k = 0; k < 4; k++) {
+            const d = segSegDist(line[i], line[i + 1], ring[k], ring[(k + 1) % 4]);
+            if (d < 1.0) throw new Error(`${id} passes ${d.toFixed(2)} m from ${s.id}`);
+          }
+      }
+    }
+  });
+
+  it("keeps the corner's side door and the passage to Joki clear", () => {
+    // In front of the east wall's door (z −3.58…−2.67) and of the passage mouth: 1.5 m deep.
+    const zones = [
+      { x0: 28.6, x1: 30.2, z0: -3.9, z1: -2.3 },
+      { x0: 28.6, x1: 30.2, z0: PASSAGE_MOUTH.z0 - 0.3, z1: PASSAGE_MOUTH.z1 + 0.3 },
+    ];
+    for (const s of STANDS)
+      for (const [x, z] of standRing(s))
+        for (const zn of zones) expect(x > zn.x0 && x < zn.x1 && z > zn.z0 && z < zn.z1).toBe(false);
   });
 });
 
@@ -182,7 +246,7 @@ describe("BioCity route legs (DESIGN §12)", () => {
   const local = routeLegsLocal();
 
   it("provides every int-bio leg, joining routes.json at the doors", () => {
-    expect(Object.keys(local).sort()).toEqual(["int-bio-event-to-lobby", "int-bio-lobby-to-event", "int-bio-tyk-to-gallery", "int-bio-tyk-to-joki"]);
+    expect(Object.keys(local).sort()).toEqual(["int-bio-event-to-lobby", "int-bio-lobby-to-event", "int-bio-tyk-to-joki", "int-bio-tyk-to-stands"]);
     const routes = JSON.parse(fs.readFileSync(path.join(process.cwd(), "public/assets/guide/3d/data/routes.json"), "utf8")) as {
       legs: Record<string, { points: V3[] }>;
     };
@@ -192,7 +256,7 @@ describe("BioCity route legs (DESIGN §12)", () => {
       const theirs = routes.legs[id]?.points;
       expect(theirs).toBeDefined();
       expect(near(ours[0], theirs[0])).toBe(true);
-      if (id !== "int-bio-tyk-to-gallery" && id !== "int-bio-event-to-lobby" && id !== "int-bio-lobby-to-event") {
+      if (id !== "int-bio-event-to-lobby" && id !== "int-bio-lobby-to-event") {
         expect(near(ours[ours.length - 1], theirs[theirs.length - 1])).toBe(true);
       }
     }
@@ -271,7 +335,7 @@ describe("BioCity views and targets", () => {
     for (const key of ["biocity:default", "biocity:entrance", "biocity:gallery", "biocity:stands"]) expect(BIOCITY_VIEWS[key]).toBeDefined();
     const ids = biocityTargets().map((t) => t.id).sort();
     expect(ids).toEqual(
-      ["bc-1", "bc-2", "bc-3", "bc-4", "build-hall", "entrance-biocity-courtyard", "entrance-biocity-tykistokatu", "serving-lines"].sort(),
+      ["bc-1", "bc-2", "bc-3", "bc-4", "bc-5", "build-hall", "entrance-biocity-courtyard", "entrance-biocity-tykistokatu", "serving-lines"].sort(),
     );
     for (const t of biocityTargets()) {
       for (const n of [...t.view.position, ...t.view.target]) expect(Number.isFinite(n)).toBe(true);

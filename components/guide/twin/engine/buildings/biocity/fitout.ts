@@ -39,7 +39,17 @@ import {
   type StandPose,
 } from "./plan";
 import { Buckets, box, mergeAll, segmentBox } from "./geom";
-import { doorASign, lettering, mapBoard, passageSign, sciencePark, standAtlas, totemAtlas, type AtlasTexture } from "./textures";
+import {
+  doorASign,
+  lettering,
+  mapBoard,
+  passageSign,
+  sciencePark,
+  standAtlas,
+  totemAtlas,
+  type AtlasTexture,
+  type StandGraphic,
+} from "./textures";
 
 /**
  * BioCity's event fit-out and signage (SPEC §7.1): the build hall's 56 tables
@@ -50,6 +60,13 @@ import { doorASign, lettering, mapBoard, passageSign, sciencePark, standAtlas, t
  * lines, the bistro bar, the info desk, and the building's own lettering
  * (vertical BIOCITY, rooftop SCIENCE PARK, the Tykistökatu "A" door board).
  */
+
+
+/** White-on-dark partner logos for the stand graphics (others are set in lettering, e.g. Red Hat). */
+const STAND_LOGOS_3D: Record<string, string> = {
+  solita: "/assets/guide/3d/logos/solita.png",
+  "pruna-ai": "/assets/guide/3d/logos/pruna-ai.png",
+};
 
 export interface FitoutResult {
   /** Objects for the interior group (furniture with their own materials, stand signs, seated people). */
@@ -167,19 +184,25 @@ export function buildFitout(b: Buckets, ctx: TwinContext): FitoutResult {
   }
 
   // ── Partner stands (one sign atlas; each stand a pickable group) ──
-  const atlas: AtlasTexture = standAtlas(
-    STANDS.map((s) => {
-      const stand = BIOCITY_STANDS.find((x) => x.id === s.id);
-      const partner = stand ? getStandPartner(stand) : undefined;
-      const logo = partner?.id === "solita" ? "/assets/guide/3d/logos/solita.png" : null;
-      return {
-        logo,
+  // One tile per partner stand; every open position shares one "open" tile (the atlas holds four).
+  const graphics: StandGraphic[] = [];
+  const tileOf = new Map<string, number>();
+  for (const s of STANDS) {
+    const stand = BIOCITY_STANDS.find((x) => x.id === s.id);
+    const partner = stand ? getStandPartner(stand) : undefined;
+    const key = partner ? partner.id : "open";
+    if (!tileOf.has(key)) {
+      tileOf.set(key, graphics.length);
+      graphics.push({
+        logo: partner ? (STAND_LOGOS_3D[partner.id] ?? null) : null,
         title: partner ? partner.name : OPEN_STAND_LABEL,
-        subtitle: partner ? `Stand ${stand?.rank} · Visibility / Tech partner` : `Stand ${stand?.rank} · open`,
+        subtitle: partner ? `Stand ${stand?.rank} · Visibility / Tech partner` : "Open position",
         open: !partner,
-      };
-    }),
-  );
+      });
+    }
+    tileOf.set(s.id, tileOf.get(key)!);
+  }
+  const atlas: AtlasTexture = standAtlas(graphics);
   textures.push(atlas.texture);
   readies.push(atlas.ready);
   const signMat = new THREE.MeshStandardMaterial({
@@ -210,7 +233,7 @@ export function buildFitout(b: Buckets, ctx: TwinContext): FitoutResult {
         new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), yaw),
         new THREE.Vector3(1, 1, 1),
       );
-      const uv = atlas.tile(i);
+      const uv = atlas.tile(tileOf.get(s.id) ?? i);
       const parts: THREE.BufferGeometry[] = [];
       const solid: THREE.BufferGeometry[] = [];
       const light: THREE.BufferGeometry[] = [];
@@ -255,7 +278,7 @@ export function buildFitout(b: Buckets, ctx: TwinContext): FitoutResult {
         light.push(box(-0.76, 0.02, -0.5, 0.76, 0.04, -0.47));
         // A partner's roll-up beside the wall, on the open side (stand 3 mirrors stand 1), and a bar
         // stool behind the counter. An open stand has no roll-up (a bare cassette read as debris).
-        if (partner) {
+        if (partner && s.rollup !== false) {
           const side = s.face[0] > 0.05 ? -1 : 1;
           const rs = roll.stand.clone();
           rs.translate(side * (s.width / 2 + 0.55), 0, 0.1);
@@ -277,26 +300,23 @@ export function buildFitout(b: Buckets, ctx: TwinContext): FitoutResult {
       b.add("interior", "standBlack", mergeAll(solid));
       if (light.length) b.add("interior", "violetLine", mergeAll(light));
       // Pick proxy: the stand's volume (2.4 m tall), invisible.
-      const proxy = new THREE.Mesh(new THREE.BoxGeometry(s.width + 0.4, 2.4, s.depth + 0.8), proxyMat);
+      const proxy = new THREE.Mesh(new THREE.BoxGeometry(s.width + 0.2, 2.4, s.depth + 0.8), proxyMat);
       proxy.name = `stand-${s.id}`;
       proxy.position.set(s.x, y0 + 1.2, s.z);
       proxy.rotation.y = yaw;
       proxy.userData.pickId = s.id;
       interior.push(proxy);
       pickables.push(proxy);
-      // Short on the map ("Stand 3 · open"). Stands 1 and 3 flank the event entrance 13 m apart and
-      // read on one line from the courtyard: their labels sit over the stands' outer halves and leave
-      // the area to the Aulagalleria's own label, so neither hides the other.
-      const gallery = s.id === "bc-1" || s.id === "bc-3";
+      // Short on the map ("Stand 4 · open"); the row's labels alternate in height so neighbours 2.2 m
+      // apart never cover each other.
       const label = makeLabel(
         partner ? `Stand ${stand?.rank} · ${partner.name}` : `Stand ${stand?.rank} · open`,
         partner ? "stand" : "open",
-        s.x + (gallery ? Math.sign(s.x) * 0.6 : 0),
-        s.markerOnly ? 2.6 : 3.0,
+        s.x,
+        s.labelY ?? (s.markerOnly ? 2.6 : 3.0),
         s.z,
         // The partner-stands view shows this group in full, phones included (open stands too).
         STAND_LABEL_GROUP,
-        gallery ? undefined : stand?.area,
       );
       labels.push({ label, interior: true });
     });
@@ -313,7 +333,7 @@ export function buildFitout(b: Buckets, ctx: TwinContext): FitoutResult {
     const atlasT = totemAtlas([
       { lines: [{ text: "Build hall", arrow: "right" }, { text: "Joki\nQ&A Showroom", arrow: "right" }, { text: "Partner\nstands", arrow: "up" }] },
       { lines: [{ text: "Joki\nShowroom", arrow: "down" }, { text: "Q&A floors\n2–3", arrow: "down" }] },
-      { lines: [{ text: "Build hall", arrow: "right" }, { text: "Meals", arrow: "left" }, { text: "Stand 1", arrow: "left" }] },
+      { lines: [{ text: "Build hall", arrow: "right" }, { text: "Meals", arrow: "left" }, { text: "Partner\nstands", arrow: "right" }] },
       { lines: [{ text: "Aulagalleria\nMeals", arrow: "up" }, { text: "Event\nentrance", arrow: "up" }] },
     ]);
     textures.push(atlasT.texture);

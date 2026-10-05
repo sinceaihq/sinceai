@@ -15,16 +15,17 @@ function pose(p: V3, t: V3): Pick<CameraView, "position" | "target"> {
 }
 
 /**
- * Dollhouse close-ups of the stands. Stands 1 and 3 face the curved glass of the Aulagalleria
- * (0.9 m away), so their camera looks in over the glass from the event entrance side.
+ * Dollhouse close-ups of the stands in the partner corner, from over the walkway (roof lifted): the
+ * row's stands from in front and a little to the west (the way builders come along the hall),
+ * Solita from over the hall's central walkway.
  */
+const rowCamera = (x: number): { p: V3; t: V3; open: boolean } => ({ p: [x - 2.2, 5.6, -0.4], t: [x + 0.3, 1.3, -7.1], open: true });
 const STAND_CAMERAS: Record<string, { p: V3; t: V3; open: boolean }> = {
-  // Stands 1 and 3 from above the event entrance, roof lifted: the way you meet them coming in.
-  "bc-1": { p: [-3.5, 7.5, -34.6], t: [6.45, 1.2, -31.8], open: true },
-  "bc-3": { p: [3.5, 7.5, -34.6], t: [-6.45, 1.2, -31.8], open: true },
-  // Stands 2 and 4 from above the build hall's central walkway (roof lifted).
+  "bc-1": rowCamera(22.15),
+  "bc-3": rowCamera(24.35),
+  "bc-4": rowCamera(26.55),
+  "bc-5": rowCamera(28.75),
   "bc-2": { p: [16.4, 6.4, -1.2], t: [26.2, 1.1, -2.7], open: true },
-  "bc-4": { p: [-12.6, 6.4, -0.6], t: [-24.4, 1.0, -3.4], open: true },
 };
 
 function standView(id: string): CameraView {
@@ -35,8 +36,8 @@ function standView(id: string): CameraView {
 }
 
 export const BIOCITY_VIEWS: Record<string, CameraView> = {
-  // The build hall down its length from over the Tykistökatu end, the roof lifted: the 56 tables, stands
-  // bc-4 and bc-2 at its ends, the passage to Joki beyond (the hall leads, not the walls round it).
+  // The build hall down its length from over the Tykistökatu end, the roof lifted: the 56 tables, the
+  // partner corner at the far end and the passage to Joki beyond (the hall leads, not the walls round it).
   "biocity:default": {
     ...pose([-40, 12, 2.5], [4, 0, -0.5]),
     hfov: 62,
@@ -53,7 +54,7 @@ export const BIOCITY_VIEWS: Record<string, CameraView> = {
     labels: true,
     open: null,
   },
-  // The curved Aulagalleria from over the courtyard: the event entrance and stands 1 and 3.
+  // The curved Aulagalleria from over the courtyard: the builders' event entrance and the way to the meals.
   "biocity:gallery": {
     ...pose([0.5, 30, -51], [2, 0, -27]),
     hfov: 62,
@@ -63,15 +64,16 @@ export const BIOCITY_VIEWS: Record<string, CameraView> = {
     labels: true,
     open: OPEN,
   },
-  // All four stands: the gallery (1, 3) and both ends of the build hall (2, 4).
+  // The partner corner: all five stand positions from over the build hall's east end, the walkway to
+  // Joki in front of them (roof lifted).
   "biocity:stands": {
-    ...pose([1, 40, -60], [1, 0, -16]),
-    hfov: 64,
-    fit: 30,
-    // Phones: nearly straight down with the hall running up the screen (all four stands in view).
-    portrait: { ...pose([-22, 76, -17], [1.5, 0, -17]), fit: 17 },
+    ...pose([13.2, 11.5, 4.2], [25.6, 0.6, -4.6]),
+    hfov: 62,
+    fit: 12,
+    // Phones: steeper, from over the walkway, the row running across the screen.
+    portrait: { ...pose([24.2, 21, 6.5], [25.4, 0, -4.4]), fit: 9 },
     labels: true,
-    // All four stand labels, open stands included, also on phones (which drop "open" labels elsewhere).
+    // All stand labels, open positions included, also on phones (which drop "open" labels elsewhere).
     labelGroup: STAND_LABEL_GROUP,
     open: OPEN,
   },
@@ -86,12 +88,9 @@ function walkTo(x: number, z: number): [number, number] {
 export function biocityTargets(): TwinTarget[] {
   const out: TwinTarget[] = [];
   for (const s of STANDS) {
-    // Stand 1 and 3 have ≈0.9 m to the curved glass: walk to their open end, not their front.
-    // Stands 1 and 3 have the curved glass close in front: walking ends just inside the event
-    // entrance, looking at the stand (the view's direction); 2 and 4 in front of the stand.
-    const gallery = s.id === "bc-1" || s.id === "bc-3";
-    // 3.6 m out: the whole stand (wall graphic, counter, roll-up) in view, not a counter in the face.
-    const w = gallery ? walkTo(Math.sign(s.x) * 0.4, -32.9) : walkTo(s.x + s.face[0] * 3.6, s.z + s.face[1] * 3.6);
+    // 3.6 m out: the whole stand (wall graphic, counter, roll-up) in view, not a counter in the face —
+    // or the stand's own clear spot in the partner corner (the row has a column and Solita in front).
+    const w = s.walk ? walkTo(s.walk[0], s.walk[1]) : walkTo(s.x + s.face[0] * 3.6, s.z + s.face[1] * 3.6);
     out.push({ id: s.id, view: standView(s.id), level: "biocity-1", walkTo: w });
   }
   // From across Tykistökatu straight down the revolving door's axis (the walk-mode heading comes from

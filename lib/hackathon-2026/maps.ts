@@ -382,10 +382,22 @@ export const VENUE_MAPS: readonly VenueMap[] = [
         y: 0.203,
         kind: "entrance",
       }),
-      standHotspot("stand-bc-1", 0.616, 0.256),
+      // The partner corner (organiser, 6 Oct 2026): one ring for every visibility / tech partner stand —
+      // the stands are 2.2 m apart, too close for a ring each on this plan. Plan-B → image: u = 0.806 +
+      // 0.0095 (x − 26.35), v = 0.641 + 0.01327 (z + 2.81), fitted on the previous stand positions.
+      hs({
+        id: "bio-partner-corner",
+        label: "Partner corner",
+        description: "Every visibility & tech partner stand · south-east end of the main lobby, by the passage to Joki",
+        x: 0.797,
+        y: 0.6,
+        kind: "area",
+      }),
+      standHotspot("stand-bc-1", 0.766, 0.584),
       standHotspot("stand-bc-2", 0.806, 0.641),
-      standHotspot("stand-bc-3", 0.494, 0.256),
-      standHotspot("stand-bc-4", 0.322, 0.63),
+      standHotspot("stand-bc-3", 0.787, 0.584),
+      standHotspot("stand-bc-4", 0.808, 0.584),
+      standHotspot("stand-bc-5", 0.829, 0.584),
       hs({
         id: "bio-build-hall",
         label: "Build area",

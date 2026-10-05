@@ -179,11 +179,11 @@ export const PLACES_3D: readonly Place3D[] = [
     title: "BioCity · build hall and partner stands",
     caption:
       "Companies and partners come in from Tykistökatu through the open entrance recess, past the supercar display; builders enter from Jussin aukio into the Aulagalleria. The main lobby is the build hall, open around the clock, and Joki is down a short stair at its far (south-east) end.",
-    alt: `3D model of BioCity's ground floor: the long main lobby filled with rows of build tables, the curved Aulagalleria with the courtyard entrance and ${standMention(
-      standById("bc-1"),
-    )} facing it, ${standMention(standById("bc-2"))} at the far end of the lobby by the stair down to Joki, ${inWords(
-      openStandCount,
-    )} open partner stands, and the Tykistökatu entrance recess with the supercar display.`,
+    alt: `3D model of BioCity's ground floor: the long main lobby filled with rows of build tables, the partner corner at its far (south-east) end by the stair down to Joki — ${BIOCITY_STANDS.filter(
+      (s) => getStandPartner(s),
+    )
+      .map(standMention)
+      .join(", ")} and ${inWords(openStandCount)} open stand positions — the curved Aulagalleria with the courtyard entrance, and the Tykistökatu entrance recess with the supercar display.`,
     poster: "/assets/guide/3d/posters/biocity.webp",
     views: [
       { id: "default", label: "Build hall" },
@@ -501,10 +501,19 @@ export function targetsForPlace(place: PlaceId): Target3D[] {
 
 // ── Walking routes ───────────────────────────────────────────────────────────
 
-const stand1 = standById("bc-1");
 const stand2 = standById("bc-2");
-const stand3 = standById("bc-3");
-const stand4 = standById("bc-4");
+/** "Red Hat's stand (Stand 1) and Pruna AI's stand (Stand 3) are in the row by the corridor to the meals, with two open positions." */
+function partnerRowSentence(): string {
+  const row = BIOCITY_STANDS.filter((s) => s.id !== "bc-2");
+  const taken = row.filter((s) => getStandPartner(s)).map(standMention);
+  const open = row.length - taken.length;
+  const list = taken.length > 1 ? `${taken.slice(0, -1).join(", ")} and ${taken.at(-1)}` : (taken[0] ?? "");
+  const verb = taken.length > 1 ? "are" : "is";
+  const rest = open ? `, with ${inWords(open)} open position${open > 1 ? "s" : ""}` : "";
+  return taken.length
+    ? `${list} ${verb} in the row by the corridor to the meals${rest}.`
+    : `the partner row is by the corridor to the meals${rest}.`;
+}
 const MAIN_STAIRS = "climb the wide outdoor stairs at its east corner (about 30 steps)";
 /** Friday, inside door B: no single room — each company has its own (see tourForCompany). */
 const DOOR_B_INSIDE =
@@ -681,12 +690,12 @@ export const TOURS_3D: readonly Tour3D[] = [
     label: "Drop-off → BioCity partner stands",
     audience: "Visibility and tech partners",
     summary:
-      "From a drop-off on Tykistökatu into BioCity's entrance recess, through the build hall and round to the stands in the Aulagalleria.",
+      "From a drop-off on Tykistökatu into BioCity's entrance recess and down the build hall to the partner corner at its far (south-east) end.",
     place: "biocity",
-    legs: ["out-co-kerb-bio-main", "int-bio-tyk-to-gallery"],
+    legs: ["out-co-kerb-bio-main", "int-bio-tyk-to-stands"],
     to: "bc-1",
-    distanceM: 106,
-    minutes: 1.4,
+    distanceM: 72,
+    minutes: 0.9,
     steps: [
       step(
         "Get dropped off on Tykistökatu just after the traffic lights at Lemminkäisenkatu, on BioCity's side.",
@@ -704,14 +713,14 @@ export const TOURS_3D: readonly Tour3D[] = [
         "Build hall",
       ),
       step(
-        "Near the far end, turn left into the corridor beside the meeting rooms, then left again into the curved Aulagalleria.",
-        [4.82, 28.69],
-        "Aulagalleria",
+        "Keep to the central walkway between the build tables to the hall's far (south-east) end.",
+        [-0.95, 20.64],
+        "Central walkway",
       ),
       step(
-        `${standMention(stand1)} faces the event entrance, with ${standMention(stand3)} beside the entrance. ${standMention(stand2)} is at the far end of the build hall by the stair to Joki, and ${standMention(stand4)} at the hall's Tykistökatu end.`,
-        [23.08, 3.91],
-        "Partner stands",
+        `The partner corner is on your left before the passage to Joki: ${partnerRowSentence()} ${standMention(stand2)} faces the hall by the walkway.`,
+        [9.67, 29.45],
+        "Partner corner",
       ),
     ],
   },

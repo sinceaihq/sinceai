@@ -1,8 +1,10 @@
 import {
+  AccommodationSection,
   CalendarButton,
   Checklist,
   CriticalPath,
   Details,
+  DiscordSection,
   FactsStrip,
   GuideHero,
   GuideSection,
@@ -77,7 +79,9 @@ export default function PartnerGuidePage() {
           { id: "steps", label: "Steps" },
           { id: "schedule", label: "Schedule" },
           { id: "prepare", label: "Prepare" },
+          { id: "discord", label: "Discord" },
           { id: "venues", label: "Venues" },
+          { id: "accommodation", label: "Hotels" },
           { id: "details", label: "Details" },
           { id: "help", label: "Help" },
         ]}
@@ -88,7 +92,7 @@ export default function PartnerGuidePage() {
           id="stands-title"
           eyebrow="// biocity stand plan"
           title="Visibility & tech partner stands."
-          lede="Stands are in BioCity and stay open for the whole event — where every builder passes on the way in, to meals and to Joki."
+          lede="All visibility and tech partner stands are together in BioCity’s partner corner, at the far end of the build hall by the passage to Joki — on the way to the meals and to Joki — and stay open for the whole event."
         />
         <StandPlan />
         <div className="mt-10">
@@ -143,11 +147,13 @@ export default function PartnerGuidePage() {
         <Checklist storageKey="partners" groups={CHECKLISTS.partners} />
       </GuideSection>
 
+      <DiscordSection audience={AUDIENCE} />
+
       <GuideSection id="venues">
         <SectionHeading
           id="venues-title"
           eyebrow="// where"
-          title="BioCity all weekend. EduCity for the opening and closing."
+          title="BioCity all weekend. EduCity for the opening and Sunday’s finals."
         />
         <VenueCards venues={["biocity", "educity", "joki"]} />
         <div className="mt-10">
@@ -160,6 +166,8 @@ export default function PartnerGuidePage() {
           <RouteCard />
         </div>
       </GuideSection>
+
+      <AccommodationSection />
 
       <GuideSection id="details">
         <SectionHeading id="details-title" eyebrow="// details" title="Good to know." />

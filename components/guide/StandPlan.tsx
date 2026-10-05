@@ -4,12 +4,13 @@ import { CompanyLogo } from "./CompanyLogo";
 import { VenueExplorer } from "./maps/VenueExplorer";
 
 /**
- * BioCity visibility / tech partner stands, ranked by visibility. Assigned
- * stands show the partner; open positions keep the generic label.
+ * BioCity visibility / tech partner stands — all in the partner corner of the
+ * main lobby — ranked by visibility. Assigned stands show the partner; open
+ * positions keep the generic label. The map rings the corner once (the stands
+ * are too close together for a ring each).
  */
 export function StandPlan() {
   const stands = [...BIOCITY_STANDS].sort((a, b) => a.rank - b.rank);
-  const assigned = stands.filter((s) => s.partnerId).map((s) => s.id);
   return (
     <div className="space-y-10">
       <ol className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -61,10 +62,11 @@ export function StandPlan() {
         })}
       </ol>
       <p className="text-xs text-white/55 leading-relaxed">
-        Stand footprints are confirmed with the venue at setup so that exit routes stay clear. Open positions are marked
-        “{OPEN_STAND_LABEL}”.
+        All stands are together in the partner corner at the south-east end of BioCity&rsquo;s main lobby, by the passage
+        to Joki — room for about five. Stand footprints are confirmed with the venue at setup so that walkways and exit
+        routes stay clear. Open positions are marked “{OPEN_STAND_LABEL}”.
       </p>
-      <VenueExplorer mapIds={["biocity-lobby"]} highlight={assigned} label="BioCity stand plan" />
+      <VenueExplorer mapIds={["biocity-lobby"]} highlight={["bio-partner-corner"]} label="BioCity stand plan" />
     </div>
   );
 }

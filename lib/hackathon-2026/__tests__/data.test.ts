@@ -9,12 +9,14 @@ import {
   DETAILS,
   EVENT_2026,
   findHotspot,
+  getMap,
   formatTime,
   getCompany,
   getScheduleItem,
   getStandPartner,
   GUIDES,
   OPEN_STAND_LABEL,
+  PARTNER_CORNER,
   placeDetailFor,
   qaStandSentence,
   showroomCounter,
@@ -218,23 +220,31 @@ describe("challenge companies", () => {
 describe("BioCity visibility & tech partner stands", () => {
   const ranked = [...BIOCITY_STANDS].sort((a, b) => a.rank - b.rank);
 
-  it("gives Red Hat the most visible stand and Solita the second", () => {
-    expect(ranked[0].rank).toBe(1);
+  it("gives Red Hat the most visible stand, Solita the second and Pruna AI the third", () => {
+    expect(ranked.map((s) => s.rank)).toEqual([1, 2, 3, 4, 5]);
     expect(getStandPartner(ranked[0])?.name).toBe("Red Hat");
-    expect(ranked[1].rank).toBe(2);
     expect(getStandPartner(ranked[1])?.name).toBe("Solita");
+    expect(getStandPartner(ranked[2])?.name).toBe("Pruna AI");
   });
 
   it("keeps every other stand open and labelled generically", () => {
-    for (const stand of ranked.slice(2)) {
+    for (const stand of ranked.slice(3)) {
       expect(stand.partnerId).toBeNull();
       expect(standDisplayName(stand)).toBe(OPEN_STAND_LABEL);
     }
     expect(OPEN_STAND_LABEL).toBe("Visibility / Tech Partner stand");
   });
 
-  it("has only Red Hat and Solita as stand partners for now", () => {
-    expect(STAND_PARTNERS.map((p) => p.name)).toEqual(["Red Hat", "Solita"]);
+  it("has only the partners with a confirmed physical stand", () => {
+    // A technology partnership or an onsite speaker is not a stand: Google, Aiven, AMD, LUMI AI Factory,
+    // NVIDIA and others appear here only once their physical stand is confirmed.
+    expect(STAND_PARTNERS.map((p) => p.name)).toEqual(["Red Hat", "Solita", "Pruna AI"]);
+    for (const p of STAND_PARTNERS) expect(BIOCITY_STANDS.filter((s) => s.partnerId === p.id)).toHaveLength(1);
+  });
+
+  it("groups every stand in the partner corner of the main lobby", () => {
+    for (const stand of BIOCITY_STANDS) expect(stand.area).toBe(PARTNER_CORNER);
+    expect(BIOCITY_STANDS.length).toBeLessThanOrEqual(5);
   });
 
   it("puts every stand in BioCity with a map position", () => {
@@ -242,6 +252,7 @@ describe("BioCity visibility & tech partner stands", () => {
       expect(stand.venue).toBe("biocity");
       expect(findHotspot("biocity-lobby", stand.id)).toBeDefined();
     }
+    expect(getMap("biocity-lobby").hotspots.some((h) => h.id === "bio-partner-corner")).toBe(true);
   });
 
   it("names the stand partner on the map, and marks open stands", () => {
@@ -249,10 +260,11 @@ describe("BioCity visibility & tech partner stands", () => {
       const h = findHotspot("biocity-lobby", id)!;
       return `${h.label} — ${h.description}`;
     };
-    expect(label("bc-1")).toMatch(/^Stand 1 · Red Hat — Aulagalleria/);
-    expect(label("bc-2")).toMatch(/^Stand 2 · Solita — Main lobby/);
-    expect(label("bc-3")).toContain(OPEN_STAND_LABEL);
+    expect(label("bc-1")).toMatch(/^Stand 1 · Red Hat — Main lobby · partner corner/);
+    expect(label("bc-2")).toMatch(/^Stand 2 · Solita — Main lobby · partner corner/);
+    expect(label("bc-3")).toMatch(/^Stand 3 · Pruna AI — Main lobby · partner corner/);
     expect(label("bc-4")).toContain(OPEN_STAND_LABEL);
+    expect(label("bc-5")).toContain(OPEN_STAND_LABEL);
   });
 });
 
