@@ -1422,7 +1422,7 @@ describe("Twin wayfinding", () => {
     expect(engine.tour).toHaveBeenLastCalledWith(tour.id, "chase");
     expect(screen.getByText(/^To/, { selector: "p" })).toHaveTextContent("To Elisa briefing room · EduCity · room 1001");
     // The steps end at Elisa's own room, not at another company's.
-    expect(screen.getByText(/your room 1001 Dromberg is on this floor/)).toBeInTheDocument();
+    expect(screen.getByText(/your briefing room for 18:30 is room 1001 Dromberg, on this floor/)).toBeInTheDocument();
     act(() => opts.onTour?.({ id: tour.id, t: 1, caption: null }));
     await act(async () => opts.onTour?.(null));
     expect(engine.focus).toHaveBeenLastCalledWith("room-elisa", true);
@@ -1567,7 +1567,7 @@ describe("Twin without WebGL 2, from a link", () => {
     setUrl(`?tour=${tour.id}&focus=room-elisa#preview-3d`);
     render(<Twin />);
     expect(await screen.findByText(`Route: ${tour.label}`, { selector: "p" })).toBeInTheDocument();
-    expect(screen.getByText(/your room 1001 Dromberg is on this floor/, { selector: "span" })).toBeInTheDocument();
+    expect(screen.getByText(/your briefing room for 18:30 is room 1001 Dromberg, on this floor/, { selector: "span" })).toBeInTheDocument();
     expect(announcer()).toHaveTextContent(`Route: ${tour.label}.`);
     // The visible notice and the announcement never say the same sentence (no echo for screen readers).
     expect(announcer().textContent).not.toContain("This device can't show the 3D model");

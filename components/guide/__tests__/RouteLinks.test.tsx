@@ -51,7 +51,8 @@ describe("RouteLinks", () => {
       const links = screen.getAllByRole("link");
       links.slice(0, 3).forEach((link, i) => {
         expect(link).toHaveAttribute("href", `${VENUE}?tour=${fri[i]}&focus=room-${c.id}#preview-3d`);
-        expect(link).toHaveTextContent(`your room ${briefingRoomLabel(c)}`);
+        expect(link).toHaveTextContent(`your briefing room for 18:30 is room ${briefingRoomLabel(c)}`);
+        expect(link).toHaveTextContent("event staff meet");
         // No other company's room number.
         for (const other of CHALLENGE_COMPANIES.filter((o) => o.briefing.room !== c.briefing.room)) {
           for (const room of other.briefing.room.split(/\s*\/\s*/)) expect(link.textContent).not.toContain(room);
