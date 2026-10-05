@@ -80,6 +80,8 @@ function JudgeCard({ judge }: { judge: Judge }) {
 }
 
 export function Judges() {
+  if (judges.length === 0) return null;
+
   return (
     <section className="py-24 px-6 border-t border-white/10">
       <div className="mx-auto max-w-6xl">
