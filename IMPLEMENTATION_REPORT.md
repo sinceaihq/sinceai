@@ -133,6 +133,15 @@ Round 3 (4 Oct, final verification):
 - Text separated by “·” could wrap with the dot at the start of a line (hero date line, “Q&A stand: Floor 1 · Showroom.”, map and schedule labels) → `keepDots()` keeps the dot at the end of the line everywhere it is shown.
 - 3D teaser, now/next, facts and copy changes from round 2 re-verified at all widths.
 
+Round 4 (5 Oct, on the Netcup server — campus twin round 2 and release hardening):
+
+- **Live first:** the guide went to production in the morning (4bccd6b) so partners could get their links; an intermediate release (d0c1eee) added the copy below. Every release since passes `scripts/release-check.sh` in a clean worktree and the full e2e suite against https://sinceai.ai afterwards.
+- **Confirmed operations reflected everywhere:** 13:30 is "company challenge winners announced" (no "Closing"/"published" wording), finals 14:00 for about an hour, stands brought to EduCity on Friday and set up in Joki by the Since AI team; open-ended meals show "onwards" instead of "end TBC".
+- **Campus twin round 2** (`docs/campus-twin/qa/round2/BRIEF.md`; eight owners in parallel against the 133 round-1 issues): walkable entrances in all three buildings (BioCity's revolving door, EduCity's main doors and door B, the Joki ramp), event-critical labels pinned and readable, chase cameras out of roofs, photographic day/dusk/night light, one correct Kalevansilta, premium display cars instead of black silhouettes, company logos in every briefing room and stand, a text version that keeps every deep link working without WebGL, a 300 MB phone memory budget, posters per place for wide screens and phones. Owner reports and screenshots were reviewed by the lead; the commits name each owner's changes.
+- **Public site:** blog Open Graph images returned 500 on Cloudflare (`runtime = "edge"`); 18 content pages overflowed on iPhone Safari (shrink-to-fit containers around nowrap tables) — both fixed. Production builds use webpack (Turbopack duplicated framer-motion three times): 25–35 % less JavaScript on public pages, pixel-identical screenshots on all 32 routes at 1440 and 390 px, smaller worker.
+- **Tests:** `e2e/site.spec.ts` guards every public route (200, indexable, h1, no console errors, no overflow, never loads the 3D); WebKit (iPhone 15, desktop Safari) and Firefox run in Playwright's Docker image (`scripts/e2e-browsers.sh`); the 3D tests accept the text fallback on engines without WebGL 2.
+- **QA tooling for a GPU-less server:** Mesa lavapipe without root (`scripts/twin/qa/setup-mesa.sh`, ≈7× SwiftShader), many shots per page load (`shots.mjs`), posters rendered with sharp.
+
 ## Notes for the wider site (not changed)
 
 - The root layout preloads the Inter font on every page although nothing renders it (`font-sans` is only used by two unused UI components); Firefox may log “preloaded but not used” for it. `preload: false` would fix that, but it made the Turbopack production build fail intermittently in Next.js 16.2.6 (`next/font/google queries have exactly one entry`), so `app/layout.tsx` is unchanged.
