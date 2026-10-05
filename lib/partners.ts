@@ -409,6 +409,12 @@ export const PARTNERS: Partner[] = [
     tier: 3,
   },
   {
+    name: "Software Finland",
+    logo: "/assets/sponsors/Software-Finland.png",
+    url: "https://softwarefinland.fi/",
+    tier: 3,
+  },
+  {
     name: "Helsinki XR Center",
     logo: "/assets/sponsors/Helsinki-XR-Center.png",
     url: "https://helsinkixrcenter.com/",
