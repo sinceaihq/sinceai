@@ -1,14 +1,15 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowDown,
   ArrowRight,
   ArrowUp,
   ChevronDown,
+  FileText,
   Footprints,
   Link2,
+  Map as MapIcon,
   Maximize2,
   Minimize2,
   Minus,
@@ -57,6 +58,7 @@ import {
   TIME_PRESETS,
   TOURS_3D,
   tourFacts,
+  tourForCompany,
   TWIN_CREDITS,
   type Place3D,
   type PlaceId,
@@ -64,10 +66,10 @@ import {
   type Tour3D,
 } from "@/lib/hackathon-2026/twin";
 import { cn } from "@/lib/utils";
-import type { TwinEngine } from "./engine";
+import type { TwinEngine, TwinOptions } from "./engine";
 import { nightFactor, sunAtTurku } from "./engine/sky/sun";
 import type { Tier } from "./engine/types";
-import { posterFor, twinHref } from "./TwinTeaser";
+import { PosterImage, twinHref } from "./TwinTeaser";
 
 /**
  * Campus twin UI — the interactive 3D model of the event campus (EduCity,
@@ -88,7 +90,12 @@ import { posterFor, twinHref } from "./TwinTeaser";
  *   degrade to text (routes as step lists, targets as cards).
  */
 
-type Status = "idle" | "loading" | "ready" | "unsupported" | "error";
+/**
+ * idle = poster · loading · ready = the 3D runs · unsupported = no WebGL 2 · error = it stopped (load failed,
+ * context lost) · text = the person chose the text version (a slow device). The last three show the same
+ * places, targets and routes as text over the poster.
+ */
+type Status = "idle" | "loading" | "ready" | "unsupported" | "error" | "text";
 type Mode = "orbit" | "walk" | "tour";
 type Sheet = "routes" | "time" | null;
 type TourCamera = "chase" | "first";
@@ -99,6 +106,10 @@ interface TourState {
   paused: boolean;
   /** False when the engine could not animate the route — the card shows the steps as text. */
   live: boolean;
+  /** Step-by-step stills (reduced motion when the route started) instead of a moving camera. */
+  stills: boolean;
+  /** Where "Walk me there" (or a company's route link) leads: the camera settles on it at the end. */
+  arrival?: string;
 }
 
 /** What someone asked to see; applied as soon as the engine has loaded. */
@@ -118,6 +129,29 @@ export interface TwinParams {
   tier?: Tier;
   debug: boolean;
 }
+
+/** The parts of the scene the controls cover, in CSS px from each edge. */
+export interface SceneInsets {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+}
+
+/**
+ * Optional engine additions this UI already speaks; an engine without them simply never calls or offers
+ * them. onTime: the engine's time changed from outside the UI (window.__twin.setTime). onConnectors:
+ * every way to another level within reach (a lift offers each floor). onSlow: even the low tier is far too
+ * slow here (the UI offers the text version). setInsets: the scene's edges the
+ * controls cover — frame views, targets and the walker on a route in the free part, keep labels out of it.
+ */
+interface EngineEvents {
+  onTime?(iso: string): void;
+  onConnectors?(list: { id: string; label: string }[]): void;
+  /** Even the lowest tier stays far too slow on this device: the UI offers the text version. */
+  onSlow?(): void;
+}
+type EngineWithExtras = TwinEngine & { setInsets?(insets: SceneInsets): void };
 
 /* ── Pure helpers (exported for tests) ─────────────────────────────────── */
 
@@ -243,8 +277,8 @@ export const sliderIso = (minutes: number) => `${FRIDAY}T${pad(Math.floor(minute
 /** The "Go to" list: every target, grouped. */
 export const TARGET_GROUPS: readonly { label: string; targets: readonly Target3D[] }[] = (
   [
-    { label: "Companies · Q&A stands", kinds: ["company"] },
-    { label: "Companies · Friday rooms", kinds: ["room"] },
+    { label: "Companies · Saturday Q&A stand (Joki)", kinds: ["company"] },
+    { label: "Companies · Friday briefing room (EduCity)", kinds: ["room"] },
     { label: "Partner stands", kinds: ["stand"] },
     { label: "Entrances", kinds: ["entrance"] },
     { label: "Places", kinds: ["area", "landmark"] },
@@ -255,6 +289,29 @@ export const TARGET_GROUPS: readonly { label: string; targets: readonly Target3D
     targets: TARGETS_3D.filter((t) => (g.kinds as readonly string[]).includes(t.kind)),
   }))
   .filter((g) => g.targets.length > 0);
+
+/** A "Go to" option: companies say where (their stand and their room are two options). */
+export function optionText(t: Target3D): string {
+  if (!t.company || !t.where) return t.label;
+  const name = t.kind === "room" ? (getTarget3D(t.company)?.label ?? t.label) : t.label;
+  return `${name} — ${t.where}`;
+}
+
+/** A company's other place: its Friday briefing room for its Saturday stand, and the other way round. */
+export function pairedTarget(t: Target3D): Target3D | null {
+  if (!t.company) return null;
+  const other = getTarget3D(t.kind === "room" ? t.company : `room-${t.company}`);
+  return other && other.id !== t.id ? other : null;
+}
+
+/**
+ * A route as the person following it sees it: a challenge company's arrival route ends at that
+ * company's own room or stand (when it leads to one of them), never at another company's room.
+ */
+export function routeFor(tour: Tour3D, arrival?: string | null): Tour3D {
+  const company = arrival ? getTarget3D(arrival)?.company : undefined;
+  return (company ? tourForCompany(tour, company) : null) ?? tour;
+}
 
 const PARTNER_RE = /partner|compan/i;
 const isPartnerTour = (tour: Tour3D) => PARTNER_RE.test(`${tour.id} ${tour.audience}`);
@@ -318,8 +375,9 @@ export function readTwinParams(search: string): TwinParams {
   else if (viewOwners.length === 1 && viewParam !== "default") place = viewOwners[0].id;
   else if (scene) place = scene.place;
   else if (focusIsPlace) place = focusAsPlace as PlaceId;
-  else if (focus) place = placeForTarget(focus);
+  // A route starts in its own place; a focus next to it is where the route leads (its arrival).
   else if (tour) place = tour.place;
+  else if (focus) place = placeForTarget(focus);
 
   const rawView = viewParam ?? scene?.view ?? null;
   const view = place && rawView ? placeView(place, rawView) : undefined;
@@ -338,7 +396,8 @@ export function readTwinParams(search: string): TwinParams {
 /** What the 3D is opening, for the loading panel: "Route: …" or the target's name (a plain place: nothing). */
 export function describeIntent(intent: TwinIntent): string | null {
   const tour = intent.tour ? getTour3D(intent.tour) : undefined;
-  if (tour) return `Route: ${tour.label}`;
+  const arrival = intent.focus ? getTarget3D(intent.focus) : undefined;
+  if (tour) return arrival && arrival.id !== tour.to ? `Route: ${tour.label} → ${arrival.label}` : `Route: ${tour.label}`;
   const target = intent.focus ? getTarget3D(intent.focus) : undefined;
   return target ? target.label : null;
 }
@@ -347,10 +406,10 @@ export function describeIntent(intent: TwinIntent): string | null {
  * What a screen reader hears when a route reaches a step: "Step 2 of 5: …" (the step number keeps two
  * steps with the same words apart). The first step also names the route.
  */
-export function stepAnnouncement(tour: Tour3D, caption: string): string {
+export function stepAnnouncement(tour: Tour3D, caption: string, shown: Tour3D = tour): string {
   const i = tour.steps.findIndex((s) => s.text === caption);
   if (i < 0) return caption;
-  const step = `Step ${i + 1} of ${tour.steps.length}: ${caption}`;
+  const step = `Step ${i + 1} of ${tour.steps.length}: ${shown.steps[i]?.text ?? caption}`;
   return i === 0 ? `Route: ${tour.label}. ${step}` : step;
 }
 
@@ -683,6 +742,9 @@ function ConnectorIcon({ label }: { label: string }) {
   return <Icon className="h-4 w-4" aria-hidden="true" />;
 }
 
+/** Said when the 3D stops (not the visible notice's words, so a screen reader does not hear them twice). */
+const STOPPED_ANNOUNCEMENT = "3D stopped — showing the text version. Try again reloads it.";
+
 const HELP_TEXT =
   "Drag to look around, right-drag or drag with two fingers to move, scroll or pinch to zoom. Keys: the arrow keys move the map, Shift + the arrow keys turn and tilt it, plus and minus zoom, 0 resets the view. In walk mode W and S or the up and down arrows walk, A and D step sideways, the left and right arrows turn, Shift runs, scrolling takes a step (Ctrl or ⌘ + scroll while the model is on the page), drag to look and Escape stops walking. Every place, stand and route in this model is also listed below as text.";
 
@@ -719,10 +781,15 @@ export function Twin() {
   const [expanded, setExpanded] = useState(false);
   // The engine starts with the names on (views may switch them and report it through onLabels).
   const [labels, setLabels] = useState(true);
-  /** The motion setting the running engine was made with: routes are stills or motion for its lifetime. */
-  const [engineReduced, setEngineReduced] = useState<boolean | null>(null);
+  /** What the 3D is doing while it loads: downloading its code, building the modules, lighting the first frame. */
+  const [loadPhase, setLoadPhase] = useState<"code" | "build" | "light">("code");
+  /** Loading takes long (a slow device or connection): offer the text version. */
+  const [slowLoad, setSlowLoad] = useState(false);
+  /** The running 3D is far too slow here (engine onSlow): offer the text version, once. */
+  const [slowRun, setSlowRun] = useState(false);
   const [mode, setMode] = useState<Mode>("orbit");
-  const [connector, setConnector] = useState<{ id: string; label: string } | null>(null);
+  /** Walk mode's way to another level (a stair, a door; a lift may offer several floors). */
+  const [connectors, setConnectors] = useState<readonly { id: string; label: string }[]>([]);
   const [tour, setTour] = useState<TourState | null>(null);
   const [tourCamera, setTourCamera] = useState<TourCamera>("chase");
   const [sheet, setSheet] = useState<Sheet>(null);
@@ -760,6 +827,8 @@ export function Twin() {
   const sheetRef = useRef<HTMLElement | null>(null);
   const loadingPanelRef = useRef<HTMLDivElement>(null);
   const retryButtonRef = useRef<HTMLButtonElement>(null);
+  /** The text version's notice over the poster (takes focus when the text version is chosen). */
+  const textPanelRef = useRef<HTMLDivElement>(null);
   const walkButtonRef = useRef<HTMLButtonElement>(null);
   const tourCardRef = useRef<HTMLDivElement>(null);
   const targetCardRef = useRef<HTMLDivElement>(null);
@@ -767,27 +836,37 @@ export function Twin() {
   const focusInsideRef = useRef(false);
   /** Where focus goes after the next render, when an action removes the control that has it. */
   const focusNextRef = useRef<(() => HTMLElement | null | undefined) | null>(null);
-  /** Routes run as stills (reduced motion) — the value the engine was made with, for callbacks. */
+  /** Routes started now run as stills: the engine's reduced-motion setting (made with, or set live). */
   const stepwiseRef = useRef(false);
+  /** The engine reports every connector within reach (onConnectors), not just one (onConnector). */
+  const connectorListRef = useRef(false);
+  /** The HUD's footprint last sent to the engine (setInsets), to send only changes. */
+  const insetsRef = useRef("");
+  const topLeftRef = useRef<HTMLDivElement>(null);
+  const toolsRef = useRef<HTMLDivElement>(null);
+  const stackRef = useRef<HTMLDivElement>(null);
   /** Re-run a twin link to this very page (see the click listener below); updated every render. */
   const replayRef = useRef<((intent: TwinIntent, opener: HTMLElement, hash: string) => void) | null>(null);
 
-  const stepwise = engineReduced ?? reducedMotion;
+  /** The running route is a series of stills (reduced motion when it started). */
+  const stepwise = tour?.stills ?? false;
+  /** No 3D here (no WebGL 2, it stopped, or the text version was chosen): the same content as text over the poster. */
+  const textMode = status === "unsupported" || status === "error" || status === "text";
   const shortOverlay = expanded && short;
   const timeInfo = useMemo(() => describeTime(time), [time]);
   const target = selected ? (getTarget3D(selected) ?? null) : null;
   const activeTour = tour ? (getTour3D(tour.id) ?? null) : null;
+  /** The route as its card shows it: a company's route ends at that company's own room or stand. */
+  const shownTour = activeTour ? routeFor(activeTour, tour?.arrival) : null;
   const route = target ? tourForTarget(target) : null;
   const placeTargets = targetsForPlace(placeId);
-  // A deep link's target, named on the poster while the 3D waits for a tap.
-  const introTarget =
-    status === "idle" && !placeChoice && urlParams?.intent?.focus
-      ? (getTarget3D(urlParams.intent.focus) ?? null)
-      : null;
-  // A deep-linked route, named on the poster the same way.
+  // A deep-linked route (and where it leads), named on the poster while the 3D waits for a tap.
   const introTour =
-    status === "idle" && !placeChoice && !introTarget && urlParams?.intent?.tour
-      ? (getTour3D(urlParams.intent.tour) ?? null)
+    status === "idle" && !placeChoice && urlParams?.intent?.tour ? (getTour3D(urlParams.intent.tour) ?? null) : null;
+  // A deep link's target, named the same way.
+  const introTarget =
+    status === "idle" && !placeChoice && !introTour && urlParams?.intent?.focus
+      ? (getTarget3D(urlParams.intent.focus) ?? null)
       : null;
 
   useEffect(() => {
@@ -795,8 +874,7 @@ export function Twin() {
     timeRef.current = time;
     tourCameraRef.current = tourCamera;
     expandedRef.current = expanded;
-    stepwiseRef.current = stepwise;
-  }, [urlParams, time, tourCamera, expanded, stepwise]);
+  }, [urlParams, time, tourCamera, expanded]);
 
   const setStatusNow = useCallback((next: Status) => {
     statusRef.current = next;
@@ -861,7 +939,7 @@ export function Twin() {
     if (modeRef.current === "walk") call((e) => e.walk(false));
     setTour(null);
     setModeNow("orbit");
-    setConnector(null);
+    setConnectors([]);
   }, [call, setModeNow]);
 
   /** Start a route; `arrival` = the target the camera settles on when it ends. */
@@ -888,9 +966,9 @@ export function Twin() {
       }
       // Keep a caption the engine may already have reported for this run; a (re)start is never paused.
       const caption = ok && tourFrame.current.id === id ? tourFrame.current.caption : null;
-      setTour({ id, caption, paused: false, live: ok });
+      setTour({ id, caption, paused: false, live: ok, stills: ok && stepwiseRef.current, arrival });
       setModeNow(ok ? "tour" : "orbit");
-      setConnector(null);
+      setConnectors([]);
       setSelected(null);
       setSheet(null);
       setPlaceChoice(t.place);
@@ -909,7 +987,8 @@ export function Twin() {
       const view = intent.view ?? defaultView(p);
       setPlaceChoice(intent.place);
       setViewChoice(view);
-      if (intent.focus) {
+      // With a route, the focus is where it leads: the route shows it at the end.
+      if (intent.focus && !intent.tour) {
         if (!call((e) => e.focus(intent.focus!, animate))) gotoView(intent.place, view, animate);
         setSelected(getTarget3D(intent.focus) ? intent.focus : null);
       } else {
@@ -923,7 +1002,7 @@ export function Twin() {
   /** Start the route or the walk an intent asks for. */
   const applyMotion = useCallback(
     (intent: TwinIntent) => {
-      if (intent.tour) runTour(intent.tour);
+      if (intent.tour) runTour(intent.tour, intent.focus);
       // Walk mode is on only when the engine says so (onMode); it may not be available.
       else if (intent.walk) {
         const view = intent.view ?? defaultView(getPlace3D(intent.place));
@@ -961,11 +1040,47 @@ export function Twin() {
     setOpening(null);
     setModeNow("orbit");
     setTour(null);
-    setConnector(null);
+    setConnectors([]);
     setLabels(true);
-    setEngineReduced(null);
+    setLoadPhase("code");
+    setSlowLoad(false);
+    setSlowRun(false);
     setSheet(null);
   }, [setModeNow, setStatusNow]);
+
+  /**
+   * No WebGL 2 on this device: the text version, opened on what was asked for — a deep link's route
+   * (its steps as text, ending at the company's own room or stand) or target (its card), named at once.
+   */
+  const showWithoutWebGL = useCallback(
+    (intent: TwinIntent | null, fromLink = false) => {
+      intentRef.current = null;
+      setStatusNow("unsupported");
+      // A link opened the page: bring its directions (the card over the poster) into view.
+      if (fromLink && (intent?.tour || intent?.focus)) {
+        requestAnimationFrame(() =>
+          stageRef.current?.scrollIntoView?.({ block: "start", behavior: REDUCED.get() ? "auto" : "smooth" }),
+        );
+      }
+      const route = intent?.tour ? getTour3D(intent.tour) : undefined;
+      const target = !route && intent?.focus ? getTarget3D(intent.focus) : undefined;
+      if (intent) setPlaceChoice(intent.place);
+      if (route) runTour(route.id, intent?.focus);
+      else if (target) {
+        setSelected(target.id);
+        setPlaceChoice(target.place);
+      }
+      // Not the visible notice's words (a screen reader would read the same sentence twice).
+      setAnnouncement(
+        route
+          ? `No 3D on this device, so here is the route as text. Route: ${routeFor(route, intent?.focus).label}.`
+          : target
+            ? `No 3D on this device, so here it is as text: ${target.label} — ${target.detail}.`
+            : "No 3D on this device: showing the text version.",
+      );
+    },
+    [runTour, setStatusNow],
+  );
 
   /**
    * Start the engine, or apply the intent right away when it runs. While it loads, the latest
@@ -991,6 +1106,8 @@ export function Twin() {
       const gen = ++genRef.current;
       setStatusNow("loading");
       setProgress(null);
+      setLoadPhase("code");
+      setSlowLoad(false);
       setAnnouncement("Loading the 3D model…");
       let markReady: () => void = () => undefined;
       const readyForDebug = new Promise<void>((resolve) => (markReady = resolve));
@@ -1004,19 +1121,23 @@ export function Twin() {
         const mod = await import("./engine");
         if (gen !== genRef.current) return;
         if (!mod.isWebGL2Available()) {
-          intentRef.current = null;
-          setStatusNow("unsupported");
-          setAnnouncement(
-            "This device can't show the 3D model. The floor plans and the lists below show every room, stand and route.",
-          );
+          showWithoutWebGL(intentRef.current ?? intent, !!paramsRef.current?.intent && intent === paramsRef.current.intent);
           return;
         }
         const params = paramsRef.current;
         const reduced = REDUCED.get();
-        const engine = mod.createTwinEngine(host, {
+        connectorListRef.current = false;
+        const options: TwinOptions & EngineEvents = {
           tier: params?.tier,
           reducedMotion: reduced,
           time: timeRef.current,
+          onTime: live((iso) => {
+            // The engine's time changed from elsewhere (window.__twin.setTime): the time chip follows.
+            const next = iso.slice(0, 16);
+            if (next === timeRef.current) return;
+            timeRef.current = next;
+            setTimeChoice(next);
+          }),
           onSelect: live((raw) => {
             const id = raw ? (normaliseTarget(raw) ?? raw) : null;
             const t = id ? getTarget3D(id) : undefined;
@@ -1029,7 +1150,7 @@ export function Twin() {
           onPlace: live((p) => setPlaceChoice(p)),
           onMode: live((m) => {
             setModeNow(m);
-            if (m !== "walk") setConnector(null);
+            if (m !== "walk") setConnectors([]);
           }),
           onTour: live((s) => {
             const f = tourFrame.current;
@@ -1040,16 +1161,21 @@ export function Twin() {
                 const newCaption = s.caption !== null && (f.id !== s.id || f.caption !== s.caption);
                 f.id = s.id;
                 f.caption = s.caption;
+                const same = (prev: TourState | null): prev is TourState => prev?.id === s.id;
+                const arrival = arrivalRef.current?.tourId === s.id ? arrivalRef.current.target : undefined;
                 setTour((prev) => ({
                   id: s.id,
                   caption: s.caption,
-                  paused: prev?.id === s.id ? prev.paused : false,
+                  paused: same(prev) ? prev.paused : false,
                   live: true,
+                  stills: same(prev) ? prev.stills : stepwiseRef.current,
+                  arrival: same(prev) ? prev.arrival : arrival,
                 }));
                 setModeNow("tour");
                 // Each step is announced once, with its number (the card shows it as plain text).
                 const t = getTour3D(s.id);
-                if (newCaption && s.caption) setAnnouncement(t ? stepAnnouncement(t, s.caption) : s.caption);
+                if (newCaption && s.caption)
+                  setAnnouncement(t ? stepAnnouncement(t, s.caption, routeFor(t, arrival)) : s.caption);
               }
               return;
             }
@@ -1084,21 +1210,36 @@ export function Twin() {
             }
           }),
           onConnector: live((c) => {
-            setConnector(c);
+            // An engine that reports the whole list (onConnectors) has the final word.
+            if (connectorListRef.current) return;
+            setConnectors(c ? [c] : []);
             if (c) setAnnouncement(`${c.label} — button available.`);
           }),
+          onConnectors: live((list) => {
+            connectorListRef.current = true;
+            setConnectors(list);
+            if (list.length) setAnnouncement(`${list.map((c) => c.label).join(", ")} — ${list.length > 1 ? "buttons" : "button"} available.`);
+          }),
           onLabels: live((on) => setLabels(on)),
-          onProgress: live((p) => setProgress({ loaded: p.loaded, total: p.total })),
+          onSlow: live(() => {
+            setSlowRun(true);
+            setAnnouncement("The 3D model runs slowly on this device. The text version shows the same rooms, stands and routes.");
+          }),
+          onProgress: live((p) => {
+            setLoadPhase((phase) => (phase === "code" ? "build" : phase));
+            setProgress({ loaded: p.loaded, total: p.total });
+          }),
           onContextLost: live(() => {
             setStatusNow("error");
             setAnnouncement(
-              "The 3D model stopped. The floor plans and the lists below show every room, stand and route. Try again to reload it.",
+              STOPPED_ANNOUNCEMENT,
             );
           }),
-        });
+        };
+        const engine = mod.createTwinEngine(host, options);
         engineRef.current = engine;
         stepwiseRef.current = reduced;
-        setEngineReduced(reduced);
+        setLoadPhase("build");
         /** The WebGL context was lost while loading: stay in the error state ("Try again"). */
         const lost = () => statusRef.current === "error";
         await engine.load();
@@ -1107,6 +1248,7 @@ export function Twin() {
           markReady();
           return;
         }
+        setLoadPhase("light");
         if (params?.debug) {
           const w = window as unknown as { __twin?: Record<string, unknown> };
           w.__twin ??= {
@@ -1155,12 +1297,12 @@ export function Twin() {
         teardown();
         setStatusNow("error");
         setAnnouncement(
-          "The 3D model stopped. The floor plans and the lists below show every room, stand and route. Try again to reload it.",
+          STOPPED_ANNOUNCEMENT,
         );
         markReady();
       }
     },
-    [applyIntent, applyMotion, applyScene, call, debugLog, paintTour, setModeNow, setStatusNow, teardown],
+    [applyIntent, applyMotion, applyScene, call, debugLog, paintTour, setModeNow, setStatusNow, showWithoutWebGL, teardown],
   );
 
   /* ── Full screen ── */
@@ -1227,7 +1369,7 @@ export function Twin() {
             ? retryButtonRef.current
             : s === "idle"
               ? startButtonRef.current
-              : null;
+              : textPanelRef.current;
     (el ?? stageRef.current)?.focus({ preventScroll: true });
   }, []);
 
@@ -1347,17 +1489,30 @@ export function Twin() {
     const debug = urlParams?.debug ?? false;
     if (!intent) return;
     intentRef.current = intent;
+    let cancelled = false;
     const raf = requestAnimationFrame(() => {
       const small = COARSE.get() || NARROW.get();
-      if (small && !debug) return;
+      if (small && !debug) {
+        // Phones wait for a tap — unless they cannot run the 3D at all: then the text version opens on the
+        // link's route or target straight away (a partner's "Walk it in 3D" still lands on the directions).
+        import("./engine")
+          .then((mod) => {
+            if (!cancelled && statusRef.current === "idle" && !mod.isWebGL2Available()) showWithoutWebGL(intent, true);
+          })
+          .catch(() => undefined);
+        return;
+      }
       if (small) {
         returnFocusRef.current = null;
         setExpanded(true);
       }
       void begin(intent);
     });
-    return () => cancelAnimationFrame(raf);
-  }, [urlParams, begin]);
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
+    };
+  }, [urlParams, begin, showWithoutWebGL]);
 
   // A link to this very page with the 3D's parameters ("Walk the route in 3D" further down) leaves
   // the URL as it is, so the deep link above does not run again: ask the 3D directly.
@@ -1395,6 +1550,66 @@ export function Twin() {
     [],
   );
 
+  // The device's Reduce Motion setting changed while the 3D runs: tell the engine (camera moves, ambient
+  // animation). Routes started from now on follow it; a running route keeps how it started.
+  useEffect(() => {
+    const engine = engineRef.current;
+    if (status !== "ready" || !engine?.setReducedMotion || stepwiseRef.current === reducedMotion) return;
+    try {
+      engine.setReducedMotion(reducedMotion);
+      stepwiseRef.current = reducedMotion;
+    } catch (err) {
+      debugLog(err);
+    }
+  }, [status, reducedMotion, debugLog]);
+
+  // Loading for long (a slow device or connection): offer the text version instead of a long wait.
+  useEffect(() => {
+    if (status !== "loading") return;
+    const timer = window.setTimeout(() => setSlowLoad(true), 20_000);
+    return () => window.clearTimeout(timer);
+  }, [status]);
+
+  // Tell the engine which edges of the scene the controls cover (optional engine API), so it frames
+  // views, targets and the walker on a route in the free part and keeps labels out from under them.
+  // Measured after every render (cards and chips come and go) and when anything changes size.
+  useEffect(() => {
+    if (status !== "ready") {
+      insetsRef.current = "";
+      return;
+    }
+    const send = () => {
+      const engine = engineRef.current as EngineWithExtras | null;
+      const box = hostRef.current?.getBoundingClientRect();
+      if (!engine?.setInsets || !box || box.width === 0) return;
+      const edge = (el: Element | null | undefined) => el?.getBoundingClientRect();
+      const topRow = edge(topLeftRef.current?.firstElementChild);
+      const tools = edge(toolsRef.current);
+      const stackTop = Math.min(
+        box.bottom,
+        ...Array.from(stackRef.current?.children ?? [])
+          .map((el) => el.getBoundingClientRect())
+          .filter((r) => r.height > 0)
+          .map((r) => r.top),
+      );
+      const insets: SceneInsets = {
+        top: topRow ? Math.max(0, Math.round(topRow.bottom - box.top)) : 0,
+        right: tools && tools.height > 0 ? Math.max(0, Math.round(box.right - tools.left)) : 0,
+        bottom: Math.max(0, Math.round(box.bottom - stackTop)),
+        left: 0,
+      };
+      const key = JSON.stringify(insets);
+      if (key === insetsRef.current) return;
+      insetsRef.current = key;
+      call((e) => (e as EngineWithExtras).setInsets?.(insets));
+    };
+    send();
+    if (typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(send);
+    for (const el of [hostRef.current, topLeftRef.current, toolsRef.current, stackRef.current]) if (el) ro.observe(el);
+    return () => ro.disconnect();
+  });
+
   /* ── Actions ── */
 
   const ready = status === "ready";
@@ -1402,8 +1617,9 @@ export function Twin() {
   /** Use the 3D for `intent`: start it if needed (phones open full screen). */
   const show = useCallback(
     (intent: TwinIntent, opener?: HTMLElement | null) => {
-      // No WebGL 2 here: the lists below are the 3D's text version — no overlay, no second try.
-      if (statusRef.current === "unsupported") return;
+      // No WebGL 2 here, or the text version was chosen: the cards and lists are the 3D's text version —
+      // no overlay, no second try.
+      if (statusRef.current === "unsupported" || statusRef.current === "text") return;
       if (!engineRef.current && compact && !expandedRef.current) openExpanded(opener ?? null);
       void begin(intent);
     },
@@ -1467,6 +1683,9 @@ export function Twin() {
     gotoView(placeId, v, true);
   };
 
+  /** No 3D (no WebGL 2, it stopped, or the text version): cards and routes show as text over the poster. */
+  const inTextMode = () => ["unsupported", "error", "text"].includes(statusRef.current);
+
   const chooseTarget = (id: string, opener?: HTMLElement | null) => {
     const t = getTarget3D(id);
     if (!t) return;
@@ -1475,6 +1694,12 @@ export function Twin() {
     setViewChoice(defaultView(getPlace3D(t.place)));
     setSelected(id);
     setAnnouncement(`${t.label} — ${t.detail}`);
+    if (inTextMode()) {
+      // The card over the poster is the answer (a route card it replaces goes).
+      setTour(null);
+      bringIntoView(opener);
+      return;
+    }
     if (!engineRef.current || statusRef.current !== "ready") {
       show({ place: t.place, focus: id }, opener);
       return;
@@ -1501,6 +1726,10 @@ export function Twin() {
     setSheet(null);
     // Also when the 3D still has to start: the loading panel shows where the route will play.
     bringIntoView(opener);
+    if (inTextMode()) {
+      runTour(id, arrival); // the steps as text
+      return;
+    }
     if (!engineRef.current || statusRef.current !== "ready") {
       show({ place: t.place, tour: id }, opener);
       return;
@@ -1589,13 +1818,12 @@ export function Twin() {
     if (refocus) focusNextRef.current = () => walkButtonRef.current;
     call((e) => e.walk(false));
     setModeNow("orbit");
-    setConnector(null);
+    setConnectors([]);
     setAnnouncement("Walk mode off.");
   };
 
-  const takeConnector = () => {
-    if (!connector) return;
-    call((e) => e.useConnector(connector.id));
+  const takeConnector = (id: string) => {
+    call((e) => e.useConnector(id));
     hostRef.current?.focus({ preventScroll: true });
   };
 
@@ -1647,13 +1875,21 @@ export function Twin() {
     const intent = lastIntentRef.current ?? {
       place: placeId,
       view: viewId,
-      focus: selected ?? undefined,
+      focus: selected ?? tour?.arrival,
       tour: tour?.id,
     };
     // The button gives way to the loading panel.
     focusNextRef.current = () => loadingPanelRef.current;
-    teardown();
+    teardown(); // also leaves the text version
     void begin(intent);
+  };
+
+  /** A slow device: stop building the 3D and show the same campus as text over the poster. */
+  const showTextVersion = () => {
+    focusNextRef.current = () => textPanelRef.current;
+    teardown();
+    setStatusNow("text");
+    setAnnouncement("Showing the text version: pick a company, room or route with Go to and Routes, or in the lists below.");
   };
 
   /** "Details" on a target that lives on this page (#maps, #route…): close full screen first, then go there. */
@@ -1732,6 +1968,15 @@ export function Twin() {
   const toolsInHeader = compact && expanded;
   // Zoom has pinch and Ctrl/⌘ + wheel; the header (phones, narrow windows) keeps only the essentials.
   const fullTools = !touch && !toolsInHeader;
+  // Phones (portrait, full screen) while a route plays: its card goes to the top, so the walker the
+  // camera follows in the lower half of the scene stays in view.
+  const tourOnTop = toolsInHeader && !short && !!tour?.live;
+  // Phones in landscape while a route plays: the card keeps to the left, under the time of day, so the
+  // walker in the middle of the scene stays in view.
+  const tourAside = toolsInHeader && short && !!tour?.live;
+  /** Either way the route card keeps to its essentials: the step and its place first, no title line. */
+  const compactRoute = tourOnTop || tourAside;
+  const [titleMain, ...titleRest] = place.title.split(" · ");
   const tools = (
     <>
       {fullTools && (
@@ -1768,11 +2013,16 @@ export function Twin() {
       </IconButton>
     </>
   );
-  const connectorButton = connector && mode === "walk" && (
-    <button type="button" onClick={takeConnector} className={cn(primarySmall, "min-h-12 px-5")}>
-      <ConnectorIcon label={connector.label} />
-      {connector.label}
-    </button>
+  // Walk mode: a button per way to another level within reach (a lift offers each of its floors).
+  const connectorButtons = connectors.length > 0 && mode === "walk" && (
+    <div role="group" aria-label="Change level" className="flex flex-wrap gap-2">
+      {connectors.map((c) => (
+        <button key={c.id} type="button" onClick={() => takeConnector(c.id)} className={cn(primarySmall, "min-h-12 px-5")}>
+          <ConnectorIcon label={c.label} />
+          {c.label}
+        </button>
+      ))}
+    </div>
   );
   // The step the route card shows (stills start before the first step; a moving route starts on it).
   const stepIndex = activeTour
@@ -1782,6 +2032,18 @@ export function Twin() {
         ? -1
         : 0
     : -1;
+  /** The step as its card shows it (a company's route names its own room or stand). */
+  const shownStep = shownTour && stepIndex >= 0 ? shownTour.steps[stepIndex] : undefined;
+  const upcoming = shownTour ? shownTour.steps[stepIndex + 1] : undefined;
+  /** Where the running route leads: the "Walk me there" target, else the route's own end. */
+  const tourDest = activeTour ? (getTarget3D(tour?.arrival ?? activeTour.to) ?? null) : null;
+  const pair = target ? pairedTarget(target) : null;
+  const targetPlan = target?.map ? `#map-${target.map}` : null;
+  // "Details" only when it leads somewhere else than the floor plan.
+  const targetDetails = target?.href && !target.href.includes("#map-") ? target.href : null;
+  /** Text version: the lists below mark what the card over the poster shows (a deep link's route or target). */
+  const listCurrent = textMode ? (tour?.id ?? selected) : null;
+  const currentItem = "border-l-2 border-l-(--color-event) pl-3";
   // Each scroll row leaves room around its buttons for their focus ring (2 px outline, 2 px offset).
   const placeTabs = (
     <ScrollRow
@@ -1826,6 +2088,312 @@ export function Twin() {
     </ScrollRow>
   );
 
+  // Loading: the engine's code, then the modules (counted), then light and textures for the first frame.
+  const builtShare = progress && progress.total > 0 ? Math.min(1, progress.loaded / progress.total) : 0;
+  const loadPct = loadPhase === "code" ? 6 : loadPhase === "build" ? 8 + 72 * builtShare : 97;
+  const loadLabel =
+    loadPhase === "code"
+      ? "Loading the 3D engine…"
+      : loadPhase === "build"
+        ? "Building the campus…"
+        : "Adding light and textures…";
+
+  const routeCard = tour && activeTour && shownTour && (
+    <div
+      ref={tourCardRef}
+      className={cn(
+        panel,
+        "min-h-0 w-full overflow-y-auto overscroll-contain p-3 sm:max-w-md",
+        tourOnTop && "max-h-[60%]",
+      )}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 pt-1">
+          <p className={cn(microLabel, "text-[10px] text-(--color-event)")}>
+            {compactRoute && shownStep
+              ? `Step ${stepIndex + 1} of ${shownTour.steps.length}${shownStep.where ? ` · ${shownStep.where}` : ""}`
+              : `${tour.live ? "Route" : "Directions"} · ${tourFacts(shownTour)}`}
+          </p>
+          {!compactRoute && (
+            <p className="mt-1.5 text-sm font-semibold text-white">
+              {tour.live ? shownTour.label : `Route: ${shownTour.label}`}
+            </p>
+          )}
+          {/* "Walk me there" (or a company's own route link) goes on past the route's end: say where. */}
+          {tour.arrival && tour.arrival !== activeTour.to && tourDest && (
+            <p className={cn("text-xs text-white/55", compactRoute ? "mt-1" : "mt-0.5")}>
+              To <span className="text-white/80">{tourDest.label}</span>
+              {tourDest.where && ` · ${tourDest.where}`}
+            </p>
+          )}
+        </div>
+        {/* 44 px buttons with a gap, so a tap meant for Stop does not restart the route. */}
+        <div className="-mr-2 -mt-1 flex shrink-0 items-center gap-1">
+          {tour.live && (
+            <>
+              {!stepwise && (
+                <button
+                  type="button"
+                  data-primary=""
+                  className={quietButton}
+                  onClick={togglePause}
+                  aria-label={tour.paused ? "Resume the route" : "Pause the route"}
+                >
+                  {tour.paused ? <Play className="h-4 w-4" aria-hidden="true" /> : <Pause className="h-4 w-4" aria-hidden="true" />}
+                </button>
+              )}
+              <button type="button" className={quietButton} onClick={restartTour} aria-label="Restart the route">
+                <RotateCcw className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </>
+          )}
+          <button
+            type="button"
+            data-primary={tour.live ? undefined : ""}
+            className={quietButton}
+            onClick={() => stopTour()}
+            aria-label={tour.live ? "Stop the route" : "Close the route"}
+          >
+            {tour.live ? <Square className="h-3.5 w-3.5" aria-hidden="true" /> : <X className="h-4 w-4" aria-hidden="true" />}
+          </button>
+        </div>
+      </div>
+      {tour.live && (
+        <div
+          ref={(el) => {
+            barTrackRef.current = el;
+            el?.setAttribute("aria-valuenow", String(Math.round(tourFrame.current.t * 100)));
+          }}
+          role="progressbar"
+          aria-label="Route progress"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          className="mt-2 h-0.5 w-full bg-white/10"
+        >
+          <div
+            ref={(el) => {
+              barRef.current = el;
+              if (el) el.style.transform = `scaleX(${Math.min(1, Math.max(0, tourFrame.current.t))})`;
+            }}
+            className="h-full w-full origin-left bg-(--color-event)"
+          />
+        </div>
+      )}
+      {tour.live ? (
+        // Plain text: each step is announced once, with its number, through the status region.
+        <>
+          {!compactRoute && shownStep && (
+            <p className={cn(microLabel, "mt-3 text-[10px] text-white/55")}>
+              Step {stepIndex + 1} of {shownTour.steps.length}
+              {shownStep.where && <span className="text-white"> · {shownStep.where}</span>}
+            </p>
+          )}
+          <p className={cn("text-sm text-neutral-200 leading-snug", shownStep && !compactRoute ? "mt-1" : "mt-3", compactRoute && "mt-2")}>
+            {shownStep?.text ?? tour.caption ?? (stepwise ? shownTour.summary : (shownTour.steps[0]?.text ?? shownTour.summary))}
+          </p>
+          {/* What comes next: the next place on the way, or where the route ends. */}
+          {(upcoming?.where || (stepIndex === shownTour.steps.length - 1 && tourDest)) && (
+            <p className={cn(microLabel, "mt-2 text-[10px] text-white/55")}>
+              {upcoming?.where ? (
+                <>
+                  Next <span aria-hidden="true">→</span> <span className="text-white/80">{upcoming.where}</span>
+                </>
+              ) : (
+                <>
+                  Arriving <span aria-hidden="true">→</span> <span className="text-white/80">{tourDest?.label}</span>
+                </>
+              )}
+            </p>
+          )}
+        </>
+      ) : (
+        <p className="mt-3 text-sm text-neutral-200 leading-snug">
+          {shownTour.summary}{" "}
+          <span className="text-white/55">
+            {textMode ? "Follow these steps:" : "Follow these steps — the destination is shown in the model."}
+          </span>
+        </p>
+      )}
+      {tour.live && stepwise && (
+        // Reduced motion: the route is a series of stills; the engine advances on "play".
+        <button type="button" data-primary="" onClick={nextStep} className={cn(primarySmall, "mt-3 px-3")}>
+          Next step
+          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        </button>
+      )}
+      <details className="guide-details mt-2" open={!tour.live}>
+        <summary
+          className={cn(microLabel, "flex min-h-11 items-center gap-2 text-[10px] text-neutral-400 hover:text-white")}
+        >
+          All steps ({shownTour.steps.length})
+          <Chevron />
+        </summary>
+        <ol className="mt-1 space-y-2 text-xs text-neutral-300 leading-relaxed">
+          {shownTour.steps.map((s, i) => (
+            <li
+              key={i}
+              aria-current={tour.live && i === stepIndex ? "step" : undefined}
+              className={cn("grid grid-cols-[1.5rem_1fr]", tour.live && i === stepIndex && "text-white")}
+            >
+              <span aria-hidden="true" className="font-mono text-[10px] text-(--color-event) pt-0.5">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span>
+                {s.where && <span className={cn(microLabel, "block text-[10px] text-white/55")}>{s.where}</span>}
+                <span className="sr-only">Step {i + 1}: </span>
+                {s.text}
+              </span>
+            </li>
+          ))}
+        </ol>
+      </details>
+      {!tour.live && tourDest?.map && (
+        <a href={`#map-${tourDest.map}`} onClick={followDetails} className={cn(ghostSmall, "mt-2 px-3 text-xs")}>
+          <MapIcon className="h-4 w-4" aria-hidden="true" />
+          {tourDest.label} on the floor plan
+        </a>
+      )}
+    </div>
+  );
+
+  const targetCard = target && (
+    // Focusable as a whole: keyboard focus lands here when a route arrives at it.
+    <div
+      ref={targetCardRef}
+      tabIndex={-1}
+      role="group"
+      aria-labelledby={`${uid}-target`}
+      className={cn(panel, focusRing, "min-h-0 w-full overflow-y-auto overscroll-contain p-3 sm:max-w-md")}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className={cn(microLabel, "text-[10px] text-(--color-event)")}>
+            {KIND_LABEL[target.kind]} · {getPlace3D(target.place).tab}
+            {target.day && ` · ${target.day}`}
+          </p>
+          <p id={`${uid}-target`} className="mt-1 font-semibold text-white">
+            {target.label}
+          </p>
+          <p className="mt-0.5 text-xs text-neutral-400 leading-relaxed">{target.detail}</p>
+        </div>
+        <div className="-mr-2 -mt-2 flex shrink-0 items-center">
+          <button
+            type="button"
+            className={quietButton}
+            aria-label={touch ? `Share ${target.label}` : `Copy a link to ${target.label}`}
+            title={touch ? "Share" : "Copy link"}
+            onClick={() => void shareTarget(target)}
+          >
+            <Link2 className="h-4 w-4" aria-hidden="true" />
+          </button>
+          <button type="button" className={quietButton} aria-label="Close" onClick={closeTarget}>
+            <X className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+      {pair && target.company && (
+        // A company is in two places: its Friday briefing room (EduCity) and its Saturday Q&A stand (Joki).
+        <div
+          role="group"
+          aria-label={`${getTarget3D(target.company)?.label ?? target.label}: Friday room and Saturday stand`}
+          className="mt-3 grid grid-cols-2 gap-1.5"
+        >
+          {[target, pair]
+            .sort((a, b) => (a.kind === "room" ? -1 : b.kind === "room" ? 1 : 0))
+            .map((t) => {
+              const on = t.id === target.id;
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  aria-pressed={on}
+                  onClick={() => !on && chooseTarget(t.id)}
+                  className={cn(
+                    "flex min-h-11 min-w-0 flex-col items-start justify-center border px-2.5 py-1.5 text-left transition-colors cursor-pointer",
+                    focusRing,
+                    on ? chipOn : chipOff,
+                  )}
+                >
+                  <span className={cn(microLabel, "text-[10px]", on ? "text-black/60" : "text-(--color-event)")}>
+                    {t.kind === "room" ? "Fri · briefing" : "Sat · Q&A stand"}
+                  </span>
+                  <span className="mt-0.5 text-[11px] leading-snug">{t.where}</span>
+                </button>
+              );
+            })}
+        </div>
+      )}
+      {(route || targetPlan || targetDetails) && (
+        // Phones: one row (the plan and the details as icon buttons), so the card leaves the target in view.
+        <div className={cn("mt-3 flex items-center gap-2", !compact && "flex-wrap")}>
+          {route && (
+            <button type="button" onClick={() => walkMeThere(target)} className={cn(primarySmall, "px-3")}>
+              <Navigation className="h-4 w-4" aria-hidden="true" />
+              {ready ? "Walk me there" : "Route there"}
+            </button>
+          )}
+          {targetPlan && (
+            <a
+              href={targetPlan}
+              onClick={followDetails}
+              aria-label={compact ? "Floor plan" : undefined}
+              title={compact ? "Floor plan" : undefined}
+              className={cn(ghostSmall, compact ? "w-11 shrink-0 px-0" : "px-3")}
+            >
+              <MapIcon className="h-4 w-4" aria-hidden="true" />
+              {!compact && "Floor plan"}
+            </a>
+          )}
+          {targetDetails && (
+            <Link
+              href={targetDetails}
+              onClick={followDetails}
+              aria-label={compact ? `Details: ${target.label}` : undefined}
+              title={compact ? "Details" : undefined}
+              className={cn(ghostSmall, compact ? "w-11 shrink-0 px-0" : "px-3")}
+            >
+              {!compact && "Details"}
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          )}
+        </div>
+      )}
+      {route && (
+        <p className={cn("mt-2 text-xs text-white/55 [@media(max-height:600px)]:hidden", compact && "hidden")}>
+          {routeFor(route, target.id).label} · {tourFacts(route)}
+        </p>
+      )}
+    </div>
+  );
+
+  const textNotice = textMode && (
+    // Announced through the status region below (a live region inserted with its text often is not).
+    <div ref={textPanelRef} tabIndex={-1} role="group" aria-label="Text version" className={cn(panel, "w-full p-3 outline-none sm:max-w-md")}>
+      <p className={cn(microLabel, "flex items-center gap-2 text-[10px] text-(--color-event)")}>
+        <FileText className="h-3.5 w-3.5" aria-hidden="true" />
+        {status === "error"
+          ? "3D stopped · text version"
+          : status === "unsupported"
+            ? "Text version · no 3D on this device"
+            : "Text version"}
+      </p>
+      {/* With a card open below, the notice keeps to its label (and its button): the card has the room. */}
+      <p className={cn("mt-1.5 text-sm text-neutral-200 leading-relaxed", (target || tour) && "sr-only")}>
+        {status === "unsupported"
+          ? "This device can't show the 3D model. Everything in it is here as text: find a company, room or route with Go to and Routes, with the floor plans one tap away."
+          : status === "error"
+            ? "The 3D model stopped. The floor plans and the lists below show every room, stand and route — or find them with Go to and Routes."
+            : "The same campus as text: find a company, room or route with Go to and Routes, with the floor plans one tap away."}
+      </p>
+      {status !== "unsupported" && (
+        <button ref={retryButtonRef} type="button" onClick={retry} className={cn(ghostSmall, "mt-3 px-3")}>
+          <RotateCcw className="h-4 w-4" aria-hidden="true" />
+          {status === "error" ? "Try again" : "Try the 3D again"}
+        </button>
+      )}
+    </div>
+  );
+
   return (
     <div className="guide-no-print">
       <div
@@ -1841,14 +2409,18 @@ export function Twin() {
           // Short screens (phones in landscape): the place tabs share the header row, so the scene keeps its height.
           <div
             className={cn(
-              "flex shrink-0 items-center justify-between border-b border-white/10 pr-2",
-              shortOverlay ? "h-[3.25rem] gap-2 pl-2" : "h-14 gap-3 pl-4",
+              // box-content: the safe-area padding (notch, rounded corners) comes on top of the row's height.
+              "box-content flex shrink-0 items-center justify-between border-b border-white/10 pt-[env(safe-area-inset-top)] pr-[max(0.5rem,env(safe-area-inset-right))]",
+              shortOverlay
+                ? "h-[3.25rem] gap-2 pl-[max(0.5rem,env(safe-area-inset-left))]"
+                : "h-14 gap-3 pl-[max(1rem,env(safe-area-inset-left))]",
             )}
           >
             <div className={cn("min-w-0", shortOverlay && "sr-only")}>
               <p className={cn(microLabel, "truncate text-[10px] text-(--color-event)")}>Campus in 3D</p>
               <h2 id={titleId} className="truncate text-sm font-bold text-white">
-                {place.title}
+                {titleMain}
+                {titleRest.length > 0 && <span className={cn(compact && "sr-only")}> · {titleRest.join(" · ")}</span>}
               </h2>
             </div>
             {shortOverlay && placeTabs}
@@ -1882,27 +2454,20 @@ export function Twin() {
               expanded ? "min-h-0 flex-1" : "aspect-[4/5] border border-white/10 sm:aspect-[3/2] lg:aspect-[16/10]",
             )}
           >
-            {/* Poster — until the 3D has rendered its first full frame. */}
+            {/* Poster — until the 3D has rendered its first full frame; it fades into the scene. */}
             <div
               aria-hidden="true"
               className={cn(
-                "absolute inset-0 transition-opacity duration-500 motion-reduce:transition-none",
+                "absolute inset-0 transition-opacity duration-700 ease-out motion-reduce:transition-none",
                 ready ? "pointer-events-none opacity-0" : "opacity-100",
               )}
             >
               {/* Usually the page's largest paint: load it eagerly. */}
-              <Image
-                src={posterFor(place)}
-                alt=""
-                fill
-                loading="eager"
-                sizes="(max-width: 1024px) 100vw, 1024px"
-                className="object-cover"
-              />
+              <PosterImage place={place} eager className="object-cover" />
               <div
                 className={cn(
-                  "absolute inset-0 bg-gradient-to-t from-black/90 via-black/15 to-black/30",
-                  status === "loading" && "bg-black/55",
+                  "absolute inset-0 bg-gradient-to-t from-black/90 via-black/15 to-black/30 transition-colors duration-500 motion-reduce:transition-none",
+                  (status === "loading" || textMode) && "bg-black/55",
                 )}
               />
             </div>
@@ -1935,8 +2500,8 @@ export function Twin() {
                     {introTarget
                       ? `${introTarget.label} — ${introTarget.detail}`
                       : introTour
-                        ? `Route: ${introTour.label} · ${tourFacts(introTour)}`
-                      : "Find your room or stand, walk the arrival routes and see the campus at any hour."}
+                        ? `Route: ${routeFor(introTour, urlParams?.intent?.focus).label} · ${tourFacts(introTour)} — ${routeFor(introTour, urlParams?.intent?.focus).summary}`
+                        : "Find your room or stand, walk the arrival routes and see the campus at any hour."}
                   </p>
                 </div>
                 <button
@@ -1962,8 +2527,8 @@ export function Twin() {
                   className={cn(panel, "w-full max-w-xs p-4 outline-none")}
                 >
                   <p className={cn(microLabel, "flex items-center justify-between gap-3 text-white")}>
-                    <span>Building the campus…</span>
-                    {progress && progress.total > 0 && (
+                    <span>{loadLabel}</span>
+                    {loadPhase === "build" && progress && progress.total > 0 && (
                       <span aria-hidden="true" className="tabular-nums text-white/55">
                         {progress.loaded}/{progress.total}
                       </span>
@@ -1971,40 +2536,37 @@ export function Twin() {
                   </p>
                   <div
                     role="progressbar"
-                    aria-label="Building the campus"
+                    aria-label="Loading the 3D campus"
                     aria-valuemin={0}
-                    aria-valuemax={progress?.total || undefined}
-                    aria-valuenow={progress?.total ? progress.loaded : undefined}
+                    aria-valuemax={100}
+                    aria-valuenow={Math.round(loadPct)}
+                    aria-valuetext={
+                      loadPhase === "build" && progress?.total
+                        ? `${loadLabel} ${progress.loaded} of ${progress.total} parts`
+                        : loadLabel
+                    }
                     className="relative mt-3 h-0.5 w-full overflow-hidden bg-white/10"
                   >
-                    {progress && progress.total > 0 ? (
-                      <div
-                        className="h-full bg-(--color-event) transition-[width] duration-300 motion-reduce:transition-none"
-                        style={{ width: `${Math.min(100, (progress.loaded / progress.total) * 100)}%` }}
-                      />
-                    ) : (
-                      <div className="h-full w-1/3 animate-pulse bg-(--color-event) motion-reduce:animate-none" />
-                    )}
+                    {/* The last stretch (light and textures) eases towards the end while the first frame renders. */}
+                    <div
+                      className={cn(
+                        "h-full w-full origin-left bg-(--color-event) transition-transform ease-out motion-reduce:transition-none",
+                        loadPhase === "light" ? "duration-[8000ms]" : "duration-500",
+                      )}
+                      style={{ transform: `scaleX(${loadPct / 100})` }}
+                    />
                   </div>
                   {opening && <p className="mt-3 text-sm text-neutral-300 leading-snug">{opening}</p>}
-                </div>
-              </div>
-            )}
-
-            {(status === "unsupported" || status === "error") && (
-              // Announced through the status region below (a live region inserted with its text often is not).
-              <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
-                <div className={cn(panel, "max-w-md p-4")}>
-                  <p className="text-sm text-neutral-200 leading-relaxed">
-                    {status === "unsupported"
-                      ? "This device can't show the 3D model. The floor plans and the lists below show every room, stand and route."
-                      : "The 3D model stopped. The floor plans and the lists below show every room, stand and route."}
-                  </p>
-                  {status === "error" && (
-                    <button ref={retryButtonRef} type="button" onClick={retry} className={cn(ghostSmall, "mt-3")}>
-                      <RotateCcw className="h-4 w-4" aria-hidden="true" />
-                      Try again
-                    </button>
+                  {slowLoad && (
+                    <div className="mt-3 border-t border-white/10 pt-3">
+                      <p className="text-xs text-neutral-400 leading-relaxed">
+                        Taking a while on this device? Everything in the 3D is also here as text.
+                      </p>
+                      <button type="button" onClick={showTextVersion} className={cn(ghostSmall, "mt-2 px-3 text-xs")}>
+                        <FileText className="h-4 w-4" aria-hidden="true" />
+                        Show as text
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
@@ -2014,6 +2576,7 @@ export function Twin() {
               <>
                 {/* Top left: time of day (+ the walk hint on phones, clear of the joystick). */}
                 <div
+                  ref={topLeftRef}
                   className={cn(
                     "pointer-events-none absolute inset-y-3 left-3 z-20 flex flex-col items-start gap-2 [&>*]:pointer-events-auto",
                     toolsInHeader ? "max-w-[calc(100%-1.5rem)]" : "max-w-[calc(100%-5rem)]",
@@ -2060,244 +2623,100 @@ export function Twin() {
                 </div>
 
                 {/* Top right: view tools (in the header on phones). */}
-                {!toolsInHeader && <div className="absolute right-3 top-3 z-10 flex flex-col gap-2">{tools}</div>}
+                {!toolsInHeader && (
+                  <div ref={toolsRef} className="absolute right-3 top-3 z-10 flex flex-col gap-2">
+                    {tools}
+                  </div>
+                )}
+              </>
+            )}
 
-                {/* Bottom: what is happening now (route, walk, selection) above the views. Phones in
-                    landscape: beside the time of day (its widest label ends at 14.6rem), so a card gets
-                    the scene's full height. */}
-                <div
-                  className={cn(
-                    "pointer-events-none absolute bottom-4 z-10 flex flex-col items-start justify-end gap-2 [&>*]:pointer-events-auto",
-                    !toolsInHeader
+            {(ready || textMode) && (
+              // Bottom: what is happening now (route, walk, selection) above the views. Phones in landscape:
+              // beside the time of day (its widest label ends at 14.6rem), so a card gets the scene's full
+              // height. Phones while a route plays: at the top (see tourOnTop). Text version: the whole stage.
+              <div
+                ref={stackRef}
+                className={cn(
+                  "pointer-events-none absolute bottom-4 z-10 flex flex-col items-start gap-2 [&>*]:pointer-events-auto",
+                  tourOnTop || tourAside ? "justify-start" : "justify-end",
+                  textMode
+                    ? "left-3 right-3 top-3"
+                    : tourAside
+                      ? "left-3 top-[4.25rem] w-[min(22rem,45%)]"
+                      : !toolsInHeader
                       ? "left-3 right-[4.25rem] top-[4.25rem]"
                       : short
                         ? "left-[15.5rem] right-3 top-3"
                         : "left-3 right-3 top-[4.25rem]",
-                  )}
-                >
-                  {tour && activeTour ? (
-                    <div
-                      ref={tourCardRef}
-                      className={cn(panel, "min-h-0 w-full overflow-y-auto overscroll-contain p-3 sm:max-w-md")}
-                    >
-                      <p className={cn(microLabel, "text-[10px] text-(--color-event)")}>Route · {tourFacts(activeTour)}</p>
-                      <div className="flex items-start justify-between gap-3">
-                        <p className="min-w-0 pt-3 text-sm font-semibold text-white">{activeTour.label}</p>
-                        {/* 44 px buttons with a gap, so a tap meant for Stop does not restart the route. */}
-                        <div className="-mr-2 flex shrink-0 items-center gap-1">
-                          {tour.live && (
-                            <>
-                              {!stepwise && (
-                                <button
-                                  type="button"
-                                  data-primary=""
-                                  className={quietButton}
-                                  onClick={togglePause}
-                                  aria-label={tour.paused ? "Resume the route" : "Pause the route"}
-                                >
-                                  {tour.paused ? (
-                                    <Play className="h-4 w-4" aria-hidden="true" />
-                                  ) : (
-                                    <Pause className="h-4 w-4" aria-hidden="true" />
-                                  )}
-                                </button>
-                              )}
-                              <button type="button" className={quietButton} onClick={restartTour} aria-label="Restart the route">
-                                <RotateCcw className="h-4 w-4" aria-hidden="true" />
-                              </button>
-                            </>
-                          )}
-                          <button
-                            type="button"
-                            data-primary={tour.live ? undefined : ""}
-                            className={quietButton}
-                            onClick={() => stopTour()}
-                            aria-label="Stop the route"
-                          >
-                            {tour.live ? (
-                              <Square className="h-3.5 w-3.5" aria-hidden="true" />
-                            ) : (
-                              <X className="h-4 w-4" aria-hidden="true" />
-                            )}
-                          </button>
+                )}
+              >
+                {textNotice}
+                {slowRun && ready && (
+                  <div role="group" aria-label="The 3D is slow" className={cn(panel, "flex w-full flex-wrap items-center gap-2 p-3 sm:max-w-md")}>
+                    <p className="min-w-0 flex-1 text-sm text-neutral-200 leading-snug">
+                      The 3D runs slowly on this device. The text version has every room, stand and route.
+                    </p>
+                    <button type="button" onClick={showTextVersion} className={cn(ghostSmall, "px-3 text-xs")}>
+                      <FileText className="h-4 w-4" aria-hidden="true" />
+                      Show as text
+                    </button>
+                    <button type="button" onClick={() => setSlowRun(false)} className={quietButton} aria-label="Keep the 3D">
+                      <X className="h-4 w-4" aria-hidden="true" />
+                    </button>
+                  </div>
+                )}
+                {routeCard ? (
+                  routeCard
+                ) : mode === "walk" && ready ? (
+                  !toolsInHeader && (
+                    <div className={cn(panel, "min-h-0 max-w-md overflow-y-auto p-3")}>
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="min-w-0">
+                          <p className={cn(microLabel, "text-[10px] text-(--color-event)")}>Walk mode · eye level</p>
+                          <p className="mt-1 text-sm text-neutral-200">{hint}</p>
+                          <p className="mt-0.5 text-xs text-white/55">Drag to look · Shift to run · Esc to stop walking</p>
                         </div>
-                      </div>
-                      {tour.live && (
-                        <div
-                          ref={(el) => {
-                            barTrackRef.current = el;
-                            el?.setAttribute("aria-valuenow", String(Math.round(tourFrame.current.t * 100)));
-                          }}
-                          role="progressbar"
-                          aria-label="Route progress"
-                          aria-valuemin={0}
-                          aria-valuemax={100}
-                          className="mt-3 h-0.5 w-full bg-white/10"
-                        >
-                          <div
-                            ref={(el) => {
-                              barRef.current = el;
-                              if (el) el.style.transform = `scaleX(${Math.min(1, Math.max(0, tourFrame.current.t))})`;
-                            }}
-                            className="h-full w-full origin-left bg-(--color-event)"
-                          />
-                        </div>
-                      )}
-                      {tour.live ? (
-                        // Plain text: each step is announced once, with its number, through the status region.
-                        <>
-                          {stepIndex >= 0 && (
-                            <p className={cn(microLabel, "mt-3 text-[10px] text-white/55")}>
-                              Step {stepIndex + 1} of {activeTour.steps.length}
-                            </p>
-                          )}
-                          <p className={cn("text-sm text-neutral-200 leading-snug", stepIndex >= 0 ? "mt-1" : "mt-3")}>
-                            {tour.caption ??
-                              (stepwise ? activeTour.summary : (activeTour.steps[0]?.text ?? activeTour.summary))}
-                          </p>
-                        </>
-                      ) : (
-                        <p className="mt-3 text-sm text-neutral-200 leading-snug">
-                          Follow these steps — the destination is shown in the model.
-                        </p>
-                      )}
-                      {tour.live && stepwise && (
-                        // Reduced motion: the route is a series of stills; the engine advances on "play".
-                        <button
-                          type="button"
-                          data-primary=""
-                          onClick={nextStep}
-                          className={cn(primarySmall, "mt-3 px-3")}
-                        >
-                          Next step
-                          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                        <button type="button" onClick={() => stopWalk(true)} className={cn(ghostSmall, "shrink-0 px-3 text-xs")}>
+                          Stop walking
                         </button>
-                      )}
-                      <details className="guide-details mt-2" open={!tour.live}>
-                        <summary
-                          className={cn(
-                            microLabel,
-                            "flex min-h-11 items-center gap-2 text-[10px] text-neutral-400 hover:text-white",
-                          )}
-                        >
-                          All steps ({activeTour.steps.length})
-                          <Chevron />
-                        </summary>
-                        <ol className="mt-1 list-decimal space-y-1 pl-5 text-xs text-neutral-300 leading-relaxed">
-                          {activeTour.steps.map((s, i) => (
-                            <li
-                              key={i}
-                              aria-current={tour.live && i === stepIndex ? "step" : undefined}
-                              className={cn(tour.live && i === stepIndex && "text-white")}
-                            >
-                              {s.text}
-                            </li>
-                          ))}
-                        </ol>
-                      </details>
+                      </div>
+                      {connectorButtons && <div className="mt-3">{connectorButtons}</div>}
                     </div>
-                  ) : mode === "walk" ? (
-                    !toolsInHeader && (
-                      <div className={cn(panel, "min-h-0 max-w-md overflow-y-auto p-3")}>
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="min-w-0">
-                            <p className={cn(microLabel, "text-[10px] text-(--color-event)")}>Walk mode · eye level</p>
-                            <p className="mt-1 text-sm text-neutral-200">{hint}</p>
-                            <p className="mt-0.5 text-xs text-white/55">Drag to look · Shift to run · Esc to stop walking</p>
-                          </div>
-                          <button type="button" onClick={() => stopWalk(true)} className={cn(ghostSmall, "shrink-0 px-3 text-xs")}>
-                            Stop walking
-                          </button>
-                        </div>
-                        {connectorButton && <div className="mt-3">{connectorButton}</div>}
-                      </div>
-                    )
-                  ) : (
-                    target && (
-                      // Focusable as a whole: keyboard focus lands here when a route arrives at it.
-                      <div
-                        ref={targetCardRef}
-                        tabIndex={-1}
-                        role="group"
-                        aria-labelledby={`${uid}-target`}
-                        className={cn(panel, focusRing, "min-h-0 w-full overflow-y-auto overscroll-contain p-3 sm:max-w-md")}
-                      >
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="min-w-0">
-                            <p className={cn(microLabel, "text-[10px] text-(--color-event)")}>
-                              {KIND_LABEL[target.kind]} · {getPlace3D(target.place).tab}
-                            </p>
-                            <p id={`${uid}-target`} className="mt-1 font-semibold text-white">
-                              {target.label}
-                            </p>
-                            <p className="mt-0.5 text-xs text-neutral-400 leading-relaxed">{target.detail}</p>
-                          </div>
-                          <div className="-mr-2 -mt-2 flex shrink-0 items-center">
-                            <button
-                              type="button"
-                              className={quietButton}
-                              aria-label={touch ? `Share ${target.label}` : `Copy a link to ${target.label}`}
-                              title={touch ? "Share" : "Copy link"}
-                              onClick={() => void shareTarget(target)}
-                            >
-                              <Link2 className="h-4 w-4" aria-hidden="true" />
-                            </button>
-                            <button type="button" className={quietButton} aria-label="Close" onClick={closeTarget}>
-                              <X className="h-4 w-4" aria-hidden="true" />
-                            </button>
-                          </div>
-                        </div>
-                        {(route || target.href) && (
-                          <div className="mt-3 flex flex-wrap items-center gap-2">
-                            {route && (
-                              <button type="button" onClick={() => walkMeThere(target)} className={cn(primarySmall, "px-3 sm:px-4")}>
-                                <Navigation className="h-4 w-4" aria-hidden="true" />
-                                Walk me there
-                              </button>
-                            )}
-                            {target.href && (
-                              <Link href={target.href} onClick={followDetails} className={cn(ghostSmall, "px-3 sm:px-4")}>
-                                Details
-                                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                              </Link>
-                            )}
-                          </div>
-                        )}
-                        {route && (
-                          <p className="mt-2 text-xs text-white/55 [@media(max-height:600px)]:hidden">
-                            {route.label} · {tourFacts(route)}
-                          </p>
-                        )}
-                      </div>
-                    )
-                  )}
+                  )
+                ) : (
+                  targetCard
+                )}
 
-                  {/* Short screens: a target's card gets the room the view chips would take. */}
-                  {showViews && !(short && target) && (
-                    <ScrollRow
-                      role="group"
-                      aria-label={`${place.tab} views`}
-                      className="-m-1 flex max-w-[calc(100%+0.5rem)] shrink-0 gap-1 p-1"
-                    >
-                      {place.views.map((v) => {
-                        const on = !selected && v.id === viewId;
-                        return (
-                          <button
-                            key={v.id}
-                            type="button"
-                            aria-pressed={on}
-                            onClick={() => chooseView(v.id)}
-                            className={cn(chipBase, on ? chipOn : chipOff)}
-                          >
-                            {v.label}
-                          </button>
-                        );
-                      })}
-                    </ScrollRow>
-                  )}
-                </div>
+                {/* Short screens: a target's card gets the room the view chips would take. */}
+                {showViews && !(short && target) && (
+                  <ScrollRow
+                    role="group"
+                    aria-label={`${place.tab} views`}
+                    className="-m-1 flex max-w-[calc(100%+0.5rem)] shrink-0 gap-1 p-1"
+                  >
+                    {place.views.map((v) => {
+                      const on = !selected && v.id === viewId;
+                      return (
+                        <button
+                          key={v.id}
+                          type="button"
+                          aria-pressed={on}
+                          onClick={() => chooseView(v.id)}
+                          className={cn(chipBase, on ? chipOn : chipOff)}
+                        >
+                          {v.label}
+                        </button>
+                      );
+                    })}
+                  </ScrollRow>
+                )}
+              </div>
+            )}
 
-                {toolsInHeader && connectorButton && <div className="absolute bottom-4 right-3 z-20">{connectorButton}</div>}
+            {ready && (
+              <>
+                {toolsInHeader && connectorButtons && <div className="absolute bottom-4 right-3 z-20">{connectorButtons}</div>}
 
                 {notice && (
                   <div
@@ -2333,37 +2752,39 @@ export function Twin() {
                     <X className="h-4 w-4" aria-hidden="true" />
                   </button>
                 </div>
-                <fieldset className="flex items-center gap-2 border-b border-white/10 px-4 py-2">
-                  <legend className="sr-only">Camera during a route</legend>
-                  <span aria-hidden="true" className={cn(microLabel, "mr-1 text-[10px] text-white/55")}>
-                    Camera
-                  </span>
-                  {(
-                    [
-                      ["chase", "Follow"],
-                      ["first", "Eye level"],
-                    ] as const
-                  ).map(([value, label]) => (
-                    <label
-                      key={value}
-                      className={cn(
-                        chipBase,
-                        "px-2.5 text-[10px] has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-white",
-                        tourCamera === value ? chipOn : chipOff,
-                      )}
-                    >
-                      <input
-                        type="radio"
-                        name={`${uid}-camera`}
-                        value={value}
-                        checked={tourCamera === value}
-                        onChange={() => setTourCamera(value)}
-                        className="sr-only"
-                      />
-                      {label}
-                    </label>
-                  ))}
-                </fieldset>
+                {!textMode && (
+                  <fieldset className="flex items-center gap-2 border-b border-white/10 px-4 py-2">
+                    <legend className="sr-only">Camera during a route</legend>
+                    <span aria-hidden="true" className={cn(microLabel, "mr-1 text-[10px] text-white/55")}>
+                      Camera
+                    </span>
+                    {(
+                      [
+                        ["chase", "Follow"],
+                        ["first", "Eye level"],
+                      ] as const
+                    ).map(([value, label]) => (
+                      <label
+                        key={value}
+                        className={cn(
+                          chipBase,
+                          "px-2.5 text-[10px] has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-white",
+                          tourCamera === value ? chipOn : chipOff,
+                        )}
+                      >
+                        <input
+                          type="radio"
+                          name={`${uid}-camera`}
+                          value={value}
+                          checked={tourCamera === value}
+                          onChange={() => setTourCamera(value)}
+                          className="sr-only"
+                        />
+                        {label}
+                      </label>
+                    ))}
+                  </fieldset>
+                )}
                 <ul className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
                   {TOURS_3D.map((t) => {
                     const playing = tour?.id === t.id && tour.live;
@@ -2389,7 +2810,7 @@ export function Twin() {
                               playing ? "border-(--color-event) text-(--color-event)" : "border-white/20 text-white",
                             )}
                           >
-                            <Play className="h-3.5 w-3.5" />
+                            {textMode ? <FileText className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
                           </span>
                           <span className="min-w-0">
                             <span className={cn(microLabel, "block truncate text-[10px] text-(--color-event)")}>
@@ -2443,13 +2864,17 @@ export function Twin() {
             </p>
           </div>
 
-          {/* Dock: find anything, or follow a route (not without WebGL 2: the lists below are the 3D's text version). */}
-          {status !== "unsupported" && (
+          {/* Dock: find anything, or follow a route — the 3D's way in, and in the text version its way through. */}
           <div
             className={cn(
               "flex items-center gap-2",
               expanded
-                ? cn("shrink-0 border-t border-white/10 bg-black px-3", shortOverlay ? "py-1.5" : "py-3")
+                ? cn(
+                    "shrink-0 border-t border-white/10 bg-black pl-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))]",
+                    shortOverlay
+                      ? "pt-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))]"
+                      : "pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]",
+                  )
                 : "mt-3",
             )}
           >
@@ -2467,12 +2892,13 @@ export function Twin() {
                     focusRing,
                   )}
                 >
-                  <option value="">Find a company, room or entrance</option>
+                  {/* Phones: short enough to read in full beside Routes (the label "Go to" names the field). */}
+                  <option value="">{compact ? "Where to?" : "Find a company or place"}</option>
                   {TARGET_GROUPS.map((g) => (
                     <optgroup key={g.label} label={g.label}>
                       {g.targets.map((t) => (
                         <option key={t.id} value={t.id}>
-                          {t.label}
+                          {optionText(t)}
                         </option>
                       ))}
                     </optgroup>
@@ -2501,15 +2927,14 @@ export function Twin() {
               Routes
             </button>
           </div>
-          )}
         </div>
       </div>
 
-      {/* Text version of everything in the 3D. */}
+      {/* Text version of everything in the 3D (open when there is no 3D). */}
       <div className="mt-6">
         <p className="max-w-3xl text-sm text-neutral-400 leading-relaxed">{place.caption}</p>
         <div className="mt-4 grid grid-cols-1 gap-x-10 md:grid-cols-2">
-          <details className="guide-details border-t border-white/10">
+          <details className="guide-details border-t border-white/10" open={textMode}>
             <summary className="flex min-h-11 items-center justify-between gap-2 text-xs text-neutral-400 hover:text-white">
               <span>
                 In {place.tab} ({placeTargets.length})
@@ -2518,10 +2943,31 @@ export function Twin() {
             </summary>
             <ul className="pb-2">
               {placeTargets.map((t) => (
-                <li key={t.id} className="flex items-start justify-between gap-3 border-b border-white/10 py-2.5 text-sm">
+                <li
+                  key={t.id}
+                  aria-current={listCurrent === t.id ? "true" : undefined}
+                  className={cn(
+                    "flex items-start justify-between gap-3 border-b border-white/10 py-2.5 text-sm",
+                    listCurrent === t.id && currentItem,
+                  )}
+                >
                   <span className="min-w-0">
                     <span className="text-white">{t.label}</span>
                     <span className="text-white/55"> — {t.detail}</span>
+                    {t.map && (
+                      <>
+                        {" "}
+                        <a
+                          href={`#map-${t.map}`}
+                          className={cn(
+                            "whitespace-nowrap text-white/55 underline decoration-white/25 underline-offset-2 transition-colors hover:text-white hover:decoration-white",
+                            focusRing,
+                          )}
+                        >
+                          floor plan<span className="sr-only"> for {t.label}</span>
+                        </a>
+                      </>
+                    )}
                   </span>
                   <button
                     type="button"
@@ -2538,14 +2984,18 @@ export function Twin() {
               ))}
             </ul>
           </details>
-          <details className="guide-details border-t border-white/10">
+          <details className="guide-details border-t border-white/10" open={textMode}>
             <summary className="flex min-h-11 items-center justify-between gap-2 text-xs text-neutral-400 hover:text-white">
               <span>Walking routes ({TOURS_3D.length})</span>
               <Chevron />
             </summary>
             <ol className="pb-2">
               {TOURS_3D.map((t) => (
-                <li key={t.id} className="border-b border-white/10 py-4">
+                <li
+                  key={t.id}
+                  aria-current={listCurrent === t.id ? "true" : undefined}
+                  className={cn("border-b border-white/10 py-4", listCurrent === t.id && currentItem)}
+                >
                   <h3 className="text-sm font-semibold text-white">{t.label}</h3>
                   <p className={cn(microLabel, "mt-1 text-[10px] text-white/55")}>
                     {t.audience} · {tourFacts(t)}

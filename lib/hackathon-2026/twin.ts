@@ -1,4 +1,11 @@
-import { briefingRoomLabel, CHALLENGE_COMPANIES, getCompany, SHOWROOM_ORDER, showroomCounter } from "./companies";
+import {
+  briefingRoomLabel,
+  CHALLENGE_COMPANIES,
+  companyMapIds,
+  getCompany,
+  SHOWROOM_ORDER,
+  showroomCounter,
+} from "./companies";
 import { EVENT_2026 } from "./facts";
 import { BIOCITY_STANDS, getStandPartner, OPEN_STAND_LABEL } from "./partners";
 import { GUIDE_BASE_PATH } from "./route";
@@ -41,12 +48,22 @@ export interface Target3D {
   place: PlaceId;
   kind: "company" | "room" | "stand" | "entrance" | "area" | "landmark";
   href?: string;
+  /** Where it is in a few words, for lists and switches: "Joki · Showroom counter 4", "EduCity · room 1001". */
+  where?: string;
+  /** The day it matters ("Fri", "Sat") — a company's briefing room and its Q&A stand. */
+  day?: string;
+  /** Challenge company id (its Q&A stand and its Friday room both carry it). */
+  company?: string;
+  /** The floor plan on the venue page that shows it (VenueExplorer map id; link `#map-<id>`). */
+  map?: string;
 }
 
 export interface TourStep {
   text: string;
   /** Where the step begins on the route, [x, z] in the campus frame — show the caption from there. */
   at?: [number, number];
+  /** The place the step is about, in a word or two ("Entrance recess") — "now / next" on the route card. */
+  where?: string;
 }
 
 export interface Tour3D {
@@ -74,8 +91,9 @@ export interface TimePreset {
 // ── Helpers over the shared event data ───────────────────────────────────────
 
 const companyHref = (id: string) => `${GUIDE_BASE_PATH}/challenge-partners/${id}`;
+/** A floor plan on the venue page (VenueExplorer selects it from the hash). */
+export const mapHref = (mapId: string) => `${GUIDE_BASE_PATH}/venue#map-${mapId}`;
 const STANDS_HREF = `${GUIDE_BASE_PATH}/partners#stands`;
-const MAPS_HREF = `${GUIDE_BASE_PATH}/venue#maps`;
 const VENUES_HREF = `${GUIDE_BASE_PATH}/venue#venues`;
 const ROUTE_HREF = `${GUIDE_BASE_PATH}/venue#route`;
 
@@ -118,6 +136,8 @@ const briefings = getScheduleItem("fri-briefings");
 const opening = getScheduleItem("fri-opening");
 const registration = getScheduleItem("fri-registration");
 const teamFormation = getScheduleItem("fri-team-formation");
+const winners = getScheduleItem("sun-closing");
+const finals = getScheduleItem("sun-finals");
 const BRIEFING_TIME = `Fri ${formatTimeRange(briefings)}`;
 
 // ── Places ───────────────────────────────────────────────────────────────────
@@ -128,7 +148,7 @@ export const PLACES_3D: readonly Place3D[] = [
     tab: "Campus",
     title: "Kupittaa campus · arrivals and the walk between venues",
     caption:
-      "EduCity, BioCity and Joki with the streets around them, built to scale from City of Turku open data. Companies arrive at BioCity's entrance on Tykistökatu; builders walk about 200 m along the raised campus deck from EduCity to BioCity.",
+      "EduCity, BioCity and Joki with the streets around them, built to scale from City of Turku open data. Challenge partners arrive at EduCity's door B on Friday and come in through BioCity's entrance on Tykistökatu to Joki on Saturday; builders walk about 200 m along the raised campus deck from EduCity to BioCity.",
     alt: "3D model of the Kupittaa campus in Turku: BioCity's dark seven-storey block on Tykistökatu, the round glass Joki tower behind it on Jussin aukio, the raised deck running past ICT-City to EduCity's brick building, and ParkCity and Kupittaa station to the north-east, with the walking routes drawn as violet lines on the ground.",
     poster: "/assets/guide/3d/posters/campus.webp",
     views: [
@@ -143,7 +163,7 @@ export const PLACES_3D: readonly Place3D[] = [
     tab: "EduCity",
     title: "EduCity · arrival, opening and briefings",
     caption:
-      "Both main entrances are in the glass pavilion at deck level. Registration and the team formation area are on floor 1, the opening ceremony is on Taidon portaat, and the company briefing rooms are on floors 1 and 2.",
+      "Both main entrances are in the glass pavilion at deck level; challenge partners come in through door B on the south-east side. Registration and the team formation area are on floor 1, the opening ceremony is on Taidon portaat, and the company briefing rooms are on floors 1 and 2.",
     alt: "3D model of EduCity with its roof lifted off: the lobby with registration by the east entrance, the team formation area and the Taidon portaat stair seating, and the company briefing rooms on floors 1 and 2, each marked with the company's name.",
     poster: "/assets/guide/3d/posters/educity.webp",
     views: [
@@ -210,6 +230,13 @@ function standDetail(company: ChallengeCompany): string {
   return `Joki floor ${company.qa.floor} · glass tower`;
 }
 
+/** "Showroom counter 4", "Showroom", "floor 3" — where a company's Q&A stand is, in a few words. */
+function standWhereShort(company: ChallengeCompany): string {
+  const counter = showroomCounter(company);
+  if (company.qa.floor === 1) return counter ? `Showroom counter ${counter}` : company.qa.zone;
+  return `floor ${company.qa.floor}`;
+}
+
 const companyTargets: Target3D[] = [...CHALLENGE_COMPANIES].sort(byName).map((c) => ({
   id: c.id,
   label: c.name,
@@ -217,6 +244,10 @@ const companyTargets: Target3D[] = [...CHALLENGE_COMPANIES].sort(byName).map((c)
   place: "joki",
   kind: "company",
   href: companyHref(c.id),
+  where: `Joki · ${standWhereShort(c)}`,
+  day: "Sat",
+  company: c.id,
+  map: companyMapIds(c).qa,
 }));
 
 const roomTargets: Target3D[] = [...CHALLENGE_COMPANIES].sort(byName).map((c) => ({
@@ -226,6 +257,10 @@ const roomTargets: Target3D[] = [...CHALLENGE_COMPANIES].sort(byName).map((c) =>
   place: "educity",
   kind: "room",
   href: companyHref(c.id),
+  where: `EduCity · room ${c.briefing.room}`,
+  day: "Fri",
+  company: c.id,
+  map: companyMapIds(c).briefing,
 }));
 
 const standTargets: Target3D[] = BIOCITY_STANDS.map((stand) => ({
@@ -237,6 +272,8 @@ const standTargets: Target3D[] = BIOCITY_STANDS.map((stand) => ({
   place: "biocity",
   kind: "stand",
   href: STANDS_HREF,
+  where: `BioCity · ${stand.area}`,
+  map: "biocity-lobby",
 }));
 
 const entranceTargets: Target3D[] = [
@@ -247,6 +284,7 @@ const entranceTargets: Target3D[] = [
     place: "biocity",
     kind: "entrance",
     href: VENUES_HREF,
+    map: "biocity-lobby",
   },
   {
     id: "entrance-biocity-courtyard",
@@ -255,6 +293,7 @@ const entranceTargets: Target3D[] = [
     place: "biocity",
     kind: "entrance",
     href: ROUTE_HREF,
+    map: "biocity-lobby",
   },
   {
     id: "entrance-educity-west",
@@ -263,6 +302,7 @@ const entranceTargets: Target3D[] = [
     place: "educity",
     kind: "entrance",
     href: VENUES_HREF,
+    map: "educity-flow-1",
   },
   {
     id: "entrance-educity-east",
@@ -271,14 +311,16 @@ const entranceTargets: Target3D[] = [
     place: "educity",
     kind: "entrance",
     href: VENUES_HREF,
+    map: "educity-flow-1",
   },
   {
     id: "entrance-educity-b",
     label: "EduCity door B",
-    detail: "South-east walkway, in a brick portal · company arrivals to room 1002",
+    detail: "South-east walkway, in a brick portal · challenge partners' way in on Friday, to the briefing rooms",
     place: "educity",
     kind: "entrance",
     href: VENUES_HREF,
+    map: "educity-flow-1",
   },
   {
     id: "entrance-educity-gateway",
@@ -295,6 +337,7 @@ const entranceTargets: Target3D[] = [
     place: "joki",
     kind: "entrance",
     href: VENUES_HREF,
+    map: "joki-1",
   },
 ];
 
@@ -305,7 +348,8 @@ const areaTargets: Target3D[] = [
     detail: "BioCity main lobby · about 52–56 build tables · open around the clock",
     place: "biocity",
     kind: "area",
-    href: MAPS_HREF,
+    href: mapHref("biocity-lobby"),
+    map: "biocity-lobby",
   },
   {
     id: "serving-lines",
@@ -313,7 +357,8 @@ const areaTargets: Target3D[] = [
     detail: "BioCity · Maunon sali restaurant, off the Aulagalleria · event meals",
     place: "biocity",
     kind: "area",
-    href: MAPS_HREF,
+    href: mapHref("biocity-lobby"),
+    map: "biocity-lobby",
   },
   {
     id: "supercars",
@@ -328,7 +373,8 @@ const areaTargets: Target3D[] = [
     detail: "Joki floor 1 · build area, open around the clock",
     place: "joki",
     kind: "area",
-    href: MAPS_HREF,
+    href: mapHref("joki-1"),
+    map: "joki-1",
   },
   {
     id: "cave",
@@ -336,7 +382,8 @@ const areaTargets: Target3D[] = [
     detail: "Joki floor 1 · black-box hall · build area, open around the clock",
     place: "joki",
     kind: "area",
-    href: MAPS_HREF,
+    href: mapHref("joki-1"),
+    map: "joki-1",
   },
   {
     id: "showroom",
@@ -344,7 +391,8 @@ const areaTargets: Target3D[] = [
     detail: `Joki floor 1 · up the ramp from the Aula · ${SHOWROOM_ORDER.length} challenge partner counters`,
     place: "joki",
     kind: "area",
-    href: MAPS_HREF,
+    href: mapHref("joki-showroom"),
+    map: "joki-showroom",
   },
   {
     id: "lounge",
@@ -352,7 +400,8 @@ const areaTargets: Target3D[] = [
     detail: "Joki floor 1 · amphitheatre beside the Showroom · for company representatives",
     place: "joki",
     kind: "area",
-    href: MAPS_HREF,
+    href: mapHref("joki-1"),
+    map: "joki-1",
   },
   {
     id: "chill-zone",
@@ -360,7 +409,8 @@ const areaTargets: Target3D[] = [
     detail: "Joki floor 2 · west half of the glass tower",
     place: "joki",
     kind: "area",
-    href: MAPS_HREF,
+    href: mapHref("joki-2-3"),
+    map: "joki-2-3",
   },
   {
     id: "registration",
@@ -368,7 +418,8 @@ const areaTargets: Target3D[] = [
     detail: `EduCity floor 1 · just inside the east main entrance · from Fri ${formatTime(registration.start)}`,
     place: "educity",
     kind: "area",
-    href: MAPS_HREF,
+    href: mapHref("educity-flow-1"),
+    map: "educity-flow-1",
   },
   {
     id: "team-formation",
@@ -376,7 +427,8 @@ const areaTargets: Target3D[] = [
     detail: `EduCity floor 1 · north lobby, beside Taidon portaat · Fri ${formatTimeRange(teamFormation)}`,
     place: "educity",
     kind: "area",
-    href: MAPS_HREF,
+    href: mapHref("educity-flow-1"),
+    map: "educity-flow-1",
   },
   {
     id: "taidon-portaat",
@@ -384,7 +436,8 @@ const areaTargets: Target3D[] = [
     detail: `EduCity floor 1 · stair seating · opening ceremony Fri ${formatTime(opening.start)}`,
     place: "educity",
     kind: "area",
-    href: MAPS_HREF,
+    href: mapHref("educity-flow-1"),
+    map: "educity-flow-1",
   },
   {
     id: "restaurant-kisalli",
@@ -392,15 +445,17 @@ const areaTargets: Target3D[] = [
     detail: "EduCity floor 1 · Friday snacks",
     place: "educity",
     kind: "area",
-    href: MAPS_HREF,
+    href: mapHref("educity-flow-1"),
+    map: "educity-flow-1",
   },
   {
     id: "company-arrival",
-    label: "Company arrival · room 1002",
-    detail: `EduCity floor 1 · in through door B · Fri from ${formatTime(EVENT_2026.challengePartnerArrival)}`,
+    label: "Company arrival · door B",
+    detail: `EduCity floor 1 · just inside door B · Fri from ${formatTime(EVENT_2026.challengePartnerArrival)} · event staff show you to your room`,
     place: "educity",
     kind: "area",
-    href: MAPS_HREF,
+    href: mapHref("educity-flow-1"),
+    map: "educity-flow-1",
   },
   {
     id: "jussin-aukio",
@@ -451,9 +506,12 @@ const stand2 = standById("bc-2");
 const stand3 = standById("bc-3");
 const stand4 = standById("bc-4");
 const MAIN_STAIRS = "climb the wide outdoor stairs at its east corner (about 30 steps)";
+/** Friday, inside door B: no single room — each company has its own (see tourForCompany). */
+const DOOR_B_INSIDE =
+  "Inside, event staff meet you and guide you on — the company briefing rooms are on floors 1 and 2. Bring your Q&A stand materials: the Since AI team sets your stand up in Joki for Saturday.";
 
 /** A tour step that begins at a point on the route ([x, z] in the campus frame, see routes.json). */
-const step = (text: string, at: [number, number]): TourStep => ({ text, at });
+const step = (text: string, at: [number, number], where: string): TourStep => ({ text, at, where });
 
 /**
  * Lengths and times are the sums of the legs in routes.json (1.3 m/s, no
@@ -470,20 +528,26 @@ export const TOURS_3D: readonly Tour3D[] = [
     place: "educity",
     legs: ["out-arr-train-edu-east", "int-edu-east-to-registration"],
     to: "registration",
-    distanceM: 391,
+    distanceM: 393,
     minutes: 5,
     steps: [
       step(
         "On the platform, walk away from the station building to the stairs up to Kalevansilta, the covered wooden footbridge.",
         [218.9, -111.5],
+        "Platform",
       ),
-      step("Cross the footbridge towards ParkCity and take the stairs down at its end.", [278.5, -25.2]),
-      step("Cross Joukahaisenkatu at the zebra crossing to EduCity's brick building.", [241.4, 37.7]),
-      step(`Turn left along the building and ${MAIN_STAIRS}.`, [227.2, 57.2]),
-      step("Follow the walkway along the building to the glass pavilion — the east main entrance.", [251.2, 97.0]),
+      step("Cross the footbridge towards ParkCity and take the stairs down at its end.", [278.5, -25.2], "Footbridge"),
+      step("Cross Joukahaisenkatu at the zebra crossing to EduCity's brick building.", [241.4, 37.7], "Zebra crossing"),
+      step(`Turn left along the building and ${MAIN_STAIRS}.`, [227.2, 57.2], "Outdoor stairs"),
+      step(
+        "Follow the walkway along the building to the glass pavilion — the east main entrance.",
+        [251.2, 97.0],
+        "East entrance",
+      ),
       step(
         "Registration is just inside; the team formation area and Taidon portaat are further into the lobby.",
         [204.0, 136.5],
+        "Registration",
       ),
     ],
   },
@@ -496,26 +560,34 @@ export const TOURS_3D: readonly Tour3D[] = [
     place: "educity",
     legs: ["out-arr-stdoor-edu-east", "int-edu-east-to-registration"],
     to: "registration",
-    distanceM: 565,
-    minutes: 7.2,
+    distanceM: 566,
+    minutes: 7.3,
     steps: [
       step(
         "From the station hall's street door or bus stop Kupittaan asema, walk to the Tykistökatu–Joukahaisenkatu junction.",
         [155.4, -153.5],
+        "Station hall door",
       ),
-      step("Turn left onto Joukahaisenkatu and cross to the ICT-City side at the first crossing.", [71.8, -130.2]),
+      step(
+        "Turn left onto Joukahaisenkatu and cross to the ICT-City side at the first crossing.",
+        [71.8, -130.2],
+        "Joukahaisenkatu",
+      ),
       step(
         "Keep going past ICT-City; EduCity is the brick building after the passage with the glass bridges.",
         [113.3, -40.8],
+        "ICT-City",
       ),
       step(
         "Step-free? Take the street-level lifts in that passage, between ICT-City and EduCity, instead of the stairs ahead.",
         [213.0, 45.8],
+        "Lift passage",
       ),
-      step(`Walk along EduCity's street side and ${MAIN_STAIRS}.`, [227.2, 57.2]),
+      step(`Walk along EduCity's street side and ${MAIN_STAIRS}.`, [227.2, 57.2], "Outdoor stairs"),
       step(
         "Follow the walkway to the glass pavilion — registration is just inside the east main entrance.",
         [251.2, 97.0],
+        "East entrance",
       ),
     ],
   },
@@ -524,7 +596,7 @@ export const TOURS_3D: readonly Tour3D[] = [
     label: "ParkCity → EduCity company arrival",
     audience: "Challenge partners arriving by car on Friday",
     summary:
-      "From the ParkCity car park across Joukahaisenkatu, up EduCity's outdoor stairs and in through door B to room 1002.",
+      "From the ParkCity car park across Joukahaisenkatu, up EduCity's outdoor stairs and in through door B to the company briefing rooms on floors 1–2.",
     place: "educity",
     legs: ["out-arr-parkcity-edu-b", "int-edu-doorB-to-1002"],
     to: "company-arrival",
@@ -534,14 +606,16 @@ export const TOURS_3D: readonly Tour3D[] = [
       step(
         "Park in ParkCity (Joukahaisenkatu 8) — guest parking is on floors 1–3 — and leave by the street door.",
         [215.5, 6.2],
+        "ParkCity",
       ),
-      step("Cross Joukahaisenkatu at the zebra crossing to EduCity's brick building.", [241.4, 37.7]),
-      step(`Turn left along the building and ${MAIN_STAIRS}.`, [227.2, 57.2]),
-      step("Door B is a few metres along the walkway on your right, in a recessed brick portal.", [251.2, 97.0]),
+      step("Cross Joukahaisenkatu at the zebra crossing to EduCity's brick building.", [241.4, 37.7], "Zebra crossing"),
+      step(`Turn left along the building and ${MAIN_STAIRS}.`, [227.2, 57.2], "Outdoor stairs"),
       step(
-        "Inside, follow the corridor to room 1002 (Moriaberg), where company arrivals are received.",
-        [237.3, 109.0],
+        "Door B is a few metres along the walkway on your right, in a recessed brick portal.",
+        [251.2, 97.0],
+        "Door B",
       ),
+      step(DOOR_B_INSIDE, [237.3, 109.0], "Briefing rooms"),
     ],
   },
   {
@@ -549,7 +623,7 @@ export const TOURS_3D: readonly Tour3D[] = [
     label: "Kupittaa station → EduCity company arrival",
     audience: "Challenge partners arriving by train on Friday",
     summary:
-      "From the platform over the covered Kalevansilta footbridge, across Joukahaisenkatu, up EduCity's outdoor stairs and in through door B to room 1002.",
+      "From the platform over the covered Kalevansilta footbridge, across Joukahaisenkatu, up EduCity's outdoor stairs and in through door B to the company briefing rooms on floors 1–2.",
     place: "educity",
     legs: ["out-arr-train-edu-b", "int-edu-doorB-to-1002"],
     to: "company-arrival",
@@ -559,15 +633,17 @@ export const TOURS_3D: readonly Tour3D[] = [
       step(
         "On the platform, walk away from the station building to the stairs up to Kalevansilta, the covered wooden footbridge.",
         [218.9, -111.5],
+        "Platform",
       ),
-      step("Cross the footbridge towards ParkCity and take the stairs down at its end.", [278.5, -25.2]),
-      step("Cross Joukahaisenkatu at the zebra crossing to EduCity's brick building.", [241.4, 37.7]),
-      step(`Turn left along the building and ${MAIN_STAIRS}.`, [227.2, 57.2]),
-      step("Door B is a few metres along the walkway on your right, in a recessed brick portal.", [251.2, 97.0]),
+      step("Cross the footbridge towards ParkCity and take the stairs down at its end.", [278.5, -25.2], "Footbridge"),
+      step("Cross Joukahaisenkatu at the zebra crossing to EduCity's brick building.", [241.4, 37.7], "Zebra crossing"),
+      step(`Turn left along the building and ${MAIN_STAIRS}.`, [227.2, 57.2], "Outdoor stairs"),
       step(
-        "Inside, follow the corridor to room 1002 (Moriaberg), where company arrivals are received.",
-        [237.3, 109.0],
+        "Door B is a few metres along the walkway on your right, in a recessed brick portal.",
+        [251.2, 97.0],
+        "Door B",
       ),
+      step(DOOR_B_INSIDE, [237.3, 109.0], "Briefing rooms"),
     ],
   },
   {
@@ -582,15 +658,21 @@ export const TOURS_3D: readonly Tour3D[] = [
     distanceM: 133,
     minutes: 1.7,
     steps: [
-      step("Leave ParkCity by the street door on Joukahaisenkatu.", [215.5, 6.2]),
-      step("Cross Joukahaisenkatu at the zebra crossing to EduCity's brick building (dropped kerbs).", [241.4, 37.7]),
+      step("Leave ParkCity by the street door on Joukahaisenkatu.", [215.5, 6.2], "ParkCity"),
+      step(
+        "Cross Joukahaisenkatu at the zebra crossing to EduCity's brick building (dropped kerbs).",
+        [241.4, 37.7],
+        "Zebra crossing",
+      ),
       step(
         "Turn right along the building into the passage between ICT-City and EduCity, under the glass bridges.",
         [227.2, 57.2],
+        "Passage",
       ),
       step(
         "EduCity's street-level door is in the passage: take the lift up to floor 1 — the lobby, registration and the briefing rooms.",
         [192.4, 70.5],
+        "Street-level lift",
       ),
     ],
   },
@@ -609,22 +691,27 @@ export const TOURS_3D: readonly Tour3D[] = [
       step(
         "Get dropped off on Tykistökatu just after the traffic lights at Lemminkäisenkatu, on BioCity's side.",
         [-35.6, -22.0],
+        "Drop-off",
       ),
       step(
         "Cross the two-way cycle path into the open entrance recess beside the glass corner tower — the supercars are on display here.",
         [-33.6, -21.0],
+        "Entrance recess",
       ),
       step(
         "Go in through the revolving door (level access) and walk down the main lobby, the build hall.",
         [-24.51, -11.75],
+        "Build hall",
       ),
       step(
         "Near the far end, turn left into the corridor beside the meeting rooms, then left again into the curved Aulagalleria.",
         [4.82, 28.69],
+        "Aulagalleria",
       ),
       step(
         `${standMention(stand1)} faces the event entrance, with ${standMention(stand3)} beside the entrance. ${standMention(stand2)} is at the far end of the build hall by the stair to Joki, and ${standMention(stand4)} at the hall's Tykistökatu end.`,
         [23.08, 3.91],
+        "Partner stands",
       ),
     ],
   },
@@ -637,14 +724,18 @@ export const TOURS_3D: readonly Tour3D[] = [
     place: "biocity",
     legs: ["out-xfer-edu-west-bio-event", "int-bio-event-to-lobby"],
     to: "build-hall",
-    distanceM: 265,
-    minutes: 3.4,
+    distanceM: 270,
+    minutes: 3.5,
     steps: [
-      step("Leave EduCity by the west main entrance, onto the raised campus deck.", [177.8, 115.1]),
-      step("Follow the deck past ICT-City for about 150 m to Jussin aukio.", [176.1, 108.8]),
-      step("Take the wide outdoor stairs down (about 10 steps).", [62.9, 3.9]),
-      step("Cross the courtyard, with the round Joki tower on your left, to BioCity's event entrance.", [59.5, 3.0]),
-      step("Inside, the Aulagalleria leads round to the build hall in the main lobby.", [22.05, -7.54]),
+      step("Leave EduCity by the west main entrance, onto the raised campus deck.", [177.8, 115.1], "West entrance"),
+      step("Follow the deck past ICT-City for about 150 m to Jussin aukio.", [174.1, 111.2], "Campus deck"),
+      step("Take the wide outdoor stairs down (about 10 steps).", [62.9, 3.9], "Stairs down"),
+      step(
+        "Cross the courtyard, with the round Joki tower on your left, to BioCity's event entrance.",
+        [59.5, 3.0],
+        "Jussin aukio",
+      ),
+      step("Inside, the Aulagalleria leads round to the build hall in the main lobby.", [22.05, -7.54], "Build hall"),
     ],
   },
   {
@@ -662,19 +753,27 @@ export const TOURS_3D: readonly Tour3D[] = [
       step(
         "Get dropped off on Tykistökatu just after the traffic lights at Lemminkäisenkatu, on BioCity's side.",
         [-35.6, -22.0],
+        "Drop-off",
       ),
       step(
         "Cross the two-way cycle path into the entrance recess beside the glass corner tower, past the supercar display.",
         [-33.6, -21.0],
+        "Entrance recess",
       ),
       step(
         "Go in through the revolving door (level access) and walk the length of the main lobby, the build hall.",
         [-24.51, -11.75],
+        "Build hall",
       ),
-      step("At the far (south-east) end, take the short stair down (10 steps) into Joki.", [9.69, 37.36]),
       step(
-        `Cross the Aula and go up the ramp into the round Showroom: ${listNames(showroomNames)} along the LED wall, counted from the entrance. The tower stairs and lift go up to floors 2 and 3.`,
+        "At the far (south-east) end, take the short stair down (10 steps) into Joki.",
+        [9.69, 37.36],
+        "Stair to Joki",
+      ),
+      step(
+        `Cross the Aula and go up the ramp into the round Showroom: ${listNames(showroomNames)} along the LED wall, counted from the entrance. The tower stairs and lift go up to floors 2 and 3. Your stand is ready — set up from the materials you brought on Friday.`,
         [14.04, 43.59],
+        "Showroom",
       ),
     ],
   },
@@ -693,18 +792,22 @@ export const TOURS_3D: readonly Tour3D[] = [
       step(
         "Leave ParkCity by the street door and follow Joukahaisenkatu to the right (north-west, away from EduCity), all the way to Tykistökatu.",
         [198.5, -7.4],
+        "ParkCity",
       ),
       step(
         "Cross the end of Joukahaisenkatu and turn left along Tykistökatu, past Eurocity and Electrocity.",
         [71.8, -130.2],
+        "Tykistökatu",
       ),
       step(
         "BioCity's main entrance is in the open recess beside the glass corner tower, where the supercars are on display.",
         [-14.1, -51.7],
+        "Entrance recess",
       ),
       step(
         "Inside, the build hall is straight ahead; Joki and the Q&A Showroom are down the short stair at its far end, about 70 m on.",
         [-24.6, -11.3],
+        "Inside BioCity",
       ),
     ],
   },
@@ -723,18 +826,22 @@ export const TOURS_3D: readonly Tour3D[] = [
       step(
         "From the station hall's street door, walk out to Tykistökatu and turn left, past bus stop Kupittaan asema.",
         [155.4, -153.5],
+        "Station hall door",
       ),
       step(
         "Cross the end of Joukahaisenkatu and keep following Tykistökatu, past Eurocity and Electrocity.",
         [71.8, -130.2],
+        "Tykistökatu",
       ),
       step(
         "BioCity's main entrance is in the open recess beside the glass corner tower, where the supercars are on display.",
         [-14.1, -51.7],
+        "Entrance recess",
       ),
       step(
         "Inside, the build hall is straight ahead; Joki and the Q&A Showroom are down the short stair at its far end, about 70 m on.",
         [-24.6, -11.3],
+        "Inside BioCity",
       ),
     ],
   },
@@ -750,34 +857,55 @@ export const TOURS_3D: readonly Tour3D[] = [
     distanceM: 123,
     minutes: 1.6,
     steps: [
-      step("Walk through the build hall to its far (south-east) end.", [-21.13, -8.56]),
+      step("Walk through the build hall to its far (south-east) end.", [-21.13, -8.56], "Build hall"),
       step(
         "Take the short stair down (10 steps) into Joki — the Aula and the Cave hall are build areas too.",
         [9.69, 37.36],
+        "Stair to Joki",
       ),
       step(
         `Go up the ramp into the round Showroom, where ${inWords(SHOWROOM_ORDER.length)} challenge partners have their counters.`,
         [46.84, 29.34],
+        "Ramp",
       ),
-      step("The tower stairs and lift beside the Showroom go up to the other stands on floors 2 and 3.", [54.75, 20.3]),
+      step(
+        "The tower stairs and lift beside the Showroom go up to the other stands on floors 2 and 3.",
+        [54.75, 20.3],
+        "Tower stairs",
+      ),
     ],
   },
   {
     id: "builders-back-to-educity",
-    label: "BioCity → EduCity closing",
-    audience: "Everyone, before the Sunday closing",
-    summary:
-      "The Friday transfer in reverse: out through the Aulagalleria, up the stair at Jussin aukio and along the campus deck to EduCity.",
+    label: "BioCity → EduCity for the winners and finals",
+    audience: `Everyone, on Sunday before ${formatTime(winners.start)}`,
+    summary: `The Friday transfer in reverse: out through the Aulagalleria, up the stair at Jussin aukio and along the campus deck to EduCity — the company challenge winners are announced from ${formatTime(winners.start)}, the finals start at ${formatTime(finals.start)}.`,
     place: "educity",
     legs: ["int-bio-lobby-to-event", "out-xfer-bio-event-edu-west", "int-edu-west-to-taidon"],
     to: "taidon-portaat",
-    distanceM: 302,
+    distanceM: 307,
     minutes: 3.9,
     steps: [
-      step("Leave the build hall through the Aulagalleria and the courtyard-side event entrance.", [1.44, 23.85]),
-      step("Cross Jussin aukio and climb the wide outdoor stairs (about 10 steps) to the campus deck.", [22.1, -7.5]),
-      step("Follow the deck past ICT-City for about 150 m to EduCity's west main entrance.", [62.9, 3.9]),
-      step("Inside, walk through the lobby to Taidon portaat.", [177.8, 115.1]),
+      step(
+        "Leave the build hall through the Aulagalleria and the courtyard-side event entrance.",
+        [1.44, 23.85],
+        "Aulagalleria",
+      ),
+      step(
+        "Cross Jussin aukio and climb the wide outdoor stairs (about 10 steps) to the campus deck.",
+        [22.1, -7.5],
+        "Jussin aukio",
+      ),
+      step(
+        "Follow the deck past ICT-City for about 150 m to EduCity's west main entrance.",
+        [62.9, 3.9],
+        "Campus deck",
+      ),
+      step(
+        "Inside, walk through the lobby towards Taidon portaat, where the opening was — event staff show you to the winners announcement and the finals.",
+        [177.8, 115.1],
+        "EduCity lobby",
+      ),
     ],
   },
 ];
@@ -796,6 +924,77 @@ export function getTour3D(id: string): Tour3D | undefined {
   return TOUR_BY_ID.get(id);
 }
 
+/** The routes a challenge partner takes: Friday to EduCity (their briefing room), Saturday to Joki (their stand). */
+const COMPANY_ROUTE_DAY: Readonly<Record<string, "fri" | "sat">> = {
+  "partners-fri-parkcity-edu": "fri",
+  "partners-fri-train-edu": "fri",
+  "partners-fri-stepfree-edu": "fri",
+  "companies-tykistokatu-to-showroom": "sat",
+  "companies-parkcity-to-biocity": "sat",
+  "companies-train-to-biocity": "sat",
+};
+
+export interface CompanyTour extends Tour3D {
+  /** Target id the route leads this company to — its Friday room or Saturday stand; the 3D settles there. */
+  arrival: string;
+}
+
+const withoutStop = (text: string) => text.replace(/[.\s]+$/, "");
+
+/**
+ * A route as one challenge company's partners take it: the summary and the last step lead to THEIR
+ * Friday briefing room or Saturday Q&A stand, never to another company's room. The steps keep their
+ * number and anchors (the 3D matches captions by position). Null for routes that are not a company's
+ * arrival route, or an unknown company.
+ */
+export function tourForCompany(tour: Tour3D, companyId: string | null | undefined): CompanyTour | null {
+  const day = COMPANY_ROUTE_DAY[tour.id];
+  const company = companyId ? getCompany(companyId) : undefined;
+  if (!day || !company) return null;
+  const steps = tour.steps.slice();
+  const last = steps.length - 1;
+  const setUp = "set up by the Since AI team from the materials you brought on Friday";
+  let summary: string;
+  let text: string;
+  if (day === "fri") {
+    const { floor } = company.briefing;
+    const room = `room ${briefingRoomLabel(company)}`;
+    const materials = "Bring your Q&A stand materials: the Since AI team sets your stand up in Joki for Saturday.";
+    if (tour.to === "entrance-educity-gateway") {
+      summary = `${withoutStop(tour.summary)}, then up to your ${room} on floor ${floor}.`;
+      text =
+        floor === 1
+          ? `EduCity's street-level door is in the passage: take the lift up to floor 1 — your ${room} is on that floor.`
+          : `EduCity's street-level door is in the passage: take the lift up to floor 1, then one more floor up to your ${room} on floor 2.`;
+    } else {
+      summary = tour.summary.replace("the company briefing rooms on floors 1–2", `your ${room} (floor ${floor})`);
+      text =
+        floor === 1
+          ? `Inside, event staff meet you — your ${room} is on this floor, floor 1. ${materials}`
+          : `Inside, event staff meet you — your ${room} is one floor up, on floor 2: the stairs and lift are just inside door B. ${materials}`;
+    }
+    return { ...tour, summary, steps: [...steps.slice(0, last), { ...steps[last], text }], arrival: `room-${company.id}` };
+  }
+  const counter = showroomCounter(company);
+  const showroom = company.qa.floor === 1;
+  const floor = company.qa.floor;
+  const counterText = counter ? `counter ${counter} of ${SHOWROOM_ORDER.length}` : "along the curved LED wall";
+  if (tour.to === "showroom") {
+    summary = showroom
+      ? `${withoutStop(tour.summary)} — your stand is ${counterText}.`
+      : `${withoutStop(tour.summary).replace(/, then up the ramp to the Showroom$/, " and up the ramp to the Showroom")}; the tower stairs or lift beside it take you to your stand on floor ${floor}.`;
+    text = showroom
+      ? `Cross the Aula and go up the ramp into the round Showroom: your stand is ${counter ? `${counterText} along the LED wall, counted from the entrance` : counterText} — ready, ${setUp}.`
+      : `Cross the Aula and go up the ramp to the Showroom; the tower stairs and lift beside it go up to floor ${floor}, where your stand is ready, ${setUp}.`;
+  } else {
+    summary = `${withoutStop(tour.summary)}. Your stand is in Joki, through BioCity: ${showroom ? `${counterText} in the Showroom` : `floor ${floor} of the tower`}.`;
+    text = showroom
+      ? `Inside, walk the length of the build hall, take the short stair down into Joki (about 70 m on) and go up the ramp to the Showroom, where your stand is ${counterText} — ready, ${setUp}.`
+      : `Inside, walk the length of the build hall and take the short stair down into Joki (about 70 m on); the tower stairs and lift beside the Showroom go up to floor ${floor}, where your stand is ready, ${setUp}.`;
+  }
+  return { ...tour, summary, steps: [...steps.slice(0, last), { ...steps[last], text }], arrival: company.id };
+}
+
 // ── Time of day ──────────────────────────────────────────────────────────────
 
 /** Lighting moments of the weekend (Turku local time). */
@@ -805,7 +1004,7 @@ export const TIME_PRESETS: readonly TimePreset[] = [
   { id: "opening", label: "Opening · Fri 17:00", iso: wallClock(EVENT_2026.officialOpening) },
   { id: "night", label: "Night build · Sat 01:00", iso: "2026-11-07T01:00" },
   { id: "qa", label: "Q&A · Sat 11:00", iso: "2026-11-07T11:00" },
-  { id: "closing", label: "Closing · Sun 13:30", iso: wallClock(EVENT_2026.closingCeremony) },
+  { id: "closing", label: "Winners · Sun 13:30", iso: wallClock(EVENT_2026.closingCeremony) },
 ] as const;
 
 /** Friday 15:30 — challenge partners arrive, the sun is low in the south-west. */

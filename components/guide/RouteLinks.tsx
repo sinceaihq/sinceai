@@ -1,22 +1,34 @@
 import Link from "next/link";
-import { getTour3D, tourFacts, type Tour3D } from "@/lib/hackathon-2026/twin";
+import { getCompany } from "@/lib/hackathon-2026/companies";
+import { getTour3D, tourFacts, tourForCompany, type Tour3D } from "@/lib/hackathon-2026/twin";
 import { twinHref } from "./twin/TwinTeaser";
 
 /**
  * Walking routes as cards: who it is for, where it goes, how far — each opens
  * the 3D campus with that route ready to play.
+ *
+ * With `company` (a challenge company's page), its arrival routes lead to THAT
+ * company's Friday briefing room or Saturday Q&A stand — in the card text and
+ * in the 3D, which settles there at the end — never to another company's room.
  */
-export function RouteLinks({ title, ids }: { title: string; ids: readonly string[] }) {
-  const tours = ids.map((id) => getTour3D(id)).filter((t): t is Tour3D => !!t);
+export function RouteLinks({ title, ids, company }: { title: string; ids: readonly string[]; company?: string }) {
+  const own = company ? getCompany(company) : undefined;
+  const tours = ids
+    .map((id) => getTour3D(id))
+    .filter((t): t is Tour3D => !!t)
+    .map((t) => {
+      const personal = own ? tourForCompany(t, own.id) : null;
+      return { tour: personal ?? t, arrival: personal?.arrival };
+    });
   if (!tours.length) return null;
   return (
     <div>
       <h3 className="font-mono text-[11px] uppercase tracking-widest text-white/55">{title}</h3>
       <ul className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {tours.map((t) => (
+        {tours.map(({ tour: t, arrival }) => (
           <li key={t.id}>
             <Link
-              href={twinHref({ tour: t.id })}
+              href={twinHref({ tour: t.id, focus: arrival })}
               className="group flex h-full cursor-pointer flex-col gap-1 border border-white/10 p-4 transition-colors hover:border-white/20 hover:bg-white/[0.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               <span className="font-mono text-[11px] uppercase tracking-widest text-(--color-event)">{t.audience}</span>
