@@ -10,7 +10,7 @@ export default function PrivacyPage() {
       <Navbar />
       
       <main className="flex flex-col w-full bg-black min-h-screen">
-        <div className="max-w-4xl mx-auto px-6 py-32 md:py-40">
+        <div className="w-full max-w-4xl mx-auto px-6 py-32 md:py-40">
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-8 tracking-tight">
             Privacy Policy
           </h1>

@@ -74,7 +74,7 @@ export default function FAQPage() {
       <StructuredData data={breadcrumbSchema} />
 
       <main className="flex flex-col w-full bg-black min-h-screen">
-        <div className="max-w-4xl mx-auto px-6 py-24 md:py-32">
+        <div className="w-full max-w-4xl mx-auto px-6 py-24 md:py-32">
           <FadeIn>
             <div className="prose prose-invert prose-neutral max-w-none">
               {/* 1. H1 */}

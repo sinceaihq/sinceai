@@ -103,7 +103,7 @@ export default function ImpactPage() {
       <StructuredData data={breadcrumbSchema} />
 
       <main className="flex flex-col w-full bg-black min-h-screen">
-        <div className="max-w-4xl mx-auto px-6 py-32 md:py-40">
+        <div className="w-full max-w-4xl mx-auto px-6 py-32 md:py-40">
           <FadeIn>
             <div className="prose prose-invert prose-neutral max-w-none">
 

@@ -52,7 +52,7 @@ export default function StatsPage() {
       />
 
       <main className="flex flex-col w-full bg-black min-h-screen">
-        <div className="max-w-4xl mx-auto px-6 py-32 md:py-40">
+        <div className="w-full max-w-4xl mx-auto px-6 py-32 md:py-40">
           <FadeIn>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight leading-tight">
               Statistics & Impact

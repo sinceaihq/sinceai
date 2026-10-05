@@ -6,7 +6,7 @@
 #   scripts/release-check.sh
 #
 # Steps: clean tree → tsc → eslint → jest → next build → e2e (desktop + Pixel 7, guide + public site, 3D on
-# software GL) against next start → Cloudflare build → the worker in workerd (wrangler dev): every route,
+# software GL; then iPhone/Safari/Firefox in Docker unless ALL_BROWSERS=0) against next start → Cloudflare build → the worker in workerd (wrangler dev): every route,
 # headers and the OG image. Exits non-zero on the first failure. Logs go to $OUT.
 set -euo pipefail
 OUT=${OUT:-${TMPDIR:-/tmp}/sinceai-release-check}
@@ -33,6 +33,11 @@ for _ in $(seq 1 60); do curl -sf -o /dev/null "http://localhost:$PORT/hackathon
 step "e2e on :$PORT"
 E2E_PORT=$PORT npx playwright test --workers=${E2E_WORKERS:-6} > "$OUT/e2e.log" 2>&1 || { grep -E "✘|failed|Error:" "$OUT/e2e.log" | head -40; exit 1; }
 grep -E "passed|skipped|flaky" "$OUT/e2e.log" | tail -3
+if [ "${ALL_BROWSERS:-1}" = 1 ] && command -v docker > /dev/null; then
+  step "e2e on WebKit (iPhone, Safari) and Firefox"
+  E2E_PORT=$PORT scripts/e2e-browsers.sh --workers=${E2E_WORKERS:-6} > "$OUT/e2e-browsers.log" 2>&1 || { grep -E "✘|failed|Error:" "$OUT/e2e-browsers.log" | head -40; exit 1; }
+  grep -E "passed|skipped|flaky" "$OUT/e2e-browsers.log" | tail -3
+fi
 kill "$NEXT_PID"; NEXT_PID=
 
 step "cloudflare build"; npm run build:cloudflare > "$OUT/cf-build.log" 2>&1 || { tail -40 "$OUT/cf-build.log"; exit 1; }

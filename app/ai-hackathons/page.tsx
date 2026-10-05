@@ -182,7 +182,7 @@ export default function AIHackathonsPage() {
       <StructuredData data={eventListSchema} />
 
       <main className="flex flex-col w-full bg-black min-h-screen">
-        <div className="max-w-4xl mx-auto px-6 py-24 md:py-32">
+        <div className="w-full max-w-4xl mx-auto px-6 py-24 md:py-32">
           <FadeIn>
             <p className="text-xs uppercase tracking-[0.2em] font-semibold text-neutral-500 mb-5">
               AI Hackathons

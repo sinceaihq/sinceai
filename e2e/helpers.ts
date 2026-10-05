@@ -36,6 +36,8 @@ const IGNORED = [
   /google-analytics/i,
   /GPU stall/i,
   /GL Driver Message/i,
+  // The host's network interfaces changed mid-request (e.g. a container started) — never the site's fault.
+  /ERR_NETWORK_CHANGED/,
 ];
 
 /** Collects console errors and warnings for a page. */
