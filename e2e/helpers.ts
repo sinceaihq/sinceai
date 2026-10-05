@@ -38,6 +38,8 @@ const IGNORED = [
   /GL Driver Message/i,
   // The host's network interfaces changed mid-request (e.g. a container started) — never the site's fault.
   /ERR_NETWORK_CHANGED/,
+  // A browser without WebGL says so when the 3D probes for it; the guide then shows its text fallback.
+  /Failed to create WebGL context/,
 ];
 
 /** Collects console errors and warnings for a page. */
