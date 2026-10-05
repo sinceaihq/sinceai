@@ -36,6 +36,8 @@ export class JokiMaterials {
   private cache = new Map<string, THREE.MeshStandardMaterial>();
   private env = new Map<Zone, THREE.Texture>();
   private glows = new Map<string, THREE.MeshBasicMaterial>();
+  private zoneScale = new Map<Zone, number>();
+  private emissives = new Map<Zone, { m: THREE.MeshBasicMaterial; base: THREE.Color }[]>();
 
   constructor(private ctx: TwinContext) {
     // The engine owns the generic interior probe; never let disposeDeep() of our meshes free it.
@@ -133,15 +135,46 @@ export class JokiMaterials {
     return m;
   }
 
+  /** A room's own light source (LED wall, screens, lamp lenses) that follows setZoneScale with the room. */
+  zoneEmissive(zone: Zone, m: THREE.MeshBasicMaterial): THREE.MeshBasicMaterial {
+    const list = this.emissives.get(zone) ?? [];
+    if (!list.some((e) => e.m === m)) list.push({ m, base: m.color.clone() });
+    this.emissives.set(zone, list);
+    const k = this.zoneScale.get(zone) ?? 1;
+    m.color.copy(list.find((e) => e.m === m)!.base).multiplyScalar(k);
+    return m;
+  }
+
   /** Give every material of an interior zone its room probe. */
   setZoneEnv(zone: Zone, texture: THREE.Texture) {
     const prev = this.env.get(zone);
     this.env.set(zone, texture);
+    const k = this.zoneScale.get(zone) ?? 1;
     for (const m of this.byZone.get(zone) ?? []) {
       m.envMap = texture;
-      m.envMapIntensity = (m.userData.jkEnvBase as number | undefined) ?? 1;
+      m.envMapIntensity = ((m.userData.jkEnvBase as number | undefined) ?? 1) * k;
     }
     if (prev && prev !== texture) prev.dispose();
+  }
+
+  /**
+   * Scale a zone's probe light (1 = as built). Seen from outside after dark the exterior exposure is
+   * far higher than the interior one: the rooms are dimmed so the floors read through the glass instead
+   * of clipping white. True when anything changed.
+   */
+  setZoneScale(zone: Zone, k: number): boolean {
+    if (Math.abs((this.zoneScale.get(zone) ?? 1) - k) < 1e-3) return false;
+    this.zoneScale.set(zone, k);
+    for (const e of this.emissives.get(zone) ?? []) e.m.color.copy(e.base).multiplyScalar(k);
+    for (const m of this.byZone.get(zone) ?? []) {
+      m.envMapIntensity = ((m.userData.jkEnvBase as number | undefined) ?? 1) * k;
+      // Baked floor light (lightMap) dims with the room.
+      if (m.lightMap) {
+        m.userData.jkLightBase ??= m.lightMapIntensity;
+        m.lightMapIntensity = (m.userData.jkLightBase as number) * k;
+      }
+    }
+    return true;
   }
 
   private setup(m: THREE.MeshStandardMaterial, zone: Zone, envIntensity?: number) {
@@ -169,6 +202,7 @@ export class JokiMaterials {
     this.byZone.clear();
     this.env.clear();
     this.glows.clear();
+    this.emissives.clear();
   }
 }
 

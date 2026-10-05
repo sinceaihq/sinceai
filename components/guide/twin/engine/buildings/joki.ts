@@ -16,17 +16,17 @@ import type {
 import { CHALLENGE_COMPANIES, SHOWROOM_ORDER } from "@/lib/hackathon-2026/companies";
 import { planGroupTransform } from "../frame";
 import { makeLabel } from "../labels";
-import { skyIlluminance } from "../sky/sky";
+import { INTERIOR_EXPOSURE, interiorExposureFor, openedInteriorScale, outsideInteriorScale, skyIlluminance } from "../sky/sky";
 import { aulaProbe, caveProbe, loungeProbe, towerProbe } from "./joki/probes";
 import { DEG, J, R, Y, arcStrip, bearingOf, jl, jv3, merge, polar, rectCorners } from "./joki/kit";
 import { JokiMaterials } from "./joki/mats";
-import { AULA_COLUMNS, AULA_FIXTURES, AULA_OUTLINE, ROUTE_J, buildLayout, counterPose, type Layout } from "./joki/layout";
-import { buildTowerShell } from "./joki/shell";
+import { AULA_COLUMNS, AULA_FIXTURES, AULA_OUTLINE, ROUTE_F2_J, ROUTE_F3_J, ROUTE_J, buildLayout, counterPose, type Layout } from "./joki/layout";
+import { DOORS, F3_STAIR_POSTS, buildTowerShell } from "./joki/shell";
 import { buildLowWing, PORTAL } from "./joki/lowwing";
-import { CAVE, LOUNGE, RAMP, buildFloor1 } from "./joki/floor1";
+import { CAVE, CAVE_DOOR, LOUNGE, RAMP, buildFloor1 } from "./joki/floor1";
 import { F1_AULA, F1_COLUMN, F1_TOWER } from "./joki/walls";
 import { buildShowroom, SHOWROOM_POLY, LED } from "./showroom";
-import { CORE, STAIRWELL, TOWER_STANDS, buildJokiTower, standPose } from "./jokiTower";
+import { CHILL_POUFS, CORE, STAIRWELL, TOWER_STANDS, buildJokiTower, standPose } from "./jokiTower";
 
 /**
  * Joki — visitor and innovation centre (Lemminkäisenkatu 12b; OSM
@@ -70,7 +70,8 @@ export async function buildJoki(ctx: TwinContext): Promise<BuildingModule> {
   /** Counter labels: shown with floor 1 when the camera can see into the drum. */
   const lblSR = new THREE.Group();
   const lblBuilding = new THREE.Group();
-  labelRoot.add(lblExt, lblF1, lblSR, lblBuilding);
+  lblF1.add(lblSR);
+  labelRoot.add(lblExt, lblF1, lblBuilding);
 
   const mats = new JokiMaterials(ctx);
   const layout: Layout = buildLayout();
@@ -111,20 +112,32 @@ export async function buildJoki(ctx: TwinContext): Promise<BuildingModule> {
     return l;
   };
   addLabel(lblBuilding, "Joki", "building", [0, Y.finTop + 2.2, 0]);
-  // Just outside the canopy (so the building hides the label from the far side).
+  // Just outside the canopy (so the building hides the label from the far side). The door is closed for
+  // the event: a neutral label (no entrance mark) that says so in its main text, which phones show too.
   const door = jl(-17.1, 63.6);
   {
-    const l = makeLabel("Joki street door", "entrance", door[0], Y.street + 3.4, door[1], undefined, "closed during the event");
+    const l = makeLabel("Joki street door — closed", "open", door[0], Y.street + 3.4, door[1], "joki", "enter through BioCity");
     lblExt.add(l);
     labels.push(l);
   }
-  addLabel(lblF1, "Aula", "area", [-5.2, Y.aula + 1.5, 37.0], "build area");
-  addLabel(lblF1, "Cave", "area", [9.6, Y.aula + 1.5, 19.5], "build area");
-  addLabel(lblF1, "Showroom", "landmark", [-5.6, Y.f1 + 2.0, -1.6], "Q&A · 6 counters");
-  addLabel(lblF1, "Company Lounge", "landmark", [LOUNGE.c[0], Y.f1 + 1.4, LOUNGE.c[1]]);
-  addLabel(lblF1, "Ramp", "area", [-0.4, Y.aula + 1.2, 13.4], "up to the Showroom");
-  addLabel(lblF1, "To BioCity", "entrance", [-17.2, Y.aula + 2.2, 49.6], "passage, 10 steps up");
-  addLabel(lblF1, "Stairs & lift", "area", [0.5, Y.f1 + 2.8, 3.2], "floors 2–3");
+  // Floor 1: one label group per room. Standing inside (or riding close over the opened floor), only the
+  // room in sight and its ways out show — the engine's occlusion knows Joki's outline, not its inner walls.
+  const lblRoom = { counters: lblSR } as Record<F1LabelGroup, THREE.Group>;
+  for (const k of F1_LABEL_GROUPS) {
+    if (k === "counters") continue;
+    lblRoom[k] = new THREE.Group();
+    lblRoom[k].name = `joki-labels-${k}`;
+    lblF1.add(lblRoom[k]);
+  }
+  addLabel(lblRoom.aula, "Aula", "area", [-5.2, Y.aula + 1.5, 37.0], "build area");
+  addLabel(lblRoom.passage, "To BioCity", "entrance", [-17.2, Y.aula + 2.2, 49.6], "passage, 10 steps up");
+  addLabel(lblRoom.cave, "Cave", "area", [9.6, Y.aula + 1.5, 19.5], "build area");
+  // In the middle of the round room from above; at its doorway (seen up the ramp) from inside.
+  const showroomTitle = addLabel(lblRoom.showroom, "Showroom", "landmark", SHOWROOM_TITLE_AT.room, "Q&A · 6 counters");
+  let titleAtDoor = false;
+  addLabel(lblRoom.lounge, "Company Lounge", "landmark", [LOUNGE.c[0], Y.f1 + 1.4, LOUNGE.c[1]]);
+  addLabel(lblRoom.ramp, "Ramp", "area", [-0.4, Y.aula + 1.2, 13.4], "up to the Showroom");
+  addLabel(lblRoom.core, "Stairs & lift", "area", [0.5, Y.f1 + 2.8, 3.2], "floors 2–3");
 
   // ── Pickables ──
   const pickables: THREE.Object3D[] = [...f1.pickables, ...showroom.pickables, ...tower.pickables];
@@ -146,22 +159,23 @@ export async function buildJoki(ctx: TwinContext): Promise<BuildingModule> {
   });
   const openAt = (level: LevelId): CameraView["open"] => ({ building: "joki", level });
   const views: Record<string, CameraView> = {
-    // High over the north-east deck, looking down floor 1 on the diagonal: the open drum
-    // (Showroom, lounge) in front, the ramp, the Cave and the Aula beyond — every build area in
-    // one frame. Phones look down the long axis from the north instead.
-    "joki:default": view([15, 56, -15], [-1.5, -1.7, 21], {
-      hfov: 58,
-      // Portrait: the 30 m-wide floor plate must fit the narrow screen; look down the long axis.
-      fit: 18,
+    // High over the tower, looking down floor 1 along its length: Joki's low wing runs in the gap between
+    // DataCity's brick wing and BioCity, so only this axis keeps both out of the way. The open drum with
+    // the Showroom's six counters and the lounge in front, the ramp and the Cave, the Aula and the
+    // passage in from BioCity at the far end. Phones get the same axis (portrait suits it).
+    "joki:default": view([5, 50, -34], [-3.0, -1.7, 19], {
+      hfov: 54,
+      fit: 11,
       open: openAt("joki-1"),
-      portrait: { position: jv3(-3, 52, -16), target: jv3(1, -1.7, 22) },
+      portrait: { position: jv3(4, 46, -30), target: jv3(-3.0, -1.7, 22) },
     }),
-    // Just inside the Showroom entrance at eye height, the LED wall ahead.
-    "joki:showroom": view([0.35, Y.f1 + 1.62, 6.2], [-6.2, Y.f1 + 1.25, -1.2], {
-      hfov: 92,
+    // At the top of the ramp, just inside the drum and a little above eye height: the curved LED wall
+    // from counter 1 (Meyer Turku, by the entrance, on the left) round to counter 6 (Bayer, right).
+    "joki:showroom": view([0.7, Y.f1 + 2.6, 7.5], [-5.0, Y.f1 + 0.3, 3.1], {
+      hfov: 100,
       labelGroup: "joki-showroom",
       open: openAt("joki-1"),
-      portrait: { position: jv3(0.4, Y.f1 + 1.62, 7.6), target: jv3(-5.4, Y.f1 + 1.3, -1.6), hfov: 100 },
+      portrait: { position: jv3(0.6, Y.f1 + 2.3, 7.6), target: jv3(-5.6, Y.f1 - 0.2, 1.4), hfov: 84 },
     }),
     // Standing at the amphitheatre's south rim (photo viewpoint), looking north across the pit.
     "joki:lounge": view([5.3, Y.f1 + 1.72, 1.45], [5.15, Y.f1 - 0.7, -3.6], { hfov: 88, open: openAt("joki-1") }),
@@ -206,17 +220,20 @@ export async function buildJoki(ctx: TwinContext): Promise<BuildingModule> {
   }
   targets.push({ id: "showroom", level: "joki-1", walkTo: jl(-3.0, 1.0), view: views["joki:showroom"] });
   targets.push({ id: "lounge", level: "joki-1", walkTo: jl(3.4, 1.0), view: views["joki:lounge"] });
+  // Steeply down onto the Aula from over the Cave (BioCity behind it): the passage, the tables, the ramp.
   targets.push({
     id: "aula",
     level: "joki-1",
     walkTo: jl(-1.2, 34.2),
-    view: view([-9, 26, 6], [-3.5, -1.7, 34], { hfov: 62, fit: 16, open: openAt("joki-1") }),
+    view: view([8, 40, 30], [-5.5, -1.7, 37.5], { hfov: 64, fit: 15, open: openAt("joki-1") }),
   });
+  // Over the drum end of the Cave, looking down its rows of tables to the stage and the screen; walk
+  // mode starts inside, in the north-west corner, facing the stage.
   targets.push({
     id: "cave",
     level: "joki-1",
-    walkTo: jl(0.6, 22.0),
-    view: view([-8.5, 15, 6.5], [8.0, -1.7, 18.5], { hfov: 64, fit: 12, open: openAt("joki-1") }),
+    walkTo: jl(2.0, 9.4),
+    view: view([7.5, 15.5, 3.0], [8.0, -1.7, 19.0], { hfov: 66, fit: 9, open: openAt("joki-1") }),
   });
   targets.push({
     id: "chill-zone",
@@ -239,7 +256,12 @@ export async function buildJoki(ctx: TwinContext): Promise<BuildingModule> {
   const walk = walkData(layout);
 
   // ── Route leg (DESIGN §12): passage stair foot → Aula → ramp → Showroom ──
-  const routeLegs: Record<string, V3[]> = { "int-joki-aula-to-showroom": ROUTE_J.map(([x, y, z]) => jv3(x, y, z)) };
+  // … and on up the tower stair to floors 2 and 3 (for the floor-2/3 stands' routes).
+  const routeLegs: Record<string, V3[]> = {
+    "int-joki-aula-to-showroom": ROUTE_J.map(([x, y, z]) => jv3(x, y, z)),
+    "int-joki-showroom-to-f2": ROUTE_F2_J.map(([x, y, z]) => jv3(x, y, z)),
+    "int-joki-showroom-to-f3": ROUTE_F3_J.map(([x, y, z]) => jv3(x, y, z)),
+  };
 
   // ── Room probes (neutral, calibrated light per interior; joki/probes.ts) ──
   const rot = J.theta * DEG;
@@ -266,6 +288,9 @@ export async function buildJoki(ctx: TwinContext): Promise<BuildingModule> {
   const rightJ = new THREE.Vector3();
   const lastRight = new THREE.Vector3(1, 0, 0);
   const leftJ = new THREE.Vector3();
+  /** The camera's view direction (J frame). */
+  const fwdJ = new THREE.Vector3(0, -1, 0);
+  const lastFwd = new THREE.Vector3();
 
   /** The level the camera stands in while the building is drawn whole (null outside). */
   let insideNow: LevelId | null = null;
@@ -293,13 +318,7 @@ export async function buildJoki(ctx: TwinContext): Promise<BuildingModule> {
   }
 
   /** The camera stands inside Joki below a ceiling: draw the building whole, as when walking. */
-  function insideLevel(cam: THREE.Vector3): LevelId | null {
-    if (!insideJoki(cam.x, cam.z)) return null;
-    if (cam.y < Y.showroomCeil) return "joki-1";
-    if (cam.y > Y.f2 && cam.y < Y.f2Ceil) return "joki-2";
-    if (cam.y > Y.f3 && cam.y < Y.f3Ceil) return "joki-3";
-    return null;
-  }
+  const insideLevel = (cam: THREE.Vector3): LevelId | null => jokiLevelAt(cam);
 
   function setDrawn(level: LevelId | null) {
     if (level === drawn) return;
@@ -307,7 +326,15 @@ export async function buildJoki(ctx: TwinContext): Promise<BuildingModule> {
     shell.setOpen(level);
     // The dollhouse shows the cut floors as lit inside (no low sun pouring over the clipped screen).
     mats.sunTower.value = level === "joki-2" || level === "joki-3" ? 0 : 1;
+    shell.setFinLod(level === null);
     apply();
+  }
+
+  /** The floor-1 room the camera looks at: where its view ray meets the floor (null when it misses floor 1). */
+  function lookRoom(cam: THREE.Vector3): F1Room | null {
+    if (fwdJ.y > -0.05) return null;
+    const t = (Y.aula - cam.y) / fwdJ.y;
+    return f1RoomAt(cam.x + fwdJ.x * t, cam.z + fwdJ.z * t);
   }
 
   /** Which labels show: the open level's, or (inside) the level the camera stands on. */
@@ -327,11 +354,33 @@ export async function buildJoki(ctx: TwinContext): Promise<BuildingModule> {
       l2 = true;
       l3 = true;
     }
-    // Counter labels only where the counters can be seen: inside the drum, or into the open floor from above.
-    const lsr = l1 && (drawn === "joki-1" || Math.hypot(cam.x, cam.z) < R.drumIn + 0.3);
-    if (lblF1.visible !== l1 || lblSR.visible !== lsr || tower.labels2.visible !== l2 || tower.labels3.visible !== l3) {
+    // Floor 1 room by room: standing in a room, its labels and its ways out; riding low over the opened
+    // floor (a route's chase camera), the room in view and its exits; from higher up, every room.
+    let groups: readonly F1LabelGroup[] = F1_LABEL_GROUPS;
+    let atDoor = false;
+    if (l1 && inside === "joki-1") {
+      groups = ROOM_LABELS[f1RoomAt(cam.x, cam.z) ?? "aula"];
+      atDoor = true;
+    } else if (l1 && cam.y - Y.f1 < 14) {
+      const room = lookRoom(cam);
+      if (room) groups = ROOM_LABELS[room];
+    }
+    let changed = lblF1.visible !== l1 || tower.labels2.visible !== l2 || tower.labels3.visible !== l3;
+    for (const k of F1_LABEL_GROUPS) {
+      const on = groups.includes(k);
+      if (lblRoom[k].visible !== on) {
+        lblRoom[k].visible = on;
+        changed = true;
+      }
+    }
+    if (atDoor !== titleAtDoor) {
+      titleAtDoor = atDoor;
+      const p = atDoor ? SHOWROOM_TITLE_AT.door : SHOWROOM_TITLE_AT.room;
+      showroomTitle.position.copy(toWorld(p[0], p[1], p[2]));
+      changed = true;
+    }
+    if (changed) {
       lblF1.visible = l1;
-      lblSR.visible = lsr;
       tower.labels2.visible = l2;
       tower.labels3.visible = l3;
       // Let the engine declutter the labels that just appeared once the view has settled.
@@ -340,14 +389,45 @@ export async function buildJoki(ctx: TwinContext): Promise<BuildingModule> {
   }
 
   const LEVEL_ORDER: Record<string, number> = { "joki-1": 1, "joki-2": 2, "joki-3": 3 };
-  /** Standing inside at or below the open level (eye-level interior views) → draw the building whole. */
+  /** Outside at eye level the open building is drawn whole (with a little hysteresis). */
+  let eyeClosed = false;
+  /**
+   * What to draw: standing inside at or below the open level (eye-level interior views), or outside below
+   * the cut (orbiting down to eye level), the building whole; else the dollhouse cut at the open level.
+   */
   function wantDrawn(cam: THREE.Vector3): LevelId | null {
     if (!open) return null;
     const inside = insideLevel(cam);
-    return inside && LEVEL_ORDER[inside] <= LEVEL_ORDER[open] ? null : open;
+    if (inside) return LEVEL_ORDER[inside] <= LEVEL_ORDER[open] ? null : open;
+    if (open === "joki-1" || open === "joki-2" || open === "joki-3") {
+      const eye = CUT_EYE_LEVEL[open];
+      eyeClosed = cam.y < eye - (eyeClosed ? -0.3 : 0.3);
+      if (eyeClosed) return null;
+    }
+    return open;
   }
 
   let coreKey = "";
+
+  /**
+   * The rooms' own light for where the camera is (sky/sky.ts contract): inside, as built; outside the
+   * closed building the engine exposes for the street — after dark far brighter than for a room — so the
+   * rooms are dimmed (they still glow over the street, with floors and ceilings legible); in a dollhouse
+   * view the engine exposes for the blend, and the rooms are set to read as from inside. The engine's
+   * interior exposure follows the daylight through a room's glazing; the windowless rooms (the Cave,
+   * the Showroom, the Company Lounge) look the same at noon as at night, so standing inside they make up
+   * for it (≈ 1 stop at Saturday noon) — LED wall and lamps included.
+   */
+  let sunElevation = 0;
+  function dimOutside(): boolean {
+    const inside = drawn === null && insideNow !== null;
+    const k = drawn !== null ? openedInteriorScale(sunElevation) : insideNow === null ? outsideInteriorScale(sunElevation) : 1;
+    const windowless = inside ? INTERIOR_EXPOSURE / interiorExposureFor(sunElevation) : 1;
+    let changed = false;
+    for (const zone of ["aula", "tower"] as const) if (mats.setZoneScale(zone, k)) changed = true;
+    for (const zone of ["cave", "lounge", "showroom"] as const) if (mats.setZoneScale(zone, k * windowless)) changed = true;
+    return changed;
+  }
 
   function onCamera(cam: THREE.Vector3): boolean {
     let changed = false;
@@ -408,6 +488,7 @@ export async function buildJoki(ctx: TwinContext): Promise<BuildingModule> {
       apply();
       changed = true;
     }
+    if (dimOutside()) changed = true;
     updateLabels(cam);
     leftJ.copy(lastRight).negate();
     if (tower.updateLabels(cam, leftJ, { f3: tower.f3.visible, inside: insideNow !== null })) changed = true;
@@ -451,7 +532,9 @@ export async function buildJoki(ctx: TwinContext): Promise<BuildingModule> {
     },
     setLighting(state: LightingState) {
       night = state.night;
+      sunElevation = state.sunElevationDeg;
       shell.setNight(night);
+      shell.setSun(state.sunDir);
       wing.setNight(night);
       // Floors 2–3: daylight through the glazing — rebuild the room probe when the light changes.
       const sky = skyIlluminance(state.sunElevationDeg);
@@ -463,6 +546,7 @@ export async function buildJoki(ctx: TwinContext): Promise<BuildingModule> {
       }
       const lum = 0.03 + 0.2 * THREE.MathUtils.smoothstep(night, 0.05, 0.6);
       standinMat.color.setRGB(lum, lum * 0.9, lum * 0.76);
+      dimOutside();
       ctx.invalidate();
     },
     tick(_dt, _elapsed, camera) {
@@ -474,9 +558,11 @@ export async function buildJoki(ctx: TwinContext): Promise<BuildingModule> {
       rightJ.y = 0;
       if (rightJ.lengthSq() > 1e-8) rightJ.normalize();
       else rightJ.copy(lastRight);
-      if (camJ.distanceToSquared(lastCam) < 1e-6 && rightJ.distanceToSquared(lastRight) < 1e-6) return false;
+      fwdJ.setFromMatrixColumn(camera.matrixWorld, 2).negate().transformDirection(inv);
+      if (camJ.distanceToSquared(lastCam) < 1e-6 && rightJ.distanceToSquared(lastRight) < 1e-6 && fwdJ.distanceToSquared(lastFwd) < 1e-6) return false;
       lastCam.copy(camJ);
       lastRight.copy(rightJ);
+      lastFwd.copy(fwdJ);
       if (onCamera(camJ)) ctx.invalidate();
       return false;
     },
@@ -539,19 +625,88 @@ export async function buildJoki(ctx: TwinContext): Promise<BuildingModule> {
   return joki;
 }
 
-/** Can a camera outside Joki (J frame) see floor 1? Through the NW glazing or the street door, from low and near. */
+/** Floor-1 rooms (J frame) — what the camera stands in decides which labels show. */
+export type F1Room = "aula" | "cave" | "ramp" | "showroom" | "lounge";
+/** Label groups of floor 1: the rooms plus the BioCity passage and the stair/lift core. */
+export const F1_LABEL_GROUPS = ["aula", "passage", "cave", "ramp", "showroom", "lounge", "core", "counters"] as const;
+export type F1LabelGroup = (typeof F1_LABEL_GROUPS)[number];
+/** From inside a room: its own labels and its ways out (the rest is behind walls). */
+export const ROOM_LABELS: Record<F1Room, readonly F1LabelGroup[]> = {
+  aula: ["aula", "passage", "cave", "ramp"],
+  cave: ["cave", "aula"],
+  ramp: ["ramp", "showroom", "core", "aula", "cave"],
+  showroom: ["counters", "core"],
+  lounge: ["lounge", "core"],
+};
+/** The Showroom's label: mid-room for views from above, at the doorway (seen up the ramp) from inside. */
+export const SHOWROOM_TITLE_AT: { room: V3; door: V3 } = {
+  room: [-5.6, Y.f1 + 2.0, -1.6],
+  door: [-0.6, Y.f1 + 2.3, 7.2],
+};
+
+/** The floor-1 room a plan point (J) lies in, or null (walls, back rooms, outside). */
+export function f1RoomAt(x: number, z: number): F1Room | null {
+  if (Math.hypot(x, z) < R.drumIn + 0.05) return x < 1.4 ? "showroom" : "lounge";
+  if (pointIn([x, z], RAMP.poly)) return "ramp";
+  if (x > CAVE.x0 - 0.05 && x < CAVE.x1 && z > CAVE.z0 && z < CAVE.z1) return "cave";
+  if (pointIn([x, z], AULA_OUTLINE)) return "aula";
+  return null;
+}
+
+/**
+ * The level a camera (J frame) stands in, below that level's ceiling, or null (outdoors — the deck,
+ * the hall-roof walkway, the stair landings — or inside a slab). Floors 2–3 only count inside the glass.
+ */
+export function jokiLevelAt(cam: { x: number; y: number; z: number }): LevelId | null {
+  const r = Math.hypot(cam.x, cam.z);
+  if (r < R.glassIn) {
+    if (cam.y < Y.showroomCeil) return "joki-1";
+    if (cam.y > Y.f2 && cam.y < Y.f2Ceil) return "joki-2";
+    if (cam.y > Y.f3 && cam.y < Y.f3Ceil) return "joki-3";
+    return null;
+  }
+  // The low wing (Aula, Cave, ramp, the back rooms): up to the hall roof — above it is the walkway.
+  return lowWingAt(cam.x, cam.z) && cam.y < Y.hallRoof ? "joki-1" : null;
+}
+
+/** Below this height outside, an open (dollhouse) Joki is drawn whole: the cut would only show a sliced-off top. */
+export const CUT_EYE_LEVEL: Record<"joki-1" | "joki-2" | "joki-3", number> = {
+  "joki-1": Y.hallEdge + 1.8,
+  "joki-2": Y.f2 + 2.25,
+  "joki-3": Y.f3 + 2.25,
+};
+
+/**
+ * Can a camera outside Joki (J frame) see floor 1? Through the NW glazing or the street door, from low
+ * and near — or from BioCity's ground floor through the passage (its stair comes down into the Aula).
+ */
 export function f1Visible(cam: { x: number; y: number; z: number }): boolean {
   if (cam.y > Y.hallEdge + 1.5) return false;
   const throughGlazing = cam.x < -1.0 && cam.z > -12 && cam.z < 46 && Math.hypot(cam.x + 4, cam.z - 20) < 70;
   const throughDoor = cam.z > 54 && Math.hypot(cam.x + 17, cam.z - 59) < 55;
-  return throughGlazing || throughDoor;
+  const throughPassage = cam.x < -17 && cam.y < 3.2 && Math.hypot(cam.x + 18.1, cam.z - 49.6) < 50;
+  return throughGlazing || throughDoor || throughPassage;
 }
 
 /** Point (J frame) inside Joki: the drum, the ramp, the Aula or the Cave. */
 function insideJoki(x: number, z: number): boolean {
-  if (Math.hypot(x, z) < R.glassOut) return true;
+  return Math.hypot(x, z) < R.glassOut || lowWingAt(x, z);
+}
+
+/** Point (J frame) under the hall roof: the Aula, the ramp, the Cave and the rooms behind it. */
+function lowWingAt(x: number, z: number): boolean {
   if (x > CAVE.x0 - 0.3 && x < CAVE.x1 + 0.8 && z > CAVE.z0 - 0.3 && z < 45) return true;
   return pointIn([x, z], AULA_OUTLINE) || pointIn([x, z], RAMP.poly);
+}
+
+/** The Cave stage's curved front edge (floor1.ts draws the same curve), west → east. */
+function stageFront(): V2[] {
+  const out: V2[] = [];
+  for (let i = 0; i <= 8; i++) {
+    const t = i / 8;
+    out.push([2.0 + 10.4 * t, 24.6 - 0.4 * Math.sin(Math.PI * t)]);
+  }
+  return out;
 }
 
 function pointIn(p: V2, poly: V2[]): boolean {
@@ -583,6 +738,8 @@ export function walkData(layout: Layout): { walkAreas: WalkArea[]; colliders: Co
 
   // ── Floor 1 ──
   walkAreas.push({ level: "joki-1", y: Y.aula, polygon: AULA_OUTLINE.map(W) });
+  // The Cave in front of its stage, with its door from the Aula (CAD: the 1.4 m gap at J z 23.97…25.38
+  // in the wall by the stage) reaching 8 cm into the Aula so the two floors join.
   walkAreas.push({
     level: "joki-1",
     y: Y.aula,
@@ -591,9 +748,11 @@ export function walkData(layout: Layout): { walkAreas: WalkArea[]; colliders: Co
         [CAVE.x0, CAVE.z0],
         [CAVE.x1, CAVE.z0],
         [CAVE.x1, CAVE.stageZ],
-        [CAVE.x0 - 0.35, CAVE.stageZ],
-        [CAVE.x0 - 0.35, 18.35],
-        [CAVE.x0, 18.35],
+        ...stageFront().reverse(),
+        [2.0, CAVE_DOOR.z1],
+        [1.15, CAVE_DOOR.z1],
+        [1.15, CAVE_DOOR.z0],
+        [CAVE.x0, CAVE_DOOR.z0],
       ] as V2[]
     ).map(W),
   });
@@ -641,10 +800,13 @@ export function walkData(layout: Layout): { walkAreas: WalkArea[]; colliders: Co
   for (const poly of F1_COLUMN) {
     const cx = poly.reduce((s, p) => s + p[0], 0) / poly.length;
     const cz = poly.reduce((s, p) => s + p[1], 0) / poly.length;
-    circle("joki-1", [cx, cz], 0.3);
+    // The column's own radius (the one by the Cave door is a slim 0.25 m post).
+    circle("joki-1", [cx, cz], Math.max(...poly.map((p) => Math.hypot(p[0] - cx, p[1] - cz))) + 0.02);
   }
   for (const c of AULA_COLUMNS) circle("joki-1", c.c, c.r + 0.02);
-  // Outline of the Aula (glazing, the shared wall, the frosted DataCity wall) — except the BioCity passage.
+  // Outline of the Aula (glazing, the shared wall, the frosted DataCity wall) — except where people walk
+  // through it: the BioCity passage, the foot of the ramp (an edge of the floor, not a wall) and the
+  // Cave door.
   for (let i = 0; i < AULA_OUTLINE.length; i++) {
     const a = AULA_OUTLINE[i];
     const b = AULA_OUTLINE[(i + 1) % AULA_OUTLINE.length];
@@ -652,6 +814,12 @@ export function walkData(layout: Layout): { walkAreas: WalkArea[]; colliders: Co
       // Shared wall: leave the passage open.
       seg("joki-1", a, [-18.56, 51.1]);
       seg("joki-1", [-17.66, 48.01], b);
+      continue;
+    }
+    if (a[1] === RAMP.z0 && b[1] === RAMP.z0) continue;
+    if (a[0] === 1.23 && b[0] === 1.23) {
+      seg("joki-1", a, [1.23, CAVE_DOOR.z0]);
+      seg("joki-1", [1.23, CAVE_DOOR.z1], b);
       continue;
     }
     seg("joki-1", a, b);
@@ -691,7 +859,10 @@ export function walkData(layout: Layout): { walkAreas: WalkArea[]; colliders: Co
     circle("joki-1", AULA_FIXTURES.sofa.c, AULA_FIXTURES.sofa.r);
   }
   // Cave stage edge (route goes round it) and the cordoned street vestibule.
-  seg("joki-1", [CAVE.x0, CAVE.stageZ], [12.4, CAVE.stageZ]);
+  {
+    const front = stageFront();
+    for (let i = 1; i < front.length; i++) seg("joki-1", front[i - 1], front[i]);
+  }
   seg("joki-1", [-20.25, PORTAL.innerZ], [-14.83, PORTAL.innerZ]);
 
   // ── Floors 2 and 3 ──
@@ -725,10 +896,21 @@ export function walkData(layout: Layout): { walkAreas: WalkArea[]; colliders: Co
     [-7.63, -3.41, 0.75],
     [-3.2, -5.6, 0.62],
     [-6.9, 0.1, 0.62],
-    [-3.4, 0.3, 0.75],
+    ...CHILL_POUFS.map(([px, pz, pr]) => [px, pz, pr + 0.02]),
   ] as [number, number, number][])
     circle("joki-2", [x, z], r);
   for (const b of [315, 293, 270, 247]) circle("joki-3", polar(7.75, b), 0.9);
+
+  // ── Outdoors: the floor-2 north-east door's steps (exit only — OSM entrance=exit) are fenced by their
+  // glass balustrades and closed at the front; the floor-3 exit stair's posts stand on the deck. ──
+  {
+    const b = DOORS.f2ne.bearing * DEG;
+    const at = (r: number, sd: number): V2 => [Math.sin(b) * r + Math.cos(b) * sd, -Math.cos(b) * r + Math.sin(b) * sd];
+    seg("outdoor", at(9.2, -1.1), at(11.55, -1.1));
+    seg("outdoor", at(9.2, 1.1), at(11.55, 1.1));
+    seg("outdoor", at(11.55, -1.1), at(11.55, 1.1));
+    for (const [x, z] of F3_STAIR_POSTS) circle("outdoor", [x, z], 0.12);
+  }
 
   // ── Connectors: tower stair and lift, the passage to BioCity ──
   const conn = (id: string, label: string, from: LevelId, to: LevelId, at: V2, arrive: V2): Connector => ({
@@ -739,17 +921,28 @@ export function walkData(layout: Layout): { walkAreas: WalkArea[]; colliders: Co
     at: W(at),
     arrive: W(arrive),
   });
+  // The lift serves all three floors. Each destination has its own call point in front of the doors
+  // (one button per spot in walk mode): the near half of the doors for the next floor, the far half
+  // for the floor beyond — 0.9 m apart, so stepping along the doors offers the other one.
+  const LIFT_F1: [V2, V2] = [
+    [0.8, 4.3],
+    [0.8, 5.2],
+  ];
+  const LIFT_UP: [V2, V2] = [
+    [2.1, 6.65],
+    [2.95, 6.65],
+  ];
   const connectors: Connector[] = [
     conn("joki-stair-1-2", "Stairs up to floor 2", "joki-1", "joki-2", [0.45, 2.3], [0.55, -6.95]),
     conn("joki-stair-2-1", "Stairs down to floor 1", "joki-2", "joki-1", [0.55, -6.6], [0.45, 2.45]),
     conn("joki-stair-2-3", "Stairs up to floor 3", "joki-2", "joki-3", [0.55, 2.3], [0.55, -6.95]),
     conn("joki-stair-3-2", "Stairs down to floor 2", "joki-3", "joki-2", [0.55, -6.6], [0.55, 2.45]),
-    conn("joki-lift-1-2", "Lift to floor 2", "joki-1", "joki-2", [0.85, 4.75], [2.5, 6.65]),
-    conn("joki-lift-1-3", "Lift to floor 3", "joki-1", "joki-3", [0.85, 4.75], [2.5, 6.65]),
-    conn("joki-lift-2-1", "Lift to floor 1", "joki-2", "joki-1", [2.5, 6.65], [0.85, 4.75]),
-    conn("joki-lift-2-3", "Lift to floor 3", "joki-2", "joki-3", [2.5, 6.65], [2.5, 6.65]),
-    conn("joki-lift-3-1", "Lift to floor 1", "joki-3", "joki-1", [2.5, 6.65], [0.85, 4.75]),
-    conn("joki-lift-3-2", "Lift to floor 2", "joki-3", "joki-2", [2.5, 6.65], [2.5, 6.65]),
+    conn("joki-lift-1-2", "Lift to floor 2", "joki-1", "joki-2", LIFT_F1[0], LIFT_UP[0]),
+    conn("joki-lift-1-3", "Lift to floor 3", "joki-1", "joki-3", LIFT_F1[1], LIFT_UP[0]),
+    conn("joki-lift-2-1", "Lift to floor 1", "joki-2", "joki-1", LIFT_UP[1], LIFT_F1[0]),
+    conn("joki-lift-2-3", "Lift to floor 3", "joki-2", "joki-3", LIFT_UP[0], LIFT_UP[0]),
+    conn("joki-lift-3-1", "Lift to floor 1", "joki-3", "joki-1", LIFT_UP[1], LIFT_F1[0]),
+    conn("joki-lift-3-2", "Lift to floor 2", "joki-3", "joki-2", LIFT_UP[0], LIFT_UP[0]),
   ];
   // Up the passage stair into BioCity's lobby (arrive by the stair top, routes.json).
   connectors.push({ id: "joki-passage-biocity", label: "Stairs up to BioCity", from: "joki-1", to: "biocity-1", at: W([-16.9, 49.7]), arrive: [10.4, 38.4] });

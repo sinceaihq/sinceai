@@ -1,10 +1,11 @@
 import * as THREE from "three";
-import type { LevelId, TwinContext } from "../../types";
+import type { LevelId, TwinContext, V2 } from "../../types";
 import {
   Batcher,
   DEG,
   FACETS,
   FACET_DEG,
+  FIN_PITCH,
   F3_DOOR_BEARING,
   J,
   MULLION_START,
@@ -81,6 +82,10 @@ export interface TowerShell {
   /** Camera in the J frame (plan x, y, plan z). Re-cuts when the view direction changes. */
   update(cameraJ: THREE.Vector3): boolean;
   setNight(night: number): void;
+  /** Direction towards the sun (world): the fins' own shading. */
+  setSun(dir: THREE.Vector3): void;
+  /** Far fins as a filtered band (closed tower only; the dollhouse cuts draw the real fins). */
+  setFinLod(on: boolean): void;
   ready: Promise<unknown>;
   dispose(): void;
 }
@@ -127,6 +132,7 @@ export function buildTowerShell(ctx: TwinContext, mats: JokiMaterials): TowerShe
   alu.needsUpdate = true;
 
   const finMat = mats.get("metalWhite", "ext", { color: "#dcdfe2", roughness: 0.42, metalness: 0.55 }, "jk-fin");
+  const finBase = finMat.color.clone();
   // Bands, mullion caps and profiles, bracket rails: one instanced mesh, colour and PBR per instance.
   const framesMat = mats.uber("ext");
   const column = mats.get("metalDark", "ext", { color: "#151a1e", roughness: 0.5, metalness: 0.4 }, "jk-column");
@@ -151,10 +157,11 @@ export function buildTowerShell(ctx: TwinContext, mats: JokiMaterials): TowerShe
   const GALV = (g: THREE.BufferGeometry) => pbr(g, "#c8cbcd", 0.45, 1);
   const BLACK_STEEL = (g: THREE.BufferGeometry) => pbr(g, "#151a1e", 0.5, 0.4);
 
-  // Uplight at the base of the fins after dusk (warm-white LED strip) — painted into the
-  // emissive: ≈ 200 cd/m² at the foot of a fin, fading over the first 2–3 m (photos: blue hour).
+  // Uplight at the base of the fins after dusk (warm-white LED strip) — painted into the emissive: about
+  // 50 cd/m² at the foot of a fin, gone within the first 2–3 m (photos: blue hour — a soft warm band at the
+  // base, the comb above it stays silver).
   const uplight = { value: 0 };
-  const warm = kelvinToLinear(3600);
+  const warm = kelvinToLinear(3500);
   chainPatch(finMat, "jk-uplight", (shader) => {
     shader.uniforms.uJkUp = uplight;
     shader.uniforms.uJkWarm = { value: warm };
@@ -174,7 +181,83 @@ export function buildTowerShell(ctx: TwinContext, mats: JokiMaterials): TowerShe
       .replace(
         "#include <emissivemap_fragment>",
         `#include <emissivemap_fragment>
-	totalEmissiveRadiance += uJkWarm * uJkUp * ( 0.8 * exp( -vJkUp / 1.1 ) + 0.2 * exp( -vJkUp / 4.5 ) );`,
+	totalEmissiveRadiance += uJkWarm * uJkUp * ( 0.85 * exp( -vJkUp / 0.6 ) + 0.15 * exp( -vJkUp / 2.5 ) );`,
+      );
+  });
+  // Sun on the fin screen without shadow-map texels (a 20 mm fin is far below a shadow texel): the fins
+  // look the shadow map up 0.5 m towards the sun — past their neighbours, so only real occluders (the
+  // tower, other buildings) shade them — and shade each other analytically: a side face is lit where
+  // the sun reaches past the next fin (gap 0.122 m, depth 0.09 m), the face towards the glass never;
+  // the gaps darken towards the glass (ambient occlusion).
+  const sunDir = { value: new THREE.Vector3(0, 1, 0) };
+  /** 1 = far fins hand over to the filtered band (closed tower); 0 = real fins only (dollhouse cuts). */
+  const finLod = { value: 1 };
+  chainPatch(finMat, "jk-finsun", (shader) => {
+    shader.uniforms.uJkSunDir = sunDir;
+    shader.uniforms.uJkLod = finLod;
+    shader.vertexShader = shader.vertexShader
+      .replace("#include <common>", "#include <common>\nvarying vec3 vJkRad;\nvarying vec3 vJkTan;\nvarying vec3 vJkN;\nvarying float vJkDepth;\nvarying vec3 vJkWorld;")
+      .replace(
+        "#include <begin_vertex>",
+        `#include <begin_vertex>
+	#ifdef USE_INSTANCING
+		mat4 jkM = modelMatrix * instanceMatrix;
+		vJkWorld = ( jkM * vec4( transformed, 1.0 ) ).xyz;
+		vJkRad = normalize( ( jkM * vec4( 0.0, 0.0, 1.0, 0.0 ) ).xyz );
+		vJkTan = normalize( ( jkM * vec4( 1.0, 0.0, 0.0, 0.0 ) ).xyz );
+		vJkN = normalize( ( jkM * vec4( objectNormal, 0.0 ) ).xyz );
+		vJkDepth = position.z + 0.5;
+	#else
+		vJkWorld = ( modelMatrix * vec4( transformed, 1.0 ) ).xyz;
+		vJkRad = vec3( 0.0, 0.0, 1.0 );
+		vJkTan = vec3( 1.0, 0.0, 0.0 );
+		vJkN = vec3( 0.0, 0.0, 1.0 );
+		vJkDepth = 1.0;
+	#endif`,
+      );
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        "#include <common>",
+        "#include <common>\nuniform vec3 uJkSunDir;\nuniform float uJkLod;\nvarying vec3 vJkRad;\nvarying vec3 vJkTan;\nvarying vec3 vJkN;\nvarying float vJkDepth;\nvarying vec3 vJkWorld;",
+      )
+      .replace(
+        "#include <clipping_planes_fragment>",
+        `#include <clipping_planes_fragment>
+	// Far away a 20 mm fin is under a pixel and breaks into dashes: it hands over (dithered) to the
+	// filtered band (finBand below) as its width drops under about 1.5 px.
+	if ( uJkLod > 0.5 ) {
+		float jkPx = length( fwidth( vJkWorld ) );
+		float jkFade = smoothstep( ${FIN_LOD_PX[0].toFixed(4)}, ${FIN_LOD_PX[1].toFixed(4)}, jkPx );
+		float jkIgn = fract( 52.9829189 * fract( dot( gl_FragCoord.xy, vec2( 0.06711056, 0.00583715 ) ) ) );
+		if ( jkFade > 0.0 && jkIgn < jkFade ) discard;
+	}`,
+      )
+      .replace(
+        "vec4 shadowWorldPosition = vec4( vSunShadowWorldPosition.xyz + vSunShadowWorldNormal * sunLightShadow.shadowNormalBias, 1.0 );",
+        "vec4 shadowWorldPosition = vec4( vSunShadowWorldPosition.xyz + vSunShadowWorldNormal * sunLightShadow.shadowNormalBias + uJkSunDir * 0.5, 1.0 );",
+      )
+      .replace(
+        "#include <lights_fragment_begin>",
+        `float jkLit = 1.0;
+	{
+		float sr = dot( uJkSunDir, vJkRad );
+		float st = dot( uJkSunDir, vJkTan );
+		float ft = dot( vJkN, vJkTan );
+		if ( abs( ft ) > 0.5 ) {
+			float facing = st * sign( ft );
+			jkLit = facing > 0.0 ? clamp( 1.36 * sr / max( facing, 1e-3 ), 0.0, 1.0 ) * smoothstep( -0.02, 0.06, sr ) : 0.0;
+		} else if ( dot( vJkN, vJkRad ) < -0.5 ) jkLit = 0.0;
+	}
+	${THREE.ShaderChunk.lights_fragment_begin.replace("getSunLightInfo( sunLight, directLight );", "getSunLightInfo( sunLight, directLight ); directLight.color *= jkLit;")}`,
+      )
+      .replace(
+        "#include <aomap_fragment>",
+        `#include <aomap_fragment>
+	{
+		float jkAO = abs( dot( vJkN, vJkTan ) ) > 0.5 ? mix( 0.5, 1.0, vJkDepth ) : ( dot( vJkN, vJkRad ) < -0.5 ? 0.45 : 1.0 );
+		reflectedLight.indirectDiffuse *= jkAO;
+		reflectedLight.indirectSpecular *= jkAO;
+	}`,
       );
   });
 
@@ -289,7 +372,11 @@ export function buildTowerShell(ctx: TwinContext, mats: JokiMaterials): TowerShe
     }
   }
   const finSet = addSet(finItems, finMat, true, "fins");
+  // Receives with the lifted lookup above (real occluders only).
   finSet.mesh.receiveShadow = true;
+  const band = finBand(mats, { finLod, sunDir, uplight, warm });
+  shell.add(band.mesh);
+  owned.push(band.mesh.geometry);
 
   // Bracket rings at the floor-3 slab and the roof: a rail behind the fins + a zig-zag of
   // flat bars to the glass (the triangulated brackets drawn on the plans).
@@ -356,24 +443,32 @@ export function buildTowerShell(ctx: TwinContext, mats: JokiMaterials): TowerShe
     { cast: true, receive: true },
   );
 
-  // ── Doors ──
-  const doorParts: THREE.BufferGeometry[] = [];
+  // ── Doors (frames in their own groups: a dollhouse cut takes them away with the glazing they stand
+  // in — no free-standing "goal posts" on the cut drum) ──
+  const doorsF2 = new THREE.Group();
+  doorsF2.name = "joki-doors-f2";
+  const doorsF3 = new THREE.Group();
+  doorsF3.name = "joki-doors-f3";
+  ext.add(doorsF2, doorsF3);
+  const doorParts: Record<"f2" | "f3", THREE.BufferGeometry[]> = { f2: [], f3: [] };
   for (const d of Object.values(DOORS)) {
+    const parts = d.level === Y.f3 ? doorParts.f3 : doorParts.f2;
     const [x, z] = polar(9.29, d.bearing);
     const yaw = yawToBearing(d.bearing);
     const h = 2.35;
     // Frame: two jambs + head + middle stile.
     for (const s of [-1, 1]) {
       const [jx, jz] = [x + Math.cos(yaw) * s * (d.width / 2), z - Math.sin(yaw) * s * (d.width / 2)];
-      doorParts.push(box(0.07, h, 0.12, jx, d.level, jz, yaw));
+      parts.push(box(0.07, h, 0.12, jx, d.level, jz, yaw));
     }
-    doorParts.push(box(d.width + 0.14, 0.09, 0.12, x, d.level + h, z, yaw));
-    doorParts.push(box(0.05, h, 0.06, x, d.level, z, yaw));
+    parts.push(box(d.width + 0.14, 0.09, 0.12, x, d.level + h, z, yaw));
+    parts.push(box(0.05, h, 0.06, x, d.level, z, yaw));
     // Push bars.
-    doorParts.push(box(0.6, 0.04, 0.05, x + Math.cos(yaw) * 0.45, d.level + 1.0, z - Math.sin(yaw) * 0.45, yaw));
-    doorParts.push(box(0.6, 0.04, 0.05, x - Math.cos(yaw) * 0.45, d.level + 1.0, z + Math.sin(yaw) * 0.45, yaw));
+    parts.push(box(0.6, 0.04, 0.05, x + Math.cos(yaw) * 0.45, d.level + 1.0, z - Math.sin(yaw) * 0.45, yaw));
+    parts.push(box(0.6, 0.04, 0.05, x - Math.cos(yaw) * 0.45, d.level + 1.0, z + Math.sin(yaw) * 0.45, yaw));
   }
-  batch.add(ext, uber, doorParts.map(GALV), { receive: true });
+  batch.add(doorsF2, uber, doorParts.f2.map(GALV), { receive: true });
+  batch.add(doorsF3, uber, doorParts.f3.map(GALV), { receive: true });
 
   // Floor-2 north-east door: landing and four galvanised checker-plate steps down to the deck,
   // glass balustrades and stainless rails (photo: Arosuo / Vesa Loikas).
@@ -422,10 +517,14 @@ export function buildTowerShell(ctx: TwinContext, mats: JokiMaterials): TowerShe
 
   // ── External floor-3 exit stair (SPEC §3.2.2): out along J +x, 1.6 m wide, 0.30 goings,
   // solid parapets in bolted aluminium panels, galvanised treads, landing at roof-walkway level.
+  // (In its own group: with floors 2–3 lifted off it would climb to nothing.)
+  const stairGroup = new THREE.Group();
+  stairGroup.name = "joki-f3-stair";
+  ext.add(stairGroup);
   const stair = f3Stair();
-  batch.add(ext, tread, stair.treads, { cast: true, receive: true });
-  batch.add(ext, alu, stair.parapets, { cast: true, receive: true });
-  batch.add(ext, uber, [...stair.rails.map(STAINLESS), ...stair.posts.map(BLACK_STEEL)], { receive: true });
+  batch.add(stairGroup, tread, stair.treads, { cast: true, receive: true });
+  batch.add(stairGroup, alu, stair.parapets, { cast: true, receive: true });
+  batch.add(stairGroup, uber, [...stair.rails.map(STAINLESS), ...stair.posts.map(BLACK_STEEL)], { receive: true });
 
   batch.flush();
 
@@ -478,6 +577,9 @@ export function buildTowerShell(ctx: TwinContext, mats: JokiMaterials): TowerShe
     setOpen(level) {
       open = level;
       shell.visible = level !== "joki-1";
+      doorsF2.visible = level !== "joki-1" && level !== "joki-2";
+      doorsF3.visible = level === null;
+      stairGroup.visible = level !== "joki-1" && level !== "joki-2";
       roof.visible = level === null;
       yTop = level === "joki-2" ? Y.f2 + 1.05 : level === "joki-3" ? Y.f3 + 1.05 : Infinity;
       sectorOn = level === "joki-3";
@@ -497,7 +599,24 @@ export function buildTowerShell(ctx: TwinContext, mats: JokiMaterials): TowerShe
     },
     setNight(night) {
       // Uplights switch on at sunset and reach full output by civil dusk.
-      uplight.value = 0.2 * THREE.MathUtils.smoothstep(night, 0.05, 0.6);
+      uplight.value = 0.055 * THREE.MathUtils.smoothstep(night, 0.05, 0.6);
+      // After dark the satin fins mirror a dim sky: keep them a mid-grey silver under the night exposure.
+      const dark = THREE.MathUtils.smoothstep(night, 0.1, 0.8);
+      const env = THREE.MathUtils.lerp(1, 0.12, dark);
+      const bandMat = band.mesh.material as THREE.MeshStandardMaterial;
+      finMat.envMapIntensity = env;
+      bandMat.envMapIntensity = env;
+      // Under the night exposure the street's fill light turned the pale satin comb into a lit curtain
+      // up to its top; the photos show it mid-grey above the warm band at its base.
+      finMat.color.copy(finBase).multiplyScalar(1 - 0.6 * dark);
+      bandMat.color.copy(finBase).multiplyScalar(1 - 0.6 * dark);
+    },
+    setSun(dir) {
+      sunDir.value.copy(dir).normalize();
+    },
+    setFinLod(on) {
+      finLod.value = on ? 1 : 0;
+      band.mesh.visible = on;
     },
     ready: Promise.resolve(),
     dispose() {
@@ -560,6 +679,165 @@ export function buildTowerShell(ctx: TwinContext, mats: JokiMaterials): TowerShe
     return { treads, parapets, rails, posts };
   }
 }
+
+/**
+ * Pixel size (m per pixel at the fin) over which the real fins hand over to the band: a fin (20 mm) under
+ * ≈ 2.3 → 1.4 px. The band's own fade uses the same range in fin pitches (0.142 m).
+ */
+const FIN_LOD_PX: [number, number] = [0.0085, 0.0142];
+
+/**
+ * The fin screen as one filtered band (far LOD): a quad per fin pitch on the fins' mid radius, drawn
+ * transparent over the glass. Its shader works out, per pixel, how much of the pitch the fins cover
+ * from this view (20 mm face plus the 90 mm depth seen at an angle — denser towards the edges of the
+ * drum), box-filters the stripes to the pixel, and lights the visible mix of outer and side faces with
+ * the same analytic sun as the fins. No sub-pixel dashes, no moiré.
+ */
+function finBand(
+  mats: JokiMaterials,
+  u: { finLod: { value: number }; sunDir: { value: THREE.Vector3 }; uplight: { value: number }; warm: THREE.Color },
+): { mesh: THREE.Mesh } {
+  const pos: number[] = [];
+  const nor: number[] = [];
+  const jkU: number[] = [];
+  const jkPost: number[] = [];
+  const jkH: number[] = [];
+  const uvs: number[] = [];
+  const idx: number[] = [];
+  const r = (R.finIn + R.finOut) / 2;
+  const pitchM = (r * FIN_PITCH * Math.PI) / 180;
+  finLayout().forEach((f, i) => {
+    const b0 = f.bearing - FIN_PITCH / 2;
+    const b1 = f.bearing + FIN_PITCH / 2;
+    const [x0, z0] = polar(r, b0);
+    const [x1, z1] = polar(r, b1);
+    const [nx, nz] = polar(1, f.bearing);
+    for (const [y0, y1] of f.pieces) {
+      const base = pos.length / 3;
+      pos.push(x0, y0, z0, x1, y0, z1, x1, y1, z1, x0, y1, z0);
+      for (let k = 0; k < 4; k++) nor.push(nx, 0, nz);
+      jkU.push(i, i + 1, i + 1, i);
+      // Metre UVs (the material's normal map needs a real tangent frame).
+      uvs.push(i * pitchM, y0, (i + 1) * pitchM, y0, (i + 1) * pitchM, y1, i * pitchM, y1);
+      for (let k = 0; k < 4; k++) jkPost.push(f.post ? 1 : 0);
+      const hb = y0 - f.pieces[0][0];
+      jkH.push(hb, hb, hb + (y1 - y0), hb + (y1 - y0));
+      // Outward-facing (counter-clockwise seen from outside).
+      idx.push(base, base + 2, base + 1, base, base + 3, base + 2);
+    }
+  });
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute("normal", new THREE.Float32BufferAttribute(nor, 3));
+  g.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
+  g.setAttribute("jkU", new THREE.Float32BufferAttribute(jkU, 1));
+  g.setAttribute("jkPost", new THREE.Float32BufferAttribute(jkPost, 1));
+  g.setAttribute("jkH", new THREE.Float32BufferAttribute(jkH, 1));
+  g.setIndex(idx);
+  g.computeBoundingSphere();
+  const m = mats.get("metalWhite", "ext", { color: "#dcdfe2", roughness: 0.42, metalness: 0.55 }, "jk-fin-band");
+  m.transparent = true;
+  m.depthWrite = false;
+  m.side = THREE.FrontSide;
+  chainPatch(m, "jk-finband", (shader) => {
+    shader.uniforms.uJkSunDir = u.sunDir;
+    shader.uniforms.uJkLod = u.finLod;
+    shader.uniforms.uJkUp = u.uplight;
+    shader.uniforms.uJkWarm = { value: u.warm };
+    shader.vertexShader = shader.vertexShader
+      .replace(
+        "#include <common>",
+        "#include <common>\nattribute float jkU;\nattribute float jkPost;\nattribute float jkH;\nvarying float vJkU;\nvarying float vJkPost;\nvarying float vJkH;\nvarying vec3 vJkWorld;\nvarying vec3 vJkRad;",
+      )
+      .replace(
+        "#include <begin_vertex>",
+        `#include <begin_vertex>
+	vJkU = jkU;
+	vJkPost = jkPost;
+	vJkH = jkH;
+	vJkWorld = ( modelMatrix * vec4( transformed, 1.0 ) ).xyz;
+	vJkRad = normalize( ( modelMatrix * vec4( objectNormal, 0.0 ) ).xyz );`,
+      );
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        "#include <common>",
+        "#include <common>\nuniform vec3 uJkSunDir;\nuniform float uJkLod;\nuniform float uJkUp;\nuniform vec3 uJkWarm;\nvarying float vJkU;\nvarying float vJkPost;\nvarying float vJkH;\nvarying vec3 vJkWorld;\nvarying vec3 vJkRad;",
+      )
+      .replace(
+        "#include <map_fragment>",
+        `#include <map_fragment>
+	vec3 jkV = normalize( cameraPosition - vJkWorld );
+	vec3 jkR = normalize( vec3( vJkRad.x, 0.0, vJkRad.z ) );
+	vec3 jkT = vec3( -jkR.z, 0.0, jkR.x );
+	float jkVr = max( dot( jkV, jkR ), 0.03 );
+	float jkVt = dot( jkV, jkT );
+	float jkW = mix( 0.02, 0.03, vJkPost );
+	float jkD = mix( 0.09, 0.13, vJkPost );
+	float jkDepthSeen = jkD * abs( jkVt ) / jkVr;
+	// Fraction of the pitch the fins hide from this direction, the part of it that is side face.
+	float jkCov = clamp( ( jkW + jkDepthSeen ) / 0.142, 0.0, 1.0 );
+	float jkSide = jkDepthSeen / ( jkW + jkDepthSeen );
+	float jkFw = fwidth( vJkU );
+	float jkF = abs( fract( vJkU ) - 0.5 );
+	float jkPulse = clamp( ( jkCov * 0.5 - jkF ) / max( jkFw, 1e-4 ) + 0.5, 0.0, 1.0 );
+	float jkA = mix( jkPulse, jkCov, smoothstep( 0.35, 0.9, jkFw ) );
+	float jkLodA = smoothstep( ${(FIN_LOD_PX[0] / 0.142).toFixed(4)}, ${(FIN_LOD_PX[1] / 0.142).toFixed(4)}, jkFw ) * uJkLod;
+	diffuseColor.a *= jkA * jkLodA;
+	if ( diffuseColor.a < 0.004 ) discard;`,
+      )
+      .replace(
+        "#include <normal_fragment_maps>",
+        `#include <normal_fragment_maps>
+	{
+		// Light the visible mix: the side faces turned to the viewer and the outer faces.
+		vec3 jkTv = normalize( ( viewMatrix * vec4( jkT * sign( jkVt ), 0.0 ) ).xyz );
+		normal = normalize( mix( normal, jkTv, jkSide ) );
+	}`,
+      )
+      .replace(
+        "#include <lights_fragment_begin>",
+        `float jkLit = 1.0;
+	{
+		float sr = dot( uJkSunDir, jkR );
+		float facing = dot( uJkSunDir, jkT ) * sign( jkVt );
+		float sideLit = facing > 0.0 ? clamp( 1.36 * sr / max( facing, 1e-3 ), 0.0, 1.0 ) * smoothstep( -0.02, 0.06, sr ) : 0.0;
+		jkLit = mix( smoothstep( -0.02, 0.06, sr ), sideLit, jkSide );
+	}
+	${THREE.ShaderChunk.lights_fragment_begin.replace("getSunLightInfo( sunLight, directLight );", "getSunLightInfo( sunLight, directLight ); directLight.color *= jkLit;")}`,
+      )
+      .replace(
+        "#include <aomap_fragment>",
+        `#include <aomap_fragment>
+	reflectedLight.indirectDiffuse *= mix( 1.0, 0.7, jkSide );
+	reflectedLight.indirectSpecular *= mix( 1.0, 0.7, jkSide );`,
+      )
+      .replace(
+        "#include <emissivemap_fragment>",
+        `#include <emissivemap_fragment>
+	totalEmissiveRadiance += uJkWarm * uJkUp * ( 0.85 * exp( -vJkH / 0.6 ) + 0.15 * exp( -vJkH / 2.5 ) );`,
+      )
+      .replace(
+        "vec4 shadowWorldPosition = vec4( vSunShadowWorldPosition.xyz + vSunShadowWorldNormal * sunLightShadow.shadowNormalBias, 1.0 );",
+        "vec4 shadowWorldPosition = vec4( vSunShadowWorldPosition.xyz + vSunShadowWorldNormal * sunLightShadow.shadowNormalBias + uJkSunDir * 0.5, 1.0 );",
+      );
+  });
+  const mesh = new THREE.Mesh(g, m);
+  mesh.name = "joki:fin-band";
+  mesh.receiveShadow = true;
+  mesh.castShadow = false;
+  // After the curtain-wall glass (renderOrder 2): the band lies in front of it.
+  mesh.renderOrder = 3;
+  return { mesh };
+}
+
+/** The floor-3 exit stair's steel posts (J x, z), for walk colliders. */
+export const F3_STAIR_POSTS: readonly V2[] = (() => {
+  const landing0 = 10.55;
+  const landEnd = landing0 + 21 * 0.3;
+  const out: V2[] = [];
+  for (const x of [landEnd + 1.4, (landing0 + landEnd) / 2]) for (const z of [-0.7, 0.7]) out.push([x, z]);
+  return out;
+})();
 
 /** J-frame transform helper for consumers (re-exported for tests). */
 export const TOWER_FRAME = J;

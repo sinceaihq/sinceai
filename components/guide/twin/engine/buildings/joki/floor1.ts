@@ -26,7 +26,7 @@ import { JOKI_LUMINANCE } from "./mats";
 import { F1_AULA, F1_COLUMN, F1_TOWER } from "./walls";
 import { AULA_FIXTURES, AULA_OUTLINE, type Layout, type Table } from "./layout";
 import { chair, downlightDisc, laptop, pouf, projector, softBox, table, wallScreen } from "./furniture";
-import { acousticCeiling, bakeLightmap, blackSlats, boardFormed, caveProjection, patchworkCarpet, planUV1, screenContent, type Pool } from "./textures";
+import { acousticCeiling, bakeLightmap, blackSlats, boardFormed, caveProjection, patchworkCarpet, planUV1, resinFloor, screenContent, type Pool } from "./textures";
 
 /**
  * Joki floor 1 apart from the Showroom (SPEC §7.2): the Aula and the Cave
@@ -81,6 +81,8 @@ const SHARED_LINING: [V2, V2][] = [
 
 /** Cave hall rectangle (J) and its stage (SW end). */
 export const CAVE = { x0: 1.59, x1: 14.67, z0: 8.75, z1: 27.07, stageZ: 24.2, stageY: 0.35 };
+/** The Cave's door from the Aula (CAD: the gap in its west wall beside the stage, J x 1.23…1.59). */
+export const CAVE_DOOR = { z0: 23.97, z1: 25.38 };
 /** Company Lounge amphitheatre (SPEC §7.2): centre, radii, tier tops below the room floor. */
 export const LOUNGE = {
   // CAD centre J (5.15, −2.2); 10 cm east so the rim (r 2.82) clears the shaft wall at x 2.38.
@@ -120,7 +122,11 @@ export function buildFloor1(ctx: TwinContext, mats: JokiMaterials, layout: Layou
   const concrete = mats.get("concreteFacade", "aula", { roughness: 0.95 }, "jk-f1-concrete");
   concrete.map = board.texture;
   concrete.color.set("#ffffff");
-  const aulaFloorMat = mats.get("concreteFloor", "aula", { color: "#d3cec6", roughness: 0.42 }, "jk-aula-floor");
+  // Light seamless satin resin (SPEC §7.2 #d3cec6): soft tone drift only, glossy enough to mirror the
+  // downlights.
+  const resin = resinFloor({ px: low ? 256 : 512 });
+  owned.push(resin.texture);
+  const aulaFloorMat = mats.plain("aula-floor", "aula", { map: resin.texture, roughness: 0.34 });
   const caveFloorMat = mats.get("concreteFloor", "cave", { color: "#a4a29d", roughness: 0.5 }, "jk-cave-floor");
   // Flat-painted surfaces: one uber material per room (colour, roughness, metalness per vertex).
   const uA = mats.uber("aula");
@@ -172,6 +178,55 @@ export function buildFloor1(ctx: TwinContext, mats: JokiMaterials, layout: Layou
   // The wall shared with BioCity is BioCity's: we only line its Aula face (1 cm proud), leaving
   // the passage opening (J (−17.66, 48.01)–(−18.56, 51.10)) free.
   for (const [a, b] of SHARED_LINING) batch.add(group, concrete, wallSeg(a, b, 0.02, Y.aula, Y.aulaCeil + 0.02));
+  // Over the passage: BioCity's side of the opening is 4.3 m tall (its lintel at +2.6), Joki's Aula only
+  // 3.1 m — a white bulkhead fills the opening down to the Aula ceiling, so from the stair nobody looks
+  // over Joki's ceiling into its roof void.
+  {
+    const a: V2 = [-17.66, 48.01];
+    const b: V2 = [-18.56, 51.1];
+    const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    const u: V2 = [(b[0] - a[0]) / len, (b[1] - a[1]) / len];
+    // Into BioCity (the wall is 0.51 m thick).
+    const n: V2 = [u[1] * -1, u[0]];
+    const off = 0.255;
+    const p0: V2 = [a[0] + n[0] * off - u[0] * 0.1, a[1] + n[1] * off - u[1] * 0.1];
+    const p1: V2 = [b[0] + n[0] * off + u[0] * 0.1, b[1] + n[1] * off + u[1] * 0.1];
+    batch.add(ceil, uA, WHITE(wallSeg(p0, p1, 0.53, Y.aulaCeil - 0.02, 2.66)));
+  }
+  // Ceiling just inside the passage (BioCity's own ceiling ends at its wall face, B x 36.92): the same
+  // tiles and plane as the Aula's, so the overlap cannot show.
+  batch.add(
+    ceil,
+    ceilingMat,
+    prism(
+      [
+        [-17.62, 47.89],
+        [-15.15, 48.62],
+        [-16.13, 51.98],
+        [-18.61, 51.25],
+      ],
+      Y.aulaCeil,
+      Y.aulaCeil + 0.02,
+      { top: false, bottom: true, sides: false },
+    ),
+  );
+  // The street vestibule's west wall (BioCity's) seen from inside the wind lobby, and its ceiling.
+  batch.add(group, concrete, wallSeg([-19.6, 54.62], [-20.82, 58.78], 0.02, Y.aula - 0.1, Y.aulaCeil + 0.02));
+  batch.add(
+    ceil,
+    ceilingMat,
+    prism(
+      [
+        [-20.82, 58.8],
+        [-19.59, 54.49],
+        [-13.89, 54.49],
+        [-13.89, 58.8],
+      ],
+      Y.aulaCeil,
+      Y.aulaCeil + 0.02,
+      { top: false, bottom: true, sides: false },
+    ),
+  );
   // Columns: white round columns in the Aula (and the pair by the sofa).
   for (const poly of F1_COLUMN) {
     const cx = poly.reduce((s, p) => s + p[0], 0) / poly.length;
@@ -182,10 +237,10 @@ export function buildFloor1(ctx: TwinContext, mats: JokiMaterials, layout: Layou
   }
   // Drum inner face: the Showroom's and the lounge's walls (each in its room's light).
   batch.add(drum, towerWall, drumInner.showroom.clone());
-  const loungeWall = mats.get("concreteFacade", "lounge", { color: "#6e6a63", roughness: 0.95 }, "jk-lounge-wall");
+  // The same board-formed concrete as the drum (#8f8a82): under the spots it reads mid-grey (photo #928c80).
+  const loungeWall = mats.get("concreteFacade", "lounge", { roughness: 0.95 }, "jk-lounge-wall");
   loungeWall.map = board.texture;
-  // Darker than the Aula's piers (photo: the amphitheatre's drum wall reads dark grey under warm spots).
-  loungeWall.color.set("#8f8b85");
+  loungeWall.color.set("#ffffff");
   batch.add(drum, loungeWall, drumInner.lounge.clone());
 
   // ── Floors ──
@@ -487,12 +542,23 @@ export function buildFloor1(ctx: TwinContext, mats: JokiMaterials, layout: Layou
         0.02,
       ),
     ].map(STEEL));
-    // Lift doors (west side of the shaft, facing the corridor).
-    batch.add(group, uA, STEEL(box(0.04, 2.1, 1.0, 1.28, Y.f1, 4.75)));
+    // Lift doors (west side of the shaft, facing the corridor — lit like the Showroom it opens into):
+    // two brushed-steel leaves in a dark 50 mm frame, a call panel with two lit buttons.
+    const uS = mats.uber("showroom");
+    const BRUSHED = (g: THREE.BufferGeometry) => pbr(g, "#9a9ea2", 0.4, 1);
+    const FRAME = (g: THREE.BufferGeometry) => pbr(g, "#232528", 0.5, 0.6);
+    const x = 1.29;
+    const doorParts: THREE.BufferGeometry[] = [];
+    for (const s2 of [-1, 1]) doorParts.push(BRUSHED(box(0.03, 2.1, 0.495, x, Y.f1, 4.75 + s2 * 0.2525)));
+    for (const s2 of [-1, 1]) doorParts.push(FRAME(box(0.07, 2.15, 0.05, x - 0.015, Y.f1, 4.75 + s2 * 0.525)));
+    doorParts.push(FRAME(box(0.07, 0.05, 1.1, x - 0.015, Y.f1 + 2.1, 4.75)));
+    doorParts.push(BRUSHED(box(0.02, 0.3, 0.12, x - 0.02, Y.f1 + 1.0, 5.45)));
+    batch.add(group, uS, doorParts);
+    batch.add(group, glowMat, [glow(box(0.01, 0.03, 0.03, x - 0.032, Y.f1 + 1.1, 5.45), mats.lampColor(JOKI_LUMINANCE.downlight, 4000)), glow(box(0.01, 0.03, 0.03, x - 0.032, Y.f1 + 1.2, 5.45), mats.lampColor(JOKI_LUMINANCE.downlight, 4000))]);
   }
 
   // ── Company Lounge amphitheatre ──
-  const lounge = buildLounge(batch, drum, ceil, { birch, uber: uL, glow: glowMat, spot: mats.lampColor(JOKI_LUMINANCE.trackSpot, 3000), low });
+  const lounge = buildLounge(batch, drum, ceil, { birch, uber: uL, glow: glowMat, spot: mats.lampColor(JOKI_LUMINANCE.trackSpot, 3500), low });
   lounge.userData.pickId = "lounge";
   pickables.push(lounge);
 
@@ -617,6 +683,60 @@ function curvedScreen(width: number, height: number, z: number, y0: number, radi
   return g;
 }
 
+/** Seat pad thickness on the amphitheatre tiers (m). */
+const PAD_H = 0.09;
+
+/**
+ * Upholstered pad on a curved tier: a rounded-rectangle section (radial r0…r1, height h, corner radius rc)
+ * swept along the bearings b0 → b1, with flat end caps.
+ */
+function curvedPad(r0: number, r1: number, b0: number, b1: number, y0: number, h: number, rc: number, seg: number): THREE.BufferGeometry {
+  // Section, counter-clockwise in (r, y), starting at the bottom inner corner.
+  const sec: [number, number][] = [];
+  const corner = (cr: number, cy: number, a0: number) => {
+    for (let k = 0; k <= 3; k++) {
+      const a = a0 + (k / 3) * (Math.PI / 2);
+      sec.push([cr + Math.cos(a) * rc, cy + Math.sin(a) * rc]);
+    }
+  };
+  corner(r1 - rc, y0 + rc, -Math.PI / 2);
+  corner(r1 - rc, y0 + h - rc, 0);
+  corner(r0 + rc, y0 + h - rc, Math.PI / 2);
+  corner(r0 + rc, y0 + rc, Math.PI);
+  const n = sec.length;
+  const pos: number[] = [];
+  const idx: number[] = [];
+  for (let i = 0; i <= seg; i++) {
+    const b = b0 + ((b1 - b0) * i) / seg;
+    for (const [r, y] of sec) {
+      const [x, z] = polar(r, b);
+      pos.push(x, y, z);
+    }
+    if (i < seg)
+      for (let k = 0; k < n; k++) {
+        const a = i * n + k;
+        const b2 = i * n + ((k + 1) % n);
+        idx.push(a, b2, a + n, b2, b2 + n, a + n);
+      }
+  }
+  // End caps (the section is convex: a fan).
+  for (const [i, flip] of [
+    [0, true],
+    [seg, false],
+  ] as [number, boolean][]) {
+    const base = i * n;
+    for (let k = 1; k < n - 1; k++) {
+      if (flip) idx.push(base, base + k + 1, base + k);
+      else idx.push(base, base + k, base + k + 1);
+    }
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+  g.setIndex(idx);
+  g.computeVertexNormals();
+  return metreUV(g);
+}
+
 /** Lounge carpet: the room outline at F1 with the amphitheatre's round hole. */
 function loungeFloorWithPit(poly: V2[]): THREE.BufferGeometry {
   const shape = new THREE.Shape(poly.map(([x, z]) => new THREE.Vector2(x, -z)));
@@ -675,7 +795,7 @@ function buildLounge(
   const pit = new THREE.CircleGeometry(LOUNGE.pit, 48);
   pit.rotateX(-Math.PI / 2);
   pit.translate(0, floor - LOUNGE.pitDrop + 0.005, 0);
-  batch.add(g, m.uber, pbr(metreUV(pit), "#6a6b6e", 1, 0));
+  batch.add(g, m.uber, pbr(metreUV(pit), "#8a8b8f", 1, 0));
   // Upholstered pads on the seat tiers, in segments of five colours.
   const colours = ["#2f3d57", "#0b8794", "#1b576b", "#3d5f48", "#9db5bb", "#0b8794", "#2f3d57", "#1b576b"];
   let ci = 0;
@@ -686,25 +806,26 @@ function buildLounge(
       for (let i = 0; i < n; i++) {
         const b0 = s0 + (span * i) / n + 0.6;
         const b1 = s0 + (span * (i + 1)) / n - 0.6;
-        const pad = merge([
-          annulus(t.r0 + 0.02, t.r1 - 0.04, b0, b1, floor - t.drop + 0.13, { seg: 10 }),
-          arcStrip(t.r0 + 0.02, b0, b1, floor - t.drop, floor - t.drop + 0.13, { seg: 10, inward: true }),
-          arcStrip(t.r1 - 0.04, b0, b1, floor - t.drop, floor - t.drop + 0.13, { seg: 10 }),
-        ]);
-        batch.add(g, m.uber, pbr(pad, colours[ci++ % colours.length], 0.95, 0));
+        // A 9 cm upholstered slab with rounded edges, following the curve of the tier.
+        const pad = curvedPad(t.r0 + 0.02, t.r1 - 0.04, b0, b1, floor - t.drop, PAD_H, 0.035, m.low ? 6 : 10);
+        batch.add(g, m.uber, pbr(pad, colours[ci++ % colours.length], 0.9, 0));
       }
     }
   }
-  // Back cushions on the rails (r 1.72 and 2.72), tilted back.
-  const cushion = softBox(0.58, 0.42, 0.11, 0.04);
-  // Navy strap down the cushion's front, a third in from one side (photo).
-  const piping = softBox(0.035, 0.43, 0.118, 0.004);
-  piping.translate(-0.13, 0, 0);
+  // Back cushions on the rails (r 1.72 and 2.72), tilted back: 12 cm thick, navy piping round the front.
+  const cushion = softBox(0.58, 0.42, 0.12, 0.045);
+  const pipe = 0.012;
+  const piping = merge([
+    softBox(0.57, pipe, pipe, 0.004, 0, 0.415 - pipe, 0.058),
+    softBox(0.57, pipe, pipe, 0.004, 0, 0.005, 0.058),
+    softBox(pipe, 0.4, pipe, 0.004, -0.282, 0.01, 0.058),
+    softBox(pipe, 0.4, pipe, 0.004, 0.282, 0.01, 0.058),
+  ]);
   for (const [t, railR] of [
     [LOUNGE.tiers[0], 2.72],
     [LOUNGE.tiers[2], 1.72],
   ] as const) {
-    const seatTop = floor - t.drop + 0.13;
+    const seatTop = floor - t.drop + PAD_H;
     for (const [s0, s1] of seatSectors) {
       const n = Math.max(2, Math.round(((s1 - s0) * (Math.PI / 180) * railR) / 0.78));
       for (let i = 0; i < n; i++) {

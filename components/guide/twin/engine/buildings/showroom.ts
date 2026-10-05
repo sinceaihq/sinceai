@@ -90,6 +90,7 @@ export async function buildShowroom(ctx: TwinContext, mats: JokiMaterials, opts:
   const ledMat = new THREE.MeshBasicMaterial({ map: led.texture, color: new THREE.Color(1, 1, 1.05).multiplyScalar(JOKI_LUMINANCE.ledWall) });
   ledMat.name = "joki-led-wall";
   owned.push(ledMat);
+  mats.zoneEmissive("showroom", ledMat);
   // P2.5 pixel structure, visible only up close (box-filtered: no moiré).
   chainPatch(ledMat, "jk-ledpix", (shader) => {
     shader.fragmentShader = shader.fragmentShader.replace(
@@ -108,7 +109,9 @@ export async function buildShowroom(ctx: TwinContext, mats: JokiMaterials, opts:
   });
 
   // ── Materials ──
-  const carpetTex = patchworkCarpet(["#3e4146", "#2f3236", "#5b5e63", "#36393d"], { px: low ? 512 : 1024, seed: 13 });
+  // Charcoal carpet tiles (0.5 m) laid patchwork: a warm brown-grey with only ±6 % between tiles (photo:
+  // Rajulive Showroom studio — the patchwork is subtle, not a chessboard).
+  const carpetTex = patchworkCarpet(["#45413e", "#4a4542", "#413e3b", "#4c4744"], { px: low ? 512 : 1024, seed: 13 });
   owned.push(carpetTex.texture);
   const carpet = mats.get("carpetDark", "showroom", { roughness: 1.0 }, "jk-sr-carpet");
   carpet.map = carpetTex.texture;
@@ -121,7 +124,7 @@ export async function buildShowroom(ctx: TwinContext, mats: JokiMaterials, opts:
   const DUCT = (g: THREE.BufferGeometry) => pbr(g, "#121214", 0.38, 0.8);
   const WALL = (g: THREE.BufferGeometry) => pbr(g, "#2a2b2e", 0.85, 0);
   // Every light fitting in the room shares one glow material (HDR colour in the vertices).
-  const glowMat = mats.glow("showroom");
+  const glowMat = mats.zoneEmissive("showroom", mats.glow("showroom"));
   const VIOLET = mats.lampColor(JOKI_LUMINANCE.violetLine, undefined, EVENT_VIOLET);
   const LEDW = mats.lampColor(JOKI_LUMINANCE.linearLed * 1.2, 5000);
   const SPOT = mats.lampColor(JOKI_LUMINANCE.trackSpot, 3000);
@@ -184,6 +187,7 @@ export async function buildShowroom(ctx: TwinContext, mats: JokiMaterials, opts:
   const frontMat = new THREE.MeshBasicMaterial({ map: atlas, color: new THREE.Color(1, 1, 1).multiplyScalar(0.11) });
   frontMat.name = "joki-counter-fronts";
   owned.push(frontMat);
+  mats.zoneEmissive("showroom", frontMat);
   const parts = counter(1.8, 1.05, 0.6);
   const stool = barStoolPbr();
   owned.push(stool);
@@ -240,6 +244,7 @@ export async function buildShowroom(ctx: TwinContext, mats: JokiMaterials, opts:
     owned.push(sc);
     const scMat = new THREE.MeshBasicMaterial({ map: sc, color: new THREE.Color(1, 1, 1).multiplyScalar(0.14) });
     owned.push(scMat);
+    mats.zoneEmissive("showroom", scMat);
     const scr: THREE.BufferGeometry[] = [];
     for (const z of [-2.1, 0.15]) {
       batch.add(group, uber, BLACK(ws.bezel.clone().rotateY(-Math.PI / 2).translate(-0.47, Y.f1 + 2.05, z)));
@@ -260,9 +265,27 @@ export async function buildShowroom(ctx: TwinContext, mats: JokiMaterials, opts:
     const ducts: THREE.BufferGeometry[] = [];
     ducts.push(rod([-7.6, Y.showroomCeil - 0.35, -2.6], [-0.6, Y.showroomCeil - 0.35, -2.6], 0.28, low ? 12 : 20));
     ducts.push(rod([-7.0, Y.showroomCeil - 0.3, 3.4], [-0.6, Y.showroomCeil - 0.3, 3.4], 0.22, low ? 12 : 20));
-    for (const x of [-6.4, -4.2, -2.0]) ducts.push(box(0.06, 0.04, 14.5, x, Y.showroomCeil - 0.12, 0));
-    for (const z of [-5.2, -0.6, 4.6]) ducts.push(box(14, 0.04, 0.06, -3.6, Y.showroomCeil - 0.14, z));
+    // Hangers for the ducts.
+    for (const [z, r, y] of [
+      [-2.6, 0.28, 0.35],
+      [3.4, 0.22, 0.3],
+    ] as [number, number, number][])
+      for (let x = -7.0; x < -0.6; x += 1.6) ducts.push(rod([x, Y.showroomCeil - y + r, z], [x, Y.showroomCeil, z], 0.008, 4));
     batch.add(ceil, uber, ducts.map(DUCT));
+    // Black ladder cable trays (0.3 m) across the room, on drop rods, clipped to the drum.
+    const trays: THREE.BufferGeometry[] = [];
+    const tray = (x0: number, x1: number, z: number, y: number) => {
+      const half = Math.sqrt(Math.max(0, (R.drumIn - 0.3) ** 2 - z * z));
+      const a = Math.max(x0, -half);
+      if (x1 - a < 0.5) return;
+      for (const dz of [-0.15, 0.15]) trays.push(box(x1 - a, 0.06, 0.025, (a + x1) / 2, y, z + dz));
+      for (let x = a + 0.15; x < x1; x += 0.3) trays.push(box(0.025, 0.012, 0.3, x, y, z));
+      for (let x = a + 0.4; x < x1; x += 1.5) for (const dz of [-0.16, 0.16]) trays.push(box(0.012, Y.showroomCeil - y - 0.06, 0.012, x, y + 0.06, z + dz));
+    };
+    tray(-8.6, -0.5, -4.3, Y.showroomCeil - 0.22);
+    tray(-8.6, -0.5, 0.9, Y.showroomCeil - 0.2);
+    tray(-8.6, -0.5, 5.6, Y.showroomCeil - 0.22);
+    batch.add(ceil, uber, trays.map(BLACK));
     // White linear LEDs in zig-zag/triangle patterns.
     const zig: THREE.BufferGeometry[] = [];
     const zigzag = (pts: V2[]) => {
@@ -303,7 +326,9 @@ export async function buildShowroom(ctx: TwinContext, mats: JokiMaterials, opts:
         lenses.push(sp.lens.clone().rotateY(yaw).translate(x, Y.showroomCeil - 0.02, z));
       }
     }
-    batch.add(ceil, uber, DUCT(arcStrip(5.9, LED.b0 - 6, LED.b1 + 6, Y.showroomCeil - 0.06, Y.showroomCeil - 0.01, { seg: 48 })));
+    // Black spot tracks: one following the LED wall, one inner arc for the room's general light.
+    batch.add(ceil, uber, BLACK(arcStrip(5.9, LED.b0 - 6, LED.b1 + 6, Y.showroomCeil - 0.06, Y.showroomCeil - 0.01, { seg: 48 })));
+    batch.add(ceil, uber, BLACK(arcStrip(3.6, LED.b0 + 4, LED.b1 - 4, Y.showroomCeil - 0.06, Y.showroomCeil - 0.01, { seg: 40 })));
     batch.add(ceil, uber, bodies.map(BLACK));
     batch.add(ceil, glowMat, lenses.map((g) => glow(g, SPOT)));
     sp.body.dispose();
