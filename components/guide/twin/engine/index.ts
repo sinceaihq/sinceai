@@ -870,6 +870,9 @@ export function createTwinEngine(container: HTMLElement, opts: TwinOptions): Twi
     return true;
   }
 
+  /** Hero buildings in the order a point is tested (Joki's hall lies inside DataCity's outline, not BioCity's). */
+  const HERO_PLACES: readonly PlaceId[] = ["joki", "biocity", "educity"];
+
   function placeOfView(key: string): PlaceId {
     const p = key.split(":")[0];
     return p === "biocity" || p === "joki" || p === "educity" ? p : "campus";
@@ -2651,6 +2654,13 @@ export function createTwinEngine(container: HTMLElement, opts: TwinOptions): Twi
     run.avatar.position.copy(f.walker);
     // props/people.ts lights the avatar with the interior environment on indoor levels.
     run.avatar.userData.level = f.level ?? null;
+    // The place tabs follow the walker (street → BioCity → Joki), so the header always names where the route is.
+    const here: PlaceId = HERO_PLACES.find((b) => inHero(b, f.walker.x, f.walker.z)) ?? "campus";
+    if (here !== activePlace) {
+      activePlace = here;
+      orbit?.setPlace(here);
+      emit.onPlace(here);
+    }
     // The avatar's body never fills the view: hidden in first person and when the camera is at it.
     const close =
       Math.hypot(f.position.x - f.walker.x, f.position.z - f.walker.z) < 1.2 && f.position.y < f.walker.y + 2.1;
