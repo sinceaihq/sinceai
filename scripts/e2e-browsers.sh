@@ -6,7 +6,7 @@
 set -euo pipefail
 VERSION=$(node -p 'require("@playwright/test/package.json").version')
 PORT=${E2E_PORT:-3100}
-exec docker run --rm --network host --ipc=host --user "$(id -u):$(id -g)" -e HOME=/tmp -e CI= \
+exec docker run --rm --network host --ipc=host --ulimit core=0 --user "$(id -u):$(id -g)" -e HOME=/tmp -e CI= \
   -e E2E_ALL_BROWSERS=1 -e E2E_PORT="$PORT" -e E2E_BASE="${E2E_BASE:-http://localhost:$PORT}" \
   -v "$PWD":/work -w /work "mcr.microsoft.com/playwright:v$VERSION-noble" \
   npx playwright test --project=iphone --project=safari --project=firefox "$@"
