@@ -76,9 +76,10 @@ interface SpeciesParams {
   /** Birch bark or the generic bark; base tint. */
   barkBirch: boolean;
   barkTint: string;
-  /** Late leaves (count at LOD0) and colours. */
+  /** Late leaves (count at LOD0), their colours and half-size (m; one leaf per quad). */
   leaves: number;
   leafColors: string[];
+  leafSize: number;
   /** Weeping twigs (birch). */
   weep: number;
 }
@@ -110,8 +111,9 @@ export const SPECIES: Record<TreeSpecies, SpeciesParams> = {
     twigDensity: 1.6,
     barkBirch: false,
     barkTint: "#6f6a64",
-    leaves: 260,
+    leaves: 70,
     leafColors: ["#c9a43c", "#b98f2e", "#d6b74e"],
+    leafSize: 0.055,
     weep: 0,
   },
   acer: {
@@ -130,8 +132,9 @@ export const SPECIES: Record<TreeSpecies, SpeciesParams> = {
     twigDensity: 1.3,
     barkBirch: false,
     barkTint: "#5d5852",
-    leaves: 120,
+    leaves: 20,
     leafColors: ["#c98a2c", "#b5652a", "#d4a23c"],
+    leafSize: 0.075,
     weep: 0,
   },
   ulmus: {
@@ -150,8 +153,9 @@ export const SPECIES: Record<TreeSpecies, SpeciesParams> = {
     twigDensity: 1.05,
     barkBirch: false,
     barkTint: "#625b53",
-    leaves: 40,
+    leaves: 0,
     leafColors: ["#a88a3a", "#9c7a30"],
+    leafSize: 0.05,
     weep: 0,
   },
   sorbus: {
@@ -170,8 +174,9 @@ export const SPECIES: Record<TreeSpecies, SpeciesParams> = {
     twigDensity: 1.3,
     barkBirch: false,
     barkTint: "#6a645d",
-    leaves: 90,
+    leaves: 40,
     leafColors: ["#b58a3c", "#a8742e", "#c49a48"],
+    leafSize: 0.05,
     weep: 0,
   },
   betula: {
@@ -190,8 +195,9 @@ export const SPECIES: Record<TreeSpecies, SpeciesParams> = {
     twigDensity: 1.7,
     barkBirch: true,
     barkTint: "#e4e2dc",
-    leaves: 220,
+    leaves: 60,
     leafColors: ["#d8b84a", "#e0c35a", "#c9a23a"],
+    leafSize: 0.035,
     weep: 0.6,
   },
   quercus: {
@@ -210,8 +216,9 @@ export const SPECIES: Record<TreeSpecies, SpeciesParams> = {
     twigDensity: 1.2,
     barkBirch: false,
     barkTint: "#58514a",
-    leaves: 550,
+    leaves: 450,
     leafColors: ["#7a5130", "#8a5e36", "#6a4428", "#9a6a3c"],
+    leafSize: 0.065,
     weep: 0,
   },
   fraxinus: {
@@ -232,6 +239,7 @@ export const SPECIES: Record<TreeSpecies, SpeciesParams> = {
     barkTint: "#7a756e",
     leaves: 0,
     leafColors: ["#a8a050"],
+    leafSize: 0.05,
     weep: 0,
   },
   malus: {
@@ -250,8 +258,9 @@ export const SPECIES: Record<TreeSpecies, SpeciesParams> = {
     twigDensity: 1.4,
     barkBirch: false,
     barkTint: "#5e564e",
-    leaves: 60,
+    leaves: 25,
     leafColors: ["#a07a34", "#8c6a2c"],
+    leafSize: 0.04,
     weep: 0,
   },
   populus: {
@@ -272,6 +281,7 @@ export const SPECIES: Record<TreeSpecies, SpeciesParams> = {
     barkTint: "#7c7a72",
     leaves: 0,
     leafColors: ["#b8a040"],
+    leafSize: 0.05,
     weep: 0,
   },
   prunus: {
@@ -290,8 +300,9 @@ export const SPECIES: Record<TreeSpecies, SpeciesParams> = {
     twigDensity: 1.4,
     barkBirch: false,
     barkTint: "#4f3f38",
-    leaves: 60,
+    leaves: 0,
     leafColors: ["#b0503a", "#c46a3a"],
+    leafSize: 0.04,
     weep: 0,
   },
   aesculus: {
@@ -310,8 +321,9 @@ export const SPECIES: Record<TreeSpecies, SpeciesParams> = {
     twigDensity: 1.2,
     barkBirch: false,
     barkTint: "#5e5751",
-    leaves: 40,
+    leaves: 0,
     leafColors: ["#9a6a30"],
+    leafSize: 0.08,
     weep: 0,
   },
   picea: {
@@ -332,6 +344,7 @@ export const SPECIES: Record<TreeSpecies, SpeciesParams> = {
     barkTint: "#4e443c",
     leaves: 0,
     leafColors: [],
+    leafSize: 0.05,
     weep: 0,
   },
   pinus: {
@@ -352,6 +365,7 @@ export const SPECIES: Record<TreeSpecies, SpeciesParams> = {
     barkTint: "#8a5a3a",
     leaves: 0,
     leafColors: [],
+    leafSize: 0.05,
     weep: 0,
   },
   shrub: {
@@ -370,8 +384,9 @@ export const SPECIES: Record<TreeSpecies, SpeciesParams> = {
     twigDensity: 3.2,
     barkBirch: false,
     barkTint: "#4a3e33",
-    leaves: 40,
+    leaves: 25,
     leafColors: ["#7a5a30", "#8a6a34", "#6a4e2a"],
+    leafSize: 0.03,
     weep: 0,
   },
   thuja: {
@@ -392,6 +407,7 @@ export const SPECIES: Record<TreeSpecies, SpeciesParams> = {
     barkTint: "#5a4a3c",
     leaves: 0,
     leafColors: [],
+    leafSize: 0.05,
     weep: 0,
   },
 };
@@ -607,7 +623,7 @@ function emitCard(g: Grow, buf: PartBuf, c: THREE.Vector3, along: THREE.Vector3,
 /** A single leaf quad (atlas of 6 leaves in the library texture: 2 columns × 3 rows). */
 function emitLeaf(g: Grow, c: THREE.Vector3, color: THREE.Color) {
   const buf = g.out.leaves;
-  const s = 0.09 + g.rnd() * 0.05;
+  const s = g.sp.leafSize * (0.8 + g.rnd() * 0.45);
   const n = v3(g.rnd() - 0.5, g.rnd() * 0.8 + 0.2, g.rnd() - 0.5).normalize();
   const a = perpendicular(n);
   const b = n.clone().cross(a);
@@ -1052,7 +1068,9 @@ export function createTreeSystem(ctx: TwinContext, placements: TreePlacement[]):
     color: "#ffffff",
   });
   needles.name = "tree-needles";
-  const leafLib = lib.get("foliage");
+  // The leaf atlas once per quad (tile 1 × 1): the library's foliage tiles every 0.2 m, which on these
+  // cell UVs drew a lattice of small leaves on every quad — the "polka-dot" crowns.
+  const leafLib = lib.variant("foliage", { tile: [1, 1] });
   const leaves = new THREE.MeshStandardMaterial({
     map: leafLib.map,
     normalMap: leafLib.normalMap,
@@ -1069,7 +1087,7 @@ export function createTreeSystem(ctx: TwinContext, placements: TreePlacement[]):
   addWind(twigs, wind, 0.012, "twigs");
   addWind(needles, wind, 0.008, "needles");
   addWind(leaves, wind, 0.03, "leaves");
-  owned.push(bark, birch, twigs, needles, leaves);
+  owned.push(bark, birch, twigs, needles, leaves, leafLib);
 
   // Variants needed.
   interface Variant {

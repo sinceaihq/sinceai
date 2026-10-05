@@ -32,6 +32,8 @@ export interface DetailKit {
   metal: MeshBuilder;
   /** Sloped and flat glazing (glows warm after dusk). */
   glazing: MeshBuilder;
+  /** Clear, see-through glass (footbridge sides, balustrades): reflections over what is behind it. */
+  clearGlass: MeshBuilder;
   /** Night lights (vertex colour = luminance in scene units). */
   emissive: MeshBuilder;
   /** Additive light pools on the ground (vertex colour = radiance at the centre). */
@@ -193,7 +195,7 @@ export function buildDetails(kit: DetailKit, input: DetailInput): DetailResult {
   const st = byRole("station");
   if (st) station(kit, asBespoke(st), signs, atlas);
   // The covered footbridge and its stairs (platform ↔ ParkCity ↔ Joukahaisenkatu).
-  kalevansilta(kit);
+  extraColliders.push(...kalevansilta(kit));
   const park = input.built.find((x) => x.b.osmId === PARKCITY_OSM);
   if (park) {
     const ring = ensureCCW(cleanRing(park.b.polygon));

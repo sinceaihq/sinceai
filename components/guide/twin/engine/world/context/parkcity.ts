@@ -140,7 +140,8 @@ export function buildParkCity(kit: DetailKit, ring: V2[], roofY: number, colonna
     arc += len;
   }
   const geo = new THREE.CylinderGeometry(1, 1, 1, low ? 5 : 7, 1, true);
-  const mat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.38, metalness: 0.25, name: "parkcity-tubes" });
+  // Painted tubes (no metal sheen: the sky reflection washed the royal blue and orange out to pastels).
+  const mat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5, metalness: 0, name: "parkcity-tubes" });
   const tubes = new THREE.InstancedMesh(geo, mat, mats.length);
   tubes.name = "parkcity-tubes";
   mats.forEach((mm, i) => tubes.setMatrixAt(i, mm));
@@ -290,11 +291,13 @@ export function buildParkCity(kit: DetailKit, ring: V2[], roofY: number, colonna
   // The big "P" near the top of the south-west face, by the west corner (YLE photo), in front of the tubes.
   signP(kit, 192.2 + sw.n[0] * 0.75, roofY - 2.4, -6.4 + sw.n[1] * 0.75, sw.yaw, 2.6);
 
-  const centre = new THREE.Vector3((bb.minX + bb.maxX) / 2, roofY / 2, (bb.minZ + bb.maxZ) / 2);
+  // Distance from the camera to the building's box (the facade, not its centre 30 m inside).
+  const box3 = new THREE.Box3(new THREE.Vector3(bb.minX, kit.heightAt((bb.minX + bb.maxX) / 2, (bb.minZ + bb.maxZ) / 2) - 2, bb.minZ), new THREE.Vector3(bb.maxX, top, bb.maxZ));
   // Near: real tubes; far: the shell. Phones keep the shell until close (aliasing at low resolution).
   // The 0.11 m tubes alias beyond a few dozen metres; the mip-mapped shell is cleaner there.
-  const nearIn = low ? 30 : 48;
-  const nearOut = low ? 40 : 62;
+  // Round 1: the tubes shimmered into moiré at ≈ 40 m on high — the shell takes over from ≈ 24 m off the facade.
+  const nearIn = low ? 16 : 24;
+  const nearOut = low ? 22 : 32;
   let near = true;
   const setNear = (on: boolean) => {
     near = on;
@@ -307,7 +310,7 @@ export function buildParkCity(kit: DetailKit, ring: V2[], roofY: number, colonna
     pickables: shell ? [tubes, shell.mesh] : [tubes],
     columns,
     tick(camera) {
-      const d = camera.position.distanceTo(centre);
+      const d = box3.distanceToPoint(camera.position);
       const want = near ? d < nearOut : d < nearIn;
       if (want === near) return false;
       setNear(want);
@@ -352,7 +355,8 @@ function makeShell(
     data[x * 4] = Math.round(Math.min(1, c.r) * 255);
     data[x * 4 + 1] = Math.round(Math.min(1, c.g) * 255);
     data[x * 4 + 2] = Math.round(Math.min(1, c.b) * 255);
-    data[x * 4 + 3] = Math.round(Math.min(1, cover * 1.1) * 255);
+    // Round tubes cover more than their diameter seen at an angle: ≈ 80 % of the screen line.
+    data[x * 4 + 3] = Math.round(Math.min(0.95, cover * 1.5) * 255);
   }
   const tex = new THREE.DataTexture(data, W, 1, THREE.RGBAFormat);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -395,8 +399,8 @@ function makeShell(
     map: tex,
     transparent: true,
     depthWrite: false,
-    roughness: 0.4,
-    metalness: 0.2,
+    roughness: 0.5,
+    metalness: 0,
     name: "parkcity-shell",
   });
   const mesh = new THREE.Mesh(g, mat);
