@@ -250,7 +250,11 @@ test.describe("venue explorer", () => {
 const hasWebGL2 = (page: Page) => page.evaluate(() => !!document.createElement("canvas").getContext("webgl2"));
 
 test.describe("3D campus", () => {
-  test("loads on demand, finds a company and switches places", async ({ page }) => {
+  test("loads on demand, finds a company and switches places", async ({ page, browserName }) => {
+    test.skip(
+      browserName === "webkit" && !!process.env.E2E_ALL_BROWSERS,
+      "Headless WebKit in Docker renders WebGL on the CPU and runs out of memory building the full campus; real iPhones and Macs use the GPU.",
+    );
     // Software GL on a busy machine can take minutes to build the campus.
     test.setTimeout(480_000);
     const problems = watchConsole(page);
