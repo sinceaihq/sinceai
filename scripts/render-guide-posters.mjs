@@ -70,11 +70,13 @@ try {
         place,
       );
       await page.evaluate((v) => {
-        window.__twin.setLabels(false);
         window.__twin.goto(v);
+        // After goto: a view can switch labels on by itself.
+        window.__twin.setLabels(false);
         if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
       }, view);
       await page.evaluate(() => window.__twin.ready());
+      await page.evaluate(() => window.__twin.setLabels(false));
       await page.evaluate(async (animated) => {
         const quiet = () => (window.__twin.stats().busy ?? []).every((b) => animated.includes(b));
         for (let ok = 0, t = 0; ok < 3 && t < 240; t++) {
