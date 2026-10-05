@@ -519,13 +519,15 @@ export function floorY(area: WalkArea, p: V2): number {
 /**
  * Optional floor-height override, e.g. the terrain for "outdoor"; null/undefined → the area's own
  * height. `area` is the walk area being asked about (undefined off every area), so an override can
- * leave areas with a floor of their own — bridge decks, stairs — alone.
+ * leave areas with a floor of their own — bridge decks, stairs — alone. `hint` is the floor the
+ * walker stands on now (when known): where modelled surfaces overlap (a deck over the street), the
+ * override answers with the one nearest to it.
  */
-export type HeightAt = (x: number, z: number, level: LevelId, area?: WalkArea) => number | null | undefined;
+export type HeightAt = (x: number, z: number, level: LevelId, area?: WalkArea, hint?: number) => number | null | undefined;
 
-/** Floor height at p on an area, honouring the override. */
-export function areaFloor(area: WalkArea, p: V2, heightAt?: HeightAt): number {
-  const h = heightAt?.(p[0], p[1], area.level, area);
+/** Floor height at p on an area, honouring the override (nearest to `hint` where floors overlap). */
+export function areaFloor(area: WalkArea, p: V2, heightAt?: HeightAt, hint?: number): number {
+  const h = heightAt?.(p[0], p[1], area.level, area, hint);
   return h ?? floorY(area, p);
 }
 
@@ -564,7 +566,7 @@ export function levelAt(p: V2, walkAreas: WalkArea[], q: LevelQuery = {}): Level
   let bestScore = Infinity;
   for (const area of walkAreas) {
     if (!pointInPolygon(p, area.polygon)) continue;
-    const own = q.heightAt?.(p[0], p[1], area.level, area);
+    const own = q.heightAt?.(p[0], p[1], area.level, area, q.y);
     const onTerrain = own !== null && own !== undefined;
     const y = onTerrain ? own : floorY(area, p);
     if (q.y !== undefined && Math.abs(y - q.y) > tolerance + 1e-9) continue;

@@ -2,8 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import zlib from "node:zlib";
 import { PLACES_3D, TARGETS_3D } from "@/lib/hackathon-2026/twin";
-import { createTerrain, decodePng, type CampusData, type Terrain, type TerrainMeta } from "../data/campus";
-import { FALLBACK_TARGETS, FALLBACK_VIEWS, WALK_STARTS, doorStart, legLevel, pushOutOfRing } from "../fallbacks";
+import { createTerrain, decodePng, type CampusData, type RoutesData, type Terrain, type TerrainMeta } from "../data/campus";
+import { FALLBACK_TARGETS, FALLBACK_VIEWS, WALK_START_LEGS, WALK_STARTS, doorStart, legLevel, legStart, pushOutOfRing } from "../fallbacks";
 import type { V2, V3 } from "../types";
 
 /**
@@ -137,5 +137,23 @@ describe("route levels", () => {
     // Down the passage stair: Joki's floor 1.
     expect(legLevel("int-bio-tyk-to-joki", false, -1.7)).toBe("joki-1");
     expect(legLevel("somewhere-else", false, 0)).toBeNull();
+  });
+});
+
+describe("arrival walk starts", () => {
+  const routes = JSON.parse(fs.readFileSync(path.join(ASSETS, "data/routes.json"), "utf8")) as RoutesData;
+  it("start the station's walk on the island platform, facing along the way out", () => {
+    const leg = routes.legs[WALK_START_LEGS["kupittaa-station"]];
+    expect(leg).toBeDefined();
+    const s = legStart(leg.points)!;
+    // On the platform (the leg's own floor, −4.84), not on the tracks or the hall's bridge.
+    expect(s.y).toBeCloseTo(leg.points[0][1], 6);
+    expect(Math.hypot(s.position[0] - leg.points[0][0], s.position[1] - leg.points[0][2])).toBeCloseTo(0.8, 6);
+    const [x1, , z1] = leg.points[2];
+    const want = ((Math.atan2(x1 - leg.points[0][0], -(z1 - leg.points[0][2])) * 180) / Math.PI + 360) % 360;
+    expect(Math.abs(((s.yawDeg - want + 540) % 360) - 180)).toBeLessThan(25);
+  });
+  it("needs a real leg", () => {
+    expect(legStart([[0, 0, 0]])).toBeNull();
   });
 });

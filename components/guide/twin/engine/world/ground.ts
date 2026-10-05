@@ -10,6 +10,7 @@ import {
   type Terrain,
 } from "../data/campus";
 import { cleanRing, clamp, ensureCCW, mulberry32, pointInRing, polygonBounds, polygonCentroid, ringArea, smoothstep } from "../util";
+import { setStreetLightMap } from "../render/facade";
 import { boxUV } from "../render/uv";
 import { makeLabel } from "../labels";
 
@@ -2968,8 +2969,11 @@ export async function buildGround(ctx: TwinContext): Promise<GroundModule> {
   poolTex.colorSpace = THREE.NoColorSpace;
   poolTex.flipY = false;
   poolTex.needsUpdate = true;
-  owned.push(poolTex);
   mats.setPoolMap(poolTex, ext);
+  // Lamp light on the lower storeys of facade-shader buildings next to a pool.
+  setStreetLightMap(poolTex, ext, POOL_SCALE);
+  owned.push({ dispose: () => setStreetLightMap(null, ext, 0) });
+  owned.push(poolTex);
   const detailTex = buildAsphaltDetail(plan, terrain, kerbLines(streets, terrain), geo.tracks, tier === "low" ? 0.5 : 0.25);
   if (detailTex) {
     owned.push(detailTex);

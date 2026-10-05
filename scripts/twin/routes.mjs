@@ -124,36 +124,150 @@ const len2 = (pts) => {
 };
 
 /**
- * The routed legs reach BioCity's event entrance with a straight "access
- * segment" across the timber terrace from the Electrocity passage; it runs
- * through the glazed box on the terrace (LOD1 record at (29.3, −6.7), visible
- * on the 2022 true ortho) and clips a planter. Walk south of the box instead.
- */
-/**
  * Legs routed under the Ströget deck (OSM layer −1): the laser DTM there is the
  * deck surface above them, so their heights cannot be resolved — left out
  * (no tour uses them).
  */
 const UNDER_DECK_LEGS = new Set(["out-arr-train-edu-west", "out-xfer-edu-east-bio-event"]);
 
-const TERRACE_FROM = [43.6, -2.15];
-const TERRACE_DOOR = [22.4, -7.8];
-const TERRACE_DETOUR = [
-  [29.0, -3.6],
-  [25.4, -5.6],
+/**
+ * Corrections to routed segments that cut through modelled solids (QA round 1), each applied to a
+ * segment from → to (either direction, ends within 1 m) as a detour through `via`:
+ * - BioCity's event-entrance terrace: the router's straight "access segment" from Jussin aukio ran
+ *   through the row of round planter drums (ground.ts HERO_BOXES) and entered the vestibule through
+ *   its south-east side wall. The walk follows the terrace along BioCity's facade, south of the drums
+ *   (≥ 0.55 m clear of drums, planters, the vent box lod2-k50 and the walls — a clearance search over
+ *   them), down the short steps to the landing and in through the outer double doors, which face
+ *   north-east (SITE-FACTS §3.2: doors (22.69, −8.01), compass 55°).
+ * - The campus deck past Joki: the line from the deck to the Jussin aukio stair grazed the bottom
+ *   step of the stair down from Joki's floor-2 north-east door (J frame r 11.45 at bearing 0.5°,
+ *   (65.8, 7.4)); it now keeps ≈ 1.5 m clear of it. The leg to that door climbs the steps from
+ *   their front (they have glass balustrades on both sides), not along their side.
+ */
+/** Stretches of a stair way that are deck (flat at the bridge's deck level): [deck edge, way end]. */
+const DECK_RUNS = [
+  [
+    [276.7, -27.8],
+    [278.5, -25.2],
+  ],
 ];
+
+const DETOURS = [
+  {
+    // Kalevansilta's platform stair: the stair rises to the deck edge at (276.7, −27.8), then the deck
+    // runs flat to (278.5, −25.2) — one straight segment put the walker up to 1.3 m under the deck.
+    from: [265.5, -43.9],
+    to: [278.5, -25.2],
+    via: [[276.7, -27.8]],
+    note: "Kalevansilta platform stair ends at the deck edge",
+  },
+  {
+    from: [43.6, -2.15],
+    to: [22.4, -7.8],
+    via: [
+      [38.9, -1.9],
+      [25.6, -1.9],
+      [24.5, -3.0],
+      [24.6, -6.8],
+      // Round the end of the vestibule's porch wall (biocity: (23.27, −7.26)–(24.04, −7.76)) and in
+      // between its two wing walls, square to the doors.
+      [24.9, -8.6],
+      [23.48, -8.57],
+      [22.69, -8.01],
+    ],
+    note: "terrace walk south of the planter drums, in through the outer doors",
+  },
+  {
+    from: [95.9, 37.7],
+    to: [62.9, 3.9],
+    via: [[66.9, 6.0]],
+    note: "clear of the steps from Joki's floor-2 door",
+  },
+  {
+    // Up to the tower door: the steps have glass balustrades on both sides — in from the front.
+    from: [62.9, 3.9],
+    to: [63.8, 8.4],
+    via: [[66.43, 6.72]],
+    note: "up the steps to Joki's floor-2 door from the front",
+  },
+];
+
+/**
+ * EduCity's main entrances as the educity module models them (buildings/educity: the revolving west
+ * door's drum in the pavilion's north-west glass, the sliding east door in its south-east glass). The
+ * routes' door points (SITE-FACTS §3.3, CAD ±3 m) lie a few metres inside the pavilion, where the
+ * indoor legs start; outdoor legs to and from them pass through the modelled doors — square to the
+ * glass, beside the revolving door's centre post — instead of through the glass next to them.
+ * `drop`: route vertices this close to the door point are replaced by the passage.
+ */
+const DOOR_PASSAGES = [
+  {
+    name: "EduCity west main entrance (revolving)",
+    at: [177.8, 115.1],
+    // Through the drum on the south side of its centre post (174.74, 112.61); the door faces 309°.
+    passage: [
+      [176.11, 112.82],
+      [175.18, 112.07],
+      [174.01, 111.13],
+    ],
+    drop: 7,
+  },
+  {
+    name: "EduCity east main entrance (sliding)",
+    at: [204.0, 136.5],
+    // The sliding door's opening, centre (207.1, 138.9); the door faces 129°.
+    passage: [
+      [206.17, 138.15],
+      [207.1, 138.9],
+      [208.27, 139.84],
+    ],
+    drop: 4.5,
+  },
+];
+
+/** Through the modelled door: a leg starting or ending at one of DOOR_PASSAGES' door points. */
+function throughDoors(points) {
+  let pts = points;
+  const notes = [];
+  for (const d of DOOR_PASSAGES) {
+    const near = (p, r) => Math.hypot(p[0] - d.at[0], p[1] - d.at[1]) < r;
+    if (near(pts[0], 0.6)) {
+      let k = 1;
+      while (k < pts.length - 1 && near(pts[k], d.drop)) k++;
+      pts = [pts[0], ...d.passage, ...pts.slice(k)];
+      notes.push(`out through the ${d.name}`);
+    }
+    if (near(pts[pts.length - 1], 0.6)) {
+      let k = pts.length - 2;
+      while (k > 0 && near(pts[k], d.drop)) k--;
+      pts = [...pts.slice(0, k + 1), ...[...d.passage].reverse(), pts[pts.length - 1]];
+      notes.push(`in through the ${d.name}`);
+    }
+  }
+  return { points: pts, notes };
+}
 
 function correctLeg(points) {
   const near = (p, q, d) => Math.hypot(p[0] - q[0], p[1] - q[1]) < d;
+  const door = throughDoors(points);
+  points = door.points;
   const out = [points[0]];
+  const notes = new Set(door.notes);
   for (let i = 1; i < points.length; i++) {
     const a = points[i - 1];
     const b = points[i];
-    if (near(a, TERRACE_FROM, 1) && near(b, TERRACE_DOOR, 1)) out.push(...TERRACE_DETOUR);
-    else if (near(a, TERRACE_DOOR, 1) && near(b, TERRACE_FROM, 1)) out.push(...[...TERRACE_DETOUR].reverse());
+    for (const d of DETOURS) {
+      if (near(a, d.from, 1) && near(b, d.to, 1)) {
+        out.push(...d.via);
+        notes.add(d.note);
+      } else if (near(a, d.to, 1) && near(b, d.from, 1)) {
+        out.push(...[...d.via].reverse());
+        notes.add(d.note);
+      }
+    }
     out.push(b);
   }
-  return out;
+  return { points: out, notes: [...notes] };
 }
 
 export function buildRoutes({ specRoutes, osm, heights, streets, terrain, educityMassing, log }) {
@@ -161,10 +275,10 @@ export function buildRoutes({ specRoutes, osm, heights, streets, terrain, educit
   for (const leg of Object.values(spec)) {
     if (leg.yMode === "snap") {
       const fixed = correctLeg(leg.points_xz);
-      if (fixed.length !== leg.points_xz.length) {
-        leg.points_xz = fixed;
-        leg.length_m = Math.round(len2(fixed) * 10) / 10;
-        leg.source += "; terrace access rerouted around the glazed box";
+      if (fixed.points.length !== leg.points_xz.length) {
+        leg.points_xz = fixed.points;
+        leg.length_m = Math.round(len2(fixed.points) * 10) / 10;
+        leg.source += `; corrected: ${fixed.notes.join("; ")}`;
       }
     }
   }
@@ -267,6 +381,13 @@ export function buildRoutes({ specRoutes, osm, heights, streets, terrain, educit
       const tag = (k) => w?.[k] ?? w?.tags?.[k];
       const bridge = tag("bridge") === "yes" && Number(tag("layer") ?? 1) >= 1;
       segKind.push(w?.highway === "steps" ? "steps" : bridge ? "bridge" : "ground");
+      // Where a stair way runs on over the deck (its OSM way ends past the deck edge): that stretch is deck.
+      const flat = DECK_RUNS.some(
+        ([a, b]) =>
+          (Math.hypot(pts2[i][0] - a[0], pts2[i][1] - a[1]) < 0.3 && Math.hypot(pts2[i + 1][0] - b[0], pts2[i + 1][1] - b[1]) < 0.3) ||
+          (Math.hypot(pts2[i][0] - b[0], pts2[i][1] - b[1]) < 0.3 && Math.hypot(pts2[i + 1][0] - a[0], pts2[i + 1][1] - a[1]) < 0.3),
+      );
+      if (flat) segKind[i] = "bridge";
     }
     const out = [];
     for (let i = 0; i < pts2.length - 1; i++) {
@@ -275,6 +396,10 @@ export function buildRoutes({ specRoutes, osm, heights, streets, terrain, educit
         if (i > 0 && k === 0) return;
         out.push({ p, kind: segKind[i], seg: i });
       });
+    }
+    // The deck edge itself is deck: the stair below rises all the way to it.
+    for (const o of out) {
+      if (o.kind === "steps" && DECK_RUNS.some(([a]) => Math.hypot(o.p[0] - a[0], o.p[1] - a[1]) < 0.3)) o.kind = "bridge";
     }
     for (const o of out) {
       const [x, z] = o.p;

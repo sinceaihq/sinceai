@@ -3,6 +3,7 @@ import { Sky } from "three/addons/objects/Sky.js";
 import { SunLight } from "three/addons/lights/SunLight.js";
 import { Lensflare, LensflareElement } from "three/addons/objects/Lensflare.js";
 import type { LightingState, Tier } from "../types";
+import { installShadowFilter, trackCascadeTexels } from "../render/shadowFilter";
 import { nightFactor, sunAtTurku } from "./sun";
 
 /**
@@ -199,30 +200,77 @@ export function kelvinToLinear(kelvin: number, target = new THREE.Color()): THRE
 }
 
 /**
- * Photographer's exposure value (EV100) for the exterior by sun elevation:
- * dull November daylight, sunset, blue hour and a street-lit city night.
+ * Photographer's exposure value (EV100) for the exterior in daylight, by sun elevation: dull
+ * November daylight down to sunset. Below the horizon see exposureValue.
  */
 const EV_TABLE: [number, number][] = [
-  [-18, 6.0],
-  [-12, 6.2],
-  [-9, 6.6],
-  [-6, 6.8],
-  [-4, 7.5],
-  [-2, 8.6],
   [0, 9.3],
   [2, 9.9],
-  [5, 10.6],
-  [8, 11.3],
-  [12, 12.0],
-  [20, 13.0],
-  [40, 14.0],
-  [90, 14.5],
+  [5, 10.65],
+  // A sun break at Saturday noon (12°) lights white facades with ≈ 30 klux: expose for them, not for
+  // the shade (half a stop under the old table, which bleached them and veiled the street milky).
+  [8, 11.65],
+  [12, 12.5],
+  [20, 13.5],
+  [40, 14.5],
+  [90, 15.0],
 ];
 
-/** EV100 a photographer would use at this sun elevation (interpolated). */
+/**
+ * Urban night floor (lux on the ground, away from any lamp): low cloud lit by the city and street
+ * light scattered between the buildings on an overcast November night in Turku. A real night is lit
+ * by its lamps, windows and signs; this floor only keeps unlit facades from going pure black.
+ */
+export const NIGHT_FLOOR_LUX = 2.0;
+
+/**
+ * The calibrated daylight dome's share of the measured diffuse illuminance (Friday 15:30: ≈ 0.83 of
+ * 1.82 klux) — the daytime look the exposure table was tuned with.
+ */
+const DAY_DOME_SHARE = 0.46;
+/**
+ * …and its share by a midday sun break (11° up): the clear Preetham dome alone (≈ 2.5 of a measured
+ * 4.7 klux at Saturday 11:00) left walls in shade about a stop under the reference photos while the
+ * low sun lit the others; the dome is topped up with a near-neutral overcast fill (domeTerms).
+ */
+const DAY_FILL_SHARE = 0.75;
+
+/**
+ * Diffuse sky light the dome stands for (klux): the calibrated daylight look by day, the measured
+ * twilight curve from 3.5° below the horizon, a smooth handover around sunset (shaped so that the
+ * image of an ambient-lit surface only ever darkens as the sun sinks — see exposureValue).
+ */
+export function twilightTarget(elevationDeg: number): number {
+  const twilight = 1 - THREE.MathUtils.smoothstep(elevationDeg, -3.5, 2);
+  const share = DAY_DOME_SHARE + (DAY_FILL_SHARE - DAY_DOME_SHARE) * THREE.MathUtils.smoothstep(elevationDeg, 6, 11);
+  return skyIlluminance(elevationDeg) * (share + (1 - share) * twilight);
+}
+
+/** Ambient light after sunset that the exposure follows (klux): the twilight sky + the urban floor; street lights excluded. */
+export function twilightAmbient(elevationDeg: number): number {
+  return twilightTarget(elevationDeg) + (NIGHT_FLOOR_LUX / 1000) * nightFactor(elevationDeg);
+}
+
+/**
+ * Share of the fall in ambient light after sunset that the exposure follows: a photographer opens up
+ * through dusk, but less than the light drops — blue hour is darker than day, night darker still.
+ * Below 1, the image of an ambient-lit surface can only get darker as the sun sinks.
+ */
+export const TWILIGHT_ADAPTATION = 0.65;
+
+/**
+ * EV100 of a street-lit city night. The exposure stops opening up here (about 5.5° below the horizon,
+ * as the lamps take over): the ambient keeps falling into the night and the lights carry the image.
+ */
+export const NIGHT_EV = 4.8;
+
+/** EV100 a photographer would use at this sun elevation. */
 export function exposureValue(elevationDeg: number): number {
   const t = EV_TABLE;
-  if (elevationDeg <= t[0][0]) return t[0][1];
+  if (elevationDeg < 0) {
+    const ev = t[0][1] + TWILIGHT_ADAPTATION * Math.log2(twilightAmbient(elevationDeg) / twilightAmbient(0));
+    return Math.max(NIGHT_EV, ev);
+  }
   for (let i = 1; i < t.length; i++) {
     if (elevationDeg <= t[i][0]) {
       const [e0, v0] = t[i - 1];
@@ -244,8 +292,121 @@ export function exposureFor(elevationDeg: number, ev = 0): number {
   return (EXPOSURE_K / Math.pow(2, exposureValue(elevationDeg))) * Math.pow(2, ev + 0.3);
 }
 
-/** Exposure for interiors (artificial light ≈ 400 lux) — used inside buildings and dollhouse views. */
+/**
+ * Exposure for interiors under their own light alone (≈ 400 lux at 3500 K) — at night, and the
+ * reference every interior module is calibrated for (DESIGN §12).
+ */
 export const INTERIOR_EXPOSURE = 3.2;
+
+/** Interior lighting the reference exposure is calibrated for (klux). */
+const INTERIOR_LAMPS = 0.4;
+/**
+ * Daylight factor of the event interiors on average — glazed lobbies, the BioCity vault, Joki's glass
+ * drum (≈ 2–10 %): the share of the exterior daylight that reaches the floor indoors.
+ */
+const INTERIOR_DAYLIGHT_FACTOR = 0.07;
+/**
+ * By day an interior is exposed at most this many stops over the exterior: in glazed lobbies the
+ * windows pull a camera's metering down, so the street through the glass keeps some detail.
+ */
+const INTERIOR_HEADROOM_EV = 2.2;
+/** Share of a change in interior light that the camera's metering follows. */
+const INTERIOR_ADAPTATION = 0.85;
+
+/**
+ * Interior exposure for the time of day: a camera inside meters the room, lit by its lamps and by the
+ * daylight through its glazing — about a stop less exposure at Saturday noon than at night, so glazed
+ * halls do not wash out and the street through the glass keeps its detail.
+ */
+export function interiorExposureFor(elevationDeg: number, sunThrough = 1, ev = 0): number {
+  const sun = sunIlluminance(elevationDeg, 10) * sunThrough * Math.max(0, Math.sin(elevationDeg * RAD));
+  // Direct sun reaches only part of a room: a third of it counts towards what the camera meters.
+  const daylight = INTERIOR_DAYLIGHT_FACTOR * (skyIlluminance(elevationDeg) + 0.3 * sun);
+  const metered = INTERIOR_EXPOSURE * Math.pow(INTERIOR_LAMPS / (INTERIOR_LAMPS + daylight), INTERIOR_ADAPTATION);
+  return Math.min(metered, exposureFor(elevationDeg, ev) * Math.pow(2, INTERIOR_HEADROOM_EV));
+}
+
+/**
+ * Camera exposure between the exterior's and the interior's (log space), for the engine's indoor
+ * weight (0 = outdoors … 1 = inside a building; 0.55 over an opened dollhouse). After dark the
+ * weight leans to the interior — the lit rooms of an opened building expose right instead of
+ * bleaching, and its dark surroundings get the view fill (viewFill) rather than more exposure.
+ */
+export function blendExposure(exterior: number, interior: number, indoor: number, night: number): number {
+  const w = indoor <= 0 ? 0 : indoor >= 1 ? 1 : Math.pow(indoor, 1 - 0.8 * THREE.MathUtils.clamp(night, 0, 1));
+  return Math.exp(Math.log(exterior) * (1 - w) + Math.log(interior) * w);
+}
+
+/**
+ * For building modules — scale of an interior's own light while the camera is OUTSIDE the closed
+ * building (DESIGN §12). The engine then exposes for the street, after dark up to ≈ 20× the
+ * interior's exposure, so lit rooms would clip to flat white. 80 % of that (in log space) is taken
+ * back: at night the rooms still read about a stop brighter than from inside, glowing over the
+ * street, with ceilings, desks and walls legible. Never brightened (by day it is 1).
+ */
+export function outsideInteriorScale(elevationDeg: number, ev = 0): number {
+  return THREE.MathUtils.clamp(Math.pow(INTERIOR_EXPOSURE / exposureFor(elevationDeg, ev), 0.8), 0.05, 1);
+}
+
+/**
+ * For building modules — scale of an interior's own light in an opened (dollhouse) view, where the
+ * engine exposes for the blend of exterior and interior (blendExposure at weight 0.55): the rooms
+ * then read as they would at INTERIOR_EXPOSURE — brighter by day (open to the sky), never dimmer
+ * than half at night.
+ */
+export function openedInteriorScale(elevationDeg: number, ev = 0): number {
+  const e = blendExposure(exposureFor(elevationDeg, ev), interiorExposureFor(elevationDeg), 0.55, nightFactor(elevationDeg));
+  return THREE.MathUtils.clamp(INTERIOR_EXPOSURE / e, 0.5, 2.2);
+}
+
+/**
+ * Exterior light (E·exposure, klux) at which asphalt (albedo ≈ 0.12) reads at about sRGB 25 and a
+ * mid-grey facade at about 50: the view fill tops an opened building's surroundings up to it after dark.
+ */
+const VIEW_FILL_TARGET = 0.42;
+
+/**
+ * Cool, dim "map" fill (klux) for the surroundings of an opened building after dark: what the camera
+ * exposure (set for the lit interior) leaves of the outside ambient, topped up so streets, entrances
+ * and neighbours stay legible around the dollhouse. 0 by day and whenever the ambient suffices.
+ */
+export function viewFill(exposure: number, ambientKlux: number): number {
+  return Math.max(0, VIEW_FILL_TARGET / Math.max(exposure, 1e-3) - ambientKlux);
+}
+
+/**
+ * Stops a camera metering into a low sun takes off (≤ 0.8 EV): buildings against the sun read as
+ * silhouettes. `facing` = view direction · sun direction; `visible` = share of the sun disc and its
+ * aureole not hidden by buildings (a sun sliding behind an edge stops down gradually).
+ */
+export function lowSunStops(facing: number, elevationDeg: number, visible: number, sunThrough = 1): number {
+  const lowSun = THREE.MathUtils.smoothstep(elevationDeg, -1.5, 1) * (1 - THREE.MathUtils.smoothstep(elevationDeg, 12, 25));
+  const through = sunThrough > 0.5 ? 1 : 0;
+  return 0.8 * Math.pow(Math.max(0, facing), 3) * lowSun * through * THREE.MathUtils.clamp(visible, 0, 1);
+}
+
+/** Exponential adaptation from `current` towards `target` over `dt` s (time constant 1/rate s). */
+export function adaptToward(current: number, target: number, dt: number, rate: number): number {
+  return current + (target - current) * (1 - Math.exp(-Math.max(0, dt) * rate));
+}
+
+/**
+ * Directions over the sun disc and its aureole (unit vectors): the centre and a ring of `ring` at
+ * `radiusDeg` around it — the engine tests each against the buildings for the visible share.
+ */
+export function sunSampleDirections(sunDir: THREE.Vector3, radiusDeg = 2, ring = 6): THREE.Vector3[] {
+  const d = sunDir.clone().normalize();
+  const helper = Math.abs(d.y) < 0.95 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(1, 0, 0);
+  const u = new THREE.Vector3().crossVectors(d, helper).normalize();
+  const v = new THREE.Vector3().crossVectors(d, u).normalize();
+  const r = Math.tan(radiusDeg * RAD);
+  const out = [d];
+  for (let i = 0; i < ring; i++) {
+    const a = (i / ring) * Math.PI * 2;
+    out.push(d.clone().addScaledVector(u, Math.cos(a) * r).addScaledVector(v, Math.sin(a) * r).normalize());
+  }
+  return out;
+}
 
 /** Unit vector towards the sun (campus frame). */
 export function sunDirection(elevationDeg: number, azimuthDeg: number, target = new THREE.Vector3()): THREE.Vector3 {
@@ -308,6 +469,122 @@ export function preethamRadiance(
   };
   out.set(comp("x"), comp("y") + 0.0003, comp("z") + 0.00075);
   return out;
+}
+
+// ── Twilight and night dome (pure, unit-tested) ─────────────────────────────
+
+/** Twilight and night terms of the sky dome (scene units, linear RGB) — the uniforms of the patch below. */
+export interface DomeTerms {
+  twiZenith: THREE.Vector3;
+  twiHorizon: THREE.Vector3;
+  /** Glow towards the sun's azimuth, low on the horizon. */
+  twiGlow: THREE.Vector3;
+  nightZenith: THREE.Vector3;
+  nightHorizon: THREE.Vector3;
+  /** City light on the low cloud, near the horizon. */
+  cityGlow: THREE.Vector3;
+}
+
+const TWI_GLOW_EARLY = new THREE.Color(1.0, 0.5, 0.22);
+const TWI_GLOW_LATE = new THREE.Color(0.55, 0.22, 0.42);
+const TWI_GLOW_TMP = new THREE.Color();
+
+/**
+ * Twilight dome (civil + nautical, luminance from the measured illuminance curve) and the night
+ * floor of a light-polluted, mostly overcast Turku sky: zenith ≈ 0.09 cd/m², horizon ≈ 0.6 cd/m²
+ * with the city glow (the old floor, 0.4 and 2 cd/m², lit the night like a dull day). The twilight sky stays bright towards the sun's azimuth well into civil dusk.
+ */
+export function domeTerms(elevationDeg: number, night: number, out: DomeTerms, twilightKlux?: number): DomeTerms {
+  const dayMix = THREE.MathUtils.smoothstep(elevationDeg, -2.5, 2.0);
+  // Scale of the twilight shape: its irradiance on the ground is the twilight light it stands for.
+  const twiK = (twilightKlux ?? (1 - dayMix) * skyIlluminance(elevationDeg)) / TWILIGHT_SHAPE_IRRADIANCE;
+  const depression = THREE.MathUtils.clamp(-elevationDeg / 12, 0, 1);
+  // By day the same terms are a near-neutral overcast fill (no glow); at dusk, twilight colours.
+  const day = THREE.MathUtils.smoothstep(elevationDeg, 3, 8);
+  out.twiZenith.set(0.34 + 0.5 * day, 0.47 + 0.44 * day, 1.0 + 0.04 * day).multiplyScalar(twiK * 0.55);
+  // A warm-grey band (not lavender): the blue comes from the zenith, the colour from the glow.
+  out.twiHorizon.set(0.8 + 0.18 * day, 0.72 + 0.25 * day, 0.72 + 0.24 * day).multiplyScalar(twiK * 1.05);
+  // Gold towards the set sun at first, rose and violet as it sinks.
+  const glow = TWI_GLOW_TMP.lerpColors(TWI_GLOW_EARLY, TWI_GLOW_LATE, depression);
+  out.twiGlow.set(glow.r, glow.g, glow.b).multiplyScalar(twiK * 1.9 * (1 - day));
+  const n = THREE.MathUtils.clamp(night, 0, 1);
+  out.nightZenith.set(0.22, 0.3, 0.55).multiplyScalar(n * 0.00031);
+  out.nightHorizon.set(0.6, 0.57, 0.64).multiplyScalar(n * 0.00052);
+  out.cityGlow.set(0.9, 0.72, 0.6).multiplyScalar(n * 0.00045);
+  return out;
+}
+
+/** Irradiance of a twilight dome shape (twiK = 1) on the ground: numerical, the shader's falloffs. */
+function twilightShapeIrradiance(): number {
+  const lum = (r: number, g: number, b: number) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  const h = lum(0.8, 0.72, 0.72) * 1.05;
+  const z = lum(0.34, 0.47, 1.0) * 0.55;
+  const g = ((lum(1.0, 0.5, 0.22) + lum(0.55, 0.22, 0.42)) / 2) * 1.9;
+  const nT = 48;
+  const nP = 96;
+  let e = 0;
+  for (let i = 0; i < nT; i++) {
+    const th = ((i + 0.5) / nT) * (Math.PI / 2);
+    const up = Math.cos(th);
+    const a = Math.pow(up, 0.55);
+    for (let j = 0; j < nP; j++) {
+      const ph = ((j + 0.5) / nP) * Math.PI * 2;
+      const towards = Math.max(0, Math.cos(ph));
+      const l = h * (1 - a) + z * a + g * towards ** 3 * Math.exp(-up * 9);
+      e += l * up * Math.sin(th) * (Math.PI / 2 / nT) * ((Math.PI * 2) / nP);
+    }
+  }
+  return e;
+}
+const TWILIGHT_SHAPE_IRRADIANCE = twilightShapeIrradiance();
+
+/**
+ * Irradiance (klux) of the daylight (Preetham) dome on the ground as the environment probe sees it
+ * (aureole capped like rebuildEnvironment), × dayMix. Clouds are not modelled here.
+ */
+export function daylightDomeIrradiance(
+  sunDir: THREE.Vector3,
+  p: { turbidity: number; rayleigh: number; mieCoefficient: number; mieDirectionalG: number; skyGain?: number },
+  dayMix: number,
+): number {
+  if (dayMix <= 0) return 0;
+  const cap = probeCap(zenithLuminance(sunDir, p));
+  const scale = SKY_SCALE * (p.skyGain ?? 1) * dayMix;
+  const nT = 10;
+  const nP = 24;
+  const dir = new THREE.Vector3();
+  const rad = new THREE.Vector3();
+  let e = 0;
+  for (let i = 0; i < nT; i++) {
+    const th = ((i + 0.5) / nT) * (Math.PI / 2);
+    for (let j = 0; j < nP; j++) {
+      const ph = ((j + 0.5) / nP) * Math.PI * 2;
+      dir.set(Math.sin(th) * Math.cos(ph), Math.cos(th), Math.sin(th) * Math.sin(ph));
+      preethamRadiance(dir, sunDir, p, rad);
+      const l = Math.min((0.2126 * rad.x + 0.7152 * rad.y + 0.0722 * rad.z) * scale, cap * dayMix);
+      e += l * Math.cos(th) * Math.sin(th) * (Math.PI / 2 / nT) * ((Math.PI * 2) / nP);
+    }
+  }
+  return e;
+}
+
+/**
+ * Twilight light (klux) the dome adds so its total follows twilightTarget from sunset through dusk:
+ * the Preetham dome alone goes dark minutes before the sun sets (≈ 0.08 klux at 0° against a
+ * measured 0.45); by day, the overcast fill up to DAY_FILL_SHARE of the measured light.
+ */
+export function twilightTopUp(elevationDeg: number, daylightDomeKlux: number, skyGain = 1): number {
+  return Math.max(0, twilightTarget(elevationDeg) * skyGain - daylightDomeKlux);
+}
+/** Luminance (scene units) of the twilight + night dome in a direction `up` (0 = horizon … 1 = zenith), `towardsSun` 0…1 — mirrors the shader. */
+export function domeLuminance(t: DomeTerms, up: number, towardsSun = 0): number {
+  const lum = (v: THREE.Vector3) => 0.2126 * v.x + 0.7152 * v.y + 0.0722 * v.z;
+  const u = THREE.MathUtils.clamp(up, 0, 1);
+  const a = Math.pow(u, 0.55);
+  const b = Math.pow(u, 0.45);
+  const twi = lum(t.twiHorizon) * (1 - a) + lum(t.twiZenith) * a + lum(t.twiGlow) * Math.pow(towardsSun, 3) * Math.exp(-u * 9);
+  const night = lum(t.nightHorizon) * (1 - b) + lum(t.nightZenith) * b + lum(t.cityGlow) * Math.exp(-u * 10);
+  return twi + night;
 }
 
 // ── Sky dome shader patch ───────────────────────────────────────────────────
@@ -525,8 +802,18 @@ export interface SkySystem {
   setLook(look: SkyLook): void;
   look(): SkyLook;
   lighting(): LightingState;
-  /** Exterior exposure for the current time and look; with a view direction, metering into a low sun. */
-  exposure(viewDir?: THREE.Vector3): number;
+  /** Exterior exposure for the current time and look; with a view direction, metering into a low sun (`sunVisible` = unhidden share). */
+  exposure(viewDir?: THREE.Vector3, sunVisible?: number): number;
+  /** Interior exposure for the current time (daylight through the glazing lowers it by day). */
+  interiorExposure(): number;
+  /**
+   * Per frame, before the engine decides whether to draw: adapts the low-sun metering (the share of
+   * the sun disc and aureole that `hidden(point)` — a building between camera and point — leaves
+   * visible) and the opened-view fill (`opened` 0/1). True while either is still settling.
+   */
+  adapt(dt: number, camera: THREE.Camera, hidden: (point: THREE.Vector3) => boolean, opened: number): boolean;
+  /** Camera exposure for the engine's indoor weight (adapted metering included); sets the view fill that depends on it. */
+  cameraExposure(indoor: number): number;
   /** Environment for scene.environment (rebuilt on time/look change). */
   environment(): THREE.Texture | null;
   /** Per frame: keeps the dome on the camera, steers the haze colour to the view direction. */
@@ -550,8 +837,11 @@ export function createSky(
   sky.scale.setScalar(4000);
   group.add(sky);
 
+  // Smooth, noise-free PCF and per-cascade normal offsets (render/shadowFilter.ts) — before anything compiles.
+  const shadowPatch = installShadowFilter();
   const sun = new SunLight(0xffffff, 1);
   sun.name = "sun";
+  const cascadeTexels = shadowPatch.perCascadeBias && trackCascadeTexels(sun.shadow);
   // Visible and shadow-casting for the whole session, whatever the time: toggling either changes
   // every program's light hash and recompiles every lit material (seconds of freeze at sunset).
   // Below the horizon the sun keeps its slot at intensity 0 (see apply()).
@@ -561,7 +851,8 @@ export function createSky(
   sun.shadow.camera.near = 1;
   sun.shadow.camera.far = 600;
   sun.shadow.bias = -0.00025;
-  sun.shadow.normalBias = 0.05;
+  // In texels of each cascade when the shader takes per-cascade offsets, else metres (fitShadows refines it).
+  sun.shadow.normalBias = cascadeTexels ? 1.4 : 0.05;
   sun.shadow.radius = 2;
   group.add(sun);
 
@@ -631,6 +922,17 @@ export function createSky(
   let look: SkyLook = "default";
   let state: LightingState = lightingFor("2026-11-06T15:30");
   let exposure = 1;
+  let interiorExp = INTERIOR_EXPOSURE;
+  /** Bumped on every time/look change: metering snaps instead of adapting across a cut. */
+  let version = 0;
+  /** Night fill of the hemisphere light (klux) before the opened-view fill. */
+  let hemiBase = 0;
+  // Low-sun metering: stops taken off now and the unhidden share of the sun (re-tested when the camera moves).
+  const meter = { stops: 0, visible: 1, version: -1, cam: new THREE.Matrix4(), pos: new THREE.Vector3(), samples: [] as THREE.Vector3[], samplesVersion: -1 };
+  /** Opened-view fill: 0…1, adapted. */
+  let fillAmount = 0;
+  const meterDir = new THREE.Vector3();
+  const meterPoint = new THREE.Vector3();
   const fog = new THREE.FogExp2(0x8a9099, LOOKS.default.fogDensity);
   scene.fog = fog;
   const horizonAvg = new THREE.Color();
@@ -717,20 +1019,19 @@ export function createSky(
     // daylight term only, which fades with dayMix, so it needs no switch-off at dusk.
     u.uVisCap.value = visibleDomeCap(zenithLuminance(state.sunDir, p), dayMix);
 
-    // Twilight dome (civil + nautical): luminance from the measured illuminance curve.
-    const twiK = (1 - dayMix) * skyIlluminance(el) / Math.PI;
-    const depression = THREE.MathUtils.clamp(-el / 12, 0, 1);
-    (u.uTwiZenith.value as THREE.Vector3).set(0.32, 0.45, 1.0).multiplyScalar(twiK * 0.55);
-    (u.uTwiHorizon.value as THREE.Vector3).set(0.75, 0.68, 0.82).multiplyScalar(twiK * 1.05);
-    const glow = new THREE.Color().lerpColors(new THREE.Color(1.0, 0.5, 0.22), new THREE.Color(0.55, 0.22, 0.42), depression);
-    (u.uTwiGlow.value as THREE.Vector3).set(glow.r, glow.g, glow.b).multiplyScalar(twiK * 1.9);
-
-    // Night floor: light-polluted, often overcast sky over Turku.
+    // Twilight dome and the night floor (see domeTerms): from sunset the twilight term tops the fading
+    // daylight dome up to the measured diffuse illuminance, so dusk is lit like dusk (not like night).
     const nightK = state.night;
-    // Units: zenith ≈ 0.4 cd/m², horizon glow ≈ 2 cd/m² (city light on low cloud).
-    (u.uNightZenith.value as THREE.Vector3).set(0.22, 0.3, 0.55).multiplyScalar(nightK * 0.0012);
-    (u.uNightHorizon.value as THREE.Vector3).set(0.6, 0.55, 0.62).multiplyScalar(nightK * 0.0016);
-    (u.uCityGlow.value as THREE.Vector3).set(0.95, 0.7, 0.55).multiplyScalar(nightK * 0.0014);
+    const dayDome = daylightDomeIrradiance(state.sunDir, p, dayMix);
+    const twilight = twilightTopUp(el, dayDome, p.skyGain);
+    domeTerms(el, nightK, {
+      twiZenith: u.uTwiZenith.value as THREE.Vector3,
+      twiHorizon: u.uTwiHorizon.value as THREE.Vector3,
+      twiGlow: u.uTwiGlow.value as THREE.Vector3,
+      nightZenith: u.uNightZenith.value as THREE.Vector3,
+      nightHorizon: u.uNightHorizon.value as THREE.Vector3,
+      cityGlow: u.uCityGlow.value as THREE.Vector3,
+    }, twilight);
     (u.uSunFlat.value as THREE.Vector3).set(state.sunDir.x, 0, state.sunDir.z);
 
     // Direct sun.
@@ -747,18 +1048,23 @@ export function createSky(
     ensureShadowMap();
 
     // Ground radiance seen from above (for the environment probe): damp mixed surfaces, albedo ≈ 0.11.
-    const groundE = skyIlluminance(el) * p.skyGain + sunKlux * Math.max(0, Math.sin(el * RAD)) * 0.5 + 0.008 * nightK;
+    // At night the ground averages ≈ 3 lux (lamp pools over a third of it, the urban floor elsewhere).
+    const groundE = skyIlluminance(el) * p.skyGain + sunKlux * Math.max(0, Math.sin(el * RAD)) * 0.5 + 0.003 * nightK;
     const groundTint = new THREE.Color(0.95, 0.92, 0.86);
     (u.uGround.value as THREE.Vector3).set(groundTint.r, groundTint.g, groundTint.b).multiplyScalar((0.11 * groundE) / Math.PI);
 
-    // Night fill: glow of the low cloud over the lit city from above (cool-neutral), street light
-    // bounced off the ground from below (warm). Keeps unlit facades legible but dark.
-    hemi.color.copy(kelvinToLinear(5200));
-    hemi.groundColor.copy(kelvinToLinear(3200)).multiplyScalar(0.55);
-    hemi.intensity = 0.005 * nightK;
+    // Night fill on top of the probe's dim night dome: a little glow from the low cloud above
+    // (neutral-cool), street light bounced off the ground from below (neutral-warm). Together with the
+    // probe ≈ NIGHT_FLOOR_LUX — unlit facades stay dark, so lamps, windows and signs carry the night.
+    hemi.color.copy(kelvinToLinear(6500));
+    hemi.groundColor.copy(kelvinToLinear(4000)).multiplyScalar(0.6);
+    hemiBase = (NIGHT_FLOOR_LUX / 1000) * 0.35 * nightK;
+    hemi.intensity = hemiBase;
 
     // Exposure and haze.
     exposure = exposureFor(el, p.ev);
+    interiorExp = interiorExposureFor(el, p.sunThrough, p.ev);
+    version++;
     fog.density = p.fogDensity * (1 + 0.35 * nightK);
     horizonRadiance(p, state.sunDir, null, horizonAvg);
     horizonAvg.multiplyScalar(SKY_SCALE * p.skyGain * dayMix);
@@ -838,14 +1144,49 @@ export function createSky(
     },
     look: () => look,
     lighting: () => state,
-    exposure(viewDir?: THREE.Vector3) {
+    exposure(viewDir?: THREE.Vector3, sunVisible = 1) {
       if (!viewDir) return exposure;
       // A camera metering into the low sun stops down (≤ 0.8 EV) — buildings read as silhouettes.
+      return exposure * Math.pow(2, -lowSunStops(viewDir.dot(state.sunDir), state.sunElevationDeg, sunVisible, LOOKS[look].sunThrough));
+    },
+    interiorExposure: () => interiorExp,
+    adapt(dt, camera, hidden, opened) {
+      camera.getWorldDirection(meterDir);
       const el = state.sunElevationDeg;
-      const facing = Math.max(0, viewDir.dot(state.sunDir));
-      const lowSun = THREE.MathUtils.smoothstep(el, -1.5, 1) * (1 - THREE.MathUtils.smoothstep(el, 12, 25));
-      const k = Math.pow(facing, 3) * lowSun * (LOOKS[look].sunThrough > 0.5 ? 1 : 0);
-      return exposure * Math.pow(2, -0.8 * k);
+      const sunThrough = LOOKS[look].sunThrough;
+      const facing = meterDir.dot(state.sunDir);
+      let target = 0;
+      if (lowSunStops(facing, el, 1, sunThrough) > 0.002) {
+        // The unhidden share of the sun: 7 rays over the disc and aureole, re-tested only when the camera or the sun moved.
+        if (meter.version !== version || !meter.cam.equals(camera.matrixWorld)) {
+          if (meter.samplesVersion !== version) {
+            meter.samples = sunSampleDirections(state.sunDir, 2, 6);
+            meter.samplesVersion = version;
+          }
+          let seen = 0;
+          for (const d of meter.samples) if (!hidden(meterPoint.copy(camera.position).addScaledVector(d, 900))) seen++;
+          meter.visible = seen / meter.samples.length;
+        }
+        target = lowSunStops(facing, el, meter.visible, sunThrough);
+      }
+      // A cut (new time or look, a jump of the camera) takes the new metering at once; motion adapts.
+      const cut = meter.version !== version || meter.pos.distanceToSquared(camera.position) > 30 * 30;
+      meter.stops = cut ? target : adaptToward(meter.stops, target, dt, 1.5);
+      if (Math.abs(meter.stops - target) < 0.004) meter.stops = target;
+      meter.version = version;
+      meter.cam.copy(camera.matrixWorld);
+      meter.pos.copy(camera.position);
+      const fillTarget = THREE.MathUtils.clamp(opened, 0, 1);
+      fillAmount = adaptToward(fillAmount, fillTarget, dt, 4);
+      if (Math.abs(fillAmount - fillTarget) < 0.01) fillAmount = fillTarget;
+      return meter.stops !== target || fillAmount !== fillTarget;
+    },
+    cameraExposure(indoor) {
+      const e = blendExposure(exposure * Math.pow(2, -meter.stops), interiorExp, indoor, state.night);
+      // An opened building's surroundings after dark: a dim cool fill instead of a black void.
+      const fill = fillAmount > 0 ? fillAmount * viewFill(e, twilightAmbient(state.sunElevationDeg)) : 0;
+      hemi.intensity = hemiBase + fill;
+      return e;
     },
     environment() {
       rebuildEnvironment();
@@ -881,12 +1222,17 @@ export function createSky(
         ensureShadowMap();
       }
       sun.shadow.radius = radius;
-      // Texel size of the far cascade ≈ range / mapSize; bias in metres along the normal.
-      const texel = range / mapSize;
-      sun.shadow.normalBias = THREE.MathUtils.clamp(texel * 0.9, 0.02, 0.45);
-      // Grazing sun stretches texels along the ground: a little more depth bias when low.
-      const grazing = 1 / Math.max(0.12, Math.sin(Math.max(1, state.sunElevationDeg) * RAD));
-      sun.shadow.bias = -0.00008 * Math.min(grazing, 6);
+      // Grazing sun stretches texels along the ground: a little more offset and depth bias when low.
+      const grazing = Math.min(6, 1 / Math.max(0.12, Math.sin(Math.max(1, state.sunElevationDeg) * RAD)));
+      if (cascadeTexels) {
+        // Normal offset in texels of each cascade (the shader multiplies by the cascade's texel size); the
+        // receiver-plane bias handles the slope, so about a texel keeps thin geometry's contact shadows.
+        sun.shadow.normalBias = radius < 1.75 ? 0.8 : 1.0;
+      } else {
+        // Texel size of the far cascade ≈ range / mapSize; bias in metres along the normal.
+        sun.shadow.normalBias = THREE.MathUtils.clamp((range / mapSize) * 0.9, 0.02, 0.45);
+      }
+      sun.shadow.bias = (cascadeTexels ? -0.00004 : -0.00008) * grazing;
     },
     setLensflare(on: boolean) {
       flareOn = on && opts.lensflare;

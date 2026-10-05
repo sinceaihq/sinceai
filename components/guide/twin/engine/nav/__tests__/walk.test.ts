@@ -520,6 +520,37 @@ describe("createWalkController (DOM)", () => {
     expect(connectors).toEqual(["stair-down", null, "stair-down"]);
   });
 
+  it("offers every floor a lift serves, nearest first, and tells the UI when the set changes", () => {
+    const world = campus();
+    const lifts: Connector[] = [
+      { id: "lift-2", label: "Lift to floor 2", from: "biocity-1", to: "joki-2", at: [4, -4], arrive: [45, 5] },
+      { id: "lift-0", label: "Lift to the Aula", from: "biocity-1", to: "joki-1", at: [4.3, -4], arrive: [35, -5] },
+      // Another level's button at the same spot is not offered here.
+      { id: "lift-back", label: "Lift to floor 1", from: "joki-2", to: "biocity-1", at: [4, -4], arrive: [4, -5] },
+    ];
+    const lists: string[][] = [];
+    const w = createWalkController(camera as unknown as THREE.PerspectiveCamera, host, {
+      reducedMotion: true,
+      onConnectors: (list) => lists.push(list.map((c) => c.id)),
+    });
+    try {
+      w.setWorld({ ...world, connectors: [...world.connectors, ...lifts] });
+      w.enable({ position: [3.6, -4.2], level: "biocity-1", yawDeg: NORTH, pitchDeg: 0 });
+      expect(w.nearConnectors?.().map((c) => c.id)).toEqual(["lift-2", "lift-0"]);
+      expect(lists).toEqual([["lift-2", "lift-0"]]);
+      // Standing still reports nothing new; walking away clears the list once.
+      w.update(1 / 60);
+      expect(lists).toHaveLength(1);
+      w.enable({ position: [-5, -15], level: "biocity-1", yawDeg: NORTH, pitchDeg: 0 });
+      expect(lists).toEqual([["lift-2", "lift-0"], []]);
+      w.enable({ position: [3.6, -4.2], level: "biocity-1", yawDeg: NORTH, pitchDeg: 0 });
+      w.disable();
+      expect(lists[lists.length - 1]).toEqual([]);
+    } finally {
+      w.dispose();
+    }
+  });
+
   it("follows a live change of reduced motion: no head bob, connectors without the fade", () => {
     walk.enable({ position: [-7.2, -17.2], level: "biocity-1", yawDeg: NORTH, pitchDeg: 0 });
     walk.setReducedMotion?.(true);
@@ -644,6 +675,19 @@ describe("structures: bridge decks and the stairs up to them", () => {
     expect(r.maxErr).toBeLessThan(0.05);
   });
 
+  it("walks over the bridge when the floor model answers with the deck near the walker's floor", () => {
+    // The engine's floors follow the modelled surfaces nearest the walker (the deck mesh at 0 over the
+    // cutting); without a floor hint they are the ground (the cutting at −6) — what the fence stands on.
+    const structures = structureWalkAreas({ decks: [deck], routes: [over], surface });
+    const own = new Set(structures);
+    const heightAt: HeightAt = (x, _z, level, area, hint) => {
+      if (level !== "outdoor" || (area && own.has(area))) return null;
+      return x > 0 && x < 40 && hint !== undefined && Math.abs(hint) < 0.7 ? 0 : surface(x);
+    };
+    const r = followRoute({ colliders: [fence], walkAreas: [ground, ...structures], connectors: [], heightAt }, over);
+    expect(r.reached).toBeGreaterThan(0.98);
+  });
+
   it("is stopped at the cutting's edge by the terrain alone (the old behaviour)", () => {
     expect(followRoute(world([]), over).reached).toBeLessThan(0.3);
   });
@@ -669,6 +713,48 @@ describe("structures: bridge decks and the stairs up to them", () => {
     const r = followRoute(world(structureWalkAreas({ decks: [deck], routes: [stair], surface })), stair);
     expect(r.reached).toBeGreaterThan(0.98);
     expect(r.maxErr).toBeLessThan(0.15);
+  });
+
+  describe("a deck at its building's doors (EduCity's pavilion: deck and lobby at 3.40 over ground at −0.5)", () => {
+    // The height model sags from the deck (3.40) down to the ground under the pavilion (−0.5) over the
+    // last 5 m before the doors at x = 0; the lobby (educity-1, 3.40) lies beyond them.
+    const dtm = (x: number) => (x < -5 ? 3.4 : x < 0 ? 3.4 - (3.9 * (x + 5)) / 5 : -0.5);
+    const lobby: WalkArea = { level: "educity-1", polygon: rect(0, -8, 20, 8), y: 3.4 };
+    const doorWalls = [seg("educity-1", [0, -8], [0, -1]), seg("educity-1", [0, 1], [0, 8])];
+    const ground: WalkArea = { level: "outdoor", polygon: rect(-40, -30, 40, 30), y: 0 };
+    /** The engine's floor: the modelled deck nearest the walker's floor where it is drawn, else the DTM. */
+    const world = (modelledDeck: boolean): WalkWorld => ({
+      colliders: doorWalls,
+      walkAreas: [ground, lobby],
+      connectors: [],
+      heightAt: (x, _z, level, area, hint) => {
+        if (level !== "outdoor" || (area && area !== ground)) return null;
+        if (modelledDeck && x < 0.3 && (hint === undefined || Math.abs(3.4 - hint) <= 0.7)) return 3.4;
+        return dtm(x);
+      },
+    });
+    const start = { position: [-12, 0] as V2, level: "outdoor" as LevelId, yawDeg: 90, pitchDeg: 0, y: 3.4 };
+
+    it("stays on the deck to the door and switches to the lobby's level there", () => {
+      let lowest = Infinity;
+      const end = simulateWalk(start, world(true), [{ input: { forward: 1 }, seconds: 14 }], {
+        onStep: (sim) => (lowest = Math.min(lowest, sim.floor)),
+      });
+      expect(end.level).toBe("educity-1");
+      expect(end.levels).toEqual(["outdoor", "educity-1"]);
+      expect(end.position[0]).toBeGreaterThan(5);
+      expect(lowest).toBeGreaterThan(3.3);
+    });
+
+    it("refuses the sag in the height model as a ledge (no 3.9 m drop without a connector)", () => {
+      let lowest = Infinity;
+      const end = simulateWalk(start, world(false), [{ input: { forward: 1 }, seconds: 14 }], {
+        onStep: (sim) => (lowest = Math.min(lowest, sim.floor)),
+      });
+      expect(end.level).toBe("outdoor");
+      expect(lowest).toBeGreaterThan(2.7);
+      expect(end.position[0]).toBeLessThan(-3);
+    });
   });
 
   describe("on the real campus (DTM, the City's bridge decks, the routes)", () => {

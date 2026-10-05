@@ -413,7 +413,38 @@ export const FACADE_GLOBALS = {
   uFcDaylight: { value: 0.08 },
   /** Lit fraction by interior kind: office, residential, retail, parking. */
   uFcOccupancy: { value: new THREE.Vector4(0.6, 0.3, 0.9, 1) },
+  /** Street-light irradiance on the ground (world/ground.ts pool map; see setStreetLightMap). */
+  uFcStreetMap: { value: null as THREE.Texture | null },
+  /** Map extent: (minX, minZ, 1 / width, 1 / depth); zw = 0 while there is no map. */
+  uFcStreetExt: { value: new THREE.Vector4(0, 0, 0, 0) },
+  /** klux per unit of the map × the lamps' on-state (0 by day). */
+  uFcStreetGain: { value: 0 },
 };
+
+/** klux per unit of the street-light map (its stored scale). */
+let streetLightScale = 0;
+
+/**
+ * Street lights on the facades: world/ground.ts hands over its pool map (irradiance on the ground in
+ * world XZ, `scale` klux per unit) and every facade lights its lower storeys from the pool in front
+ * of it after dusk — lamp-lit street walls instead of black canyons over lit roads.
+ */
+export function setStreetLightMap(
+  tex: THREE.Texture | null,
+  ext: { minX: number; maxX: number; minZ: number; maxZ: number },
+  scale: number,
+): void {
+  FACADE_GLOBALS.uFcStreetMap.value = tex;
+  if (tex) FACADE_GLOBALS.uFcStreetExt.value.set(ext.minX, ext.minZ, 1 / (ext.maxX - ext.minX), 1 / (ext.maxZ - ext.minZ));
+  else FACADE_GLOBALS.uFcStreetExt.value.set(0, 0, 0, 0);
+  streetLightScale = tex ? scale : 0;
+}
+
+/** Street lights' on-state for a sun elevation: on at sunset, full by civil dusk (as world/ground.ts pools). */
+export function streetLightsOn(sunElevationDeg: number): number {
+  const t = Math.min(1, Math.max(0, (1 - sunElevationDeg) / 5));
+  return t * t * (3 - 2 * t);
+}
 
 /** Occupancy (share of lit rooms) for a Turku wall-clock time — pure, unit-tested. */
 export function occupancyFor(iso: string): { office: number; residential: number; retail: number; parking: number } {
@@ -456,6 +487,7 @@ export function setFacadeLighting(state: LightingState, sunThrough = 1): void {
   FACADE_GLOBALS.uFcDaylight.value = 0.045 * exterior;
   const o = occupancyFor(state.iso);
   FACADE_GLOBALS.uFcOccupancy.value.set(o.office, o.residential, o.retail, o.parking);
+  FACADE_GLOBALS.uFcStreetGain.value = streetLightScale * streetLightsOn(el);
 }
 
 // ── Material ────────────────────────────────────────────────────────────────
@@ -499,6 +531,9 @@ varying vec3 vFcWorldNormal;
 uniform float uFcNight;
 uniform float uFcDaylight;
 uniform vec4 uFcOccupancy;
+uniform sampler2D uFcStreetMap;
+uniform vec4 uFcStreetExt;
+uniform float uFcStreetGain;
 
 uniform float uFcStorey;
 uniform float uFcGroundStorey;
@@ -877,11 +912,28 @@ const FACADE_FRAGMENT_INTERIOR = /* glsl */ `
 					}
 				}
 			}
+			// Shops: gondola runs and wall shelving (dark uprights, product bands) a step behind the glass.
+			if ( retail ) {
+				float tsh = ( 1.5 + 1.0 * rnd2 - o.z ) / d.z;
+				vec3 sp = o + d * tsh;
+				float shelfH = 1.2 + 0.6 * rnd;
+				if ( tsh > 0.0 && tsh < t && sp.y < shelfH && fract( sp.x / 2.4 + rnd ) < 0.72 ) {
+					float row = floor( sp.y / 0.36 );
+					float band = step( 0.42, fract( sp.y / 0.36 ) );
+					vec3 goods = mix( vec3( 0.42, 0.4, 0.36 ), vec3( 0.7, 0.62, 0.5 ), fcHash( vec3( floor( sp.x / 0.45 ), row, rnd2 ) ) );
+					surf = mix( vec3( 0.12, 0.12, 0.12 ), goods, band );
+					t = tsh;
+					emissive = 0.0;
+					artK = 0.85;
+				}
+			}
 			// Daylight falls off into the room; artificial light is even. Corners darker.
 			vec3 edge = min( hp - vec3( xMin, 0.0, 0.0 ), vec3( xMax, H, D ) - hp );
 			float ao = 0.72 + 0.28 * smoothstep( 0.0, 0.7, min( edge.x, min( edge.y, edge.z ) ) );
 			float dayFall = mix( 1.0, 0.3, clamp( hp.z / D, 0.0, 1.0 ) );
 			vec3 E = vec3( day * dayFall ) + lightCol * art * artK * fc.lit;
+			// Shops are lit from the ceiling: a bright band up top, the lower half darker, per shop.
+			if ( retail ) E *= mix( 0.5, 1.35, smoothstep( 0.2, H, ( o + d * t ).y ) ) * ( 0.75 + 0.5 * rnd2 );
 			// Panel luminance ≈ 700 cd/m² (diffused LED panels / linear lights).
 			radiance = surf * E * ao / 3.14159 + lightCol * emissive * fc.lit * ( parking ? 0.3 : 0.7 );
 			// Far away the parallax detail averages out (no sparkle).
@@ -890,6 +942,7 @@ const FACADE_FRAGMENT_INTERIOR = /* glsl */ `
 			float panels = parking ? 0.006 : ( retail ? 0.02 : ( home ? 0.0 : 0.012 ) );
 			vec3 avg = mix( wallTone, floorTone, 0.4 ) * ( vec3( day * 0.6 ) + lightCol * art * fc.lit ) * 0.8 / 3.14159
 				+ lightCol * fc.lit * panels;
+			if ( retail ) avg *= mix( 0.55, 1.4, smoothstep( 0.15, 0.95, fc.local.y / max( fc.cell.y, 0.5 ) ) ) * ( 0.75 + 0.5 * rnd2 );
 			radiance = mix( radiance, avg, far );
 		}
 		#else
@@ -897,6 +950,7 @@ const FACADE_FRAGMENT_INTERIOR = /* glsl */ `
 			// Flat interior (low tier): brighter near the ceiling when lit.
 			float g = clamp( fc.local.y / max( fc.cell.y, 0.5 ), 0.0, 1.0 );
 			radiance = mix( wallTone, floorTone, 0.4 ) * ( vec3( day * 0.6 ) + lightCol * art * fc.lit * ( 0.8 + 0.4 * g ) ) * 0.8 / 3.14159;
+			if ( retail ) radiance *= mix( 0.55, 1.4, smoothstep( 0.15, 0.95, g ) ) * ( 0.75 + 0.5 * rnd2 );
 		}
 		#endif
 		// Blinds: a slatted plane just behind the glass, glowing softly when the room is lit.
@@ -917,6 +971,20 @@ const FACADE_FRAGMENT_INTERIOR = /* glsl */ `
 		float F = 0.05 + 0.95 * pow( 1.0 - cosT, 5.0 );
 		vec3 tint = mix( vec3( 1.0 ), normalize( uFcGlassColor + 0.05 ) * 1.7, 0.35 );
 		totalEmissiveRadiance += radiance * tint * uFcTrans * ( 1.0 - F ) * fc.glass;
+	}
+`;
+
+/**
+ * Street lights on the wall: the pool in front of it (≈ 2.5 m out), a little over half of it reaching
+ * the vertical (full cut-off luminaires light mostly downwards), fading out towards the lamp heads.
+ */
+const FACADE_FRAGMENT_STREET = /* glsl */ `
+	if ( uFcStreetGain > 0.0 && uFcStreetExt.z > 0.0 ) {
+		vec2 fcSp = ( vFcWorldPos.xz + fcN.xz * 2.5 - uFcStreetExt.xy ) * uFcStreetExt.zw;
+		float fcIn = step( 0.0, fcSp.x ) * step( fcSp.x, 1.0 ) * step( 0.0, fcSp.y ) * step( fcSp.y, 1.0 );
+		float fcH = fcV - vFcGround;
+		vec3 fcE = texture2D( uFcStreetMap, fcSp ).rgb * ( uFcStreetGain * 0.55 * fcIn * ( 1.0 - smoothstep( 1.5, 11.0, fcH ) ) );
+		reflectedLight.directDiffuse += fcE * BRDF_Lambert( material.diffuseContribution );
 	}
 `;
 
@@ -1062,7 +1130,8 @@ ${FACADE_FRAGMENT_SURFACE}`,
       )
       .replace("#include <normal_fragment_maps>", `#include <normal_fragment_maps>\n${FACADE_FRAGMENT_NORMAL}`)
       .replace("#include <emissivemap_fragment>", `#include <emissivemap_fragment>\n${FACADE_FRAGMENT_INTERIOR}`)
-      .replace("#include <lights_physical_fragment>", `#include <lights_physical_fragment>\n${FACADE_FRAGMENT_SPECULAR}`);
+      .replace("#include <lights_physical_fragment>", `#include <lights_physical_fragment>\n${FACADE_FRAGMENT_SPECULAR}`)
+      .replace("#include <lights_fragment_end>", `#include <lights_fragment_end>\n${FACADE_FRAGMENT_STREET}`);
   };
   return m;
 }

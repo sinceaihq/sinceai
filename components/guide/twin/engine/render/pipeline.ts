@@ -33,11 +33,52 @@ const BLOOM_THRESHOLD = 3.0;
  */
 const BLOOM_MIN_LUMINANCE = 0.4;
 /**
- * Most a pixel feeds into the bloom above the threshold (display-referred). Without a cap an
+ * Most a pixel feeds into the bloom above the threshold (display-referred; with the tiers' tight bloom
+ * radius a lamp head at night glows to about 1.5× its size, not a halo across the street). Without a cap an
  * LED panel at 70× white, or a whole facade of lit windows at night (when the exposure is ≈ 20×
  * the daytime one), floods the frame with a milky veil instead of a few soft glows.
  */
-const BLOOM_CAP = 5.0;
+const BLOOM_CAP = 2.5;
+
+/**
+ * Photographic look after AgX (OutputPass): AgX's base curve keeps four stops under mid-grey at
+ * ≈ sRGB 18 and holds colour back — the "milky", low-contrast CG daylight. An S-curve about mid-grey
+ * in display space (fixed ends, slope `twContrast` at the pivot) gives deeper blacks and crisper
+ * light without clipping more, and a little colour comes back (`twSaturation`, on luminance).
+ * Operates on AgX's own display encoding (γ 2.2), returns linear like AgXToneMapping.
+ */
+export const LOOK_GLSL = /* glsl */ `
+uniform float twContrast;
+uniform float twSaturation;
+vec3 twLook( vec3 linearColor ) {
+	vec3 d = pow( max( linearColor, vec3( 0.0 ) ), vec3( 1.0 / 2.2 ) );
+	const float pivot = 0.5;
+	vec3 lo = pivot * pow( d / pivot, vec3( twContrast ) );
+	vec3 hi = 1.0 - ( 1.0 - pivot ) * pow( max( ( 1.0 - d ) / ( 1.0 - pivot ), vec3( 0.0 ) ), vec3( twContrast ) );
+	d = mix( lo, hi, step( pivot, d ) );
+	float l = dot( d, vec3( 0.2126, 0.7152, 0.0722 ) );
+	d = clamp( mix( vec3( l ), d, twSaturation ), 0.0, 1.0 );
+	return pow( d, vec3( 2.2 ) );
+}
+`;
+
+/** Contrast (slope at mid-grey) and saturation of the look. */
+export const LOOK = { contrast: 1.25, saturation: 1.12 } as const;
+
+/** The OutputPass fragment shader with the look after AgX; null when the shader no longer matches. */
+export function withLook(fragmentShader: string): string | null {
+  const call = "gl_FragColor.rgb = AgXToneMapping( gl_FragColor.rgb );";
+  const pars = "#include <tonemapping_pars_fragment>";
+  if (!fragmentShader.includes(call) || !fragmentShader.includes(pars)) return null;
+  return fragmentShader.replace(pars, `${pars}\n${LOOK_GLSL}`).replace(call, "gl_FragColor.rgb = twLook( AgXToneMapping( gl_FragColor.rgb ) );");
+}
+
+/** Pure JS mirror of twLook on one display-encoded channel (tests, tools). */
+export function lookCurve(display: number, contrast: number = LOOK.contrast): number {
+  const p = 0.5;
+  const d = Math.min(1, Math.max(0, display));
+  return d < p ? p * Math.pow(d / p, contrast) : 1 - (1 - p) * Math.pow((1 - d) / (1 - p), contrast);
+}
 
 /**
  * GLSL ES 3.0: an HDR colour made safe for post-processing. NaN → 0, +∞ → the largest half
@@ -338,10 +379,17 @@ export function createPipeline(
   highPass.needsUpdate = true;
   composer.addPass(bloom);
 
-  // Not patched: OutputPass is a RawShaderMaterial and compiles as GLSL ES 1.00 (no uint bit tests).
+  // Not guarded: OutputPass is a RawShaderMaterial and compiles as GLSL ES 1.00 (no uint bit tests).
   // It needs no guard either — tone mapping is per pixel, and on ultra/high the GTAO copy has
-  // already sanitised the image.
+  // already sanitised the image. It does get the photographic look after AgX (LOOK_GLSL).
   const output = new OutputPass();
+  const looked = withLook(output.material.fragmentShader);
+  if (looked) {
+    output.uniforms.twContrast = { value: LOOK.contrast };
+    output.uniforms.twSaturation = { value: LOOK.saturation };
+    output.material.fragmentShader = looked;
+    output.material.needsUpdate = true;
+  }
   composer.addPass(output);
 
   const smaa = new SMAAPass();

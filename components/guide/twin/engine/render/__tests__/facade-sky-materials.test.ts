@@ -71,7 +71,9 @@ describe("photometry", () => {
       prev = e;
     }
     expect(exposureFor(4.52, -0.3)).toBeCloseTo(1.5, 1); // the default look (−0.3 EV)
-    expect(exposureValue(-40)).toBeGreaterThanOrEqual(5.5);
+    // A street-lit night: the exposure holds (EV ≈ 4.6) and the lamps carry the image.
+    expect(exposureValue(-40)).toBeGreaterThanOrEqual(4.5);
+    expect(exposureValue(-40)).toBeLessThan(5.5);
   });
 
   it("warms the low sun and keeps colours luminance-normalised", () => {

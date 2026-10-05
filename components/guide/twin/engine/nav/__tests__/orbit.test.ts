@@ -15,6 +15,7 @@ import {
   pushOutOfSolids,
   type FlightShape,
   type OrbitSolid,
+  zoomAnchor,
 } from "../orbit";
 
 // three and its addons are ESM-only (Jest runs CommonJS): stand-ins for the parts orbit.ts touches.
@@ -502,5 +503,21 @@ describe("planFlight", () => {
     // The plain arcs (the engine before) crossed buildings on hundreds of these flights.
     expect(plainThrough).toBeGreaterThan(100);
     expect(through).toEqual([]);
+  });
+});
+
+describe("zoomAnchor", () => {
+  const ground = (x: number) => 0.2 + x * 0.01;
+  it("zooms onto a roof or the ground where the pointer is", () => {
+    expect(zoomAnchor([10, 19.9, -5], [0, 1, 0], ground)).toEqual([10, 19.9, -5]);
+    expect(zoomAnchor([10, 0.3, -5], null, ground)).toEqual([10, 0.3, -5]);
+  });
+  it("turns a pointer on a facade into the ground 3 m in front of it", () => {
+    // BioCity's NW facade at the recess, facing NW (−x, −z).
+    const n: V3 = [-Math.SQRT1_2, 0.05, -Math.SQRT1_2];
+    const a = zoomAnchor([-20, 19.9, -12], n, ground);
+    expect(Math.hypot(a[0] + 20, a[2] + 12)).toBeCloseTo(3, 6);
+    expect(a[0]).toBeLessThan(-20);
+    expect(a[1]).toBeCloseTo(ground(a[0]), 9);
   });
 });

@@ -72,6 +72,8 @@ export interface TwinContext {
   invalidate(): void;
   /** Lighting at build time; later changes arrive through WorldModule.setLighting. */
   lighting(): LightingState;
+  /** Where the person the camera follows stands (walk: the walker's feet; a route: its avatar); null otherwise. */
+  actor?(): V3 | null;
 }
 
 /**
@@ -208,6 +210,8 @@ export interface WorldModule {
   connectors?: Connector[];
   /** OSM way ids of campus buildings this module models (the fallback massing skips them). */
   claims?: number[];
+  /** LOD2 record ids (lod2.json, e.g. "lod2-k50") of small structures this module models instead of the massing. */
+  claimsLod2?: string[];
   /** Walking route legs this module provides (e.g. inside a building), keyed by leg id; points in the shared frame. */
   routeLegs?: Record<string, V3[]>;
   /**

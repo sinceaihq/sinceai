@@ -18,13 +18,15 @@ jest.mock("three/addons/postprocessing/SMAAPass.js", () => nodeRequire()("three/
 jest.mock("three/addons/postprocessing/OutputPass.js", () => nodeRequire()("three/addons/postprocessing/OutputPass.js"));
 jest.mock("three/addons/postprocessing/Pass.js", () => nodeRequire()("three/addons/postprocessing/Pass.js"));
 jest.mock("three/addons/shaders/CopyShader.js", () => nodeRequire()("three/addons/shaders/CopyShader.js"));
+jest.mock("three/addons/shaders/OutputShader.js", () => nodeRequire()("three/addons/shaders/OutputShader.js"));
 jest.mock("three/addons/objects/Sky.js", () => nodeRequire()("three/addons/objects/Sky.js"));
 jest.mock("three/addons/lights/SunLight.js", () => nodeRequire()("three/addons/lights/SunLight.js"));
 jest.mock("three/addons/objects/Lensflare.js", () => nodeRequire()("three/addons/objects/Lensflare.js"));
 
 import * as THREE from "three";
 import { CopyShader } from "three/addons/shaders/CopyShader.js";
-import { BLOOM_HIGH_PASS, FINITE_GLSL, guardSampledColor, pixelRatioFor } from "../pipeline";
+import { OutputShader } from "three/addons/shaders/OutputShader.js";
+import { BLOOM_HIGH_PASS, FINITE_GLSL, LOOK, guardSampledColor, lookCurve, pixelRatioFor, withLook } from "../pipeline";
 import {
   ANTITILE_NORMAL_CHUNK,
   TwinMaterialLibrary,
@@ -80,6 +82,32 @@ describe("post-processing NaN/Inf guard", () => {
     expect(pixelRatioFor(1.25, 2)).toBe(1.25);
     expect(pixelRatioFor(Number.NaN, 2)).toBe(1);
     expect(pixelRatioFor(0, 2)).toBe(1);
+  });
+});
+
+describe("photographic look after AgX", () => {
+  it("patches the OutputPass shader: the look wraps AgX", () => {
+    const fs = withLook(OutputShader.fragmentShader);
+    expect(fs).not.toBeNull();
+    expect(fs).toContain("twLook( AgXToneMapping( gl_FragColor.rgb ) )");
+    expect(fs).toContain("uniform float twContrast;");
+    expect(withLook("void main() {}")).toBeNull();
+  });
+
+  it("is an S-curve about mid-grey: ends and pivot fixed, deeper shadows, crisper highlights, monotonic", () => {
+    expect(lookCurve(0)).toBe(0);
+    expect(lookCurve(0.5)).toBeCloseTo(0.5, 12);
+    expect(lookCurve(1)).toBe(1);
+    expect(LOOK.contrast).toBeGreaterThan(1);
+    // AgX puts −4 EV under mid-grey at ≈ sRGB 18 (0.07): the look takes it to ≈ 0.04.
+    expect(lookCurve(0.071)).toBeLessThan(0.05);
+    expect(lookCurve(0.84)).toBeGreaterThan(0.84);
+    let prev = -1;
+    for (let d = 0; d <= 1.0001; d += 0.01) {
+      const v = lookCurve(d);
+      expect(v).toBeGreaterThan(prev);
+      prev = v;
+    }
   });
 });
 
@@ -189,7 +217,9 @@ describe("anti-tiling of normal maps", () => {
         fragmentShader: THREE.ShaderLib.physical.fragmentShader,
       };
       m.onBeforeCompile(shader as unknown as Parameters<THREE.Material["onBeforeCompile"]>[0], {} as THREE.WebGLRenderer);
-      expect(shader.defines.TW_ANTITILE).toBe("");
+      // Set on the material at patch time (stable program cache key), not inside onBeforeCompile.
+      expect(m.defines?.TW_ANTITILE).toBe("");
+      expect(shader.defines.TW_ANTITILE).toBeUndefined();
       expect(shader.fragmentShader).not.toContain("#include <normal_fragment_maps>");
       expect(shader.fragmentShader).toContain("mapN2.xy = transpose( TW_ROT ) * mapN2.xy;");
       // twTileMix is declared (map_fragment patch) before the normal chunk uses it.
