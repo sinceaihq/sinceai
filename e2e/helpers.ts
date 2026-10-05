@@ -40,6 +40,8 @@ const IGNORED = [
   /ERR_NETWORK_CHANGED/,
   // A browser without WebGL says so when the 3D probes for it; the guide then shows its text fallback.
   /Failed to create WebGL context/,
+  // Network-level failures are reported without their URL; requestfailed below catches ours with the URL.
+  /Failed to load resource: net::ERR_/,
 ];
 
 /** Collects console errors and warnings for a page. */
@@ -52,6 +54,14 @@ export function watchConsole(page: Page) {
     problems.push(`${msg.type()}: ${text}`);
   });
   page.on("pageerror", (err) => problems.push(`pageerror: ${err.message}`));
+  // Our own requests must not fail; a third party's network hiccup is not the site's fault.
+  page.on("requestfailed", (req) => {
+    const failure = req.failure()?.errorText ?? "";
+    if (/ERR_ABORTED|NS_BINDING_ABORTED|cancelled/i.test(failure)) return; // navigation or unmount cancelled it
+    const pageUrl = page.url();
+    if (pageUrl.startsWith("http") && new URL(req.url()).origin === new URL(pageUrl).origin)
+      problems.push(`requestfailed: ${failure} ${req.url()}`);
+  });
   return problems;
 }
 

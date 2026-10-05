@@ -314,7 +314,8 @@ test.describe("3D campus", () => {
     await expect(stage.getByText("Joki floor 1 · Showroom · counter 4 of 6", { exact: true }).first()).toBeVisible({
       timeout: 60_000,
     });
-    await expect(stage.getByRole("link", { name: "Floor plan" })).toHaveAttribute("href", "#map-joki-showroom");
+    const card = stage.getByRole("group", { name: "Elisa", exact: true });
+    await expect(card.getByRole("link", { name: "Floor plan" }).first()).toHaveAttribute("href", "#map-joki-showroom");
   });
 
   test("deep links open the right place and target", async ({ page }) => {
