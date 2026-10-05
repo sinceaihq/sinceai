@@ -3524,7 +3524,8 @@ export async function buildVehicles(ctx: TwinContext): Promise<WorldModule> {
 
   const labels: CSS2DObject[] = [makeLabel("Supercar display", "landmark", -28.4, 3.1, -16.4, "biocity")];
   // Walk me there: in the kept-free walkway between flagpoles 3 and 5 (SPEC §5.2), not behind a pole.
-  const targets: TwinTarget[] = [{ id: "supercars", view: SUPERCARS_VIEW, walkTo: [-32.0, -22.4] }];
+  // Walk me there faces along BioCity's Tykistökatu door axis, into the recess.
+  const targets: TwinTarget[] = [{ id: "supercars", view: SUPERCARS_VIEW, walkTo: [-32.0, -22.4], walkYawDeg: 145 }];
   // Picking: invisible boxes round the cars (always present, also when the far stand-ins show).
   root.add(display.pick);
   const pickables: THREE.Object3D[] = [display.pick];

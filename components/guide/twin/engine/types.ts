@@ -193,6 +193,8 @@ export interface TwinTarget {
   level?: LevelId;
   /** Where "Walk me there" ends (ground position). */
   walkTo?: V2;
+  /** Which way "Walk me there" faces at that point (bearing in degrees); default: the target view's bearing. */
+  walkYawDeg?: number;
 }
 
 /** A piece of the world: the campus ground, a building, the cars, the people… */

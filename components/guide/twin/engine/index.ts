@@ -2094,6 +2094,7 @@ export function createTwinEngine(container: HTMLElement, opts: TwinOptions): Twi
           const r = (yawDeg * Math.PI) / 180;
           position = [view.target[0] - Math.sin(r) * 4, view.target[2] + Math.cos(r) * 4];
         }
+        if (t.target.walkYawDeg !== undefined) yawDeg = t.target.walkYawDeg;
       } else if (v) {
         place = placeOfView(start);
         if (v.module) {
@@ -2648,6 +2649,8 @@ export function createTwinEngine(container: HTMLElement, opts: TwinOptions): Twi
     camera.position.copy(f.position);
     camera.lookAt(f.target);
     run.avatar.position.copy(f.walker);
+    // props/people.ts lights the avatar with the interior environment on indoor levels.
+    run.avatar.userData.level = f.level ?? null;
     // The avatar's body never fills the view: hidden in first person and when the camera is at it.
     const close =
       Math.hypot(f.position.x - f.walker.x, f.position.z - f.walker.z) < 1.2 && f.position.y < f.walker.y + 2.1;
