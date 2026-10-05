@@ -11,10 +11,15 @@ jest.mock("three", () => nodeRequire()(`${process.cwd()}/node_modules/three/buil
 jest.mock("three/addons/utils/BufferGeometryUtils.js", () => nodeRequire()("three/addons/utils/BufferGeometryUtils.js"));
 jest.mock("three/addons/renderers/CSS2DRenderer.js", () => nodeRequire()("three/addons/renderers/CSS2DRenderer.js"));
 
+import fs from "node:fs";
+import path from "node:path";
 import * as THREE from "three";
-import { mulberry32 } from "../../util";
+import type { CampusData, RoutesData } from "../../data/campus";
+import type { V2 } from "../../types";
+import { hashString, mulberry32, pointInRing } from "../../util";
 import {
   FEATURE,
+  GROUP_SPOTS,
   STRIDE_M,
   buildPersonFarGeometry,
   buildPersonGeometry,
@@ -25,10 +30,18 @@ import {
   groupLayout,
   makePath,
   pathAt,
+  insideHeroFootprint,
   randomLook,
+  stablePick,
+  unitHash,
   walkerDistance,
+  walkerForward,
   wrapAngle,
 } from "../people";
+
+const DATA = path.join(process.cwd(), "public/assets/guide/3d/data");
+const campus = JSON.parse(fs.readFileSync(path.join(DATA, "campus.json"), "utf8")) as CampusData;
+const routes = JSON.parse(fs.readFileSync(path.join(DATA, "routes.json"), "utf8")) as RoutesData;
 
 const triangles = (g: THREE.BufferGeometry) => (g.index ? g.index.count : g.getAttribute("position").count) / 3;
 
@@ -190,5 +203,93 @@ describe("the figure", () => {
       expect(out).toBeGreaterThan(4);
       expect(inn).toBe(0);
     }
+  });
+});
+
+describe("a calm crowd", () => {
+  it("keeps every walker's dice fixed and well spread", () => {
+    expect(unitHash(3, 7)).toBe(unitHash(3, 7));
+    const xs = Array.from({ length: 4000 }, (_, i) => unitHash(i, 1));
+    expect(Math.min(...xs)).toBeGreaterThan(0);
+    expect(Math.max(...xs)).toBeLessThan(1);
+    const mean = xs.reduce((a, b) => a + b, 0) / xs.length;
+    expect(Math.abs(mean - 0.5)).toBeLessThan(0.02);
+  });
+  it("picks paths in proportion to their weights", () => {
+    const w = [1, 3, 0, 6];
+    const n = [0, 0, 0, 0];
+    for (let i = 0; i < 6000; i++) n[stablePick(w, i)]++;
+    expect(n[2]).toBe(0);
+    expect(n[0] / 6000).toBeCloseTo(0.1, 1);
+    expect(n[1] / 6000).toBeCloseTo(0.3, 1);
+    expect(n[3] / 6000).toBeCloseTo(0.6, 1);
+    expect(stablePick([0, 0], 1)).toBe(-1);
+  });
+  it("moves only a few walkers when the plan shifts a little (no reshuffle on the time slider)", () => {
+    const a = [1, 2, 3, 4, 2, 1];
+    const b = a.map((x, j) => (j === 2 ? x * 1.08 : x));
+    let moved = 0;
+    for (let i = 0; i < 170; i++) if (stablePick(a, i) !== stablePick(b, i)) moved++;
+    expect(moved).toBeLessThan(170 * 0.06);
+    // The inbound share flips only the walkers between the two shares.
+    let flipped = 0;
+    for (let i = 0; i < 170; i++) if (walkerForward(i, "arrivalEdu", 0.65) !== walkerForward(i, "arrivalEdu", 0.7)) flipped++;
+    expect(flipped).toBeLessThan(170 * 0.12);
+    // Sidewalks: either way, whatever the plan.
+    for (let i = 0; i < 50; i++) expect(walkerForward(i, "sidewalk", 0.1)).toBe(walkerForward(i, "sidewalk", 0.9));
+  });
+});
+
+describe("standing groups keep doors and routes clear", () => {
+  const tourLegs = new Set(routes.tours.flatMap((t) => t.legs));
+  const legs = Object.entries(routes.legs).filter(([id, l]) => l.mode === "outdoor" && tourLegs.has(id));
+  const segDist = (p: V2, a: number[], b: number[]) => {
+    const dx = b[0] - a[0];
+    const dz = b[2] - a[2];
+    const l2 = dx * dx + dz * dz;
+    const t = l2 ? Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[2]) * dz) / l2)) : 0;
+    return Math.hypot(p[0] - a[0] - dx * t, p[1] - a[2] - dz * t);
+  };
+  const toRoutes = (p: V2) => Math.min(...legs.flatMap(([, l]) => l.points.slice(1).map((q, i) => segDist(p, l.points[i], q))));
+  // Event doors (SPEC §3.1.4, §3.3.4, §4.5).
+  const DOORS: V2[] = [
+    [204.0, 136.5],
+    [177.8, 115.1],
+    [176.1, 108.8],
+    [237.3, 109.0],
+    [196.9, 76.8],
+    [22.69, -8.01],
+    [-24.51, -11.75],
+    [198.5, -7.4],
+    [215.5, 6.2],
+  ];
+  const solid = campus.buildings.filter((b) => !(b.minHeight && b.minHeight > 2));
+  it.each(GROUP_SPOTS.map((s) => [s.id, s.at] as const))("%s stands off every tour route and doorway, outdoors", (_id, at) => {
+    expect(toRoutes(at)).toBeGreaterThan(2.6);
+    for (const d of DOORS) expect(Math.hypot(d[0] - at[0], d[1] - at[1])).toBeGreaterThan(3.5);
+    expect(solid.some((b) => pointInRing(at, b.polygon))).toBe(false);
+  });
+  it("keeps BioCity's Tykistökatu door corridor free (nobody stands in the revolving door's mouth)", () => {
+    // From the recess mouth to the drum (buildings/biocity): the walk in must stay open.
+    const corridor: V2[] = [
+      [-29.91, -22.56],
+      [-20.76, -9.43],
+      [-23.63, -7.43],
+      [-32.78, -20.56],
+    ];
+    for (const spot of GROUP_SPOTS) {
+      for (const m of groupLayout(spot.n, hashString(spot.id))) {
+        const p: V2 = [spot.at[0] + m.x, spot.at[1] + m.z];
+        expect(pointInRing(p, corridor)).toBe(false);
+      }
+    }
+  });
+  it("tells indoors from outdoors for the tour walker", () => {
+    const rings = campus.buildings.filter((b) => b.role === "biocity" || b.role === "joki" || b.role === "educity").map((b) => ({ ring: b.polygon, holes: b.holes ?? [] }));
+    // BioCity lobby behind the Tykistökatu door, Joki Aula; the recess and Jussin aukio are outdoors.
+    expect(insideHeroFootprint(-23.4, -10.0, rings)).toBe(true);
+    expect(insideHeroFootprint(13.5, 43.0, rings)).toBe(true);
+    expect(insideHeroFootprint(-28.0, -17.0, rings)).toBe(false);
+    expect(insideHeroFootprint(48.5, 6.5, rings)).toBe(false);
   });
 });

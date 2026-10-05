@@ -1139,7 +1139,6 @@ function buildDisplay(ctx: TwinContext, terrain: Terrain | null): DisplayBuild {
     spot.shadow.bias = -0.0003;
     spot.shadow.normalBias = 0.02;
     spot.shadow.radius = 3;
-    group.add(spot, spot.target);
     spots.push(spot);
   }
   return {
@@ -1207,9 +1206,76 @@ function envSkySettings(scene: THREE.Scene): () => void {
  * featureless sky. Captured on the first frame near the display and again
  * when the time of day changes or new modules appear; never every frame.
  */
+/**
+ * Copies a captured cube map face by face, dropping NaN and infinite texels and capping the rest
+ * (a sun glint on smooth glass exceeds half-float range). The main view's pipeline is NaN-safe; a
+ * raw capture is not, and one bad texel blurred by the prefilter turns the whole probe — and every
+ * car that reflects it — into a black silhouette.
+ */
+class CubeSanitizer {
+  private readonly scene = new THREE.Scene();
+  private readonly box: THREE.Mesh;
+  readonly target: THREE.WebGLCubeRenderTarget;
+  private readonly camera: THREE.CubeCamera;
+  private readonly src: THREE.IUniform<THREE.Texture | null> = { value: null };
+
+  constructor(size: number) {
+    this.target = new THREE.WebGLCubeRenderTarget(size, { type: THREE.HalfFloatType, generateMipmaps: false });
+    const material = new THREE.ShaderMaterial({
+      name: "probe-sanitize",
+      uniforms: { uSrc: this.src, uMax: { value: SANITIZE_MAX } },
+      vertexShader: /* glsl */ `
+        varying vec3 vDir;
+        void main() {
+          vDir = position;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+        }`,
+      fragmentShader: /* glsl */ `
+        uniform samplerCube uSrc;
+        uniform float uMax;
+        varying vec3 vDir;
+        void main() {
+          vec3 c = textureCube( uSrc, normalize( vDir ) ).rgb;
+          // NaN fails every comparison, infinity the upper bound: both become black.
+          if ( !( all( greaterThanEqual( c, vec3( -1e-3 ) ) ) && all( lessThan( c, vec3( 1e30 ) ) ) ) ) c = vec3( 0.0 );
+          c = max( c, vec3( 0.0 ) );
+          float l = dot( c, vec3( 0.2126, 0.7152, 0.0722 ) );
+          if ( l > uMax ) c *= uMax / l;
+          gl_FragColor = vec4( c, 1.0 );
+        }`,
+      side: THREE.BackSide,
+      depthTest: false,
+      depthWrite: false,
+      toneMapped: false,
+    });
+    this.box = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 2), material);
+    this.box.frustumCulled = false;
+    this.scene.add(this.box);
+    this.camera = new THREE.CubeCamera(0.1, 10, this.target);
+  }
+
+  /** Sanitize `source` into this.target (same orientation: both are drawn by a CubeCamera). */
+  run(renderer: THREE.WebGLRenderer, source: THREE.Texture): THREE.Texture {
+    this.src.value = source;
+    this.camera.update(renderer, this.scene);
+    this.src.value = null;
+    return this.target.texture;
+  }
+
+  dispose(): void {
+    this.target.dispose();
+    this.box.geometry.dispose();
+    (this.box.material as THREE.Material).dispose();
+  }
+}
+
+/** Highest luminance a probe texel keeps (scene units, 1 = 1000 cd/m²): sky and lit facades pass, glints are capped. */
+const SANITIZE_MAX = 400;
+
 class ReflectionProbe {
   private rt: THREE.WebGLCubeRenderTarget;
   private cube: THREE.CubeCamera;
+  private sanitizer: CubeSanitizer;
   private env: THREE.WebGLRenderTarget | null = null;
   private renderer: THREE.WebGLRenderer | null = null;
   private scene: THREE.Scene | null = null;
@@ -1235,6 +1301,7 @@ class ReflectionProbe {
     this.rt = new THREE.WebGLCubeRenderTarget(size, { type: THREE.HalfFloatType, generateMipmaps: false });
     this.cube = new THREE.CubeCamera(0.3, 6000, this.rt);
     this.cube.position.copy(position);
+    this.sanitizer = new CubeSanitizer(size);
   }
 
   /** Grab the renderer and scene from a render callback. */
@@ -1304,9 +1371,10 @@ class ReflectionProbe {
     renderer.setClearColor(0x000000, 1);
     try {
       this.cube.update(renderer, scene);
+      const clean = this.sanitizer.run(renderer, this.rt.texture);
       // Captures are rare: free the generator's blur buffers (≈ 6 MB at 256) in between.
       const pmrem = new THREE.PMREMGenerator(renderer);
-      const next = pmrem.fromCubemap(this.rt.texture);
+      const next = pmrem.fromCubemap(clean as THREE.CubeTexture);
       pmrem.dispose();
       const prev = this.env;
       this.env = next;
@@ -1332,6 +1400,7 @@ class ReflectionProbe {
     for (const m of this.materials) if (m.envMap === this.env?.texture) m.envMap = null;
     this.env?.dispose();
     this.rt.dispose();
+    this.sanitizer.dispose();
   }
 }
 
@@ -1787,117 +1856,196 @@ export const CAR_SPECS: Record<Exclude<CarType, "bus" | "taxi">, CarSpec> = {
   van: { L: 4.9, W: 1.9, wb: 3.0, fo: 0.88, r: 0.335, hood: 1.06, belt: 1.16, roof: 1.97, zWs: 0.78, zRf: 1.24, zRr: 4.84, zRw: 4.87, deck: 1.16, sill: 0.38 },
 };
 
-/** Set the part id of every vertex (non-indexed, position/normal/aPart only). */
-function tagged(g: THREE.BufferGeometry, part: number): THREE.BufferGeometry {
+/** Set the part id of every vertex (non-indexed; position, normal, aPart and aTwData — per-part extras for the shader). */
+function tagged(g: THREE.BufferGeometry, part: number, data: readonly [number, number, number, number] = [0, 0, 0, 0]): THREE.BufferGeometry {
   const geo = g.index ? g.toNonIndexed() : g;
   if (geo !== g) g.dispose();
-  for (const name of Object.keys(geo.attributes)) if (name !== "position" && name !== "normal") geo.deleteAttribute(name);
+  for (const name of Object.keys(geo.attributes)) if (name !== "position" && name !== "normal" && name !== "aTwData") geo.deleteAttribute(name);
   if (!geo.getAttribute("normal")) geo.computeVertexNormals();
   const n = geo.getAttribute("position").count;
   // Created by three itself, like the generated geometries' attributes (merging needs one array type).
   const attr = new THREE.Float32BufferAttribute(n, 1);
   (attr.array as Float32Array).fill(part);
   geo.setAttribute("aPart", attr);
+  if (!geo.getAttribute("aTwData")) {
+    const d = new THREE.Float32BufferAttribute(n * 4, 4);
+    const a = d.array as Float32Array;
+    for (let i = 0; i < n; i++) a.set(data, i * 4);
+    geo.setAttribute("aTwData", d);
+  }
   return geo;
 }
 
-/** Wheel: tyre and rim disc at (x, y, z), axle along x; the rim faces outwards (side ±1). */
-function simpleWheel(parts: THREE.BufferGeometry[], x: number, y: number, z: number, r: number, width: number, side: number, seg: number) {
-  parts.push(tagged(cyl("x", x, y, z, r, r, width, seg), PART.tyre));
-  parts.push(tagged(cyl("x", x + side * (width / 2 + 0.004), y, z, r * 0.64, r * 0.64, 0.012, seg), PART.rim));
+/**
+ * Wheel at (x, y, z), axle along x, outer face towards `side` (±1): a tyre with rounded shoulders and
+ * bulging sidewalls, and a dished rim whose spokes the shader draws from the rim's disc coordinates
+ * (aTwData.xy = position on the rim face / rim radius). `seg` = segments round the wheel.
+ */
+function addWheel2(parts: THREE.BufferGeometry[], x: number, y: number, z: number, r: number, width: number, side: number, seg: number, near: boolean) {
+  const hw = width / 2;
+  const rr = r * 0.66;
+  const m = new THREE.Matrix4().makeTranslation(x, y, z);
+  if (side < 0) m.multiply(new THREE.Matrix4().makeRotationY(Math.PI));
+  const tyreProfile: [number, number][] = near
+    ? [
+        [rr + 0.004, -hw + 0.01],
+        [r - 0.045, -hw - 0.004],
+        [r, -hw + 0.04],
+        [r, hw - 0.04],
+        [r - 0.045, hw + 0.004],
+        [rr + 0.004, hw - 0.01],
+      ]
+    : [
+        [rr, -hw],
+        [r, -hw + 0.03],
+        [r, hw - 0.03],
+        [rr, hw],
+      ];
+  const tyre = latheX(tyreProfile, seg);
+  tyre.applyMatrix4(m);
+  parts.push(tagged(tyre, PART.tyre));
+  // Rim face: dish from the lip to the hub (the spokes are drawn on it); disc coordinates per vertex.
+  // Profile from the lip in to the hub (that order makes the face look outwards).
+  const rimProfile: [number, number][] = near
+    ? [
+        [rr + 0.006, hw - 0.012],
+        [rr, hw - 0.004],
+        [rr * 0.86, hw - 0.025],
+        [rr * 0.28, hw - 0.05],
+        [0.0, hw - 0.035],
+      ]
+    : [
+        [rr, hw - 0.01],
+        [rr * 0.3, hw - 0.05],
+        [0.0, hw - 0.04],
+      ];
+  const rim = latheX(rimProfile, seg).toNonIndexed();
+  {
+    const p = rim.getAttribute("position");
+    const d = new Float32Array(p.count * 4);
+    for (let i = 0; i < p.count; i++) d.set([p.getY(i) / rr, p.getZ(i) / rr, 1, 0], i * 4);
+    rim.setAttribute("aTwData", new THREE.Float32BufferAttribute(d, 4));
+  }
+  rim.applyMatrix4(m);
+  parts.push(tagged(rim, PART.rim));
 }
 
 /**
  * A car body lofted through cross-sections along its length (front −z): a
- * tucked-in sill, the side bulging to the shoulder, the belt crease, the
- * glasshouse leaning in to a rounded roof, a sloping bonnet and screens, the
- * plan rounding off at both ends and arch-shaped wheel openings. Faces get
- * their part (paint, glazing with pillars, black sills) by where they lie.
+ * tucked-in sill rounding into the door's slight barrel, a soft shoulder, the
+ * belt seal, a glasshouse with tumblehome rounding into the roof
+ * (superellipse), a crowned bonnet and boot, the plan rounding off at both
+ * ends and arch-shaped wheel openings. Smooth normals over the whole skin;
+ * faces get their part (paint, side and screen glass, the black belt seal,
+ * pillars, sills) by where they lie. aTwData of the paint carries the door
+ * shut lines for the shader: (front door front edge z, B-pillar z, rear door
+ * end z, belt y).
  */
 function loftCarBody(c: CarSpec, type: Exclude<CarType, "bus" | "taxi">, near: boolean): THREE.BufferGeometry {
   const L = c.L;
   const f = -c.fo - c.wb / 2;
   const axles = [c.fo, c.fo + c.wb];
-  const ar = c.r + 0.055;
+  const ar = c.r + 0.06;
   const deckRear = c.deck > c.belt + 0.01;
   const van = type === "van";
   const tailTop = deckRear ? c.deck : c.belt + 0.03;
   const zB = (c.zRf + c.zRr) / 2 - (van ? 0.95 : 0.12);
-  const winStart = c.zWs + (van ? 0.12 : 0.2);
-  const winEnd = van ? zB + 0.05 : deckRear ? c.zRr - 0.04 : c.zRw - 0.2;
+  const winStart = c.zWs + (van ? 0.1 : 0.16);
+  const winEnd = van ? zB + 0.05 : deckRear ? c.zRr - 0.06 : c.zRw - 0.22;
   const ss = (a: number, b: number, x: number) => {
     const t = clamp((x - a) / (b - a), 0, 1);
     return t * t * (3 - 2 * t);
   };
   const lerpN = (a: number, b: number, t: number) => a + (b - a) * t;
   const topY = (z: number) => {
-    if (z < 0.3) return lerpN(c.hood - 0.11, c.hood, ss(0, 0.3, z));
-    if (z < c.zWs) return lerpN(c.hood, c.belt + 0.035, ss(0.3, c.zWs, z) * 0.85 + ((z - 0.3) / (c.zWs - 0.3)) * 0.15);
+    if (z < 0.25) return lerpN(c.hood - 0.13, c.hood - 0.01, ss(0, 0.25, z));
+    if (z < c.zWs) return lerpN(c.hood, c.belt + 0.035, ss(0.25, c.zWs, z) * 0.8 + ((z - 0.25) / (c.zWs - 0.25)) * 0.2);
     if (z < c.zRf) {
       const t = (z - c.zWs) / (c.zRf - c.zWs);
-      // Screens bow outwards: a bit higher than the straight line between base and roof.
-      return lerpN(c.belt + 0.035, c.roof, t + 0.12 * Math.sin(Math.PI * t));
+      // Screens bow outwards and round into the roof.
+      return lerpN(c.belt + 0.035, c.roof, Math.sin((t * Math.PI) / 2) * 0.35 + t * 0.65);
     }
-    if (z < c.zRr) return c.roof - 0.012 * Math.pow((z - (c.zRf + c.zRr) / 2) / ((c.zRr - c.zRf) / 2), 2);
+    if (z < c.zRr) return c.roof - 0.014 * Math.pow((z - (c.zRf + c.zRr) / 2) / ((c.zRr - c.zRf) / 2), 2);
     if (z < c.zRw) {
       const t = (z - c.zRr) / Math.max(c.zRw - c.zRr, 0.01);
-      return lerpN(c.roof - 0.012, tailTop, t * t * 0.35 + t * 0.65);
+      return lerpN(c.roof - 0.014, tailTop, 1 - Math.cos((t * Math.PI) / 2) * 0.35 - (1 - t) * 0.65);
     }
-    return lerpN(tailTop, tailTop - 0.13, ss(L - 0.14, L, z));
+    return lerpN(tailTop, tailTop - 0.12, ss(L - 0.16, L, z));
   };
   const waistY = (z: number) => {
-    if (z < c.zWs) return lerpN(c.hood - 0.07, c.belt, ss(0.1, c.zWs, z));
+    if (z < c.zWs) return lerpN(c.hood - 0.06, c.belt, ss(0.1, c.zWs, z));
     const w = c.belt + 0.03 * ((z - c.zWs) / (L - c.zWs));
-    return z > L - 0.2 ? lerpN(w, tailTop - 0.09, ss(L - 0.2, L, z)) : w;
+    return z > L - 0.22 ? lerpN(w, tailTop - 0.08, ss(L - 0.22, L, z)) : w;
   };
   const bottomY = (z: number) => {
-    let y = c.sill + 0.07 * (1 - ss(0, 0.35, z)) + 0.06 * (1 - ss(0, 0.3, L - z));
+    let y = c.sill + 0.08 * (1 - ss(0, 0.32, z)) + 0.07 * (1 - ss(0, 0.28, L - z));
     for (const a of axles) {
       const dz = z - a;
       if (Math.abs(dz) < ar) y = Math.max(y, c.r + Math.sqrt(ar * ar - dz * dz));
     }
     return y;
   };
-  const halfW = (z: number) => (c.W / 2) * (1 - 0.1 * (1 - ss(0, 0.6, z)) - 0.075 * (1 - ss(0, 0.45, L - z)));
+  // Plan: the corners round off over the last ≈ 0.5 m at both ends.
+  const halfW = (z: number) => {
+    const front = 1 - ss(0, 0.55, z);
+    const rear = 1 - ss(0, 0.45, L - z);
+    return (c.W / 2) * (1 - 0.13 * front * front - 0.1 * rear * rear);
+  };
   const inHouse = (z: number) => z > c.zWs - 0.02 && z < c.zRw + 0.02;
-  // Stations: the key lines of the body plus the wheel openings.
-  const keys = near
-    ? [0, 0.1, 0.3, 0.6, c.zWs - 0.3, c.zWs, winStart, (c.zWs + c.zRf) / 2, c.zRf, zB - 0.05, zB + 0.05, c.zRr, winEnd, (c.zRr + c.zRw) / 2, c.zRw, L - 0.14, L]
-    : [0, 0.25, c.zWs, winStart, c.zRf, zB - 0.05, zB + 0.05, c.zRr, winEnd, c.zRw, L];
-  const archSteps = near ? [-1, -0.86, -0.5, 0, 0.5, 0.86, 1] : [-1, 0, 1];
+  // Stations: an even spacing, the key lines of the body and the wheel openings.
+  const keys: number[] = [];
+  const spacing = near ? 0.6 : 0.9;
+  for (let z = 0; z <= L; z += spacing) keys.push(z);
+  keys.push(L, 0.04, 0.1, 0.18, L - 0.04, L - 0.1, L - 0.18, c.zWs, c.zRf, c.zRr, c.zRw, winStart, winEnd, zB - 0.05, zB + 0.05);
+  if (near) keys.push(c.zWs - 0.25, (c.zWs + c.zRf) / 2, (c.zRr + c.zRw) / 2);
+  const archSteps = near ? [-1, -0.87, -0.5, 0, 0.5, 0.87, 1] : [-1, 0, 1];
   for (const a of axles) for (const k of archSteps) keys.push(a + k * ar * 0.999);
-  const zs = [...new Set(keys.map((z) => Math.round(clamp(z, 0, L) * 1000) / 1000))].sort((a, b) => a - b).filter((z, i, arr) => i === 0 || z - arr[i - 1] > 0.02);
-  // Half section (x ≥ 0, bottom → top), mirrored into a closed ring.
+  const zs = [...new Set(keys.map((z) => Math.round(clamp(z, 0, L) * 1000) / 1000))].sort((a, b) => a - b).filter((z, i, arr) => i === 0 || z - arr[i - 1] > 0.025);
+  // Upper section: superellipse angles (0 = belt seal at the side … 90 = roof centre).
+  const thetas = near ? [0, 16, 34, 52, 70, 90] : [0, 40, 90];
+  const lowerN = near ? 7 : 4;
+  /** Half section (x ≥ 0, bottom → top). */
   const half = (z: number): V2[] => {
     const yb = bottomY(z);
-    const yw = Math.max(waistY(z), yb + 0.12);
-    const yt = Math.max(topY(z), yw + 0.03);
-    const hw = halfW(z);
-    const hb = hw - 0.055;
+    const yw = Math.max(waistY(z), yb + 0.14);
     const house = inHouse(z);
-    const rt = house ? Math.min(0.08, (yt - yw) * 0.4) : 0.05;
-    const ht = house ? hw - 0.075 - 0.07 * clamp((yt - yw) / 0.5, 0, 1) : hw - 0.09;
-    return [
-      [0, yb],
-      [hb - 0.05, yb],
-      [hb, yb + 0.05],
-      [hw, yb + (yw - yb) * 0.5],
-      [hw - 0.012, yw - 0.025],
-      [hw - 0.035, yw],
-      [(hw - 0.05 + ht) / 2, (yw + Math.max(yt - rt, yw + 0.01)) / 2],
-      [ht, Math.max(yt - rt, yw + 0.01)],
-      [ht - rt * 0.29, Math.max(yt - rt * 0.29, yw + 0.015)],
-      [ht - rt, yt],
-      [0, yt + (house ? 0.006 : 0.004)],
-    ];
+    const yt = Math.max(topY(z), yw + (house ? 0.06 : 0.025));
+    const hw = halfW(z);
+    const lower: V2[] = near
+      ? [
+          [0, yb],
+          [hw - 0.17, yb],
+          [hw - 0.075, yb + 0.012],
+          [hw - 0.026, yb + 0.07],
+          [hw, yb + (yw - yb) * 0.42],
+          [hw - 0.007, yw - 0.085],
+          [hw - 0.022, yw - 0.018],
+        ]
+      : [
+          [0, yb],
+          [hw - 0.07, yb + 0.012],
+          [hw, yb + (yw - yb) * 0.42],
+          [hw - 0.022, yw - 0.018],
+        ];
+    // Upper: from the belt seal (side) over the roof; the glasshouse leans in (tumblehome).
+    const a = hw - 0.045;
+    const b = yt - (yw + 0.004);
+    const n = house ? 4.4 : 2.6;
+    const tumble = house ? 0.1 : 0.03;
+    const upper: V2[] = thetas.map((deg) => {
+      const th = (deg * Math.PI) / 180;
+      const cx = Math.pow(Math.cos(th), 2 / n);
+      const cy = Math.pow(Math.sin(th), 2 / n);
+      const y = yw + 0.004 + b * cy;
+      const lean = 1 - (tumble * (y - yw)) / Math.max(b, 0.01) * (house ? 1 : 0.5);
+      return [a * cx * lean, y] as V2;
+    });
+    return [...lower, ...upper];
   };
-  // Far: every other point of the half section (same parts, coarser shape).
-  const SEL = near ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] : [0, 2, 3, 5, 7, 9, 10];
-  const H = SEL.length;
+  const H = lowerN + thetas.length;
   const ringN = 2 * (H - 1);
   const ring = (z: number): V3[] => {
-    const full = half(z);
-    const h = SEL.map((k) => full[k]);
+    const h = half(z);
     const out: V3[] = h.map(([x, y]) => [x, y, f + z]);
     for (let j = H - 2; j >= 1; j--) out.push([-h[j][0], h[j][1], f + z]);
     return out;
@@ -1921,10 +2069,9 @@ function loftCarBody(c: CarSpec, type: Exclude<CarType, "bus" | "taxi">, near: b
   grid.setIndex(quadIdx);
   grid.computeVertexNormals();
   let nrm = grid.getAttribute("normal");
-  // Make sure the faces point outwards (the right side's bulge must face +x).
-  const probe = Math.floor(rings.length / 2) * ringN + SEL.indexOf(3);
-  const flip = nrm.getX(probe) < 0;
-  if (flip) {
+  // Faces point outwards (the right side's door bulge must face +x).
+  const probe = Math.floor(rings.length / 2) * ringN + (near ? 4 : 2);
+  if (nrm.getX(probe) < 0) {
     for (let k = 0; k < quadIdx.length; k += 3) {
       const t = quadIdx[k + 1];
       quadIdx[k + 1] = quadIdx[k + 2];
@@ -1934,28 +2081,39 @@ function loftCarBody(c: CarSpec, type: Exclude<CarType, "bus" | "taxi">, near: b
     grid.computeVertexNormals();
     nrm = grid.getAttribute("normal");
   }
+  // Which part a face is: by its section segment (index into the half section) and station.
+  const sideWindow = (zMid: number) => zMid > winStart && zMid < winEnd && !(zMid > zB - 0.05 && zMid < zB + 0.05 && !van);
   const partOf = (j: number, zMid: number): number => {
-    // Ring segment j (0…ringN−1) → its start point on the right half (mirror), as an index of the full section.
-    const k = SEL[j < H - 1 ? j : ringN - 1 - j];
-    if (k <= 1) return PART.trim;
-    if (k <= 4) return PART.paint;
+    const k = j < H - 1 ? j : ringN - 1 - j;
+    if (k < (near ? 2 : 1)) return PART.trim;
+    if (k < lowerN - 1) return PART.paint;
     const house = inHouse(zMid);
-    if (k <= 6) {
-      if (!house) return PART.paint;
+    if (k === lowerN - 1) return house && sideWindow(zMid) ? PART.trim : PART.paint;
+    const u = k - lowerN; // 0 … thetas.length − 2 (upper segments)
+    const deg = thetas[u + 1];
+    const screen = (zMid > c.zWs && zMid < c.zRf - 0.04) || (zMid > c.zRr + 0.04 && zMid < c.zRw);
+    if (screen && house) return deg <= 90 ? PART.glass : PART.paint;
+    if (!house) return PART.paint;
+    if (deg <= 52) {
       if (zMid > zB - 0.05 && zMid < zB + 0.05 && !van) return PART.trim;
-      return zMid > winStart && zMid < winEnd ? PART.glass : PART.paint;
+      return sideWindow(zMid) ? PART.glass : PART.paint;
     }
-    const screen = (zMid > c.zWs && zMid < c.zRf) || (zMid > c.zRr && zMid < c.zRw);
-    return screen ? PART.glass : PART.paint;
+    return PART.paint;
   };
+  // Door shut lines (object z) and the belt height for the shader.
+  const doorFront = f + Math.max(c.zWs + 0.02, axles[0] + ar + 0.06);
+  const doorRear = f + Math.min(axles[1] - ar - 0.02, winEnd - 0.05);
+  const paintData: [number, number, number, number] = [doorFront, f + zB, van ? f + winEnd + 0.3 : doorRear, c.belt];
   const outPos: number[] = [];
   const outNor: number[] = [];
   const outPart: number[] = [];
+  const outData: number[] = [];
   const P = grid.getAttribute("position");
   const pushV = (idx: number, part: number) => {
     outPos.push(P.getX(idx), P.getY(idx), P.getZ(idx));
     outNor.push(nrm.getX(idx), nrm.getY(idx), nrm.getZ(idx));
     outPart.push(part);
+    outData.push(...(part === PART.paint ? paintData : [0, 0, 0, 0]));
   };
   for (let i = 0; i + 1 < rings.length; i++) {
     const zMid = (zs[i] + zs[i + 1]) / 2;
@@ -1979,7 +2137,6 @@ function loftCarBody(c: CarSpec, type: Exclude<CarType, "bus" | "taxi">, near: b
       const a = r[j];
       const b = r[(j + 1) % ringN];
       const tri: V3[] = dir < 0 ? [[0, cy, cz], b, a] : [[0, cy, cz], a, b];
-      // Orient by the geometric normal (the ring's winding was decided above).
       const e1 = new THREE.Vector3(tri[1][0] - tri[0][0], tri[1][1] - tri[0][1], tri[1][2] - tri[0][2]);
       const e2 = new THREE.Vector3(tri[2][0] - tri[0][0], tri[2][1] - tri[0][1], tri[2][2] - tri[0][2]);
       const nz = e1.cross(e2).z;
@@ -1988,6 +2145,7 @@ function loftCarBody(c: CarSpec, type: Exclude<CarType, "bus" | "taxi">, near: b
         outPos.push(p[0], p[1], p[2]);
         outNor.push(0, 0, dir);
         outPart.push(PART.paint);
+        outData.push(...paintData);
       }
     }
   }
@@ -1996,6 +2154,15 @@ function loftCarBody(c: CarSpec, type: Exclude<CarType, "bus" | "taxi">, near: b
   g.setAttribute("position", new THREE.Float32BufferAttribute(outPos, 3));
   g.setAttribute("normal", new THREE.Float32BufferAttribute(outNor, 3));
   g.setAttribute("aPart", new THREE.Float32BufferAttribute(outPart, 1));
+  g.setAttribute("aTwData", new THREE.Float32BufferAttribute(outData, 4));
+  return g;
+}
+
+/** A box tilted about y (plan angle, rad) — lamp clusters that wrap round a corner. */
+function yawBox(cx: number, cy: number, cz: number, w: number, h: number, d: number, yaw: number): THREE.BufferGeometry {
+  const g = new THREE.BoxGeometry(w, h, d);
+  g.rotateY(yaw);
+  g.translate(cx, cy, cz);
   return g;
 }
 
@@ -2008,78 +2175,135 @@ export function buildCarGeometry(type: Exclude<CarType, "bus">, lod: 0 | 1): THR
   const back = f + c.L;
   const axF = -c.wb / 2;
   const axR = c.wb / 2;
-  const ar = c.r + 0.055;
+  const ar = c.r + 0.06;
   const parts: THREE.BufferGeometry[] = [];
   parts.push(loftCarBody(c, type, near));
-  // Lamps, grille, bumpers, plates, mirrors.
   const hw = c.W / 2;
+  const tailTop = c.deck > c.belt + 0.01 ? c.deck : c.belt + 0.03;
   for (const s of [-1, 1]) {
-    parts.push(tagged(boxg(s * (hw - 0.26), c.hood - 0.09, f + 0.045, 0.34, 0.1, 0.06), PART.head));
-    parts.push(tagged(boxg(s * (hw - 0.17), c.belt - 0.11, back - 0.03, 0.26, 0.11, 0.05), PART.tail));
-    if (near) parts.push(tagged(boxg(s * (hw - 0.1), c.hood - 0.05, f + 0.12, 0.08, 0.03, 0.06), PART.indicator));
-    if (near) parts.push(tagged(boxg(s * (hw + 0.07), c.belt + 0.08, f + c.zWs + 0.16, 0.16, 0.1, 0.08), PART.paint));
+    // Headlamp: a slim cluster following the nose round the corner (lens + its dark housing).
+    parts.push(tagged(yawBox(s * (hw - 0.28), c.hood - 0.075, f + 0.075, 0.44, 0.085, 0.1, -s * 0.32), PART.head));
+    if (near) parts.push(tagged(yawBox(s * (hw - 0.27), c.hood - 0.13, f + 0.06, 0.4, 0.02, 0.08, -s * 0.32), PART.trim));
+    // Tail lamps: on the back and wrapping onto the side.
+    parts.push(tagged(yawBox(s * (hw - 0.22), tailTop - 0.12, back - 0.04, 0.36, 0.1, 0.06, s * 0.28), PART.tail));
+    if (near) parts.push(tagged(yawBox(s * (hw - 0.05), tailTop - 0.12, back - 0.2, 0.05, 0.08, 0.22, 0), PART.tail));
+    // Mirror on a short arm at the base of the A-pillar; a repeater in it.
+    if (near) {
+      parts.push(tagged(yawBox(s * (hw + 0.07), c.belt + 0.09, f + c.zWs + 0.18, 0.16, 0.1, 0.09, s * 0.12), PART.paint));
+      parts.push(tagged(boxg(s * (hw - 0.01), c.belt + 0.06, f + c.zWs + 0.2, 0.1, 0.04, 0.05), PART.trim));
+      parts.push(tagged(boxg(s * (hw + 0.07), c.belt + 0.058, f + c.zWs + 0.16, 0.12, 0.012, 0.02), PART.indicator));
+      // Door handles (body colour) just under the belt.
+      for (const z of [f + c.zWs + 0.62, f + (c.zRf + c.zRr) / 2 + 0.32]) {
+        if (type === "van" && z > f + c.zWs + 1) continue;
+        parts.push(tagged(boxg(s * (hw - 0.004), c.belt - 0.075, z, 0.02, 0.028, 0.16), PART.paint));
+      }
+    } else parts.push(tagged(boxg(s * (hw + 0.05), c.belt + 0.08, f + c.zWs + 0.18, 0.12, 0.09, 0.07), PART.paint));
   }
-  parts.push(tagged(boxg(0, (c.sill + c.hood) / 2 - 0.02, f + 0.02, c.W * 0.42, (c.hood - c.sill) * 0.45, 0.04), PART.trim));
-  parts.push(tagged(boxg(0, c.sill + 0.04, f + 0.05, c.W - 0.12, 0.08, 0.1), PART.trim));
-  parts.push(tagged(boxg(0, c.sill + 0.04, back - 0.05, c.W - 0.12, 0.08, 0.1), PART.trim));
+  // Grille and lower intake (dark), front and rear bumper lips, plates in their recesses.
+  parts.push(tagged(boxg(0, c.hood - 0.12, f + 0.035, c.W * 0.4, 0.13, 0.05), PART.trim));
+  parts.push(tagged(boxg(0, c.sill + 0.1, f + 0.05, c.W * 0.55, 0.11, 0.06), PART.trim));
+  parts.push(tagged(boxg(0, c.sill + 0.02, f + 0.12, c.W - 0.2, 0.05, 0.2), PART.trim));
+  parts.push(tagged(boxg(0, c.sill + 0.03, back - 0.1, c.W - 0.2, 0.06, 0.18), PART.trim));
   if (near) {
-    parts.push(tagged(boxg(0, c.sill + 0.13, f - 0.004, 0.5, 0.11, 0.01), PART.plate));
-    parts.push(tagged(boxg(0, c.belt - 0.28, back + 0.004, 0.5, 0.11, 0.01), PART.plate));
+    parts.push(tagged(boxg(0, c.sill + 0.24, f + 0.02, 0.54, 0.13, 0.012), PART.trim));
+    parts.push(tagged(boxg(0, c.sill + 0.24, f + 0.012, 0.5, 0.11, 0.01), PART.plate));
+    parts.push(tagged(boxg(0, tailTop - 0.3, back - 0.02, 0.54, 0.13, 0.012), PART.trim));
+    parts.push(tagged(boxg(0, tailTop - 0.3, back - 0.012, 0.5, 0.11, 0.01), PART.plate));
+    // High-level brake light at the top of the rear screen.
+    parts.push(tagged(boxg(0, c.roof - 0.04, f + c.zRw - 0.06, 0.32, 0.025, 0.03), PART.tail));
   }
   // Underbody and wheel wells (no see-through under the arches).
   parts.push(tagged(boxg(0, (0.16 + c.sill) / 2 + 0.02, (f + back) / 2, c.W - 0.3, c.sill - 0.12, c.L - 1.0), PART.trim));
-  if (near) for (const z of [axF, axR]) parts.push(tagged(boxg(0, c.r + 0.06, z, c.W - 0.5, c.r * 2, ar * 2 - 0.04), PART.trim));
-  // Wheels.
-  const seg = near ? 12 : 6;
-  for (const z of [axF, axR]) {
-    for (const s of [-1, 1]) {
-      if (near) simpleWheel(parts, s * (hw - 0.13), c.r, z, c.r, 0.22, s, seg);
-      else parts.push(tagged(cyl("x", s * (hw - 0.13), c.r, z, c.r, c.r, 0.22, seg), PART.tyre));
-    }
-  }
+  for (const z of [axF, axR]) parts.push(tagged(boxg(0, c.r + 0.08, z, c.W - 0.42, c.r * 2, ar * 2 - 0.06), PART.trim));
+  // Wheels: tyres with sidewalls, dished rims (spokes in the shader).
+  const seg = near ? 14 : 8;
+  const tw = type === "suv" || type === "van" ? 0.235 : 0.215;
+  for (const z of [axF, axR]) for (const s of [-1, 1]) addWheel2(parts, s * (hw - 0.04 - tw / 2), c.r, z, c.r, tw, s, seg, near);
   const merged = mergeGeometries(parts, false);
   for (const p of parts) p.dispose();
   if (!merged) throw new Error(`vehicles: could not merge ${type}`);
   return merged;
 }
 
-/** Föli city bus (12 m, electric): yellow body, black window band, three doors on the right. */
+/**
+ * Föli city bus (12 m, electric; yellow `#F2C200` with the black window band, SPEC §4.5): a rounded
+ * body on a low floor, a deep raked windscreen under the LED destination display, the window band
+ * split by black pillars, three glazed double doors on the right with frames, wheel arches with
+ * dark wells, rams-horn mirrors, roof battery and A/C pods, lamp clusters front and back.
+ */
 export function buildBusGeometry(lod: 0 | 1): THREE.BufferGeometry {
   const near = lod === 0;
   const L = 12.0;
   const W = 2.55;
   const parts: THREE.BufferGeometry[] = [];
-  const f = -6.0;
-  const axF = -3.3;
-  const axR = 2.6;
+  const f = -L / 2;
+  const back = L / 2;
+  const axF = -3.25;
+  const axR = 2.65;
   const r = 0.5;
-  // Body: a rounded box from the skirt to the roof, wheel openings covered by dark wells.
-  parts.push(tagged(near ? rbox(0, 1.72, 0, W, 2.7, L, 0.12, 2) : boxg(0, 1.72, 0, W, 2.7, L), PART.paint));
-  // Window band on both sides, the windscreen, the rear window and the destination display.
+  const ar = 0.58;
+  const floorY = 0.36;
+  const roofY = 3.08;
+  // Body shell: a rounded box from the skirt to the roof (the arches are dark wells over the wheels).
+  parts.push(tagged(rbox(0, (floorY + roofY) / 2, 0, W, roofY - floorY, L, 0.14, near ? 3 : 1, !near), PART.paint));
+  // Window band (both sides): glass from the waist to the cant rail, pillars every ≈ 1.45 m (black).
+  const winY0 = 1.12;
+  const winY1 = 2.72;
   for (const s of [-1, 1]) {
-    parts.push(tagged(boxg(s * (W / 2 + 0.006), 1.95, -0.4, 0.012, 1.25, L - 1.6), PART.glass));
-    if (near) for (let z = -5.0; z < 5.4; z += 1.45) parts.push(tagged(boxg(s * (W / 2 + 0.012), 1.95, z, 0.014, 1.26, 0.09), PART.trim));
+    parts.push(tagged(boxg(s * (W / 2 + 0.004), (winY0 + winY1) / 2, 0.15, 0.012, winY1 - winY0, L - 2.1), PART.glass));
+    // Black band frame (above and below the glass) so the window line reads as one dark band.
+    parts.push(tagged(boxg(s * (W / 2 + 0.006), winY1 + 0.07, 0.15, 0.014, 0.14, L - 2.0), PART.trim));
+    parts.push(tagged(boxg(s * (W / 2 + 0.006), winY0 - 0.05, 0.15, 0.014, 0.1, L - 2.0), PART.trim));
+    if (near) for (let z = -4.6; z < 5.6; z += 1.45) parts.push(tagged(boxg(s * (W / 2 + 0.01), (winY0 + winY1) / 2, z, 0.016, winY1 - winY0, 0.08), PART.trim));
   }
-  parts.push(tagged(boxg(0, 1.85, f - 0.006, W - 0.26, 1.7, 0.012), PART.glass));
-  parts.push(tagged(boxg(0, 2.86, f - 0.008, W - 0.5, 0.2, 0.014), PART.sign));
-  parts.push(tagged(boxg(0, 2.25, -f + 0.006, W - 0.6, 0.6, 0.012), PART.glass));
-  // Doors (right side = +x): glazed leaves to the floor.
-  for (const z of [-5.0, -0.6, 3.9]) parts.push(tagged(boxg(W / 2 + 0.01, 1.42, z, 0.014, 2.25, 1.2), PART.glass));
-  // Bumpers, lamps, roof battery packs, mirrors.
-  parts.push(tagged(boxg(0, 0.48, f - 0.04, W, 0.26, 0.1), PART.trim));
-  parts.push(tagged(boxg(0, 0.48, -f + 0.04, W, 0.26, 0.1), PART.trim));
-  for (const s of [-1, 1]) {
-    parts.push(tagged(boxg(s * 1.0, 0.72, f - 0.012, 0.36, 0.14, 0.03), PART.head));
-    parts.push(tagged(boxg(s * 1.12, 1.0, -f + 0.012, 0.16, 0.5, 0.03), PART.tail));
-    if (near) parts.push(tagged(boxg(s * 1.45, 2.3, f + 0.25, 0.08, 0.32, 0.12), PART.trim));
+  // Doors on the right (+x): front (in the overhang), middle, rear — glazed leaves to the floor, framed.
+  for (const z of [f + 1.05, -0.35, 4.05]) {
+    parts.push(tagged(boxg(W / 2 + 0.012, 1.55, z, 0.014, 2.35, 1.24), PART.glass));
+    parts.push(tagged(boxg(W / 2 + 0.016, 1.55, z, 0.016, 2.35, 0.05), PART.trim));
+    for (const dz of [-0.62, 0.62]) parts.push(tagged(boxg(W / 2 + 0.016, 1.55, z + dz, 0.016, 2.37, 0.06), PART.trim));
+    parts.push(tagged(boxg(W / 2 + 0.016, 2.75, z, 0.016, 0.08, 1.3), PART.trim));
   }
-  parts.push(tagged(boxg(0, 3.17, 0.8, 1.9, 0.28, 3.6), PART.grey));
-  parts.push(tagged(boxg(0, 3.13, -3.4, 1.7, 0.2, 1.6), PART.grey));
-  for (const z of [axF, axR]) parts.push(tagged(boxg(0, r + 0.1, z, W - 0.3, 2 * r + 0.1, 2 * r + 0.25), PART.trim));
+  // Front: raked windscreen (black-framed), the destination display above it, lamps, bumper, mirrors.
+  {
+    parts.push(tagged(boxg(0, 1.72, f - 0.006, W - 0.18, 1.95, 0.012), PART.glass));
+    const fr = boxg(0, 2.72, f - 0.008, W - 0.1, 0.12, 0.014);
+    parts.push(tagged(fr, PART.trim));
+    // LED destination display (text drawn by the shader: aTwData.xy = position on the display).
+    const disp = boxg(0, 2.9, f - 0.014, W - 0.42, 0.24, 0.012).toNonIndexed();
+    {
+      const p = disp.getAttribute("position");
+      const d = new Float32Array(p.count * 4);
+      for (let i = 0; i < p.count; i++) d.set([p.getX(i) / ((W - 0.42) / 2), (p.getY(i) - 2.9) / 0.12, 2, 0], i * 4);
+      disp.setAttribute("aTwData", new THREE.Float32BufferAttribute(d, 4));
+    }
+    parts.push(tagged(disp, PART.sign));
+    parts.push(tagged(boxg(0, 0.5, f - 0.04, W, 0.3, 0.1), PART.trim));
+    for (const s of [-1, 1]) {
+      parts.push(tagged(yawBox(s * 0.98, 0.72, f - 0.012, 0.42, 0.14, 0.04, s * 0.15), PART.head));
+      if (near) {
+        // Rams-horn mirror: a curved arm forward of the screen, the housing hanging at eye level.
+        parts.push(tagged(boxg(s * 1.05, 2.62, f - 0.32, 0.05, 0.05, 0.62), PART.trim));
+        parts.push(tagged(rbox(s * 1.12, 2.22, f - 0.6, 0.12, 0.42, 0.14, 0.04, 1), PART.trim));
+      }
+    }
+  }
+  // Rear: lamp strips, a small rear window, the bumper.
+  for (const s of [-1, 1]) parts.push(tagged(boxg(s * 1.14, 1.2, back + 0.012, 0.14, 0.7, 0.03), PART.tail));
+  parts.push(tagged(boxg(0, 2.35, back + 0.006, W - 0.6, 0.55, 0.012), PART.glass));
+  parts.push(tagged(boxg(0, 0.5, back + 0.04, W, 0.3, 0.1), PART.trim));
+  if (near) parts.push(tagged(boxg(0, 0.82, back + 0.012, 0.52, 0.12, 0.012), PART.plate));
+  // Roof: battery packs and the A/C unit (light grey), behind a skirt.
+  parts.push(tagged(rbox(0, roofY + 0.17, 1.2, 2.0, 0.34, 4.6, 0.08, 1, !near), PART.grey));
+  parts.push(tagged(rbox(0, roofY + 0.13, -3.4, 1.8, 0.26, 1.7, 0.08, 1, !near), PART.grey));
+  // Wheel arches (dark wells) and wheels: single tyres in front, twin in the back.
+  for (const z of [axF, axR]) {
+    parts.push(tagged(boxg(0, r + 0.12, z, W - 0.24, 2 * r + 0.18, 2 * ar), PART.trim));
+    for (const s of [-1, 1]) parts.push(tagged(boxg(s * (W / 2 + 0.003), r + 0.35, z, 0.01, 0.12, 2 * ar + 0.1), PART.trim));
+  }
   const seg = near ? 16 : 8;
   for (const s of [-1, 1]) {
-    simpleWheel(parts, s * (W / 2 - 0.2), r, axF, r, 0.3, s, seg);
-    simpleWheel(parts, s * (W / 2 - 0.25), r, axR, r, 0.48, s, seg);
+    addWheel2(parts, s * (W / 2 - 0.2), r, axF, r, 0.3, s, seg, near);
+    addWheel2(parts, s * (W / 2 - 0.26), r, axR, r, 0.42, s, seg, near);
   }
   const merged = mergeGeometries(parts, false);
   for (const p of parts) p.dispose();
@@ -2090,8 +2314,8 @@ export function buildBusGeometry(lod: 0 | 1): THREE.BufferGeometry {
 /** A taxi: an estate with the roof sign (lit amber-white, part "sign"). */
 function withTaxiSign(body: THREE.BufferGeometry, c: CarSpec): THREE.BufferGeometry {
   const f = -c.fo - c.wb / 2;
-  const sign = tagged(boxg(0, c.roof + 0.07, f + (c.zRf + c.zRr) / 2 - 0.2, 0.5, 0.13, 0.18), PART.sign);
-  const base = tagged(boxg(0, c.roof + 0.005, f + (c.zRf + c.zRr) / 2 - 0.2, 0.56, 0.02, 0.24), PART.trim);
+  const sign = tagged(rbox(0, c.roof + 0.075, f + (c.zRf + c.zRr) / 2 - 0.2, 0.52, 0.13, 0.18, 0.03, 1), PART.sign);
+  const base = tagged(boxg(0, c.roof + 0.008, f + (c.zRf + c.zRr) / 2 - 0.2, 0.56, 0.02, 0.24), PART.trim);
   const merged = mergeGeometries([body, sign, base], false);
   body.dispose();
   sign.dispose();
@@ -2105,6 +2329,9 @@ const FLAG = { lights: 1, brake: 2, metallic: 4, darkRims: 8, hazard: 16, bus: 3
 
 const TRAFFIC_FRAGMENT_PARS = /* glsl */ `
 flat varying float vTwPart;
+varying vec4 vTwData;
+varying vec3 vTwPos;
+varying vec3 vTwNrm;
 uniform float uTwNight;
 uniform float uTwTime;
 uniform vec3 uTwHead;
@@ -2121,39 +2348,72 @@ const TRAFFIC_COLOR = /* glsl */ `
 	bool twHazard = ( twFlags & 16 ) != 0;
 	bool twBus = ( twFlags & 32 ) != 0;
 	vec3 twAlbedo = vColor.rgb;
-	float twRough = twMetallic ? 0.3 : 0.24;
-	float twMetal = twMetallic ? 0.55 : 0.0;
+	float twRough = twMetallic ? 0.26 : 0.2;
+	float twMetal = twMetallic ? 0.5 : 0.0;
 	float twCoat = 1.0;
 	vec3 twEmis = vec3( 0.0 );
 	float twBlink = step( 0.5, fract( uTwTime * 1.4 ) );
 	if ( twPart < 0.5 ) {
+		// Paint: door shut lines (vTwData = front door edge z, B-pillar z, rear door end z, belt y) on the sides.
+		if ( vTwData.w > 0.0 && abs( vTwNrm.x ) > 0.55 && vTwPos.y < vTwData.w - 0.02 && vTwPos.y > 0.3 ) {
+			float aa = fwidth( vTwPos.z ) * 0.8 + 0.002;
+			float d = min( min( abs( vTwPos.z - vTwData.x ), abs( vTwPos.z - vTwData.y ) ), abs( vTwPos.z - vTwData.z ) );
+			float gap = 1.0 - smoothstep( 0.003, 0.003 + aa, d );
+			twAlbedo *= 1.0 - 0.85 * gap;
+			twCoat *= 1.0 - gap;
+		}
+		// The sill shadow line under the doors.
+		if ( vTwData.w > 0.0 && abs( vTwNrm.x ) > 0.55 ) twAlbedo *= mix( 0.55, 1.0, smoothstep( 0.32, 0.42, vTwPos.y ) );
 	} else if ( twPart < 1.5 ) {
-		twAlbedo = vec3( 0.012, 0.014, 0.017 ); twRough = 0.05; twMetal = 0.0; twCoat = 0.0;
+		// Glass: dark tinted with the interior behind it; the coat-free gloss reflects the sky.
+		twAlbedo = vec3( 0.016, 0.018, 0.021 ); twRough = 0.04; twMetal = 0.0; twCoat = 0.0;
 		// Bus interiors lit after dark: a soft glow behind tinted glass (≈ 6 cd/m²), not a light box.
 		if ( twBus ) twEmis = vec3( 1.0, 0.9, 0.78 ) * 0.006 * uTwNight;
 	} else if ( twPart < 2.5 ) {
-		twAlbedo = vec3( 0.018 ); twRough = 0.62; twMetal = 0.0; twCoat = 0.0;
+		twAlbedo = vec3( 0.02 ); twRough = 0.55; twMetal = 0.0; twCoat = 0.0;
 	} else if ( twPart < 3.5 ) {
-		twAlbedo = vec3( 0.022 ); twRough = 0.9; twMetal = 0.0; twCoat = 0.0;
+		// Tyre: matt black rubber, the sidewall a touch lighter.
+		twAlbedo = vec3( 0.024 ); twRough = 0.88; twMetal = 0.0; twCoat = 0.0;
 	} else if ( twPart < 4.5 ) {
-		twAlbedo = twDarkRims ? vec3( 0.045 ) : vec3( 0.56, 0.57, 0.58 ); twRough = 0.35; twMetal = 1.0; twCoat = 0.0;
+		// Rim: five double spokes drawn on the dished face (vTwData.xy = disc coordinates).
+		vec2 q = vTwData.xy;
+		float r = length( q );
+		float a = atan( q.y, q.x );
+		float k = fract( a / 6.2831853 * 5.0 );
+		float spoke = 1.0 - smoothstep( 0.12, 0.2, abs( k - 0.5 ) * ( 0.6 + r ) );
+		float window = step( 0.3, r ) * step( r, 0.86 ) * ( 1.0 - spoke );
+		vec3 alloy = twDarkRims ? vec3( 0.05, 0.052, 0.056 ) : vec3( 0.58, 0.59, 0.6 );
+		twAlbedo = mix( alloy, vec3( 0.012 ), window );
+		if ( r < 0.18 ) twAlbedo = twDarkRims ? vec3( 0.03 ) : vec3( 0.32 );
+		twRough = mix( 0.28, 0.7, window ); twMetal = mix( 1.0, 0.0, window ); twCoat = 0.0;
 	} else if ( twPart < 5.5 ) {
-		twAlbedo = vec3( 0.55 ); twRough = 0.12; twMetal = 0.7; twCoat = 0.0;
+		twAlbedo = vec3( 0.6 ); twRough = 0.1; twMetal = 0.75; twCoat = 0.0;
 		if ( twLights ) twEmis = uTwHead;
 	} else if ( twPart < 6.5 ) {
-		twAlbedo = vec3( 0.22, 0.012, 0.01 ); twRough = 0.18; twMetal = 0.0; twCoat = 0.0;
+		twAlbedo = vec3( 0.24, 0.012, 0.01 ); twRough = 0.16; twMetal = 0.0; twCoat = 0.0;
 		float tail = twLights ? mix( 0.15, 1.0, uTwNight ) : 0.0;
 		tail += twBrake ? 3.0 : 0.0;
 		twEmis = uTwTail * tail;
 	} else if ( twPart < 7.5 ) {
 		twAlbedo = vec3( 0.8 ); twRough = 0.45; twMetal = 0.0; twCoat = 0.0;
 	} else if ( twPart < 8.5 ) {
-		twAlbedo = vec3( 0.4, 0.2, 0.02 ); twRough = 0.2; twMetal = 0.0; twCoat = 0.0;
+		twAlbedo = vec3( 0.42, 0.2, 0.02 ); twRough = 0.2; twMetal = 0.0; twCoat = 0.0;
 		if ( twHazard ) twEmis = vec3( 1.0, 0.45, 0.02 ) * 6.0 * twBlink;
 	} else if ( twPart < 9.5 ) {
-		// Destination display / taxi sign: amber LED text on black (≈ 120 cd/m² average).
 		twAlbedo = vec3( 0.01 ); twRough = 0.3; twMetal = 0.0; twCoat = 0.0;
-		twEmis = vec3( 1.0, 0.55, 0.08 ) * 0.12;
+		if ( vTwData.z > 1.5 ) {
+			// Föli destination display: amber LED text in rows of dots (route number left, destination right).
+			vec2 p = vTwData.xy;
+			vec2 cell = fract( vec2( p.x * 46.0, p.y * 4.5 ) ) - 0.5;
+			float dot_ = 1.0 - smoothstep( 0.28, 0.42, length( cell ) );
+			float row = step( abs( p.y ), 0.62 );
+			float glyph = step( 0.5, fract( sin( dot( floor( vec2( p.x * 46.0, p.y * 4.5 ) ), vec2( 12.9898, 78.233 ) ) ) * 43758.5453 ) );
+			float lit = row * dot_ * ( p.x < -0.62 ? step( -0.92, p.x ) : glyph * step( p.x, 0.86 ) );
+			twEmis = vec3( 1.0, 0.55, 0.06 ) * ( 0.02 + 0.28 * lit );
+		} else {
+			// Taxi roof sign: amber-white, lit.
+			twEmis = vec3( 1.0, 0.62, 0.14 ) * 0.12;
+		}
 	} else {
 		twAlbedo = vec3( 0.42, 0.43, 0.44 ); twRough = 0.55; twMetal = 0.0; twCoat = 0.0;
 	}
@@ -2181,8 +2441,8 @@ export function makeTrafficMaterial(physical: boolean): TrafficMaterial {
   material.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, uniforms);
     shader.vertexShader = shader.vertexShader
-      .replace("#include <common>", "#include <common>\nattribute float aPart;\nflat varying float vTwPart;")
-      .replace("#include <begin_vertex>", "#include <begin_vertex>\n\tvTwPart = aPart;");
+      .replace("#include <common>", "#include <common>\nattribute float aPart;\nattribute vec4 aTwData;\nflat varying float vTwPart;\nvarying vec4 vTwData;\nvarying vec3 vTwPos;\nvarying vec3 vTwNrm;")
+      .replace("#include <begin_vertex>", "#include <begin_vertex>\n\tvTwPart = aPart;\n\tvTwData = aTwData;\n\tvTwPos = position;\n\tvTwNrm = normal;");
     shader.fragmentShader = shader.fragmentShader
       .replace("#include <common>", `#include <common>\n${TRAFFIC_FRAGMENT_PARS}`)
       .replace("#include <color_fragment>", TRAFFIC_COLOR)
@@ -2239,6 +2499,10 @@ interface Route {
   /** Seconds between buses (0 = none). */
   busEvery: number;
   stops: { s: number; junction: number; phase: "A" | "B" }[];
+  /** Every pedestrian crossing on the lane (s of its centre line): nobody stops on a zebra. */
+  crossings: number[];
+  /** s abreast of the supercar display (Tykistökatu lanes only). */
+  sDisplay?: number;
   busStops: number[];
   next: number;
   nextBus: number;
@@ -2276,6 +2540,14 @@ export const JUNCTIONS: readonly { at: V2; offset: number }[] = [
   { at: [-50, -12], offset: 0 },
   { at: [48, -140], offset: 14 },
 ];
+
+/** Half the length of a zebra along the traffic (bars ≥ 2.5 m long, Traficom), plus a margin. */
+const ZEBRA_HALF = 2.0;
+
+/** The supercar display (recess centre, campus frame). */
+const DISPLAY_SPOT: V2 = [-29.5, -16.5];
+/** While the display is in view, a bus on Tykistökatu waits this far (m) short of it, out of the views. */
+const BUS_HOLD = 75;
 
 /** Kerb at BioCity's partner entrance where cars drop people off (SPEC §6.3). */
 const DROPOFF_KERB: V2 = [-36.2, -23.0];
@@ -2368,9 +2640,8 @@ function lengthOf(type: CarType): number {
   return type === "bus" ? 12 : specOf(type).L;
 }
 
-/** Detailed / mid / box geometry by distance (m): a parked car beyond ≈ 90 m is a few dozen pixels long. */
-const LOD_NEAR = 35;
-const LOD_MID = 90;
+/** Detailed / mid / box geometry by distance (m): a parked car beyond ≈ 90 m is a few dozen pixels long (phones: nearer). */
+const LOD_DIST: Record<TwinContext["tier"], [number, number]> = { ultra: [38, 95], high: [34, 90], low: [16, 55] };
 
 /** Ground under the roads: terrain, bridge decks over the railway. */
 interface Ground {
@@ -2395,6 +2666,12 @@ export class TrafficSim {
   time = 0;
   /** Seconds between drop-off taxis (0 = none at this time of day). */
   taxiEvery = 0;
+  /**
+   * The camera is on the supercar display (its hero views, walking up to it): the signals at the
+   * BioCity junction keep Tykistökatu moving and no drop-off stops at the recess, so no queue or
+   * standing car hides the cars or the walk to the door. Traffic still drives past.
+   */
+  focus = false;
   onSpawn: ((m: Mover) => boolean) | null = null;
   onRelease: ((m: Mover) => void) | null = null;
   private acc = 0;
@@ -2473,11 +2750,12 @@ export class TrafficSim {
         if (this.spawn(i, type)) r.next = t + (-Math.log(1 - this.rnd() * 0.999) * 3600) / r.rate;
         else r.next = t + 1;
       }
-      if (r.busEvery > 0 && t >= r.nextBus) {
+      // No 12 m bus sweeping through the display's views while they are on screen (cars still pass).
+      if (r.busEvery > 0 && t >= r.nextBus && !(this.focus && r.id.startsWith("tyk-"))) {
         if (this.spawn(i, "bus")) r.nextBus = t + r.busEvery * (0.8 + this.rnd() * 0.4);
         else r.nextBus = t + 2;
       }
-      if (r.dropoff !== undefined && this.taxiEvery > 0 && t >= r.nextTaxi) {
+      if (r.dropoff !== undefined && this.taxiEvery > 0 && !this.focus && t >= r.nextTaxi) {
         if (this.spawn(i, "taxi")) r.nextTaxi = t + this.taxiEvery * (0.7 + this.rnd() * 0.6);
         else r.nextTaxi = t + 2;
       }
@@ -2495,6 +2773,8 @@ export class TrafficSim {
       for (let k = 0; k < list.length; k++) {
         const m = list[k];
         m.age += h;
+        // A drop-off ends early once the display is in view (a bus at its stop keeps its dwell).
+        if (this.focus && m.type === "taxi" && m.dwell > 1.5) m.dwell = 1.5;
         if (m.dwell > 0) {
           m.dwell -= h;
           m.v = 0;
@@ -2503,12 +2783,14 @@ export class TrafficSim {
         }
         let gap = Infinity;
         let dv = 0;
+        let lead: Mover | null = null;
         // Leader on the same lane (a bus pulled into its stop does not block).
         for (let j = k - 1; j >= 0; j--) {
-          const lead = list[j];
-          if (lead.lateral > 1.0) continue;
-          gap = lead.s - lead.len - m.s;
-          dv = m.v - lead.v;
+          const cand = list[j];
+          if (cand.lateral > 1.0) continue;
+          lead = cand;
+          gap = cand.s - cand.len - m.s;
+          dv = m.v - cand.v;
           break;
         }
         // Signals: a red (or an amber we can still stop for) is a wall at the stop line.
@@ -2516,13 +2798,41 @@ export class TrafficSim {
           const dist = st.s - m.s;
           if (dist < -0.5 || dist > 80) continue;
           const j = JUNCTIONS[st.junction];
-          const colour = signalColour(st.phase, t, j?.offset ?? 0);
+          const colour = this.focus && st.junction === 0 ? (st.phase === "A" ? "green" : "red") : signalColour(st.phase, t, j?.offset ?? 0);
           const canStop = dist > (m.v * m.v) / (2 * 3.0) + 1.0;
           if (colour === "red" || (colour === "amber" && canStop)) {
             if (dist < gap) {
               gap = Math.max(dist, 0.05);
               dv = m.v;
             }
+          }
+        }
+        // Never stop on a zebra: behind a slow or standing car with no room beyond a crossing for the
+        // whole car, wait before it ("don't block the crossing").
+        if (lead && (lead.v < 2.5 || lead.dropoff >= 0)) {
+          // Judge by where the leader will stand: a comfortable stop from its speed, or its drop-off kerb.
+          const stopAt = lead.s + (lead.v * lead.v) / 6;
+          const tail = Math.min(stopAt, lead.dropoff >= 0 ? lead.dropoff : stopAt) - lead.len;
+          for (const cs of r.crossings) {
+            const dist = cs - m.s;
+            if (dist < ZEBRA_HALF || dist > 45) continue;
+            if (tail < cs + ZEBRA_HALF + m.len + 2.2) {
+              // IDM keeps s0 ≈ 2.2 m to a wall: put it 1.2 m into the zebra, the bumper stops ≈ 1 m short of it.
+              const wall = dist - ZEBRA_HALF + 1.2;
+              if (wall < gap) {
+                gap = Math.max(wall, 0.05);
+                dv = m.v;
+              }
+            }
+            break;
+          }
+        }
+        // While the display is in view, buses not yet abreast of it wait out of sight (cars drive on).
+        if (this.focus && m.type === "bus" && r.sDisplay !== undefined) {
+          const hold = r.sDisplay - BUS_HOLD - m.s;
+          if (hold > -1 && hold + 2.2 < gap) {
+            gap = Math.max(hold + 2.2, 0.05);
+            dv = m.v;
           }
         }
         // Buses stop at their stops.
@@ -2604,6 +2914,7 @@ class Vehicles {
   private readonly one = new THREE.Vector3(1, 1, 1);
   private readonly p2: V2 = [0, 0];
   private readonly d2: V2 = [0, 0];
+  private readonly lodDist: [number, number];
 
   constructor(
     private ctx: TwinContext,
@@ -2612,6 +2923,7 @@ class Vehicles {
     maxMovers: number,
     seed: number,
   ) {
+    this.lodDist = LOD_DIST[ctx.tier];
     this.sim = new TrafficSim([], maxMovers, seed);
     this.sim.onSpawn = (m) => this.attach(m);
     this.sim.onRelease = (m) => this.detach(m);
@@ -2889,7 +3201,7 @@ class Vehicles {
       this.batch.getMatrixAt(id, this.m);
       const e = this.m.elements;
       const d = Math.hypot(e[12] - c.x, e[13] - c.y, e[14] - c.z);
-      const lod = d < LOD_NEAR ? 0 : d < LOD_MID ? 1 : 2;
+      const lod = d < this.lodDist[0] ? 0 : d < this.lodDist[1] ? 1 : 2;
       if (lod !== this.instLod[id]) {
         this.instLod[id] = lod;
         const type = this.instType[id] ?? "hatch";
@@ -2981,6 +3293,10 @@ export function buildRoutes(streets: StreetsData | null, scale: number): Route[]
       }
     }
     const stopLines = [...entry.entries()].map(([junction, s]) => ({ s: Math.max(0, s - 1.2), junction, phase: setup.phase })).sort((a, b) => a.s - b.s);
+    // Every crossing (signalled or not) the lane passes over.
+    const zebras: number[] = [];
+    for (const c of streets?.crossings ?? []) for (let i = 0; i + 1 < c.line.length; i++) zebras.push(...line.crossings(c.line[i], c.line[i + 1]));
+    zebras.sort((a, b) => a - b);
     // Bus stops on the right-hand side, 2–8 m off the lane.
     const busStops: number[] = [];
     if (setup.busEvery > 0) {
@@ -2994,6 +3310,14 @@ export function buildRoutes(streets: StreetsData | null, scale: number): Route[]
       }
       busStops.sort((a, b) => a - b);
     }
+    // A 12 m bus at its stop must not stand on a zebra (stops right after a crossing: pull up past it).
+    const zebrasHere: number[] = [];
+    for (const c of streets?.crossings ?? []) for (let i = 0; i + 1 < c.line.length; i++) zebrasHere.push(...line.crossings(c.line[i], c.line[i + 1]));
+    for (let k = 0; k < busStops.length; k++) {
+      for (const cs of zebrasHere) {
+        if (busStops[k] > cs - ZEBRA_HALF && busStops[k] - 12 < cs + ZEBRA_HALF + 0.5) busStops[k] = Math.min(line.length - 20, cs + ZEBRA_HALF + 12.8);
+      }
+    }
     routes.push({
       id: setup.id,
       line,
@@ -3004,6 +3328,8 @@ export function buildRoutes(streets: StreetsData | null, scale: number): Route[]
       busBase: setup.busEvery,
       stops: stopLines,
       busStops,
+      crossings: zebras,
+      sDisplay: setup.id.startsWith("tyk-") ? line.project(DISPLAY_SPOT).s : undefined,
       next: rnd() * 6,
       nextBus: 5 + rnd() * setup.busEvery,
       // Partners' drop-off at BioCity's recess (SPEC §6.3: kerb (−35.6, −22.0), NE-bound kerb lane).
@@ -3116,7 +3442,7 @@ export function dropoffInterval(iso: string): number {
 
 /**
  * Camera for the "supercars" target (SPEC §5.5): from across Tykistökatu, as
- * if from a second-floor window on the north-west side — the three cars either
+ * if from a third-floor window on the north-west side — the three cars either
  * side of the walkway to the revolving door, the sign, the flagpoles. High
  * enough (9.5 m; 11 m on portrait screens, which stand further back) that a bus
  * passing in front of the display never hides a car: in a headless 15-minute
@@ -3124,11 +3450,12 @@ export function dropoffInterval(iso: string): number {
  * ≈ 2.4 % of the time from 6 m.
  */
 export const SUPERCARS_VIEW: CameraView = {
-  position: [-55.0, 9.5, -33.0],
+  // South-west of the street lamp at (−47, −31.5) (City lamp register): its mast and arm stay out of the frame.
+  position: [-57.5, 9.5, -29.5],
   target: [-28.6, 1.5, -16.2],
   hfov: 44,
   fit: 8,
-  portrait: { position: [-57.0, 11.0, -34.2], target: [-28.8, 2.0, -16.2] },
+  portrait: { position: [-59.5, 11.0, -30.5], target: [-28.8, 2.0, -16.2] },
   open: null,
 };
 
@@ -3146,6 +3473,10 @@ export async function buildVehicles(ctx: TwinContext): Promise<WorldModule> {
   root.name = "vehicles";
   const display = buildDisplay(ctx, terrain);
   root.add(display.group);
+  // The spots live in the root, always visible: hiding them with the far display would flip the scene's
+  // light count 0 ↔ 2 and recompile every lit material. Far away they are switched off (intensity 0).
+  for (const s of display.spots) root.add(s, s.target);
+  let spotLevel = 0;
 
   // Everyday cars: parked (time-of-day occupancy) and moving (ultra/high, no reduced motion).
   const animate = !ctx.reducedMotion && ctx.tier !== "low";
@@ -3157,7 +3488,12 @@ export async function buildVehicles(ctx: TwinContext): Promise<WorldModule> {
   fleet.sim.taxiEvery = dropoffInterval(ctx.lighting().iso);
   // Start from a lived-in street: two minutes of traffic, simulated before the first frame
   // (the still that low tier and reduced motion keep: queues at the lights, cars in between).
-  fleet.sim.prewarm(120);
+  fleet.sim.prewarm(70);
+  // The last 50 s with the display in focus: the first frame (and the still that phones and reduced motion
+  // keep) has no queue, drop-off or bus standing in front of the recess.
+  fleet.sim.focus = true;
+  fleet.sim.prewarm(50);
+  fleet.sim.focus = false;
   fleet.sync();
   fleet.setOccupancy(ctx.lighting().iso);
   root.add(fleet.batch, fleet.shadows);
@@ -3182,11 +3518,13 @@ export async function buildVehicles(ctx: TwinContext): Promise<WorldModule> {
     displayNear = near;
     display.group.visible = near;
     fleet.setDisplayFar(!near);
+    for (const s of display.spots) s.intensity = near ? spotLevel : 0;
     return true;
   };
 
   const labels: CSS2DObject[] = [makeLabel("Supercar display", "landmark", -28.4, 3.1, -16.4, "biocity")];
-  const targets: TwinTarget[] = [{ id: "supercars", view: SUPERCARS_VIEW, walkTo: [-33.2, -21.2] }];
+  // Walk me there: in the kept-free walkway between flagpoles 3 and 5 (SPEC §5.2), not behind a pole.
+  const targets: TwinTarget[] = [{ id: "supercars", view: SUPERCARS_VIEW, walkTo: [-32.0, -22.4] }];
   // Picking: invisible boxes round the cars (always present, also when the far stand-ins show).
   root.add(display.pick);
   const pickables: THREE.Object3D[] = [display.pick];
@@ -3208,10 +3546,11 @@ export async function buildVehicles(ctx: TwinContext): Promise<WorldModule> {
     const night = state.night;
     // DRLs and tail LEDs on (display mode): DRL brightness by day, dimmed to position-light level after dark.
     display.emit.value = LUMINANCE.signLit * (2.5 + 9.5 * (1 - night));
-    // 4000 K display spots fade in from sunset (≈ 300 lux on the cars at full night: they stand out
-    // from the ≈ 20 lux street without bleaching under the night exposure).
+    // 4000 K display spots fade in from sunset (≈ 100 lux on the cars at full night: they stand out
+    // from the ≈ 20 lux street; brighter, the night exposure bleaches the paint to beige).
     const k = clamp((night - 0.05) / 0.6, 0, 1);
-    for (const s of display.spots) s.intensity = 135 * k;
+    spotLevel = 48 * k;
+    for (const s of display.spots) s.intensity = displayNear ? spotLevel : 0;
     fleet.setOccupancy(state.iso);
     fleet.setNight(night, simTime);
     fleet.sim.taxiEvery = dropoffInterval(state.iso);
@@ -3232,6 +3571,18 @@ export async function buildVehicles(ctx: TwinContext): Promise<WorldModule> {
   const projScreen = new THREE.Matrix4();
   let frame = 0;
   let lodPrimed = false;
+  const camFwd = new THREE.Vector3();
+  const toDisplay = new THREE.Vector3();
+  /** The camera is looking at the display from close by (its hero views, the walk up to the door). */
+  const displayInView = (camera: THREE.Camera): boolean => {
+    toDisplay.copy(DISPLAY_CENTRE).sub(camera.position);
+    const d = toDisplay.length();
+    if (d > 50 || d < 0.1) return false;
+    camera.getWorldDirection(camFwd);
+    return camFwd.dot(toDisplay) / d > 0.7;
+  };
+  // QA scripts (window.__twin.root("vehicles").userData.fleet): the traffic and its simulation.
+  root.userData.fleet = fleet;
 
   const vehicles: WorldModule = {
     id: "vehicles",
@@ -3256,6 +3607,7 @@ export async function buildVehicles(ctx: TwinContext): Promise<WorldModule> {
         fleet.updateLod(camera);
         return active;
       }
+      fleet.sim.focus = displayInView(camera);
       // Simulate always (cheap); render only while moving traffic is on screen and close enough to see it move.
       fleet.sim.step(dt);
       simTime += dt;

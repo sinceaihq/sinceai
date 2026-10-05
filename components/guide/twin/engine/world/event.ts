@@ -71,6 +71,7 @@ const REGIONS = {
   hangFront: { x: 1024, y: 1280, w: 448, h: 160 },
   hangBack: { x: 1024, y: 1440, w: 448, h: 160 },
   belt: { x: 1472, y: 1280, w: 128, h: 32 },
+  beltPlain: { x: 1472, y: 1344, w: 128, h: 32 },
   edge: { x: 1600, y: 1280, w: 32, h: 128 },
 } satisfies Record<string, Region>;
 
@@ -98,6 +99,8 @@ interface FaceRow {
 
 /** A totem face: header (Since AI marks), a hero message with one big arrow, or a list of destinations. */
 export interface FaceDesign {
+  /** A plain information notice: light face, dark type, no event violet and no Since AI marks. */
+  notice?: boolean;
   kicker?: string;
   title?: string[];
   sub?: string[];
@@ -181,11 +184,20 @@ export const FACES = {
     arrow: "up",
   },
   jokiClosed: {
+    notice: true,
     kicker: "Joki",
     title: ["Door closed", "during the", "event"],
     sub: ["Enter via BioCity", "Tykistökatu 6"],
     detail: ["110 m · round the corner"],
     arrow: "left",
+  },
+  jokiClosedBack: {
+    notice: true,
+    kicker: "Joki",
+    title: ["Door closed", "during the", "event"],
+    sub: ["Enter via BioCity", "Tykistökatu 6"],
+    detail: ["110 m · round the corner"],
+    arrow: "right",
   },
   parkcity: {
     kicker: "Since AI Hackathon",
@@ -258,10 +270,44 @@ const RECESS_POLES: V2[] = [
   [-29.28, -22.74],
 ];
 const POLE_HEIGHT = 10;
+/** BioCity plan frame (SPEC §1.3 B): the white N-block recess wall is the line z_B = −4.62, facing +z_B. */
+const bAt = (x: number, z: number): V2 => planToLocal(PLAN_FRAMES.B, x, z);
+const RECESS_WALL_Z = -4.62;
+/** Compass bearing from the recess floor towards the white wall (−z_B). */
+const TO_RECESS_WALL = (PLAN_FRAMES.B.theta + 360) % 360;
+/**
+ * 3000 K wall-washers at the foot of the white recess wall (SPEC §5.5): one either side of car A,
+ * one in the gap behind it (the car stands out against the lit wall) and one by the gable.
+ */
+export const WALL_WASHERS: number[] = [-41.4, -37.1, -33.6, -31.0];
 
 /** A placed thing. `y` = known floor level (decks, interiors); else the ground under it. */
 export type Item =
-  | { kind: "totem"; id: string; at: V2; facing: number; front: FaceId; back: FaceId; y?: number; pick?: string; uplights?: boolean }
+  | {
+      kind: "totem";
+      id: string;
+      at: V2;
+      facing: number;
+      front: FaceId;
+      back: FaceId;
+      y?: number;
+      pick?: string;
+      uplights?: boolean;
+      /** "notice": a plain information sign (no violet light) — e.g. at a door closed during the event. */
+      style?: "event" | "notice";
+    }
+  | {
+      kind: "wallWash";
+      id: string;
+      /** Floor fixture position, the compass bearing it shines towards (the wall) and its distance to the wall. */
+      at: V2;
+      facing: number;
+      wallDist: number;
+      /** Height the wash fades out at (m above the floor) and its width at the top. */
+      height: number;
+      width: number;
+      y?: number;
+    }
   | { kind: "flag"; id: string; at: V2; facing: number; variant: FlagVariant; y?: number; pick?: string }
   | { kind: "decal"; id: string; at: V2; facing: number; decal: DecalId; size: number; y?: number }
   | { kind: "lineLight"; id: string; from: V2; to: V2; y?: number }
@@ -289,6 +335,17 @@ export const ITEMS: Item[] = [
     uplights: true,
   },
   { kind: "lineLight", id: "bio-recess-line", from: recessAt(0.7, 0.3), to: recessAt(MOUTH_LEN - 2.3, 0.3) },
+  ...WALL_WASHERS.map(
+    (x, i): Item => ({
+      kind: "wallWash",
+      id: `bio-recess-wash-${i + 1}`,
+      at: bAt(x, RECESS_WALL_Z + 0.32),
+      facing: TO_RECESS_WALL,
+      wallDist: 0.32,
+      height: 11,
+      width: 4.2,
+    }),
+  ),
   // Since AI banners on the recess's three white flagpoles, facing the street.
   // The middle one names the entrance for the partners arriving on Tykistökatu.
   ...RECESS_POLES.map(
@@ -331,9 +388,11 @@ export const ITEMS: Item[] = [
   // desks and roll-up stands at E (36.8, 54.0)), facing the walk in from the east main entrance; the
   // floor-1 ceiling is 3.9 m up.
   { kind: "hangSign", id: "edu-reg-hang", at: eAt(37.4, 55.2), facing: (PLAN_FRAMES.E.theta + 180) % 360, y: 3.4, bottom: 2.7, ceiling: 3.9 },
-  // Joki street door: closed for the event (SPEC §3.2.3) — belts across, a totem sending people to BioCity.
+  // Joki street door: closed for the event (SPEC §3.2.3, organiser's map: "Ei ulos-/sisäänkäyntiä") — plain
+  // black belts across and a plain notice sending people to BioCity: nothing violet, no lights, so it never
+  // reads as an entrance.
   { kind: "stanchions", id: "joki-belts", points: [fromDoor(JOKI_DOOR, 219.5, 1.25, -4.2), fromDoor(JOKI_DOOR, 219.5, 1.25, -1.4), fromDoor(JOKI_DOOR, 219.5, 1.25, 1.4), fromDoor(JOKI_DOOR, 219.5, 1.25, 4.0)] },
-  { kind: "totem", id: "joki-totem", at: fromDoor(JOKI_DOOR, 219.5, 3.0, -2.6), facing: 219.5, front: "jokiClosed", back: "brand", pick: "entrance-joki-street", uplights: true },
+  { kind: "totem", id: "joki-totem", at: fromDoor(JOKI_DOOR, 219.5, 3.0, -2.6), facing: 219.5, front: "jokiClosed", back: "jokiClosedBack", pick: "entrance-joki-street", style: "notice" },
   // ParkCity: on the pavement outside the colonnade, where the walk from the street door turns.
   { kind: "totem", id: "parkcity-totem", at: [207.6, 11.0], facing: 39, front: "parkcity", back: "brand", pick: "parkcity", uplights: true },
 ];
@@ -527,6 +586,10 @@ function drawPoleBanner(ctx: CanvasRenderingContext2D, r: Region, print: "brand"
 
 /** Totem face: header with the marks, then a hero message + arrow, or destination rows. */
 export function drawFace(ctx: CanvasRenderingContext2D, r: Region, d: FaceDesign, m: Marks) {
+  if (d.notice) {
+    drawNotice(ctx, r, d);
+    return;
+  }
   const W = r.w;
   const H = r.h;
   const x0 = r.x;
@@ -596,6 +659,56 @@ export function drawFace(ctx: CanvasRenderingContext2D, r: Region, d: FaceDesign
   ctx.fillStyle = VIOLET_STRONG;
   ctx.fillRect(x0, y0 + H * 0.935, W, H * 0.065);
   tracked(ctx, "SINCE AI HACKATHON 2026", x0 + W / 2, y0 + H * 0.978, W * 0.048, { align: "center", track: 0.08, maxW: W - pad * 2 });
+}
+
+/** Plain notice face (a door closed during the event): light grey, black type, a black arrow — no event look. */
+function drawNotice(ctx: CanvasRenderingContext2D, r: Region, d: FaceDesign) {
+  const W = r.w;
+  const H = r.h;
+  const x0 = r.x;
+  const y0 = r.y;
+  const pad = W * 0.09;
+  const maxW = W - pad * 2;
+  ctx.fillStyle = "#e4e4e0";
+  ctx.fillRect(x0, y0, W, H);
+  // A no-entry disc (red ring, white bar) at the top: closed, at a glance.
+  const cx = x0 + W / 2;
+  const cy = y0 + H * 0.12;
+  const rr = W * 0.2;
+  ctx.fillStyle = "#c8282d";
+  ctx.beginPath();
+  ctx.arc(cx, cy, rr, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(cx - rr * 0.68, cy - rr * 0.17, rr * 1.36, rr * 0.34);
+  let y = y0 + H * 0.27;
+  if (d.kicker) {
+    tracked(ctx, d.kicker.toUpperCase(), x0 + pad, y, W * 0.06, { color: "#5a5a60", track: 0.12, maxW });
+    y += H * 0.02;
+  }
+  for (const line of d.title ?? []) {
+    y += W * 0.115;
+    tracked(ctx, line.toUpperCase(), x0 + pad, y, W * 0.1, { maxW, track: 0.02, color: "#111114" });
+  }
+  y += H * 0.02;
+  for (const line of d.sub ?? []) {
+    y += W * 0.085;
+    tracked(ctx, line.toUpperCase(), x0 + pad, y, W * 0.068, { maxW, color: "#2a2a30", track: 0.04 });
+  }
+  y += H * 0.015;
+  for (const line of d.detail ?? []) {
+    y += W * 0.07;
+    tracked(ctx, line, x0 + pad, y, W * 0.056, { maxW, color: "#55555c", weight: 500, track: 0.02 });
+  }
+  if (d.arrow) {
+    const sz = W * 0.42;
+    const ay = y0 + H * 0.8;
+    ctx.fillStyle = "#111114";
+    ctx.fillRect(x0 + (W - sz) / 2, ay - sz / 2, sz, sz);
+    arrow(ctx, x0 + W / 2, ay, sz * 0.62, d.arrow, "#ffffff");
+  }
+  ctx.fillStyle = "#3a3a40";
+  ctx.fillRect(x0, y0 + H * 0.955, W, H * 0.045);
 }
 
 /** Hanging sign: "REGISTRATION" with the mark; the front says what happens here, the back when. */
@@ -691,6 +804,11 @@ function makeAtlases(scale: number): { prints: THREE.CanvasTexture; decals: THRE
     ctx.fillRect(REGIONS.belt.x, REGIONS.belt.y, REGIONS.belt.w, REGIONS.belt.h);
     ctx.fillStyle = "rgba(255,255,255,0.18)";
     ctx.fillRect(REGIONS.belt.x, REGIONS.belt.y + REGIONS.belt.h * 0.45, REGIONS.belt.w, REGIONS.belt.h * 0.1);
+    // Plain black webbing (a closed door's cordon: not the event's colour).
+    ctx.fillStyle = "#18181c";
+    ctx.fillRect(REGIONS.beltPlain.x, REGIONS.beltPlain.y, REGIONS.beltPlain.w, REGIONS.beltPlain.h);
+    ctx.fillStyle = "rgba(255,255,255,0.1)";
+    ctx.fillRect(REGIONS.beltPlain.x, REGIONS.beltPlain.y + REGIONS.beltPlain.h * 0.45, REGIONS.beltPlain.w, REGIONS.beltPlain.h * 0.1);
     // Edge light: bright violet core.
     const eg = ctx.createLinearGradient(REGIONS.edge.x, 0, REGIONS.edge.x + REGIONS.edge.w, 0);
     eg.addColorStop(0, VIOLET_STRONG);
@@ -991,6 +1109,7 @@ const GLOW_FRAGMENT = /* glsl */ `
 #include <fog_pars_fragment>
 uniform vec3 uColor;
 uniform vec3 uHot;
+uniform vec3 uWarm;
 uniform float uNight;
 varying vec2 vUv;
 varying vec3 vGlow;
@@ -999,7 +1118,24 @@ void main() {
 	float kind = vGlow.x;
 	float a = 0.0;
 	vec3 c = uColor;
-	if ( kind < 0.5 ) {
+	if ( kind > 3.5 ) {
+		c = uWarm;
+		if ( kind < 4.5 ) {
+			// Wall wash from a floor uplight (uv.y = 0 at the fixture … 1 at the top): a scallop that starts
+			// just above the fixture, widens with height and fades out towards the top (night only).
+			float h = vUv.y;
+			float spread = 0.16 + 0.84 * sqrt( h );
+			float across = 1.0 - smoothstep( 0.35 * spread, spread, abs( p.x ) );
+			float rise = smoothstep( 0.0, 0.06, h );
+			float fall = pow( 1.0 - h, 1.6 );
+			a = across * rise * fall * ( 0.55 + 0.45 * exp( -h * 6.0 ) ) * uNight;
+		} else {
+			// Warm fixture lens.
+			float r = length( p );
+			a = ( 1.0 - smoothstep( 0.6, 1.0, r ) ) * uNight;
+			c = mix( uWarm, vec3( 1.0 ), 0.4 );
+		}
+	} else if ( kind < 0.5 ) {
 		// Ground pool round an uplight (night only).
 		float r = length( p );
 		a = exp( -r * r * 4.5 ) * ( 1.0 - smoothstep( 0.85, 1.0, r ) ) * uNight;
@@ -1063,6 +1199,8 @@ export async function buildEvent(ctx: TwinContext): Promise<WorldModule> {
     ...THREE.UniformsUtils.clone(THREE.UniformsLib.fog),
     uColor: { value: new THREE.Color(VIOLET_STRONG) },
     uHot: { value: new THREE.Color("#efeaff") },
+    // 3000 K (wall-washers).
+    uWarm: { value: new THREE.Color().setRGB(1.0, 0.71, 0.42, THREE.SRGBColorSpace) },
     uNight: { value: 0 },
   };
   const glowMat = new THREE.ShaderMaterial({
@@ -1154,6 +1292,8 @@ export async function buildEvent(ctx: TwinContext): Promise<WorldModule> {
 
   /** Ground under an item: its known level, the probed surface, else the DTM. */
   const heights = new Map<string, number>();
+  /** Lowest surface within ≈ 1 m of an item (its uplights' ground pools lie there). */
+  const lows = new Map<string, number>();
   const baseY = (it: Item, at: V2): number => {
     const key = `${it.id}@${at[0].toFixed(2)},${at[1].toFixed(2)}`;
     const known = heights.get(key);
@@ -1188,13 +1328,16 @@ export async function buildEvent(ctx: TwinContext): Promise<WorldModule> {
         kind,
         intensity,
       );
-    const uplight = (m: THREE.Matrix4, lx: number, lz: number, y: number) => {
+    const uplight = (it: Item, m: THREE.Matrix4, lx: number, lz: number, y: number) => {
       // Small black can, tilted up at the object; lens and ground pool glow at night.
       const can = new THREE.CylinderGeometry(0.06, 0.07, 0.15, 10);
       frame.add(can, m.clone().multiply(local(lx, 0.075, lz, 0, lz > 0 ? -0.18 : 0.18)));
       const p = new THREE.Vector3(lx, 0.152, lz).applyMatrix4(m);
       groundQuad(p.x, p.y + 0.002, p.z, 0.065, 1, LUMINANCE.eventLight * 0.45);
-      groundQuad(p.x, y + 0.02, p.z, 1.3, 0, 0.012);
+      // The pool is a flat quad: lay it on the lowest surface round the item (a deck's fall, a step
+      // beside it), so it never floats over the ground or a route ribbon there.
+      const low = lows.get(it.id) ?? y;
+      groundQuad(p.x, Math.min(y, low) + 0.012, p.z, 1.1, 0, 0.012);
     };
 
     for (const it of ITEMS) {
@@ -1209,8 +1352,8 @@ export async function buildEvent(ctx: TwinContext): Promise<WorldModule> {
         const bi = FACE_ORDER.indexOf(it.back);
         print.add(printQuad(0.56, 1.866, faceRegion(fi)), m.clone().multiply(local(0, 0.17 + 0.933, 0.072)));
         print.add(printQuad(0.56, 1.866, faceRegion(bi)), m.clone().multiply(local(0, 0.17 + 0.933, -0.072, Math.PI)));
-        // Violet edge lights down both narrow sides: the diffuser (print) and its light (glow).
-        for (const sx of [-1, 1]) {
+        // Violet edge lights down both narrow sides: the diffuser (print) and its light (glow). A notice has none.
+        for (const sx of it.style === "notice" ? [] : [-1, 1]) {
           const strip = printQuad(0.03, 1.98, REGIONS.edge);
           print.add(strip, m.clone().multiply(local(sx * 0.3015, 0.08 + 0.99, 0, (sx * Math.PI) / 2)));
           const c = (lx: number, ly: number): V3 => {
@@ -1219,9 +1362,9 @@ export async function buildEvent(ctx: TwinContext): Promise<WorldModule> {
           };
           glowQuad([c(-0.011, 0.09), c(-0.011, 2.07), c(0.011, 2.07), c(0.011, 0.09)], 2, 1);
         }
-        if (it.uplights) {
-          uplight(m, 0, 0.55, y);
-          uplight(m, 0, -0.55, y);
+        if (it.uplights && it.style !== "notice") {
+          uplight(it, m, 0, 0.55, y);
+          uplight(it, m, 0, -0.55, y);
         }
         const proxy = proxies.get(it.id);
         if (proxy) {
@@ -1239,7 +1382,7 @@ export async function buildEvent(ctx: TwinContext): Promise<WorldModule> {
         for (const a of [0, Math.PI / 2]) frame.add(new THREE.BoxGeometry(0.62, 0.025, 0.04), m.clone().multiply(local(-0.012, 0.085, 0, a)));
         const i = flags.indexOf(it);
         sails.setMatrixAt(i, m);
-        uplight(m, 0.35, 0.45, y);
+        uplight(it, m, 0.35, 0.45, y);
         const proxy = proxies.get(it.id);
         if (proxy) {
           proxy.matrix.copy(m).multiply(new THREE.Matrix4().compose(new THREE.Vector3(0.4, 2.2, 0), new THREE.Quaternion(), new THREE.Vector3(0.9, 4.2, 0.3)));
@@ -1291,7 +1434,7 @@ export async function buildEvent(ctx: TwinContext): Promise<WorldModule> {
           const mid = new THREE.Vector3((a[0] + b[0]) / 2, (a[1] + b[1]) / 2 + 0.875, (a[2] + b[2]) / 2);
           const yaw = -Math.atan2(b[2] - a[2], b[0] - a[0]);
           for (const side of [0, Math.PI]) {
-            const belt = printQuad(len, 0.05, REGIONS.belt);
+            const belt = printQuad(len, 0.05, REGIONS.beltPlain);
             print.add(belt, new THREE.Matrix4().compose(mid, new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), yaw + side), new THREE.Vector3(1, 1, 1)));
           }
         }
@@ -1308,6 +1451,39 @@ export async function buildEvent(ctx: TwinContext): Promise<WorldModule> {
           const len = Math.max(0.05, it.ceiling - top - 0.02);
           frame.add(new THREE.CylinderGeometry(0.004, 0.004, len, 4), m.clone().multiply(local(sx, top + 0.02 + len / 2, 0)));
         }
+      } else if (it.kind === "wallWash") {
+        const y = baseY(it, it.at);
+        const m = placeMatrix(it.at[0], y, it.at[1], it.facing + 180);
+        // Low black linear fixture on the paving (front −z of m faces the wall), warm lens on top.
+        frame.add(boxUV(new THREE.BoxGeometry(0.42, 0.09, 0.16)), m.clone().multiply(local(0, 0.045, 0)));
+        const lens = new THREE.Vector3(0, 0.092, 0).applyMatrix4(m);
+        glowQuad(
+          [
+            [lens.x - 0.17, lens.y, lens.z - 0.17],
+            [lens.x + 0.17, lens.y, lens.z - 0.17],
+            [lens.x + 0.17, lens.y, lens.z + 0.17],
+            [lens.x - 0.17, lens.y, lens.z + 0.17],
+          ],
+          5,
+          LUMINANCE.eventLight * 0.12,
+        );
+        // The wash on the wall, 3 cm in front of it: the quad is wide at the top (the scallop spreads).
+        const [fx, fz] = bearingVector(it.facing);
+        const wx = it.at[0] + fx * (it.wallDist - 0.03);
+        const wz = it.at[1] + fz * (it.wallDist - 0.03);
+        const rx = -fz;
+        const rz = fx;
+        const half = it.width / 2;
+        glowQuad(
+          [
+            [wx - rx * half, y + 0.08, wz - rz * half],
+            [wx + rx * half, y + 0.08, wz + rz * half],
+            [wx + rx * half, y + it.height, wz + rz * half],
+            [wx - rx * half, y + it.height, wz - rz * half],
+          ],
+          4,
+          0.035,
+        );
       } else if (it.kind === "poleBanner") {
         const y = baseY(it, it.at);
         const m = placeMatrix(it.at[0], y + it.top, it.at[1], it.facing);
@@ -1349,8 +1525,20 @@ export async function buildEvent(ctx: TwinContext): Promise<WorldModule> {
   surfaceService.request(footprints, 2);
   const unlisten = surfaceService.listen((index) => {
     heights.clear();
+    lows.clear();
     for (const it of ITEMS) {
       if (it.kind === "hangSign") continue;
+      if (it.kind === "totem" || it.kind === "flag") {
+        const hint = it.y ?? groundAt(it.at[0], it.at[1]);
+        let low: number | null = null;
+        for (let k = 0; k < 9; k++) {
+          const a = (k / 8) * Math.PI * 2;
+          const r = k === 8 ? 0 : 1.0;
+          const yy = index.heightAt(it.at[0] + Math.cos(a) * r, it.at[1] + Math.sin(a) * r, hint, 0.6, 0.45);
+          if (yy !== null && (low === null || yy < low)) low = yy;
+        }
+        if (low !== null) lows.set(it.id, low);
+      }
       const pts: V2[] = it.kind === "lineLight" ? [it.from, it.to] : it.kind === "stanchions" ? it.points : [it.at];
       for (const at of pts) {
         const hint = it.y ?? groundAt(at[0], at[1]);

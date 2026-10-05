@@ -4,7 +4,8 @@ import type { LightingState, Tier, TwinContext, V2, V3, WorldModule } from "../t
 import { loadCampus, loadRoutes, loadTerrain, type CampusData, type RoutesData, type Terrain } from "../data/campus";
 import { TIER_SETTINGS } from "../render/quality";
 import { EVENT_VIOLET, EVENT_VIOLET_STRONG } from "../render/canvas";
-import { clamp, hashString, mulberry32, pointInRing, polygonBounds } from "../util";
+import { surfaceService } from "../world/routes";
+import { clamp, hashString, mulberry32, pointInRing, polygonBounds, smoothstep } from "../util";
 
 /**
  * People on the campus (DESIGN §2 props/people.ts):
@@ -261,6 +262,43 @@ export function walkerDistance(length: number, speed: number, offset: number, t:
   if (cycle <= 0) return null;
   const s = (((offset + speed * t) % cycle) + cycle) % cycle;
   return s <= length ? s : null;
+}
+
+/** A well-mixed hash of two integers to (0, 1) — per-walker dice that never change (deterministic). */
+export function unitHash(a: number, b: number): number {
+  let h = Math.imul((a | 0) ^ 0x9e3779b9, 0x85ebca6b) ^ Math.imul(((b | 0) + 0x632be59b) | 0, 0xc2b2ae35);
+  h ^= h >>> 16;
+  h = Math.imul(h, 0x7feb352d);
+  h ^= h >>> 15;
+  h = Math.imul(h, 0x846ca68b);
+  h ^= h >>> 16;
+  return ((h >>> 0) + 0.5) / 4294967296;
+}
+
+/**
+ * Stable weighted choice for walker `i` (an exponential race with fixed dice): the
+ * pick is proportional to the weights, and when the weights change a little only a
+ * few walkers change their pick — the crowd never reshuffles as the clock moves.
+ * Returns −1 when no weight is positive.
+ */
+export function stablePick(weights: readonly number[], i: number): number {
+  let best = -1;
+  let bestKey = Infinity;
+  for (let j = 0; j < weights.length; j++) {
+    const w = weights[j];
+    if (!(w > 0)) continue;
+    const key = -Math.log(unitHash(i, j + 1)) / w;
+    if (key < bestKey) {
+      bestKey = key;
+      best = j;
+    }
+  }
+  return best;
+}
+
+/** Walking direction of walker `i` on a path: towards the venue with the plan's inbound share (sidewalks: either way). */
+export function walkerForward(i: number, kind: WalkPath["kind"], inbound: number): boolean {
+  return unitHash(i, 0x51ed) < (kind === "sidewalk" ? 0.5 : inbound);
 }
 
 /** Positions of a standing group: `n` people on a small circle facing its centre (deterministic). */
@@ -810,7 +848,17 @@ flat varying vec4 vTwDetail;
 	#define TW_LOOK1 uTwLook1
 	#define TW_LOOK2 uTwLook2
 #endif
+#ifdef USE_INSTANCING
+	attribute float aTwFade;
+	#define TW_FADE aTwFade
+#else
+	uniform float uTwFadeU;
+	#define TW_FADE uTwFadeU
+#endif
 uniform float uTwFreeze;
+// Camera distance (m, to the body's axis) over which a figure dissolves: never a mannequin in the lens.
+uniform vec2 uTwNear;
+varying float vTwFade;
 varying vec3 vTwCol;
 varying float vTwRough;
 varying float vTwSheen;
@@ -1036,6 +1084,27 @@ const VERTEX_COLOR = /* glsl */ `
 		bool puffer = slot == 2 && fract( TW_LOOK2.w * 0.37 ) > 0.55;
 		float sole = fract( seed * 5.3 ) > 0.6 ? 1.0 : 0.0;
 		vTwDetail = vec4( puffer ? 1.0 : 0.0, sole, dot( TW_LOOK2.rgb, vec3( 0.3, 0.59, 0.11 ) ), 0.0 );
+		// Dissolve: the instance's own fade (people joining or leaving the street) times the camera's
+		// nearness to the body's axis (feet → head), so a walk-mode or eye-level camera never sits in a face.
+		#ifdef USE_INSTANCING
+			mat4 twM = modelMatrix * instanceMatrix;
+		#else
+			mat4 twM = modelMatrix;
+		#endif
+		vec3 twO = ( twM * vec4( 0.0, 0.0, 0.0, 1.0 ) ).xyz;
+		float twH = 1.75 * length( twM[ 1 ].xyz );
+		float twDy = cameraPosition.y - clamp( cameraPosition.y, twO.y, twO.y + twH );
+		float twD = length( vec2( length( cameraPosition.xz - twO.xz ), twDy ) );
+		vTwFade = clamp( TW_FADE, 0.0, 1.0 ) * smoothstep( uTwNear.x, uTwNear.y, twD );
+	}
+`;
+
+/** Ordered 4 × 4 dither: a figure dissolves (screen-door) instead of popping; opaque, no sorting. */
+const FADE_FRAGMENT = /* glsl */ `
+	if ( vTwFade < 0.999 ) {
+		const float twBayer[ 16 ] = float[ 16 ]( 0.0, 8.0, 2.0, 10.0, 12.0, 4.0, 14.0, 6.0, 3.0, 11.0, 1.0, 9.0, 15.0, 7.0, 13.0, 5.0 );
+		ivec2 twQ = ivec2( mod( gl_FragCoord.xy, 4.0 ) );
+		if ( vTwFade * 16.0 <= twBayer[ twQ.x + twQ.y * 4 ] + 0.5 ) discard;
 	}
 `;
 
@@ -1050,10 +1119,15 @@ export interface SingleUniforms {
 export interface PersonMaterials {
   material: THREE.MeshStandardMaterial;
   depth: THREE.MeshDepthMaterial;
-  uniforms: { uTwTime: THREE.IUniform<number>; uTwFreeze: THREE.IUniform<number> };
+  uniforms: { uTwTime: THREE.IUniform<number>; uTwFreeze: THREE.IUniform<number>; uTwNear: THREE.IUniform<THREE.Vector2> };
   /** Only for `instanced: false`. */
   single?: SingleUniforms;
+  /** Only for `instanced: false`: the figure's own fade (0 = gone … 1 = shown). */
+  fade?: THREE.IUniform<number>;
 }
+
+/** Default dissolve range (m from the camera to a person's axis): gone inside 0.75 m, whole beyond 1.6 m. */
+const NEAR_FADE = new THREE.Vector2(0.75, 1.6);
 
 /**
  * Material pair (colour + shadow depth) that skins the figure. `instanced`
@@ -1061,7 +1135,8 @@ export interface PersonMaterials {
  * (the tour avatar).
  */
 export function makePersonMaterials(opts: { instanced: boolean; lanyard?: THREE.ColorRepresentation } = { instanced: true }): PersonMaterials {
-  const uniforms = { uTwTime: { value: 0 }, uTwFreeze: { value: 0 } };
+  const uniforms = { uTwTime: { value: 0 }, uTwFreeze: { value: 0 }, uTwNear: { value: NEAR_FADE.clone() } };
+  const fade = opts.instanced ? undefined : { value: 1 };
   const single: SingleUniforms | undefined = opts.instanced
     ? undefined
     : {
@@ -1075,7 +1150,7 @@ export function makePersonMaterials(opts: { instanced: boolean; lanyard?: THREE.
   material.name = "people";
   const skin = skinGlsl();
   material.onBeforeCompile = (shader) => {
-    Object.assign(shader.uniforms, uniforms, single ?? {}, { uTwLanyard: lanyard });
+    Object.assign(shader.uniforms, uniforms, single ?? {}, fade ? { uTwFadeU: fade } : {}, { uTwLanyard: lanyard });
     shader.vertexShader = shader.vertexShader
       .replace("#include <common>", `#include <common>\nuniform vec3 uTwLanyard;\n${VERTEX_PARS}\n${skin}`)
       .replace(
@@ -1086,8 +1161,9 @@ export function makePersonMaterials(opts: { instanced: boolean; lanyard?: THREE.
     shader.fragmentShader = shader.fragmentShader
       .replace(
         "#include <common>",
-        "#include <common>\nvarying vec3 vTwCol;\nvarying float vTwRough;\nvarying float vTwSheen;\nvarying vec3 vTwLocal;\nflat varying float vTwSlot;\nflat varying vec4 vTwDetail;",
+        "#include <common>\nvarying vec3 vTwCol;\nvarying float vTwRough;\nvarying float vTwSheen;\nvarying vec3 vTwLocal;\nflat varying float vTwSlot;\nflat varying vec4 vTwDetail;\nvarying float vTwFade;",
       )
+      .replace("#include <clipping_planes_fragment>", `${FADE_FRAGMENT}\n#include <clipping_planes_fragment>`)
       .replace("#include <color_fragment>", `#include <color_fragment>\n\tdiffuseColor.rgb = vTwCol;\n${PERSON_DETAILS}`)
       .replace("#include <roughnessmap_fragment>", "#include <roughnessmap_fragment>\n\troughnessFactor = vTwRough;");
   };
@@ -1096,13 +1172,13 @@ export function makePersonMaterials(opts: { instanced: boolean; lanyard?: THREE.
   const depth = new THREE.MeshDepthMaterial();
   depth.name = "people-depth";
   depth.onBeforeCompile = (shader) => {
-    Object.assign(shader.uniforms, uniforms, single ?? {}, { uTwLanyard: lanyard });
+    Object.assign(shader.uniforms, uniforms, single ?? {}, fade ? { uTwFadeU: fade } : {}, { uTwLanyard: lanyard });
     shader.vertexShader = shader.vertexShader
       .replace("#include <common>", `#include <common>\nuniform vec3 uTwLanyard;\n${VERTEX_PARS}`)
       .replace("#include <begin_vertex>", `#include <begin_vertex>\n\t{ vec3 twN = vec3( 0.0, 1.0, 0.0 ); twSkin( transformed, twN ); }`);
   };
   depth.customProgramCacheKey = () => `tw-person-depth-${opts.instanced ? "i" : "s"}`;
-  return { material, depth, uniforms, single };
+  return { material, depth, uniforms, single, fade };
 }
 
 // ── Looks ────────────────────────────────────────────────────────────────────
@@ -1158,16 +1234,20 @@ interface InstanceAttrs {
   look0: THREE.InstancedBufferAttribute;
   look1: THREE.InstancedBufferAttribute;
   look2: THREE.InstancedBufferAttribute;
+  /** 0 = gone … 1 = shown (people joining or leaving the street dissolve). */
+  fade: THREE.InstancedBufferAttribute;
 }
 
 function instanceAttrs(geometry: THREE.BufferGeometry, count: number): InstanceAttrs {
-  const make = (name: string) => {
-    const a = new THREE.InstancedBufferAttribute(new Float32Array(count * 4), 4);
+  const make = (name: string, size = 4) => {
+    const a = new THREE.InstancedBufferAttribute(new Float32Array(count * size), size);
     a.setUsage(THREE.StaticDrawUsage);
     geometry.setAttribute(name, a);
     return a;
   };
-  return { anim: make("aTwAnim"), look0: make("aTwLook0"), look1: make("aTwLook1"), look2: make("aTwLook2") };
+  const fade = make("aTwFade", 1);
+  (fade.array as Float32Array).fill(1);
+  return { anim: make("aTwAnim"), look0: make("aTwLook0"), look1: make("aTwLook1"), look2: make("aTwLook2"), fade };
 }
 
 function writeLook(a: InstanceAttrs, i: number, look: Look) {
@@ -1251,17 +1331,50 @@ export function placeSeatedPeople(
   return mesh;
 }
 
+/** Footprints of the hero buildings (filled once the campus data is in): the tour walker's indoor test. */
+const heroRings: { ring: V2[]; holes: V2[][]; box: ReturnType<typeof polygonBounds> }[] = [];
+let heroLoad: Promise<void> | null = null;
+function loadHeroRings(): Promise<void> {
+  heroLoad ??= loadCampus()
+    .then((campus) => {
+      if (heroRings.length) return;
+      for (const b of campus.buildings) {
+        if (b.role !== "biocity" && b.role !== "joki" && b.role !== "educity") continue;
+        heroRings.push({ ring: b.polygon, holes: b.holes ?? [], box: polygonBounds(b.polygon) });
+      }
+    })
+    .catch(() => undefined);
+  return heroLoad;
+}
+
+/** Inside a hero building's footprint (BioCity, Joki, EduCity) — the walker is then lit by the interior light. */
+export function insideHeroFootprint(x: number, z: number, rings: readonly { ring: V2[]; holes: V2[][] }[] = heroRings): boolean {
+  return rings.some(
+    (r) => pointInRing([x, z], r.ring) && !r.holes.some((h) => pointInRing([x, z], h)),
+  );
+}
+
 /**
  * The tour walker: a person in the Since AI violet jacket with an event
  * lanyard, a soft violet ring on the ground so it reads from afar. Front = −z,
  * feet at y = 0 (the engine sets position and rotation every frame). The walk
  * cycle advances with the distance it is moved, so it stops when it stops.
+ *
+ * - Indoors it is lit like the interiors around it (ctx.envInterior, the
+ *   calibrated artificial light), outdoors by the sky — never a black cut-out
+ *   in a lit hall at night. The level comes from `userData.level` when the
+ *   engine sets it, else from the hero buildings' footprints.
+ * - Eye level (first person): the camera sits in its head, so the figure and
+ *   its ring dissolve within ≈ 1.7 m of the camera; over the shoulder it stays.
+ * - The ring is display-referred (fixed brightness on screen at noon and at night).
  */
 export function makeWalkerAvatar(ctx: TwinContext): THREE.Object3D {
   const group = new THREE.Group();
   group.name = "tour-walker";
+  void loadHeroRings();
   const geometry = buildPersonGeometry("high");
   const mats = makePersonMaterials({ instanced: false, lanyard: "#ffffff" });
+  mats.uniforms.uTwNear.value.set(0.95, 1.7);
   const single = mats.single;
   if (single) {
     const violet = new THREE.Color(EVENT_VIOLET_STRONG);
@@ -1283,12 +1396,26 @@ export function makeWalkerAvatar(ctx: TwinContext): THREE.Object3D {
   // Stride-locked walk: phase from the distance moved since the last frame.
   const last = new THREE.Vector3(NaN, 0, 0);
   const now = new THREE.Vector3();
+  const head = new THREE.Vector3();
   let phase = 0;
   let speed = 0;
   let lastT = performance.now();
-  body.onBeforeRender = () => {
-    if (!single) return;
+  /** Camera distance to the walker's axis (feet → head): eye level dissolves the ring too. */
+  let camAxis = Infinity;
+  const measure = (camera: THREE.Camera) => {
     group.getWorldPosition(now);
+    camera.getWorldPosition(head);
+    const dy = head.y - clamp(head.y, now.y, now.y + 1.75);
+    camAxis = Math.hypot(head.x - now.x, head.z - now.z, dy);
+  };
+  body.onBeforeRender = (_renderer, _scene, camera) => {
+    measure(camera);
+    // Indoors: the interior's artificial light (as the seated builders and the furniture get it).
+    const level = group.userData.level as string | null | undefined;
+    const indoor = level !== undefined && level !== null ? level !== "outdoor" : insideHeroFootprint(now.x, now.z);
+    const env = indoor && ctx.envInterior ? ctx.envInterior : null;
+    if (mats.material.envMap !== env) mats.material.envMap = env;
+    if (!single) return;
     const t = performance.now();
     const dt = Math.min(0.1, (t - lastT) / 1000);
     lastT = t;
@@ -1306,14 +1433,21 @@ export function makeWalkerAvatar(ctx: TwinContext): THREE.Object3D {
     single.uTwAnim.value.set(phase, moving ? 1 : 0, POSE.walk, 0);
   };
   group.add(body);
-  const ring = new THREE.Mesh(
-    new THREE.RingGeometry(0.42, 0.55, 48),
-    new THREE.MeshBasicMaterial({ color: EVENT_VIOLET, transparent: true, opacity: 0.85, depthWrite: false }),
-  );
+  const ringMat = new THREE.MeshBasicMaterial({ color: EVENT_VIOLET, transparent: true, opacity: 0.85, depthWrite: false, toneMapped: true });
+  ringMat.name = "tour-walker-ring";
+  const ring = new THREE.Mesh(new THREE.RingGeometry(0.42, 0.55, 48), ringMat);
   ring.rotation.x = -Math.PI / 2;
   ring.position.y = 0.03;
   ring.renderOrder = 2;
   ring.name = "tour-walker-ring";
+  const violet = new THREE.Color(EVENT_VIOLET);
+  ring.onBeforeRender = (renderer, _scene, camera) => {
+    measure(camera);
+    // Display-referred: the same violet on screen at noon and at night (pipeline: AgX after exposure).
+    const exposure = renderer.toneMappingExposure > 0 ? renderer.toneMappingExposure : 1;
+    ringMat.color.copy(violet).multiplyScalar(1.4 / exposure);
+    ringMat.opacity = 0.85 * smoothstep(1.0, 1.9, camAxis);
+  };
   group.add(ring);
   return group;
 }
@@ -1321,8 +1455,13 @@ export function makeWalkerAvatar(ctx: TwinContext): THREE.Object3D {
 // ── The pedestrians module ──────────────────────────────────────────────────
 
 interface Walker {
+  /** Path and direction shown now, and the ones the plan wants (a change dissolves out, then in). */
   path: number;
   forward: boolean;
+  wantPath: number;
+  wantForward: boolean;
+  /** 0 = gone … 1 = shown. */
+  vis: number;
   speed: number;
   offset: number;
   lateral: number;
@@ -1332,28 +1471,41 @@ interface Walker {
 
 interface StandingGroup {
   at: V3;
-  members: { x: number; z: number; ry: number; look: Look; pose: number }[];
+  members: { x: number; z: number; ry: number; look: Look; pose: number; y: number }[];
   /** Earliest share of crowdPlan().groups at which this group is out. */
   rank: number;
+  vis: number;
 }
 
-/** Event hot spots for standing groups (y from the route data / terrain). */
-const GROUP_SPOTS: { at: V2; n: number; id: string }[] = [
-  { id: "edu-east", at: [207.5, 139.2], n: 5 },
+/**
+ * Event hot spots for standing groups: by the entrances, the stops and the stairs, but
+ * never in a doorway or on a tour route (≥ 2.6 m from every route's centre line, ≥ 3.5 m
+ * from every door point — props/__tests__/people.test.ts checks it against routes.json).
+ * Heights come from the modelled surfaces (the shared probe in world/routes.ts).
+ */
+export const GROUP_SPOTS: { at: V2; n: number; id: string }[] = [
+  // EduCity east main entrance: on the plaza south-east of the sliding doors, out of the door axis.
+  { id: "edu-east", at: [208.8, 145.8], n: 5 },
   { id: "edu-east-2", at: [200.2, 141.0], n: 3 },
-  { id: "edu-west", at: [172.8, 112.6], n: 4 },
+  // EduCity west main entrance: on the deck north-west of the revolving door, beside the transfer route.
+  { id: "edu-west", at: [171.7, 103.0], n: 4 },
   { id: "edu-west-2", at: [169.5, 116.8], n: 3 },
-  { id: "edu-deck", at: [160.0, 99.0], n: 3 },
-  { id: "edu-b", at: [241.0, 112.5], n: 3 },
-  { id: "bio-event", at: [26.6, -9.6], n: 4 },
-  { id: "bio-event-2", at: [30.4, -5.2], n: 3 },
-  { id: "jussin-aukio", at: [48.5, 6.5], n: 4 },
-  { id: "jussin-aukio-2", at: [56.0, 13.0], n: 2 },
-  { id: "bio-tyk-door", at: [-27.6, -13.4], n: 2 },
-  { id: "bus-870", at: [103.2, -158.9], n: 3 },
+  { id: "edu-deck", at: [158.7, 101.3], n: 3 },
+  { id: "edu-b", at: [247.0, 107.6], n: 3 },
+  { id: "bio-event", at: [28.0, -9.6], n: 4 },
+  { id: "bio-event-2", at: [30.1, -6.2], n: 3 },
+  { id: "jussin-aukio", at: [47.5, 8.2], n: 4 },
+  { id: "jussin-aukio-2", at: [50.2, 11.4], n: 2 },
+  // Two hosts at BioCity's partner entrance: beside the walkway under the canopy's north-east end, clear of
+  // the door corridor, the stanchions and car A.
+  { id: "bio-tyk-door", at: [-22.8, -15.45], n: 2 },
+  { id: "bus-870", at: [104.9, -157.9], n: 3 },
   { id: "station-platform", at: [214.5, -105.0], n: 4 },
-  { id: "parkcity-door", at: [212.5, 9.5], n: 2 },
+  { id: "parkcity-door", at: [209.5, 9.5], n: 2 },
 ];
+
+/** Seconds for a person to dissolve in or out (joining the street, a plan change). */
+const FADE_S = 1.1;
 
 /** Pedestrian paths: outdoor route legs (with their own heights) and the campus sidewalks. */
 function collectPaths(routes: RoutesData | null, campus: CampusData | null, terrain: Terrain | null): WalkPath[] {
@@ -1467,11 +1619,12 @@ class CrowdMeshes {
     this.nShadow = 0;
   }
 
-  push(matrix: THREE.Matrix4, looks: Float32Array, anims: Float32Array, person: number, distance: number) {
+  push(matrix: THREE.Matrix4, looks: Float32Array, anims: Float32Array, person: number, distance: number, fade = 1) {
     const nearSlot = distance < NEAR_M;
     if (nearSlot ? this.nNear >= this.capacity : this.nFar >= this.capacity) return;
     const write = (mesh: THREE.InstancedMesh, a: InstanceAttrs, i: number) => {
       mesh.setMatrixAt(i, matrix);
+      a.fade.setX(i, fade);
       const l = person * 12;
       a.look0.setXYZW(i, looks[l], looks[l + 1], looks[l + 2], looks[l + 3]);
       a.look1.setXYZW(i, looks[l + 4], looks[l + 5], looks[l + 6], looks[l + 7]);
@@ -1481,8 +1634,8 @@ class CrowdMeshes {
     };
     if (nearSlot) write(this.near, this.nearAttrs, this.nNear++);
     else write(this.far, this.farAttrs, this.nFar++);
-    // Shadows only near the camera (a figure's shadow beyond ≈ 90 m is a few pixels).
-    if (distance < 90 && this.nShadow < this.capacity) write(this.shadow, this.shadowAttrs, this.nShadow++);
+    // Shadows only near the camera (a figure's shadow beyond ≈ 90 m is a few pixels), and of the people mostly there.
+    if (distance < 90 && fade > 0.5 && this.nShadow < this.capacity) write(this.shadow, this.shadowAttrs, this.nShadow++);
   }
 
   end() {
@@ -1499,7 +1652,7 @@ class CrowdMeshes {
       mesh.instanceMatrix.needsUpdate = true;
       for (const attr of Object.values(a)) {
         attr.clearUpdateRanges();
-        attr.addUpdateRange(0, Math.max(n, 1) * 4);
+        attr.addUpdateRange(0, Math.max(n, 1) * attr.itemSize);
         attr.needsUpdate = true;
       }
     }
@@ -1546,6 +1699,9 @@ export async function buildPeople(ctx: TwinContext): Promise<WorldModule> {
     walkers.push({
       path: 0,
       forward: true,
+      wantPath: 0,
+      wantForward: true,
+      vis: 0,
       speed: 1.12 + rnd() * 0.42,
       offset: rnd() * 1000,
       lateral: 0.35 + rnd() * 0.75,
@@ -1553,7 +1709,8 @@ export async function buildPeople(ctx: TwinContext): Promise<WorldModule> {
       look: randomLook(rnd, { lanyard: 0.35, backpack: 0.4 }),
     });
   }
-  // Standing groups at the event spots (y from the nearest route point within 4 m, else the terrain).
+  // Standing groups at the event spots (y from the nearest route point within 4 m, else the terrain;
+  // then the modelled surface once the probe has run).
   const routePts: V3[] = paths.filter((p) => p.kind !== "sidewalk").flatMap((p) => p.points);
   const yAt = (x: number, z: number) => {
     let best = Infinity;
@@ -1579,9 +1736,9 @@ export async function buildPeople(ctx: TwinContext): Promise<WorldModule> {
     const grnd = mulberry32(hashString(spot.id) ^ 0x9e3779b9);
     const members = layout
       .filter((m) => !insideBuilding(spot.at[0] + m.x, spot.at[1] + m.z))
-      .map((m, k) => ({ ...m, look: randomLook(grnd, { lanyard: 0.6, backpack: 0.35 }), pose: k === 0 || grnd() < 0.3 ? POSE.talk : POSE.stand }));
+      .map((m, k) => ({ ...m, look: randomLook(grnd, { lanyard: 0.6, backpack: 0.35 }), pose: k === 0 || grnd() < 0.3 ? POSE.talk : POSE.stand, y: yAt(spot.at[0] + m.x, spot.at[1] + m.z) }));
     standingCount += members.length;
-    groups.push({ at: [spot.at[0], yAt(spot.at[0], spot.at[1]), spot.at[1]], members, rank: grnd() });
+    groups.push({ at: [spot.at[0], yAt(spot.at[0], spot.at[1]), spot.at[1]], members, rank: grnd(), vis: 0 });
   }
 
   // Everyone's look and animation, packed as the instance attributes expect (persons = walkers, then groups).
@@ -1611,30 +1768,54 @@ export async function buildPeople(ctx: TwinContext): Promise<WorldModule> {
   root.add(crowd.near, crowd.far, crowd.shadow);
   mats.uniforms.uTwFreeze.value = ctx.reducedMotion ? 1 : 0;
 
-  // Assign walkers to paths for a time of day (deterministic per time).
+  // Who walks where for a time of day. Every walker keeps its own dice (stablePick, walkerForward), so a
+  // new plan moves only the few walkers whose pick changes — and they dissolve out and back in.
   let plan = crowdPlan(ctx.lighting().iso);
   let activeWalkers = 0;
-  const assign = () => {
+  const assign = (instant: boolean) => {
     const weights = paths.map((p) => plan.weights[p.kind] * Math.sqrt(Math.max(p.length, 1)));
-    const sum = weights.reduce((acc, w) => acc + w, 0);
-    const prnd = mulberry32(hashString(`assign-${plan.walkers.toFixed(2)}-${plan.inbound.toFixed(2)}`));
     activeWalkers = Math.round(walkers.length * plan.walkers);
-    for (const w of walkers) {
-      let r = prnd() * sum;
-      let pick = 0;
-      for (let j = 0; j < weights.length; j++) {
-        r -= weights[j];
-        if (r <= 0) {
-          pick = j;
-          break;
-        }
+    walkers.forEach((w, i) => {
+      const pick = Math.max(0, stablePick(weights, i));
+      w.wantPath = pick;
+      w.wantForward = walkerForward(i, paths[pick].kind, plan.inbound);
+      if (instant) {
+        w.path = w.wantPath;
+        w.forward = w.wantForward;
+        w.vis = i < activeWalkers ? 1 : 0;
       }
-      w.path = pick;
-      const pth = paths[pick];
-      w.forward = pth.kind === "sidewalk" ? prnd() < 0.5 : prnd() < plan.inbound;
-    }
+    });
+    if (instant) for (const g of groups) g.vis = g.rank < plan.groups ? 1 : 0;
   };
-  if (paths.length) assign();
+  if (paths.length) assign(true);
+
+  /** Advance the dissolves by dt seconds; true while any is under way. */
+  const fadeStep = (dt: number): boolean => {
+    const k = dt / FADE_S;
+    let busy = false;
+    walkers.forEach((w, i) => {
+      const changing = w.path !== w.wantPath || w.forward !== w.wantForward;
+      const target = i < activeWalkers && !changing ? 1 : 0;
+      if (changing && w.vis <= 0) {
+        w.path = w.wantPath;
+        w.forward = w.wantForward;
+        busy = true;
+        return;
+      }
+      if (w.vis !== target) {
+        w.vis = target > w.vis ? Math.min(target, w.vis + k) : Math.max(target, w.vis - k);
+        busy = true;
+      }
+    });
+    for (const g of groups) {
+      const target = g.rank < plan.groups ? 1 : 0;
+      if (g.vis !== target) {
+        g.vis = target > g.vis ? Math.min(target, g.vis + k) : Math.max(target, g.vis - k);
+        busy = true;
+      }
+    }
+    return busy;
+  };
 
   const at = { p: [0, 0, 0] as V3, d: [0, -1] as V2 };
   const ahead = { p: [0, 0, 0] as V3, d: [0, -1] as V2 };
@@ -1646,7 +1827,7 @@ export async function buildPeople(ctx: TwinContext): Promise<WorldModule> {
     for (let i = 0; i < walkers.length; i++) {
       const w = walkers[i];
       const path = paths[w.path];
-      if (!path || i >= activeWalkers) continue;
+      if (!path || w.vis <= 0) continue;
       const s = walkerDistance(path.length, w.speed, w.offset, t, w.pause);
       if (s === null) continue;
       const along = w.forward ? s : path.length - s;
@@ -1666,19 +1847,19 @@ export async function buildPeople(ctx: TwinContext): Promise<WorldModule> {
       // Keep right (Finland): offset to the right of the walking direction.
       const x = at.p[0] - dz * w.lateral;
       const z = at.p[2] + dx * w.lateral;
+      // Walking out of sight at a path's ends (into a door, onto a train): dissolve over the last metre.
+      const ends = clamp(Math.min(along, path.length - along) / 1.2, 0, 1);
       composeAt(_m, x, at.p[1], z, Math.atan2(-dx, -dz), w.look);
-      crowd.push(_m, lookData, animData, i, Math.hypot(x - camPos.x, at.p[1] - camPos.y, z - camPos.z));
+      crowd.push(_m, lookData, animData, i, Math.hypot(x - camPos.x, at.p[1] - camPos.y, z - camPos.z), w.vis * ends);
     }
     let j = walkers.length;
     for (const g of groups) {
-      const out = g.rank < plan.groups;
       for (const m of g.members) {
-        if (out) {
+        if (g.vis > 0) {
           const x = g.at[0] + m.x;
           const z = g.at[2] + m.z;
-          const y = yAt(x, z);
-          composeAt(_m, x, y, z, m.ry, m.look);
-          crowd.push(_m, lookData, animData, j, Math.hypot(x - camPos.x, y - camPos.y, z - camPos.z));
+          composeAt(_m, x, m.y, z, m.ry, m.look);
+          crowd.push(_m, lookData, animData, j, Math.hypot(x - camPos.x, m.y - camPos.y, z - camPos.z), g.vis);
         }
         j++;
       }
@@ -1687,10 +1868,28 @@ export async function buildPeople(ctx: TwinContext): Promise<WorldModule> {
   };
   place(0);
 
+  // Standing groups on the modelled surfaces (decks, plazas, steps), not the bare terrain.
+  const spotPoints: V2[] = GROUP_SPOTS.map((s) => s.at);
+  surfaceService.attach(root);
+  surfaceService.request(spotPoints, 3);
+  const unlisten = surfaceService.listen((index) => {
+    for (const g of groups) {
+      for (const m of g.members) {
+        const x = g.at[0] + m.x;
+        const z = g.at[2] + m.z;
+        const y = index.heightAt(x, z, yAt(x, z), 0.9, 0.5);
+        if (y !== null) m.y = y;
+      }
+    }
+    place(time);
+    ctx.invalidate();
+  });
+
   const frustum = new THREE.Frustum();
   const projScreen = new THREE.Matrix4();
   const lastCam = new THREE.Vector3(1e9, 0, 0);
   let frameCount = 0;
+  let fading = false;
 
   const people: WorldModule = {
     id: "people",
@@ -1701,10 +1900,12 @@ export async function buildPeople(ctx: TwinContext): Promise<WorldModule> {
     ready: Promise.resolve(),
     setLighting(state: LightingState) {
       const next = crowdPlan(state.iso);
-      if (Math.abs(next.walkers - plan.walkers) > 1e-3 || Math.abs(next.inbound - plan.inbound) > 1e-3 || next.groups !== plan.groups) {
+      const kinds = Object.keys(next.weights) as (keyof CrowdPlan["weights"])[];
+      const weightsChanged = kinds.some((k) => Math.abs(next.weights[k] - plan.weights[k]) > 1e-3);
+      if (Math.abs(next.walkers - plan.walkers) > 1e-3 || Math.abs(next.inbound - plan.inbound) > 1e-3 || next.groups !== plan.groups || weightsChanged) {
         plan = next;
-        if (paths.length) assign();
-        place(time);
+        if (paths.length) assign(false);
+        fading = true;
         ctx.invalidate();
       }
     },
@@ -1712,9 +1913,11 @@ export async function buildPeople(ctx: TwinContext): Promise<WorldModule> {
       frameCount++;
       camera.getWorldPosition(camPos);
       const moved = camPos.distanceToSquared(lastCam) > 16;
+      // Dissolves run on the wall clock (also with reduced motion: nobody moves, people fade).
+      if (fading) fading = fadeStep(Math.min(dt, 0.1));
       if (ctx.reducedMotion || !paths.length) {
-        // Still people: only re-sort near/far when the camera has moved.
-        if (!moved) return false;
+        // Still people: only re-sort near/far when the camera has moved or someone is fading.
+        if (!moved && !fading) return false;
         lastCam.copy(camPos);
         place(time);
         return true;
@@ -1725,20 +1928,22 @@ export async function buildPeople(ctx: TwinContext): Promise<WorldModule> {
       const nearest = crowd.nearestVisible(frustum, camPos);
       // Motion further than ~600 m is sub-pixel; between 150 and 600 m update at a lower rate.
       if (!Number.isFinite(nearest) || nearest > 600) {
-        if (moved) {
+        if (moved || fading) {
           lastCam.copy(camPos);
           place(time);
         }
-        return false;
+        return fading;
       }
       const every = nearest < 150 ? 1 : nearest < 320 ? 2 : 4;
-      if (frameCount % every !== 0) return false;
+      if (frameCount % every !== 0) return fading;
       lastCam.copy(camPos);
       mats.uniforms.uTwTime.value = time;
       place(time);
       return true;
     },
     dispose() {
+      unlisten();
+      surfaceService.detach(root);
       mats.depth.dispose();
     },
   };
