@@ -89,11 +89,12 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   {
     id: "fri-opening",
     start: at(FRI, "17:00"),
+    end: at(FRI, "17:45"),
     title: "Opening ceremony + keynote",
     titleFor: { builders: "Opening ceremony — challenge selection opens" },
     detail: "The official start of Since AI Hackathon 2026.",
     detailFor: {
-      builders: "The official start. Team owners select the team's challenge in sinceai.app from 17:00.",
+      builders: "The official start — challenge selection opens in sinceai.app right after, at 17:45.",
       speakers: "The keynote is part of the opening programme — your run sheet has your exact cue.",
     },
     place: "educity",
@@ -104,11 +105,11 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   },
   {
     id: "fri-challenge-selection",
-    start: at(FRI, "17:00"),
-    end: at(FRI, "17:30"),
+    start: at(FRI, "17:45"),
+    end: at(FRI, "18:05"),
     title: "Challenge selection",
     detail:
-      "Only the team owner selects, in sinceai.app — first come, first served, with limited places per challenge. At 17:30 your team view shows your challenge, departure time, room, floor and map.",
+      "Only the team owner selects, in sinceai.app — first come, first served, with limited places per challenge. At 18:05 your team view shows your challenge, room, floor and map.",
     place: "app",
     audiences: ["builders"],
     kind: "deadline",
@@ -116,15 +117,15 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   },
   {
     id: "fri-move-to-briefings",
-    start: at(FRI, "18:00"),
-    end: at(FRI, "18:25"),
-    title: "Move to company briefing rooms",
+    start: at(FRI, "18:05"),
+    end: at(FRI, "18:15"),
+    title: "Move to your challenge briefing room",
     titleFor: { "challenge-partners": "Teams arrive at your room" },
     detail:
-      "Staggered departures: leave at your team's time shown in the app, then follow the announcements and volunteer signs.",
+      "Go straight to the room shown in sinceai.app — follow the announcements and volunteer signs.",
     detailFor: {
       "challenge-partners":
-        "Teams are released in groups and guided to your room. Stay in your room — they come to you.",
+        "Teams come to your room right after challenge selection, guided by volunteers. Stay in your room — they come to you.",
     },
     place: "educity",
     placeDetail: "Floors 1–2",
@@ -134,8 +135,8 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   },
   {
     id: "fri-briefings",
-    start: at(FRI, "18:30"),
-    end: at(FRI, "19:30"),
+    start: at(FRI, "18:15"),
+    end: at(FRI, "18:45"),
     title: "Company challenge briefings",
     titleFor: {
       builders: "Your challenge briefing",
@@ -146,7 +147,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
       builders:
         "Your challenge company explains the task, expected result, boundaries, resources, evaluation and how to reach them during the event.",
       "challenge-partners":
-        "Use the full hour: problem, expected result, boundaries, resources, evaluation and your live support route. Finish at 19:30.",
+        "30 minutes: problem, expected result, boundaries, resources, evaluation and your live support route. Finish at 18:45 — teams then head to BioCity and Joki.",
     },
     place: "educity",
     placeDetail: "Company briefing rooms",
@@ -171,10 +172,10 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   },
   {
     id: "fri-build-start",
-    start: at(FRI, "19:30"),
-    title: "Move to BioCity or Joki — start building",
+    start: at(FRI, "18:45"),
+    title: "Dinner, move to your workspace and start building",
     detail:
-      "Follow the guided route, find a workspace for your team and start building. Build spaces stay open around the clock.",
+      "Right after the briefing, walk with your team to BioCity or Joki. Eat when it suits you — dinner runs until 21:30 — find a workspace and start building as soon as you arrive. Build spaces stay open around the clock.",
     place: "biocity-joki",
     audiences: ["builders"],
     kind: "move",
@@ -196,6 +197,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     start: at(FRI, "18:30"),
     end: at(FRI, "21:30"),
     title: "Dinner",
+    detail: "Rolling service at Maunon sali, BioCity — builders arrive from the briefings from about 18:45; come whenever suits you.",
     detailFor: {
       "challenge-partners": MEAL_OPTIONAL,
       partners: MEAL_OPTIONAL,

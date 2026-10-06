@@ -93,14 +93,14 @@ export const CRITICAL_PATH: Partial<Record<Audience, readonly { label: string; t
   builders: [
     { label: "Check in", time: "Fri 15:00", text: "EduCity — either main entrance." },
     { label: "Team", time: "by 16:45", text: "Everyone in the same team in sinceai.app." },
-    { label: "Select", time: "17:00–17:30", text: "Team owner picks the challenge in the app." },
-    { label: "Briefing", time: "18:30", text: "Your company's room at EduCity." },
-    { label: "Build", time: "from 19:30", text: "BioCity or Joki, around the clock." },
+    { label: "Select", time: "17:45–18:05", text: "Team owner picks the challenge in the app." },
+    { label: "Briefing", time: "18:15–18:45", text: "Your company's room at EduCity." },
+    { label: "Build", time: "from 18:45", text: "Dinner and building in BioCity or Joki, around the clock." },
     { label: "Submit", time: "Sun 10:00", text: "Team owner submits in the app." },
   ],
   "challenge-partners": [
     { label: "Arrive", time: "Fri 15:30", text: "EduCity — weekend briefing at 15:40." },
-    { label: "Brief", time: "18:30–19:30", text: "Your teams come to your EduCity room." },
+    { label: "Brief", time: "18:15–18:45", text: "Your teams come to your EduCity room." },
     { label: "Q&A", time: "Sat 09–18", text: "At your Joki stand (pause 12–14)." },
     { label: "Evaluate", time: "Sun 10–13", text: "Briefing at 08:15, then pick your winner by 13:00." },
     { label: "Winners · finals", time: "Sun 13:30", text: "Company challenge winners announced at EduCity, then the 14:00 finals." },
@@ -151,7 +151,7 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
       items: [
         "Fri 15:00 — check in at EduCity.",
         "Fri 16:45 — team complete; changes close.",
-        "Fri 17:00–17:30 — owner selects the challenge.",
+        "Fri 17:45–18:05 — owner selects the challenge.",
         "Sun 10:00 — owner submits. Then vote until 12:00: 10 votes, 10 different solutions.",
       ],
     },
@@ -276,7 +276,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
     {
       q: "How does challenge selection work?",
-      a: "Only the team owner selects, in sinceai.app, between 17:00 and 17:30. It is first come, first served with limited places per challenge; the app shows how changes work. If your team has no challenge when selection closes, go straight to event staff — never guess a room.",
+      a: "Only the team owner selects, in sinceai.app, between 17:45 and 18:05, right after the opening. It is first come, first served with limited places per challenge; the app shows how changes work. If your team has no challenge when selection closes, go straight to event staff — never guess a room.",
     },
     {
       q: "Can we sleep at the venue?",

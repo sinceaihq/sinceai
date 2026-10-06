@@ -192,7 +192,7 @@ describe("targets", () => {
       const t = getTarget3D(`room-${c.id}`)!;
       expect(t).toMatchObject({ place: "educity", kind: "room" });
       expect(t.detail).toContain(`EduCity floor ${c.briefing.floor} · Room ${briefingRoomLabel(c)}`);
-      expect(t.detail).toContain("Fri 18:30–19:30");
+      expect(t.detail).toContain("Fri 18:15–18:45");
     }
     expect(TARGETS_3D.filter((t) => t.kind === "room")).toHaveLength(CHALLENGE_COMPANIES.length);
   });

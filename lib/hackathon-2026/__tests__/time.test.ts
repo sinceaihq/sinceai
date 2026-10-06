@@ -51,7 +51,7 @@ describe("now / next", () => {
   });
 
   it("shows the live item and what is next during the event", () => {
-    const state = getNowNext(builders, at("2026-11-06T18:45:00+02:00"));
+    const state = getNowNext(builders, at("2026-11-06T18:30:00+02:00"));
     expect(state.phase).toBe("during");
     if (state.phase === "during") {
       expect(state.now.map((i) => i.id)).toContain("fri-briefings");

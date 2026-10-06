@@ -93,8 +93,8 @@ export default function FieldGuideHubPage() {
             steps={[
               { label: "Arrive", time: "Fri afternoon", text: "EduCity — role-specific arrival times." },
               { label: "Opening", time: "Fri 17:00", text: "EduCity lobby, Taidon portaat." },
-              { label: "Briefings", time: "Fri 18:30", text: "Company rooms at EduCity." },
-              { label: "Build", time: "Fri 19:30 →", text: "BioCity + Joki, around the clock." },
+              { label: "Briefings", time: "Fri 18:15", text: "Company rooms at EduCity." },
+              { label: "Build", time: "Fri 18:45 →", text: "Dinner, then BioCity + Joki around the clock." },
               { label: "Winners · finals", time: "Sun 13:30", text: "EduCity — company winners, then the finals at 14:00." },
             ]}
           />

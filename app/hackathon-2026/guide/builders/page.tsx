@@ -45,13 +45,13 @@ const APP_STEPS = [
   {
     title: "Challenge selection",
     who: "Team owner",
-    when: "Fri 17:00–17:30",
+    when: "Fri 17:45–18:05",
     text: "Pick one available challenge for the whole team. First come, first served, with limited places per challenge.",
   },
   {
     title: "Where to go",
     who: "Everyone",
-    when: "From Fri 17:30",
+    when: "From Fri 18:05",
     text: "Your team view shows your challenge, departure time, room, floor and map for the briefing.",
   },
   {
@@ -84,7 +84,7 @@ export default function BuilderGuidePage() {
           facts={[
             { label: "Registration", value: "Fri 15:00", sub: "EduCity", strong: true },
             { label: "Official opening", value: "Fri 17:00", sub: "EduCity · Taidon portaat" },
-            { label: "Build spaces", value: "BioCity + Joki", sub: "From Fri 19:30, around the clock" },
+            { label: "Build spaces", value: "BioCity + Joki", sub: "From Fri 18:45, around the clock" },
             { label: "Submission deadline", value: "Sun 10:00", sub: "Team owner, in sinceai.app", strong: true },
             { label: "Company winners", value: "Sun 13:30", sub: "EduCity" },
             { label: "Finals", value: "Sun 14:00", sub: "Five finalists · ends ~15:00" },
@@ -169,7 +169,7 @@ export default function BuilderGuidePage() {
           id="venues-title"
           eyebrow="// where"
           title="Start at EduCity. Build at BioCity and Joki."
-          lede="After the 18:30 briefing, move with your team to BioCity or Joki and pick a workspace. Both stay open around the clock. Sunday's closing is back at EduCity."
+          lede="After the briefing (18:15–18:45), move with your team to BioCity or Joki, eat when it suits you and pick a workspace. Both stay open around the clock. Sunday's closing is back at EduCity."
         />
         <VenueCards venues={["educity", "biocity", "joki"]} />
         <div className="mt-8">

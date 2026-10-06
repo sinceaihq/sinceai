@@ -970,18 +970,18 @@ export function tourForCompany(tour: Tour3D, companyId: string | null | undefine
     const room = `room ${briefingRoomLabel(company)}`;
     const materials = "Bring your Q&A stand materials: the Since AI team sets your stand up in Joki for Saturday.";
     // Friday 15:30: event staff receive company arrivals on floor 1 by door B and take them to the 15:40
-    // weekend briefing; the company's own room is for its 18:30 briefing.
+    // weekend briefing; the company's own room is for its 18:15 briefing.
     const own =
       floor === 1
-        ? `your briefing room for 18:30 is ${room}, on this floor`
-        : `your briefing room for 18:30 is ${room}, one floor up on floor 2`;
+        ? `your briefing room for 18:15 is ${room}, on this floor`
+        : `your briefing room for 18:15 is ${room}, one floor up on floor 2`;
     if (tour.to === "entrance-educity-gateway") {
-      summary = `${withoutStop(tour.summary)}, then up to floor 1, where event staff meet company arrivals; your briefing room for 18:30 is ${room} (floor ${floor}).`;
+      summary = `${withoutStop(tour.summary)}, then up to floor 1, where event staff meet company arrivals; your briefing room for 18:15 is ${room} (floor ${floor}).`;
       text = `EduCity's street-level door is in the passage: take the lift up to floor 1, where event staff meet company arrivals and take you to the 15:40 weekend briefing — ${own}. ${materials}`;
     } else {
       summary = tour.summary.replace(
         "the company briefing rooms on floors 1–2",
-        `the company arrival on floor 1, where event staff meet you; your briefing room for 18:30 is ${room} (floor ${floor})`,
+        `the company arrival on floor 1, where event staff meet you; your briefing room for 18:15 is ${room} (floor ${floor})`,
       );
       text = `Inside, event staff meet company arrivals in the floor-1 corridor and take you to the 15:40 weekend briefing — ${floor === 1 ? own : `${own}: the stairs and lift are just inside door B`}. ${materials}`;
     }

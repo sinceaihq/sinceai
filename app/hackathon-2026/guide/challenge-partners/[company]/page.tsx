@@ -78,7 +78,7 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
               sub: `EduCity · floor ${company.briefing.floor}`,
               strong: true,
             },
-            { label: "Your briefing", value: "Fri 18:30–19:30", sub: "Teams arrive 18:00–18:25" },
+            { label: "Your briefing", value: "Fri 18:15–18:45", sub: "Teams arrive 18:05–18:15" },
             {
               label: "Your Q&A stand",
               value: showroom ? "Joki Showroom" : `Joki Floor ${company.qa.floor}`,
@@ -119,7 +119,7 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
           id="friday-title"
           eyebrow="// friday · educity"
           title={`Briefing room ${room}.`}
-          lede={`EduCity floor ${company.briefing.floor}. Teams are released from the opening in groups from 18:00 and guided to your room — stay put, they come to you. Brief from 18:30 to 19:30.`}
+          lede={`EduCity floor ${company.briefing.floor}. Teams come to your room after challenge selection, from 18:05, guided by volunteers — stay put, they come to you. Brief from 18:15 to 18:45.`}
         />
         <VenueExplorer mapIds={[maps.briefing]} highlight={[company.id]} label={`${company.name} briefing room`} />
         <div className="mt-10">

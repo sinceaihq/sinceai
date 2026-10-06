@@ -19,7 +19,7 @@ export const VENUES: readonly Venue[] = [
     roles: [
       "Arrival, registration and team formation (Fri from 15:00)",
       "Opening ceremony (Fri 17:00)",
-      "Company challenge briefings (Fri 18:30–19:30)",
+      "Company challenge briefings (Fri 18:15–18:45)",
       "Company challenge winners (Sun 13:30) and the finals (Sun 14:00)",
     ],
     openAroundTheClock: false,

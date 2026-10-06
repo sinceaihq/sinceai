@@ -71,7 +71,7 @@ export const VENUE_MAPS: readonly VenueMap[] = [
     width: 1200,
     height: 1500,
     alt: "EduCity floor 1 plan with company briefing rooms: Elisa in 1001 Dromberg, Bayer in 1002 Moriaberg, Revvity in 1090 Ringsberg and Traficom in 1091 Hammarbacka, around the lobby and Taidon portaat.",
-    caption: "Company logos mark the briefing rooms used on Friday 18:30–19:30.",
+    caption: "Company logos mark the briefing rooms used on Friday 18:15–18:45.",
     source: "Since AI event map",
     glossary: [G.floor, G.lobby, G.taito, G.restaurant, G.entrance, G.briefingRooms, G.logoMarks],
     hotspots: [

@@ -73,7 +73,7 @@ export const TOURS = [
   [
     "builders-transfer-to-build",
     "builders",
-    "Fri 6 Nov ~19:30",
+    "Fri 6 Nov ~18:45",
     ["out-xfer-edu-west-bio-event", "int-bio-event-to-lobby"],
     "build-hall",
   ],

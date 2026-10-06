@@ -345,7 +345,7 @@ test.describe("3D campus", () => {
     const stage = page.locator("#preview-3d");
     await expect(stage.getByText("Route: Kupittaa station → EduCity company arrival", { exact: true })).toBeVisible({ timeout: 60_000 });
     // The steps end at Elisa's own room, and the route list below marks the route.
-    await expect(stage.getByText(/your briefing room for 18:30 is room 1001 Dromberg, on this floor/).first()).toBeVisible();
+    await expect(stage.getByText(/your briefing room for 18:15 is room 1001 Dromberg, on this floor/).first()).toBeVisible();
     await expect(stage.locator('li[aria-current="true"]').first()).toContainText("Kupittaa station → EduCity company arrival");
     await expect(page.locator("canvas")).toHaveCount(0);
 

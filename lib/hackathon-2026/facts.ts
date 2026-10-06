@@ -23,7 +23,7 @@ export const EVENT_2026 = {
   /** Official opening ceremony. */
   officialOpening: "2026-11-06T17:00:00+02:00",
   /** Build phase starts in BioCity + Joki after the briefings. */
-  buildStart: "2026-11-06T19:30:00+02:00",
+  buildStart: "2026-11-06T18:45:00+02:00",
   submissionDeadline: "2026-11-08T10:00:00+02:00",
   /** Company evaluators review their challenge 10:00–13:00 and hand over their winner by 13:00. */
   evaluationEnd: "2026-11-08T13:00:00+02:00",
