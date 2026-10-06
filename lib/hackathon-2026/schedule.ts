@@ -12,9 +12,8 @@ const MEAL_OPTIONAL = "Optional for company representatives — food is reserved
  * One schedule for everyone. Pages filter by audience and pick the
  * audience-specific wording. Times are local Turku time (EET, UTC+2).
  *
- * Unresolved details are modelled, not guessed: Friday dinner and Sunday
- * breakfast have no confirmed end time (`endPending`), so the UI shows the
- * start time only.
+ * Meals (organiser, 6 Oct 2026): Fri 18:30–21:30, Sat 10:30–13:30 and
+ * 17:00–20:00, Sun 10:00–12:30 — no separate breakfasts.
  */
 export const SCHEDULE: readonly ScheduleItem[] = [
   // ── Friday 6 November ──────────────────────────────────────────────────────
@@ -194,8 +193,8 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   },
   {
     id: "fri-dinner",
-    start: at(FRI, "21:00"),
-    endPending: true,
+    start: at(FRI, "18:30"),
+    end: at(FRI, "21:30"),
     title: "Dinner",
     detailFor: {
       "challenge-partners": MEAL_OPTIONAL,
@@ -219,26 +218,13 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     kind: "note",
     status: "confirmed",
   },
-  {
-    id: "sat-breakfast",
-    start: at(SAT, "07:30"),
-    end: at(SAT, "09:30"),
-    title: "Breakfast",
-    detailFor: {
-      "challenge-partners": MEAL_OPTIONAL,
-      partners: MEAL_OPTIONAL,
-    },
-    place: "biocity",
-    audiences: ["builders", ...COMPANIES],
-    kind: "meal",
-    status: "working",
-  },
+
   {
     id: "sat-cp-arrival",
     start: at(SAT, "08:30"),
     title: "Arrive at Joki — your stand is ready",
     detail:
-      "Since AI has set up your Q&A stand from the materials you brought on Friday. Come over after breakfast, before the Q&A opens at 09:00 — your company's page shows its exact floor and stand.",
+      "Since AI has set up your Q&A stand from the materials you brought on Friday. Come over before the Q&A opens at 09:00 — your company's page shows its exact floor and stand.",
     place: "joki",
     audiences: ["challenge-partners"],
     kind: "milestone",
@@ -263,13 +249,9 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   },
   {
     id: "sat-lunch",
-    start: at(SAT, "12:00"),
-    end: at(SAT, "14:00"),
+    start: at(SAT, "10:30"),
+    end: at(SAT, "13:30"),
     title: "Lunch",
-    titleFor: {
-      builders: "Lunch (Q&A pause)",
-      "challenge-partners": "Lunch + Q&A pause",
-    },
     detailFor: {
       "challenge-partners": MEAL_OPTIONAL,
       partners: MEAL_OPTIONAL,
@@ -302,8 +284,8 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   },
   {
     id: "sat-dinner",
-    start: at(SAT, "20:00"),
-    end: at(SAT, "21:30"),
+    start: at(SAT, "17:00"),
+    end: at(SAT, "20:00"),
     title: "Dinner",
     detailFor: {
       "challenge-partners": MEAL_OPTIONAL,
@@ -316,7 +298,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   },
   {
     id: "sat-night",
-    start: at(SAT, "21:30"),
+    start: at(SAT, "20:00"),
     title: "Final push — building continues through the night",
     detail: "Build spaces stay open. Short rest is fine in suitable event areas; there are no sleeping facilities.",
     place: "biocity-joki",
@@ -326,20 +308,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   },
 
   // ── Sunday 8 November ──────────────────────────────────────────────────────
-  {
-    id: "sun-breakfast",
-    start: at(SUN, "07:00"),
-    endPending: true,
-    title: "Breakfast",
-    detailFor: {
-      "challenge-partners": MEAL_OPTIONAL,
-      partners: MEAL_OPTIONAL,
-    },
-    place: "biocity",
-    audiences: ["builders", ...COMPANIES],
-    kind: "meal",
-    status: "working",
-  },
+
   {
     id: "sun-evaluator-arrival",
     start: at(SUN, "08:15"),
@@ -403,7 +372,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   {
     id: "sun-lunch",
     start: at(SUN, "10:00"),
-    end: at(SUN, "12:00"),
+    end: at(SUN, "12:30"),
     title: "Lunch",
     detailFor: {
       "challenge-partners": MEAL_OPTIONAL,

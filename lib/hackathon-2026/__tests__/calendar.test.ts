@@ -41,13 +41,12 @@ describe("calendar export", () => {
     expect(text).toMatch(/UID:sun-submission-deadline\.builders@sinceai\.ai[\s\S]*?DTSTART:20261108T080000Z/);
   });
 
-  it("leaves open end times out and says so", () => {
+  it("exports meal windows with their start and end", () => {
     const dinner = unfold(ics)
       .split("BEGIN:VEVENT")
       .find((e) => e.includes("UID:fri-dinner."))!;
-    expect(dinner).toContain("DTSTART:20261106T190000Z");
-    expect(dinner).not.toContain("DTEND");
-    expect(dinner).toContain("Starts at this time — no fixed end.");
+    expect(dinner).toContain("DTSTART:20261106T163000Z");
+    expect(dinner).toContain("DTEND:20261106T193000Z");
   });
 
   it("escapes text and includes the venue address", () => {

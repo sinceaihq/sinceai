@@ -101,7 +101,7 @@ export const CRITICAL_PATH: Partial<Record<Audience, readonly { label: string; t
   "challenge-partners": [
     { label: "Arrive", time: "Fri 15:30", text: "EduCity — weekend briefing at 15:40." },
     { label: "Brief", time: "18:30–19:30", text: "Your teams come to your EduCity room." },
-    { label: "Q&A", time: "Sat 09–18", text: "At your Joki stand (lunch pause 12–14)." },
+    { label: "Q&A", time: "Sat 09–18", text: "At your Joki stand (pause 12–14)." },
     { label: "Evaluate", time: "Sun 10–13", text: "Briefing at 08:15, then pick your winner by 13:00." },
     { label: "Winners · finals", time: "Sun 13:30", text: "Company challenge winners announced at EduCity, then the 14:00 finals." },
   ],
@@ -306,7 +306,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
     {
       q: "Stand setup at Joki",
-      a: "Since AI sets it up for you. Bring your stand materials when you arrive at EduCity on Friday and hand them to the Since AI team — when you come over to Joki after breakfast on Saturday, your stand is ready.",
+      a: "Since AI sets it up for you. Bring your stand materials when you arrive at EduCity on Friday and hand them to the Since AI team — when you come over to Joki on Saturday morning, your stand is ready.",
     },
     {
       q: "NDA and confidential data",

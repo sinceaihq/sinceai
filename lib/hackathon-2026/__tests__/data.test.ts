@@ -1,4 +1,5 @@
 import {
+  formatTimeRange,
   BIOCITY_STANDS,
   briefingRoomLabel,
   CHALLENGE_COMPANIES,
@@ -89,11 +90,14 @@ describe("canonical event facts", () => {
     expect([formatTime(pm.start), formatTime(pm.end!)]).toEqual(["14:00", "18:00"]);
   });
 
-  it("leaves unresolved meal end times unpublished", () => {
-    expect(getScheduleItem("fri-dinner").end).toBeUndefined();
-    expect(getScheduleItem("fri-dinner").endPending).toBe(true);
-    expect(getScheduleItem("sun-breakfast").end).toBeUndefined();
-    expect(getScheduleItem("sun-breakfast").endPending).toBe(true);
+  it("publishes the agreed meal times (organiser, 6 Oct 2026) and no separate breakfasts", () => {
+    const meals = SCHEDULE.filter((i) => i.kind === "meal").map((i) => [i.id, formatTimeRange(i)]);
+    expect(meals).toEqual([
+      ["fri-dinner", "18:30–21:30"],
+      ["sat-lunch", "10:30–13:30"],
+      ["sat-dinner", "17:00–20:00"],
+      ["sun-lunch", "10:00–12:30"],
+    ]);
   });
 
   it("tears visibility stands down after the event, not at the 10:00 deadline", () => {

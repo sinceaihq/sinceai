@@ -22,11 +22,12 @@ describe("Schedule", () => {
   });
 
   it("shows start-only times as 'onwards' when the end is open", () => {
-    render(<Schedule items={scheduleFor("builders")} audience="builders" />);
+    const open: ScheduleItem = { ...scheduleFor("builders").find((i) => i.id === "fri-dinner")!, end: undefined, endPending: true };
+    render(<Schedule items={[open]} audience="builders" />);
     const dinner = document.getElementById("schedule-item-fri-dinner")!;
-    expect(within(dinner).getByText("21:00", { selector: ".font-bold" })).toBeInTheDocument();
+    expect(within(dinner).getByText("18:30", { selector: ".font-bold" })).toBeInTheDocument();
     expect(within(dinner).getByText("onwards")).toBeInTheDocument();
-    expect(within(dinner).getByText("From 21:00")).toHaveClass("sr-only");
+    expect(within(dinner).getByText("From 18:30")).toHaveClass("sr-only");
   });
 
   it("marks approximate times", () => {
