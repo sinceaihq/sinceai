@@ -31,6 +31,7 @@ describe("partner Discord onboarding", () => {
     expect(tech).not.toMatch(/challenge|judg|evaluat|teams ask/i);
     expect(tech).toMatch(/stand/);
     expect(tech).toMatch(/API access/);
+    expect(tech).toContain("own partner channel");
   });
 
   it("never encourages mass pings", () => {

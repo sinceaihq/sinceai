@@ -136,7 +136,7 @@ test.describe("content", () => {
     await page.goto(`${GUIDE}/partners#discord`);
     const tech = page.locator("#discord");
     await expect(tech.getByRole("link", { name: /Join the Since AI Discord/ })).toHaveAttribute("href", "https://discord.gg/vMWdrVUPws");
-    await expect(tech).toContainText("How partners use Discord");
+    await expect(tech).toContainText("Your partner channel");
     await expect(tech).not.toContainText(/challenge channel|judg/i);
   });
 

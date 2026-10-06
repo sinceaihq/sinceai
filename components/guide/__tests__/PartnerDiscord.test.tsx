@@ -14,7 +14,7 @@ describe("PartnerDiscord", () => {
 
   it("tech / visibility partners: same onboarding, no challenge channel or judging", () => {
     const { container } = render(<PartnerDiscord audience="partners" />);
-    expect(screen.getByRole("heading", { name: "How partners use Discord" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Your partner channel" })).toBeInTheDocument();
     expect(container.textContent).not.toMatch(/challenge channel|judg|evaluat/i);
     expect(container.textContent).toMatch(/office hours/);
   });

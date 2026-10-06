@@ -7,7 +7,7 @@ const DISCORD_LEDE: Record<DiscordAudience, string> = {
   "challenge-partners":
     "Discord is the main channel between partner representatives and the Since AI team during the hackathon — and where teams ask about your challenge. Set it up before you travel.",
   partners:
-    "Discord is the main channel between partner representatives and the Since AI team during the hackathon. Set it up before you travel.",
+    "Discord is the main channel between partner representatives and the Since AI team during the hackathon — and where builders ask about your technology in your own partner channel. Set it up before you travel.",
 };
 
 /** "Partner communication on Discord" — section id `discord`. */

@@ -205,6 +205,7 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
         "Setup time on Friday and the teardown window on Sunday",
         "Meal headcount and dietary needs",
         "Any agreed workshop, demo, recruiting or visibility slot",
+        "Every onsite representative joined the Since AI Discord — see Discord below",
       ],
     },
     {
@@ -213,7 +214,7 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
         "How participants get access (and when it starts and ends)",
         "How credits or credentials are distributed",
         "Quota or rate-limit notes that are safe to share",
-        "Docs link and onsite / remote support hours",
+        "Docs link and onsite / remote support hours (also pinned in your Discord partner channel)",
         "Who builders contact when something breaks",
       ],
     },
