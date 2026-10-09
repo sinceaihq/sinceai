@@ -16,7 +16,7 @@ import { exitSign, floorScreen, mapWall, patchworkCarpet, rollupAtlas, screenCon
  * (r 9.15) with the 16 black columns, the core (stair, shaft, lift + WC) on
  * the J north–south axis, light wood-wool ceilings with galvanised spiral
  * ducts and black track spots, grey patchwork carpet, convector benches
- * along the glass. Floor 2: Revvity, Valmet, Traficom (east) and the Chill
+ * along the glass. Floor 2: a partner to be announced, Valmet, Traficom (east) and the Chill
  * Zone in the Turku Futurescapes exhibition (west). Floor 3: Takomo Golf,
  * Forcit Group, Saarioinen (east), Lindström, Bo LKV, Business Turku
  * (west) in front of the dark timber bleachers. Stand = black counter
@@ -27,7 +27,7 @@ import { exitSign, floorScreen, mapWall, patchworkCarpet, rollupAtlas, screenCon
 
 /** Stand positions (J, logo-box centres of the event map). */
 export const TOWER_STANDS: Record<string, { floor: 2 | 3; x: number; z: number }> = {
-  revvity: { floor: 2, x: 5.29, z: -4.43 },
+  tba: { floor: 2, x: 5.29, z: -4.43 },
   valmet: { floor: 2, x: 6.27, z: -1.01 },
   traficom: { floor: 2, x: 6.08, z: 2.07 },
   "takomo-golf": { floor: 3, x: 5.29, z: -4.43 },

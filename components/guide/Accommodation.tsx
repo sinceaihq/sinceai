@@ -89,7 +89,7 @@ function Offer({ offer, now }: { offer: AccommodationOffer; now: number | null }
   );
 }
 
-/** "Accommodation & discounted rates": the four confirmed offers (lib/hackathon-2026/accommodation.ts). */
+/** "Accommodation & discounted rates": the five confirmed offers (lib/hackathon-2026/accommodation.ts). */
 export function Accommodation() {
   const now = useGuideNow();
   return (

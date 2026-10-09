@@ -319,8 +319,8 @@ function stairUp(y: number): V3[] {
 
 /**
  * int-joki-showroom-to-f2: from where int-joki-aula-to-showroom ends, back to the corridor and up the
- * tower stair to floor 2, round the north end of the core into the Partner Expo (Revvity, Valmet,
- * Traficom).
+ * tower stair to floor 2, round the north end of the core into the Partner Expo (to be
+ * announced, Valmet, Traficom).
  */
 export const ROUTE_F2_J: readonly V3[] = [
   [-3.5, Y.f1, 1.0],

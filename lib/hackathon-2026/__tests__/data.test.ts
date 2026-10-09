@@ -167,8 +167,8 @@ describe("challenge companies", () => {
     );
   });
 
-  it("places Revvity, Valmet and Traficom on Joki floor 2", () => {
-    expect(byQaFloor(2)).toEqual(["Revvity", "Traficom", "Valmet"]);
+  it("places the to-be-announced partner, Valmet and Traficom on Joki floor 2", () => {
+    expect(byQaFloor(2)).toEqual(["To be announced", "Traficom", "Valmet"]);
   });
 
   it("places six companies on Joki floor 3", () => {
@@ -189,7 +189,7 @@ describe("challenge companies", () => {
     expect(rooms).toEqual({
       Elisa: "1:1001 Dromberg",
       Bayer: "1:1002 Moriaberg",
-      Revvity: "1:1090 Ringsberg",
+      "To be announced": "1:1090 Ringsberg",
       Traficom: "1:1091 Hammarbacka",
       "Business Turku": "2:2072 Työkahvila / Aurinkokylpy",
       "Bo LKV": "2:2001 Elias",

@@ -42,14 +42,15 @@ describe("partner Discord onboarding", () => {
 describe("accommodation & discounted rates", () => {
   const byId = Object.fromEntries(ACCOMMODATION_OFFERS.map((o) => [o.id, o]));
 
-  it("publishes exactly the four confirmed offers", () => {
+  it("publishes exactly the five confirmed offers", () => {
     expect(ACCOMMODATION_OFFERS.map((o) => o.name)).toEqual([
       "Original Sokos Hotel Kupittaa",
       "Holiday Club Turun Caribia",
       "Omena Hotels Turku",
       "Scandic Turku",
+      "Bob W",
     ]);
-    expect(textOf(ACCOMMODATION_OFFERS)).not.toMatch(/Bob W|Centro|sponsor/i);
+    expect(textOf(ACCOMMODATION_OFFERS)).not.toMatch(/Centro|sponsor/i);
     expect(ACCOMMODATION_INTRO).toMatch(/not included/);
   });
 
@@ -83,6 +84,14 @@ describe("accommodation & discounted rates", () => {
       "https://www.omenahotels.com/fi/hotellit/turku-humalistonkatu/",
       "https://www.omenahotels.com/fi/hotellit/turku-kauppiaskatu/",
     ]);
+  });
+
+  it("has Bob W's 10% with BOBWSINCEAI26 at bobw.co", () => {
+    const o = byId["bob-w"];
+    expect(o).toMatchObject({ benefit: "10% off apartments", code: "BOBWSINCEAI26" });
+    expect(o.howTo).toContain("Apply voucher");
+    expect(o.links[0].href).toBe("https://bobw.co/");
+    expect(offerOpen(o, Date.parse("2026-11-06T12:00:00+02:00"))).toBe(true);
   });
 
   it("gives Scandic its dedicated link and no invented percentage", () => {

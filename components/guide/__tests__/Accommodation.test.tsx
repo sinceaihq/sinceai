@@ -8,12 +8,13 @@ function at(now: string) {
 describe("Accommodation", () => {
   afterEach(() => window.history.replaceState(null, "", "/"));
 
-  it("shows the four offers with copyable codes and safe external links", () => {
+  it("shows the five offers with copyable codes and safe external links", () => {
     at("2026-10-06T10:00");
     render(<Accommodation />);
     const offers = screen.getAllByRole("listitem");
-    expect(offers).toHaveLength(4);
+    expect(offers).toHaveLength(5);
     expect(screen.getByText("BSINCEAI")).toBeInTheDocument();
+    expect(screen.getByText("BOBWSINCEAI26")).toBeInTheDocument();
     expect(screen.getAllByText("SINCEAI2026")).toHaveLength(2);
     for (const link of screen.getAllByRole("link")) {
       expect(link).toHaveAttribute("target", "_blank");

@@ -511,10 +511,10 @@ describe("Tower labels stay on what the camera can see", () => {
   });
 
   it("slides floor-2 stand labels down below the floor-3 slab edge instead of floating over floor 3", () => {
-    const revvity = standLabelHeight(floorsCam, 2, TOWER_STANDS.revvity.x, TOWER_STANDS.revvity.z, true);
+    const tba = standLabelHeight(floorsCam, 2, TOWER_STANDS.tba.x, TOWER_STANDS.tba.z, true);
     const valmet = standLabelHeight(floorsCam, 2, TOWER_STANDS.valmet.x, TOWER_STANDS.valmet.z, true);
     const traficom = standLabelHeight(floorsCam, 2, TOWER_STANDS.traficom.x, TOWER_STANDS.traficom.z, true);
-    expect(revvity).toBe(2.45);
+    expect(tba).toBe(2.45);
     expect(valmet).toBe(2.0);
     expect(traficom).toBe(1.6);
     // At the preferred height the slab hides Valmet's and Traficom's labels.
@@ -538,15 +538,15 @@ describe("Tower labels stay on what the camera can see", () => {
   it("hides a stand round the other side of the core from a camera on the floor", () => {
     // In the Chill Zone (west), looking east through the core at Valmet.
     expect(coreHides({ x: -5, z: -1 }, TOWER_STANDS.valmet.x, TOWER_STANDS.valmet.z)).toBe(true);
-    // North of the core, Revvity is in plain sight.
-    expect(coreHides({ x: 1, z: -8 }, TOWER_STANDS.revvity.x, TOWER_STANDS.revvity.z)).toBe(false);
+    // North of the core, the to-be-announced stand is in plain sight.
+    expect(coreHides({ x: 1, z: -8 }, TOWER_STANDS.tba.x, TOWER_STANDS.tba.z)).toBe(false);
     // On the east side, every east stand is visible.
-    for (const id of ["revvity", "valmet", "traficom"]) expect(coreHides({ x: 4, z: 0 }, TOWER_STANDS[id].x, TOWER_STANDS[id].z)).toBe(false);
+    for (const id of ["tba", "valmet", "traficom"]) expect(coreHides({ x: 4, z: 0 }, TOWER_STANDS[id].x, TOWER_STANDS[id].z)).toBe(false);
   });
 
   it("hides floor-2 labels behind floor 2's own slab from below", () => {
     // Under the tower on the floor-1 deck level, looking up through the slab.
-    expect(slabHides({ x: 1, y: 1.5, z: 1 }, TOWER_STANDS.revvity.x, Y.f2 + 2.45, TOWER_STANDS.revvity.z, true)).toBe(true);
+    expect(slabHides({ x: 1, y: 1.5, z: 1 }, TOWER_STANDS.tba.x, Y.f2 + 2.45, TOWER_STANDS.tba.z, true)).toBe(true);
   });
 });
 

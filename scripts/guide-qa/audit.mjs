@@ -8,7 +8,7 @@ const OUT = process.argv[2];
 fs.mkdirSync(OUT, { recursive: true });
 
 const G = "/hackathon-2026/guide";
-const COMPANIES = ["elisa","bayer","revvity","traficom","business-turku","bo-lkv","takomo-golf","forcit-group","lindstrom","saarioinen","valmet","dna","turku-energia","meyer-turku","apetit"];
+const COMPANIES = ["elisa","bayer","tba","traficom","business-turku","bo-lkv","takomo-golf","forcit-group","lindstrom","saarioinen","valmet","dna","turku-energia","meyer-turku","apetit"];
 const NOT_FOUND = `${G}/no-such-page`;
 const ROUTES = [G, `${G}/builders`, `${G}/challenge-partners`, `${G}/partners`, `${G}/judges`, `${G}/speakers`, `${G}/venue`, ...COMPANIES.map((c) => `${G}/challenge-partners/${c}`), NOT_FOUND];
 const VIEWPORTS = (process.env.VP || "320x568,390x844,768x1024,1280x800,1920x1080").split(",").map((v) => v.split("x").map(Number));
