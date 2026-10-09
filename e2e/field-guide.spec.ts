@@ -93,7 +93,7 @@ test.describe("content", () => {
     await page.goto(`${GUIDE}/challenge-partners`);
     for (const [id, room, qa] of [
       ["meyer-turku", "2030 Evert", "Joki · Floor 1 · Showroom"],
-      ["revvity", "1090 Ringsberg", "Joki · Floor 2"],
+      ["tba", "1090 Ringsberg", "Joki · Floor 2"],
       ["saarioinen", "2067", "Joki · Floor 3"],
     ]) {
       const row = page.locator(`#company-${id}`);
@@ -140,13 +140,14 @@ test.describe("content", () => {
     await expect(tech).not.toContainText(/challenge channel|judg/i);
   });
 
-  test("accommodation: the four confirmed offers on every partner and builder page", async ({ page }) => {
+  test("accommodation: the five confirmed offers on every partner and builder page", async ({ page }) => {
     for (const path of [GUIDE, `${GUIDE}/builders`, `${GUIDE}/challenge-partners`, `${GUIDE}/partners`, `${GUIDE}/challenge-partners/elisa`]) {
       await page.goto(`${path}#accommodation`);
       const acc = page.locator("#accommodation");
-      await expect(acc.locator("[data-offer]")).toHaveCount(4);
+      await expect(acc.locator("[data-offer]")).toHaveCount(5);
       await expect(acc).toContainText("SINCEAI2026");
-      await expect(acc).not.toContainText(/Bob W|Centro/);
+      await expect(acc.locator('[data-offer="bob-w"]')).toContainText("BOBWSINCEAI26");
+      await expect(acc).not.toContainText(/Centro/);
       await expect(acc.getByRole("link", { name: /View discounted Scandic rates/ })).toHaveAttribute(
         "href",
         "https://www.scandichotels.com/fi?bookingCode=CGRO",

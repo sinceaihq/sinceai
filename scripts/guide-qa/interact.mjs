@@ -175,13 +175,13 @@ async function newPage(opts = {}) {
     await page.waitForTimeout(80);
     ok(`search "${q}" → ${n}`, (await rows.count()) === n, String(await rows.count()));
   }
-  const btn = page.locator("#company-revvity").getByRole("button", { name: "Stand on map" });
+  const btn = page.locator("#company-valmet").getByRole("button", { name: "Stand on map" });
   await btn.click();
   const dialog = page.getByRole("dialog");
   await dialog.waitFor();
   await page.waitForTimeout(1200);
   ok("map dialog opens on Joki floors 2–3", /Floors 2 and 3/.test(await dialog.getByRole("heading").first().textContent()));
-  ok("Revvity is highlighted", (await dialog.locator(".guide-hotspot-pulse").count()) >= 1);
+  ok("Valmet is highlighted", (await dialog.locator(".guide-hotspot-pulse").count()) >= 1);
   await shot(page, "company-map");
   await page.keyboard.press("Escape");
   await page.waitForTimeout(200);

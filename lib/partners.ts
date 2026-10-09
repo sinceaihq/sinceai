@@ -116,12 +116,6 @@ export const PARTNERS: Partner[] = [
     tier: 1,
   },
   {
-    name: "Revvity",
-    logo: "/assets/sponsors/revvity.png",
-    url: "https://www.revvity.com/",
-    tier: 1,
-  },
-  {
     name: "Traficom",
     logo: "/assets/sponsors/traficom.png",
     url: "https://www.traficom.fi/",
@@ -175,12 +169,7 @@ export const PARTNERS: Partner[] = [
     url: "https://lindstromgroup.com/",
     tier: 1,
   },
-  {
-    name: "Bo",
-    logo: "/assets/sponsors/Bo.png",
-    url: "https://bo.fi/en/",
-    tier: 1,
-  },
+  // Bo (https://bo.fi/en/, /assets/sponsors/Bo.png) is withheld until its contract is signed.
   {
     name: "Business Turku",
     logo: "/assets/sponsors/businessturku.png",

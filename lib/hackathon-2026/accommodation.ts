@@ -1,6 +1,6 @@
 /**
- * Discounted accommodation in Turku for Since AI participants — exactly the four
- * offers the hotels confirmed to Since AI (6 Oct 2026). Do not add offers that
+ * Discounted accommodation in Turku for Since AI participants — exactly the five
+ * offers the hotels confirmed to Since AI (6 Oct 2026; Bob W 7 Oct 2026). Do not add offers that
  * are not confirmed, and never show a discount a hotel did not state (Scandic
  * confirmed discounted rates through a booking link, no percentage).
  */
@@ -82,6 +82,16 @@ export const ACCOMMODATION_OFFERS: readonly AccommodationOffer[] = [
       { label: "View discounted Scandic rates", href: "https://www.scandichotels.com/fi?bookingCode=CGRO", primary: true },
       { label: "See Scandic hotels in Turku", href: "https://www.scandichotels.com/en/destinations/finland/turku" },
     ],
+  },
+  {
+    id: "bob-w",
+    name: "Bob W",
+    benefit: "10% off apartments",
+    code: "BOBWSINCEAI26",
+    codeNote: "Rates are dynamic and vary with demand and availability.",
+    howTo:
+      "At bobw.co, choose your city, dates and guests and click Search. Click “Apply voucher”, enter the code, pick an apartment to see the discounted rate, then book and pay by credit card.",
+    links: [{ label: "Book Bob W", href: "https://bobw.co/", primary: true }],
   },
 ] as const;
 

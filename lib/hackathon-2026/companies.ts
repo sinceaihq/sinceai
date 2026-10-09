@@ -5,7 +5,9 @@ import type { ChallengeCompany, ScheduleItem } from "./types";
  * The 15 challenge companies with their Friday briefing room (EduCity) and
  * Saturday Q&A location (Joki).
  *
- * Source: 2 Oct 2026 placement maps, as compiled on 3 Oct 2026. Placements are
+ * Source: 2 Oct 2026 placement maps, as compiled on 3 Oct 2026. Revvity
+ * cancelled on 7 Oct 2026; its room and stand are held for a partner still to
+ * be announced (`tba`) — replace that entry when the partner is confirmed. Placements are
  * `working` until production locks them — change a room here and every page,
  * map highlight and 3D label follows.
  */
@@ -27,9 +29,9 @@ export const CHALLENGE_COMPANIES: readonly ChallengeCompany[] = [
     placementStatus: "working",
   },
   {
-    id: "revvity",
-    name: "Revvity",
-    logo: { src: "/assets/sponsors/revvity.png", width: 797, height: 261 },
+    id: "tba",
+    name: "To be announced",
+    // No logo — the UI renders the name.
     briefing: { venue: "educity", floor: 1, room: "1090", roomName: "Ringsberg" },
     qa: { venue: "joki", floor: 2, zone: "Floor 2" },
     placementStatus: "working",
@@ -58,7 +60,8 @@ export const CHALLENGE_COMPANIES: readonly ChallengeCompany[] = [
   {
     id: "bo-lkv",
     name: "Bo LKV",
-    logo: { src: "/assets/sponsors/Bo.png", width: 500, height: 577 },
+    // Logo withheld until the contract is signed (7 Oct 2026) — the UI renders the name.
+    // To restore: logo: { src: "/assets/sponsors/Bo.png", width: 500, height: 577 },
     briefing: { venue: "educity", floor: 2, room: "2001", roomName: "Elias" },
     qa: { venue: "joki", floor: 3, zone: "Floor 3" },
     placementStatus: "working",

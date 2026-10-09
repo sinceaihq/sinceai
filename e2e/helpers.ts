@@ -15,7 +15,7 @@ export const GUIDE_ROUTES = [
 export const COMPANY_IDS = [
   "elisa",
   "bayer",
-  "revvity",
+  "tba",
   "traficom",
   "business-turku",
   "bo-lkv",
