@@ -94,13 +94,16 @@ test.describe("content", () => {
     for (const [id, room, qa] of [
       ["meyer-turku", "2030 Evert", "Joki · Floor 1 · Showroom"],
       ["tba", "1090 Ringsberg", "Joki · Floor 2"],
-      ["saarioinen", "2067", "Joki · Floor 3"],
+      ["fonecta", "2001 Elias", "Joki · Floor 3"],
+      ["tba-2", "2067", "Joki · Floor 3"],
     ]) {
       const row = page.locator(`#company-${id}`);
       await expect(row).toContainText(room);
       await expect(row).toContainText(qa);
     }
     await expect(page.locator('[id^="company-"]')).toHaveCount(15);
+    const text = await page.locator("main").innerText();
+    for (const name of ["Revvity", "Bo LKV", "Saarioinen", "Sandvik", "Kongsberg"]) expect(text).not.toContain(name);
   });
 
   test("company search narrows the list", async ({ page }) => {
@@ -110,17 +113,28 @@ test.describe("content", () => {
     await expect(page.locator("#company-traficom")).toContainText("1091 Hammarbacka");
   });
 
-  test("partner guide groups the stands in the partner corner: Red Hat, Solita, Pruna AI", async ({ page }) => {
+  test("partner guide groups the six stands in the partner corner", async ({ page }) => {
     await page.goto(`${GUIDE}/partners#stands`);
     const stands = page.locator('[id^="stand-bc-"]');
-    await expect(stands).toHaveCount(5);
+    await expect(stands).toHaveCount(6);
     await expect(page.locator("#stand-bc-1")).toContainText("Stand 1 · most visible");
-    await expect(page.locator("#stand-bc-1")).toContainText("Red Hat");
-    await expect(page.locator("#stand-bc-2")).toContainText("Solita");
-    await expect(page.locator("#stand-bc-3")).toContainText("Pruna AI");
-    await expect(page.locator("#stand-bc-4")).toContainText("Visibility / Tech Partner stand");
-    await expect(page.locator("#stand-bc-5")).toContainText("Visibility / Tech Partner stand");
-    for (let i = 1; i <= 5; i++) await expect(page.locator(`#stand-bc-${i}`)).toContainText("partner corner");
+    const names = ["Red Hat", "Solita", "Pruna AI", "BearingPoint", "CSC / LUMI AI Factory", "Major League Hacking"];
+    for (const [i, name] of names.entries()) await expect(page.locator(`#stand-bc-${i + 1}`)).toContainText(name);
+    await expect(page.locator("#stand-bc-6")).toContainText("confirmed separately");
+    for (let i = 1; i <= 6; i++) await expect(page.locator(`#stand-bc-${i}`)).toContainText("partner corner");
+  });
+
+  test("builder guide shows the team formation plan with a text version", async ({ page }) => {
+    await page.goto(`${GUIDE}/builders#team-formation`);
+    const section = page.locator("#team-formation");
+    for (const step of ["Choose your zone", "Build your team", "Join in the app", "Leave via the other side"])
+      await expect(section.getByRole("heading", { name: step, exact: true })).toBeVisible();
+    await expect(section).toContainText("Already have a team?");
+    await expect(section).toContainText("not the building’s emergency exit plan");
+    await expect(section.locator('img[src*="educity-team-formation"]').first()).toHaveAttribute("alt", /zones 1, 2, 3 and 4/);
+    const body = await page.locator("main").innerText();
+    expect(body).not.toMatch(/17:45|18:05|16:50/);
+    expect(body).toContain("before 17:00");
   });
 
   test("partner Discord onboarding: challenge partners vs tech / visibility partners", async ({ page }) => {
@@ -171,15 +185,15 @@ test.describe("content", () => {
   });
 
   test("company schedule and calendar are personalised", async ({ page }) => {
-    await page.goto(`${GUIDE}/challenge-partners/saarioinen`);
+    await page.goto(`${GUIDE}/challenge-partners/fonecta`);
     const schedule = page.locator("#schedule");
-    await expect(schedule).toContainText("Room 2067 · floor 2");
+    await expect(schedule).toContainText("Room 2001 Elias · floor 2");
     await expect(schedule).toContainText("Your stand · Floor 3");
     await expect(schedule).toContainText("floor 3 of the Joki tower");
     await expect(schedule).not.toContainText("Your place");
     const calendar = page.getByRole("link", { name: /Add to calendar/ }).first();
-    await expect(calendar).toHaveAttribute("href", `${GUIDE}/calendar/challenge-partners/saarioinen`);
-    await expect(calendar).toHaveAttribute("download", "since-ai-hackathon-2026-saarioinen.ics");
+    await expect(calendar).toHaveAttribute("href", `${GUIDE}/calendar/challenge-partners/fonecta`);
+    await expect(calendar).toHaveAttribute("download", "since-ai-hackathon-2026-fonecta.ics");
   });
 
   test("venue photos are credited", async ({ page }) => {
@@ -246,7 +260,8 @@ test.describe("navigation", () => {
 test.describe("venue explorer", () => {
   test("opens full screen, zooms with the keyboard, closes with Escape and returns focus", async ({ page }) => {
     await page.goto(`${GUIDE}/builders#maps`);
-    const trigger = page.getByRole("button", { name: /full screen/ }).first();
+    // Scoped to #maps: the team formation section above it has its own map viewer.
+    const trigger = page.locator("#maps").getByRole("button", { name: /full screen/ }).first();
     await trigger.click();
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible();
@@ -283,7 +298,8 @@ test.describe("venue explorer", () => {
     await expect(locations).toContainText("Company Lounge");
     await expect(locations).toContainText("Stand 1 · Red Hat");
     await expect(locations).toContainText("Stand 2 · Solita");
-    await expect(locations).toContainText("Visibility / Tech Partner stand ·");
+    await expect(locations).toContainText("Stand 6 · Major League Hacking");
+    await expect(locations).toContainText("Team check");
   });
 });
 

@@ -7,6 +7,17 @@
 - Remote branch: `origin/feature/hackathon-2026-field-guide` — pushed, **not merged**. CI deploys only on pushes to `main`, so pushing this branch deploys nothing.
 - Untouched: the user's untracked files in `public/assets/sponsors/` and `public/assets/supports/` were left as they were and are not in any commit.
 
+## Final release update — 13 Oct 2026
+
+Organiser brief of 13 Oct 2026 (newest source; supersedes the decisions below where they differ):
+
+- **Challenge roster:** 13 named challenge partners — Valmet, Bayer, Turku Energia, Apetit, Takomo Golf, Forcit Group, Elisa, Meyer Turku, Traficom, Lindström, Business Turku, DNA, Fonecta — plus two places to be announced (15). Revvity, Bo LKV and Saarioinen are no longer 2026 challenge partners: Fonecta takes Bo LKV's room and stand (2001 Elias · Joki F3), `tba-2` takes Saarioinen's (2067 · Joki F3), `tba` keeps Revvity's (1090 Ringsberg · Joki F2) — all three provisional. Map images re-lettered with `scripts/patch-guide-maps.mjs`.
+- **BioCity:** six visibility / tech partner stands in the partner corner — Red Hat, Solita, Pruna AI, BearingPoint, CSC / LUMI AI Factory, MLH (stand planned; MLH's on-site staffing not confirmed). Row of five 1.56 m stands + Solita; provisional until the venue approves.
+- **Friday:** team formation from 15:00 (organiser's team formation plan, EduCity floor 1, now in the Builder Guide); team formation and challenge selection both complete before the 17:00 opening (window time not decided — in-app selection is sinceai-platform#371); hosts introduce the companies, then Jason Mayes' keynote; staggered move to briefings from 17:50; briefings 18:15–18:45, 19:00 at the latest.
+- **Saturday:** Q&A 09:00–12:00 and 14:30–18:00 (break 12:00–14:30). The planned enterprise presentation is not published.
+- **Sunday:** Mauno lunch 10:00–13:00; company winners by 13:00, announced 13:30; five finalist teams present live at 14:00.
+- **MLH:** 2027 Season Member Event wording, the official 2027 Trust Badge on `/hackathon`, MLH logo with the visibility partners, MLH Code of Conduct links.
+
 ## Routes built
 
 All public by direct link, `noindex`, not in the sitemap or the marketing nav/footer.
@@ -168,7 +179,7 @@ Modelled in data as *Current plan* / *To be confirmed* (or left out), easy to ch
 - ~~`lib/sinceai.ts` 16:00 start / Sun 17:00 end~~ — aligned on 4 Oct 2026 with the operational schedule (Fri 15:00 – Sun 15:00; drives `/hackathon`, its countdown and Event JSON-LD).
 - “72 hours / 72-hour” across `/hackathon` (metadata, hero, FAQ), `HackathonPopup`, `/for-builders`, `/partners`, `/press`, `/stats`, `/turku`, `/ai-hackathons`, `/production-support`, `lib/faqs.ts`, `lib/schema.ts` and blog posts.
 - `/hackathon` venue copy and JSON-LD name EduCity only; building happens in BioCity + Joki.
-- `/hackathon` metadata/FAQ list “Google for Developers, Bayer, Sandvik, Kongsberg, Valmet” as challenge partners; the 2026 challenge companies are the 15 in this guide.
+- ~~`/hackathon` metadata/FAQ list “Google for Developers, Bayer, Sandvik, Kongsberg, Valmet” as challenge partners~~ — fixed 13 Oct 2026 (the 13 named challenge partners + 2 to be announced).
 
 ## Local review
 

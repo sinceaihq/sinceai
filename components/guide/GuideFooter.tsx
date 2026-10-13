@@ -37,6 +37,14 @@ export function GuideFooter() {
           <Link href="/code-of-conduct" prefetch={false} className="inline-flex min-h-11 items-center text-neutral-400 hover:text-white">
             Code of conduct
           </Link>
+          <a
+            href={GUIDE_LINKS.mlhCodeOfConduct}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-11 items-center text-neutral-400 hover:text-white"
+          >
+            MLH Code of Conduct<span className="sr-only"> (opens in a new tab)</span>
+          </a>
           <Link href="/privacy" prefetch={false} className="inline-flex min-h-11 items-center text-neutral-400 hover:text-white">
             Privacy
           </Link>

@@ -23,7 +23,7 @@ export const GUIDES: readonly GuideDefinition[] = [
     name: "Challenge Partner Guide",
     navLabel: "Challenge partners",
     lede: "Where to arrive, where your teams meet you, when to be available and how Sunday evaluation works.",
-    forWho: "Representatives of the 15 challenge companies",
+    forWho: "Representatives of the challenge companies",
     firstMomentId: "fri-cp-arrival",
     metaDescription:
       "Since AI Hackathon 2026 Challenge Partner Guide: arrival, your EduCity briefing room, Saturday Q&A at Joki, Sunday evaluation and what to send Since AI.",
@@ -33,7 +33,7 @@ export const GUIDES: readonly GuideDefinition[] = [
     slug: "partners",
     name: "Partner & Tech Guide",
     navLabel: "Partners & tech",
-    lede: "Stand plan, setup and teardown, presence hours and practicalities for visibility and tech partners.",
+    lede: "The six-stand BioCity plan, setup and teardown, presence hours and practicalities for visibility and tech partners.",
     forWho: "Visibility, tech and ecosystem partners",
     firstMomentId: "fri-opening",
     metaDescription:
@@ -48,7 +48,7 @@ export const GUIDES: readonly GuideDefinition[] = [
     forWho: "The overall jury and company challenge evaluators",
     firstMomentId: "sun-evaluator-arrival",
     metaDescription:
-      "Since AI Hackathon 2026 Judge Guide: company challenge evaluation, participant voting, five finalist presentations and the overall winner — Sunday 8 November.",
+      "Since AI Hackathon 2026 Judge Guide: company challenge evaluation, participant voting, five live finalist presentations and the overall winner — Sunday 8 November.",
   },
   {
     audience: "speakers",
@@ -92,16 +92,17 @@ export const VENUE_GUIDE = {
 export const CRITICAL_PATH: Partial<Record<Audience, readonly { label: string; time: string; text: string }[]>> = {
   builders: [
     { label: "Check in", time: "Fri 15:00", text: "EduCity — either main entrance." },
-    { label: "Team", time: "by 16:45", text: "Everyone in the same team in sinceai.app." },
-    { label: "Select", time: "17:45–18:05", text: "Team owner picks the challenge in the app." },
+    { label: "Team", time: "from 15:00", text: "Everyone in the same team in sinceai.app — then Team check." },
+    { label: "Select", time: "before 17:00", text: "Team owner selects the team's challenge in the app." },
+    { label: "Opening", time: "17:00", text: "Taidon portaat — rooms are called from 17:50." },
     { label: "Briefing", time: "18:15–18:45", text: "Your company's room at EduCity." },
     { label: "Build", time: "from 18:45", text: "Dinner and building in BioCity or Joki, around the clock." },
-    { label: "Submit", time: "Sun 10:00", text: "Team owner submits in the app." },
+    { label: "Submit", time: "Sun 10:00", text: "Your team submits in the app — the deadline is fixed." },
   ],
   "challenge-partners": [
     { label: "Arrive", time: "Fri 15:30", text: "EduCity — weekend briefing at 15:40." },
     { label: "Brief", time: "18:15–18:45", text: "Your teams come to your EduCity room." },
-    { label: "Q&A", time: "Sat 09–18", text: "At your Joki stand (pause 12–14)." },
+    { label: "Q&A", time: "Sat 09–18", text: "At your Joki stand (pause 12:00–14:30)." },
     { label: "Evaluate", time: "Sun 10–13", text: "Briefing at 08:15, then pick your winner by 13:00." },
     { label: "Winners · finals", time: "Sun 13:30", text: "Company challenge winners announced at EduCity, then the 14:00 finals." },
   ],
@@ -116,7 +117,7 @@ export const CRITICAL_PATH: Partial<Record<Audience, readonly { label: string; t
     { label: "Deadline", time: "Sun 10:00", text: "Submissions close." },
     { label: "Evaluate", time: "10:00–13:00", text: "Company evaluators pick their challenge's winner." },
     { label: "Finalists", time: "by 12:00", text: "Five most-voted solutions." },
-    { label: "Final", time: "14:00", text: "Five finalists present; the jury picks the overall winner." },
+    { label: "Final", time: "14:00", text: "Five finalist teams present live; the jury picks the overall winner." },
   ],
   speakers: [
     { label: "Run sheet", time: "Before travel", text: "Your host confirms every personal time." },
@@ -132,7 +133,7 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
       title: "Before you arrive",
       items: [
         "Everyone in your team has joined the same team in sinceai.app.",
-        "You know who your team owner is — only the owner selects the challenge and submits.",
+        "You know who your team owner is — the owner selects your team's challenge on Friday.",
         "You have joined the Since AI Discord for updates and teammates.",
         "If you plan to sleep, you have your own accommodation booked.",
       ],
@@ -149,10 +150,10 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
     {
       title: "On the day",
       items: [
-        "Fri 15:00 — check in at EduCity.",
-        "Fri 16:45 — team complete; changes close.",
-        "Fri 17:45–18:05 — owner selects the challenge.",
-        "Sun 10:00 — owner submits. Then vote until 12:00: 10 votes, 10 different solutions.",
+        "Fri 15:00 — check in at EduCity, then team formation beside Taidon portaat.",
+        "Before 17:00 — every member in the team in the app, Team check passed, challenge selected by the owner.",
+        "Fri 17:00 — opening ceremony; from 17:50 to your briefing room when it is called.",
+        "Sun 10:00 — your team's submission is in. Then vote until 12:00: 10 votes, 10 different solutions.",
       ],
     },
   ],
@@ -169,7 +170,7 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
         "Data, IP and NDA boundaries — and the signing process if an NDA is needed",
         "Live support channel and the hours it is monitored",
         "AV and technical needs",
-        "Approved logo and public company intro",
+        "Approved logo and a short company introduction — the hosts read it when they introduce your challenge at the opening",
         "Meal headcount and dietary needs",
       ],
     },
@@ -272,11 +273,27 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
     {
       q: "A teammate arrives late",
-      a: "Tell the registration desk on Friday. The teammate must already be in your team in sinceai.app before teams lock at 16:50.",
+      a: "Tell the registration desk on Friday. The teammate must already be in your team in sinceai.app before team changes close — before 17:00; event staff announce the exact time.",
+    },
+    {
+      q: "How does team formation work?",
+      a: "From registration, walk to the team formation area beside Taidon portaat on EduCity's first floor (the lobby and room 1091). Teams have up to five members. Looking for people? Stand in the zone for the number of open places in your team — 1, 2, 3 or 4. Every member must join the same team in sinceai.app. Then leave via the exit side: at Team check a volunteer looks at your full team member list in the app before you go on to the opening. Already have a team? You pass Team check too.",
     },
     {
       q: "How does challenge selection work?",
-      a: "Only the team owner selects, in sinceai.app, between 17:45 and 18:05, right after the opening. It is first come, first served with limited places per challenge; the app shows how changes work. If your team has no challenge when selection closes, go straight to event staff — never guess a room.",
+      a: "Your team owner selects one challenge for the whole team in sinceai.app — before the 17:00 opening ceremony. Places per challenge are limited. Event staff and the app announce when the selection window opens. If your team has no challenge when selection closes, go straight to event staff — never guess a room.",
+    },
+    {
+      q: "Who submits for the team?",
+      a: "Any member of the team can submit the team's solution in sinceai.app — agree who does it. The deadline, Sunday 10:00, is fixed.",
+    },
+    {
+      q: "Meals and dietary needs",
+      a: "Mauno serves four meals at BioCity: Fri 18:30–21:30, Sat 10:30–13:30 and 17:00–20:00, Sun 10:00–13:00. Dietary requirements are collected in advance. Dishes are disposable and takeaway containers are available.",
+    },
+    {
+      q: "What happens at the finals?",
+      a: "At 14:00 on Sunday, the five finalist teams — the five most-voted solutions — present their projects live on stage at EduCity, not as recorded videos. The jury evaluates the presentations and selects the overall winner.",
     },
     {
       q: "Can we sleep at the venue?",
@@ -302,7 +319,11 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
     {
       q: "Q&A hours vs. your presence",
-      a: "The Q&A area at Joki is open Sat 09:00–12:00 and 14:00–18:00. Please be available for at least two hours across those windows and post your exact hours at your stand. You are welcome on site all weekend — even around the clock.",
+      a: "The Q&A area at Joki is open Sat 09:00–12:00 and 14:30–18:00, with a break 12:00–14:30. Please be available for at least two hours across those windows and post your exact hours at your stand. You are welcome on site all weekend — even around the clock.",
+    },
+    {
+      q: "The opening ceremony",
+      a: "At 17:00 the hosts introduce every challenge company from the short introduction you send in advance — company representatives do not present their challenges on stage. Jason Mayes' keynote follows. Teams then come to your room from 17:50 for your briefing, 18:15–18:45 (19:00 at the latest).",
     },
     {
       q: "Stand setup at Joki",
@@ -318,7 +339,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
     {
       q: "Sunday results",
-      a: "Evaluate the submissions to your challenge from 10:00, when submissions close, until 13:00. The winners of all 15 company challenges are announced from 13:30 at EduCity; the finals — the five most-voted solutions — follow at 14:00.",
+      a: "Evaluate the submissions to your challenge from 10:00, when submissions close, until 13:00 — every company's winner is decided by 13:00 at the latest. The company challenge winners are announced from 13:30 at EduCity; at the 14:00 finals the five finalist teams (the five most-voted solutions) present live on stage.",
     },
   ],
   partners: [
@@ -346,11 +367,11 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
   judges: [
     {
       q: "Overall jury vs. company evaluator",
-      a: "The overall jury watches the five finalist presentations at the 14:00 finals and selects the overall winner. A company evaluator reviews the submissions to one company's challenge between 10:00 and 13:00 and decides that company's winner, announced from 13:30. One person can hold both roles — the responsibilities stay separate.",
+      a: "The overall jury evaluates the five finalist teams' live presentations on stage at the 14:00 finals and selects the overall winner. A company evaluator reviews the submissions to one company's challenge between 10:00 and 13:00 and decides that company's winner, announced from 13:30. One person can hold both roles — the responsibilities stay separate.",
     },
     {
       q: "How are the five finalists chosen?",
-      a: "Every builder has 10 votes in sinceai.app and gives them to 10 different solutions between 10:00 and 12:00. The five most-voted solutions present in the finals at 14:00.",
+      a: "Every builder has 10 votes in sinceai.app and gives them to 10 different solutions between 10:00 and 12:00. The teams behind the five most-voted solutions present live on stage in the finals at 14:00.",
     },
     {
       q: "Scoring criteria",
@@ -384,4 +405,5 @@ export const HELP = {
   discord: GUIDE_LINKS.discord,
   reportIncident: GUIDE_LINKS.appReportIncident,
   codeOfConduct: GUIDE_LINKS.codeOfConduct,
+  mlhCodeOfConduct: GUIDE_LINKS.mlhCodeOfConduct,
 } as const;
