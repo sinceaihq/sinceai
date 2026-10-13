@@ -21,10 +21,11 @@ function pose(p: V3, t: V3): Pick<CameraView, "position" | "target"> {
  */
 const rowCamera = (x: number): { p: V3; t: V3; open: boolean } => ({ p: [x - 2.2, 5.6, -0.4], t: [x + 0.3, 1.3, -7.1], open: true });
 const STAND_CAMERAS: Record<string, { p: V3; t: V3; open: boolean }> = {
-  "bc-1": rowCamera(22.15),
-  "bc-3": rowCamera(24.35),
-  "bc-4": rowCamera(26.55),
-  "bc-5": rowCamera(28.75),
+  "bc-1": rowCamera(21.93),
+  "bc-3": rowCamera(23.69),
+  "bc-4": rowCamera(25.45),
+  "bc-5": rowCamera(27.21),
+  "bc-6": rowCamera(28.97),
   "bc-2": { p: [16.4, 6.4, -1.2], t: [26.2, 1.1, -2.7], open: true },
 };
 

@@ -78,11 +78,11 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
               sub: `EduCity · floor ${company.briefing.floor}`,
               strong: true,
             },
-            { label: "Your briefing", value: "Fri 18:15–18:45", sub: "Teams arrive 18:05–18:15" },
+            { label: "Your briefing", value: "Fri 18:15–18:45", sub: "Teams arrive from 17:50 · 19:00 latest" },
             {
               label: "Your Q&A stand",
               value: showroom ? "Joki Showroom" : `Joki Floor ${company.qa.floor}`,
-              sub: showroom ? "Floor 1 · Sat 09–12 · 14–18" : "Sat 09–12 · 14–18",
+              sub: showroom ? "Floor 1 · Sat 09–12 · 14:30–18" : "Sat 09–12 · 14:30–18",
               strong: true,
             },
             { label: "Evaluate", value: "Sun 10:00–13:00", sub: "Briefing 08:15 · EduCity" },
@@ -91,8 +91,9 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
         />
         <p className="flex flex-wrap items-center gap-3 text-xs text-white/55">
           <StatusTag status={company.placementStatus} />
-          Room and stand follow the 2 Oct 2026 venue maps; production does a final lock — this page updates if anything
-          moves.
+          {company.placementStatus === "pending"
+            ? "Provisional: this room and stand were reassigned on 13 Oct 2026 and await production's confirmation — this page updates if anything moves."
+            : "Room and stand follow the 2 Oct 2026 venue maps; production does a final lock — this page updates if anything moves."}
         </p>
         <div className="flex flex-wrap gap-3">
           <ShareButton title={`${company.name} · Since AI Hackathon 2026`} />
@@ -119,7 +120,7 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
           id="friday-title"
           eyebrow="// friday · educity"
           title={`Briefing room ${room}.`}
-          lede={`EduCity floor ${company.briefing.floor}. Teams come to your room after challenge selection, from 18:05, guided by volunteers — stay put, they come to you. Brief from 18:15 to 18:45.`}
+          lede={`EduCity floor ${company.briefing.floor}. After the opening, volunteers send teams to the rooms in turn from 17:50 — stay put, they come to you. Brief from 18:15 to 18:45; if it runs long, 19:00 is the absolute latest.`}
         />
         <VenueExplorer mapIds={[maps.briefing]} highlight={[company.id]} label={`${company.name} briefing room`} />
         <div className="mt-10">

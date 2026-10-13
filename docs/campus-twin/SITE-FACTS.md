@@ -664,6 +664,13 @@ z 34.4…36.3), EduCity gateway lift (street −1.55 → 3.40, near (196.9,76.8)
   | bc-2 Solita (rank 2, lobby E end at the Joki passage) | (26.35, −2.81) | (10.44, 32.63) | clear; face the lobby (−x) |
   | bc-3 open (W side of the event entrance) | (−6.40, −31.39) | (15.17, −10.57) | mirror of bc-1: **B (−6.4, −31.75)** → (15.47,−10.78); double column (−6.04/−5.65) behind |
   | bc-4 open (lobby W end) | (−24.46, −3.62) | (−17.94, −9.52) | **inside the reserved restaurant terrace** — render as "open stand" marker only; organiser to resolve |
+- **Partner corner, six stands (organiser 13 Oct 2026) [D]:** the table above records the original research positions.
+  The plan in use is `biocity/plan.ts` `STANDS`: a row of five at z −7.1 facing the walkway to Joki — bc-1 Red Hat
+  x 21.93, bc-3 Pruna AI 23.69, bc-4 BearingPoint 25.45, bc-5 CSC / LUMI AI Factory 27.21, bc-6 MLH 28.97, each
+  **1.56 × 1.0 m** (a 1.6 m table + roll-up), 0.2 m apart, spanning x 21.15…29.75 exactly as the earlier row of four
+  2.0 m stands did — plus bc-2 Solita unchanged at (26.35, −2.81) facing the hall. `plan.test.ts` checks every
+  clearance (stands ≥ 0.15 m apart, 0.3 m from CAD walls and columns, 0.8 m from the bistro bar, every route ≥ 1 m,
+  side door and Joki passage clear). Footprints are provisional until the venue approves the layout.
 - **Supercar recess / pilotis:** §5.
 
 ### 7.2 Joki floor 1 (frame J; walls `interiors-walls.json joki_floor1`, 190 polygons; clear height Aula/Cave 3.1 m [V])
@@ -727,6 +734,8 @@ z 34.4…36.3), EduCity gateway lift (street −1.55 → 3.40, near (196.9,76.8)
   Bo LKV (−5.45,−1.32) → (55.47,11.49); Business Turku (−3.39,4.27) → (53.58,17.14)**. The west stands collide with the
   lecture-chair arc → omit the chairs in the twin [D]; Forcit is ≈3 m from the F3 SE exit (keep ≥1.2 m clear).
 - Stand dressing [E]: counter 1.8 × 0.6 × 1.05 m + roll-up 0.85 × 2.0 m with the company logo (repo logos only).
+- **Roster of 13 Oct 2026 [D]:** Revvity's F2 spot is held for a partner to be announced (`tba`); Bo LKV's F3 spot is
+  Fonecta's and Saarioinen's F3 spot is the second to-be-announced place (`tba-2`). The positions above are unchanged.
 
 ### 7.4 EduCity floors 1–2 (frame E; schematic maps ±0.3–0.5 m; rooms in `interiors.json educity`)
 - **1F (y 3.40):** exposed concrete column grid x_E ≈5.4/17.3/22.3/29.3/34.2/39.3, z_E ≈8.8/16.4/24.5/30/48.8/54.1/
@@ -751,8 +760,12 @@ z 34.4…36.3), EduCity gateway lift (street −1.55 → 3.40, near (196.9,76.8)
   2–4 m cantilever, ≈45 mm vertical slats/20 mm gaps `#d6ccbe`, shade `#b2aba3`); **two matte charcoal bridges `#2f3438`
   at 3F (y 12.4) and 4F (y 16.4) around z 31–34.5** with white core / lilac halo `#d0a8db` LED lines; steel gantry under
   the glass.
-- **2F (y 8.40):** 2001 Elias (Bo LKV) x 0.27–12.3; 2002 Ivar (Takomo Golf) 12.3–22.4; 2003 Erik (Forcit) 22.5–32.2;
-  2004 Johannes (Lindström) 32.2–42.4 (all z 0.3–8.4); 2067 (Saarioinen) x 0.27–7.4, z 8.8–20.6; 2006/2007 (Valmet)
+- **Roster of 13 Oct 2026 [D]:** 1090 Ringsberg is held for a partner to be announced; 2001 Elias is Fonecta's and
+  2067 the second to-be-announced place. The room geometry below is unchanged. During team formation (Fri 15:00 → before
+  17:00) room 1091 Hammarbacka and the lobby in front of it are the team formation area (organiser's plan, zones 1–4);
+  Traficom's briefing there is at 18:15.
+- **2F (y 8.40):** 2001 Elias (Bo LKV → Fonecta) x 0.27–12.3; 2002 Ivar (Takomo Golf) 12.3–22.4; 2003 Erik (Forcit) 22.5–32.2;
+  2004 Johannes (Lindström) 32.2–42.4 (all z 0.3–8.4); 2067 (Saarioinen → to be announced) x 0.27–7.4, z 8.8–20.6; 2006/2007 (Valmet)
   L x 44.2–51.6, z 5.5–20.6; **2072 Työkahvila Aurinkokylpy (Business Turku) x 14.15–37.24, z 16.8–35.3 with KAIVO 2073
   round slatted drum Ø≈5.4 (pink stepped seating inside) at (28.95,25.76)**; 2026 Orvokki (DNA) L x 34.2–51.6,
   z 35.5–48.7; 2029/2031 (Turku Energia) x 14.2–34.9, z 48.9–55.2; 2030 Evert (Meyer Turku) x 9.2–20.7, z 56.8–65;

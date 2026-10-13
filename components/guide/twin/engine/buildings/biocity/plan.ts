@@ -493,19 +493,26 @@ export interface StandPose {
 }
 
 /**
- * The partner corner at the main lobby's south-east end (where Solita's stand was): a row of four
+ * The partner corner at the main lobby's south-east end (where Solita's stand was): a row of five
  * stands along the corner's north-east side, backs 0.9 m off the bistro bar and the corner room,
- * fronts facing the walkway to Joki; Solita in its own position facing the build hall. Kept clear:
- * the corridor to the meals and the Aulagalleria (route at x 19.9; the row starts 1.25 m east of it),
- * the walkway to Joki (z ≥ −1.3), the side door in the east wall (z −3.58…−2.67) and the column at
- * (24.16, −4.95), which stands in the row's visitor zone, 1.65 m in front of stand 3's counter.
+ * fronts facing the walkway to Joki; Solita in its own position facing the build hall. Six stands
+ * (organiser, 13 Oct 2026) fit in the span that held five by planning each at 1.56 × 1.0 m (a
+ * standard 1.6 m table and a roll-up) instead of the earlier assumed 2.0 m: the row still runs
+ * x 21.15…29.75 at a 1.76 m pitch (0.2 m between stands). Kept clear: the corridor to the meals and
+ * the Aulagalleria (route at x 19.9; the row starts 1.25 m east of it), the walkway to Joki
+ * (z ≥ −1.3), the side door in the east wall (z −3.58…−2.67) and the column at (24.16, −4.95), which
+ * stands in the row's visitor zone in front of stand 3. Footprints are provisional until the venue
+ * approves the layout [D].
  */
 const ROW_Z = -7.1;
+/** Stand width along the row (m). */
+export const ROW_STAND_WIDTH = 1.56;
 const ROW: { id: string; x: number; markerOnly?: boolean; labelY: number; walk: V2 }[] = [
-  { id: "bc-1", x: 22.15, labelY: 3.0, walk: [22.15, -4.4] },
-  { id: "bc-3", x: 24.35, labelY: 3.55, walk: [25.0, -4.4] },
-  { id: "bc-4", x: 26.55, markerOnly: true, labelY: 2.6, walk: [26.55, -5.0] },
-  { id: "bc-5", x: 28.75, markerOnly: true, labelY: 3.15, walk: [28.6, -5.0] },
+  { id: "bc-1", x: 21.93, labelY: 3.0, walk: [21.93, -4.4] },
+  { id: "bc-3", x: 23.69, labelY: 3.6, walk: [23.2, -4.4] },
+  { id: "bc-4", x: 25.45, labelY: 2.6, walk: [25.45, -4.6] },
+  { id: "bc-5", x: 27.21, labelY: 3.2, walk: [27.21, -4.6] },
+  { id: "bc-6", x: 28.97, labelY: 3.8, walk: [28.6, -5.0] },
 ];
 
 export const STANDS: StandPose[] = [
@@ -515,7 +522,7 @@ export const STANDS: StandPose[] = [
       x: r.x,
       z: ROW_Z,
       face: [0, 1],
-      width: 2.0,
+      width: ROW_STAND_WIDTH,
       depth: 1.0,
       markerOnly: r.markerOnly,
       rollup: false,

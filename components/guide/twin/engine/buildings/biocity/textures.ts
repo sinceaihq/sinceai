@@ -72,17 +72,25 @@ export interface StandGraphic {
   open: boolean;
 }
 
-/** One 2048² atlas with four 1024² stand graphics (back walls and counter fronts share it). */
+/**
+ * The stand graphics in one atlas (back walls and counter fronts share it): a 2 × 2 grid of 1024²
+ * tiles for up to four graphics, else a 3-column grid of 682² tiles (six graphics: 2046 × 1364).
+ * Logos and lettering stay inside the middle 60 % of a tile's width, so a stand's narrower back wall
+ * and counter front can show an undistorted slice of it (fitout.ts `aspectCrop`).
+ */
 export function standAtlas(stands: StandGraphic[]): AtlasTexture {
-  const size = 2048;
-  const tileSize = 1024;
-  const { canvas, ctx } = makeCanvas(size, size);
-  const tile = atlasTile(2, 2);
+  const cols = stands.length <= 4 ? 2 : 3;
+  const rows = Math.max(1, Math.ceil(stands.length / cols));
+  const tileSize = cols === 2 ? 1024 : 682;
+  const k = tileSize / 1024;
+  const { canvas, ctx } = makeCanvas(cols * tileSize, rows * tileSize);
+  const tile = atlasTile(cols, rows);
   const mono = monoFont();
   const sans = sansFont();
-  stands.slice(0, 4).forEach((s, i) => {
-    const x = (i % 2) * tileSize;
-    const y = Math.floor(i / 2) * tileSize;
+  const origin = (i: number) => [(i % cols) * tileSize, Math.floor(i / cols) * tileSize] as const;
+  const maxW = tileSize * 0.6;
+  stands.forEach((s, i) => {
+    const [x, y] = origin(i);
     const g = ctx.createLinearGradient(x, y, x, y + tileSize);
     g.addColorStop(0, s.open ? "#121216" : "#100e1f");
     g.addColorStop(1, s.open ? "#0b0b0e" : "#08070f");
@@ -90,29 +98,30 @@ export function standAtlas(stands: StandGraphic[]): AtlasTexture {
     ctx.fillRect(x, y, tileSize, tileSize);
     if (!s.open) violetLines(ctx, x, y, tileSize, tileSize, 31 + i * 7);
     ctx.strokeStyle = s.open ? "rgba(255,255,255,0.18)" : "rgba(139,123,255,0.7)";
-    ctx.lineWidth = 6;
-    ctx.strokeRect(x + 10, y + 10, tileSize - 20, tileSize - 20);
+    ctx.lineWidth = 6 * k;
+    ctx.strokeRect(x + 10 * k, y + 10 * k, tileSize - 20 * k, tileSize - 20 * k);
     // Event strip at the bottom.
     ctx.fillStyle = s.open ? "rgba(139,123,255,0.35)" : EVENT_VIOLET;
-    ctx.fillRect(x + 10, y + tileSize - 70, tileSize - 20, 8);
+    ctx.fillRect(x + 10 * k, y + tileSize - 70 * k, tileSize - 20 * k, 8 * k);
     ctx.fillStyle = s.open ? "rgba(255,255,255,0.55)" : "rgba(220,214,255,0.9)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = `600 ${40}px ${mono}`;
-    ctx.fillText(s.subtitle.toUpperCase(), x + tileSize / 2, y + tileSize - 120);
-    ctx.font = `500 ${30}px ${mono}`;
+    const sub = s.subtitle.toUpperCase();
+    ctx.font = `600 ${fitFont(ctx, sub, mono, 600, 40 * k, maxW)}px ${mono}`;
+    ctx.fillText(sub, x + tileSize / 2, y + tileSize - 120 * k);
+    ctx.font = `500 ${fitFont(ctx, "SINCE AI HACKATHON 2026", mono, 500, 30 * k, maxW)}px ${mono}`;
     ctx.fillStyle = "rgba(255,255,255,0.45)";
-    ctx.fillText("SINCE AI HACKATHON 2026", x + tileSize / 2, y + 80);
+    ctx.fillText("SINCE AI HACKATHON 2026", x + tileSize / 2, y + 80 * k);
     if (!s.logo) {
       ctx.fillStyle = s.open ? "rgba(255,255,255,0.78)" : "#ffffff";
       const words = s.title.split(" / ");
       if (words.length > 1) {
-        const fs = fitFont(ctx, s.title, sans, 700, 76, tileSize * 0.8);
+        const fs = fitFont(ctx, `${words[0]} /`, sans, 700, 76 * k, maxW);
         ctx.font = `700 ${fs}px ${sans}`;
         ctx.fillText(`${words[0]} /`, x + tileSize / 2, y + tileSize * 0.42);
         ctx.fillText(words.slice(1).join(" / "), x + tileSize / 2, y + tileSize * 0.42 + fs * 1.25);
       } else {
-        const fs = fitFont(ctx, s.title, sans, 800, 190, tileSize * 0.8);
+        const fs = fitFont(ctx, s.title, sans, 800, 190 * k, maxW);
         ctx.font = `800 ${fs}px ${sans}`;
         ctx.fillText(s.title, x + tileSize / 2, y + tileSize * 0.46);
       }
@@ -121,15 +130,14 @@ export function standAtlas(stands: StandGraphic[]): AtlasTexture {
   const texture = canvasTexture(canvas, { anisotropy: 8 });
   const ready = (async () => {
     await Promise.all(
-      stands.slice(0, 4).map(async (s, i) => {
+      stands.map(async (s, i) => {
         if (!s.logo) return;
         const img = await loadImage(s.logo);
-        const x = (i % 2) * tileSize;
-        const y = Math.floor(i / 2) * tileSize;
-        if (img) drawContained(ctx, img, x + tileSize / 2, y + tileSize * 0.46, tileSize * 0.74, tileSize * 0.3);
+        const [x, y] = origin(i);
+        if (img) drawContained(ctx, img, x + tileSize / 2, y + tileSize * 0.46, maxW, tileSize * 0.28);
         else {
           ctx.fillStyle = "#ffffff";
-          ctx.font = `800 140px ${sans}`;
+          ctx.font = `800 ${fitFont(ctx, s.title, sans, 800, 140 * k, maxW)}px ${sans}`;
           ctx.textAlign = "center";
           ctx.fillText(s.title, x + tileSize / 2, y + tileSize * 0.46);
         }

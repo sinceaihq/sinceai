@@ -18,7 +18,7 @@ import { exitSign, floorScreen, mapWall, patchworkCarpet, rollupAtlas, screenCon
  * ducts and black track spots, grey patchwork carpet, convector benches
  * along the glass. Floor 2: a partner to be announced, Valmet, Traficom (east) and the Chill
  * Zone in the Turku Futurescapes exhibition (west). Floor 3: Takomo Golf,
- * Forcit Group, Saarioinen (east), Lindström, Bo LKV, Business Turku
+ * Forcit Group, a partner to be announced (east), Lindström, Fonecta, Business Turku
  * (west) in front of the dark timber bleachers. Stand = black counter
  * 1.8 × 0.6 × 1.05 m with a violet kick light, two bar stools and a
  * 0.85 × 2.0 m roll-up with the company's logo (repo logos only).
@@ -32,9 +32,9 @@ export const TOWER_STANDS: Record<string, { floor: 2 | 3; x: number; z: number }
   traficom: { floor: 2, x: 6.08, z: 2.07 },
   "takomo-golf": { floor: 3, x: 5.29, z: -4.43 },
   "forcit-group": { floor: 3, x: 6.27, z: -1.01 },
-  saarioinen: { floor: 3, x: 6.08, z: 2.07 },
+  "tba-2": { floor: 3, x: 6.08, z: 2.07 },
   lindstrom: { floor: 3, x: -3.45, z: -5.71 },
-  "bo-lkv": { floor: 3, x: -5.45, z: -1.32 },
+  fonecta: { floor: 3, x: -5.45, z: -1.32 },
   "business-turku": { floor: 3, x: -3.39, z: 4.27 },
 };
 

@@ -75,7 +75,7 @@ describe("calendar export", () => {
 
 describe("company calendar", () => {
   const elisa = getCompany("elisa")!;
-  const saarioinen = getCompany("saarioinen")!;
+  const fonecta = getCompany("fonecta")!;
 
   it("puts the company's own room and stand in the events", () => {
     const text = unfold(buildCompanyCalendar(elisa));
@@ -84,7 +84,7 @@ describe("company calendar", () => {
     expect(briefing).toContain("Room 1001 Dromberg · floor 1");
     const arrival = text.split("BEGIN:VEVENT").find((e) => e.includes("UID:sat-cp-arrival."))!;
     expect(arrival).toContain("Showroom");
-    expect(unfold(buildCompanyCalendar(saarioinen))).toContain("floor 3 of the Joki tower");
+    expect(unfold(buildCompanyCalendar(fonecta))).toContain("floor 3 of the Joki tower");
   });
 
   it("uses UIDs that do not collide with the shared partner calendar", () => {

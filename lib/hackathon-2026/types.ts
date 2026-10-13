@@ -120,7 +120,11 @@ export interface EventPartner {
   logo?: { src: string; width: number; height: number };
   url?: string;
   category: StandCategory;
+  /** What the partner brings, in a few words ("Compute partner", "Visibility partner · mentoring"). */
+  role?: string;
   status: Publishability;
+  /** Short visible caveat (e.g. what is not yet confirmed). */
+  note?: string;
 }
 
 export interface PartnerStand {

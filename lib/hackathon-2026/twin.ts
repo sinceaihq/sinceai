@@ -179,11 +179,11 @@ export const PLACES_3D: readonly Place3D[] = [
     title: "BioCity · build hall and partner stands",
     caption:
       "Companies and partners come in from Tykistökatu through the open entrance recess, past the supercar display; builders enter from Jussin aukio into the Aulagalleria. The main lobby is the build hall, open around the clock, and Joki is down a short stair at its far (south-east) end.",
-    alt: `3D model of BioCity's ground floor: the long main lobby filled with rows of build tables, the partner corner at its far (south-east) end by the stair down to Joki — ${BIOCITY_STANDS.filter(
-      (s) => getStandPartner(s),
-    )
-      .map(standMention)
-      .join(", ")} and ${inWords(openStandCount)} open stand positions — the curved Aulagalleria with the courtyard entrance, and the Tykistökatu entrance recess with the supercar display.`,
+    alt: `3D model of BioCity's ground floor: the long main lobby filled with rows of build tables, the partner corner at its far (south-east) end by the stair down to Joki with ${inWords(
+      BIOCITY_STANDS.length,
+    )} partner stands — ${listNames(BIOCITY_STANDS.filter((s) => getStandPartner(s)).map(standMention))}${
+      openStandCount ? ` and ${inWords(openStandCount)} open stand position${openStandCount > 1 ? "s" : ""}` : ""
+    } — the curved Aulagalleria with the courtyard entrance, and the Tykistökatu entrance recess with the supercar display.`,
     poster: "/assets/guide/3d/posters/biocity.webp",
     views: [
       { id: "default", label: "Build hall" },
@@ -502,7 +502,7 @@ export function targetsForPlace(place: PlaceId): Target3D[] {
 // ── Walking routes ───────────────────────────────────────────────────────────
 
 const stand2 = standById("bc-2");
-/** "Red Hat's stand (Stand 1) and Pruna AI's stand (Stand 3) are in the row by the corridor to the meals, with two open positions." */
+/** "Red Hat's stand (Stand 1), …and Major League Hacking's stand (Stand 6) are in the row by the corridor to the meals." */
 function partnerRowSentence(): string {
   const row = BIOCITY_STANDS.filter((s) => s.id !== "bc-2");
   const taken = row.filter((s) => getStandPartner(s)).map(standMention);

@@ -173,10 +173,17 @@ describe("BioCity build tables (SPEC §7.1)", () => {
 });
 
 describe("BioCity stands (SPEC §7.1)", () => {
-  it("groups every stand in the partner corner, Solita where it was", () => {
+  it("groups all six stands in the partner corner, Solita where it was", () => {
     const solita = STANDS.find((s) => s.id === "bc-2")!;
     expect([solita.x, solita.z, ...solita.face]).toEqual([26.35, -2.81, -1, 0]);
-    expect(STANDS).toHaveLength(5);
+    expect(STANDS).toHaveLength(6);
+    // The row of five keeps the span the row of four had (x 21.15…29.75): only the widths changed.
+    const row = STANDS.filter((s) => s.id !== "bc-2").sort((a, b) => a.x - b.x);
+    expect(row.map((s) => s.id)).toEqual(["bc-1", "bc-3", "bc-4", "bc-5", "bc-6"]);
+    expect(row[0].x - row[0].width / 2).toBeCloseTo(21.15, 2);
+    expect(row[4].x + row[4].width / 2).toBeCloseTo(29.75, 2);
+    // A standard 1.6 m table and its roll-up still fit: the counter mesh is 1.5 m wide.
+    for (const s of row) expect(s.width).toBeGreaterThanOrEqual(1.5);
     for (const s of STANDS) {
       for (const [x, z] of standRing(s)) {
         expect(x).toBeGreaterThan(20.9);
@@ -335,7 +342,7 @@ describe("BioCity views and targets", () => {
     for (const key of ["biocity:default", "biocity:entrance", "biocity:gallery", "biocity:stands"]) expect(BIOCITY_VIEWS[key]).toBeDefined();
     const ids = biocityTargets().map((t) => t.id).sort();
     expect(ids).toEqual(
-      ["bc-1", "bc-2", "bc-3", "bc-4", "bc-5", "build-hall", "entrance-biocity-courtyard", "entrance-biocity-tykistokatu", "serving-lines"].sort(),
+      ["bc-1", "bc-2", "bc-3", "bc-4", "bc-5", "bc-6", "build-hall", "entrance-biocity-courtyard", "entrance-biocity-tykistokatu", "serving-lines"].sort(),
     );
     for (const t of biocityTargets()) {
       for (const n of [...t.view.position, ...t.view.target]) expect(Number.isFinite(n)).toBe(true);

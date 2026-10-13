@@ -4,9 +4,9 @@ import { CompanyLogo } from "./CompanyLogo";
 import { VenueExplorer } from "./maps/VenueExplorer";
 
 /**
- * BioCity visibility / tech partner stands — all in the partner corner of the
- * main lobby — ranked by visibility. Assigned stands show the partner; open
- * positions keep the generic label. The map rings the corner once (the stands
+ * BioCity visibility / tech partner stands — six, all in the partner corner of
+ * the main lobby — ranked by visibility. Assigned stands show the partner and
+ * its role; open positions keep the generic label. The map rings the corner once (the stands
  * are too close together for a ring each).
  */
 export function StandPlan() {
@@ -54,17 +54,22 @@ export function StandPlan() {
                   <span className="text-base font-semibold text-neutral-300">{OPEN_STAND_LABEL}</span>
                 )}
               </div>
+              {partner?.role && (
+                <p className="mt-3 font-mono text-[11px] uppercase tracking-widest text-(--color-event)">{partner.role}</p>
+              )}
               <p className="mt-4 font-semibold text-white">{keepDots(stand.area)}</p>
               <p className="text-sm text-neutral-300">{stand.location}</p>
               <p className="mt-2 text-sm text-white/55 leading-relaxed">{stand.visibility}</p>
+              {partner?.note && <p className="mt-2 text-sm text-white/55 leading-relaxed">{partner.note}</p>}
             </li>
           );
         })}
       </ol>
       <p className="text-xs text-white/55 leading-relaxed">
-        All stands are together in the partner corner at the south-east end of BioCity&rsquo;s main lobby, by the passage
-        to Joki — room for about five. Stand footprints are confirmed with the venue at setup so that walkways and exit
-        routes stay clear. Open positions are marked “{OPEN_STAND_LABEL}”.
+        All six stands are together in the partner corner at the south-east end of BioCity&rsquo;s main lobby, by the
+        passage to Joki: a row of five facing the walkway and one facing the build hall. Each is planned at about 1.6 ×
+        1.0 m. The layout is provisional until the venue approves it, and footprints are confirmed at setup so that
+        walkways, the side door and exit routes stay clear.
       </p>
       <VenueExplorer mapIds={["biocity-lobby"]} highlight={["bio-partner-corner"]} label="BioCity stand plan" />
     </div>
