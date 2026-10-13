@@ -127,9 +127,9 @@ export default function ForBuildersPage() {
                       Access to real problems
                     </h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
-                      Partner-backed challenges at Since AI Hackathon 2026 and ongoing
-                      applied projects from Google for Developers, Bayer, Sandvik,
-                      Kongsberg, Valmet, and others. No toy datasets, no synthetic prompts —
+                      15 company challenges at Since AI Hackathon 2026 — from Valmet,
+                      Bayer, Elisa, Meyer Turku, DNA, Traficom, Fonecta and others — and
+                      ongoing applied projects with Since AI partners. No toy datasets, no synthetic prompts —
                       production-relevant engineering problems that matter.
                     </p>
                   </div>
@@ -189,8 +189,8 @@ export default function ForBuildersPage() {
                       <span>Turku, Finland</span>
                     </div>
                     <p className="text-neutral-400 text-sm leading-relaxed mb-5">
-                      Partner challenges from Google for Developers, Bayer, Sandvik,
-                      Kongsberg, Valmet, and more. Free to attend. Open globally.
+                      15 company challenges from Valmet, Bayer, Elisa, Meyer Turku, DNA,
+                      Traficom and more. Free to attend. Open globally.
                     </p>
                     <Link
                       href="/hackathon"

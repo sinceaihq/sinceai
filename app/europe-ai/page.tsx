@@ -388,8 +388,8 @@ export default function EuropeAIPage() {
                 <p className="text-neutral-300 leading-relaxed mb-5">
                   <strong className="text-white">For builders:</strong>{' '}Since AI&apos;s
                   network of 10,000+ AI builders across Europe is open globally. Join
-                  the community, apply for hackathons, and access real partner challenges
-                  from Google for Developers, Bayer, Sandvik, and others.{" "}
+                  the community, apply for hackathons, and access real company challenges
+                  from partners such as Bayer, Valmet, Elisa and others.{" "}
                   <Link href="/for-builders" className="text-white underline hover:text-neutral-300">
                     Learn more on the For Builders page →
                   </Link>

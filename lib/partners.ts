@@ -169,7 +169,7 @@ export const PARTNERS: Partner[] = [
     url: "https://lindstromgroup.com/",
     tier: 1,
   },
-  // Bo (https://bo.fi/en/, /assets/sponsors/Bo.png) is withheld until its contract is signed.
+  // Bo (https://bo.fi/en/, /assets/sponsors/Bo.png) is not a 2026 challenge partner (organiser roster, 13 Oct 2026).
   {
     name: "Business Turku",
     logo: "/assets/sponsors/businessturku.png",
@@ -180,6 +180,30 @@ export const PARTNERS: Partner[] = [
     name: "Forcit Group",
     logo: "/assets/sponsors/Forcit-Group.png",
     url: "https://forcitgroup.com/",
+    tier: 1,
+  },
+  {
+    name: "Fonecta",
+    logo: "/assets/sponsors/fonecta.svg",
+    url: "https://www.fonecta.fi/",
+    tier: 1,
+  },
+  {
+    name: "Red Hat",
+    logo: "/assets/sponsors/red-hat.svg",
+    url: "https://www.redhat.com/en/products/ai",
+    tier: 1,
+  },
+  {
+    name: "BearingPoint",
+    logo: "/assets/sponsors/bearingpoint.png",
+    url: "https://www.bearingpoint.com/",
+    tier: 1,
+  },
+  {
+    name: "Major League Hacking",
+    logo: "/assets/sponsors/mlh.svg",
+    url: "https://www.mlh.com/",
     tier: 1,
   },
 

@@ -105,8 +105,11 @@ Since AI's flagship launch event brought together 260 AI builders to collaborate
 
 ### Since AI Hackathon 2026 (Upcoming)
 
-- **Dates**: November 6–8, 2026
-- **Location**: EduCity, Turku, Finland
+- **Dates**: November 6–8, 2026 (check-in Fri 15:00, opening Fri 17:00, submissions close Sun 10:00, finals Sun 14:00, ends ~15:00)
+- **Location**: Turku, Finland — EduCity (opening and closing), BioCity and Joki (building)
+- **Challenges**: 15 company challenges — Valmet, Bayer, Turku Energia, Apetit, Takomo Golf, Forcit Group, Elisa, Meyer Turku, Traficom, Lindström, Business Turku, DNA and Fonecta, plus two partners to be announced
+- **Keynote**: Jason Mayes, Web AI Lead at Google
+- **MLH**: MLH 2027 Season Member Event
 - **Status**: Registration open
 - **Updates**: https://luma.com/sinceai
 

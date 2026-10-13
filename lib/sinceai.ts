@@ -39,6 +39,52 @@ export const UPCOMING_EVENT_2026 = {
   statusLabelShort: "November 6–8, 2026 • Turku",
 } as const;
 
+/**
+ * Since AI Hackathon 2026 partners for marketing copy (organiser roster, 13 Oct 2026).
+ * The operational source is lib/hackathon-2026 (companies.ts, partners.ts); a test keeps
+ * these lists equal to it. Former or unconfirmed 2026 names (Revvity, Bo LKV, Saarioinen,
+ * Sandvik, Kongsberg) must not appear as 2026 challenge partners.
+ */
+export const HACKATHON_2026_PARTNERS = {
+  /** Company challenges the event is built for: 13 named + 2 to be announced. */
+  challengeTarget: 15,
+  challengePartners: [
+    "Valmet",
+    "Bayer",
+    "Turku Energia",
+    "Apetit",
+    "Takomo Golf",
+    "Forcit Group",
+    "Elisa",
+    "Meyer Turku",
+    "Traficom",
+    "Lindström",
+    "Business Turku",
+    "DNA",
+    "Fonecta",
+  ],
+  /** Short form for metadata and one-liners. */
+  challengePartnersShort: "Valmet, Bayer, Elisa, Meyer Turku, DNA, Traficom and more",
+  /** Visibility / technology partners (not challenge partners). */
+  visibilityPartners: ["Solita", "Red Hat", "BearingPoint", "Pruna AI", "CSC / LUMI AI Factory", "Major League Hacking"],
+  /** Keynote speaker. */
+  keynote: "Jason Mayes, Web AI Lead at Google",
+} as const;
+
+/** "Valmet, Bayer, … and Fonecta" */
+export const HACKATHON_2026_CHALLENGE_LIST = `${HACKATHON_2026_PARTNERS.challengePartners.slice(0, -1).join(", ")} and ${HACKATHON_2026_PARTNERS.challengePartners.at(-1)}`;
+
+/** MLH: the 2027 Season Member Event Agreement was signed on 13 Oct 2026. */
+export const MLH_2027 = {
+  label: "MLH 2027 Season Member Event",
+  codeOfConduct: "https://github.com/MLH/mlh-policies/blob/main/code-of-conduct.md",
+  /** Official 2027-season Trust Badge (mlh.com/brand-guidelines), hosted by MLH. */
+  trustBadgeSrc: "https://logged-assets.s3.amazonaws.com/trust-badge/2027/mlh-trust-badge-2027-white.svg",
+  trustBadgeHref:
+    "https://mlh.io/eu?utm_source=eu-hackathon&utm_medium=TrustBadge&utm_campaign=2027-season&utm_content=white",
+  trustBadgeAlt: "Major League Hacking 2027 Hackathon Season",
+} as const;
+
 // UI helper strings - premium & minimal
 export const COPY = {
   // Short versions for UI elements
