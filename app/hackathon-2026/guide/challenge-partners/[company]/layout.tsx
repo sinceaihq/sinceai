@@ -17,7 +17,7 @@ interface Props {
 
 const guide = getGuide("challenge-partners");
 
-// Only the 15 known companies exist; anything else is a 404.
+// Only the 15 known challenge places exist; anything else is a 404.
 export const dynamicParams = false;
 
 export function generateStaticParams() {

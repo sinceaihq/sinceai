@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { PARTNERS, type Partner } from "@/lib/partners";
+import { HACKATHON_2026_PARTNERS } from "@/lib/sinceai";
 
 /**
  * Partner logo grid for /hackathon.
@@ -20,43 +21,37 @@ function byName(name: string): Partner {
   return partner;
 }
 
-const groups: { label: string; names: string[]; boxClass: string; sizes: string; note?: string }[] = [
+/** Challenge places still to be announced (lib/hackathon-2026: 15 challenges, 13 partners named). */
+const TBA_PLACES = HACKATHON_2026_PARTNERS.challengeTarget - HACKATHON_2026_PARTNERS.challengePartners.length;
+
+const groups: {
+  label: string;
+  names: readonly string[];
+  boxClass: string;
+  sizes: string;
+  note?: string;
+  tba?: number;
+}[] = [
   {
-    label: "Tech partners",
-    names: [
-      "Google For Developers",
-      "ElevenLabs",
-      "LUMI AI Factory",
-      "Aiven",
-      "Lovable",
-      "n8n",
-      "Featherless.ai",
-      "JetBrains",
-      "Atlassian",
-      "Pruna AI",
-    ],
+    label: `Challenge partners · ${HACKATHON_2026_PARTNERS.challengeTarget} company challenges`,
+    names: HACKATHON_2026_PARTNERS.challengePartners,
+    boxClass: "w-32 h-12 sm:w-36 sm:h-14 lg:w-40 lg:h-16",
+    sizes: "(max-width: 640px) 128px, (max-width: 1024px) 144px, 160px",
+    tba: TBA_PLACES,
+    note: `${TBA_PLACES} more challenge partners to be announced.`,
+  },
+  {
+    // On site at BioCity's partner corner; Solita and BearingPoint also mentor builders.
+    label: "Visibility & technology partners",
+    names: ["Red Hat", "Solita", "BearingPoint", "Pruna AI", "LUMI AI Factory", "Major League Hacking"],
     boxClass: "w-28 h-10 sm:w-32 sm:h-11 lg:w-36 lg:h-12",
     sizes: "(max-width: 640px) 112px, (max-width: 1024px) 128px, 144px",
   },
   {
-    label: "Challenge partners",
-    names: [
-      "Bayer",
-      "Sandvik",
-      "Valmet",
-      "Turun Teknologiakiinteistöt",
-      "Traficom",
-      "Meyer Turku",
-      "Elisa",
-      "Solita",
-      "Takomo Golf",
-      "Turku Energia",
-      "Apetit",
-      "Lindström",
-    ],
-    boxClass: "w-32 h-12 sm:w-36 sm:h-14 lg:w-40 lg:h-16",
-    sizes: "(max-width: 640px) 128px, (max-width: 1024px) 144px, 160px",
-    note: "More challenge partners coming soon...",
+    label: "Tech partners",
+    names: ["Google For Developers", "ElevenLabs", "Aiven", "Lovable", "n8n", "Featherless.ai", "JetBrains", "Atlassian"],
+    boxClass: "w-28 h-10 sm:w-32 sm:h-11 lg:w-36 lg:h-12",
+    sizes: "(max-width: 640px) 112px, (max-width: 1024px) 128px, 144px",
   },
   {
     label: "Funding partners",
@@ -65,12 +60,25 @@ const groups: { label: string; names: string[]; boxClass: string; sizes: string;
     sizes: "(max-width: 640px) 96px, (max-width: 1024px) 112px, 128px",
   },
   {
-    label: "Capital & ecosystem",
-    names: ["University of Turku", "AI Finland", "Maria 01", "City of Turku", "Turku AMK"],
+    label: "Venue & ecosystem",
+    names: ["Turun Teknologiakiinteistöt", "University of Turku", "AI Finland", "Maria 01", "City of Turku", "Turku AMK"],
     boxClass: "w-24 h-9 sm:w-28 sm:h-10 lg:w-32 lg:h-11",
     sizes: "(max-width: 640px) 96px, (max-width: 1024px) 112px, 128px",
   },
 ];
+
+/** A held challenge place: a quiet text tile, never a logo or an organisation's name. */
+function TbaItem({ boxClass }: { boxClass: string }) {
+  return (
+    <div className="flex items-center justify-center w-full py-3 sm:py-4">
+      <div
+        className={`flex flex-shrink-0 items-center justify-center border border-white/10 text-center font-mono text-[11px] uppercase tracking-widest text-neutral-500 ${boxClass}`}
+      >
+        To be announced
+      </div>
+    </div>
+  );
+}
 
 function LogoItem({
   partner,
@@ -114,9 +122,9 @@ export function PartnerLogoGrid() {
           Real problems from real companies.
         </h2>
         <p className="text-sm text-neutral-400 leading-relaxed max-w-[640px] mb-14">
-          Every challenge at Since AI Hackathon 2026 is set by a company that
-          actually needs it solved. Build something they can use — and get in
-          front of the people who do the hiring.
+          Since AI Hackathon 2026 is built for 15 company challenges, each set by a
+          company that actually needs it solved. Build something they can use — and
+          get in front of the people who do the hiring.
         </p>
 
         {groups.map((group, i) => (
@@ -132,6 +140,9 @@ export function PartnerLogoGrid() {
                   boxClass={group.boxClass}
                   sizes={group.sizes}
                 />
+              ))}
+              {Array.from({ length: group.tba ?? 0 }, (_, i) => (
+                <TbaItem key={`tba-${i}`} boxClass={group.boxClass} />
               ))}
             </div>
             {group.note && (

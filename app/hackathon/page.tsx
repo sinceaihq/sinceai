@@ -18,7 +18,7 @@ import {
 } from "@/components/sections/hackathon";
 import { TrackedLink } from "@/components/analytics/TrackedLink";
 import ORG from "@/lib/org";
-import { UPCOMING_EVENT_2026 } from "@/lib/sinceai";
+import { HACKATHON_2026_CHALLENGE_LIST, HACKATHON_2026_PARTNERS, MLH_2027, UPCOMING_EVENT_2026 } from "@/lib/sinceai";
 
 const APPLY_URL = "https://sinceai.app/sign-up";
 
@@ -36,15 +36,15 @@ const breadcrumbSchema = {
 const hackathonFaqs = [
   {
     q: "What is Since AI Hackathon?",
-    a: "Since AI Hackathon is the flagship annual event of Since AI — a global execution-focused AI innovation ecosystem based in Turku, Finland. It is an official MLH (Major League Hacking) partner event. Builders from across the world gather to solve real industry challenges and ship AI products in 72 hours.",
+    a: "Since AI Hackathon is the flagship annual event of Since AI — a global execution-focused AI innovation ecosystem based in Turku, Finland. The 2026 edition is a Major League Hacking (MLH) 2027 Season Member Event. Builders from across the world gather for a 72-hour AI hackathon format to solve real company challenges and ship working AI products.",
   },
   {
     q: "When is Since AI Hackathon 2026?",
-    a: `Since AI Hackathon 2026 runs ${UPCOMING_EVENT_2026.dateNote} at EduCity, Joukahaisenkatu 7, Turku, Finland. Registration is now open — apply at sinceai.app/sign-up.`,
+    a: `Since AI Hackathon 2026 runs November 6–8, 2026 in Turku, Finland. Check-in and team formation open Friday 6 November at 15:00 at EduCity; the opening ceremony starts at 17:00. Submissions close Sunday 8 November at 10:00, the company challenge winners are announced at 13:30, the finals start at 14:00 and the event ends around 15:00. Registration is open — apply at sinceai.app/sign-up.`,
   },
   {
     q: "Is Since AI Hackathon an official MLH event?",
-    a: "Yes. Since AI Hackathon 2026 is an official Major League Hacking (MLH) Member Event for the 2026 season. MLH is the world's largest hackathon league, supporting hundreds of events annually across North America, Europe, and Asia. Participants gain MLH recognition, prizes, and API credits.",
+    a: "Yes. Since AI Hackathon 2026 is a Major League Hacking (MLH) Member Event of the 2027 MLH season, which covers the 2026–27 hackathon year. MLH is the world's largest hackathon league. The MLH Code of Conduct applies at the event alongside Since AI's own Code of Conduct.",
   },
   {
     q: "Who can participate?",
@@ -52,7 +52,7 @@ const hackathonFaqs = [
   },
   {
     q: "Where is the event held?",
-    a: "EduCity, Joukahaisenkatu 7, Turku, Finland — the modern campus of Turku University of Applied Sciences (Turku AMK).",
+    a: "On the Turku science park campus in Turku, Finland. The opening on Friday and the closing on Sunday are at EduCity (Joukahaisenkatu 7), the campus of Turku University of Applied Sciences; teams build around the clock next door at BioCity (Tykistökatu 6) and Joki (Lemminkäisenkatu 12b).",
   },
   {
     q: "Is registration free?",
@@ -64,11 +64,15 @@ const hackathonFaqs = [
   },
   {
     q: "What companies set challenges?",
-    a: "Challenge partners for 2026 include Google for Developers, Bayer, Sandvik, Kongsberg, and Valmet. Past edition partners also included ElevenLabs, Antler, and the University of Turku.",
+    a: `Since AI Hackathon 2026 is built for 15 company challenges. The challenge partners are ${HACKATHON_2026_CHALLENGE_LIST}; two more challenge partners are still to be announced.`,
   },
   {
-    q: "What happens during the 72 hours?",
-    a: "Teams form, select a partner challenge or open track, build a working AI product, and present it to judges. No slide decks — working demos only. Mentors from partner companies are available throughout.",
+    q: "What happens over the weekend?",
+    a: "On Friday, teams of up to five form in sinceai.app at EduCity and select one company challenge before the 17:00 opening ceremony. After the opening and Jason Mayes' keynote, each company briefs its teams. Teams then build at BioCity and Joki, which stay open around the clock, with company Q&A on Saturday. Submissions close Sunday at 10:00. Each company picks its challenge winner, and in the 14:00 finals five finalist teams present live on stage to the jury, which selects the overall winner.",
+  },
+  {
+    q: "Which code of conduct applies?",
+    a: `Since AI's Code of Conduct (sinceai.ai/code-of-conduct) and the MLH Code of Conduct (${MLH_2027.codeOfConduct}) both apply to everyone at the event.`,
   },
 ];
 
@@ -86,13 +90,16 @@ const faqSchema = {
 
 const keyFacts = [
   { label: "Date",           value: UPCOMING_EVENT_2026.dateNote },
-  { label: "Venue",          value: "EduCity, Joukahaisenkatu 7, Turku, Finland" },
+  { label: "Venues",         value: "EduCity (opening and closing), BioCity and Joki (building) — Turku, Finland" },
   { label: "Prize pool",     value: "€50,000 cash" },
-  { label: "Duration",       value: "72 hours" },
+  { label: "Format",         value: "72-hour AI hackathon" },
+  { label: "Schedule",       value: "Fri 15:00 check-in · Fri 17:00 opening · Sun 10:00 submissions close · Sun 14:00 finals · ends ~15:00" },
+  { label: "Challenges",     value: `15 company challenges — ${HACKATHON_2026_PARTNERS.challengePartners.length} partners confirmed, 2 to be announced` },
+  { label: "Keynote",        value: HACKATHON_2026_PARTNERS.keynote },
   { label: "Expected",       value: "1,000+ builders" },
   { label: "Participation",  value: "Free" },
   { label: "Open to",        value: "Builders worldwide — students and professionals" },
-  { label: "MLH",            value: "Official 2026 Season Member Event" },
+  { label: "MLH",            value: MLH_2027.label },
   { label: "Organised by",   value: "Since AI (sinceai.ai)" },
 ];
 
@@ -100,12 +107,12 @@ const whyItems = [
   {
     num: "01",
     title: "Real industry challenges",
-    body: "Solve actual problems set by Bayer, Sandvik, Kongsberg, Valmet, Google for Developers. The best solutions get noticed — and hired.",
+    body: `Solve actual problems set by ${HACKATHON_2026_PARTNERS.challengePartnersShort} — 15 company challenges. The best solutions get noticed — and hired.`,
   },
   {
     num: "02",
-    title: "Official MLH partner event",
-    body: "Since AI Hackathon 2026 is an official Major League Hacking (MLH) Member Event. Gain MLH recognition, prizes, API credits, and connect with the worldwide hacker community.",
+    title: "MLH Member Event",
+    body: "Since AI Hackathon 2026 is a Major League Hacking (MLH) 2027 Season Member Event — part of the world's largest hackathon league and its global builder community.",
   },
   {
     num: "03",
@@ -115,7 +122,7 @@ const whyItems = [
   {
     num: "04",
     title: "Working demos only",
-    body: "No slide decks. No mockups. Since AI Hackathon rewards teams that build and demo working AI products within the 72-hour sprint.",
+    body: "No mockups. Since AI Hackathon rewards teams that build and demo working AI products — and the five finalist teams present theirs live on stage.",
   },
 ];
 
@@ -161,14 +168,30 @@ export default function HackathonPage() {
             style={{ background: "linear-gradient(to top, #000 0%, transparent 100%)" }}
           />
 
+          {/* Official MLH 2027-season Trust Badge (mlh.com/brand-guidelines): in the page header, top
+              right, below the fixed navbar. MLH's own embed pins it to the viewport; here it scrolls
+              with the hero so it never covers the navbar or the sticky Apply bar. */}
+          <a
+            id="mlh-trust-badge"
+            href={MLH_2027.trustBadgeHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute z-20 block right-4 sm:right-[50px] top-[84px]"
+            style={{ width: "clamp(60px, 10vw, 100px)" }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element -- MLH serves the official badge; not optimised by us */}
+            <img src={MLH_2027.trustBadgeSrc} alt={MLH_2027.trustBadgeAlt} width={100} height={175} className="w-full h-auto" />
+            <span className="sr-only"> (opens in a new tab)</span>
+          </a>
+
           <FadeIn className="relative z-10 mx-auto w-full max-w-6xl pb-12"
             style={{ paddingTop: "clamp(100px, 13vh, 140px)" }}
           >
-            <p className="text-xs font-mono uppercase tracking-widest text-white/60 mb-5">
-              {"// official mlh 2026 season member event"}
+            <p className="text-xs font-mono uppercase tracking-widest text-white/60 mb-5 pr-[84px] lg:pr-0">
+              {"// mlh 2027 season member event"}
             </p>
 
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-6 max-w-[820px] leading-none">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-6 max-w-[820px] leading-none pr-[84px] lg:pr-0">
               Since AI Hackathon 2026.
             </h1>
 
@@ -178,7 +201,7 @@ export default function HackathonPage() {
             </p>
 
             <p className="text-sm text-white/75 mb-8 tracking-wide">
-              November 6–8, 2026 &nbsp;/&nbsp; EduCity, Turku, Finland &nbsp;/&nbsp; Free to enter &nbsp;/&nbsp; Open to builders worldwide
+              November 6–8, 2026 &nbsp;/&nbsp; Turku, Finland &nbsp;/&nbsp; 15 company challenges &nbsp;/&nbsp; Free to enter &nbsp;/&nbsp; Open to builders worldwide
             </p>
 
             <div className="w-full sm:w-fit mb-8">
@@ -275,7 +298,7 @@ export default function HackathonPage() {
               </div>
 
               <p className="text-sm text-neutral-400 leading-relaxed mt-8 max-w-2xl">
-                Google and LUMI provide hackathon participants with compute access and GPU usage throughout the 72-hour sprint — so you can focus on building, not on infrastructure.
+                Google and LUMI provide hackathon participants with compute access and GPU usage throughout the event — so you can focus on building, not on infrastructure.
               </p>
             </div>
           </section>
@@ -328,10 +351,11 @@ export default function HackathonPage() {
                   by 100+ strategic, capital, and research partners.
                 </p>
                 <p>
-                  Teams form on day one, pick a partner challenge or an open track, and have
-                  72 hours to ship. 1,000+ builders are expected in 2026, with challenges set
-                  by Google for Developers, Bayer, Sandvik, Kongsberg, and Valmet. Open to
-                  developers, researchers, and entrepreneurs worldwide.
+                  Teams form on Friday afternoon, select one of 15 company challenges before the
+                  17:00 opening, and ship by Sunday&apos;s 10:00 deadline. 1,000+ builders are
+                  expected in 2026, with challenges set by {HACKATHON_2026_CHALLENGE_LIST} — and
+                  two more partners still to be announced. Open to developers, researchers, and
+                  entrepreneurs worldwide.
                 </p>
                 <p className="text-white font-semibold">
                   No slide decks. No mockups. Only working demos.
@@ -382,25 +406,34 @@ export default function HackathonPage() {
                 {"// venue"}
               </p>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-8">
-                EduCity, Turku.
+                EduCity, BioCity and Joki, Turku.
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
                 <div>
                   <p className="text-sm text-neutral-400 leading-relaxed mb-6">
-                    Since AI Hackathon 2026 takes place at EduCity — the modern campus of Turku
-                    University of Applied Sciences (Turku AMK), Joukahaisenkatu 7, 20520 Turku,
-                    Finland. State-of-the-art facilities for 1,000+ builders to collaborate, build,
-                    and present.
+                    Since AI Hackathon 2026 takes place on the Turku science park campus. Friday&apos;s
+                    opening and Sunday&apos;s closing are at EduCity — the campus of Turku University of
+                    Applied Sciences (Turku AMK), Joukahaisenkatu 7, 20520 Turku. Teams build around the
+                    clock next door at BioCity and Joki. The Hackathon 2026 guide has every room, map and
+                    walking route.
                   </p>
-                  <a
-                    href="https://maps.google.com/?q=EduCity+Joukahaisenkatu+7+Turku"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-neutral-400 hover:text-white transition-colors"
-                  >
-                    View on Google Maps ↗
-                  </a>
+                  <div className="flex flex-wrap gap-x-8 gap-y-2">
+                    <Link
+                      href="/hackathon-2026/guide/venue"
+                      className="text-sm text-neutral-400 hover:text-white transition-colors"
+                    >
+                      Venue maps & 3D campus →
+                    </Link>
+                    <a
+                      href="https://maps.google.com/?q=EduCity+Joukahaisenkatu+7+Turku"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-neutral-400 hover:text-white transition-colors"
+                    >
+                      EduCity on Google Maps ↗
+                    </a>
+                  </div>
                 </div>
 
                 <div className="relative w-full h-[280px] overflow-hidden">
@@ -547,13 +580,27 @@ export default function HackathonPage() {
 
             <FaqAccordion faqs={hackathonFaqs} />
 
-            <div className="mt-10">
+            <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3">
               <Link
                 href="/faq"
                 className="text-sm text-neutral-400 hover:text-white transition-colors"
               >
                 More questions? See our full FAQ →
               </Link>
+              <Link
+                href="/code-of-conduct"
+                className="text-sm text-neutral-400 hover:text-white transition-colors"
+              >
+                Since AI Code of Conduct →
+              </Link>
+              <a
+                href={MLH_2027.codeOfConduct}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-neutral-400 hover:text-white transition-colors"
+              >
+                MLH Code of Conduct ↗
+              </a>
             </div>
           </div>
         </section>

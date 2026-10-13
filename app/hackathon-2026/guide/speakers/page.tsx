@@ -76,7 +76,7 @@ export default function SpeakerGuidePage() {
             { label: "Opening programme", value: "Fri 17:00", sub: "Opening + keynote", strong: true },
             { label: "Your times", value: "Run sheet", sub: "Confirmed by your host" },
             { label: "Company winners", value: "Sun 13:30", sub: "Announced at EduCity" },
-            { label: "Finals", value: "Sun 14:00", sub: "Five finalists" },
+            { label: "Finals", value: "Sun 14:00", sub: "Five teams live on stage" },
             { label: "Event ends", value: "Sun ~15:00", sub: "EduCity" },
           ]}
         />

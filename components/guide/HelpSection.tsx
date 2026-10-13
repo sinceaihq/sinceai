@@ -22,7 +22,7 @@ export function HelpSection({ onSiteNote }: { onSiteNote?: string }) {
     },
     {
       title: "Report an incident",
-      body: "Anything against the Code of Conduct — report it in sinceai.app.",
+      body: "Anything against our Code of Conduct or the MLH Code of Conduct — report it in sinceai.app.",
       cta: "sinceai.app/report",
       href: HELP.reportIncident,
     },

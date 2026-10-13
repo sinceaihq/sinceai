@@ -2,14 +2,24 @@ import { scheduleFor } from "./schedule";
 import type { ChallengeCompany, ScheduleItem } from "./types";
 
 /**
- * The 15 challenge companies with their Friday briefing room (EduCity) and
- * Saturday Q&A location (Joki).
+ * The 15 challenge places — 13 named challenge partners and two places held
+ * for partners still to be announced — with their Friday briefing room
+ * (EduCity) and Saturday Q&A location (Joki).
  *
- * Source: 2 Oct 2026 placement maps, as compiled on 3 Oct 2026. Revvity
- * cancelled on 7 Oct 2026; its room and stand are held for a partner still to
- * be announced (`tba`) — replace that entry when the partner is confirmed. Placements are
- * `working` until production locks them — change a room here and every page,
- * map highlight and 3D label follows.
+ * Source: the early-October placement maps (2 Oct 2026, compiled 3 Oct) are the
+ * baseline. Organiser roster of 13 Oct 2026: Valmet, Bayer, Turku Energia,
+ * Apetit, Takomo Golf, Forcit Group, Elisa, Meyer Turku, Traficom, Lindström,
+ * Business Turku, DNA and Fonecta, plus two "to be announced" places — 15 in
+ * all. Revvity (cancelled 7 Oct), Bo LKV and Saarioinen are not 2026 challenge
+ * partners; their three positions were reconciled without moving anyone else:
+ *   - Fonecta takes Bo LKV's positions (2001 Elias · Joki floor 3),
+ *   - `tba-2` takes Saarioinen's (2067 · Joki floor 3),
+ *   - `tba` keeps Revvity's (1090 Ringsberg · Joki floor 2).
+ * Those three reassignments are `pending` (provisional) until production
+ * confirms them; the twelve others are `working` until production locks them.
+ * Replace a `tba` entry when its partner is confirmed. Change a room here and
+ * every page, map highlight and 3D label follows (the venue map images carry
+ * the logos too — scripts/patch-guide-maps.mjs).
  */
 export const CHALLENGE_COMPANIES: readonly ChallengeCompany[] = [
   {
@@ -30,11 +40,11 @@ export const CHALLENGE_COMPANIES: readonly ChallengeCompany[] = [
   },
   {
     id: "tba",
-    name: "To be announced",
-    // No logo — the UI renders the name.
+    name: "To be announced (1)",
+    // A challenge place held for a partner still to be announced. No logo — the UI renders the name.
     briefing: { venue: "educity", floor: 1, room: "1090", roomName: "Ringsberg" },
     qa: { venue: "joki", floor: 2, zone: "Floor 2" },
-    placementStatus: "working",
+    placementStatus: "pending",
   },
   {
     id: "traficom",
@@ -58,13 +68,14 @@ export const CHALLENGE_COMPANIES: readonly ChallengeCompany[] = [
     placementStatus: "working",
   },
   {
-    id: "bo-lkv",
-    name: "Bo LKV",
-    // Logo withheld until the contract is signed (7 Oct 2026) — the UI renders the name.
-    // To restore: logo: { src: "/assets/sponsors/Bo.png", width: 500, height: 577 },
+    id: "fonecta",
+    name: "Fonecta",
+    // Official white logo (yrityksille.fonecta.fi footer artwork, 13 Oct 2026).
+    logo: { src: "/assets/sponsors/fonecta.svg", width: 1105, height: 276 },
+    // Bo LKV's former positions — provisional until production confirms.
     briefing: { venue: "educity", floor: 2, room: "2001", roomName: "Elias" },
     qa: { venue: "joki", floor: 3, zone: "Floor 3" },
-    placementStatus: "working",
+    placementStatus: "pending",
   },
   {
     id: "takomo-golf",
@@ -91,12 +102,12 @@ export const CHALLENGE_COMPANIES: readonly ChallengeCompany[] = [
     placementStatus: "working",
   },
   {
-    id: "saarioinen",
-    name: "Saarioinen",
-    // No approved logo file in the repository — the UI renders the name.
+    id: "tba-2",
+    name: "To be announced (2)",
+    // The second place held for a partner still to be announced, in Saarioinen's former positions.
     briefing: { venue: "educity", floor: 2, room: "2067" },
     qa: { venue: "joki", floor: 3, zone: "Floor 3" },
-    placementStatus: "working",
+    placementStatus: "pending",
   },
   {
     id: "valmet",
@@ -139,6 +150,17 @@ export const CHALLENGE_COMPANIES: readonly ChallengeCompany[] = [
     placementStatus: "working",
   },
 ] as const;
+
+/** A challenge place held for a partner still to be announced (not a confirmed organisation). */
+export function isTbaPlace(company: ChallengeCompany): boolean {
+  return company.id === "tba" || company.id.startsWith("tba-");
+}
+
+/** The named, confirmed challenge partners (13 on 13 Oct 2026). */
+export const NAMED_CHALLENGE_PARTNERS: readonly ChallengeCompany[] = CHALLENGE_COMPANIES.filter((c) => !isTbaPlace(c));
+
+/** Challenge places still held for partners to be announced (2 on 13 Oct 2026). */
+export const TBA_CHALLENGE_PLACES: readonly ChallengeCompany[] = CHALLENGE_COMPANIES.filter(isTbaPlace);
 
 export function getCompany(id: string): ChallengeCompany | undefined {
   return CHALLENGE_COMPANIES.find((c) => c.id === id);

@@ -34,7 +34,7 @@ export default function FieldGuideHubPage() {
             { label: "Build spaces", value: "BioCity + Joki", sub: "Around the clock" },
             { label: "Submissions close", value: "Sun 10:00", sub: "Hard deadline", strong: true },
             { label: "Company winners", value: "Sun 13:30", sub: "EduCity" },
-            { label: "Finals", value: "Sun 14:00", sub: "Five finalists · ends ~15:00" },
+            { label: "Finals", value: "Sun 14:00", sub: "Five teams live on stage · ends ~15:00" },
           ]}
         />
         <p className="text-sm text-neutral-400">{HUB.openingNote}</p>

@@ -93,3 +93,49 @@ test.describe("public site", () => {
     expect(robots.status()).toBe(200);
   });
 });
+
+test.describe("hackathon 2026 page", () => {
+  test("carries the MLH 2027 Trust Badge, both codes of conduct and the 13 Oct 2026 roster", async ({ page }) => {
+    await acceptNoCookies(page);
+    await page.addInitScript(() => {
+      try {
+        localStorage.setItem("hackathon2026_popup_v1", String(Date.now()));
+      } catch {}
+    });
+    await page.goto("/hackathon");
+    const badge = page.locator("#mlh-trust-badge");
+    await expect(badge).toBeVisible();
+    await expect(badge).toHaveAttribute("href", /^https:\/\/mlh\.io\/.*2027-season/);
+    await expect(badge.locator("img")).toHaveAttribute("src", /trust-badge\/2027\/mlh-trust-badge-2027-white\.svg$/);
+    await expect(badge.locator("img")).toHaveAttribute("alt", "Major League Hacking 2027 Hackathon Season");
+    // The badge never covers the eyebrow or headline text (it is absolutely positioned in the hero).
+    const overlaps = await page.evaluate(() => {
+      const b = document.getElementById("mlh-trust-badge")!.getBoundingClientRect();
+      const hero = document.getElementById("hackathon-hero")!;
+      const texts = [hero.querySelector("h1")!, hero.querySelector("h1")!.previousElementSibling!];
+      return texts.flatMap((el) => {
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        return [...range.getClientRects()].filter(
+          (r) => r.width > 0 && r.left < b.right && r.right > b.left && r.top < b.bottom && r.bottom > b.top,
+        ).length;
+      });
+    });
+    expect(overlaps.reduce((a, n) => a + n, 0)).toBe(0);
+    await expect(page.getByRole("link", { name: /MLH Code of Conduct/ })).toHaveAttribute(
+      "href",
+      "https://github.com/MLH/mlh-policies/blob/main/code-of-conduct.md",
+    );
+    const main = await page.locator("main").innerText();
+    expect(main).not.toMatch(/MLH 2026 season|2026 Season Member Event/i);
+    for (const name of ["Fonecta", "Lindström", "Business Turku", "Forcit Group"]) expect(main).toContain(name);
+    // Former 2026 names appear only in the 2025 edition paragraph.
+    const without2025 = main.replace(/The inaugural Since AI Hackathon[\s\S]*?72 hours\./, "");
+    for (const name of ["Revvity", "Bo LKV", "Saarioinen", "Sandvik", "Kongsberg"]) expect(without2025).not.toContain(name);
+    await expect(page.getByText("To be announced", { exact: true })).toHaveCount(2);
+    const ld = await page.locator('script[type="application/ld+json"]').allTextContents();
+    const event = ld.map((t) => JSON.parse(t)).find((d) => d["@type"] === "Event");
+    expect(event.sponsor.map((s: { name: string }) => s.name)).toHaveLength(13);
+    expect(event.location.map((l: { name: string }) => l.name)).toEqual(["EduCity", "BioCity", "Joki"]);
+  });
+});

@@ -106,7 +106,7 @@ async function newPage(opts = {}) {
   const { ctx, page } = await newPage();
   const cases = [
     ["builders", "2026-10-04T12:00", /Starts in 33 days.*Turku 12:00.*Registration opens/i],
-    ["builders", "2026-11-06T16:47", /Live now.*Turku 16:47.*Team changes close.*Next.*Teams lock/i],
+    ["builders", "2026-11-06T16:47", /Live now.*Turku 16:47.*Team formation.*Next.*team complete, challenge selected/i],
     ["builders", "2026-11-07T10:30", /Live now.*Challenge partner Q&A open.*Next.*Lunch/i],
     ["builders", "2026-11-08T09:59", /Next.*Hard submission deadline/i],
     ["challenge-partners", "2026-11-06T18:40", /Your challenge briefing/i],
@@ -508,7 +508,7 @@ if (process.env.SKIP3D !== "1") {
 
   current = "print";
   const { ctx: c4, page: p4 } = await newPage();
-  for (const r of ["", "/builders", "/challenge-partners", "/partners", "/judges", "/speakers", "/venue", "/challenge-partners/saarioinen"]) {
+  for (const r of ["", "/builders", "/challenge-partners", "/partners", "/judges", "/speakers", "/venue", "/challenge-partners/fonecta"]) {
     await p4.goto(BASE + G + r, { waitUntil: "networkidle" });
     await p4.evaluate(() => window.dispatchEvent(new Event("beforeprint")));
     await p4.emulateMedia({ media: "print" });

@@ -24,7 +24,7 @@ export const faqs: Faq[] = [
   {
     question: "When and where is Since AI Hackathon 2026?",
     answer:
-      "Since AI Hackathon 2026 takes place November 6 to 8, 2026, at Educity, Joukahaisenkatu 7, Turku, Finland. It is a 72-hour format targeting 1,000+ builders, with partner challenges from Google for Developers, Bayer, Sandvik, Kongsberg, and Valmet.",
+      "Since AI Hackathon 2026 takes place November 6 to 8, 2026, in Turku, Finland: the opening (Friday 17:00) and the closing (Sunday) are at EduCity, Joukahaisenkatu 7, and teams build at BioCity and Joki next door. It is a 72-hour AI hackathon format targeting 1,000+ builders, with 15 company challenges from Valmet, Bayer, Elisa, Meyer Turku, DNA, Traficom, Fonecta and more.",
   },
   {
     question: "Who can join Since AI?",

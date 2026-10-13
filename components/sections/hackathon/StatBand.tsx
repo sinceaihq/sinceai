@@ -12,7 +12,7 @@ const stats = [
   { value: "€50,000", label: "// prize pool", desc: "In cash, awarded across tracks", brand: true },
   { value: "1,000+",  label: "// builders",   desc: "Expected from across the world" },
   { value: "Free",    label: "// entry",      desc: "No fee for any participant" },
-  { value: "72h",     label: "// to ship",    desc: "Working demos only — no decks" },
+  { value: "72h",     label: "// format",     desc: "AI hackathon format — 15 company challenges" },
 ];
 
 export function StatBand() {
@@ -39,7 +39,7 @@ export function StatBand() {
         </div>
 
         <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mt-12 pt-6 border-t border-white/10">
-          Official MLH 2026 Season Member Event &nbsp;·&nbsp; EduCity, Turku, Finland
+          MLH 2027 Season Member Event &nbsp;·&nbsp; EduCity · BioCity · Joki, Turku, Finland
           &nbsp;·&nbsp; Open to builders worldwide
         </p>
       </div>

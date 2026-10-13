@@ -14,7 +14,7 @@ import { TrackedLink } from "@/components/analytics/TrackedLink";
 export const metadata: Metadata = {
   title: "AI Hackathons 2026 — Best Global AI Hackathons & Events | Since AI",
   description:
-    "The definitive guide to AI hackathons globally. Since AI Hackathon 2026: November 6–8, Turku, Finland — 72 hours, 1,000+ builders, partner challenges from Google, Bayer, Sandvik. Free to attend.",
+    "The definitive guide to AI hackathons globally. Since AI Hackathon 2026: November 6–8, Turku, Finland — 72-hour format, 1,000+ builders, 15 company challenges from Valmet, Bayer, Elisa and more. Free to attend.",
   keywords: [
     "AI hackathons global",
     "AI hackathon 2026",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "AI Hackathons 2026 | Since AI",
     description:
-      "Since AI Hackathon 2026: Nov 6–8, Turku. 72 hours, 1,000+ builders, challenges from Google, Bayer, Sandvik, Kongsberg, Valmet.",
+      "Since AI Hackathon 2026: Nov 6–8, Turku. 72-hour format, 1,000+ builders, 15 company challenges from Valmet, Bayer, Elisa, Meyer Turku and more.",
   },
 };
 
@@ -81,7 +81,7 @@ const sinceAiEdge = [
   },
   {
     label: "Partners",
-    since: "Google, Bayer, Sandvik, Kongsberg, Valmet, ElevenLabs",
+    since: "Valmet, Bayer, Elisa, Meyer Turku, DNA, Traficom, Fonecta and more",
     typical: "Variable",
   },
   {
@@ -226,8 +226,8 @@ export default function AIHackathonsPage() {
                             <span>{event.size}</span>
                           </div>
                           <p className="text-neutral-400 text-sm">
-                            Partner challenges from Google for Developers, Bayer, Sandvik,
-                            Kongsberg, Valmet. Free to attend. Open globally.
+                            15 company challenges from Valmet, Bayer, Elisa, Meyer Turku, DNA
+                            and more. Free to attend. Open globally.
                           </p>
                         </div>
                         <Link
@@ -355,10 +355,11 @@ export default function AIHackathonsPage() {
                   across Europe with leading AI companies, research groups, and investors.
                 </p>
                 <p className="text-neutral-400 leading-relaxed mb-6">
-                  Since AI Hackathon 2026 is our flagship annual event. It is backed by
-                  Google for Developers, Bayer, Sandvik, Kongsberg, Valmet, ElevenLabs,
-                  Aiven, Lovable, Antler, Inventure, Wave Ventures, and the universities of
-                  Turku and Aalto.
+                  Since AI Hackathon 2026 is our flagship annual event, with 15 company
+                  challenges from Valmet, Bayer, Elisa, Meyer Turku, DNA, Traficom, Fonecta
+                  and others, and backed by Google for Developers, ElevenLabs, Aiven,
+                  Lovable, Antler, Inventure, Wave Ventures, and the universities of Turku
+                  and Aalto.
                 </p>
                 <ButtonPair
                   primaryLabel="Apply to Hackathon 2026 →"

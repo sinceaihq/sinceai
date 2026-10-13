@@ -34,7 +34,7 @@ const ROLES = [
     title: "Overall hackathon jury",
     points: [
       "Builders vote 10:00–12:00 — 10 votes each, for 10 different solutions; the five most-voted become the finalists.",
-      "The finalists present in the 14:00 finals at EduCity — about an hour.",
+      "The five finalist teams present live on stage in the 14:00 finals at EduCity — about an hour. You evaluate the live presentations.",
       "The jury selects the overall winner of Since AI Hackathon 2026.",
       "Be ready before 14:00 — your call time comes in your personal briefing.",
     ],
@@ -46,7 +46,7 @@ const ROLES = [
       "Reviews the submissions to one company's challenge.",
       "Evaluation briefing at EduCity from 08:15; reviewing starts when submissions close at 10:00.",
       "Uses the company's agreed criteria and decides that challenge's winner by 13:00.",
-      "The winners of all 15 company challenges are announced from 13:30 at EduCity.",
+      "The company challenge winners are announced from 13:30 at EduCity — prepared from the winners handed over by 13:00.",
     ],
   },
 ] as const;
@@ -168,7 +168,7 @@ export default function JudgeGuidePage() {
           id="venue-title"
           eyebrow="// where"
           title="EduCity on Sunday."
-          lede="The company challenge winners (13:30) and the finals with the five finalist presentations (14:00) are at EduCity."
+          lede="The company challenge winners (13:30) and the finals with the five live finalist presentations (14:00) are at EduCity."
         />
         <VenueCards venues={["educity"]} />
         <div className="mt-8">

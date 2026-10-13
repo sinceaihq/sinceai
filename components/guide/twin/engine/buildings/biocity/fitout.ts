@@ -53,20 +53,35 @@ import {
 
 /**
  * BioCity's event fit-out and signage (SPEC §7.1): the build hall's 56 tables
- * and 280 chairs with laptops and seated builders, the four visibility /
- * tech partner stands (Red Hat stand 1 facing the event entrance, Solita
- * stand 2 at the Joki end, stands 3 and 4 open), Since AI wayfinding totems,
+ * and 280 chairs with laptops and seated builders, the six visibility /
+ * tech partner stands in the partner corner (a row of five facing the walkway
+ * to Joki — Red Hat, Pruna AI, BearingPoint, CSC / LUMI AI Factory, MLH — and
+ * Solita facing the build hall), Since AI wayfinding totems,
  * the Mauno restaurant (tables, chairs, pendants, curtains) and its serving
  * lines, the bistro bar, the info desk, and the building's own lettering
  * (vertical BIOCITY, rooftop SCIENCE PARK, the Tykistökatu "A" door board).
  */
 
 
-/** White-on-dark partner logos for the stand graphics (others are set in lettering, e.g. Red Hat). */
+/** White-on-dark (or reverse) partner logos for the stand graphics; a partner without one is set in lettering. */
 const STAND_LOGOS_3D: Record<string, string> = {
+  "red-hat": "/assets/guide/3d/logos/red-hat.png",
   solita: "/assets/guide/3d/logos/solita.png",
   "pruna-ai": "/assets/guide/3d/logos/pruna-ai.png",
+  bearingpoint: "/assets/guide/3d/logos/bearingpoint.png",
+  "csc-lumi": "/assets/guide/3d/logos/csc-lumi.png",
+  mlh: "/assets/guide/3d/logos/mlh.png",
 };
+
+/**
+ * The centred slice of a square atlas tile that a w × h plane shows undistorted (tile-relative,
+ * v from the bottom), within the vertical band v0…v1. standAtlas keeps logos and lettering inside the
+ * middle 60 % of the tile, so any slice at least that wide shows them whole.
+ */
+export function aspectCrop(w: number, h: number, v0 = 0, v1 = 1): [number, number, number, number] {
+  const du = Math.min(1, (w / h) * (v1 - v0));
+  return [0.5 - du / 2, v0, 0.5 + du / 2, v1];
+}
 
 export interface FitoutResult {
   /** Objects for the interior group (furniture with their own materials, stand signs, seated people). */
@@ -184,7 +199,7 @@ export function buildFitout(b: Buckets, ctx: TwinContext): FitoutResult {
   }
 
   // ── Partner stands (one sign atlas; each stand a pickable group) ──
-  // One tile per partner stand; every open position shares one "open" tile (the atlas holds four).
+  // One tile per partner stand; every open position shares one "open" tile (the atlas holds six).
   const graphics: StandGraphic[] = [];
   const tileOf = new Map<string, number>();
   for (const s of STANDS) {
@@ -196,7 +211,7 @@ export function buildFitout(b: Buckets, ctx: TwinContext): FitoutResult {
       graphics.push({
         logo: partner ? (STAND_LOGOS_3D[partner.id] ?? null) : null,
         title: partner ? partner.name : OPEN_STAND_LABEL,
-        subtitle: partner ? `Stand ${stand?.rank} · Visibility / Tech partner` : "Open position",
+        subtitle: partner ? `Stand ${stand?.rank} · ${partner.role ?? "Visibility / Tech partner"}` : "Open position",
         open: !partner,
       });
     }
@@ -255,12 +270,12 @@ export function buildFitout(b: Buckets, ctx: TwinContext): FitoutResult {
         solid.push(rs);
       } else {
         // Back wall graphic (its face towards −z of the stand, at the wall's front).
-        const back = atlasPlane(s.width - 0.06, 2.24, uv);
+        const back = atlasPlane(s.width - 0.06, 2.24, uv, aspectCrop(s.width - 0.06, 2.24));
         back.rotateY(Math.PI);
         back.translate(0, 1.18, s.depth / 2 - 0.036);
         parts.push(back);
         // Counter front: the logo band of the tile.
-        const front = atlasPlane(1.38, 0.7, uv, [0.08, 0.36, 0.92, 0.7]);
+        const front = atlasPlane(1.38, 0.7, uv, aspectCrop(1.38, 0.7, 0.36, 0.7));
         front.rotateY(Math.PI);
         front.translate(0, 0.55, -0.2 - 0.276);
         parts.push(front);
