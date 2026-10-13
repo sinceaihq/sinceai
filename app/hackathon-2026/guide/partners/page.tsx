@@ -67,7 +67,7 @@ export default function PartnerGuidePage() {
             { label: "Stands open", value: "All weekend", sub: "BioCity" },
             { label: "Submissions close", value: "Sun 10:00", sub: "Stands stay open" },
             { label: "Winners · finals", value: "Sun 13:30 · 14:00", sub: "EduCity" },
-            { label: "Teardown", value: "After ~15:00", sub: "Agreed post-event window", strong: true },
+            { label: "Teardown", value: "After 15:00", sub: "Agreed post-event window", strong: true },
           ]}
         />
         <NowNext items={schedule} audience={AUDIENCE} firstMoment={getScheduleItem(guide.firstMomentId)} />

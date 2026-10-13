@@ -33,8 +33,8 @@ const ROLES = [
     eyebrow: "Role A",
     title: "Overall hackathon jury",
     points: [
-      "Builders vote 10:00–12:00 — 10 votes each, for 10 different solutions; the five most-voted become the finalists.",
-      "The five finalist teams present live on stage in the 14:00 finals at EduCity — about an hour. You evaluate the live presentations.",
+      "Builders vote 10:00–12:00 on the ten solutions sinceai.app gives each of them; at 12:00 the five teams with the most votes are confirmed as finalists.",
+      "The five finalist teams present live on stage in the 14:00 finals at EduCity. You evaluate the live presentations; the programme is over by 15:00.",
       "The jury selects the overall winner of Since AI Hackathon 2026.",
       "Be ready before 14:00 — your call time comes in your personal briefing.",
     ],
@@ -44,9 +44,9 @@ const ROLES = [
     title: "Company challenge evaluator",
     points: [
       "Reviews the submissions to one company's challenge.",
-      "Evaluation briefing at EduCity from 08:15; reviewing starts when submissions close at 10:00.",
+      "Evaluation briefing at EduCity at 09:00; reviewing starts when submissions close at 10:00.",
       "Uses the company's agreed criteria and decides that challenge's winner by 13:00.",
-      "The company challenge winners are announced from 13:30 at EduCity — prepared from the winners handed over by 13:00.",
+      "The company challenge winners are announced from 13:30 at EduCity — prepared from the winners confirmed by 13:00.",
     ],
   },
 ] as const;
@@ -77,11 +77,11 @@ export default function JudgeGuidePage() {
         <FactsStrip
           facts={[
             { label: "Submissions close", value: "Sun 10:00", sub: "Hard deadline", strong: true },
-            { label: "Company evaluation", value: "10:00–13:00", sub: "Briefing 08:15 · EduCity" },
+            { label: "Company evaluation", value: "10:00–13:00", sub: "Briefing 09:00 · EduCity" },
             { label: "Builder voting", value: "10:00–12:00", sub: "Top five become finalists" },
             { label: "Company winners", value: "Sun 13:30", sub: "Announced at EduCity" },
             { label: "Finals", value: "Sun 14:00", sub: "EduCity · jury decides", strong: true },
-            { label: "Event ends", value: "Sun ~15:00", sub: "EduCity" },
+            { label: "Event ends", value: "Sun 15:00", sub: "EduCity · over by 15:00" },
           ]}
         />
         <NowNext items={schedule} audience={AUDIENCE} firstMoment={getScheduleItem(guide.firstMomentId)} />

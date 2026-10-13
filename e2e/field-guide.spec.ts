@@ -83,7 +83,7 @@ test.describe("content", () => {
     await expect(facts.filter({ hasText: "Sun 10:00" })).toHaveCount(1);
     await expect(facts.filter({ hasText: "Sun 13:30" })).toHaveCount(1);
     await expect(facts.filter({ hasText: "Sun 14:00" })).toHaveCount(1);
-    await expect(facts.filter({ hasText: "~15:00" })).toHaveCount(1);
+    await expect(facts.filter({ hasText: "over by 15:00" })).toHaveCount(1);
     const body = await page.locator("main").innerText();
     expect(body).not.toMatch(/72[\s-]*(h\b|hours?)/i);
     expect(body).not.toContain("14:10");
@@ -133,8 +133,9 @@ test.describe("content", () => {
     await expect(section).toContainText("not the building’s emergency exit plan");
     await expect(section.locator('img[src*="educity-team-formation"]').first()).toHaveAttribute("alt", /zones 1, 2, 3 and 4/);
     const body = await page.locator("main").innerText();
-    expect(body).not.toMatch(/17:45|18:05|16:50/);
-    expect(body).toContain("before 17:00");
+    expect(body).not.toMatch(/17:45|18:05|before 17:00/);
+    expect(body).toContain("Team formation closes at 16:45");
+    expect(body).toContain("17:00–17:50");
   });
 
   test("partner Discord onboarding: challenge partners vs tech / visibility partners", async ({ page }) => {

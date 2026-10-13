@@ -39,20 +39,20 @@ const APP_STEPS = [
   {
     title: "Your team",
     who: "Everyone",
-    when: "Fri from 15:00",
-    text: "Create or join your team — up to five members. Every member must appear in the same team: that list is what the volunteer checks at Team check.",
+    when: "Fri 15:00–16:45",
+    text: "Create or join your team — up to five members. Every member must appear in the same team: that list is what the volunteer checks at Team check. Teams lock at 16:45.",
   },
   {
     title: "Challenge selection",
-    who: "Team owner",
-    when: "Before Fri 17:00",
-    text: "Select one challenge for the whole team. Places per challenge are limited; event staff and the app announce when selection opens.",
+    who: "Your team",
+    when: "Fri 17:00–17:50",
+    text: "Preview every challenge from 15:15, then select one for the whole team while selection is open. Places per challenge are limited.",
   },
   {
     title: "Where to go",
     who: "Everyone",
     when: "From Fri 17:50",
-    text: "Go to your challenge company's briefing room when volunteers call it. Its page in this guide shows the room, floor and map.",
+    text: "When selection closes, the app shows your team's route: floor, room, floor plan and when to move. The company's page in this guide has the same room and map.",
   },
   {
     title: "Submission",
@@ -64,7 +64,7 @@ const APP_STEPS = [
     title: "Voting",
     who: "Everyone",
     when: "Sun 10:00–12:00",
-    text: "Give your 10 votes to 10 different solutions. The teams behind the five most-voted present live in the finals at 14:00.",
+    text: "The app gives you ten solutions to review and vote on. The five teams with the most votes present live in the finals at 14:00.",
   },
 ] as const;
 
@@ -84,7 +84,7 @@ const TEAM_FORMATION_STEPS = [
   },
   {
     title: "Leave via the other side",
-    text: "You came in from registration on the right; leave on the opposite side. At Team check, show the full team member list in the app to the volunteer — every member is checked before the team continues to the opening ceremony.",
+    text: "You came in from registration on the right; leave on the opposite side. At Team check, show the full team member list in the app to the volunteer — every member is checked before the team continues to the opening ceremony. Team formation closes at 16:45.",
   },
 ] as const;
 
@@ -107,7 +107,7 @@ export default function BuilderGuidePage() {
             { label: "Build spaces", value: "BioCity + Joki", sub: "From Fri 18:45, around the clock" },
             { label: "Submission deadline", value: "Sun 10:00", sub: "In sinceai.app · fixed", strong: true },
             { label: "Company winners", value: "Sun 13:30", sub: "EduCity" },
-            { label: "Finals", value: "Sun 14:00", sub: "Five teams live on stage · ends ~15:00" },
+            { label: "Finals", value: "Sun 14:00", sub: "Five teams live on stage · over by 15:00" },
           ]}
         />
         <NowNext items={schedule} audience={AUDIENCE} firstMoment={getScheduleItem(guide.firstMomentId)} />
@@ -142,7 +142,7 @@ export default function BuilderGuidePage() {
           id="team-formation-title"
           eyebrow="// friday · team formation"
           title="Find a team. Join in the app. Show your team at the exit."
-          lede="EduCity floor 1, beside Taidon portaat — from 15:00, straight after registration. Team formation and challenge selection are both done before the 17:00 opening ceremony."
+          lede="EduCity floor 1, beside Taidon portaat — from 15:00, straight after registration. Team formation closes at 16:45; challenge selection follows in sinceai.app at 17:00–17:50."
         />
         <ol className="grid grid-cols-1 border-l border-t border-white/10 sm:grid-cols-2 lg:grid-cols-4">
           {TEAM_FORMATION_STEPS.map((step, i) => (
@@ -184,7 +184,7 @@ export default function BuilderGuidePage() {
           id="app-title"
           eyebrow="// sinceai.app"
           title="The app runs your weekend."
-          lede="Your team, your challenge and your submission all live in sinceai.app. The team owner selects the challenge; any team member can submit."
+          lede="Your team, your challenge and your submission all live in sinceai.app. Your team selects its challenge on Friday 17:00–17:50; any team member can submit."
         />
         <ol className="grid grid-cols-1 border-l border-t border-white/10 sm:grid-cols-2 lg:grid-cols-5">
           {APP_STEPS.map((step) => (

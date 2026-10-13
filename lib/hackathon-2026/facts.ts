@@ -4,9 +4,11 @@ import { GUIDE_BASE_PATH } from "./route";
 /**
  * Canonical operational facts for Since AI Hackathon 2026.
  *
- * Source precedence (newest wins): organiser final-release brief of 13 Oct 2026 (13 challenge partners + 2 TBA
- * places, six BioCity partner stands, team formation and challenge selection before the 17:00 opening, staggered
- * move to briefings from 17:50, Saturday Q&A 09:00–12:00 and 14:30–18:00, Mauno meals with Sunday lunch to 13:00,
+ * Source precedence (newest wins): the organiser's final run of show, "Since AI 2026 tapahtuman kulku" (11 Oct
+ * 2026, confirmed final 13 Oct 2026: team formation closes 16:45, team count locked 16:50, challenge selection in
+ * sinceai.app 17:00–17:50, Mauno meals Fri 18:30–21:00 / Sat 10:30–13:30 and 17:00–20:00 / Sun 10:00–12:30,
+ * company evaluation briefing Sun 09:00, everything over by 15:00) →
+ * organiser final-release brief of 13 Oct 2026 (13 challenge partners + 2 TBA places, six BioCity partner stands,
  * five finalist teams presenting live) →
  * organiser decisions of 4 Oct 2026 (Sunday programme, Joki stand setup) →
  * organiser decisions of 3 Oct 2026 →
@@ -24,9 +26,17 @@ export const EVENT_2026 = {
   builderRegistration: "2026-11-06T15:00:00+02:00",
   /** Challenge partner arrival at EduCity. */
   challengePartnerArrival: "2026-11-06T15:30:00+02:00",
-  /** Official opening ceremony. Team formation and challenge selection are complete before it. */
+  /** Challenge preview opens in sinceai.app. */
+  challengePreview: "2026-11-06T15:15:00+02:00",
+  /** Team formation closes: no new teams, joining or member changes after this. */
+  teamFormationCloses: "2026-11-06T16:45:00+02:00",
+  /** Final team count locked; places per challenge set. */
+  teamCountLocked: "2026-11-06T16:50:00+02:00",
+  /** Official opening ceremony; challenge selection opens in sinceai.app at the same time. */
   officialOpening: "2026-11-06T17:00:00+02:00",
-  /** Staggered move to the company briefing rooms (current target). */
+  /** Challenge selection closes; staggered move to the company briefing rooms. */
+  challengeSelectionCloses: "2026-11-06T17:50:00+02:00",
+  /** Staggered move to the company briefing rooms. */
   moveToBriefings: "2026-11-06T17:50:00+02:00",
   /** Company challenge briefings 18:15–18:45; an extended briefing ends by 19:00 at the latest. */
   briefingsStart: "2026-11-06T18:15:00+02:00",
@@ -38,9 +48,9 @@ export const EVENT_2026 = {
   evaluationEnd: "2026-11-08T13:00:00+02:00",
   /** The closing programme at EduCity opens: the company challenge winners are announced. */
   closingCeremony: "2026-11-08T13:30:00+02:00",
-  /** Finals: the five finalist teams (most-voted solutions) present live on stage; the jury selects the overall winner (about an hour). */
+  /** Finals: the five finalist teams (most-voted solutions) present live on stage; the jury selects the overall winner. */
   finals: "2026-11-08T14:00:00+02:00",
-  /** Planned end, after the finals — "around 15:00". */
+  /** The competition and the closing ceremony are over by 15:00. */
   eventEnd: "2026-11-08T15:00:00+02:00",
   /** First and last instants used for "now / next" calculations. */
   window: {

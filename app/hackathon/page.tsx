@@ -40,7 +40,7 @@ const hackathonFaqs = [
   },
   {
     q: "When is Since AI Hackathon 2026?",
-    a: `Since AI Hackathon 2026 runs November 6–8, 2026 in Turku, Finland. Check-in and team formation open Friday 6 November at 15:00 at EduCity; the opening ceremony starts at 17:00. Submissions close Sunday 8 November at 10:00, the company challenge winners are announced at 13:30, the finals start at 14:00 and the event ends around 15:00. Registration is open — apply at sinceai.app/sign-up.`,
+    a: `Since AI Hackathon 2026 runs November 6–8, 2026 in Turku, Finland. Check-in and team formation open Friday 6 November at 15:00 at EduCity; the opening ceremony starts at 17:00, and teams select their challenge in sinceai.app until 17:50. Submissions close Sunday 8 November at 10:00, the company challenge winners are announced at 13:30, the finals start at 14:00 and everything is over by 15:00. Registration is open — apply at sinceai.app/sign-up.`,
   },
   {
     q: "Is Since AI Hackathon an official MLH event?",
@@ -93,7 +93,7 @@ const keyFacts = [
   { label: "Venues",         value: "EduCity (opening and closing), BioCity and Joki (building) — Turku, Finland" },
   { label: "Prize pool",     value: "€50,000 cash" },
   { label: "Format",         value: "72-hour AI hackathon" },
-  { label: "Schedule",       value: "Fri 15:00 check-in · Fri 17:00 opening · Sun 10:00 submissions close · Sun 14:00 finals · ends ~15:00" },
+  { label: "Schedule",       value: "Fri 15:00 check-in · Fri 17:00 opening · Sun 10:00 submissions close · Sun 14:00 finals · over by 15:00" },
   { label: "Challenges",     value: `15 company challenges — ${HACKATHON_2026_PARTNERS.challengePartners.length} partners confirmed, 2 to be announced` },
   { label: "Keynote",        value: HACKATHON_2026_PARTNERS.keynote },
   { label: "Expected",       value: "1,000+ builders" },

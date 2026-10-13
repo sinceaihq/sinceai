@@ -34,7 +34,7 @@ export default function FieldGuideHubPage() {
             { label: "Build spaces", value: "BioCity + Joki", sub: "Around the clock" },
             { label: "Submissions close", value: "Sun 10:00", sub: "Hard deadline", strong: true },
             { label: "Company winners", value: "Sun 13:30", sub: "EduCity" },
-            { label: "Finals", value: "Sun 14:00", sub: "Five teams live on stage · ends ~15:00" },
+            { label: "Finals", value: "Sun 14:00", sub: "Five teams live on stage · over by 15:00" },
           ]}
         />
         <p className="text-sm text-neutral-400">{HUB.openingNote}</p>
@@ -92,7 +92,7 @@ export default function FieldGuideHubPage() {
             label="Event flow"
             steps={[
               { label: "Arrive", time: "Fri afternoon", text: "EduCity — role-specific arrival times." },
-              { label: "Opening", time: "Fri 17:00", text: "EduCity lobby, Taidon portaat." },
+              { label: "Opening", time: "Fri 17:00", text: "EduCity lobby, Taidon portaat — challenge selection until 17:50." },
               { label: "Briefings", time: "Fri 18:15", text: "Company rooms at EduCity." },
               { label: "Build", time: "Fri 18:45 →", text: "Dinner, then BioCity + Joki around the clock." },
               { label: "Winners · finals", time: "Sun 13:30", text: "EduCity — company winners, then the finals at 14:00." },
