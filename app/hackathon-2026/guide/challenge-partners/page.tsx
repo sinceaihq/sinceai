@@ -49,12 +49,12 @@ export default function ChallengePartnerGuidePage() {
       >
         <FactsStrip
           facts={[
-            { label: "Arrive", value: "Fri 15:30", sub: "EduCity · briefing 15:40", strong: true },
+            { label: "Arrive", value: "Fri 15:30", sub: "EduCity · briefing 15:45", strong: true },
             { label: "Official opening", value: "Fri 17:00", sub: "EduCity" },
-            { label: "Your briefing", value: "Fri 18:15–18:45", sub: "Your EduCity room", strong: true },
+            { label: "Your briefing", value: "Fri 18:50–19:30", sub: "Your EduCity room · 19:30 hard end", strong: true },
             { label: "Q&A at Joki", value: "Sat 09–12 · 14:30–18", sub: "At least 2 h of presence" },
-            { label: "Evaluation", value: "Sun 10:00–13:00", sub: "Briefing 09:00 at EduCity" },
-            { label: "Winners · finals", value: "Sun 13:30 · 14:00", sub: "EduCity" },
+            { label: "Evaluation", value: "Sun 10:00–13:00", sub: "Arrive 08:45 · briefing 09:00 · EduCity" },
+            { label: "Top three · finals", value: "Sun 13:30 · 14:00", sub: "EduCity · ceremony from 13:15" },
           ]}
         />
         <NowNext items={schedule} audience={AUDIENCE} firstMoment={getScheduleItem(guide.firstMomentId)} />

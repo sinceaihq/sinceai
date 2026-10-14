@@ -46,7 +46,7 @@ describe("calendar export", () => {
       .split("BEGIN:VEVENT")
       .find((e) => e.includes("UID:fri-dinner."))!;
     expect(dinner).toContain("DTSTART:20261106T163000Z");
-    expect(dinner).toContain("DTEND:20261106T190000Z");
+    expect(dinner).toContain("DTEND:20261106T200000Z");
   });
 
   it("escapes text and includes the venue address", () => {

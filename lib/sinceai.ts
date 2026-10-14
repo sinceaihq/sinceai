@@ -28,12 +28,12 @@ export const FIRST_EVENT = {
 export const UPCOMING_EVENT_2026 = {
   name: "Since AI Hackathon 2026",
   // Operational schedule (Field Guide, lib/hackathon-2026/facts.ts): check-in opens Fri 15:00,
-  // the finals end around Sun 15:00.
+  // the event ends around Sun 15:30.
   startDate: "2026-11-06T15:00:00+02:00",
-  endDate: "2026-11-08T15:00:00+02:00",
+  endDate: "2026-11-08T15:30:00+02:00",
   month: "November",
   year: 2026,
-  dateNote: "November 6 15:00 – November 8 15:00, 2026",
+  dateNote: "November 6 15:00 – November 8 15:30, 2026",
   city: "Turku",
   country: "FI",
   statusLabelShort: "November 6–8, 2026 • Turku",
@@ -103,7 +103,7 @@ export const COPY = {
   
   // Upcoming 2026 event
   upcomingEventLineShort: "Since AI Hackathon 2026 — November 6–8, 2026, Turku.",
-  upcomingEventLineLong: "Since AI Hackathon 2026 will be held November 6 15:00 - November 8 15:00, 2026 at EduCity in Turku, Finland.",
+  upcomingEventLineLong: "Since AI Hackathon 2026 will be held November 6 15:00 - November 8 15:30, 2026 at EduCity in Turku, Finland.",
 } as const;
 
 // Helper function to get year for copyright, etc.

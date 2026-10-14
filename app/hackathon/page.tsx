@@ -40,7 +40,7 @@ const hackathonFaqs = [
   },
   {
     q: "When is Since AI Hackathon 2026?",
-    a: `Since AI Hackathon 2026 runs November 6–8, 2026 in Turku, Finland. Check-in and team formation open Friday 6 November at 15:00 at EduCity; the opening ceremony starts at 17:00, and teams select their challenge in sinceai.app until 17:50. Submissions close Sunday 8 November at 10:00, the company challenge winners are announced at 13:30, the finals start at 14:00 and everything is over by 15:00. Registration is open — apply at sinceai.app/sign-up.`,
+    a: `Since AI Hackathon 2026 runs November 6–8, 2026 in Turku, Finland. Check-in and team formation open Friday 6 November at 15:00 at EduCity; the opening ceremony starts at 17:00, and teams select their challenge in sinceai.app until 17:30. Submissions close Sunday 8 November at 10:00, the closing ceremony starts at 13:15, each company challenge's top three teams are announced from 13:30, the finals start at 14:00 and the event ends around 15:30. Registration is open — apply at sinceai.app/sign-up.`,
   },
   {
     q: "Is Since AI Hackathon an official MLH event?",
@@ -68,7 +68,7 @@ const hackathonFaqs = [
   },
   {
     q: "What happens over the weekend?",
-    a: "On Friday, teams of up to five form in sinceai.app at EduCity and select one company challenge before the 17:00 opening ceremony. After the opening and Jason Mayes' keynote, each company briefs its teams. Teams then build at BioCity and Joki, which stay open around the clock, with company Q&A on Saturday. Submissions close Sunday at 10:00. Each company picks its challenge winner, and in the 14:00 finals five finalist teams present live on stage to the jury, which selects the overall winner.",
+    a: "On Friday, teams of up to five form in sinceai.app at EduCity by 16:45, and each team's owner selects one company challenge in the app during the 17:00 opening ceremony. After the opening and Jason Mayes' keynote and tech talk, each company briefs its teams. Teams then build at BioCity and Joki, which stay open around the clock, with company Q&A on Saturday. Submissions close Sunday at 10:00. Each company picks the top three teams of its challenge, and in the 14:00 finals five finalist teams present live on stage to the jury, which selects the overall winner.",
   },
   {
     q: "Which code of conduct applies?",
@@ -93,7 +93,7 @@ const keyFacts = [
   { label: "Venues",         value: "EduCity (opening and closing), BioCity and Joki (building) — Turku, Finland" },
   { label: "Prize pool",     value: "€50,000 cash" },
   { label: "Format",         value: "72-hour AI hackathon" },
-  { label: "Schedule",       value: "Fri 15:00 check-in · Fri 17:00 opening · Sun 10:00 submissions close · Sun 14:00 finals · over by 15:00" },
+  { label: "Schedule",       value: "Fri 15:00 check-in · Fri 17:00 opening · Sun 10:00 submissions close · Sun 13:15 closing ceremony · Sun 14:00 finals · ends around 15:30" },
   { label: "Challenges",     value: `15 company challenges — ${HACKATHON_2026_PARTNERS.challengePartners.length} partners confirmed, 2 to be announced` },
   { label: "Keynote",        value: HACKATHON_2026_PARTNERS.keynote },
   { label: "Expected",       value: "1,000+ builders" },

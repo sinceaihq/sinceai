@@ -398,7 +398,7 @@ export function educityRouteLegs(): Record<string, V3[]> {
       [38.6, 55.2],
       [37.85, 54.4],
     ]),
-    // West main entrance → round the pub → the west opening → the snack counter → the foot of Taidon portaat.
+    // West main entrance → round the pub → the west opening → Kisälli's serving counter → the foot of Taidon portaat.
     "int-edu-west-to-taidon": leg([
       [9.33, 74.58],
       [11.4, 72.9],

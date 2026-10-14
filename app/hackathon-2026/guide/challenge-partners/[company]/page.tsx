@@ -71,22 +71,22 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
       >
         <FactsStrip
           facts={[
-            { label: "Arrive", value: "Fri 15:30", sub: "EduCity · briefing 15:40" },
+            { label: "Arrive", value: "Fri 15:30", sub: "EduCity · briefing 15:45" },
             {
               label: "Your briefing room",
               value: room,
               sub: `EduCity · floor ${company.briefing.floor}`,
               strong: true,
             },
-            { label: "Your briefing", value: "Fri 18:15–18:45", sub: "Teams move from 17:50 · 19:00 latest" },
+            { label: "Your briefing", value: "Fri 18:50–19:30", sub: "Teams move from 18:30 · 19:30 hard end" },
             {
               label: "Your Q&A stand",
               value: showroom ? "Joki Showroom" : `Joki Floor ${company.qa.floor}`,
               sub: showroom ? "Floor 1 · Sat 09–12 · 14:30–18" : "Sat 09–12 · 14:30–18",
               strong: true,
             },
-            { label: "Evaluate", value: "Sun 10:00–13:00", sub: "Briefing 09:00 · EduCity" },
-            { label: "Winners · finals", value: "Sun 13:30 · 14:00", sub: "EduCity" },
+            { label: "Evaluate", value: "Sun 10:00–13:00", sub: "Arrive 08:45 · briefing 09:00 · EduCity" },
+            { label: "Top three · finals", value: "Sun 13:30 · 14:00", sub: "EduCity · ceremony from 13:15" },
           ]}
         />
         <p className="flex flex-wrap items-center gap-3 text-xs text-white/55">
@@ -120,7 +120,7 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
           id="friday-title"
           eyebrow="// friday · educity"
           title={`Briefing room ${room}.`}
-          lede={`EduCity floor ${company.briefing.floor}. Challenge selection closes at 17:50 and the teams then move to the rooms in turn, each following its own route in sinceai.app — stay put, they come to you. Start as soon as all your teams are there, 18:15 at the latest, and finish at 18:45; the volunteer in your room can grant extra time up to 19:00 at the latest.`}
+          lede={`EduCity floor ${company.briefing.floor}. Challenge selection closes at 17:30; after Jason Mayes' programme, from 18:30, the teams move to the rooms in turn, each following its own route in sinceai.app — stay put, they come to you. Your briefing runs 18:50–19:30, and 19:30 is a hard end for every briefing.`}
         />
         <VenueExplorer mapIds={[maps.briefing]} highlight={[company.id]} label={`${company.name} briefing room`} />
         <div className="mt-10">

@@ -136,7 +136,9 @@ const briefings = getScheduleItem("fri-briefings");
 const opening = getScheduleItem("fri-opening");
 const registration = getScheduleItem("fri-registration");
 const teamFormation = getScheduleItem("fri-team-formation");
+const closingCeremony = getScheduleItem("sun-closing-ceremony");
 const winners = getScheduleItem("sun-closing");
+const weekendBriefing = getScheduleItem("fri-cp-weekend-briefing");
 const finals = getScheduleItem("sun-finals");
 const BRIEFING_TIME = `Fri ${formatTimeRange(briefings)}`;
 
@@ -442,7 +444,7 @@ const areaTargets: Target3D[] = [
   {
     id: "restaurant-kisalli",
     label: "Ravintola Kisälli",
-    detail: "EduCity floor 1 · Friday snacks",
+    detail: "EduCity floor 1 · behind Taidon portaat",
     place: "educity",
     kind: "area",
     href: mapHref("educity-flow-1"),
@@ -886,9 +888,9 @@ export const TOURS_3D: readonly Tour3D[] = [
   },
   {
     id: "builders-back-to-educity",
-    label: "BioCity → EduCity for the winners and finals",
-    audience: `Everyone, on Sunday before ${formatTime(winners.start)}`,
-    summary: `The Friday transfer in reverse: out through the Aulagalleria, up the stair at Jussin aukio and along the campus deck to EduCity — the company challenge winners are announced from ${formatTime(winners.start)}, the finals start at ${formatTime(finals.start)}.`,
+    label: "BioCity → EduCity for the closing ceremony and finals",
+    audience: `Everyone, on Sunday before ${formatTime(closingCeremony.start)}`,
+    summary: `The Friday transfer in reverse: out through the Aulagalleria, up the stair at Jussin aukio and along the campus deck to EduCity — the closing ceremony starts at ${formatTime(closingCeremony.start)}, each challenge's top three are announced from ${formatTime(winners.start)} and the finals start at ${formatTime(finals.start)}.`,
     place: "educity",
     legs: ["int-bio-lobby-to-event", "out-xfer-bio-event-edu-west", "int-edu-west-to-taidon"],
     to: "taidon-portaat",
@@ -911,7 +913,7 @@ export const TOURS_3D: readonly Tour3D[] = [
         "Campus deck",
       ),
       step(
-        "Inside, walk through the lobby towards Taidon portaat, where the opening was — event staff show you to the winners announcement and the finals.",
+        "Inside, walk through the lobby towards Taidon portaat, where the opening was — event staff show you to the closing ceremony and the finals.",
         [177.8, 115.1],
         "EduCity lobby",
       ),
@@ -969,21 +971,22 @@ export function tourForCompany(tour: Tour3D, companyId: string | null | undefine
     const { floor } = company.briefing;
     const room = `room ${briefingRoomLabel(company)}`;
     const materials = "Bring your Q&A stand materials: the Since AI team sets your stand up in Joki for Saturday.";
-    // Friday 15:30: event staff receive company arrivals on floor 1 by door B and take them to the 15:40
-    // weekend briefing; the company's own room is for its 18:15 briefing.
+    // Friday 15:30: event staff receive company arrivals on floor 1 by door B and take them to the weekend
+    // briefing; the company's own room is for its challenge briefing.
+    const briefingAt = formatTime(briefings.start);
     const own =
       floor === 1
-        ? `your briefing room for 18:15 is ${room}, on this floor`
-        : `your briefing room for 18:15 is ${room}, one floor up on floor 2`;
+        ? `your briefing room for ${briefingAt} is ${room}, on this floor`
+        : `your briefing room for ${briefingAt} is ${room}, one floor up on floor 2`;
     if (tour.to === "entrance-educity-gateway") {
-      summary = `${withoutStop(tour.summary)}, then up to floor 1, where event staff meet company arrivals; your briefing room for 18:15 is ${room} (floor ${floor}).`;
-      text = `EduCity's street-level door is in the passage: take the lift up to floor 1, where event staff meet company arrivals and take you to the 15:40 weekend briefing — ${own}. ${materials}`;
+      summary = `${withoutStop(tour.summary)}, then up to floor 1, where event staff meet company arrivals; your briefing room for ${briefingAt} is ${room} (floor ${floor}).`;
+      text = `EduCity's street-level door is in the passage: take the lift up to floor 1, where event staff meet company arrivals and take you to the ${formatTime(weekendBriefing.start)} weekend briefing — ${own}. ${materials}`;
     } else {
       summary = tour.summary.replace(
         "the company briefing rooms on floors 1–2",
-        `the company arrival on floor 1, where event staff meet you; your briefing room for 18:15 is ${room} (floor ${floor})`,
+        `the company arrival on floor 1, where event staff meet you; your briefing room for ${briefingAt} is ${room} (floor ${floor})`,
       );
-      text = `Inside, event staff meet company arrivals in the floor-1 corridor and take you to the 15:40 weekend briefing — ${floor === 1 ? own : `${own}: the stairs and lift are just inside door B`}. ${materials}`;
+      text = `Inside, event staff meet company arrivals in the floor-1 corridor and take you to the ${formatTime(weekendBriefing.start)} weekend briefing — ${floor === 1 ? own : `${own}: the stairs and lift are just inside door B`}. ${materials}`;
     }
     return { ...tour, summary, steps: [...steps.slice(0, last), { ...steps[last], text }], arrival: `room-${company.id}` };
   }
@@ -1016,7 +1019,7 @@ export const TIME_PRESETS: readonly TimePreset[] = [
   { id: "opening", label: "Opening · Fri 17:00", iso: wallClock(EVENT_2026.officialOpening) },
   { id: "night", label: "Night build · Sat 01:00", iso: "2026-11-07T01:00" },
   { id: "qa", label: "Q&A · Sat 11:00", iso: "2026-11-07T11:00" },
-  { id: "closing", label: "Winners · Sun 13:30", iso: wallClock(EVENT_2026.closingCeremony) },
+  { id: "closing", label: "Closing · Sun 13:15", iso: wallClock(EVENT_2026.closingCeremony) },
 ] as const;
 
 /** Friday 15:30 — challenge partners arrive, the sun is low in the south-west. */

@@ -73,11 +73,11 @@ export default function SpeakerGuidePage() {
         <FactsStrip
           facts={[
             { label: "Venue", value: "EduCity", sub: "Joukahaisenkatu 7, Turku" },
-            { label: "Opening programme", value: "Fri 17:00", sub: "Opening + keynote", strong: true },
+            { label: "Opening programme", value: "Fri 17:00", sub: "Opening · keynote and tech talk 17:30–18:30", strong: true },
             { label: "Your times", value: "Run sheet", sub: "Confirmed by your host" },
-            { label: "Company winners", value: "Sun 13:30", sub: "Announced at EduCity" },
+            { label: "Closing ceremony", value: "Sun 13:15", sub: "EduCity · top three per challenge 13:30" },
             { label: "Finals", value: "Sun 14:00", sub: "Five teams live on stage" },
-            { label: "Event ends", value: "Sun 15:00", sub: "EduCity · over by 15:00" },
+            { label: "Event ends", value: "Sun ~15:30", sub: "EduCity · around 15:30" },
           ]}
         />
         <NowNext items={schedule} audience={AUDIENCE} firstMoment={getScheduleItem(guide.firstMomentId)} />

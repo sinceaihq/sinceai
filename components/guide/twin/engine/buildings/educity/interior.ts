@@ -258,7 +258,7 @@ export function buildInterior(
   area("Registration", POINTS.registration[0], 4.0, POINTS.registration[1], "edu-lobby", "educity-1", "east entrance");
   area("Team formation", POINTS.teamFormation[0] - 4, 2.6, POINTS.teamFormation[1] - 1.5, "edu-lobby", "educity-1");
   area("Taidon portaat", (TAIDON.x0 + TAIDON.x1) / 2, 4.2, 40.0, "edu-lobby", "educity-1", "opening ceremony");
-  area("Ravintola Kisälli", 26.0, 2.4, 58.0, "edu-lobby", "educity-1", "snacks");
+  area("Ravintola Kisälli", 26.0, 2.4, 58.0, "edu-lobby", "educity-1");
   // In the corridor in front of room 1002, where the walk from door B ends (the room's own company
   // label is inside the room, so the two stay apart).
   area("Company arrival", 32.0, 1.9, 9.4, "edu-rooms1", "educity-1", "door B → room 1002");
@@ -905,7 +905,7 @@ function registration(fur: Furnisher, b: Buckets, print: Bucket): void {
 function kisalli(fur: Furnisher, b: Buckets, rnd: () => number, low: boolean): void {
   const y = F1.y;
   const K = POINTS.kisalli;
-  // Serving counter along the kitchen wall (snacks on Friday).
+  // Serving counter along the kitchen wall.
   b.frame.paint("#2a2b2d", 0.4, 0.1);
   box(b.frame, 11.4, y, 47.8, 12.2, y + 0.92, 58.6);
   b.wall.paint("#c9c8c4", 0.3, 0.6);

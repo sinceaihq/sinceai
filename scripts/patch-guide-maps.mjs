@@ -88,6 +88,43 @@ async function patch(base, layers) {
   console.log(`patched ${base} (${meta.width}×${meta.height})`);
 }
 
+/**
+ * 14 Oct 2026: Ravintola Kisälli serves no snacks, so the "SNACK" pill on the
+ * EduCity floor-1 arrival flow is painted out with the floor colour and the
+ * wall it covered is redrawn from the same wall just above it.
+ * `--snack-only` applies just this step.
+ */
+/** Two rectangles [left, top, right, bottom], stepped to clear the arrowhead just below the pill's right end. */
+const SNACK_PILL = [
+  [700, 1772, 994, 1832],
+  [700, 1832, 988, 1838],
+  [700, 1838, 982, 1850],
+];
+const SNACK_WALL = { left: 850, width: 10, sourceTop: 1690 };
+const FLOOR = "#f7f7f7";
+
+async function snackLayers() {
+  const top = SNACK_PILL[0][1];
+  const bottom = SNACK_PILL[SNACK_PILL.length - 1][3];
+  const floors = await Promise.all(
+    SNACK_PILL.map(async ([l, t, r, b]) => ({
+      input: await sharp({ create: { width: r - l, height: b - t, channels: 3, background: FLOOR } })
+        .png()
+        .toBuffer(),
+      left: l,
+      top: t,
+    })),
+  );
+  const wall = await sharp(path.join(DIR, "educity-flow-1-large.webp"))
+    .extract({ left: SNACK_WALL.left, top: SNACK_WALL.sourceTop, width: SNACK_WALL.width, height: bottom - top })
+    .png()
+    .toBuffer();
+  return [...floors, { input: wall, left: SNACK_WALL.left, top }];
+}
+
+await patch("educity-flow-1", await snackLayers());
+if (process.argv.includes("--snack-only")) process.exit(0);
+
 const tbaEdu = await glyphs(TBA_SOURCE.educity);
 const tbaJoki = await glyphs(TBA_SOURCE.joki);
 
