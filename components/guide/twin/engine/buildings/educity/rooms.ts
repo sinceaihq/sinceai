@@ -153,7 +153,6 @@ export const POINTS = {
   registration: [36.8, 54.0] as V2,
   teamFormation: [29.9, 31.5] as V2,
   teamZone: rect(18.0, 34.0, 25.2, 34.6),
-  snacks: [15.0, 50.0] as V2,
   stage: rect(21.53, 31.01, 44.71, 47.34),
   /** The screen ("sermi") behind the stage, Kisälli behind it. */
   screen: { a: [18.17, 47.6] as V2, b: [34.91, 47.2] as V2 },

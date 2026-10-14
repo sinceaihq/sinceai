@@ -81,9 +81,9 @@ test.describe("content", () => {
     const facts = page.getByRole("definition");
     await expect(facts.filter({ hasText: "Fri 17:00" })).toHaveCount(1);
     await expect(facts.filter({ hasText: "Sun 10:00" })).toHaveCount(1);
-    await expect(facts.filter({ hasText: "Sun 13:30" })).toHaveCount(1);
+    await expect(facts.filter({ hasText: "Sun 13:15" })).toHaveCount(1);
     await expect(facts.filter({ hasText: "Sun 14:00" })).toHaveCount(1);
-    await expect(facts.filter({ hasText: "over by 15:00" })).toHaveCount(1);
+    await expect(facts.filter({ hasText: "ends around 15:30" })).toHaveCount(1);
     const body = await page.locator("main").innerText();
     expect(body).not.toMatch(/72[\s-]*(h\b|hours?)/i);
     expect(body).not.toContain("14:10");
@@ -133,9 +133,10 @@ test.describe("content", () => {
     await expect(section).toContainText("not the building’s emergency exit plan");
     await expect(section.locator('img[src*="educity-team-formation"]').first()).toHaveAttribute("alt", /zones 1, 2, 3 and 4/);
     const body = await page.locator("main").innerText();
-    expect(body).not.toMatch(/17:45|18:05|before 17:00/);
+    expect(body).not.toMatch(/17:45|17:50|18:05|before 17:00|18:15–18:45/);
     expect(body).toContain("Team formation closes at 16:45");
-    expect(body).toContain("17:00–17:50");
+    expect(body).toContain("17:00–17:30");
+    expect(body).toContain("18:50–19:30");
   });
 
   test("partner Discord onboarding: challenge partners vs tech / visibility partners", async ({ page }) => {
@@ -363,7 +364,7 @@ test.describe("3D campus", () => {
     const stage = page.locator("#preview-3d");
     await expect(stage.getByText("Route: Kupittaa station → EduCity company arrival", { exact: true })).toBeVisible({ timeout: 60_000 });
     // The steps end at Elisa's own room, and the route list below marks the route.
-    await expect(stage.getByText(/your briefing room for 18:15 is room 1001 Dromberg, on this floor/).first()).toBeVisible();
+    await expect(stage.getByText(/your briefing room for 18:50 is room 1001 Dromberg, on this floor/).first()).toBeVisible();
     await expect(stage.locator('li[aria-current="true"]').first()).toContainText("Kupittaa station → EduCity company arrival");
     await expect(page.locator("canvas")).toHaveCount(0);
 

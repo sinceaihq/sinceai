@@ -62,12 +62,13 @@ export default function PartnerGuidePage() {
       >
         <FactsStrip
           facts={[
+            { label: "Arrive", value: "Fri 16:20–17:00", sub: "Since AI welcomes you", strong: true },
             { label: "Official opening", value: "Fri 17:00", sub: "EduCity · Taidon portaat" },
-            { label: "Stand setup", value: "Fri 18:00", sub: "BioCity · window confirmed with you", strong: true },
-            { label: "Stands open", value: "All weekend", sub: "BioCity" },
+            { label: "Stand setup", value: "Fri 18:30", sub: "BioCity · arrangement confirmed with you", strong: true },
+            { label: "Stands open", value: "All weekend", sub: "BioCity · until the event ends" },
             { label: "Submissions close", value: "Sun 10:00", sub: "Stands stay open" },
-            { label: "Winners · finals", value: "Sun 13:30 · 14:00", sub: "EduCity" },
-            { label: "Teardown", value: "After 15:00", sub: "Agreed post-event window", strong: true },
+            { label: "Closing · finals", value: "Sun 13:15 · 14:00", sub: "EduCity" },
+            { label: "Teardown", value: "Around 15:30", sub: "After the event · agreed window", strong: true },
           ]}
         />
         <NowNext items={schedule} audience={AUDIENCE} firstMoment={getScheduleItem(guide.firstMomentId)} />

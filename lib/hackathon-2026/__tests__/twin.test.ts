@@ -192,7 +192,7 @@ describe("targets", () => {
       const t = getTarget3D(`room-${c.id}`)!;
       expect(t).toMatchObject({ place: "educity", kind: "room" });
       expect(t.detail).toContain(`EduCity floor ${c.briefing.floor} · Room ${briefingRoomLabel(c)}`);
-      expect(t.detail).toContain("Fri 18:15–18:45");
+      expect(t.detail).toContain("Fri 18:50–19:30");
     }
     expect(TARGETS_3D.filter((t) => t.kind === "room")).toHaveLength(CHALLENGE_COMPANIES.length);
   });
@@ -473,7 +473,7 @@ describe("time presets", () => {
       ["opening", "2026-11-06T17:00"],
       ["night", "2026-11-07T01:00"],
       ["qa", "2026-11-07T11:00"],
-      ["closing", "2026-11-08T13:30"],
+      ["closing", "2026-11-08T13:15"],
     ]);
     expect(DEFAULT_TIME).toBe("2026-11-06T15:30");
   });

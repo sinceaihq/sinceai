@@ -41,14 +41,15 @@ const byQaFloor = (floor: 1 | 2 | 3) =>
     .sort();
 
 describe("canonical event facts", () => {
-  it("uses the 3 Oct 2026 operational times (Turku time)", () => {
+  it("uses the operational times of the 14 Oct 2026 production update (Turku time)", () => {
     expect(formatTime(EVENT_2026.builderRegistration)).toBe("15:00");
     expect(formatTime(EVENT_2026.officialOpening)).toBe("17:00");
     expect(formatTime(EVENT_2026.submissionDeadline)).toBe("10:00");
     expect(formatTime(EVENT_2026.evaluationEnd)).toBe("13:00");
-    expect(formatTime(EVENT_2026.closingCeremony)).toBe("13:30");
+    expect(formatTime(EVENT_2026.closingCeremony)).toBe("13:15");
+    expect(formatTime(EVENT_2026.challengeResults)).toBe("13:30");
     expect(formatTime(EVENT_2026.finals)).toBe("14:00");
-    expect(formatTime(EVENT_2026.eventEnd)).toBe("15:00");
+    expect(formatTime(EVENT_2026.eventEnd)).toBe("15:30");
   });
 
   it("keeps builder registration separate from the official opening", () => {
@@ -61,20 +62,31 @@ describe("canonical event facts", () => {
     );
   });
 
-  it("runs Sunday as evaluation 10–13, finalists at 12:00, company winners 13:30, finals 14:00 and over by 15:00", () => {
+  it("runs Sunday: arrival 08:45, evaluation 10–13, finalists 12:00, ceremony 13:15, top three 13:30, finals 14:00–15:10, end ~15:30", () => {
     const evaluation = getScheduleItem("sun-evaluation");
     expect([formatTime(evaluation.start), formatTime(evaluation.end!)]).toEqual(["10:00", "13:00"]);
     expect(evaluation.status).toBe("confirmed");
     const closing = getScheduleItem("sun-closing");
     const finals = getScheduleItem("sun-finals");
     const end = getScheduleItem("sun-end");
-    expect(formatTime(closing.start)).toBe("13:30");
-    expect(formatTime(finals.start)).toBe("14:00");
-    for (const item of [closing, finals, end]) expect(item.place).toBe("educity");
-    expect(formatTime(end.start)).toBe("15:00");
-    expect(end.approx).toBeUndefined();
-    expect(end.detail).toMatch(/over by 15:00/);
-    expect(closing.detail).toMatch(/all 15 company challenges/);
+    const ceremony = getScheduleItem("sun-closing-ceremony");
+    expect(formatTime(ceremony.start)).toBe("13:15");
+    expect(ceremony.detail).toMatch(/at most ten minutes/);
+    expect(formatTimeRange(closing)).toBe("13:30–14:00");
+    expect(formatTimeRange(finals)).toBe("14:00–15:10");
+    for (const item of [ceremony, closing, finals, end]) expect(item.place).toBe("educity");
+    expect(formatTime(end.start)).toBe("15:30");
+    expect(end.approx).toBe(true);
+    expect(end.detail).toMatch(/around 15:30/);
+    expect(closing.detail).toMatch(/top three teams.*at most two minutes per company, all 15 challenges within 30 minutes/);
+    expect(finals.detail).toMatch(/at most four minutes.*up to six.*one question from each judge.*five-minute break/);
+    expect(evaluation.detail).toMatch(/top three teams by 13:00/);
+    const finalistsStage = getScheduleItem("sun-finalists-stage");
+    expect(formatTime(finalistsStage.start)).toBe("13:00");
+    expect(finalistsStage.detail).toMatch(/Front-row seats/);
+    const arrival = getScheduleItem("sun-cp-arrival");
+    expect(formatTime(arrival.start)).toBe("08:45");
+    expect(arrival.audiences).toEqual(["challenge-partners", "judges"]);
     const voting = getScheduleItem("sun-voting");
     expect([formatTime(voting.start), formatTime(voting.end!)]).toEqual(["10:00", "12:00"]);
     expect(voting.detail).toMatch(/ten solutions to review and vote on/);
@@ -82,8 +94,9 @@ describe("canonical event facts", () => {
     expect(formatTime(getScheduleItem("sun-evaluator-arrival").start)).toBe("09:00");
     expect(formatTime(getScheduleItem("sun-evaluation-ready").start)).toBe("09:45");
     const move = getScheduleItem("sun-move-to-educity");
-    expect(move.approx).toBe(true);
-    expect(move.detail).toMatch(/before the programme starts at 13:30/);
+    expect(formatTime(move.start)).toBe("12:30");
+    expect(move.approx).toBeUndefined();
+    expect(move.detail).toMatch(/before the closing ceremony starts at 13:15/);
   });
 
   it("has Since AI set up the challenge partners' Joki stands", () => {
@@ -110,47 +123,69 @@ describe("canonical event facts", () => {
     expect(SCHEDULE.some((i) => i.start.startsWith("2026-11-07T13:30"))).toBe(false);
   });
 
-  it("runs Friday's team and challenge flow by the final run of show (11 Oct 2026)", () => {
+  it("runs Friday's team and challenge flow by the 14 Oct 2026 production update", () => {
     const formation = getScheduleItem("fri-team-formation");
     expect([formatTime(formation.start), formatTime(formation.end!)]).toEqual(["15:00", "16:45"]);
-    expect(formatTime(getScheduleItem("fri-challenge-preview").start)).toBe("15:15");
+    expect(formatTime(getScheduleItem("fri-challenge-preview").start)).toBe("15:00");
     const lock = getScheduleItem("fri-team-lock");
     expect(formatTime(lock.start)).toBe("16:45");
     expect(lock.kind).toBe("deadline");
     expect(lock.detail).toMatch(/16:50.*final number of teams is locked/);
     expect(lock.detail).toMatch(/as evenly as possible across all 15 challenges/);
     const selection = getScheduleItem("fri-challenge-selection");
-    expect([formatTime(selection.start), formatTime(selection.end!)]).toEqual(["17:00", "17:50"]);
+    expect([formatTime(selection.start), formatTime(selection.end!)]).toEqual(["17:00", "17:30"]);
+    expect(selection.detail).toMatch(/team's owner selects one challenge/);
     expect(selection.place).toBe("app");
     expect(selection.note).toBeUndefined();
     expect(selection.start).toBe(getScheduleItem("fri-opening").start);
-    expect(getScheduleItem("fri-move-to-briefings").detail).toMatch(/own route in sinceai.app: floor, room, floor plan/);
+    const routes = getScheduleItem("fri-routes");
+    expect(formatTime(routes.start)).toBe("17:30");
+    expect(routes.detail).toMatch(/selected challenge, your departure time, the room, floor, route and floor plan/);
     expect(formatTime(EVENT_2026.teamFormationCloses)).toBe("16:45");
     expect(formatTime(EVENT_2026.teamCountLocked)).toBe("16:50");
-    expect(formatTime(EVENT_2026.challengeSelectionCloses)).toBe("17:50");
-    // The superseded drafts: a 17:45–18:05 window, "before 17:00" selection, first-come wording.
-    expect(JSON.stringify(SCHEDULE)).not.toMatch(/17:45|18:05|before 17:00|first come|team owner/i);
+    expect(formatTime(EVENT_2026.challengeSelectionCloses)).toBe("17:30");
+    // The superseded drafts: 17:45–18:05 and 17:50 windows, "before 17:00" selection, first-come wording.
+    expect(JSON.stringify(SCHEDULE)).not.toMatch(/17:45|17:50|18:05|before 17:00|first come/i);
   });
 
   it("sets the challenge partners' Friday and Saturday evening briefings", () => {
-    expect(formatTime(getScheduleItem("fri-cp-saturday-briefing").start)).toBe("19:15");
+    expect(formatTime(getScheduleItem("fri-cp-weekend-briefing").start)).toBe("15:45");
+    const saturday = getScheduleItem("fri-cp-saturday-briefing");
+    expect(formatTime(saturday.start)).toBe("19:45");
+    expect(saturday.detail).toMatch(/same room as the 15:45 weekend briefing/);
     const sunday = getScheduleItem("sat-cp-sunday-briefing");
     expect(formatTime(sunday.start)).toBe("18:15");
     expect(sunday.placeDetail).toBe("Floor 3 · the round room");
-    expect(getScheduleItem("fri-partner-setup").status).toBe("confirmed");
+    expect(sunday.detail).toMatch(/08:45.*top three teams by 13:00/);
   });
 
-  it("introduces the companies from the stage, then the keynote; briefings 18:15–18:45, 19:00 at the latest", () => {
+  it("receives the partners 16:20–17:00 and sets the BioCity stands up from 18:30", () => {
+    expect(formatTimeRange(getScheduleItem("fri-partner-arrival"))).toBe("16:20–17:00");
+    const setup = getScheduleItem("fri-partner-setup");
+    expect(formatTime(setup.start)).toBe("18:30");
+    // Who builds which stand is still being confirmed with the partners.
+    expect(setup.status).toBe("working");
+    expect(setup.detail).toMatch(/confirms with you directly/);
+  });
+
+  it("reads the company introductions, then Jason Mayes 17:30–18:30; move 18:30, briefings 18:50–19:30 (hard end)", () => {
     const opening = getScheduleItem("fri-opening");
-    expect(opening.detail).toMatch(/hosts welcome everyone and introduce the company challenges, and Jason Mayes/);
+    expect(formatTimeRange(opening)).toBe("17:00–17:30");
+    expect(opening.detail).toMatch(/hosts welcome everyone and read out the introductions of the company challenges/);
+    const keynote = getScheduleItem("fri-keynote");
+    expect(formatTimeRange(keynote)).toBe("17:30–18:30");
+    expect(keynote.detail).toMatch(/30-minute keynote followed by a 30-minute tech talk/);
     expect(detailFor(opening, "challenge-partners")).toMatch(/at most a minute per company/);
     expect(detailFor(opening, "challenge-partners")).toMatch(/do not present on stage/);
     const move = getScheduleItem("fri-move-to-briefings");
-    expect([formatTime(move.start), formatTime(move.end!)]).toEqual(["17:50", "18:15"]);
+    expect([formatTime(move.start), formatTime(move.end!)]).toEqual(["18:30", "18:50"]);
     const briefings = getScheduleItem("fri-briefings");
-    expect([formatTime(briefings.start), formatTime(briefings.end!)]).toEqual(["18:15", "18:45"]);
-    expect(briefings.note).toMatch(/19:00/);
-    expect(formatTime(EVENT_2026.briefingsLatestEnd)).toBe("19:00");
+    expect([formatTime(briefings.start), formatTime(briefings.end!)]).toEqual(["18:50", "19:30"]);
+    expect(briefings.note).toMatch(/19:30/);
+    expect(formatTime(EVENT_2026.briefingsLatestEnd)).toBe("19:30");
+    expect(formatTime(getScheduleItem("fri-build-start").start)).toBe("19:30");
+    // The superseded briefing times and the extra-time rule.
+    expect(JSON.stringify({ SCHEDULE, DETAILS })).not.toMatch(/18:15–18:45|19:00 at the latest|extra time/);
   });
 
   it("has the five finalist teams present live, never as recorded videos", () => {
@@ -159,27 +194,30 @@ describe("canonical event facts", () => {
     expect(JSON.stringify(SCHEDULE)).not.toMatch(/pre-?recorded/i);
   });
 
-  it("publishes the Mauno meal times of the final run of show and no separate breakfasts", () => {
+  it("publishes the Mauno meal times of the 14 Oct 2026 update, with breakfasts on Saturday and Sunday", () => {
     const meals = SCHEDULE.filter((i) => i.kind === "meal").map((i) => [i.id, formatTimeRange(i)]);
     expect(meals).toEqual([
-      ["fri-dinner", "18:30–21:00"],
+      ["fri-dinner", "18:30–22:00"],
+      ["sat-breakfast", "07:30"],
       ["sat-lunch", "10:30–13:30"],
       ["sat-dinner", "17:00–20:00"],
+      ["sun-breakfast", "07:00"],
       ["sun-lunch", "10:00–12:30"],
     ]);
-    expect(JSON.stringify({ SCHEDULE, DETAILS })).not.toMatch(/21:30|Sun 10:00–13:00/);
+    expect(JSON.stringify({ SCHEDULE, DETAILS })).not.toMatch(/21:00|21:30|Sun 10:00–13:00/);
   });
 
   it("tears visibility stands down after the event, not at the 10:00 deadline", () => {
     const teardown = getScheduleItem("sun-partner-teardown");
-    expect(formatTime(teardown.start)).toBe("15:00");
+    expect(formatTime(teardown.start)).toBe("15:30");
+    expect(teardown.approx).toBe(true);
     expect(teardown.place).toBe("biocity");
   });
 
   it("assigns venue roles correctly", () => {
     const roles = Object.fromEntries(VENUES.map((v) => [v.id, v.roles.join(" ")]));
     expect(roles.educity).toMatch(/Opening ceremony/);
-    expect(roles.educity).toMatch(/Company challenge winners \(Sun 13:30\) and the finals \(Sun 14:00\)/);
+    expect(roles.educity).toMatch(/closing ceremony \(Sun 13:15\), each challenge's top three \(13:30\) and the finals \(Sun 14:00\)/);
     expect(roles.educity).toMatch(/briefings/);
     expect(roles.biocity).toMatch(/Build/);
     expect(roles.biocity).toMatch(/partner stands/);

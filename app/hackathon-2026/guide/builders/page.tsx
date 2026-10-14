@@ -44,15 +44,15 @@ const APP_STEPS = [
   },
   {
     title: "Challenge selection",
-    who: "Your team",
-    when: "Fri 17:00–17:50",
-    text: "Preview every challenge from 15:15, then select one for the whole team while selection is open. Places per challenge are limited.",
+    who: "Your team's owner",
+    when: "Fri 17:00–17:30",
+    text: "Preview every challenge from 15:00, then the team's owner selects one for the whole team while selection is open. Places per challenge are limited.",
   },
   {
     title: "Where to go",
     who: "Everyone",
-    when: "From Fri 17:50",
-    text: "When selection closes, the app shows your team's route: floor, room, floor plan and when to move. The company's page in this guide has the same room and map.",
+    when: "From Fri 17:30",
+    text: "When selection closes, the app shows your team's route: the challenge, your departure time, room, floor, route and floor plan. The teams move in turn from 18:30. The company's page in this guide has the same room and map.",
   },
   {
     title: "Submission",
@@ -104,10 +104,10 @@ export default function BuilderGuidePage() {
           facts={[
             { label: "Registration", value: "Fri 15:00", sub: "EduCity", strong: true },
             { label: "Official opening", value: "Fri 17:00", sub: "EduCity · Taidon portaat" },
-            { label: "Build spaces", value: "BioCity + Joki", sub: "From Fri 18:45, around the clock" },
+            { label: "Build spaces", value: "BioCity + Joki", sub: "From Fri 19:30, around the clock" },
             { label: "Submission deadline", value: "Sun 10:00", sub: "In sinceai.app · fixed", strong: true },
-            { label: "Company winners", value: "Sun 13:30", sub: "EduCity" },
-            { label: "Finals", value: "Sun 14:00", sub: "Five teams live on stage · over by 15:00" },
+            { label: "Closing ceremony", value: "Sun 13:15", sub: "EduCity · top three per challenge 13:30" },
+            { label: "Finals", value: "Sun 14:00", sub: "Five teams live on stage · ends around 15:30" },
           ]}
         />
         <NowNext items={schedule} audience={AUDIENCE} firstMoment={getScheduleItem(guide.firstMomentId)} />
@@ -142,7 +142,7 @@ export default function BuilderGuidePage() {
           id="team-formation-title"
           eyebrow="// friday · team formation"
           title="Find a team. Join in the app. Show your team at the exit."
-          lede="EduCity floor 1, beside Taidon portaat — from 15:00, straight after registration. Team formation closes at 16:45; challenge selection follows in sinceai.app at 17:00–17:50."
+          lede="EduCity floor 1, beside Taidon portaat — from 15:00, straight after registration. Team formation closes at 16:45; challenge selection follows in sinceai.app at 17:00–17:30."
         />
         <ol className="grid grid-cols-1 border-l border-t border-white/10 sm:grid-cols-2 lg:grid-cols-4">
           {TEAM_FORMATION_STEPS.map((step, i) => (
@@ -184,7 +184,7 @@ export default function BuilderGuidePage() {
           id="app-title"
           eyebrow="// sinceai.app"
           title="The app runs your weekend."
-          lede="Your team, your challenge and your submission all live in sinceai.app. Your team selects its challenge on Friday 17:00–17:50; any team member can submit."
+          lede="Your team, your challenge and your submission all live in sinceai.app. Your team's owner selects its challenge on Friday 17:00–17:30; any team member can submit."
         />
         <ol className="grid grid-cols-1 border-l border-t border-white/10 sm:grid-cols-2 lg:grid-cols-5">
           {APP_STEPS.map((step) => (
@@ -219,7 +219,7 @@ export default function BuilderGuidePage() {
           id="venues-title"
           eyebrow="// where"
           title="Start at EduCity. Build at BioCity and Joki."
-          lede="After the briefing (18:15–18:45), move with your team to BioCity or Joki, eat when it suits you and pick a workspace. Both stay open around the clock. Sunday's closing is back at EduCity."
+          lede="After the briefing (18:50–19:30), move with your team to BioCity or Joki, eat when it suits you and pick a workspace. Both stay open around the clock. Sunday's closing is back at EduCity."
         />
         <VenueCards venues={["educity", "biocity", "joki"]} />
         <div className="mt-8">
