@@ -10,6 +10,7 @@ export const GUIDE_ROUTES = [
   `${GUIDE}/judges`,
   `${GUIDE}/speakers`,
   `${GUIDE}/venue`,
+  `${GUIDE}/discord`,
 ] as const;
 
 export const COMPANY_IDS = [

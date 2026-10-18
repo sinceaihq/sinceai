@@ -17,6 +17,7 @@ import { metadata as partnersMetadata } from "@/app/hackathon-2026/guide/partner
 import { metadata as judgesMetadata } from "@/app/hackathon-2026/guide/judges/layout";
 import { metadata as speakersMetadata } from "@/app/hackathon-2026/guide/speakers/layout";
 import { metadata as venueMetadata } from "@/app/hackathon-2026/guide/venue/layout";
+import { metadata as discordMetadata } from "@/app/hackathon-2026/guide/discord/layout";
 import { generateMetadata as companyMetadata } from "@/app/hackathon-2026/guide/challenge-partners/[company]/layout";
 
 function expectNoindex(meta: Metadata) {
@@ -40,6 +41,7 @@ describe("Field Guide indexing", () => {
     ["judges", judgesMetadata],
     ["speakers", speakersMetadata],
     ["venue", venueMetadata],
+    ["discord", discordMetadata],
   ])("%s metadata is noindex, nofollow", (_name, meta) => {
     expectNoindex(meta);
   });

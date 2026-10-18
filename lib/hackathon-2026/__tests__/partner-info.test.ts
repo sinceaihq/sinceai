@@ -4,7 +4,10 @@ import {
   DISCORD_CHECKLIST,
   DISCORD_INVITE,
   DISCORD_ROLE_GUIDES,
-  discordSetupSteps,
+  DISCORD_GUIDE_PATH,
+  DISCORD_NOTIFICATION_STEPS,
+  DISCORD_TROUBLESHOOTING,
+  discordSteps,
   offerOpen,
 } from "@/lib/hackathon-2026";
 
@@ -15,12 +18,26 @@ describe("partner Discord onboarding", () => {
     expect(DISCORD_INVITE).toBe("https://discord.gg/vMWdrVUPws");
   });
 
-  it("has the pre-event checklist and a full first-time setup", () => {
+  it("has the pre-event checklist and an illustrated six-step setup on its own page", () => {
     expect(DISCORD_CHECKLIST).toHaveLength(6);
-    const steps = discordSetupSteps("Anna | Valmet");
-    expect(steps).toHaveLength(9);
+    expect(DISCORD_GUIDE_PATH).toBe("/hackathon-2026/guide/discord");
+    const steps = discordSteps("Anna | Valmet");
+    expect(steps.map((s) => s.illustration)).toEqual(["invite", "account", "email", "welcome", "nickname", "channels"]);
     expect(textOf(steps)).toContain("Anna | Valmet");
-    expect(textOf(steps)).toContain("info@sinceai.fi");
+    // Discord's own labels, exactly as its screens show them.
+    for (const label of ["**Accept Invite**", "**Continue**", "**Verify Email**", "**Edit Server Profile**", "**Save Changes**"]) {
+      expect(textOf(steps)).toContain(label);
+    }
+    expect(DISCORD_NOTIFICATION_STEPS.join(" ")).toMatch(/\*\*Notification Settings\*\*.*\*\*All Messages\*\*/);
+  });
+
+  it("answers the problems first-time users hit, matching the server's settings", () => {
+    const text = textOf(DISCORD_TROUBLESHOOTING);
+    expect(text).toMatch(/spam/);
+    expect(text).toMatch(/at least five minutes old/);
+    expect(text).toMatch(/work laptop or network/);
+    expect(text).toMatch(/Nitro/);
+    expect(DISCORD_TROUBLESHOOTING.every((t) => !t.a.includes("**"))).toBe(true);
   });
 
   it("gives challenge partners their challenge channel, and tech / visibility partners no challenge duties", () => {
