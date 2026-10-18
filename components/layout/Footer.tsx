@@ -36,7 +36,6 @@ const NAV_COLUMNS = [
       { name: "AI Hackathons",          href: "/ai-hackathons" },
       { name: "Finland AI",             href: "/finland-ai" },
       { name: "Turku",                  href: "/turku" },
-      { name: "European AI Hub",        href: "/european-ai" },
       { name: "Production Support",     href: "/production-support" },
       { name: "Research to Market",     href: "/research-to-market" },
     ],

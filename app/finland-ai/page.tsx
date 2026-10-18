@@ -294,11 +294,9 @@ export default function FinlandAIPage() {
                   <span className="text-neutral-600" aria-hidden="true">&bull;</span>
                   <Link href="/europe-ai" className="text-neutral-400 hover:text-white underline">Europe AI Community</Link>
                   <span className="text-neutral-600" aria-hidden="true">&bull;</span>
-                  <Link href="/european-ai" className="text-neutral-400 hover:text-white underline">European AI Sovereignty</Link>
-                  <span className="text-neutral-600" aria-hidden="true">&bull;</span>
                   <Link href="/research-to-market" className="text-neutral-400 hover:text-white underline">Research to Market</Link>
                   <span className="text-neutral-600" aria-hidden="true">&bull;</span>
-                  <Link href="/stats" className="text-neutral-400 hover:text-white underline">Stats &amp; Impact</Link>
+                  <Link href="/impact" className="text-neutral-400 hover:text-white underline">Impact &amp; Numbers</Link>
                 </div>
               </section>
 

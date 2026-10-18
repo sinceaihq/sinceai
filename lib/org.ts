@@ -21,6 +21,8 @@ export const ORG = {
       "Since AI ry operates on a not-for-profit basis. Its activities are carried out to advance its nonprofit mission and broader community benefit rather than to generate private financial benefit for members or leadership.",
   },
   baseUrl: "https://sinceai.ai",
+  /** Square logo for structured data — dark on transparent, so it reads on white backgrounds (Google's requirement). */
+  logoUrl: `https://sinceai.ai/assets/logo/${encodeURIComponent("SINCE AI black.png")}`,
   location: {
     city: "Turku",
     country: "Finland",
@@ -44,11 +46,20 @@ export const ORG = {
     substack: "https://sinceai.substack.com",
     reddit: "https://www.reddit.com/r/SinceAI/",
   },
+  /**
+   * Published metrics — the /impact page explains how each is counted.
+   * Last updated 18 Sep 2026 (#65); change them here and on /impact together.
+   */
   stats: {
-    members: "1000+",
-    hackathonParticipants: "260+",
-    projects: "30+",
-    partners: "15+",
+    lastUpdated: "September 2026",
+    network: "10,000+",
+    members: "1,000+",
+    hackathonParticipants: "260",
+    hackathon2026Target: "1,000+",
+    /** 107 organisations in lib/partners.ts (challenge, strategic, capital, research and community partners). */
+    partners: "100+",
+    projects: "100+",
+    countries: "100+",
   },
 } as const;
 

@@ -93,12 +93,11 @@ const organizationSchema = {
   alternateName: ORG.legalName,
   legalName: ORG.legalName,
   url: ORG.baseUrl,
-  logo: `${ORG.baseUrl}/assets/logo/SINCE AI white.png`,
+  logo: { "@type": "ImageObject", url: ORG.logoUrl, width: 4000, height: 4000 },
   description: ORG.mission.purpose,
   foundingDate: "2025",
   taxID: ORG.businessId,
   email: ORG.contact.infoEmail,
-  nonprofitStatus: "NonprofitType",
   location: {
     "@type": "Place",
     address: {
@@ -125,6 +124,8 @@ const organizationSchema = {
     ORG.social.facebook,
     ORG.social.youtube,
     ORG.social.substack,
+    ORG.social.reddit,
+    ORG.social.tiktok,
   ],
   knowsAbout: [
     "Artificial Intelligence",

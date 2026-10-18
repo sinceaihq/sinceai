@@ -387,13 +387,13 @@ export default function PressPage() {
                     <Link href="/about" className="text-white hover:text-neutral-300 underline">About Since AI</Link> — full story, mission, and differentiators
                   </p>
                   <p>
-                    <Link href="/stats" className="text-white hover:text-neutral-300 underline">Statistics & Impact</Link> — community metrics and case studies
+                    <Link href="/impact" className="text-white hover:text-neutral-300 underline">Impact &amp; Numbers</Link> — published metrics, methodology and case studies
                   </p>
                   <p>
                     <Link href="/production-support" className="text-white hover:text-neutral-300 underline">Production Support</Link> — our unique post-hackathon deployment program
                   </p>
                   <p>
-                    <Link href="/european-ai" className="text-white hover:text-neutral-300 underline">European AI Sovereignty</Link> — open-source initiatives
+                    <Link href="/europe-ai#open-source" className="text-white hover:text-neutral-300 underline">Open source &amp; European AI</Link> — open source and European AI sovereignty
                   </p>
                   <p>
                     <Link href="/research-to-market" className="text-white hover:text-neutral-300 underline">Research to Market</Link> — academic commercialization
