@@ -1,99 +1,71 @@
-import {
-  DISCORD_CHECKLIST,
-  DISCORD_INVITE,
-  DISCORD_ROLE_GUIDES,
-  discordSetupSteps,
-  type DiscordAudience,
-} from "@/lib/hackathon-2026";
-import { Checklist } from "./Checklist";
-import { Arrow, primaryButtonClass } from "./primitives";
+import Link from "next/link";
+import { DISCORD_GUIDE_PATH, DISCORD_INVITE, DISCORD_ROLE_GUIDES, type DiscordAudience } from "@/lib/hackathon-2026";
+import { Arrow, ghostButtonClass, primaryButtonClass } from "./primitives";
 
 /**
- * Partner onboarding to the Since AI Discord: join and set up before the event (checklist, a
- * beginner's walkthrough), then how this kind of partner uses it during the hackathon.
+ * Partner Discord on a role page, kept short: join before the event, how this
+ * kind of partner uses it, and the illustrated step-by-step Discord Guide
+ * (its own page) for everything else.
  */
 export function PartnerDiscord({ audience, company }: { audience: DiscordAudience; company?: string }) {
   const guide = DISCORD_ROLE_GUIDES[audience];
   const example = `Anna | ${company ?? (audience === "challenge-partners" ? "Valmet" : "Solita")}`;
   const invite = DISCORD_INVITE.replace(/^https?:\/\//, "");
   return (
-    <div className="space-y-12">
-      <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
-        <div className="guide-avoid-break border border-(--color-event)/40 bg-(--color-event)/[0.05] p-6">
-          <h3 className="text-2xl font-bold tracking-tight text-white">Join before you travel</h3>
-          <p className="mt-3 text-sm text-neutral-300 leading-relaxed">
-            Every representative coming on site: join the Since AI Discord, verify your account and check that your
-            company role is in place before you arrive in Turku.
-          </p>
+    <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
+      <div className="guide-avoid-break border border-(--color-event)/40 bg-(--color-event)/[0.05] p-6 md:self-start">
+        <h3 className="text-2xl font-bold tracking-tight text-white">Join before you travel</h3>
+        <p className="mt-3 text-sm text-neutral-300 leading-relaxed">
+          Every representative coming on site: join the Since AI Discord, confirm your email and set your nickname
+          to First name | Company — for example “{example}”. The Since AI team then opens your company&apos;s
+          channels.
+        </p>
+        <div className="mt-6 flex flex-col gap-3">
           <a
             href={DISCORD_INVITE}
             target="_blank"
             rel="noopener noreferrer"
-            className={`${primaryButtonClass} mt-6 w-full sm:w-auto`}
+            className={`${primaryButtonClass} w-full sm:w-auto sm:self-start`}
           >
             Join the Since AI Discord
             <Arrow external />
             <span className="sr-only"> (opens in a new tab)</span>
           </a>
-          <p className="mt-3 font-mono text-xs text-white/55 break-all">{invite}</p>
-          <details className="guide-details group mt-6 border-t border-white/10">
-            <summary className="flex min-h-12 cursor-pointer items-center justify-between gap-4 pt-4 font-semibold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
-              First time using Discord?
-              <svg
-                aria-hidden="true"
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                className="guide-chevron shrink-0 text-white/55 transition-transform duration-200"
-              >
-                <path d="M1.5 4l4.5 4.5L10.5 4" stroke="currentColor" strokeWidth="1.5" fill="none" />
-              </svg>
-            </summary>
-            <ol className="mt-4 space-y-3 text-sm text-neutral-300 leading-relaxed">
-              {discordSetupSteps(example).map((step, i) => (
-                <li key={step} className="grid grid-cols-[1.75rem_1fr] gap-2">
-                  <span className="font-mono tabular-nums text-white/55">{String(i + 1).padStart(2, "0")}</span>
-                  <span>{step}</span>
-                </li>
-              ))}
-            </ol>
-          </details>
+          <p className="font-mono text-xs text-white/55 break-all">{invite}</p>
         </div>
-        <Checklist
-          single
-          storageKey={`discord-${audience}`}
-          groups={[{ title: "Before you arrive in Turku", items: DISCORD_CHECKLIST }]}
-        />
+        <div className="mt-6 border-t border-white/10 pt-5">
+          <p className="font-semibold text-white">New to Discord?</p>
+          <p className="mt-1 text-sm text-neutral-400 leading-relaxed">
+            Our Discord Guide walks you through it with pictures: account, nickname, your channel, notifications and
+            the phone app. About ten minutes.
+          </p>
+          <Link href={`${DISCORD_GUIDE_PATH}#setup`} className={`${ghostButtonClass} mt-4 w-full sm:w-auto`}>
+            Open the step-by-step Discord Guide
+            <Arrow />
+          </Link>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-10 md:grid-cols-[3fr_2fr]">
-        <div className="guide-avoid-break">
-          <h3 className="text-2xl font-bold tracking-tight text-white">{guide.title}</h3>
-          <ul className="mt-4 border-t border-white/10">
-            {guide.points.map((point) => (
-              <li key={point} className="border-b border-white/10 py-3 text-sm text-neutral-300 leading-relaxed">
-                {point}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="guide-avoid-break">
-          <h3 className="text-2xl font-bold tracking-tight text-white">Notifications</h3>
-          <p className="mt-2 text-sm text-neutral-400 leading-relaxed">
-            Right-click a channel (desktop) or long-press it (phone) and open its notification settings.
-          </p>
-          <dl className="mt-4 border-t border-white/10">
-            {guide.notifications.map((n) => (
-              <div key={n.where} className="border-b border-white/10 py-3">
-                <dt className="text-sm text-neutral-300">{n.where}</dt>
-                <dd className="mt-1 font-mono text-xs uppercase tracking-widest text-white">{n.level}</dd>
-              </div>
-            ))}
-          </dl>
-          <p className="mt-4 text-sm text-neutral-400 leading-relaxed">
-            At least one onsite representative keeps phone notifications on during the event.
-          </p>
-        </div>
+      <div className="guide-avoid-break">
+        <h3 className="text-2xl font-bold tracking-tight text-white">{guide.title}</h3>
+        <ul className="mt-4 border-t border-white/10">
+          {guide.points.map((point) => (
+            <li key={point} className="border-b border-white/10 py-3 text-sm text-neutral-300 leading-relaxed">
+              {point}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4 text-sm text-neutral-400 leading-relaxed">
+          Set your channel&apos;s notifications to <span className="font-semibold text-white">All Messages</span>, and
+          keep phone notifications on for at least one onsite representative —{" "}
+          <Link
+            href={`${DISCORD_GUIDE_PATH}#notifications`}
+            className="text-neutral-300 underline decoration-white/25 underline-offset-4 hover:text-white hover:decoration-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          >
+            here&apos;s how
+          </Link>
+          .
+        </p>
       </div>
     </div>
   );

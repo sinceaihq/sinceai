@@ -144,16 +144,40 @@ test.describe("content", () => {
     const cp = page.locator("#discord");
     await expect(cp.getByRole("link", { name: /Join the Since AI Discord/ })).toHaveAttribute("href", "https://discord.gg/vMWdrVUPws");
     await expect(cp).toContainText("Your challenge channel");
-    await cp.getByText("First time using Discord?").click();
     await expect(cp).toContainText("Anna | Valmet");
     await page.goto(`${GUIDE}/challenge-partners/elisa#discord`);
-    await page.locator("#discord").getByText("First time using Discord?").click();
     await expect(page.locator("#discord")).toContainText("Anna | Elisa");
     await page.goto(`${GUIDE}/partners#discord`);
     const tech = page.locator("#discord");
     await expect(tech.getByRole("link", { name: /Join the Since AI Discord/ })).toHaveAttribute("href", "https://discord.gg/vMWdrVUPws");
     await expect(tech).toContainText("Your partner channel");
     await expect(tech).not.toContainText(/challenge channel|judg/i);
+    await tech.getByRole("link", { name: /step-by-step Discord Guide/ }).click();
+    await expect(page).toHaveURL(new RegExp(`${GUIDE}/discord#setup$`));
+    await expect(page.locator("#setup-title")).toBeInViewport();
+  });
+
+  test("Discord Guide: six illustrated steps, notifications, phone and troubleshooting", async ({ page }) => {
+    await page.goto(`${GUIDE}/discord`);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Discord Guide");
+    const steps = page.locator("#setup ol > li");
+    await expect(steps).toHaveCount(6);
+    for (let i = 0; i < 6; i++) {
+      await expect(steps.nth(i).getByRole("img")).toBeVisible();
+      await expect(steps.nth(i)).toContainText(`Step ${i + 1} of 6`);
+    }
+    await expect(page.locator("#notifications")).toContainText("All Messages");
+    await expect(page.locator("#phone").getByRole("img")).toBeVisible();
+    await page.locator("#problems").getByText("I can't type in a channel").click();
+    await expect(page.locator("#problems")).toContainText("at least five minutes old");
+    // The illustrations scale with the page and never push it sideways.
+    const widest = await page.locator('#setup [role="img"]').evaluateAll((els) =>
+      Math.max(...els.map((e) => e.getBoundingClientRect().right)),
+    );
+    expect(widest).toBeLessThanOrEqual(await page.evaluate(() => document.documentElement.clientWidth));
+    await page.goto(GUIDE);
+    await page.getByRole("link", { name: /Discord Guide/ }).first().click();
+    await expect(page).toHaveURL(new RegExp(`${GUIDE}/discord$`));
   });
 
   test("accommodation: the five confirmed offers on every partner and builder page", async ({ page }) => {

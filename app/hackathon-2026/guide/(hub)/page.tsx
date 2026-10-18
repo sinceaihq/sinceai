@@ -16,7 +16,15 @@ import {
   primaryButtonClass,
 } from "@/components/guide";
 import { TwinTeaser } from "@/components/guide/twin/TwinTeaser";
-import { EVENT_2026, getScheduleItem, GUIDE_BASE_PATH, HUB, HUB_MILESTONE_IDS } from "@/lib/hackathon-2026";
+import {
+  DISCORD_GUIDE,
+  DISCORD_GUIDE_PATH,
+  EVENT_2026,
+  getScheduleItem,
+  GUIDE_BASE_PATH,
+  HUB,
+  HUB_MILESTONE_IDS,
+} from "@/lib/hackathon-2026";
 
 const milestones = HUB_MILESTONE_IDS.map(getScheduleItem);
 
@@ -61,10 +69,10 @@ export default function FieldGuideHubPage() {
           lede="Each guide puts your next action first: where to be, when, what to bring — and where to get help."
         />
         <GuideCards />
-        <div className="mt-4">
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
           <Link
             href={`${GUIDE_BASE_PATH}/venue`}
-            className="group flex items-center justify-between gap-6 border border-white/10 p-6 transition-colors hover:border-white/30 hover:bg-white/[0.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:p-8"
+            className="group flex h-full items-center justify-between gap-6 border border-white/10 p-6 transition-colors hover:border-white/30 hover:bg-white/[0.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:p-8"
           >
             <span>
               <span className="block font-mono text-xs uppercase tracking-widest text-white/55">Everyone</span>
@@ -73,6 +81,23 @@ export default function FieldGuideHubPage() {
               </span>
               <span className="mt-3 block max-w-xl text-sm text-neutral-400 leading-relaxed">
                 Zoomable floor plans for EduCity, BioCity and Joki, the weekend menu — and a 3D preview of the event spaces.
+              </span>
+            </span>
+            <span aria-hidden="true" className="text-2xl text-white/55 transition-colors group-hover:text-white">
+              →
+            </span>
+          </Link>
+          <Link
+            href={DISCORD_GUIDE_PATH}
+            className="group flex h-full items-center justify-between gap-6 border border-white/10 p-6 transition-colors hover:border-white/30 hover:bg-white/[0.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:p-8"
+          >
+            <span>
+              <span className="block font-mono text-xs uppercase tracking-widest text-white/55">Partners · new to Discord</span>
+              <span className="mt-3 block text-2xl md:text-3xl font-bold tracking-tight text-white">
+                {DISCORD_GUIDE.name}
+              </span>
+              <span className="mt-3 block max-w-xl text-sm text-neutral-400 leading-relaxed">
+                How partners use the Since AI Discord, step by step with pictures — no Discord experience needed.
               </span>
             </span>
             <span aria-hidden="true" className="text-2xl text-white/55 transition-colors group-hover:text-white">

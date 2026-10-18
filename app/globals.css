@@ -114,6 +114,15 @@
   --color-surface-raised: #0a0a0f;
   /* 3D preview backdrop — matches the scenes' clear colour. */
   --color-scene: #050409;
+  /* Discord Guide mock screens only — Discord's own dark palette, so the drawings look familiar. */
+  --color-discord-rail: #1e1f22;
+  --color-discord-sidebar: #2b2d31;
+  --color-discord-chat: #313338;
+  --color-discord-input: #383a40;
+  --color-discord-text: #dbdee1;
+  --color-discord-muted: #949ba4;
+  --color-discord-blurple: #5865f2;
+  --color-discord-green: #23a559;
   /* Campus schematic building faces (front / side). */
   --color-schematic-front: #0d0c16;
   --color-schematic-side: #09080f;
