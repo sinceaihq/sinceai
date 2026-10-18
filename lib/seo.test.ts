@@ -39,6 +39,10 @@ describe("content consolidation (#28)", () => {
 });
 
 describe("files for AI assistants", () => {
+  it("use the partner count of lib/partners.ts", () => {
+    expect(ORG.stats.partners).toBe("100+");
+  });
+
   const texts = GEO_FILES.map((f) => [f, readFileSync(path.join(root, f), "utf8")] as const);
 
   it("never point to merged URLs", () => {
@@ -57,6 +61,8 @@ describe("files for AI assistants", () => {
       expect(text).toContain(ORG.stats.members);
       expect(text).toContain(ORG.stats.projects);
       expect(text).toContain(ORG.stats.countries);
+      expect(text).toMatch(/100\+ partners and supporters|Partners and supporters: 100\+/);
+      expect(text).not.toMatch(/30\+ partners|supporters: 30\+/);
       expect(text).toContain("https://sinceai.ai/impact");
       expect(text).not.toMatch(/Europe's only|10\+ countries|15\+ (partner|industry)/i);
     }
