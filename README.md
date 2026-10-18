@@ -1,354 +1,164 @@
-# Since AI
+<div align="center">
 
-Global AI builders community — Turku-based, globally connected.
+<a href="https://sinceai.ai">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="public/assets/logo/SINCE%20AI%20full%20white.png">
+    <img src="public/assets/logo/SINCE%20AI%20full%20black.png" alt="Since AI" width="260">
+  </picture>
+</a>
+
+### Where frontier AI becomes shipped products.
+
+The open-source website of **Since AI**, a global, execution-focused AI innovation ecosystem.
+
+[**sinceai.ai**](https://sinceai.ai) · [Hackathon 2026](https://sinceai.ai/hackathon) · [Discord](https://discord.gg/vMWdrVUPws) · [LinkedIn](https://www.linkedin.com/company/sinceai) · [Contact](https://sinceai.ai/contact)
 
 [![CI](https://github.com/sinceaihq/sinceai/actions/workflows/nextjs.yml/badge.svg)](https://github.com/sinceaihq/sinceai/actions/workflows/nextjs.yml)
-[![Cloudflare Deploy](https://github.com/sinceaihq/sinceai/actions/workflows/cloudflare.yml/badge.svg)](https://github.com/sinceaihq/sinceai/actions/workflows/cloudflare.yml)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Deploy](https://github.com/sinceaihq/sinceai/actions/workflows/cloudflare.yml/badge.svg)](https://github.com/sinceaihq/sinceai/actions/workflows/cloudflare.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-white.svg)](LICENSE)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js&logoColor=white)](https://nextjs.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![Node](https://img.shields.io/badge/Node.js-%3E%3D20.9.0-green?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
-Marketing website for Since AI — a non-profit AI builders community running hackathons, applied AI projects, and community events.
-
----
-
-## Table of Contents
-
-- [Quick Start](#quick-start)
-- [Commands](#commands)
-- [Project Structure](#project-structure)
-- [Architecture](#architecture)
-- [Tech Stack](#tech-stack)
-- [Key Data Files](#key-data-files)
-- [Styling](#styling)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
+</div>
 
 ---
 
-## Quick Start
+## About Since AI
 
-**Requirements:** Node.js >= 20.9.0
+Since AI connects AI builders with leading AI companies, research groups and investors, and turns those
+connections into working products. We run high-intensity hackathons with real industry challenges, applied AI
+projects and community events, open to builders worldwide.
 
-```bash
-# Clone and install
-git clone https://github.com/sinceaihq/sinceai.git
-cd sinceai
-npm ci --legacy-peer-deps   # --legacy-peer-deps is required
+Since AI is run by **Since AI ry**, a registered non-profit association in Finland. Our mission is to advance AI
+education, practical skills, technological literacy and open collaboration for the broader community.
 
-# Start dev server
-npm run dev
-```
+**Flagship event:** [Since AI Hackathon 2026](https://sinceai.ai/hackathon), 6–8 November 2026, Turku, Finland.
 
-Open [http://localhost:3000](http://localhost:3000).
+## Why this repository is open source
 
-> The `--legacy-peer-deps` flag is required due to peer dependency conflicts between React 19 and some packages. Always use it when installing or adding dependencies.
+We are a non-profit, and we believe progress compounds when work is shared. Everything that runs
+[sinceai.ai](https://sinceai.ai) is public: the site, the event Field Guide and its to-scale 3D campus model.
+Anyone can learn from it, reuse it and build on where we left off. Issues and pull requests are welcome.
 
----
+## What's inside
 
-## Commands
-
-| Command | Description |
+| Area | What it is |
 |---|---|
-| `npm run dev` | Start local development server |
-| `npm run build` | Production build (Next.js) |
-| `npm run start` | Start production server locally |
-| `npm run lint` | Run ESLint |
-| `npm run test` | Run Jest tests |
-| `npm run test:watch` | Run Jest in watch mode |
-| `npm run test:coverage` | Run Jest with coverage report |
-| `npm run build:cloudflare` | Build for Cloudflare Workers deployment |
-| `npm run preview:cloudflare` | Build and preview Cloudflare Workers locally |
-| `npm run deploy:cloudflare` | Build and deploy to Cloudflare Workers |
+| **Website** | The public site: home, hackathon, partners, projects, events, blog, press and more. |
+| **Hackathon 2026 Field Guide** | `/hackathon-2026/guide`: role-based guides for builders, challenge partners, partners, judges and speakers, with schedules and calendar export, venue floor plans, food and accessibility information. Shared by direct link and intentionally not indexed by search engines. |
+| **Campus 3D model** | A to-scale three.js model of the event campus (EduCity, BioCity, Joki), built from City of Turku and OpenStreetMap open data and loaded only on demand. See [`docs/campus-twin/`](docs/campus-twin/README.md). |
+| **Discoverability** | Per-page metadata, JSON-LD structured data, a sitemap, robots rules and `llms.txt` files for AI assistants. |
 
----
-
-## Project Structure
-
-```
-sinceai/
-├── app/                          # Next.js App Router — pages and routes
-│   ├── layout.tsx                # Root layout: fonts, global metadata, JSON-LD schemas
-│   ├── page.tsx                  # Homepage (/)
-│   ├── globals.css               # Global styles, OKLCH color tokens, Tailwind imports
-│   ├── sitemap.ts                # Dynamic sitemap generation
-│   ├── robots.ts                 # robots.txt generation
-│   │
-│   ├── blog/
-│   │   ├── page.tsx              # Blog index (/blog)
-│   │   └── [slug]/page.tsx       # Blog post pages — 308 redirect to Medium
-│   │
-│   ├── hackathon/                # /hackathon — flagship event page
-│   ├── partners/                 # /partners — company partnership info
-│   ├── for-builders/             # /for-builders — builder community info
-│   ├── about/                    # /about — org info, team, legal
-│   ├── faq/                      # /faq — frequently asked questions
-│   ├── events/                   # /events — event listings
-│   ├── contact/                  # /contact — contact form and team directory
-│   ├── press/                    # /press — press kit and media info
-│   ├── stats/                    # /stats — community metrics
-│   ├── impact/                   # /impact — impact and methodology
-│   ├── resources/                # /resources — guides and tools
-│   ├── projects/                 # /projects — shipped AI projects
-│   ├── europe-ai/                # /europe-ai — European AI ecosystem
-│   ├── european-ai/              # /european-ai — European AI sovereignty
-│   ├── finland-ai/               # /finland-ai — Finland AI community
-│   ├── turku/                    # /turku — Turku AI scene
-│   ├── ai-hackathons/            # /ai-hackathons — global AI hackathon guide
-│   ├── production-support/       # /production-support — post-hackathon support program
-│   ├── research-to-market/       # /research-to-market — academic-to-industry bridge
-│   ├── privacy/                  # /privacy — privacy policy
-│   ├── terms/                    # /terms — terms of service
-│   └── code-of-conduct/          # /code-of-conduct
-│
-├── components/
-│   ├── CookieConsent.tsx         # Cookie consent banner
-│   ├── HackathonCountdown.tsx    # Live countdown to next hackathon
-│   ├── HackathonPopup.tsx        # Hackathon event popup modal
-│   ├── ManageCookies.tsx         # Cookie preference manager
-│   ├── StructuredData.tsx        # JSON-LD script injection helper
-│   ├── countdown-timer.tsx       # Generic countdown primitive (used by HackathonCountdown)
-│   │
-│   ├── brand/                    # Brand identity
-│   │   └── logo.tsx              # Since AI logo component
-│   │
-│   ├── forms/                    # Form components
-│   │   ├── ContactForm.tsx       # EmailJS-powered contact form
-│   │   └── NewsletterSignup.tsx  # Newsletter signup form
-│   │
-│   ├── layout/                   # Site-wide layout primitives
-│   │   ├── Navbar.tsx            # Top navigation bar
-│   │   └── Footer.tsx            # Site footer
-│   │
-│   ├── sections/                 # Page-specific section components
-│   │   └── homepage/             # Homepage sections
-│   │       ├── index.ts          # Barrel export
-│   │       ├── Hero.tsx          # Main hero section
-│   │       ├── BelowHero.tsx     # Below-the-fold homepage content
-│   │       ├── PartnerMarquee.tsx # Infinite partner logo scroll
-│   │       ├── FeaturedSpeakers.tsx
-│   │       ├── LatestPosts.tsx
-│   │       ├── ProjectSpotlight.tsx
-│   │       └── PartnersSection.tsx
-│   │
-│   ├── smoothScroll/             # Lenis smooth scroll wrapper (used by all pages)
-│   │   └── index.jsx
-│   │
-│   ├── utils/
-│   │   └── Preloader/            # Page load animation (homepage only)
-│   │       ├── index.jsx
-│   │       ├── anim.js
-│   │       └── style.module.css
-│   │
-│   ├── motion-primitives/        # Reusable Framer Motion wrappers
-│   │   ├── fade-in.tsx           # FadeIn wrapper
-│   │   ├── in-view.tsx           # Trigger animations on scroll into view
-│   │   ├── infinite-slider.tsx   # Infinite scroll marquee
-│   │   ├── text-effect.tsx       # Animated text reveals
-│   │   └── ...
-│   │
-│   └── ui/                       # shadcn/ui components (new-york style)
-│       ├── button.tsx
-│       ├── card.tsx
-│       ├── dialog.tsx
-│       └── ...                   # Add new ones via: npx shadcn@latest add <component>
-│
-├── lib/                          # Shared utilities and constants
-│   ├── org.ts                    # ← Single source of truth for org info
-│   ├── sinceai.ts                # Event dates, copy strings, helper functions
-│   ├── blog.ts                   # Blog post metadata (titles, slugs, Medium URLs)
-│   ├── partners.ts               # Partner company data
-│   ├── projects.ts               # Challenge theme data (ChallengeTheme type)
-│   ├── faqs.ts                   # FAQ content for /faq and structured data
-│   ├── schema.ts                 # JSON-LD structured data generators
-│   └── utils.ts                  # cn() helper (clsx + tailwind-merge)
-│
-├── hooks/
-│   └── use-mobile.ts             # Mobile breakpoint hook (768px)
-│
-├── public/
-│   ├── assets/
-│   │   ├── logo/                 # Since AI logo variants (black/white, full/mark)
-│   │   ├── og/                   # OpenGraph images (hero.png)
-│   │   ├── images/               # Page images (educity-hero.webp, educity-card.webp)
-│   │   ├── sponsors/             # Partner and sponsor logos
-│   │   ├── speakers/             # Speaker photos
-│   │   ├── team/                 # Team member photos (used on contact page)
-│   │   └── supports/             # Supporting org logos
-│   ├── ai.txt                    # AI crawler discovery file
-│   ├── llms.txt                  # LLM context file (short)
-│   └── llms-full.txt             # LLM context file (full)
-│
-├── .github/
-│   ├── labeler.yml               # PR auto-label rules (path → label mapping)
-│   ├── CODEOWNERS                # Default code reviewer assignment
-│   └── workflows/
-│       ├── nextjs.yml            # CI: lint, typecheck, build
-│       ├── cloudflare.yml        # CD: deploy to Cloudflare Workers
-│       └── labeler.yml           # Auto-label PRs based on changed files
-│
-├── scripts/
-│   └── patch-opennext-worker.mjs # Post-build patch for Cloudflare image handling
-│
-├── next.config.ts                # Next.js config (security headers, image settings)
-├── open-next.config.ts           # OpenNext Cloudflare Workers adapter config
-├── wrangler.jsonc                # Cloudflare Workers config (name, compatibility date)
-├── postcss.config.mjs            # PostCSS config for Tailwind CSS v4
-├── tsconfig.json                 # TypeScript config (@/* path alias)
-└── CLAUDE.md                     # Instructions for Claude Code AI assistant
-```
-
----
-
-## Architecture
-
-**Next.js 16 App Router** with React Server Components. Most pages are server-rendered — `"use client"` is added only when a component needs browser APIs, state, or event handlers. Exception: the homepage and blog index are `"use client"` at the page level due to animation state (Preloader, category filter).
-
-### Routing
-
-Each page lives in `app/<route>/page.tsx`. Pages that need shared metadata or layout wrappers use a sibling `layout.tsx`. The `app/layout.tsx` root layout applies globally: fonts, body styles, cookie consent, and Organization + WebSite JSON-LD schemas.
-
-### Data Flow
-
-Organization constants live in `lib/org.ts` — contact info, social links, stats. Event dates and copy come from `lib/sinceai.ts`. Use these instead of hardcoding values in components.
-
-### Blog
-
-Blog posts are self-hosted. Each article body is authored as MDX in `content/blog/<slug>.mdx` and rendered by `app/blog/[slug]/page.tsx` as a full article page (table of contents, key takeaway, FAQ, prev/next, and `BlogPosting` + `FAQPage` JSON-LD). Post metadata (title, excerpt, tags, dates, keywords, FAQs) lives in `lib/blog.ts`, which also maps each slug to its MDX component. The blog index (`/blog`) lists posts from `lib/blog.ts` and links internally to `/blog/<slug>`. MDX rendering is configured via `@next/mdx` (`next.config.ts`) with element styling in the root `mdx-components.tsx`.
-
-### Path Alias
-
-`@/*` maps to the project root. Use it for all imports:
-
-```ts
-import { ORG } from "@/lib/org";
-import { FadeIn } from "@/components/motion-primitives/fade-in";
-```
-
----
-
-## Tech Stack
+## Tech stack
 
 | Layer | Technology |
 |---|---|
-| Framework | Next.js 16 (App Router, RSC) |
-| UI | React 19, Tailwind CSS v4, shadcn/ui, Radix UI |
-| Animation | Framer Motion 12, custom motion primitives |
-| Scroll | Lenis smooth scroll (`@studio-freight/lenis`) |
-| Forms | React Hook Form + Zod validation, EmailJS for delivery |
-| Type Safety | TypeScript 5 (strict mode) |
-| Testing | Jest 30, React Testing Library |
-| Linting | ESLint 9 with Next.js config |
-| Deployment | Cloudflare Workers (via OpenNext adapter) |
+| Framework | [Next.js 16](https://nextjs.org/) (App Router, React Server Components), [React 19](https://react.dev/) |
+| Language | [TypeScript 5](https://www.typescriptlang.org/) (strict) |
+| Styling | [Tailwind CSS v4](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/) on [Radix UI](https://www.radix-ui.com/) |
+| Motion and 3D | [Framer Motion](https://motion.dev/), [three.js](https://threejs.org/) |
+| Content | MDX blog articles (`@next/mdx`) |
+| Forms | React Hook Form + Zod, EmailJS |
+| Testing | [Jest](https://jestjs.io/) + Testing Library, [Playwright](https://playwright.dev/) with axe accessibility checks |
+| Hosting | [Cloudflare Workers](https://workers.cloudflare.com/) via the [OpenNext](https://opennext.js.org/cloudflare) adapter |
 | CI/CD | GitHub Actions |
 
----
+## Quick start
 
-## Key Data Files
-
-These are the files you'll edit most often for content changes:
-
-### `lib/org.ts`
-Organization constants — name, contact emails, social links, stats. **Never hardcode these values in components.**
-
-### `lib/sinceai.ts`
-Event data (past hackathon dates, upcoming event info), UI copy strings, and helper functions (`hasEventOccurred()`, `getEventStatus()`).
-
-### `lib/blog.ts`
-Blog post metadata: title, description, slug, Medium URL, publish date, tags, keywords. Adding a new post here automatically adds it to the blog index and sitemap.
-
-### `lib/faqs.ts`
-FAQ content used on the `/faq` page and injected as `FAQPage` JSON-LD structured data.
-
-### `lib/partners.ts`
-Partner company data used in the partner marquee and partner sections.
-
----
-
-## Styling
-
-- **Tailwind CSS v4** via PostCSS (`@tailwindcss/postcss`)
-- **OKLCH color space** with CSS custom properties defined in `app/globals.css`
-- **Dark-first design** — `bg-black` on body, light text
-- **Fonts:** JetBrains Mono (`--font-mono`) and Inter (`--font-sans`) loaded via `next/font/google`
-- **Component library:** shadcn/ui (new-york style, RSC-enabled, Lucide icons)
-- **Buttons:** always `rounded-none`, two styles only (white fill or border-only ghost), `cursor-pointer`, no scale animations
-- **Brand color:** always `var(--color-brand)` — never hardcode `#FF2D78`
-- **Cards:** sharp corners (no `rounded-*`), `border border-white/5` or `border-white/10`, no drop shadows
-
-Add a new shadcn component:
+**Requirements:** Node.js 20.9 or newer (the deploy pipeline uses Node 22) and npm 10+.
 
 ```bash
-npx shadcn@latest add <component>
+git clone https://github.com/sinceaihq/sinceai.git
+cd sinceai
+npm ci --legacy-peer-deps
+npm run dev
 ```
 
----
+Open [http://localhost:3000](http://localhost:3000). No environment variables or external services are needed
+to develop, build or test the site.
+
+> `--legacy-peer-deps` is required because some packages have not yet declared React 19 as a peer. Use it for every install.
+
+## Commands
+
+| Command | What it does |
+|---|---|
+| `npm run dev` | Development server (Turbopack) |
+| `npm run build` | Production build (webpack, for a smaller worker bundle) |
+| `npm start` | Serve the production build |
+| `npm run lint` | ESLint |
+| `npx tsc --noEmit` | Type check |
+| `npm test` | Unit and component tests (Jest) |
+| `npm run test:e2e` | Browser tests (Playwright, desktop and mobile). Run `npm run build` first. |
+| `npm run build:cloudflare` | Build the Cloudflare Worker locally |
+| `npm run preview:cloudflare` | Build and preview the Worker locally |
+
+`E2E_BASE=https://sinceai.ai npm run test:e2e` runs the browser tests against the live site.
+
+## Project structure
+
+```
+app/                     Routes (App Router). Each page has page.tsx + layout.tsx; metadata lives in layout.tsx
+  hackathon-2026/guide/  The Field Guide: hub, role guides, venue explorer, calendar (.ics) routes
+components/
+  layout/                Navbar and footer
+  sections/              Page sections (homepage, hackathon)
+  guide/                 Field Guide UI; guide/twin/ is the campus 3D model
+  ui/                    shadcn/ui primitives
+  motion-primitives/     Framer Motion wrappers
+content/blog/            Blog articles (MDX)
+lib/
+  org.ts                 Organisation facts: name, legal details, contacts, social links
+  sinceai.ts             Event dates and site-wide copy
+  schema.ts              JSON-LD generators
+  hackathon-2026/        Single source of truth for the Field Guide: schedule, venues, food, companies, maps
+data/campus-twin/        Open-data inputs of the 3D model, with sources and licences
+public/                  Static assets, llms.txt, ai.txt
+scripts/                 Build patches, QA tooling, the 3D data pipeline and poster rendering
+e2e/                     Playwright tests
+docs/                    Server setup and campus 3D documentation
+```
+
+## How we build
+
+- **Data first.** Facts live in typed data in `lib/`, never in components. Changing a time, room or partner is a
+  one-line edit, and tests guard the published facts.
+- **Server-rendered by default.** `"use client"` only where a component needs browser APIs or state.
+- **Accessible.** Semantic HTML, keyboard support and automated axe checks in the browser tests.
+- **Fast.** Static pre-rendering, optimised images, and heavy features such as the 3D model loaded only on demand.
+- **Consistent design.** One dark design system, with its conventions documented in [`CLAUDE.md`](CLAUDE.md).
 
 ## Deployment
 
-Production runs on **Cloudflare Workers** using the [OpenNext](https://opennext.js.org/) adapter.
+Production runs on Cloudflare Workers through OpenNext.
 
-### How it works
+1. Every pull request runs **lint, type check, unit tests and a production build** (`nextjs.yml`) and a
+   **Cloudflare build check** (`cloudflare.yml`).
+2. A merge to `main` deploys to [sinceai.ai](https://sinceai.ai) automatically.
 
-1. `npm run build:cloudflare` compiles the Next.js app via OpenNext for the Workers runtime
-2. `opennextjs-cloudflare deploy` pushes the Worker to Cloudflare
-3. Cloudflare handles CDN, caching, SSL, and `www` → root domain redirects
-
-### CI/CD pipelines
-
-**`nextjs.yml`** — runs on every push and PR to `main`:
-- Lint (`eslint`)
-- Type check (`tsc --noEmit`)
-- Build (`next build`)
-
-**`cloudflare.yml`** — runs on every push and PR to `main`:
-- Lint + Cloudflare build (PRs: check only)
-- Deploy to Cloudflare Workers (pushes to `main` only)
-
-**`labeler.yml`** — runs on every PR open/update:
-- Automatically applies labels based on which files changed
-- Config lives in `.github/labeler.yml`
-
-### Environment variables
-
-Cloudflare deployment requires these secrets in GitHub Actions:
-
-| Secret | Description |
-|---|---|
-| `CLOUDFLARE_ACCOUNT_ID` | Your Cloudflare account ID |
-| `CLOUDFLARE_API_TOKEN` | API token with Workers deployment permissions |
-
----
+The deploy job uses the `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` repository secrets.
 
 ## Contributing
 
-### Rules
+We welcome contributions, from typo fixes to new features. Start with [`CONTRIBUTING.md`](CONTRIBUTING.md),
+and please follow our [Code of Conduct](CODE_OF_CONDUCT.md).
 
-- **Organization data** always comes from `lib/org.ts` — never hardcode names, emails, or links
-- **Event data** always comes from `lib/sinceai.ts`
-- Use `"use client"` only when strictly necessary (browser APIs, state, event handlers)
-- All PRs must pass lint, type check, and build before merging
-- Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `chore:`, etc.)
+- Found a bug or an outdated fact? [Open an issue](https://github.com/sinceaihq/sinceai/issues/new/choose).
+- Found a security issue? Report it privately, as described in [`SECURITY.md`](SECURITY.md).
 
-### PR labels
+## License
 
-Labels are applied automatically based on changed files. No manual action needed.
+The source code is released under the [MIT License](LICENSE).
 
-| Label | Applied when |
-|---|---|
-| `components` | Any file in `components/` |
-| `pages` | Any file in `app/` |
-| `content` | Data files (`lib/blog.ts`, `lib/org.ts`, `lib/sinceai.ts`, etc.) |
-| `seo` | `lib/schema.ts`, layout files, sitemap, robots |
-| `styling` | `app/globals.css` |
-| `infra` | `.github/`, config files, `package.json` |
-| `documentation` | `README.md`, `CLAUDE.md` |
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for full workflow details including how to add pages, components, and the CI requirements.
+The Since AI name and logos, the site's written content, partner logos and photographs are **not** covered by
+the MIT License. See [`NOTICE.md`](NOTICE.md) for what you may and may not reuse.
 
 ---
 
-**Since AI ry** — Business ID 3593920-2 — Turku, Finland
+<div align="center">
 
-[sinceai.ai](https://sinceai.ai) · [Discord](https://discord.gg/vMWdrVUPws) · [GitHub](https://github.com/sinceaihq)
+**Since AI ry** · Registered non-profit association in Finland · Business ID 3593920-2
+
+[sinceai.ai](https://sinceai.ai) · [info@sinceai.fi](mailto:info@sinceai.fi) · [GitHub](https://github.com/sinceaihq)
+
+</div>

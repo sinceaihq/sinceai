@@ -2,6 +2,17 @@
   "name": "sinceai",
   "version": "0.1.0",
   "private": true,
+  "description": "The open-source website of Since AI, a global, execution-focused AI innovation ecosystem.",
+  "homepage": "https://sinceai.ai",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sinceaihq/sinceai.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sinceaihq/sinceai/issues"
+  },
+  "license": "MIT",
+  "author": "Since AI ry <info@sinceai.fi> (https://sinceai.ai)",
   "engines": {
     "node": ">=20.9.0"
   },
