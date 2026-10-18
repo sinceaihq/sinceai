@@ -18,6 +18,7 @@ export { StandPlan } from "./StandPlan";
 export { PartnerDiscord } from "./PartnerDiscord";
 export { Accommodation } from "./Accommodation";
 export { AccommodationSection, DiscordSection } from "./GuideSections";
+export { CateringInfo, DietaryNotice, FoodSection, FoodSummary, MealSchedule } from "./FoodMenu";
 export { GuideCards } from "./GuideCards";
 export { PrintButton } from "./PrintButton";
 export { VenueExplorer } from "./maps/VenueExplorer";

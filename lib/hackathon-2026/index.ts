@@ -16,3 +16,4 @@ export * from "./text";
 export * from "./twin";
 export * from "./discord";
 export * from "./accommodation";
+export * from "./food";

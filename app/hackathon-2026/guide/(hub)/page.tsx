@@ -3,6 +3,7 @@ import {
   AccommodationSection,
   CriticalPath,
   FactsStrip,
+  FoodSummary,
   GuideCards,
   GuideHero,
   GuideSection,
@@ -45,6 +46,7 @@ export default function FieldGuideHubPage() {
           { id: "guides", label: "Your guide" },
           { id: "weekend", label: "Weekend" },
           { id: "venues", label: "Venues" },
+          { id: "food", label: "Food" },
           { id: "accommodation", label: "Hotels" },
           { id: "preview", label: "3D preview" },
           { id: "help", label: "Help" },
@@ -70,7 +72,7 @@ export default function FieldGuideHubPage() {
                 Venue Explorer
               </span>
               <span className="mt-3 block max-w-xl text-sm text-neutral-400 leading-relaxed">
-                Zoomable floor plans for EduCity, BioCity and Joki — and a 3D preview of the event spaces.
+                Zoomable floor plans for EduCity, BioCity and Joki, the weekend menu — and a 3D preview of the event spaces.
               </span>
             </span>
             <span aria-hidden="true" className="text-2xl text-white/55 transition-colors group-hover:text-white">
@@ -114,6 +116,8 @@ export default function FieldGuideHubPage() {
           <RouteCard />
         </div>
       </GuideSection>
+
+      <FoodSummary />
 
       <AccommodationSection />
 

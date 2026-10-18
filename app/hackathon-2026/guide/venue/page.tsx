@@ -1,4 +1,5 @@
 import {
+  FoodSection,
   GuideHero,
   GuideSection,
   HelpSection,
@@ -62,6 +63,7 @@ export default function VenueExplorerPage() {
           { id: "maps", label: "Floor plans" },
           { id: "route", label: "Between venues" },
           { id: "venues", label: "Addresses" },
+          { id: "food", label: "Food" },
           { id: "locations", label: "All locations" },
           { id: "help", label: "Help" },
         ]}
@@ -106,6 +108,8 @@ export default function VenueExplorerPage() {
         <SectionHeading id="venues-title" eyebrow="// addresses" title="Three venues." />
         <VenueCards venues={["educity", "biocity", "joki"]} />
       </GuideSection>
+
+      <FoodSection />
 
       <GuideSection id="locations">
         <SectionHeading

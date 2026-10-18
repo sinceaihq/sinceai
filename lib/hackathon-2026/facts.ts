@@ -4,11 +4,12 @@ import { GUIDE_BASE_PATH } from "./route";
 /**
  * Canonical operational facts for Since AI Hackathon 2026.
  *
- * Source precedence (newest wins): the organiser's production update of 14 Oct 2026 ("Since AI 2026 tuotannon
+ * Source precedence (newest wins): the official food schedule of 18 Oct 2026 (main meals at Restaurant Mauno,
+ * Fri dinner 18:30–21:30, Sun lunch 10:00–13:00, breakfasts around 07:00 with menus to be announced — see food.ts) →
+ * the organiser's production update of 14 Oct 2026 ("Since AI 2026 tuotannon
  * päivitykset": challenge preview 15:00, challenge selection 17:00–17:30 by the team owner, Jason Mayes 17:30–18:30,
- * staggered move from 18:30, briefings 18:50–19:30, build from 19:30, Fri dinner until 22:00, breakfasts Sat 07:30
- * and Sun 07:00, company arrival Sun 08:45, each challenge's top three, closing ceremony 13:15, finals 14:00–15:10,
- * end around 15:30) →
+ * staggered move from 18:30, briefings 18:50–19:30, build from 19:30, company arrival Sun 08:45, each challenge's top
+ * three, closing ceremony 13:15, finals 14:00–15:10, end around 15:30) →
  * the organiser's run of show, "Since AI 2026 tapahtuman kulku" (11 Oct 2026: team formation closes 16:45, team
  * count locked 16:50, company evaluation briefing Sun 09:00) →
  * organiser final-release brief of 13 Oct 2026 (13 challenge partners + 2 TBA places, six BioCity partner stands,
@@ -77,6 +78,8 @@ export const GUIDE_LINKS = {
   privacy: `${ORG.baseUrl}/privacy`,
   app: "https://sinceai.app/",
   appTeams: "https://sinceai.app/teams",
+  /** Builders' dashboard, incl. the Meal RSVP (checked 18 Oct 2026). */
+  appDashboard: "https://sinceai.app/dashboard",
   appSignIn: "https://sinceai.app/sign-in",
   appReportIncident: "https://sinceai.app/report",
   /** MLH Code of Conduct — applies alongside our own (MLH 2027 Season Member Event). */
