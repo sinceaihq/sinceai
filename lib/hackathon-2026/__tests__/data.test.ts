@@ -194,17 +194,18 @@ describe("canonical event facts", () => {
     expect(JSON.stringify(SCHEDULE)).not.toMatch(/pre-?recorded/i);
   });
 
-  it("publishes the Mauno meal times of the 14 Oct 2026 update, with breakfasts on Saturday and Sunday", () => {
+  it("publishes the official meal times of 18 Oct 2026, with approximate breakfasts on Saturday and Sunday", () => {
     const meals = SCHEDULE.filter((i) => i.kind === "meal").map((i) => [i.id, formatTimeRange(i)]);
     expect(meals).toEqual([
-      ["fri-dinner", "18:30–22:00"],
-      ["sat-breakfast", "07:30"],
+      ["fri-dinner", "18:30–21:30"],
+      ["sat-breakfast", "~07:00"],
       ["sat-lunch", "10:30–13:30"],
       ["sat-dinner", "17:00–20:00"],
-      ["sun-breakfast", "07:00"],
-      ["sun-lunch", "10:00–12:30"],
+      ["sun-breakfast", "~07:00"],
+      ["sun-lunch", "10:00–13:00"],
     ]);
-    expect(JSON.stringify({ SCHEDULE, DETAILS })).not.toMatch(/21:00|21:30|Sun 10:00–13:00/);
+    // The superseded times and breakfast menus of the 14 Oct 2026 update.
+    expect(JSON.stringify({ SCHEDULE, DETAILS })).not.toMatch(/18:30–22:00|until 22:00|10:00–12:30|from 07:30|taskurieska|by Mauno/);
   });
 
   it("tears visibility stands down after the event, not at the 10:00 deadline", () => {

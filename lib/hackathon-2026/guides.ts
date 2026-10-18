@@ -1,4 +1,5 @@
 import { GUIDE_BASE_PATH, GUIDE_LINKS } from "./facts";
+import { DIETARY } from "./food";
 import type { Audience, ChecklistGroup, GuideDefinition, GuideDetail } from "./types";
 
 /**
@@ -83,9 +84,9 @@ export const HUB = {
 
 export const VENUE_GUIDE = {
   name: "Venue Explorer",
-  lede: "Floor plans for EduCity, BioCity and Joki, the walk between them — and a 3D preview of the spaces.",
+  lede: "Floor plans for EduCity, BioCity and Joki, the walk between them, the weekend menu — and a 3D preview of the spaces.",
   metaDescription:
-    "Since AI Hackathon 2026 Venue Explorer: zoomable floor plans for EduCity, BioCity and Joki, company rooms and stands, venue photos and a 3D preview of the event spaces.",
+    "Since AI Hackathon 2026 Venue Explorer: zoomable floor plans for EduCity, BioCity and Joki, company rooms and stands, the meal schedule and special diets, venue photos and a 3D preview of the event spaces.",
 } as const;
 
 /** The first-view critical path per audience: short, action-first. */
@@ -293,7 +294,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
     {
       q: "Meals and dietary needs",
-      a: "Mauno serves the meals at BioCity: Friday dinner 18:30–22:00; Saturday breakfast from 07:30, lunch 10:30–13:30 and dinner 17:00–20:00; Sunday breakfast from 07:00 and lunch 10:00–12:30. Eat at your own pace within each window — the meals are in sinceai.app, with reminders. Dietary requirements are collected in advance. Dishes are disposable and takeaway containers are available.",
+      a: `Main meals are served buffet-style at Restaurant Mauno, BioCity: Friday dinner 18:30–21:30; Saturday lunch 10:30–13:30 and dinner 17:00–20:00; Sunday lunch 10:00–13:00. Breakfast is around 07:00 on Saturday and Sunday — the menu is coming soon. The full menu and dietary labels are in the Venue Explorer. Eat at your own pace within each window. Tell us about vegetarian, vegan, gluten-free or other dietary needs by ${DIETARY.deadlineLabel} through the Meal RSVP on your sinceai.app dashboard; pre-arranged special meals are collected from Restaurant Mauno's open kitchen. With food allergies, always ask the restaurant staff before eating. Dishes are disposable and takeaway containers are available.`,
     },
     {
       q: "What happens at the finals?",

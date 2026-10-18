@@ -7,6 +7,8 @@ const at = (date: string, time: string) => `${date}T${time}:00+02:00`;
 
 const COMPANIES: readonly Audience[] = ["challenge-partners", "partners"];
 const MEAL_OPTIONAL = "Optional for company representatives — food is reserved for you at the scheduled meal times.";
+/** Breakfast time is approximate and the menu is not confirmed yet (update both in one place). */
+const BREAKFAST_TBA = "Menu coming soon — the breakfast menu will be announced closer to the event.";
 
 /**
  * One schedule for everyone. Pages filter by audience and pick the
@@ -16,10 +18,11 @@ const MEAL_OPTIONAL = "Optional for company representatives — food is reserved
  * tuotannon päivitykset", from the updated schedule sheet), on top of the run
  * of show "Since AI 2026 tapahtuman kulku" (11 Oct 2026).
  *
- * Meals by Mauno at BioCity: Fri dinner 18:30–22:00; Sat breakfast from 07:30,
- * lunch 10:30–13:30 and dinner 17:00–20:00; Sun breakfast from 07:00 and lunch
- * 10:00–12:30. Builders eat at their own pace within the windows; the app shows
- * the meals and sends reminders.
+ * Meals — the official food schedule of 18 Oct 2026: main meals at Restaurant
+ * Mauno, BioCity — Fri dinner 18:30–21:30, Sat lunch 10:30–13:30 and dinner
+ * 17:00–20:00, Sun lunch 10:00–13:00; breakfast around 07:00 on Sat and Sun,
+ * menus to be announced. Menus, dietary labels and special diets live in
+ * food.ts. Builders eat at their own pace within the windows.
  *
  * Friday: registration, team formation and the challenge preview in
  * sinceai.app from 15:00; team formation closes at 16:45 (staff resolve
@@ -247,7 +250,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     start: at(FRI, "19:30"),
     title: "Move to BioCity, dinner and start building",
     detail:
-      "At 19:30, after your briefing, a volunteer walks your team to BioCity. Eat when it suits you — dinner runs until 22:00 — find a workspace in BioCity or Joki and start building as soon as you arrive. Build spaces stay open around the clock.",
+      "At 19:30, after your briefing, a volunteer walks your team to BioCity. Eat when it suits you — dinner runs until 21:30 — find a workspace in BioCity or Joki and start building as soon as you arrive. Build spaces stay open around the clock.",
     place: "biocity-joki",
     audiences: ["builders"],
     kind: "move",
@@ -267,10 +270,10 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   {
     id: "fri-dinner",
     start: at(FRI, "18:30"),
-    end: at(FRI, "22:00"),
+    end: at(FRI, "21:30"),
     title: "Dinner",
     detail:
-      "Buffet by Mauno at Maunon sali, BioCity, open the whole window — builders come over after their briefings; eat whenever suits you.",
+      "Buffet at Restaurant Mauno, BioCity, open the whole window — builders come over after their briefings; eat whenever suits you.",
     detailFor: {
       "challenge-partners": MEAL_OPTIONAL,
       partners: MEAL_OPTIONAL,
@@ -282,7 +285,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   },
   {
     id: "fri-night",
-    start: at(FRI, "22:00"),
+    start: at(FRI, "21:30"),
     title: "Building continues through the night",
     detail: "Build spaces stay open. Short rest is fine in suitable event areas; there are no sleeping facilities.",
     place: "biocity-joki",
@@ -294,9 +297,10 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   // ── Saturday 7 November ────────────────────────────────────────────────────
   {
     id: "sat-breakfast",
-    start: at(SAT, "07:30"),
+    start: at(SAT, "07:00"),
+    approx: true,
     title: "Breakfast",
-    detail: "Breakfast pasties (taskurieska) by Mauno at BioCity.",
+    detail: BREAKFAST_TBA,
     place: "biocity",
     audiences: ["builders"],
     kind: "meal",
@@ -424,8 +428,9 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   {
     id: "sun-breakfast",
     start: at(SUN, "07:00"),
+    approx: true,
     title: "Breakfast",
-    detail: "Breakfast by Mauno at BioCity.",
+    detail: BREAKFAST_TBA,
     place: "biocity",
     audiences: ["builders"],
     kind: "meal",
@@ -528,7 +533,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   {
     id: "sun-lunch",
     start: at(SUN, "10:00"),
-    end: at(SUN, "12:30"),
+    end: at(SUN, "13:00"),
     title: "Lunch",
     detailFor: {
       "challenge-partners": MEAL_OPTIONAL,

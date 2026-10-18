@@ -214,6 +214,41 @@ test.describe("content", () => {
     expect(photos).toContain("creditText");
     expect(photos).toContain("copyrightHolder");
   });
+
+  test("food: the official menu, both breakfasts to be announced and the special-diet notice", async ({ page }) => {
+    await page.goto(`${GUIDE}/venue#food`);
+    const food = page.locator("#food");
+    await expect(food.getByRole("heading", { level: 2 })).toHaveText("Meals at Restaurant Mauno.");
+    const notice = food.getByRole("complementary", { name: "Special diets and allergies" });
+    await expect(notice).toBeVisible();
+    await expect(notice).toContainText("collect it directly from Restaurant Mauno's open kitchen");
+    await expect(notice).toContainText("always ask the restaurant staff before eating");
+    await expect(notice).toContainText("Friday 30 October 2026");
+
+    const card = (id: string) => food.locator(`#meal-${id}`);
+    await expect(food.locator("[data-meal]")).toHaveCount(6);
+    await expect(card("fri-dinner")).toContainText("18:30–21:30");
+    await expect(card("fri-dinner")).toContainText("Chicken pasta bake");
+    await expect(card("sat-lunch")).toContainText("10:30–13:30");
+    await expect(card("sat-lunch")).toContainText("Macaroni casserole");
+    await expect(card("sat-lunch")).not.toContainText(/vegetarian|vegan|gluten-free/i);
+    await expect(card("sat-dinner")).toContainText("17:00–20:00");
+    await expect(card("sat-dinner")).toContainText("Kebab and potato casserole");
+    await expect(card("sun-lunch")).toContainText("10:00–13:00");
+    await expect(card("sun-lunch")).toContainText("Chicken tikka masala with rice");
+    await expect(card("sun-lunch")).toContainText("Mango quark dessert");
+    for (const id of ["sat-breakfast", "sun-breakfast"]) {
+      await expect(card(id)).toContainText("~07:00");
+      await expect(card(id)).toContainText("Menu coming soon");
+    }
+    await expect(food).toContainText("Tykistökatu 6, 20520 Turku, Finland");
+
+    await page.goto(GUIDE);
+    await expect(page.locator("#food [data-meal]")).toHaveCount(6);
+    await page.locator("#food").getByRole("link", { name: /Full menu/ }).click();
+    await expect(page).toHaveURL(new RegExp(`${GUIDE}/venue#food$`));
+    await expect(page.locator("#food-title")).toBeInViewport();
+  });
 });
 
 test.describe("photo lightbox", () => {
