@@ -27,7 +27,6 @@ const SITE_ROUTES = [
   "/projects",
   "/research-to-market",
   "/resources",
-  "/stats",
   "/terms",
   "/turku",
 ] as const;
@@ -63,6 +62,31 @@ test.describe("public site", () => {
       expect(problems).toEqual([]);
     });
   }
+
+  test("merged pages answer with permanent redirects to their canonical page", async ({ request, page }) => {
+    for (const [from, to] of [
+      ["/stats", "/impact"],
+      ["/european-ai", "/europe-ai#open-source"],
+    ]) {
+      const res = await request.get(from, { maxRedirects: 0 });
+      expect(res.status(), from).toBe(308);
+      expect(new URL(res.headers()["location"], "http://x").pathname + (to.includes("#") ? "#" + to.split("#")[1] : "")).toBe(to);
+    }
+    await acceptNoCookies(page);
+    await page.addInitScript(() => {
+      try {
+        localStorage.setItem("hackathon2026_popup_v1", String(Date.now()));
+      } catch {}
+    });
+    await page.goto("/impact");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Impact & numbers");
+    await expect(page.getByRole("heading", { name: "Events to date" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "From hackathon to production" })).toBeVisible();
+    await expect(page.locator("main")).not.toContainText(/72 hours/);
+    await page.goto("/european-ai");
+    await expect(page).toHaveURL(/\/europe-ai#open-source$/);
+    await expect(page.locator("#open-source")).toBeInViewport();
+  });
 
   test("the Apply popup opens once and closes", async ({ page }) => {
     await acceptNoCookies(page);

@@ -4,7 +4,7 @@ import { FIRST_EVENT, UPCOMING_EVENT_2026, getEventStatus, LINKS } from './since
 import { blogPosts, type BlogPost } from './blog'
 import { getAuthor } from './authors'
 
-const BLOG_IMAGE = `${ORG.baseUrl}/assets/logo/SINCE AI white.png`
+const BLOG_IMAGE = encodeURI(`${ORG.baseUrl}/assets/logo/SINCE AI white.png`)
 
 /** Canonical on-site URL for a blog post. */
 export function getPostUrl(slug: string): string {
@@ -170,7 +170,7 @@ export function getBlogSchema(): WithContext<Blog> {
       url: ORG.baseUrl,
       logo: {
         '@type': 'ImageObject',
-        url: `${ORG.baseUrl}/assets/logo/SINCE AI white.png`,
+        url: ORG.logoUrl,
       },
     },
     blogPost: blogPosts.map((post) => ({
@@ -196,7 +196,7 @@ export function getBlogSchema(): WithContext<Blog> {
         url: ORG.baseUrl,
         logo: {
           '@type': 'ImageObject' as const,
-          url: BLOG_IMAGE,
+          url: ORG.logoUrl,
         },
       },
       keywords: post.keywords.join(', '),
@@ -253,7 +253,7 @@ export function getArticleSchema(
       url: ORG.baseUrl,
       logo: {
         '@type': 'ImageObject',
-        url: BLOG_IMAGE,
+        url: ORG.logoUrl,
       },
     },
   }

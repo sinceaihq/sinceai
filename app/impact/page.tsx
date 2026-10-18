@@ -1,46 +1,10 @@
 import React from "react";
 import Link from "next/link";
-import type { Metadata } from "next";
 import SmoothScroll from "@/components/smoothScroll";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { ORG } from "@/lib/org";
-import StructuredData from "@/components/StructuredData";
-
-export const metadata: Metadata = {
-  title: "Impact & Numbers — Since AI",
-  description:
-    "Since AI publishes real numbers and methodology notes for every metric: network reach, event size, projects shipped, partnerships. Updated quarterly.",
-  alternates: { canonical: "https://sinceai.ai/impact" },
-  openGraph: {
-    title: "Impact & Numbers — Since AI",
-    description:
-      "Real numbers with methodology notes: network reach, event size, projects shipped, partnerships. Updated quarterly.",
-    url: "https://sinceai.ai/impact",
-    siteName: "Since AI",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Impact & Numbers — Since AI",
-    description: "Real numbers with methodology notes: network reach, event size, projects shipped, partnerships. Updated quarterly.",
-  },
-};
-
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://sinceai.ai/" },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "Impact & Numbers",
-      item: "https://sinceai.ai/impact",
-    },
-  ],
-};
 
 // TODO (Riku): verify "countries represented" before this page goes live.
 // Current value uses the hero's claim of 100+ — replace with the defensible
@@ -53,45 +17,78 @@ const metrics: {
 }[] = [
   {
     metric: "AI builders in our network globally",
-    value: "10,000+",
+    value: ORG.stats.network,
     methodology:
       "Includes direct community members (Discord, newsletter, Medium), hackathon attendees (past and registered), and verified reach across partner AI communities globally. Not membership — reach.",
   },
   {
     metric: "Direct community members",
-    value: "1,000+",
+    value: ORG.stats.members,
     methodology:
       "Active members in our core Discord community. Figure from Discord server analytics.",
   },
   {
     metric: "Hackathon builders to date",
-    value: "260",
+    value: ORG.stats.hackathonParticipants,
     methodology:
       "Cumulative builders across all Since AI events. Since AI Hackathon, Nov 21–23 2025, EduCity, Turku: 260 builders. Exact figure, not rounded.",
   },
   {
     metric: "Hackathon 2026 participants targeted",
-    value: "1,000+",
+    value: ORG.stats.hackathon2026Target,
     methodology:
-      "Target based on venue capacity (Educity, Joukahaisenkatu 7, Turku) and partner challenge scale. Applications open rolling from 2026.",
+      "Target based on venue capacity (EduCity, BioCity and Joki in Turku) and partner challenge scale. Since AI Hackathon 2026: 6–8 November 2026.",
   },
   {
     metric: "Partners & supporters",
-    value: "30+",
+    value: ORG.stats.partners,
     methodology:
       "Counted as organizations with a formal partnership role: event sponsorship (challenge partner), ecosystem support (MoU or named collaboration), or capital/research partner.",
   },
   {
     metric: "Projects shipped",
-    value: "100+",
+    value: ORG.stats.projects,
     methodology:
       "Hackathon and post-hackathon projects with public deliverables — GitHub repositories, live demos, or partner-accepted prototypes. See sinceai.ai/projects for public summaries.",
   },
   {
     metric: "Countries represented",
-    value: "100+",
+    value: ORG.stats.countries,
     methodology:
       "Via partner community reach, direct applications from Since AI Hackathon 2025, and Discord member analytics.",
+  },
+];
+
+const EVENTS: { name: string; href?: string; dates: string; builders: string; projects: string }[] = [
+  { name: "Since AI Hackathon 2025", dates: "21–23 Nov 2025", builders: "260", projects: "30+" },
+  {
+    name: "Since AI Hackathon 2026",
+    href: "/hackathon",
+    dates: "6–8 Nov 2026",
+    builders: `${ORG.stats.hackathon2026Target} targeted`,
+    projects: "Upcoming",
+  },
+];
+
+/** Hackathon 2025 projects that went on to production support (figures as reported by the teams and partners). */
+const CASE_STUDIES: { title: string; facts: [string, string][] }[] = [
+  {
+    title: "Maritime sound signal detection (Kongsberg)",
+    facts: [
+      ["Built at", "Since AI Hackathon 2025"],
+      ["Support", "8 weeks"],
+      ["Status", "Production deployment"],
+      ["Impact", "Real-time maritime safety monitoring"],
+    ],
+  },
+  {
+    title: "Intelligent spare part discovery (Sandvik)",
+    facts: [
+      ["Built at", "Since AI Hackathon 2025 (RAG-based system)"],
+      ["Support", "6 weeks"],
+      ["Status", "Production use"],
+      ["Impact", "8+ hours saved per search"],
+    ],
   },
 ];
 
@@ -99,8 +96,6 @@ export default function ImpactPage() {
   return (
     <SmoothScroll>
       <Navbar />
-
-      <StructuredData data={breadcrumbSchema} />
 
       <main className="flex flex-col w-full bg-black min-h-screen">
         <div className="w-full max-w-4xl mx-auto px-6 py-32 md:py-40">
@@ -115,8 +110,8 @@ export default function ImpactPage() {
               {/* 2. Intro paragraph */}
               <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-16">
                 Since AI publishes real numbers with methodology notes. We believe
-                credible ecosystems require transparent metrics. All figures below are
-                current as of April 2026 and updated quarterly.
+                credible ecosystems require transparent metrics. All figures below were
+                last updated in {ORG.stats.lastUpdated} and are reviewed quarterly.
               </p>
 
               {/* 3. Metrics table */}
@@ -168,7 +163,69 @@ export default function ImpactPage() {
 
               </section>
 
-              {/* 4. What we don't claim */}
+              {/* 4. Events to date */}
+              <section className="mb-16">
+                <h2 className="text-3xl font-bold text-white mb-6 tracking-tight">Events to date</h2>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm text-left border-collapse">
+                    <thead>
+                      <tr className="border-b border-white/10">
+                        <th className="py-3 pr-6 text-neutral-400 font-semibold">Event</th>
+                        <th className="py-3 pr-6 text-neutral-400 font-semibold whitespace-nowrap">Dates</th>
+                        <th className="py-3 pr-6 text-neutral-400 font-semibold">Builders</th>
+                        <th className="py-3 text-neutral-400 font-semibold">Projects</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {EVENTS.map((event) => (
+                        <tr key={event.name} className="border-b border-white/5 last:border-b-0 align-top">
+                          <td className="py-4 pr-6 text-neutral-200 font-medium">
+                            {event.href ? (
+                              <Link href={event.href} className="text-white underline hover:text-neutral-300">
+                                {event.name}
+                              </Link>
+                            ) : (
+                              event.name
+                            )}
+                          </td>
+                          <td className="py-4 pr-6 text-neutral-300 whitespace-nowrap">{event.dates}</td>
+                          <td className="py-4 pr-6 text-neutral-300">{event.builders}</td>
+                          <td className="py-4 text-neutral-300">{event.projects}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+
+              {/* 5. From hackathon to production */}
+              <section className="mb-16">
+                <h2 className="text-3xl font-bold text-white mb-4 tracking-tight">From hackathon to production</h2>
+                <p className="text-neutral-300 leading-relaxed mb-8">
+                  Since AI supports selected teams after the event, so that their solutions reach production
+                  use with the challenge company.{" "}
+                  <Link href="/production-support" className="text-white underline hover:text-neutral-300">
+                    How production support works →
+                  </Link>
+                </p>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 not-prose">
+                  {CASE_STUDIES.map((study) => (
+                    <div key={study.title} className="border border-white/10 p-6">
+                      <h3 className="text-lg font-bold text-white mb-4">{study.title}</h3>
+                      <dl className="grid grid-cols-[7rem_1fr] gap-y-2 text-sm">
+                        {study.facts.map(([label, value]) => (
+                          <div key={label} className="contents">
+                            <dt className="text-neutral-500">{label}</dt>
+                            <dd className="text-neutral-300">{value}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* 6. What we don't claim */}
               <section className="mb-12">
                 <h2 className="text-3xl font-bold text-white mb-5 tracking-tight">
                   What we don&apos;t claim
@@ -180,7 +237,7 @@ export default function ImpactPage() {
                 </p>
               </section>
 
-              {/* 5. Governance and funding */}
+              {/* 7. Governance and funding */}
               <section className="mb-12">
                 <h2 className="text-3xl font-bold text-white mb-5 tracking-tight">
                   Governance and funding
@@ -193,9 +250,20 @@ export default function ImpactPage() {
                 </p>
               </section>
 
-              {/* 6. Footer note */}
+              {/* 8. Data inquiries */}
+              <section className="mb-12">
+                <h2 className="text-3xl font-bold text-white mb-5 tracking-tight">Data inquiries</h2>
+                <p className="text-neutral-300 leading-relaxed">
+                  For media, research or partnership questions about these figures, email{" "}
+                  <a href={`mailto:${ORG.contact.infoEmail}`} className="text-white underline hover:text-neutral-300">
+                    {ORG.contact.infoEmail}
+                  </a>
+                  .
+                </p>
+              </section>
+
               <p className="text-xs text-neutral-600 pt-6 border-t border-white/5">
-                Last updated: April 2026. Maintained by Since AI ry.
+                Last updated: {ORG.stats.lastUpdated}. Maintained by Since AI ry.
               </p>
 
               {/* Cross-links */}
@@ -214,6 +282,10 @@ export default function ImpactPage() {
                 <span className="text-neutral-700">&bull;</span>
                 <Link href="/hackathon" className="text-neutral-400 hover:text-white underline">
                   Hackathon 2026
+                </Link>
+                <span className="text-neutral-700">&bull;</span>
+                <Link href="/press" className="text-neutral-400 hover:text-white underline">
+                  Press
                 </Link>
                 <span className="text-neutral-700">&bull;</span>
                 <Link href="/faq" className="text-neutral-400 hover:text-white underline">

@@ -233,7 +233,7 @@ test.describe("content", () => {
     await expect(footer).toContainText("Vesa Loikas");
     await expect(footer).toContainText("Turun Teknologiakiinteistöt Oy");
     const jsonLd = await page.locator('script[type="application/ld+json"]').allTextContents();
-    const photos = jsonLd.find((t) => t.includes("ImageObject"));
+    const photos = jsonLd.find((t) => t.includes("ImageObject") && t.includes("contentUrl"));
     expect(photos).toBeDefined();
     expect(photos).toContain("creditText");
     expect(photos).toContain("copyrightHolder");

@@ -141,6 +141,15 @@ const communities = [
   },
 ];
 
+/** Principles behind open, European AI (merged from the former /european-ai page). */
+const SOVEREIGNTY_VALUES = [
+  { name: "Privacy", text: "GDPR-first design." },
+  { name: "Transparency", text: "Open source and explainable AI." },
+  { name: "Sovereignty", text: "European data stays in Europe." },
+  { name: "Inclusivity", text: "Multilingual and multicultural by default." },
+  { name: "Sustainability", text: "Efficient models and green AI." },
+];
+
 export default function EuropeAIPage() {
   return (
     <SmoothScroll>
@@ -433,7 +442,48 @@ export default function EuropeAIPage() {
                 </p>
               </section>
 
-              {/* 8. FAQs */}
+              {/* 8. Open source and sovereignty (formerly /european-ai) */}
+              <section id="open-source" className="mb-12 scroll-mt-28">
+                <h2 className="text-3xl font-bold text-white mb-6 tracking-tight">
+                  Open source and European AI sovereignty
+                </h2>
+                <p className="text-neutral-300 leading-relaxed mb-5">
+                  Europe still depends heavily on AI providers from outside the continent. Open,
+                  community-built tools are one of the ways Europe keeps independent AI capability,
+                  keeps sensitive data in Europe and develops technology in line with European values.
+                </p>
+                <ul className="mb-6 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2 list-none pl-0">
+                  {SOVEREIGNTY_VALUES.map((value) => (
+                    <li key={value.name} className="pl-0 text-neutral-400 leading-relaxed">
+                      <strong className="text-white">{value.name}:</strong> {value.text}
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-neutral-300 leading-relaxed mb-0">
+                  Since AI works in the open: the code behind sinceai.ai is{" "}
+                  <a
+                    href={ORG.social.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white underline hover:text-neutral-300"
+                  >
+                    open source on GitHub
+                  </a>
+                  , and open challenges are posted in the{" "}
+                  <a
+                    href={ORG.social.discord}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white underline hover:text-neutral-300"
+                  >
+                    Since AI Discord
+                  </a>{" "}
+                  for builders of every level — documentation and testing, features and fixes, or
+                  architecture and core algorithms.
+                </p>
+              </section>
+
+              {/* 9. FAQs */}
               <section className="mb-12">
                 <h2 className="text-3xl font-bold text-white mb-8 tracking-tight">
                   Frequently asked questions
@@ -449,14 +499,14 @@ export default function EuropeAIPage() {
                 </div>
               </section>
 
-              {/* 9. Last updated */}
+              {/* 10. Last updated */}
               <section className="mb-8">
                 <h2 className="text-sm font-semibold text-neutral-600 mb-2 uppercase tracking-wider">
                   Last updated
                 </h2>
                 <p className="text-xs text-neutral-600">
                   This page is maintained by Since AI ry and updated quarterly. Last
-                  updated: April 16, 2026.
+                  updated: October 19, 2026.
                 </p>
               </section>
 

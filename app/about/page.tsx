@@ -251,10 +251,10 @@ export default function AboutPage() {
                 <p className="text-neutral-400 text-sm">
                   We publish our real numbers, including methodology notes, at{" "}
                   <Link
-                    href="/stats"
+                    href="/impact"
                     className="text-neutral-300 hover:text-white underline"
                   >
-                    sinceai.ai/stats
+                    sinceai.ai/impact
                   </Link>
                   .
                 </p>
