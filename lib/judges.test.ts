@@ -22,15 +22,15 @@ describe("judging panel data", () => {
     for (const judge of judges) expect(judge.profileUrl).toMatch(/^https:\/\/www\.linkedin\.com\/in\/[\w-]+\/$/);
   });
 
-  it("uses only local, credited portraits; judges without one get initials", () => {
+  it("gives every confirmed judge a local, optimised portrait with real alt text", () => {
     for (const judge of judges) {
-      if (!judge.portrait) continue;
-      expect(judge.portrait.src).toMatch(/^\/assets\/judges\/.+\.webp$/);
-      expect(existsSync(path.join(process.cwd(), "public", judge.portrait.src))).toBe(true);
-      expect(judge.portrait.alt).toContain(judge.name);
-      expect(judge.portrait.credit).toMatch(/^Photo: /);
+      expect(judge.portrait).toBeDefined();
+      expect(judge.portrait!.src).toMatch(/^\/assets\/judges\/.+\.webp$/);
+      expect(existsSync(path.join(process.cwd(), "public", judge.portrait!.src))).toBe(true);
+      expect(judge.portrait!.alt).toContain(judge.name);
+      if (judge.portrait!.credit) expect(judge.portrait!.credit).toMatch(/^Photo: /);
     }
-    expect(judges.find((j) => j.name === "Niko Elers")!.portrait).toBeUndefined();
+    // Initials remain the fallback for a judge announced before a portrait is cleared.
     expect(initials("Niko Elers")).toBe("NE");
   });
 });

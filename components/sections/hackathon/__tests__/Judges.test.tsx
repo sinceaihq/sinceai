@@ -16,11 +16,12 @@ describe("Judges", () => {
     }
   });
 
-  it("credits the portrait, and falls back to initials without one", () => {
+  it("shows both judges' portraits, with the source credit where one is required", () => {
     render(<Judges />);
     expect(screen.getByRole("img", { name: "Portrait of Sarita Runeberg, CEO of Maria 01" })).toBeInTheDocument();
-    expect(screen.getByText("Photo: Wasim Al-Nasser / Maria 01")).toBeInTheDocument();
-    expect(screen.getByText("NE")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "Portrait of Niko Elers, Investment Director at Voima Ventures" })).toBeInTheDocument();
+    expect(screen.getByText("Photo: Voima Ventures")).toBeInTheDocument();
+    expect(screen.queryByText("NE")).not.toBeInTheDocument();
   });
 
   it("links each organisation and profile safely in a new tab", () => {

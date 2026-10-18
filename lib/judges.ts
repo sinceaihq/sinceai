@@ -11,8 +11,8 @@
 export interface JudgePortrait {
   src: string;
   alt: string;
-  /** Photographer credit, as the source requires. */
-  credit: string;
+  /** Photographer or source credit, shown on the photo when the source asks for one. */
+  credit?: string;
 }
 
 export interface Judge {
@@ -42,11 +42,10 @@ export const judges: Judge[] = [
     organizationUrl: "https://maria.io/",
     profileUrl: "https://www.linkedin.com/in/saritaruneberg/",
     bio: "CEO of Maria 01, one of the Nordics' leading startup campuses, bringing expertise in entrepreneurship, startup ecosystems and scaling innovation.",
-    // Maria 01's official press kit (maria01.notion.site), photo by Wasim Al-Nasser.
+    // Portrait chosen by the organiser for the event (PR #83, 18 Oct 2026).
     portrait: {
       src: "/assets/judges/sarita-runeberg.webp",
       alt: "Portrait of Sarita Runeberg, CEO of Maria 01",
-      credit: "Photo: Wasim Al-Nasser / Maria 01",
     },
   },
   {
@@ -56,7 +55,12 @@ export const judges: Judge[] = [
     organizationUrl: "https://voimaventures.com/",
     profileUrl: "https://www.linkedin.com/in/niko-elers-7a87a941/",
     bio: "Investment Director at Voima Ventures, focused on early-stage deep tech, science-driven innovation and venture investing.",
-    // No portrait cleared for reuse yet (Voima Ventures publishes no press images): initials until one is approved.
+    // Voima Ventures' official team photo (voimaventures.com/get-in-touch), chosen by the organiser (PR #83).
+    portrait: {
+      src: "/assets/judges/niko-elers.webp",
+      alt: "Portrait of Niko Elers, Investment Director at Voima Ventures",
+      credit: "Photo: Voima Ventures",
+    },
   },
 ];
 

@@ -19,9 +19,11 @@ function Portrait({ judge }: { judge?: Judge }) {
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 280px"
           className="object-cover grayscale transition-[filter] duration-500 group-hover:grayscale-0"
         />
-        <figcaption className="absolute bottom-0 right-0 bg-black/70 px-2 py-1 text-[10px] leading-none text-white/80">
-          {judge.portrait.credit}
-        </figcaption>
+        {judge.portrait.credit && (
+          <figcaption className="absolute bottom-0 right-0 bg-black/70 px-2 py-1 text-[10px] leading-none text-white/80">
+            {judge.portrait.credit}
+          </figcaption>
+        )}
       </figure>
     );
   }
