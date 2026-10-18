@@ -147,23 +147,23 @@ export default function EuropeanAIPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   <div className="p-4 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-white font-bold mb-1">Privacy</div>
-                    <div className="text-neutral-500 text-sm">GDPR-first design</div>
+                    <div className="text-white/55 text-sm">GDPR-first design</div>
                   </div>
                   <div className="p-4 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-white font-bold mb-1">Transparency</div>
-                    <div className="text-neutral-500 text-sm">Open source, explainable AI</div>
+                    <div className="text-white/55 text-sm">Open source, explainable AI</div>
                   </div>
                   <div className="p-4 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-white font-bold mb-1">Sovereignty</div>
-                    <div className="text-neutral-500 text-sm">European data stays in Europe</div>
+                    <div className="text-white/55 text-sm">European data stays in Europe</div>
                   </div>
                   <div className="p-4 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-white font-bold mb-1">Inclusivity</div>
-                    <div className="text-neutral-500 text-sm">Multilingual, multicultural</div>
+                    <div className="text-white/55 text-sm">Multilingual, multicultural</div>
                   </div>
                   <div className="p-4 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-white font-bold mb-1">Sustainability</div>
-                    <div className="text-neutral-500 text-sm">Efficient models, green AI</div>
+                    <div className="text-white/55 text-sm">Efficient models, green AI</div>
                   </div>
                 </div>
               </section>
@@ -209,7 +209,7 @@ export default function EuropeanAIPage() {
                   secondaryLabel="GitHub"
                   secondaryHref={ORG.social.github}
                 />
-                <p className="text-sm text-neutral-500 mt-4">
+                <p className="text-sm text-white/55 mt-4">
                   Also explore:{" "}
                   <Link href="/about" className="text-neutral-400 hover:text-white underline">About Since AI</Link>
                   {" "}|{" "}
@@ -219,7 +219,7 @@ export default function EuropeanAIPage() {
                 </p>
               </section>
 
-              <p className="text-xs text-neutral-600 mt-16 pt-6 border-t border-white/5">
+              <p className="text-xs text-white/55 mt-16 pt-6 border-t border-white/5">
                 Last updated: February 2026
               </p>
             </div>

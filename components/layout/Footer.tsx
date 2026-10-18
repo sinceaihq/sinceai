@@ -94,7 +94,7 @@ export const Footer: React.FC<FooterProps> = () => {
 
           {/* ── Social links ─────────────────────────────────── */}
           <div className="max-w-[320px]">
-            <span className="text-xs font-mono uppercase tracking-widest text-neutral-500 block mb-4">
+            <span className="text-xs font-mono uppercase tracking-widest text-white/55 block mb-4">
               {"// community"}
             </span>
             <div className="flex flex-wrap gap-x-6">
@@ -128,7 +128,7 @@ export const Footer: React.FC<FooterProps> = () => {
         <div className="grid grid-cols-2 md:grid-cols-3 gap-16 pt-16 border-t border-white/10 mb-16">
           {NAV_COLUMNS.map((col) => (
             <nav key={col.label} aria-label={col.label}>
-              <span className="text-xs font-mono uppercase tracking-widest text-neutral-500 block mb-6">
+              <span className="text-xs font-mono uppercase tracking-widest text-white/55 block mb-6">
                 {col.label}
               </span>
               {col.links.map((link) => (
@@ -146,7 +146,7 @@ export const Footer: React.FC<FooterProps> = () => {
 
         {/* ── Bottom bar ──────────────────────────────────────── */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-10 border-t border-white/10 gap-4">
-          <p className="text-xs text-neutral-500 leading-relaxed">
+          <p className="text-xs text-white/55 leading-relaxed">
             {ORG.legalName} is a registered Finnish nonprofit association · Business ID {ORG.businessId} · Haukilahdenkatu 1 A 89, 02200 Espoo, Finland
             <br />
             © {year} Since AI. All rights reserved.
@@ -157,7 +157,7 @@ export const Footer: React.FC<FooterProps> = () => {
               <Link
                 key={l.href}
                 href={l.href}
-                className="text-xs text-neutral-500 hover:text-white transition-colors whitespace-nowrap focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+                className="text-xs text-white/55 hover:text-white transition-colors whitespace-nowrap focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
               >
                 {l.name}
               </Link>

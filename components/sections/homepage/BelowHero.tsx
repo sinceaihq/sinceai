@@ -48,7 +48,7 @@ export function BelowHero() {
       {/* ── SECTION 1: Definition ──────────────────────────────── */}
       <section className="py-24 px-6 border-t border-white/10">
         <div className="mx-auto max-w-6xl">
-          <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+          <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
             {"// what is since ai"}
           </p>
           <h2 className="text-3xl font-bold tracking-tight text-white mb-6">
@@ -92,7 +92,7 @@ export function BelowHero() {
             },
           ].map((stat) => (
             <div key={stat.label} className="border-l border-white/10 pl-6">
-              <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-2">
+              <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-2">
                 {stat.label}
               </p>
               <p className="text-4xl md:text-5xl font-bold text-white leading-none">
@@ -109,7 +109,7 @@ export function BelowHero() {
       {/* ── SECTION 3: Three pillars ───────────────────────────── */}
       <section className="py-24 px-6 border-t border-white/10">
         <div className="mx-auto max-w-6xl">
-          <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+          <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
             {"// how since ai works"}
           </p>
           <h2 className="text-3xl font-bold tracking-tight text-white mb-12">
@@ -156,7 +156,7 @@ export function BelowHero() {
       {/* ── SECTION 4: Partner tiers ───────────────────────────── */}
       <section className="py-24 px-6 border-t border-white/10">
         <div className="mx-auto max-w-6xl">
-          <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+          <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
             {"// ecosystem"}
           </p>
           <h2 className="text-3xl font-bold tracking-tight text-white mb-12">
@@ -174,7 +174,7 @@ export function BelowHero() {
               ] as const
             ).map(({ header, partners }) => (
               <div key={header}>
-                <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-4">
+                <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-4">
                   {header}
                 </p>
                 <div className="text-sm leading-loose text-white">
@@ -189,7 +189,7 @@ export function BelowHero() {
                         {p.name}
                       </a>
                       {i < partners.length - 1 && (
-                        <span className="text-neutral-500">, </span>
+                        <span className="text-white/55">, </span>
                       )}
                     </span>
                   ))}

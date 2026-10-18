@@ -137,28 +137,28 @@ export default function FAQPage() {
                   >
                     Hackathon 2026
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link
                     href="/partners"
                     className="text-neutral-400 hover:text-white underline"
                   >
                     Partner with us
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link
                     href="/for-builders"
                     className="text-neutral-400 hover:text-white underline"
                   >
                     For builders
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link
                     href="/ai-hackathons"
                     className="text-neutral-400 hover:text-white underline"
                   >
                     AI hackathons in Europe
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link
                     href="/about"
                     className="text-neutral-400 hover:text-white underline"

@@ -361,12 +361,12 @@ const LeadCard: React.FC<{ person: TeamMember }> = ({ person }) => (
       <p className="text-neutral-400 text-sm mt-0.5">{person.role}</p>
       <div className="mt-3 space-y-2">
         {person.email && (
-          <a href={`mailto:${person.email}`} className="text-sm text-neutral-500 hover:text-white transition-colors break-all block">
+          <a href={`mailto:${person.email}`} className="text-sm text-white/55 hover:text-white transition-colors break-all block">
             {person.email}
           </a>
         )}
         {person.linkedin && (
-          <a href={person.linkedin} target="_blank" rel="noopener noreferrer" className="text-neutral-500 hover:text-white transition-colors inline-block">
+          <a href={person.linkedin} target="_blank" rel="noopener noreferrer" className="text-white/55 hover:text-white transition-colors inline-block">
             <FaLinkedin size={15} />
           </a>
         )}
@@ -401,15 +401,15 @@ const MemberCard: React.FC<{ person: TeamMember }> = ({ person }) => (
     </div>
     <div className="min-w-0 flex-1">
       <p className="text-white text-sm font-medium tracking-tight truncate">{person.name}</p>
-      <p className="text-neutral-500 text-xs truncate">{person.role}</p>
+      <p className="text-white/55 text-xs truncate">{person.role}</p>
       {person.email && (
-        <a href={`mailto:${person.email}`} className="text-neutral-600 text-xs hover:text-white transition-colors break-all block mt-0.5">
+        <a href={`mailto:${person.email}`} className="text-white/55 text-xs hover:text-white transition-colors break-all block mt-0.5">
           {person.email}
         </a>
       )}
     </div>
     {person.linkedin && (
-      <a href={person.linkedin} target="_blank" rel="noopener noreferrer" className="ml-auto shrink-0 self-start text-neutral-600 hover:text-white transition-colors">
+      <a href={person.linkedin} target="_blank" rel="noopener noreferrer" className="ml-auto shrink-0 self-start text-white/55 hover:text-white transition-colors">
         <FaLinkedin size={15} />
       </a>
     )}

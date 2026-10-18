@@ -48,7 +48,7 @@ function JudgeCard({ judge }: { judge: Judge }) {
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-neutral-500 hover:text-white transition-colors duration-300"
+              className="text-sm text-white/55 hover:text-white transition-colors duration-300"
             >
               {link.label} ↗
             </a>
@@ -85,7 +85,7 @@ export function Judges() {
   return (
     <section className="py-24 px-6 border-t border-white/10">
       <div className="mx-auto max-w-6xl">
-        <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+        <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
           {"// judges"}
         </p>
         <h2 className="text-3xl font-bold tracking-tight text-white mb-10">

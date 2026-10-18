@@ -178,19 +178,19 @@ export default function FinlandAIPage() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">1000+</div>
-                    <div className="text-sm text-neutral-500">Finnish AI developers</div>
+                    <div className="text-sm text-white/55">Finnish AI developers</div>
                   </div>
                   <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">10+</div>
-                    <div className="text-sm text-neutral-500">Countries represented</div>
+                    <div className="text-sm text-white/55">Countries represented</div>
                   </div>
                   <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">4</div>
-                    <div className="text-sm text-neutral-500">Major cities</div>
+                    <div className="text-sm text-white/55">Major cities</div>
                   </div>
                   <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">30+</div>
-                    <div className="text-sm text-neutral-500">AI projects built</div>
+                    <div className="text-sm text-white/55">AI projects built</div>
                   </div>
                 </div>
               </section>
@@ -291,18 +291,18 @@ export default function FinlandAIPage() {
                 </h2>
                 <div className="flex flex-wrap gap-3">
                   <Link href="/turku" className="text-neutral-400 hover:text-white underline">Turku AI</Link>
-                  <span className="text-neutral-600">&bull;</span>
+                  <span className="text-neutral-600" aria-hidden="true">&bull;</span>
                   <Link href="/europe-ai" className="text-neutral-400 hover:text-white underline">Europe AI Community</Link>
-                  <span className="text-neutral-600">&bull;</span>
+                  <span className="text-neutral-600" aria-hidden="true">&bull;</span>
                   <Link href="/european-ai" className="text-neutral-400 hover:text-white underline">European AI Sovereignty</Link>
-                  <span className="text-neutral-600">&bull;</span>
+                  <span className="text-neutral-600" aria-hidden="true">&bull;</span>
                   <Link href="/research-to-market" className="text-neutral-400 hover:text-white underline">Research to Market</Link>
-                  <span className="text-neutral-600">&bull;</span>
+                  <span className="text-neutral-600" aria-hidden="true">&bull;</span>
                   <Link href="/stats" className="text-neutral-400 hover:text-white underline">Stats &amp; Impact</Link>
                 </div>
               </section>
 
-              <p className="text-xs text-neutral-600 mt-16 pt-6 border-t border-white/5">
+              <p className="text-xs text-white/55 mt-16 pt-6 border-t border-white/5">
                 Last updated: February 2026
               </p>
             </div>

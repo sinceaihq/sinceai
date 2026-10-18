@@ -164,21 +164,21 @@ export default function EventsPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4">
                     <div className="text-center sm:text-left">
                       <div className="text-3xl font-bold text-white mb-1">260+</div>
-                      <div className="text-sm text-neutral-500">Builders</div>
+                      <div className="text-sm text-white/55">Builders</div>
                     </div>
                     <div className="text-center sm:text-left">
                       <div className="text-3xl font-bold text-white mb-1">30+</div>
-                      <div className="text-sm text-neutral-500">Projects Shipped</div>
+                      <div className="text-sm text-white/55">Projects Shipped</div>
                     </div>
                     <div className="text-center sm:text-left">
                       <div className="text-3xl font-bold text-white mb-1">€10K+</div>
-                      <div className="text-sm text-neutral-500">In Awards</div>
+                      <div className="text-sm text-white/55">In Awards</div>
                     </div>
                   </div>
 
                   {/* Partner Companies */}
                   <div className="pt-6 border-t border-white/5">
-                    <p className="text-sm text-neutral-500 mb-3">Partner Companies</p>
+                    <p className="text-sm text-white/55 mb-3">Partner Companies</p>
                     <div className="flex flex-wrap gap-3">
                       {["Valmet", "Sandvik", "Kongsberg", "ElevenLabs", "Featherless.ai", "Antler"].map((partner) => (
                         <span
@@ -232,7 +232,7 @@ export default function EventsPage() {
               <p className="text-lg text-neutral-400 mb-4 max-w-xl mx-auto">
                 Join our Discord or Telegram to get notified about upcoming events, meetups, and hackathons.
               </p>
-              <p className="text-sm text-neutral-500 mb-8 max-w-xl mx-auto">
+              <p className="text-sm text-white/55 mb-8 max-w-xl mx-auto">
                 New to hackathons? Read our{" "}
                 <Link href="/blog" className="text-neutral-300 hover:text-white underline">
                   AI hackathon guides

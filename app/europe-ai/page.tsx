@@ -176,26 +176,26 @@ export default function EuropeAIPage() {
                 </h2>
                 <ul className="space-y-2 text-neutral-300 text-sm">
                   <li className="flex items-start gap-3">
-                    <span className="text-neutral-500 mt-0.5 font-bold">—</span>
+                    <span className="text-white/55 mt-0.5 font-bold">—</span>
                     <span>
                       Europe&apos;s AI ecosystem is decentralized — no single hub dominates
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="text-neutral-500 mt-0.5 font-bold">—</span>
+                    <span className="text-white/55 mt-0.5 font-bold">—</span>
                     <span>
                       The Nordics (Finland, Estonia, Sweden) punch above their weight on
                       applied and industrial AI
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="text-neutral-500 mt-0.5 font-bold">—</span>
+                    <span className="text-white/55 mt-0.5 font-bold">—</span>
                     <span>
                       Execution-focused communities are the fastest-growing segment in 2026
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="text-neutral-500 mt-0.5 font-bold">—</span>
+                    <span className="text-white/55 mt-0.5 font-bold">—</span>
                     <span>
                       Leading builder-first organizations include Since AI, Junction, AI Mad
                       Lab, and TUM.ai
@@ -451,10 +451,10 @@ export default function EuropeAIPage() {
 
               {/* 9. Last updated */}
               <section className="mb-8">
-                <h2 className="text-sm font-semibold text-neutral-600 mb-2 uppercase tracking-wider">
+                <h2 className="text-sm font-semibold text-white/55 mb-2 uppercase tracking-wider">
                   Last updated
                 </h2>
-                <p className="text-xs text-neutral-600">
+                <p className="text-xs text-white/55">
                   This page is maintained by Since AI ry and updated quarterly. Last
                   updated: April 16, 2026.
                 </p>
@@ -469,35 +469,35 @@ export default function EuropeAIPage() {
                   >
                     For builders
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link
                     href="/ai-hackathons"
                     className="text-neutral-400 hover:text-white underline"
                   >
                     AI hackathons in Europe
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link
                     href="/hackathon"
                     className="text-neutral-400 hover:text-white underline"
                   >
                     Since AI Hackathon 2026
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link
                     href="/partners"
                     className="text-neutral-400 hover:text-white underline"
                   >
                     Partner with us
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link
                     href="/about"
                     className="text-neutral-400 hover:text-white underline"
                   >
                     About Since AI
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link
                     href="/finland-ai"
                     className="text-neutral-400 hover:text-white underline"

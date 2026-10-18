@@ -57,7 +57,7 @@ export default function ProjectsPage() {
                 High-signal prototypes built around real partner challenge themes.
               </p>
 
-              <p className="text-sm text-neutral-500 max-w-2xl mx-auto">
+              <p className="text-sm text-white/55 max-w-2xl mx-auto">
                 Public summaries only. Full challenge materials and solutions are not published.
               </p>
             </motion.div>
@@ -76,7 +76,7 @@ export default function ProjectsPage() {
               {/* Search */}
               <div className="mb-6">
                 <div className="relative">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500" />
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/55" />
                   <input
                     type="text"
                     placeholder="Search themes, tags, or technologies..."
@@ -91,7 +91,7 @@ export default function ProjectsPage() {
               <div className="space-y-4">
                 {/* Industry */}
                 <div>
-                  <label className="text-xs text-neutral-500 uppercase tracking-wider mb-2 block">
+                  <label className="text-xs text-white/55 uppercase tracking-wider mb-2 block">
                     Industry
                   </label>
                   <div className="flex flex-wrap gap-2">
@@ -113,7 +113,7 @@ export default function ProjectsPage() {
 
                 {/* Modality */}
                 <div>
-                  <label className="text-xs text-neutral-500 uppercase tracking-wider mb-2 block">
+                  <label className="text-xs text-white/55 uppercase tracking-wider mb-2 block">
                     Modality
                   </label>
                   <div className="flex flex-wrap gap-2">
@@ -135,7 +135,7 @@ export default function ProjectsPage() {
 
                 {/* Sponsor */}
                 <div>
-                  <label className="text-xs text-neutral-500 uppercase tracking-wider mb-2 block">
+                  <label className="text-xs text-white/55 uppercase tracking-wider mb-2 block">
                     Sponsor
                   </label>
                   <div className="flex flex-wrap gap-2">
@@ -164,7 +164,7 @@ export default function ProjectsPage() {
           <div className="max-w-6xl mx-auto">
             {filteredThemes.length === 0 ? (
               <div className="text-center py-20">
-                <p className="text-neutral-500 text-lg">
+                <p className="text-white/55 text-lg">
                   No themes match your filters. Try adjusting your selection.
                 </p>
               </div>
@@ -181,10 +181,10 @@ export default function ProjectsPage() {
                   >
                     {/* Sponsor */}
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+                      <span className="text-xs font-semibold text-white/55 uppercase tracking-wider">
                         {theme.sponsor}
                       </span>
-                      <span className="text-xs text-neutral-600 px-2 py-1 rounded bg-white/5">
+                      <span className="text-xs text-white/55 px-2 py-1 rounded bg-white/5">
                         {theme.industry}
                       </span>
                     </div>
@@ -201,12 +201,12 @@ export default function ProjectsPage() {
 
                     {/* What teams explored */}
                     <div className="mb-4">
-                      <p className="text-xs text-neutral-600 uppercase tracking-wider mb-2">
+                      <p className="text-xs text-white/55 uppercase tracking-wider mb-2">
                         What teams explored
                       </p>
                       <ul className="space-y-1.5">
                         {theme.bullets.map((bullet, i) => (
-                          <li key={i} className="text-sm text-neutral-400 pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-neutral-600">
+                          <li key={i} className="text-sm text-neutral-400 pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-white/55">
                             {bullet}
                           </li>
                         ))}
@@ -215,7 +215,7 @@ export default function ProjectsPage() {
 
                     {/* Why it matters */}
                     <div className="mb-6 p-4 bg-white/5 border border-white/5">
-                      <p className="text-xs text-neutral-600 uppercase tracking-wider mb-1">
+                      <p className="text-xs text-white/55 uppercase tracking-wider mb-1">
                         Why it matters
                       </p>
                       <p className="text-sm text-neutral-300">
@@ -272,7 +272,7 @@ export default function ProjectsPage() {
               <p className="text-neutral-400 mb-4">
                 <span className="text-white font-semibold">Since AI Hackathon 2025</span> — Nov 21–23, 2025 • EduCity, Turku • 260+ builders
               </p>
-              <p className="text-neutral-500 text-sm">
+              <p className="text-white/55 text-sm">
                 <span className="text-neutral-300">Next:</span> Hackathon 2026 — November 6-8, 2026
               </p>
             </motion.div>

@@ -154,13 +154,16 @@ export default function HackathonPage() {
 
         {/* ── SECTION 1: Hero ─────────────────────────────────── */}
         <section id="hackathon-hero" className="relative w-full flex flex-col px-6">
-          <Image
+          {/* Plain responsive image: images are served unoptimised, so the phone size is a file of its own. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src="/assets/images/educity-hero.webp"
-            alt="EduCity, Turku — venue for Since AI Hackathon 2026"
-            fill
+            srcSet="/assets/images/educity-hero-828.webp 828w, /assets/images/educity-hero.webp 1920w"
             sizes="100vw"
-            className="object-cover"
-            priority
+            alt="EduCity, Turku — venue for Since AI Hackathon 2026"
+            fetchPriority="high"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover"
           />
           <div className="absolute inset-0" style={{ background: "rgba(0,0,0,0.72)" }} />
           <div
@@ -270,7 +273,7 @@ export default function HackathonPage() {
                     key={partner.name}
                     className={`py-6 md:px-6 md:flex-1 ${i > 0 ? "border-t md:border-t-0 md:border-l border-white/10" : ""}`}
                   >
-                    <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+                    <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
                       {partner.label}
                     </p>
                     <a
@@ -337,7 +340,7 @@ export default function HackathonPage() {
         <FadeInView>
           <section className="py-24 px-6 border-t border-white/10">
             <div className="mx-auto max-w-6xl">
-              <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+              <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
                 {"// what is it"}
               </p>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-8">
@@ -369,7 +372,7 @@ export default function HackathonPage() {
         <FadeInView>
           <section className="py-24 px-6 border-t border-white/10">
             <div className="mx-auto max-w-6xl">
-              <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+              <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
                 {"// why participate"}
               </p>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-10">
@@ -382,7 +385,7 @@ export default function HackathonPage() {
                     key={item.num}
                     className="border border-white/5 p-8 hover:border-white/20 hover:bg-white/[0.02] transition-all duration-300"
                   >
-                    <p className="text-xs font-mono text-neutral-500 mb-4" aria-hidden="true">
+                    <p className="text-xs font-mono text-white/55 mb-4" aria-hidden="true">
                       {item.num}
                     </p>
                     <h3 className="text-2xl font-bold tracking-tight text-white mb-3">
@@ -402,7 +405,7 @@ export default function HackathonPage() {
         <FadeInView>
           <section className="py-24 px-6 border-t border-white/10">
             <div className="mx-auto max-w-6xl">
-              <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+              <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
                 {"// venue"}
               </p>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-8">
@@ -454,7 +457,7 @@ export default function HackathonPage() {
         <FadeInView>
           <section className="py-24 px-6 border-t border-white/10">
             <div className="mx-auto max-w-6xl">
-              <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+              <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
                 {"// previous editions"}
               </p>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-8">
@@ -491,7 +494,7 @@ export default function HackathonPage() {
         {/* ── SECTION 11: Key facts ────────────────────────────── */}
         <section className="py-24 px-6 border-t border-white/10">
           <div className="mx-auto max-w-6xl">
-            <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+            <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
               {"// key facts"}
             </p>
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-8">
@@ -504,7 +507,7 @@ export default function HackathonPage() {
                   key={fact.label}
                   className="flex flex-col sm:flex-row sm:items-baseline gap-3 py-4 border-b border-white/10"
                 >
-                  <dt className="text-xs font-mono uppercase tracking-widest text-neutral-500 shrink-0 w-40">
+                  <dt className="text-xs font-mono uppercase tracking-widest text-white/55 shrink-0 w-40">
                     {fact.label}
                   </dt>
                   <dd className="text-sm text-white">
@@ -523,7 +526,7 @@ export default function HackathonPage() {
           style={{ scrollMarginTop: "80px" }}
         >
           <div className="mx-auto max-w-6xl">
-            <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+            <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
               {"// registrations"}
             </p>
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-6">
@@ -571,7 +574,7 @@ export default function HackathonPage() {
         {/* ── SECTION 13: FAQ ───────────────────────────────────── */}
         <section className="py-24 px-6 border-t border-white/10">
           <div className="mx-auto max-w-6xl">
-            <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+            <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
               {"// faq"}
             </p>
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-10">

@@ -135,7 +135,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <div className="max-w-3xl mx-auto">
             {/* Breadcrumb */}
             <nav aria-label="Breadcrumb" className="mb-10">
-              <ol className="flex items-center gap-1.5 text-sm text-neutral-500">
+              <ol className="flex items-center gap-1.5 text-sm text-white/55">
                 <li>
                   <Link href="/" className="hover:text-neutral-300 transition-colors">
                     Home
@@ -178,7 +178,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 {post.excerpt}
               </p>
 
-              <div className="flex flex-wrap items-center gap-5 text-sm text-neutral-500">
+              <div className="flex flex-wrap items-center gap-5 text-sm text-white/55">
                 <span className="flex items-center gap-1.5">
                   <Calendar className="w-3.5 h-3.5" />
                   <time dateTime={post.datePublished}>
@@ -205,7 +205,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
             {/* TL;DR — citable key takeaway for AI engines */}
             <aside className="mb-12 border-l-2 border-white/20 bg-white/[0.02] p-6">
-              <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-2">
+              <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-2">
                 Key takeaway
               </p>
               <p className="text-lg text-neutral-200 leading-relaxed">
@@ -219,7 +219,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 aria-label="Table of contents"
                 className="mb-12 border border-white/10 bg-white/[0.02] p-6"
               >
-                <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-4">
+                <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-4">
                   On this page
                 </p>
                 <ol className="space-y-2">
@@ -279,11 +279,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     .join("")}
                 </div>
                 <div>
-                  <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-1">
+                  <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-1">
                     Written by
                   </p>
                   <p className="text-white font-bold">{author.name}</p>
-                  <p className="text-sm text-neutral-500 mb-2">{author.role}</p>
+                  <p className="text-sm text-white/55 mb-2">{author.role}</p>
                   <p className="text-neutral-400 leading-relaxed mb-3">
                     {author.bio}
                   </p>
@@ -335,7 +335,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     href={`/blog/${previous.slug}`}
                     className="group flex flex-col p-6 border border-white/10 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.03] transition-colors"
                   >
-                    <span className="flex items-center gap-1.5 text-xs text-neutral-500 mb-2">
+                    <span className="flex items-center gap-1.5 text-xs text-white/55 mb-2">
                       <ArrowLeft className="w-3.5 h-3.5" />
                       Previous
                     </span>
@@ -351,7 +351,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     href={`/blog/${next.slug}`}
                     className="group flex flex-col p-6 border border-white/10 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.03] transition-colors sm:text-right"
                   >
-                    <span className="flex items-center gap-1.5 text-xs text-neutral-500 mb-2 sm:justify-end">
+                    <span className="flex items-center gap-1.5 text-xs text-white/55 mb-2 sm:justify-end">
                       Next
                       <ArrowRight className="w-3.5 h-3.5" />
                     </span>

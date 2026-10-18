@@ -64,16 +64,27 @@ test.describe("public site", () => {
     });
   }
 
-  test("the Apply popup opens once and closes", async ({ page }) => {
+  test("the Hackathon announcement waits for engagement, never blocks the page, and stays closed", async ({ page }) => {
     await acceptNoCookies(page);
     await page.goto("/");
-    const dialog = page.getByRole("dialog");
-    await expect(dialog).toBeVisible({ timeout: 10_000 });
-    await dialog.getByRole("button").last().click();
-    await expect(dialog).toHaveCount(0);
-    await page.reload();
+    const card = page.getByRole("complementary", { name: "Since AI Hackathon 2026" });
+    // Not on arrival: no modal, no announcement until the visitor engages.
     await page.waitForTimeout(3000);
     await expect(page.getByRole("dialog")).toHaveCount(0);
+    await expect(card).toHaveCount(0);
+    // After scrolling a third of the page it appears, and the page still scrolls.
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight * 0.5));
+    await expect(card).toBeVisible({ timeout: 10_000 });
+    const before = await page.evaluate(() => window.scrollY);
+    await page.mouse.wheel(0, 300);
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(before);
+    await expect(card.getByRole("link", { name: "Apply →" })).toHaveAttribute("href", "https://sinceai.app/sign-up");
+    await page.keyboard.press("Escape");
+    await expect(card).toHaveCount(0);
+    await page.reload();
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight * 0.5));
+    await page.waitForTimeout(1500);
+    await expect(card).toHaveCount(0);
   });
 
   test("blog Open Graph images render", async ({ request }) => {

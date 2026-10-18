@@ -254,7 +254,7 @@ export default function ResearchToMarketPage() {
                 </div>
               </section>
 
-              <p className="text-xs text-neutral-600 mt-16 pt-6 border-t border-white/5">
+              <p className="text-xs text-white/55 mt-16 pt-6 border-t border-white/5">
                 Last updated: February 2026
               </p>
             </div>

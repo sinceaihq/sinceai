@@ -157,7 +157,7 @@ export default function ImpactPage() {
                               </span>
                             )}
                           </td>
-                          <td className="py-4 text-neutral-500 text-xs leading-relaxed">
+                          <td className="py-4 text-white/55 text-xs leading-relaxed">
                             {row.methodology}
                           </td>
                         </tr>
@@ -194,7 +194,7 @@ export default function ImpactPage() {
               </section>
 
               {/* 6. Footer note */}
-              <p className="text-xs text-neutral-600 pt-6 border-t border-white/5">
+              <p className="text-xs text-white/55 pt-6 border-t border-white/5">
                 Last updated: April 2026. Maintained by Since AI ry.
               </p>
 
@@ -203,19 +203,19 @@ export default function ImpactPage() {
                 <Link href="/about" className="text-neutral-400 hover:text-white underline">
                   About Since AI
                 </Link>
-                <span className="text-neutral-700">&bull;</span>
+                <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                 <Link href="/partners" className="text-neutral-400 hover:text-white underline">
                   Partners
                 </Link>
-                <span className="text-neutral-700">&bull;</span>
+                <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                 <Link href="/projects" className="text-neutral-400 hover:text-white underline">
                   Projects
                 </Link>
-                <span className="text-neutral-700">&bull;</span>
+                <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                 <Link href="/hackathon" className="text-neutral-400 hover:text-white underline">
                   Hackathon 2026
                 </Link>
-                <span className="text-neutral-700">&bull;</span>
+                <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                 <Link href="/faq" className="text-neutral-400 hover:text-white underline">
                   FAQ
                 </Link>

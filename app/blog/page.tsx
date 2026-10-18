@@ -75,7 +75,7 @@ export default function BlogPage() {
             >
               {/* Breadcrumb */}
               <nav aria-label="Breadcrumb" className="mb-8">
-                <ol className="flex items-center justify-center gap-1 text-sm text-neutral-500">
+                <ol className="flex items-center justify-center gap-1 text-sm text-white/55">
                   <li>
                     <Link
                       href="/"
@@ -171,12 +171,12 @@ export default function BlogPage() {
                     </p>
 
                     {/* Key Takeaway — citable content for AI engines */}
-                    <p className="text-sm text-neutral-500 italic leading-relaxed mb-6">
+                    <p className="text-sm text-white/55 italic leading-relaxed mb-6">
                       {post.keyTakeaway}
                     </p>
 
                     {/* Meta: Reading time + Date */}
-                    <div className="flex items-center gap-4 text-sm text-neutral-500 mb-8">
+                    <div className="flex items-center gap-4 text-sm text-white/55 mb-8">
                       <span className="flex items-center gap-1.5">
                         <Clock className="w-3.5 h-3.5" />
                         {post.readingTime} min read
@@ -252,7 +252,7 @@ export default function BlogPage() {
                   <ArrowUpRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </a>
               </div>
-              <p className="mt-6 text-sm text-neutral-500">
+              <p className="mt-6 text-sm text-white/55">
                 Prefer a reader? Subscribe via{" "}
                 <a
                   href="/blog/feed.xml"

@@ -74,7 +74,7 @@ export default function ResourcesPage() {
                       <p className="text-neutral-400 text-sm leading-relaxed mb-3">
                         {post.excerpt}
                       </p>
-                      <p className="text-neutral-500 text-xs mb-3">
+                      <p className="text-white/55 text-xs mb-3">
                         {post.readingTime} min read
                       </p>
                       <Link
@@ -266,18 +266,18 @@ export default function ResourcesPage() {
                 </h2>
                 <div className="flex flex-wrap gap-3">
                   <Link href="/blog" className="text-neutral-400 hover:text-white underline">Blog</Link>
-                  <span className="text-neutral-600">&bull;</span>
+                  <span className="text-neutral-600" aria-hidden="true">&bull;</span>
                   <Link href="/projects" className="text-neutral-400 hover:text-white underline">Projects</Link>
-                  <span className="text-neutral-600">&bull;</span>
+                  <span className="text-neutral-600" aria-hidden="true">&bull;</span>
                   <Link href="/production-support" className="text-neutral-400 hover:text-white underline">Production Support</Link>
-                  <span className="text-neutral-600">&bull;</span>
+                  <span className="text-neutral-600" aria-hidden="true">&bull;</span>
                   <Link href="/events" className="text-neutral-400 hover:text-white underline">Events</Link>
-                  <span className="text-neutral-600">&bull;</span>
+                  <span className="text-neutral-600" aria-hidden="true">&bull;</span>
                   <Link href="/faq" className="text-neutral-400 hover:text-white underline">FAQ</Link>
                 </div>
               </section>
 
-              <p className="text-xs text-neutral-600 mt-16 pt-6 border-t border-white/5">
+              <p className="text-xs text-white/55 mt-16 pt-6 border-t border-white/5">
                 Last updated: February 2026
               </p>
             </div>

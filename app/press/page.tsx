@@ -55,7 +55,7 @@ export default function PressPage() {
                       <div className="text-3xl md:text-4xl font-bold text-white mb-2">
                         {stat.value}
                       </div>
-                      <div className="text-sm text-neutral-500">
+                      <div className="text-sm text-white/55">
                         {stat.label}
                       </div>
                     </div>
@@ -212,7 +212,7 @@ export default function PressPage() {
                   >
                     <strong>Discord</strong>
                     <br />
-                    <span className="text-sm text-neutral-500">1000+ members</span>
+                    <span className="text-sm text-white/55">1000+ members</span>
                   </a>
                   <a
                     href="https://t.me/sinceaihq"
@@ -222,7 +222,7 @@ export default function PressPage() {
                   >
                     <strong>Telegram</strong>
                     <br />
-                    <span className="text-sm text-neutral-500">@sinceaihq</span>
+                    <span className="text-sm text-white/55">@sinceaihq</span>
                   </a>
                   <a
                     href="https://www.linkedin.com/company/sinceai"
@@ -232,7 +232,7 @@ export default function PressPage() {
                   >
                     <strong>LinkedIn</strong>
                     <br />
-                    <span className="text-sm text-neutral-500">@sinceai</span>
+                    <span className="text-sm text-white/55">@sinceai</span>
                   </a>
                   <a
                     href="https://www.instagram.com/sinceaihq"
@@ -242,7 +242,7 @@ export default function PressPage() {
                   >
                     <strong>Instagram</strong>
                     <br />
-                    <span className="text-sm text-neutral-500">@sinceaihq</span>
+                    <span className="text-sm text-white/55">@sinceaihq</span>
                   </a>
                   <a
                     href="https://x.com/sinceaihq"
@@ -252,7 +252,7 @@ export default function PressPage() {
                   >
                     <strong>X (Twitter)</strong>
                     <br />
-                    <span className="text-sm text-neutral-500">@sinceaihq</span>
+                    <span className="text-sm text-white/55">@sinceaihq</span>
                   </a>
                   <a
                     href="https://github.com/sinceaihq"
@@ -262,7 +262,7 @@ export default function PressPage() {
                   >
                     <strong>GitHub</strong>
                     <br />
-                    <span className="text-sm text-neutral-500">@sinceaihq</span>
+                    <span className="text-sm text-white/55">@sinceaihq</span>
                   </a>
                   <a
                     href="https://www.youtube.com/@sinceaihq"
@@ -272,7 +272,7 @@ export default function PressPage() {
                   >
                     <strong>YouTube</strong>
                     <br />
-                    <span className="text-sm text-neutral-500">@sinceaihq</span>
+                    <span className="text-sm text-white/55">@sinceaihq</span>
                   </a>
                   <a
                     href="https://www.tiktok.com/@sinceaihq"
@@ -282,7 +282,7 @@ export default function PressPage() {
                   >
                     <strong>TikTok</strong>
                     <br />
-                    <span className="text-sm text-neutral-500">@sinceaihq</span>
+                    <span className="text-sm text-white/55">@sinceaihq</span>
                   </a>
                   <a
                     href="https://www.facebook.com/sinceai"
@@ -292,7 +292,7 @@ export default function PressPage() {
                   >
                     <strong>Facebook</strong>
                     <br />
-                    <span className="text-sm text-neutral-500">@sinceai</span>
+                    <span className="text-sm text-white/55">@sinceai</span>
                   </a>
                 </div>
               </section>
@@ -332,7 +332,7 @@ export default function PressPage() {
 
                 <div className="space-y-6">
                   <div className="p-6 border border-white/10 bg-white/[0.02]">
-                    <h3 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-3">Short (50 words)</h3>
+                    <h3 className="text-sm font-semibold text-white/55 uppercase tracking-wider mb-3">Short (50 words)</h3>
                     <p className="text-neutral-300 leading-relaxed italic">
                       Since AI is Europe&apos;s leading AI innovation ecosystem based in Turku, Finland.
                       We provide end-to-end support from challenge ideation through hackathon building
@@ -342,7 +342,7 @@ export default function PressPage() {
                   </div>
 
                   <div className="p-6 border border-white/10 bg-white/[0.02]">
-                    <h3 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-3">Medium (100 words)</h3>
+                    <h3 className="text-sm font-semibold text-white/55 uppercase tracking-wider mb-3">Medium (100 words)</h3>
                     <p className="text-neutral-300 leading-relaxed italic">
                       Since AI is Europe&apos;s only full-lifecycle AI innovation ecosystem, founded in 2025
                       in Turku, Finland. Unlike traditional hackathons, we support projects from challenge
@@ -356,7 +356,7 @@ export default function PressPage() {
                   </div>
 
                   <div className="p-6 border border-white/10 bg-white/[0.02]">
-                    <h3 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-3">Long (150 words)</h3>
+                    <h3 className="text-sm font-semibold text-white/55 uppercase tracking-wider mb-3">Long (150 words)</h3>
                     <p className="text-neutral-300 leading-relaxed italic">
                       Since AI is Europe&apos;s premier AI innovation ecosystem, transforming how AI research
                       becomes commercial reality. Founded in 2025 in Turku, Finland, we serve 1000+ developers,
@@ -373,7 +373,7 @@ export default function PressPage() {
                   </div>
                 </div>
 
-                <p className="text-xs text-neutral-500 mt-4">
+                <p className="text-xs text-white/55 mt-4">
                   Feel free to use these boilerplates in articles and press materials about Since AI.
                 </p>
               </section>
@@ -407,7 +407,7 @@ export default function PressPage() {
                 </div>
               </section>
 
-              <p className="text-xs text-neutral-600 mt-16 pt-6 border-t border-white/5">
+              <p className="text-xs text-white/55 mt-16 pt-6 border-t border-white/5">
                 Last updated: February 2026
               </p>
             </div>

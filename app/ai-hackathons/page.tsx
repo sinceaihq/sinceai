@@ -184,7 +184,7 @@ export default function AIHackathonsPage() {
       <main className="flex flex-col w-full bg-black min-h-screen">
         <div className="w-full max-w-4xl mx-auto px-6 py-24 md:py-32">
           <FadeIn>
-            <p className="text-xs uppercase tracking-[0.2em] font-semibold text-neutral-500 mb-5">
+            <p className="text-xs uppercase tracking-[0.2em] font-semibold text-white/55 mb-5">
               AI Hackathons
             </p>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight leading-tight">
@@ -240,7 +240,7 @@ export default function AIHackathonsPage() {
                     </div>
                   ))}
                 </div>
-                <p className="text-neutral-500 text-sm mt-4">
+                <p className="text-white/55 text-sm mt-4">
                   More events announced on our{" "}
                   <TrackedLink
                     href={ORG.social.discord}
@@ -284,9 +284,9 @@ export default function AIHackathonsPage() {
                   <table className="w-full text-sm text-left">
                     <thead>
                       <tr className="border-b border-white/10">
-                        <th className="py-3 pr-6 text-neutral-500 font-semibold">Feature</th>
+                        <th className="py-3 pr-6 text-white/55 font-semibold">Feature</th>
                         <th className="py-3 pr-6 text-white font-semibold">Since AI Hackathon</th>
-                        <th className="py-3 text-neutral-500 font-semibold">Typical AI hackathon</th>
+                        <th className="py-3 text-white/55 font-semibold">Typical AI hackathon</th>
                       </tr>
                     </thead>
                     <tbody className="text-neutral-400">
@@ -428,30 +428,30 @@ export default function AIHackathonsPage() {
                   <Link href="/hackathon" className="text-neutral-400 hover:text-white underline">
                     Since AI Hackathon 2026
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link href="/for-builders" className="text-neutral-400 hover:text-white underline">
                     For builders
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link href="/europe-ai" className="text-neutral-400 hover:text-white underline">
                     European AI ecosystem
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link href="/partners" className="text-neutral-400 hover:text-white underline">
                     Partner with Since AI
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link href="/faq" className="text-neutral-400 hover:text-white underline">
                     FAQ
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link href="/about" className="text-neutral-400 hover:text-white underline">
                     About
                   </Link>
                 </div>
               </section>
 
-              <p className="text-xs text-neutral-600 mt-16 pt-6 border-t border-white/5">
+              <p className="text-xs text-white/55 mt-16 pt-6 border-t border-white/5">
                 Last updated: April 2026
               </p>
             </div>

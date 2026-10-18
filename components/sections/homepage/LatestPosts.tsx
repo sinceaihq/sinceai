@@ -73,7 +73,7 @@ export function LatestPosts() {
                 </p>
 
                 {/* Meta */}
-                <div className="flex items-center gap-3 text-xs text-neutral-500 mb-6">
+                <div className="flex items-center gap-3 text-xs text-white/55 mb-6">
                   <span className="flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     {post.readingTime} min

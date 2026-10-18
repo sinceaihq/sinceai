@@ -76,19 +76,19 @@ export default function StatsPage() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   <div className="p-6 border border-white/10 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">1000+</div>
-                    <div className="text-sm text-neutral-500">Active Members</div>
+                    <div className="text-sm text-white/55">Active Members</div>
                   </div>
                   <div className="p-6 border border-white/10 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">260+</div>
-                    <div className="text-sm text-neutral-500">Hackathon Participants</div>
+                    <div className="text-sm text-white/55">Hackathon Participants</div>
                   </div>
                   <div className="p-6 border border-white/10 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">30+</div>
-                    <div className="text-sm text-neutral-500">AI Projects Shipped</div>
+                    <div className="text-sm text-white/55">AI Projects Shipped</div>
                   </div>
                   <div className="p-6 border border-white/10 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">15+</div>
-                    <div className="text-sm text-neutral-500">Partner Companies</div>
+                    <div className="text-sm text-white/55">Partner Companies</div>
                   </div>
                 </div>
               </section>
@@ -100,19 +100,19 @@ export default function StatsPage() {
                 </h2>
                 <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-base">
                   <div>
-                    <dt className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-1">Developers & Engineers</dt>
+                    <dt className="text-sm font-semibold text-white/55 uppercase tracking-wider mb-1">Developers & Engineers</dt>
                     <dd className="text-neutral-300">350+</dd>
                   </div>
                   <div>
-                    <dt className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-1">Students</dt>
+                    <dt className="text-sm font-semibold text-white/55 uppercase tracking-wider mb-1">Students</dt>
                     <dd className="text-neutral-300">75+</dd>
                   </div>
                   <div>
-                    <dt className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-1">Researchers</dt>
+                    <dt className="text-sm font-semibold text-white/55 uppercase tracking-wider mb-1">Researchers</dt>
                     <dd className="text-neutral-300">50+</dd>
                   </div>
                   <div>
-                    <dt className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-1">Industry Professionals</dt>
+                    <dt className="text-sm font-semibold text-white/55 uppercase tracking-wider mb-1">Industry Professionals</dt>
                     <dd className="text-neutral-300">25+</dd>
                   </div>
                 </dl>
@@ -125,19 +125,19 @@ export default function StatsPage() {
                 </h2>
                 <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-base">
                   <div>
-                    <dt className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-1">Countries Represented</dt>
+                    <dt className="text-sm font-semibold text-white/55 uppercase tracking-wider mb-1">Countries Represented</dt>
                     <dd className="text-neutral-300">10+</dd>
                   </div>
                   <div>
-                    <dt className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-1">Headquarters</dt>
+                    <dt className="text-sm font-semibold text-white/55 uppercase tracking-wider mb-1">Headquarters</dt>
                     <dd className="text-neutral-300">Turku, Finland</dd>
                   </div>
                   <div>
-                    <dt className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-1">Primary Region</dt>
+                    <dt className="text-sm font-semibold text-white/55 uppercase tracking-wider mb-1">Primary Region</dt>
                     <dd className="text-neutral-300">Finland (60%)</dd>
                   </div>
                   <div>
-                    <dt className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-1">Global (outside Finland)</dt>
+                    <dt className="text-sm font-semibold text-white/55 uppercase tracking-wider mb-1">Global (outside Finland)</dt>
                     <dd className="text-neutral-300">40%</dd>
                   </div>
                 </dl>
@@ -152,10 +152,10 @@ export default function StatsPage() {
                   <table className="w-full text-sm text-left">
                     <thead>
                       <tr className="border-b border-white/10">
-                        <th className="py-3 pr-4 text-neutral-500 font-semibold">Event</th>
-                        <th className="py-3 pr-4 text-neutral-500 font-semibold">Date</th>
-                        <th className="py-3 pr-4 text-neutral-500 font-semibold">Participants</th>
-                        <th className="py-3 text-neutral-500 font-semibold">Projects</th>
+                        <th className="py-3 pr-4 text-white/55 font-semibold">Event</th>
+                        <th className="py-3 pr-4 text-white/55 font-semibold">Date</th>
+                        <th className="py-3 pr-4 text-white/55 font-semibold">Participants</th>
+                        <th className="py-3 text-white/55 font-semibold">Projects</th>
                       </tr>
                     </thead>
                     <tbody className="text-neutral-400">
@@ -194,7 +194,7 @@ export default function StatsPage() {
                     <div className="text-sm text-neutral-400">Average support duration</div>
                   </div>
                 </div>
-                <p className="text-neutral-500 text-sm">
+                <p className="text-white/55 text-sm">
                   <Link href="/production-support" className="text-neutral-400 hover:text-white underline">
                     Learn more about our production support program
                   </Link>
@@ -208,19 +208,19 @@ export default function StatsPage() {
                 </h2>
                 <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-base mb-6">
                   <div>
-                    <dt className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-1">Industry Partners</dt>
+                    <dt className="text-sm font-semibold text-white/55 uppercase tracking-wider mb-1">Industry Partners</dt>
                     <dd className="text-neutral-300">15+ (Valmet, Sandvik, Kongsberg, ElevenLabs, Antler, etc.)</dd>
                   </div>
                   <div>
-                    <dt className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-1">University Partners</dt>
+                    <dt className="text-sm font-semibold text-white/55 uppercase tracking-wider mb-1">University Partners</dt>
                     <dd className="text-neutral-300">2 (University of Turku, Turku AMK)</dd>
                   </div>
                   <div>
-                    <dt className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-1">Supporting Organizations</dt>
+                    <dt className="text-sm font-semibold text-white/55 uppercase tracking-wider mb-1">Supporting Organizations</dt>
                     <dd className="text-neutral-300">City of Turku, Business Turku, Aalto AI, AI Mad Lab</dd>
                   </div>
                   <div>
-                    <dt className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-1">Investor Network</dt>
+                    <dt className="text-sm font-semibold text-white/55 uppercase tracking-wider mb-1">Investor Network</dt>
                     <dd className="text-neutral-300">Antler partnership for startup support</dd>
                   </div>
                 </dl>
@@ -236,19 +236,19 @@ export default function StatsPage() {
                     <h3 className="text-lg font-bold text-white mb-2">Maritime Sound Signal Detection (Kongsberg)</h3>
                     <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
                       <div>
-                        <dt className="text-neutral-500">Built</dt>
+                        <dt className="text-white/55">Built</dt>
                         <dd className="text-neutral-300">72 hours</dd>
                       </div>
                       <div>
-                        <dt className="text-neutral-500">Support</dt>
+                        <dt className="text-white/55">Support</dt>
                         <dd className="text-neutral-300">8 weeks</dd>
                       </div>
                       <div>
-                        <dt className="text-neutral-500">Status</dt>
+                        <dt className="text-white/55">Status</dt>
                         <dd className="text-neutral-300">Production deployment</dd>
                       </div>
                       <div>
-                        <dt className="text-neutral-500">Impact</dt>
+                        <dt className="text-white/55">Impact</dt>
                         <dd className="text-neutral-300">Real-time maritime safety monitoring</dd>
                       </div>
                     </dl>
@@ -258,19 +258,19 @@ export default function StatsPage() {
                     <h3 className="text-lg font-bold text-white mb-2">Intelligent Spare Part Discovery (Sandvik)</h3>
                     <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
                       <div>
-                        <dt className="text-neutral-500">Built</dt>
+                        <dt className="text-white/55">Built</dt>
                         <dd className="text-neutral-300">72 hours (RAG-based system)</dd>
                       </div>
                       <div>
-                        <dt className="text-neutral-500">Support</dt>
+                        <dt className="text-white/55">Support</dt>
                         <dd className="text-neutral-300">6 weeks</dd>
                       </div>
                       <div>
-                        <dt className="text-neutral-500">Status</dt>
+                        <dt className="text-white/55">Status</dt>
                         <dd className="text-neutral-300">Production use</dd>
                       </div>
                       <div>
-                        <dt className="text-neutral-500">Impact</dt>
+                        <dt className="text-white/55">Impact</dt>
                         <dd className="text-neutral-300">8+ hours saved per search</dd>
                       </div>
                     </dl>
@@ -292,7 +292,7 @@ export default function StatsPage() {
                     {ORG.contact.infoEmail}
                   </a>
                 </p>
-                <p className="text-sm text-neutral-500 mt-4">
+                <p className="text-sm text-white/55 mt-4">
                   Also see:{" "}
                   <Link href="/press" className="text-neutral-400 hover:text-white underline">Press & Media</Link>
                   {" "}|{" "}
@@ -302,7 +302,7 @@ export default function StatsPage() {
                 </p>
               </section>
 
-              <p className="text-xs text-neutral-600 mt-16 pt-6 border-t border-white/5">
+              <p className="text-xs text-white/55 mt-16 pt-6 border-t border-white/5">
                 Last updated: February 2026. Next update: May 2026.
               </p>
             </div>

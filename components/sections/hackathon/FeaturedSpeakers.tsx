@@ -72,7 +72,7 @@ function SocialLink({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="text-neutral-500 hover:text-white transition-colors duration-300"
+      className="text-white/55 hover:text-white transition-colors duration-300"
     >
       <Icon size={18} strokeWidth={1.5} />
     </a>
@@ -141,7 +141,7 @@ function SpeakerCard({ speaker }: { speaker: Speaker }) {
         <div className="space-y-6">
           {speaker.talks.map((talk, index) => (
             <div key={index} className="border-l border-white/10 pl-6">
-              <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-2">
+              <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-2">
                 {"// "}{talk.type}
               </p>
               <h4 className="text-base font-bold text-white mb-2 leading-snug">
@@ -162,7 +162,7 @@ export function FeaturedSpeakers() {
   return (
     <section className="py-24 px-6 border-t border-white/10">
       <div className="mx-auto max-w-6xl">
-        <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+        <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
           {"// featured speakers"}
         </p>
         <h2 className="text-3xl font-bold tracking-tight text-white mb-10">

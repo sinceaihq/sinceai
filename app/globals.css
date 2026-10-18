@@ -362,3 +362,40 @@ html:has(body[data-scroll-locked]) {
     display: none !important;
   }
 }
+
+/* ── Entrance motion (FadeIn / FadeInView) — CSS only, no JavaScript ───────
+   FadeIn plays on first paint and starts at 0.01 opacity, so the content
+   counts for LCP from the first frame. FadeInView is a scroll-driven
+   animation; browsers without animation-timeline simply show the content. */
+@keyframes site-fade-up {
+  from { opacity: 0.01; translate: 0 18px; }
+  to { opacity: 1; translate: 0 0; }
+}
+.fade-in {
+  animation: site-fade-up var(--fade-duration, 0.8s) cubic-bezier(0.22, 1, 0.36, 1) var(--fade-delay, 0s) both;
+}
+@supports (animation-timeline: view()) {
+  .fade-in-view {
+    animation: site-fade-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 55%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fade-in,
+  .fade-in-view {
+    animation: none;
+  }
+}
+
+/* The Hackathon 2026 announcement card (HackathonPopup) slides up from the edge. */
+@keyframes announce-in {
+  from { opacity: 0; translate: 0 16px; }
+  to { opacity: 1; translate: 0 0; }
+}
+.announce-in {
+  animation: announce-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .announce-in { animation: none; }
+}

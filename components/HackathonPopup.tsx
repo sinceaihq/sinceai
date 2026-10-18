@@ -2,214 +2,127 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useId, useState } from "react";
 import { X } from "lucide-react";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { trackEvent, ANALYTICS_EVENTS } from "@/lib/gtag";
 import { GUIDE_BASE_PATH } from "@/lib/hackathon-2026/route";
 
 const STORAGE_KEY = "hackathon2026_popup_v1";
+const SNOOZE_MS = 7 * 24 * 60 * 60 * 1000;
+/** Show once the visitor has read this share of the page — or after a while on it. */
+const SCROLL_SHARE = 0.35;
+const IDLE_MS = 25_000;
 
-// Module-level so the same reference is used for add and remove
-let _preventScroll: ((e: Event) => void) | null = null;
-
-let _scrollY = 0;
-
-function lockScroll() {
-  if (_preventScroll) return;
-  _preventScroll = (e: Event) => e.preventDefault();
-  window.addEventListener("wheel", _preventScroll, { passive: false, capture: true });
-  window.addEventListener("touchmove", _preventScroll, { passive: false, capture: true });
-  _scrollY = window.scrollY;
-  // Use setProperty with 'important' to beat Radix's injected
-  // "body[data-scroll-locked] { position: relative !important }"
-  document.body.style.setProperty("position", "fixed", "important");
-  document.body.style.setProperty("top", `-${_scrollY}px`, "important");
-  document.body.style.setProperty("width", "100%", "important");
-  document.body.style.setProperty("overflow", "hidden", "important");
-  document.documentElement.style.setProperty("overflow", "hidden", "important");
-  document.documentElement.style.setProperty("scroll-behavior", "auto", "important");
+function snoozed(): boolean {
+  try {
+    const at = Number(localStorage.getItem(STORAGE_KEY));
+    return Number.isFinite(at) && at > 0 && Date.now() - at < SNOOZE_MS;
+  } catch {
+    return false;
+  }
 }
 
-function unlockScroll() {
-  if (!_preventScroll) return;
-  window.removeEventListener("wheel", _preventScroll, { capture: true });
-  window.removeEventListener("touchmove", _preventScroll, { capture: true });
-  _preventScroll = null;
-  document.body.style.removeProperty("position");
-  document.body.style.removeProperty("top");
-  document.body.style.removeProperty("width");
-  document.body.style.removeProperty("overflow");
-  document.documentElement.style.removeProperty("overflow");
-  document.documentElement.style.removeProperty("scroll-behavior");
-  window.scrollTo(0, _scrollY);
+function snooze() {
+  try {
+    localStorage.setItem(STORAGE_KEY, String(Date.now()));
+  } catch {
+    /* private mode: it simply may show again */
+  }
 }
 
+/**
+ * The Hackathon 2026 announcement: a small card at the edge of the screen,
+ * never a modal. It appears only after the visitor has engaged with the page
+ * (scrolled a third of it, or stayed a while), never blocks scrolling or
+ * steals focus, closes with Escape, and stays away for a week once closed —
+ * no intrusive interstitial on arrival (Google's page-experience guidance),
+ * and never the page's largest paint.
+ */
 export function HackathonPopup() {
+  const pathname = usePathname() ?? "";
+  const titleId = useId();
   const [open, setOpen] = useState(false);
-  // The Field Guide is an operational tool for people already at the event —
-  // never interrupt it with the "Apply" popup.
-  const suppressed = usePathname()?.startsWith(GUIDE_BASE_PATH) ?? false;
+  // The Field Guide is an operational tool, and /hackathon has its own Apply bar.
+  const suppressed = pathname.startsWith(GUIDE_BASE_PATH) || pathname === "/hackathon";
+
+  const dismiss = useCallback(() => {
+    snooze();
+    setOpen(false);
+  }, []);
 
   useEffect(() => {
-    if (suppressed) return;
-    const dismissed = localStorage.getItem(STORAGE_KEY);
-    if (dismissed && Date.now() - Number(dismissed) < 24 * 60 * 60 * 1000) return;
-    const t = setTimeout(() => {
-      lockScroll();
+    if (suppressed || snoozed()) return;
+    let done = false;
+    const show = () => {
+      if (done) return;
+      done = true;
       setOpen(true);
-      localStorage.setItem(STORAGE_KEY, String(Date.now()));
-    }, 2000);
-    return () => clearTimeout(t);
+      cleanup();
+    };
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      if (max > 0 && window.scrollY / max >= SCROLL_SHARE) show();
+    };
+    const timer = window.setTimeout(show, IDLE_MS);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    function cleanup() {
+      window.clearTimeout(timer);
+      window.removeEventListener("scroll", onScroll);
+    }
+    return cleanup;
   }, [suppressed]);
 
-  function dismiss() {
-    unlockScroll();
-    setOpen(false);
-  }
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") dismiss();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, dismiss]);
+
+  if (!open || suppressed) return null;
 
   return (
-    <Dialog open={open} onOpenChange={() => {}}>
-      <DialogContent
-        showCloseButton={false}
-        aria-describedby={undefined}
-        onInteractOutside={(e) => e.preventDefault()}
-        onEscapeKeyDown={(e) => e.preventDefault()}
-        className="rounded-none border-0 p-0 gap-0 sm:max-w-md"
-        style={{ background: "#000", border: "2px solid var(--color-brand)" }}
+    <aside
+      aria-labelledby={titleId}
+      className="announce-in fixed inset-x-4 bottom-4 z-50 border border-(--color-brand)/60 bg-black p-5 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-[22rem]"
+    >
+      <button
+        type="button"
+        onClick={dismiss}
+        aria-label="Close the Since AI Hackathon 2026 announcement"
+        className="absolute top-2 right-2 inline-flex h-11 w-11 items-center justify-center text-neutral-400 transition-colors hover:text-white cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
       >
-        <DialogTitle className="sr-only">Since AI Hackathon 2026</DialogTitle>
-
-        <DialogClose
-          onClick={dismiss}
-          aria-label="Close"
-          style={{
-            position: "absolute",
-            top: "16px",
-            right: "16px",
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            color: "#fff",
-            padding: "4px",
-            lineHeight: 0,
-            zIndex: 10,
+        <X size={18} strokeWidth={2} aria-hidden="true" />
+      </button>
+      <p className="text-xs font-mono uppercase tracking-widest text-(--color-brand)">6–8 Nov 2026 · Turku, Finland</p>
+      <h2 id={titleId} className="mt-2 pr-8 text-xl font-bold tracking-tight text-white">
+        Since AI Hackathon 2026
+      </h2>
+      <p className="mt-2 text-sm text-neutral-300 leading-relaxed">
+        1,000+ builders, real company challenges and a €50,000 prize pool — with 8 weeks of production support for the
+        strongest teams.
+      </p>
+      <div className="mt-4 flex gap-3">
+        <Link
+          href="https://sinceai.app/sign-up"
+          onClick={() => {
+            trackEvent(ANALYTICS_EVENTS.REGISTER_CLICK);
+            dismiss();
           }}
+          className="inline-flex flex-1 items-center justify-center bg-white text-black rounded-none px-4 py-2.5 text-sm font-semibold hover:bg-neutral-100 transition-colors cursor-pointer"
         >
-          <X size={20} strokeWidth={2.5} />
-        </DialogClose>
-
-        <div style={{ padding: "clamp(24px, 4vw, 36px)", position: "relative", overflow: "hidden" }}>
-          {/* Ghost logo watermark */}
-          <img
-            src="/assets/logo/sinceai-white.png"
-            alt=""
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "85%",
-              opacity: 0.10,
-              pointerEvents: "none",
-              userSelect: "none",
-              zIndex: 0,
-            }}
-          />
-          {/* Logo + heading row */}
-          <div style={{ marginBottom: "20px" }}>
-            <h2
-              style={{
-                fontSize: "clamp(20px, 4vw, 28px)",
-                fontWeight: 700,
-                lineHeight: 1.05,
-                color: "#fff",
-                margin: 0,
-              }}
-            >
-              Since AI<br />Hackathon 2026.
-            </h2>
-          </div>
-
-          {/* Prize */}
-          <p
-            style={{
-              fontSize: "clamp(20px, 4vw, 28px)",
-              fontWeight: 700,
-              color: "var(--color-brand)",
-              margin: "0 0 20px",
-              lineHeight: 1,
-            }}
-          >
-            €50,000 prize pool
-          </p>
-
-          {/* Date */}
-          <p
-            style={{
-              fontSize: "13px",
-              color: "#fff",
-              letterSpacing: "0.01em",
-              marginBottom: "20px",
-            }}
-          >
-            November 6–8, 2026 · Turku, Finland
-          </p>
-
-          {/* Tagline */}
-          <p
-            style={{
-              fontSize: "13px",
-              color: "#fff",
-              lineHeight: 1.6,
-              marginBottom: "20px",
-            }}
-          >
-            Compete alongside 1,000+ AI engineers, researchers, and founders from across the globe. Ship something real in 72 hours.
-          </p>
-
-          {/* Body */}
-          <p
-            className="text-neutral-400"
-            style={{
-              fontSize: "13px",
-              lineHeight: 1.6,
-              marginBottom: "20px",
-            }}
-          >
-Backed by Google for Developers, ElevenLabs, Aiven, LUMI supercomputer, and more. Open to builders worldwide.
-          </p>
-
-          {/* CTA */}
-          <Link
-            href="https://sinceai.app/sign-up"
-            onClick={() => {
-              trackEvent(ANALYTICS_EVENTS.REGISTER_CLICK);
-              dismiss();
-            }}
-            className="popup-apply-btn"
-            style={{
-              position: "relative",
-              zIndex: 1,
-              display: "block",
-              fontSize: "13px",
-              fontWeight: 500,
-              padding: "12px 20px",
-              textDecoration: "none",
-              textAlign: "center",
-              margin: 0,
-            }}
-          >
-            Apply →
-          </Link>
-        </div>
-      </DialogContent>
-    </Dialog>
+          Apply →
+        </Link>
+        <Link
+          href="/hackathon"
+          onClick={snooze}
+          className="inline-flex flex-1 items-center justify-center border border-white/20 text-white rounded-none px-4 py-2.5 text-sm font-semibold hover:border-white transition-colors cursor-pointer"
+        >
+          Learn more
+        </Link>
+      </div>
+    </aside>
   );
 }
