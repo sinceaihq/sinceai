@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
-import { GUIDE_BASE_PATH, GUIDES, guidePath } from "@/lib/hackathon-2026";
+import { DISCORD_GUIDE, DISCORD_GUIDE_PATH, GUIDE_BASE_PATH, GUIDES, guidePath } from "@/lib/hackathon-2026";
 import { cn } from "@/lib/utils";
 
 const NAV = [
   ...GUIDES.map((g) => ({ href: guidePath(g.audience), label: g.navLabel })),
   { href: `${GUIDE_BASE_PATH}/venue`, label: "Venue & 3D" },
+  { href: DISCORD_GUIDE_PATH, label: DISCORD_GUIDE.navLabel },
 ];
 
 /**
@@ -70,14 +71,14 @@ export function GuideHeader() {
         </div>
 
         <nav aria-label="Field Guide" className="hidden lg:block">
-          <ul className="flex items-center gap-6">
+          <ul className="flex items-center gap-4 xl:gap-6">
             {NAV.map(({ href, label }) => (
               <li key={href}>
                 <Link
                   href={href}
                   aria-current={isActive(href) ? "page" : undefined}
                   className={cn(
-                    "text-[13px] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white",
+                    "whitespace-nowrap text-[13px] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white",
                     isActive(href) ? "text-white" : "text-neutral-400 hover:text-white",
                   )}
                 >
