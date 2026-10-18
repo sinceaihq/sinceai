@@ -18,7 +18,7 @@ import { GUIDE_BASE_PATH } from "./route";
  * organiser decisions of 3 Oct 2026 →
  * 3 Oct info compilation → 2–3 Oct venue maps → role schedules → older
  * production files. Public marketing copy elsewhere on sinceai.ai is NOT the
- * operational authority — see IMPLEMENTATION_REPORT.md for known mismatches.
+ * operational authority — see docs/hackathon-2026-field-guide-report.md for known mismatches.
  */
 export const EVENT_2026 = {
   name: "Since AI Hackathon 2026",
