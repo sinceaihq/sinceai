@@ -1,0 +1,24 @@
+name: Content correction
+description: A fact, date, name, link or text on sinceai.ai is wrong or out of date.
+title: "copy: "
+labels: ["content"]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: Page URL
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: What the page says now
+    validations:
+      required: true
+  - type: textarea
+    id: correct
+    attributes:
+      label: What it should say
+      description: Include a source if you have one (an official page, an announcement, an email from the organisers).
+    validations:
+      required: true

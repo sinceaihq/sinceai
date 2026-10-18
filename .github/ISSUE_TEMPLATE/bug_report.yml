@@ -1,0 +1,40 @@
+name: Bug report
+description: Something on sinceai.ai is broken or behaves unexpectedly.
+title: "fix: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for helping improve sinceai.ai. Please check that the issue has not already been reported.
+  - type: input
+    id: url
+    attributes:
+      label: Page URL
+      placeholder: https://sinceai.ai/hackathon
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open …
+        2. Click …
+        3. See …
+  - type: input
+    id: environment
+    attributes:
+      label: Browser and device
+      placeholder: Chrome 130 on macOS, Safari on iPhone 15 …
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Drag images here if they help explain the problem.

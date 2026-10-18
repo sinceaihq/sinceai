@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Since AI community website (sinceai.fi) — a Next.js 16 marketing site for an AI developers and hackathon community based in Turku, Finland. Built with React 19, TypeScript 5, and Tailwind CSS v4.
+Since AI website (sinceai.ai), open source under the MIT License (see NOTICE.md for what it does not cover) — a Next.js 16 site for an AI developers and hackathon community based in Turku, Finland. Built with React 19, TypeScript 5, and Tailwind CSS v4.
 
 ## Commands
 

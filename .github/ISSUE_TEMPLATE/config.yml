@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/sinceaihq/sinceai/security/advisories/new
+    about: Report security issues privately — never in a public issue.
+  - name: Questions about Since AI or our events
+    url: https://discord.gg/vMWdrVUPws
+    about: Ask the community on Discord.
+  - name: Partnerships, press and everything else
+    url: https://sinceai.ai/contact
+    about: Contact the Since AI team.
