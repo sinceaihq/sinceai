@@ -3017,6 +3017,8 @@ export async function buildGround(ctx: TwinContext): Promise<GroundModule> {
   const labels = [
     makeLabel("Jussin aukio", "landmark", 52, 6, 6, "campus"),
     makeLabel("Kupittaa station", "landmark", 212, 4, -122, "campus"),
+    // BioCity's car park entrance (OSM node 6774131670), on the driveway off Joukahaisenkatu.
+    makeLabel("P · BioCity car park", "landmark", 84, heights.y(84, -27.2, "low") + 3, -27.2, "campus"),
     street("Tykistökatu", -38, -38),
     street("Tykistökatu", 4, -95),
     street("Lemminkäisenkatu", -36, 16),

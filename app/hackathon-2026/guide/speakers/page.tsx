@@ -14,6 +14,7 @@ import {
   SectionNav,
   TextLink,
   VenueCards,
+  ParkingNote,
 } from "@/components/guide";
 import {
   CHECKLISTS,
@@ -167,6 +168,7 @@ export default function SpeakerGuidePage() {
           lede="Stage moments are at EduCity. If you mentor or visit the build, BioCity and Joki are a 3-minute walk away."
         />
         <VenueCards venues={["educity", "biocity", "joki"]} />
+        <ParkingNote className="mt-6" />
         <div className="mt-8">
           <RouteCard />
         </div>
