@@ -56,7 +56,7 @@ Anyone can learn from it, reuse it and build on where we left off. Issues and pu
 | Framework | [Next.js 16](https://nextjs.org/) (App Router, React Server Components), [React 19](https://react.dev/) |
 | Language | [TypeScript 5](https://www.typescriptlang.org/) (strict) |
 | Styling | [Tailwind CSS v4](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/) on [Radix UI](https://www.radix-ui.com/) |
-| Motion and 3D | [Framer Motion](https://motion.dev/), [three.js](https://threejs.org/) |
+| Motion and 3D | CSS animations (first-paint and scroll-driven, no JavaScript), [three.js](https://threejs.org/) for the campus model |
 | Content | MDX blog articles (`@next/mdx`) |
 | Forms | React Hook Form + Zod, EmailJS |
 | Testing | [Jest](https://jestjs.io/) + Testing Library, [Playwright](https://playwright.dev/) with axe accessibility checks |
@@ -105,7 +105,7 @@ components/
   sections/              Page sections (homepage, hackathon)
   guide/                 Field Guide UI; guide/twin/ is the campus 3D model
   ui/                    shadcn/ui primitives
-  motion-primitives/     Framer Motion wrappers
+  motion-primitives/     FadeIn / FadeInView — CSS-only entrance motion
 content/blog/            Blog articles (MDX)
 lib/
   org.ts                 Organisation facts: name, legal details, contacts, social links

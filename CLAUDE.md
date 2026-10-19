@@ -9,7 +9,7 @@ Since AI website (sinceai.ai), open source under the MIT License (see NOTICE.md 
 ## Commands
 
 - `npm run dev` — Start development server
-- `npm run build` — Production build (webpack: Turbopack's production chunking duplicated framer-motion three times, so public pages shipped ~35 % more JS; same pixels, smaller worker — measured 5 Oct 2026. `npm run dev` stays on Turbopack.)
+- `npm run build` — Production build (webpack: Turbopack's production chunking produced ~35 % more JS on public pages, measured 5 Oct 2026. `npm run dev` stays on Turbopack.)
 - `npm run lint` — Run ESLint
 - `npm start` — Start production server
 - `npm ci --legacy-peer-deps` — Install dependencies (legacy-peer-deps required for CI)
@@ -28,7 +28,8 @@ Jest is configured (`npm run test`). Add tests when introducing testable logic.
 - `components/sections/` — Page-specific section components, organized by page (currently only `homepage/`). Each subdirectory has a barrel `index.ts`.
 - `components/ui/` — shadcn/ui components (new-york style, RSC-enabled, lucide icons). Add new ones via `npx shadcn@latest add <component>`.
 - `components/ui/ButtonPair.tsx` — reusable CTA button pair (primary white + ghost border). Use this for all hero/section CTA pairs.
-- `components/motion-primitives/` — Reusable animation components (Framer Motion wrappers).
+- `components/motion-primitives/` — `FadeIn` / `FadeInView`: CSS-only entrance motion (no framer-motion). Content must be in the HTML and visible without JavaScript — never start text at opacity 0.
+- Performance rules (public site): pages are server components unless they need state; no scroll-jacking libraries; Google Analytics loads `lazyOnload`; fonts are self-hosted in `app/fonts/` (`next/font/local`); new images are pre-sized and compressed (`images.unoptimized` is on).
 - `lib/org.ts` — Single source of truth for organization constants (name, contact info, social links, stats).
 - `lib/sinceai.ts` — Site-wide constants (event dates, copy, links).
 - `lib/projects.ts` — Challenge theme data with typed `ChallengeTheme` interface.

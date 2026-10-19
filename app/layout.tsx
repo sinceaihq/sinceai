@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Inter } from "next/font/google";
+import localFont from "next/font/local";
 import Script from "next/script";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import "./globals.css";
@@ -9,24 +9,27 @@ import { HackathonPopup } from "@/components/HackathonPopup";
 import { ORG } from "@/lib/org";
 import { GA_ID } from "@/lib/gtag";
 
-// The site font. Its fallback is a monospace stack with nearly the same advance width (0.6 em),
-// so text keeps its line breaks while JetBrains Mono loads — Next's default fallback is a
-// stretched Arial, which re-wraps headlines when the real font swaps in.
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
+// Self-hosted variable fonts (app/fonts, SIL Open Font License): builds never depend on the
+// Google Fonts network, and visitors never contact a third party for them.
+// The site font's fallback is a monospace stack with nearly the same advance width (0.6 em),
+// so text keeps its line breaks while JetBrains Mono loads.
+const jetbrainsMono = localFont({
+  src: "./fonts/JetBrainsMono-latin-variable.woff2",
+  weight: "100 800",
+  style: "normal",
   display: "swap",
   variable: "--font-mono",
-  weight: ["400", "500", "700"],
   adjustFontFallback: false,
   fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "Liberation Mono", "monospace"],
 });
 
 // Used only where explicitly needed, so it is not preloaded ahead of the site font.
-const inter = Inter({
-  subsets: ["latin"],
+const inter = localFont({
+  src: "./fonts/Inter-latin-variable.woff2",
+  weight: "100 900",
+  style: "normal",
   display: "swap",
   variable: "--font-sans",
-  weight: ["400", "500"],
   preload: false,
 });
 

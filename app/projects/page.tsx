@@ -4,7 +4,6 @@ import Link from "next/link";
 import SmoothScroll from "@/components/smoothScroll";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 import {
   getIndustries,
@@ -43,12 +42,7 @@ export default function ProjectsPage() {
         {/* Hero Section - Minimal */}
         <section className="relative w-full px-6 py-24 md:py-32">
           <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="text-center"
-            >
+            <div className="fade-in text-center">
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight">
                 Projects
               </h1>
@@ -60,19 +54,14 @@ export default function ProjectsPage() {
               <p className="text-sm text-white/55 max-w-2xl mx-auto">
                 Public summaries only. Full challenge materials and solutions are not published.
               </p>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Filters Section */}
         <section className="relative w-full px-6 py-8 border-t border-white/5">
           <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            >
+            <div className="fade-in-view">
               {/* Search */}
               <div className="mb-6">
                 <div className="relative">
@@ -155,13 +144,14 @@ export default function ProjectsPage() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Challenge Themes Grid */}
-        <section className="relative w-full px-6 py-24">
+        <section className="relative w-full px-6 py-24" aria-labelledby="themes-title">
           <div className="max-w-6xl mx-auto">
+            <h2 id="themes-title" className="sr-only">Challenge themes</h2>
             {filteredThemes.length === 0 ? (
               <div className="text-center py-20">
                 <p className="text-white/55 text-lg">
@@ -170,15 +160,8 @@ export default function ProjectsPage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {filteredThemes.map((theme, index) => (
-                  <motion.div
-                    key={theme.slug}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.05, ease: "easeOut" }}
-                    className="border border-white/10 p-8 bg-white/[0.02] hover:border-white/20 transition-all duration-300 group"
-                  >
+                {filteredThemes.map((theme) => (
+                  <div key={theme.slug} className="fade-in-view border border-white/10 p-8 bg-white/[0.02] hover:border-white/20 transition-all duration-300 group">
                     {/* Sponsor */}
                     <div className="flex items-center justify-between mb-4">
                       <span className="text-xs font-semibold text-white/55 uppercase tracking-wider">
@@ -253,7 +236,7 @@ export default function ProjectsPage() {
                         Sponsor a challenge →
                       </Link>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             )}
@@ -263,34 +246,24 @@ export default function ProjectsPage() {
         {/* Credibility Strip */}
         <section className="relative w-full px-6 py-24 border-t border-white/5">
           <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            >
+            <div className="fade-in-view">
               <p className="text-neutral-400 mb-4">
                 <span className="text-white font-semibold">Since AI Hackathon 2025</span> — Nov 21–23, 2025 • EduCity, Turku • 260+ builders
               </p>
               <p className="text-white/55 text-sm">
                 <span className="text-neutral-300">Next:</span> Hackathon 2026 — November 6-8, 2026
               </p>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Final CTA Section */}
         <section className="relative w-full px-6 py-24 border-t border-white/5">
           <div className="max-w-3xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            >
-              <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
+            <div className="fade-in-view">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
                 Build with the Best
-              </h3>
+              </h2>
               <p className="text-lg text-neutral-400 mb-8 max-w-xl mx-auto">
                 Join 1000+ AI builders or partner with Since AI for your next challenge.
               </p>
@@ -312,7 +285,7 @@ export default function ProjectsPage() {
                   Partner with Since AI
                 </Link>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
       </main>

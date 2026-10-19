@@ -1,7 +1,5 @@
-"use client";
 import React, { Suspense } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { FaLinkedin } from "react-icons/fa";
 
 import SmoothScroll from "@/components/smoothScroll";
@@ -366,8 +364,14 @@ const LeadCard: React.FC<{ person: TeamMember }> = ({ person }) => (
           </a>
         )}
         {person.linkedin && (
-          <a href={person.linkedin} target="_blank" rel="noopener noreferrer" className="text-white/55 hover:text-white transition-colors inline-block">
-            <FaLinkedin size={15} />
+          <a
+            href={person.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${person.name} on LinkedIn (opens in a new tab)`}
+            className="-m-3 inline-flex h-11 w-11 items-center justify-center text-white/55 hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+          >
+            <FaLinkedin size={15} aria-hidden="true" />
           </a>
         )}
       </div>
@@ -409,8 +413,14 @@ const MemberCard: React.FC<{ person: TeamMember }> = ({ person }) => (
       )}
     </div>
     {person.linkedin && (
-      <a href={person.linkedin} target="_blank" rel="noopener noreferrer" className="ml-auto shrink-0 self-start text-white/55 hover:text-white transition-colors">
-        <FaLinkedin size={15} />
+      <a
+        href={person.linkedin}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${person.name} on LinkedIn (opens in a new tab)`}
+        className="-m-3 ml-auto inline-flex h-11 w-11 shrink-0 self-start items-center justify-center text-white/55 hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+      >
+        <FaLinkedin size={15} aria-hidden="true" />
       </a>
     )}
   </div>
@@ -428,30 +438,15 @@ function ContactPageContent() {
         </div>
 
         <div className="relative z-20 flex flex-col items-center space-y-8 text-center max-w-4xl mx-auto">
-          <motion.h1
-            className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tighter leading-tight text-white"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0, ease: [0.22, 1, 0.36, 1] }}
-          >
+          <h1 className="fade-in text-5xl sm:text-6xl md:text-7xl font-bold tracking-tighter leading-tight text-white">
             Let&apos;s build together.
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            className="text-lg sm:text-xl text-neutral-400 max-w-2xl"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0, ease: [0.22, 1, 0.36, 1] }}
-          >
+          <p className="fade-in text-lg sm:text-xl text-neutral-400 max-w-2xl">
             Questions about partnerships, events, or community? We typically respond within 24 hours.
-          </motion.p>
+          </p>
 
-          <motion.div
-            className="flex flex-col sm:flex-row items-center gap-4 pt-4"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0, ease: [0.22, 1, 0.36, 1] }}
-          >
+          <div className="fade-in flex flex-col sm:flex-row items-center gap-4 pt-4">
             <ButtonPair
               primaryLabel="Join Discord"
               primaryHref={config.discordUrl}
@@ -459,7 +454,7 @@ function ContactPageContent() {
               secondaryLabel="Email Us"
               secondaryHref="mailto:info@sinceai.fi"
             />
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -473,30 +468,18 @@ function ContactPageContent() {
       {/* Team Section - Organized by Department */}
       <section className="w-full bg-black py-24 px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto">
-          <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-          >
+          <div className="fade-in-view text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
               Team
             </h2>
             <p className="text-lg text-neutral-400 max-w-xl mx-auto">
               Reach out directly to the right person.
             </p>
-          </motion.div>
+          </div>
 
           <div className="space-y-12">
-            {teamSections.map((section, sectionIndex) => (
-              <motion.div
-                key={section.department}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: sectionIndex * 0.06, ease: "easeOut" }}
-              >
+            {teamSections.map((section) => (
+              <div className="fade-in-view" key={section.department}>
                 <p className="text-xs font-mono uppercase tracking-widest text-neutral-300 mb-4">
                   {section.department}
                 </p>
@@ -510,7 +493,7 @@ function ContactPageContent() {
                     ))}
                   </div>
                 )}
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -519,20 +502,14 @@ function ContactPageContent() {
       {/* Quick FAQ - Minimal */}
       <section className="w-full bg-black py-24 px-6 border-t border-white/5">
         <div className="max-w-4xl mx-auto">
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-          >
+          <div className="fade-in-view text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
               Quick answers
             </h2>
             <p className="text-lg text-neutral-400">
               Common questions about Since AI.
             </p>
-          </motion.div>
+          </div>
 
           <div className="space-y-6">
             {[
@@ -553,38 +530,25 @@ function ContactPageContent() {
                 a: "No. We welcome builders, researchers, founders, and professionals working on AI projects."
               },
             ].map((faq, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
-                className="border border-white/5 p-6 hover:border-white/10 transition-colors"
-              >
+              <div key={index} className="fade-in-view border border-white/5 p-6 hover:border-white/10 transition-colors">
                 <h3 className="text-white font-semibold text-lg mb-2">
                   {faq.q}
                 </h3>
                 <p className="text-neutral-400 leading-relaxed">
                   {faq.a}
                 </p>
-              </motion.div>
+              </div>
             ))}
           </div>
 
-          <motion.div
-            className="text-center mt-12"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
-          >
+          <div className="fade-in-view text-center mt-12">
             <a
               href="/faq"
               className="inline-flex items-center gap-2 text-neutral-400 hover:text-white transition-colors text-sm"
             >
               View all FAQs →
             </a>
-          </motion.div>
+          </div>
         </div>
       </section>
     </>

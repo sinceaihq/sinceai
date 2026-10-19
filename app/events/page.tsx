@@ -1,11 +1,9 @@
-"use client";
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import SmoothScroll from "@/components/smoothScroll";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { motion } from "framer-motion";
 import { Calendar, MapPin, ExternalLink, ArrowRight } from "lucide-react";
 import { FIRST_EVENT, COPY, LINKS } from "@/lib/sinceai";
 import { ButtonPair } from "@/components/ui/ButtonPair";
@@ -25,12 +23,7 @@ export default function EventsPage() {
         {/* Hero Section - Minimal */}
         <section className="relative w-full px-6 py-24 md:py-32">
           <div className="max-w-5xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="text-center"
-            >
+            <div className="fade-in text-center">
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight">
                 Events
               </h1>
@@ -38,19 +31,14 @@ export default function EventsPage() {
               <p className="text-xl md:text-2xl text-neutral-400 max-w-2xl mx-auto">
                 High-signal hackathons and meetups for builders who ship.
               </p>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Upcoming Event - Most Prominent */}
         <section className="relative w-full px-6 py-24 border-t border-white/5">
           <div className="max-w-5xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            >
+            <div className="fade-in-view">
               {/* Label */}
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8">
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
@@ -104,19 +92,14 @@ export default function EventsPage() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Past Event */}
         <section className="relative w-full px-6 py-24 border-t border-white/5">
           <div className="max-w-5xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            >
+            <div className="fade-in-view">
               {/* Label */}
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8">
                 <span className="text-sm font-semibold text-neutral-400">Past Events</span>
@@ -213,19 +196,14 @@ export default function EventsPage() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Subscribe Section - Minimal */}
         <section className="relative w-full px-6 py-24 border-t border-white/5">
           <div className="max-w-3xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            >
+            <div className="fade-in-view">
               <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
                 Stay Updated
               </h3>
@@ -252,7 +230,7 @@ export default function EventsPage() {
                 secondaryHref="https://t.me/sinceaihq"
                 className="justify-center"
               />
-            </motion.div>
+            </div>
           </div>
         </section>
       </main>

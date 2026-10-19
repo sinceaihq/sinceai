@@ -89,16 +89,16 @@ export default function FAQPage() {
                 Last updated: September 29, 2026.
               </p>
 
-              {/* 3. FAQ list — flat H3 + p, fully visible to crawlers */}
+              {/* 3. FAQ list — flat H2 + p, fully visible to crawlers */}
               <div className="space-y-10">
                 {faqs.map((faq) => (
                   <div
                     key={faq.question}
                     className="pb-10 border-b border-white/5 last:border-b-0 last:pb-0"
                   >
-                    <h3 className="text-xl font-bold text-white mb-3 tracking-tight">
+                    <h2 className="text-xl font-bold text-white mb-3 tracking-tight">
                       {faq.question}
-                    </h3>
+                    </h2>
                     <p className="text-neutral-400 leading-relaxed">{faq.answer}</p>
                   </div>
                 ))}
