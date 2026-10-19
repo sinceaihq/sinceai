@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/assets/logo/SINCE AI full black.png",
+        url: "/api/og/blog",
         width: 1200,
         height: 630,
         alt: "Since AI Blog - AI Hackathon Guides & Resources",
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     title: "AI Hackathon Guides & Community Resources | Since AI Blog",
     description:
       "Comprehensive guides from the leading global AI builders community. Hackathon strategies, tech stacks, project ideas, and developer events.",
-    images: ["/assets/logo/SINCE AI full black.png"],
+    images: ["/api/og/blog"],
   },
   other: {
     "article:section": "AI & Technology",

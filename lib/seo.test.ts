@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import sitemap from "@/app/sitemap";
 import { ORG } from "@/lib/org";
@@ -84,5 +84,34 @@ describe("structured data basics", () => {
     const layout = readFileSync(path.join(root, "app/layout.tsx"), "utf8");
     for (const key of Object.keys(ORG.social)) expect(layout).toContain(`ORG.social.${key}`);
     expect(layout).not.toContain("nonprofitStatus");
+  });
+});
+
+describe("share images", () => {
+  const sources = (dir: string): string[] =>
+    readdirSync(path.join(root, dir), { withFileTypes: true, recursive: true })
+      .filter((e) => e.isFile() && /\.tsx?$/.test(e.name) && !e.name.includes(".test."))
+      .map((e) => readFileSync(path.join(e.parentPath, e.name), "utf8"));
+  const code = [...sources("app"), ...sources("lib")].join("\n");
+  const cards = [...new Set([...code.matchAll(/\/assets\/og\/[\w-]+\.png/g)].map((m) => m[0]))];
+
+  it("are referenced from the page metadata", () => {
+    expect(cards).toEqual(expect.arrayContaining(["/assets/og/sinceai.png", "/assets/og/hackathon-2026.png"]));
+  });
+
+  it("exist as 1200 × 630 PNGs with real artwork, not an empty canvas", () => {
+    for (const card of cards) {
+      const file = path.join(root, "public", card);
+      expect(existsSync(file)).toBe(true);
+      const png = readFileSync(file);
+      // IHDR: width and height are the first two big-endian words after the 16-byte signature and chunk header.
+      expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([1200, 630]);
+      // A flat single-colour card compresses to a few kilobytes; the map alone is far more.
+      expect(png.length).toBeGreaterThan(20_000);
+    }
+  });
+
+  it("never use a bare logo file as a share image", () => {
+    expect(code).not.toMatch(/images:\s*\[[^\]]*\/assets\/logo\//);
   });
 });
