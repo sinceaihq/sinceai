@@ -7,11 +7,12 @@ import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { getBreadcrumbSchema } from "@/lib/schema";
 import { ORG } from "@/lib/org";
 import type { Metadata } from "next";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
-  title: "Research to Market — Commercializing AI Innovation | Since AI",
+  title: "Research to Market — Commercializing AI | Since AI",
   description:
-    "Since AI bridges academic AI research and commercial reality. We help researchers validate, deploy, and commercialize AI innovations through hackathons, production support, and entrepreneurship programs.",
+    "Since AI bridges academic AI research and the market: researchers validate, deploy and commercialize AI through hackathons, production support and founders.",
   keywords: [
     "AI research commercialization",
     "research to market",
@@ -23,17 +24,19 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "https://sinceai.ai/research-to-market" },
   openGraph: {
-    title: "Research to Market — Commercializing AI Innovation | Since AI",
+    title: "Research to Market — Commercializing AI | Since AI",
     description:
       "Bridging academia and industry. Since AI helps researchers commercialize AI innovations through real-world validation, production deployment, and startup support.",
     url: "https://sinceai.ai/research-to-market",
     siteName: "Since AI",
     type: "website",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Research to Market — Commercializing AI Innovation | Since AI",
+    title: "Research to Market — Commercializing AI | Since AI",
     description: "Bridging academia and industry. Since AI helps researchers commercialize AI innovations through real-world validation, production deployment, and startup support.",
+    images: [OG_IMAGE.url],
   },
 };
 

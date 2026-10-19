@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { getFAQSchema } from "@/lib/schema";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Contact Since AI - Partnerships, Sponsorships, Community",
@@ -25,12 +26,14 @@ export const metadata: Metadata = {
     locale: "en_US",
     siteName: "Since AI",
     url: "https://sinceai.ai/contact",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "Contact Since AI",
     description:
       "Get in touch with Since AI. Partner with us, sponsor the next hackathon, or join our community.",
+    images: [OG_IMAGE.url],
   },
   robots: {
     index: true,

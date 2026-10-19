@@ -3,12 +3,13 @@ import StructuredData from "@/components/StructuredData";
 import { getFirstEventSchema, getUpcoming2026EventSchema, getBreadcrumbSchema } from "@/lib/schema";
 import { FIRST_EVENT, COPY } from "@/lib/sinceai";
 import { ORG } from "@/lib/org";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title:
-    "Events — Since AI Hackathons & AI Builder Meetups | Turku, Finland",
+    "Events — Since AI Hackathons & AI Builder Meetups",
   description:
-    `High-signal hackathons and meetups for builders who ship. ${COPY.firstEventLineShort}. Next: Since AI Hackathon 2026 — November 6–8, Turku.`,
+    `Hackathons and meetups for builders who ship. ${COPY.firstEventLineShort}. Next: Since AI Hackathon 2026, 6–8 November.`,
   keywords: [
     "Since AI hackathon",
     "AI hackathon Turku",
@@ -30,11 +31,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     siteName: "Since AI",
     url: "https://sinceai.ai/events",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "Events — Since AI Hackathons & AI Builder Meetups",
     description: `Global execution-focused AI hackathons. ${FIRST_EVENT.attendance} builders at the inaugural event, 30+ projects shipped. Since AI Hackathon 2026: November 6–8, Turku.`,
+    images: [OG_IMAGE.url],
   },
   robots: {
     index: true,

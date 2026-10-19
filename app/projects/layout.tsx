@@ -1,9 +1,10 @@
 import { Metadata } from "next";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Projects - Since AI | Challenge Themes from Hackathon 2025",
   description:
-    "High-signal prototypes built around real partner challenge themes. Explore AI projects from Since AI Hackathon 2025: maritime safety, industrial automation, B2B sales, environmental data, and more. 260+ builders in Turku.",
+    "AI prototypes built on real partner challenges at Since AI Hackathon 2025: maritime safety, industrial automation, B2B sales, environmental data and more.",
   keywords: [
     "AI hackathon projects",
     "AI prototypes",
@@ -23,11 +24,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     siteName: "Since AI",
     url: "https://sinceai.ai/projects",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "Projects — Since AI | Challenge Themes from Hackathon 2025",
     description: "High-signal prototypes from partner challenge themes. Maritime safety, industrial automation, B2B sales, and more. Built by 260+ AI builders in Turku.",
+    images: [OG_IMAGE.url],
   },
   robots: {
     index: true,

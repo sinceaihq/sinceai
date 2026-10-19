@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type MouseEvent, type PointerEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent, type PointerEvent } from "react";
 import { CITIES, HQ, MAP_GRID } from "@/lib/ecosystem-cities.generated";
 
 const { cols, rows } = MAP_GRID;
@@ -52,8 +52,25 @@ function nearest(gx: number, gy: number, reach: number) {
  */
 export function EcosystemMapLive() {
   const ref = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(-1);
+  const [active, setActiveIndex] = useState(-1);
+  // Which way the label opens, from where the dot is on screen — on phones the
+  // map is wider than its frame, so the map's own edges are not the screen's.
+  const [side, setSide] = useState<"left" | "mid" | "right">("mid");
   const pointing = useRef(false);
+  const tipRef = useRef<HTMLSpanElement>(null);
+  const resume = useRef(0);
+
+  // Keep the label inside the map's frame (and so on screen), however close to the edge the dot is.
+  useLayoutEffect(() => {
+    const tip = tipRef.current;
+    const frame = ref.current?.closest(".eco-map-frame")?.getBoundingClientRect();
+    if (!tip || !frame) return;
+    tip.style.marginLeft = "0px";
+    const r = tip.getBoundingClientRect();
+    const pad = 8;
+    const shift = r.left < frame.left + pad ? frame.left + pad - r.left : r.right > frame.right - pad ? frame.right - pad - r.right : 0;
+    tip.style.marginLeft = `${shift}px`;
+  }, [active]);
 
   useEffect(() => {
     const el = ref.current;
@@ -79,11 +96,23 @@ export function EcosystemMapLive() {
     const first = window.setTimeout(tick, 900);
     const timer = window.setInterval(tick, TOUR_MS);
     return () => {
+      window.clearTimeout(resume.current);
       window.clearTimeout(first);
       window.clearInterval(timer);
       io.disconnect();
     };
   }, []);
+
+  const setActive = (i: number) => {
+    const el = ref.current;
+    const frame = el?.closest(".eco-map-frame")?.getBoundingClientRect();
+    if (el && frame) {
+      const r = el.getBoundingClientRect();
+      const sx = r.left + ((CITIES[i][2] + 0.5) / cols) * r.width;
+      setSide(sx - frame.left < 110 ? "left" : frame.right - sx < 110 ? "right" : "mid");
+    }
+    setActiveIndex(i);
+  };
 
   const pick = (clientX: number, clientY: number, reach: number) => {
     const r = ref.current!.getBoundingClientRect();
@@ -105,7 +134,9 @@ export function EcosystemMapLive() {
     if (i >= 0) {
       pointing.current = true;
       setActive(i);
-      window.setTimeout(() => (pointing.current = false), TOUR_MS * 2);
+      // Each tap restarts the pause, so an earlier tap's timer cannot hand the map back to the tour.
+      window.clearTimeout(resume.current);
+      resume.current = window.setTimeout(() => (pointing.current = false), TOUR_MS * 2);
     }
   };
 
@@ -134,8 +165,9 @@ export function EcosystemMapLive() {
           </svg>
           <span
             key={`t${active}`}
+            ref={tipRef}
             className="eco-tip"
-            data-x={city[2] < cols * 0.14 ? "left" : city[2] > cols * 0.86 ? "right" : "mid"}
+            data-x={side}
             data-y={city[3] < rows * 0.42 ? "below" : "above"}
             style={{ left: pct(city[2], cols), top: pct(city[3], rows) }}
           >

@@ -4,7 +4,7 @@ const aboutPageSchema = {
   "@id": "https://sinceai.ai/about",
   name: "About Since AI",
   description:
-    "Since AI ry is a Finnish nonprofit association whose mission is to advance AI education, practical skills, technological literacy, and open collaboration for the broader community.",
+    "Since AI ry is the Finnish nonprofit behind a global AI ecosystem, advancing AI education, practical skills and open collaboration for builders worldwide.",
   url: "https://sinceai.ai/about",
   mainEntity: { "@id": "https://sinceai.ai/#organization" },
 };

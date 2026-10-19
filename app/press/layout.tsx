@@ -1,9 +1,10 @@
 import { Metadata } from "next";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Press & Media — Since AI",
   description:
-    "Press kit for Since AI, a global, execution-focused AI innovation ecosystem: 10,000+ AI builders in the network, 1,000+ community members, 100+ partners and supporters. Media contact: info@sinceai.fi.",
+    "Press kit for Since AI, a global, execution-focused AI innovation ecosystem: 10,000+ AI builders, 100+ partners and supporters. Media: info@sinceai.fi.",
   keywords: [
     "Since AI press",
     "AI community media",
@@ -18,16 +19,18 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Press & Media — Since AI",
     description:
-      "Press kit for Since AI, a global, execution-focused AI innovation ecosystem: 10,000+ AI builders in the network, 1,000+ community members, 100+ partners and supporters. Media contact: info@sinceai.fi.",
+      "Press kit for Since AI, a global, execution-focused AI innovation ecosystem: 10,000+ AI builders, 100+ partners and supporters. Media: info@sinceai.fi.",
     type: "website",
     locale: "en_US",
     siteName: "Since AI",
     url: "https://sinceai.ai/press",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "Press & Media — Since AI",
-    description: "Press kit for Since AI, a global, execution-focused AI innovation ecosystem: 10,000+ AI builders in the network, 1,000+ community members, 100+ partners and supporters. Media contact: info@sinceai.fi.",
+    description: "Press kit for Since AI, a global, execution-focused AI innovation ecosystem: 10,000+ AI builders, 100+ partners and supporters. Media: info@sinceai.fi.",
+    images: [OG_IMAGE.url],
   },
   robots: {
     index: true,

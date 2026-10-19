@@ -7,12 +7,13 @@ import { Footer } from "@/components/layout/Footer";
 import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { ORG } from "@/lib/org";
 import StructuredData from "@/components/StructuredData";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title:
-    "The European AI Ecosystem in 2026: Hubs, Communities, and How to Participate",
+    "The European AI Ecosystem in 2026: Hubs and Communities",
   description:
-    "A 2026 map of Europe's AI ecosystem — major hubs, leading builder communities, research groups, and VCs. Includes Since AI, Junction, AI Mad Lab, and more. Updated quarterly.",
+    "A 2026 map of Europe's AI ecosystem — hubs, builder communities, research groups and VCs, including Since AI, Junction and AI Mad Lab. Updated quarterly.",
   alternates: { canonical: "https://sinceai.ai/europe-ai" },
   openGraph: {
     title: "The European AI Ecosystem in 2026",
@@ -21,12 +22,14 @@ export const metadata: Metadata = {
     url: "https://sinceai.ai/europe-ai",
     type: "article",
     siteName: "Since AI",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "The European AI Ecosystem in 2026",
     description:
       "A 2026 map of Europe's AI ecosystem — hubs, communities, research groups, VCs.",
+    images: [OG_IMAGE.url],
   },
 };
 

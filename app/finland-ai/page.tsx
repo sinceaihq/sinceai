@@ -8,11 +8,12 @@ import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { getBreadcrumbSchema } from "@/lib/schema";
 import { ORG } from "@/lib/org";
 import { ButtonPair } from "@/components/ui/ButtonPair";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Finland AI Community | Since AI - Nordic AI Excellence",
   description:
-    "Join Finland's leading AI developer community. 1000+ members across Helsinki, Turku, Tampere, Oulu. AI hackathons, real company projects, production deployment support.",
+    "Join Finland's leading AI developer community: 1,000+ members in Helsinki, Turku, Tampere and Oulu, AI hackathons and real company projects.",
   keywords:
     "finland ai, ai finland, finland ai community, finnish ai developers, ai hackathon finland, helsinki ai, turku ai, tampere ai",
   alternates: {
@@ -25,11 +26,13 @@ export const metadata: Metadata = {
     url: "https://sinceai.ai/finland-ai",
     siteName: "Since AI",
     type: "website",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "Finland AI Community | Since AI - Nordic AI Excellence",
     description: "Join Finland's leading AI developer community. 1000+ members across Helsinki, Turku, Tampere, Oulu.",
+    images: [OG_IMAGE.url],
   },
 };
 

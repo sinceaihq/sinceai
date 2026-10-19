@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "AI Hackathon Guides & Community Resources | Since AI Blog",
   description:
-    "Comprehensive guides from the leading global AI builders community. Learn hackathon strategies, tech stack choices, project ideas, and discover the best AI developer events globally.",
+    "Guides from the global Since AI builder community: hackathon strategy, tech stack choices, project ideas and the best AI developer events worldwide.",
   keywords: [
     "AI hackathon guide",
     "hackathon team building",

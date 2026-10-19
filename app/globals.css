@@ -550,6 +550,60 @@ html:has(body[data-scroll-locked]) {
   .eco-arc { animation: none; stroke-dashoffset: 0; opacity: 0.6; }
 }
 
+/* ── About: the story timeline (app/about/page.tsx) ── */
+/* Each chapter draws the track down to the next one, and the track fills in the brand colour as the chapter passes
+   the middle of the screen; its marker lights as it gets there. Scroll-driven and CSS only — without support, or with
+   reduced motion, the timeline is simply drawn. */
+.story { --story-x: 5px; }
+@media (min-width: 768px) { .story { --story-x: 15rem; } }
+/* The timeline's "viewport" is the line across the middle of the screen. */
+.story > li { view-timeline: --chapter block; view-timeline-inset: 50% 50%; }
+.story > li:not(:last-child)::before,
+.story > li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: calc(0.4rem + 11px);
+  bottom: -0.4rem;
+  left: var(--story-x);
+  width: 1px;
+  pointer-events: none;
+}
+.story > li::before { background: color-mix(in srgb, var(--color-fg) 14%, transparent); }
+.story > li::after {
+  background: var(--color-brand);
+  transform-origin: top;
+}
+.story-mark {
+  position: absolute;
+  top: 0.4rem;
+  left: calc(var(--story-x) - 5px);
+  width: 11px;
+  height: 11px;
+  border: 1px solid color-mix(in srgb, var(--color-fg) 45%, transparent);
+  background: #000;
+}
+.story-mark-now { border-color: var(--color-brand); background: var(--color-brand); outline: 1px solid color-mix(in srgb, var(--color-brand) 55%, transparent); outline-offset: 3px; }
+@supports (animation-timeline: view()) {
+  .story > li::after {
+    scale: 1 0;
+    animation: story-fill linear both;
+    animation-timeline: --chapter;
+    /* From the chapter's top to its bottom crossing the middle of the screen — where the reader's eye is. */
+    animation-range: cover 0% cover 100%;
+  }
+  .story-mark:not(.story-mark-now) {
+    animation: story-mark linear both;
+    animation-timeline: --chapter;
+    animation-range: cover 0% cover 6%;
+  }
+}
+@keyframes story-fill { from { scale: 1 0; } to { scale: 1 1; } }
+@keyframes story-mark { to { border-color: var(--color-fg); background: var(--color-fg); } }
+@media (prefers-reduced-motion: reduce) {
+  .story > li::after { animation: none; scale: 1 1; }
+  .story-mark:not(.story-mark-now) { animation: none; }
+}
+
 /* Mobile menu (Navbar) */
 @keyframes menu-in {
   from { opacity: 0; translate: 0 -12px; }

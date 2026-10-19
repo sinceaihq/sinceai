@@ -9,6 +9,7 @@ import { getBreadcrumbSchema } from "@/lib/schema";
 import { ORG } from "@/lib/org";
 import { blogPosts } from "@/lib/blog";
 import NewsletterSignup from "@/components/forms/NewsletterSignup";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "AI Development Resources | Since AI Community Guides & Tools",
@@ -26,11 +27,13 @@ export const metadata: Metadata = {
     url: "https://sinceai.ai/resources",
     siteName: "Since AI",
     type: "website",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "AI Development Resources | Since AI Community Guides & Tools",
     description: "Comprehensive AI development resources from Since AI. Hackathon guides, tech stack recommendations, project ideas, and curated tools for AI builders.",
+    images: [OG_IMAGE.url],
   },
 };
 
@@ -52,7 +55,7 @@ export default function ResourcesPage() {
       <main className="flex flex-col w-full bg-black min-h-screen">
         <div className="w-full max-w-4xl mx-auto px-6 py-32 md:py-40">
           <FadeIn>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight leading-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight leading-tight">
               AI Development Resources
             </h1>
 
