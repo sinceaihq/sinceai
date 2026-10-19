@@ -5,13 +5,14 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { Download, Mail } from "lucide-react";
+import { ORG } from "@/lib/org";
 
 export default function PressPage() {
   const stats = [
-    { label: "Community Members", value: "1000+" },
-    { label: "Hackathon Participants", value: "200+" },
-    { label: "Partner Companies", value: "15+" },
-    { label: "AI Projects Built", value: "30+" },
+    { label: "AI builders in our network", value: ORG.stats.network },
+    { label: "Builders targeted at Hackathon 2026", value: ORG.stats.hackathon2026Target },
+    { label: "Partners & supporters", value: ORG.stats.partners },
+    { label: "Builders at Hackathon 2025", value: ORG.stats.hackathonParticipants },
   ];
 
   const pressKit = [
@@ -34,15 +35,16 @@ export default function PressPage() {
             
             <div className="prose prose-invert prose-neutral max-w-none">
               <p className="text-xl text-neutral-300 leading-relaxed mb-8">
-                Since AI is Europe&apos;s only full-lifecycle AI innovation ecosystem with 1000+ members,
-                based in Turku, Finland. We support AI projects from challenge ideation through hackathon
-                building to production deployment and commercialization.
+                Since AI is a global, execution-focused AI innovation ecosystem with 10,000+ AI builders in
+                its network and 1,000+ community members, run by the Finnish non-profit Since AI ry. We support
+                AI projects from challenge ideation through hackathon building to production deployment and
+                commercialization.
               </p>
 
               <p className="text-lg text-neutral-400 leading-relaxed mb-12">
-                <strong className="text-white">In one sentence: </strong> Since AI is Europe&apos;s only AI community
-                providing end-to-end support from challenge ideation through hackathon building to production
-                deployment and commercialization.
+                <strong className="text-white">In one sentence: </strong> Since AI turns frontier AI into shipped
+                products — supporting AI projects end to end, from challenge ideation through hackathons to
+                production deployment and commercialization.
               </p>
 
               <section className="mb-12">
@@ -126,19 +128,19 @@ export default function PressPage() {
                 <ul className="space-y-4 text-neutral-300">
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">•</span>
-                    <span>Organized flagship AI hackathon with 260 builders in 2025</span>
+                    <span>Organized the first Since AI Hackathon in 2025 with {ORG.stats.hackathonParticipants} builders and 30+ AI projects</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">•</span>
-                    <span>Built 30+ AI projects addressing real company challenges</span>
+                    <span>Since AI Hackathon 2026 (6–8 November): {ORG.stats.hackathon2026Target} builders, 15 company challenges and a €50,000 prize pool</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">•</span>
-                    <span>Grew community from 0 to 1000+ members in 18 months</span>
+                    <span>Grew to a {ORG.stats.network} builder network and {ORG.stats.members} community members since 2025</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">•</span>
-                    <span>Partnered with 15+ companies including Fortune 500 enterprises</span>
+                    <span>Works with {ORG.stats.partners} partners and supporters, including Google for Developers, ElevenLabs, Valmet and Bayer</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">•</span>
@@ -212,7 +214,7 @@ export default function PressPage() {
                   >
                     <strong>Discord</strong>
                     <br />
-                    <span className="text-sm text-white/55">1000+ members</span>
+                    <span className="text-sm text-white/55">1,000+ members</span>
                   </a>
                   <a
                     href="https://t.me/sinceaihq"
@@ -334,41 +336,40 @@ export default function PressPage() {
                   <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-sm font-semibold text-white/55 uppercase tracking-wider mb-3">Short (50 words)</h3>
                     <p className="text-neutral-300 leading-relaxed italic">
-                      Since AI is Europe&apos;s leading AI innovation ecosystem based in Turku, Finland.
-                      We provide end-to-end support from challenge ideation through hackathon building
-                      to production deployment and commercialization. With 1000+ members and 15+ partner
-                      companies including Valmet, Sandvik, and Kongsberg, we&apos;re building Europe&apos;s AI future.
+                      Since AI is a global, execution-focused AI innovation ecosystem, run by the Finnish
+                      non-profit Since AI ry. We support AI projects end to end — from challenge ideation
+                      through hackathon building to production deployment and commercialization. 10,000+ AI
+                      builders in the network and 100+ partners and supporters, including Google for Developers,
+                      ElevenLabs, Valmet and Bayer.
                     </p>
                   </div>
 
                   <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-sm font-semibold text-white/55 uppercase tracking-wider mb-3">Medium (100 words)</h3>
                     <p className="text-neutral-300 leading-relaxed italic">
-                      Since AI is Europe&apos;s only full-lifecycle AI innovation ecosystem, founded in 2025
-                      in Turku, Finland. Unlike traditional hackathons, we support projects from challenge
-                      ideation through production deployment to commercialization. With 1000+ developers,
-                      researchers, and builders, we&apos;ve shipped 30+ AI projects with partner companies including
-                      Valmet, Sandvik, Kongsberg, and ElevenLabs. Our unique approach includes post-hackathon
-                      production support (8+ weeks), entrepreneurship assistance through Antler partnership,
-                      European AI sovereignty initiatives, and research-to-market bridges with the University
-                      of Turku and Turku AMK. Learn more: sinceai.ai
+                      Since AI is a global, execution-focused AI innovation ecosystem, founded in 2025 and run by
+                      the Finnish non-profit Since AI ry. Since AI runs high-intensity hackathons on real challenges
+                      from industry partners and supports the strongest teams after the event, with eight weeks of
+                      production support. Its network counts 10,000+ AI builders in 100+ countries and 100+ partners
+                      and supporters, including Google for Developers, ElevenLabs, Valmet, Bayer and Antler. The
+                      flagship event, Since AI Hackathon 2026, brings 1,000+ builders to Turku, Finland on 6–8
+                      November 2026. Learn more: sinceai.ai
                     </p>
                   </div>
 
                   <div className="p-6 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-sm font-semibold text-white/55 uppercase tracking-wider mb-3">Long (150 words)</h3>
                     <p className="text-neutral-300 leading-relaxed italic">
-                      Since AI is Europe&apos;s premier AI innovation ecosystem, transforming how AI research
-                      becomes commercial reality. Founded in 2025 in Turku, Finland, we serve 1000+ developers,
-                      researchers, and builders across Europe and beyond. Our unique full-lifecycle approach
-                      supports projects from challenge ideation (working with companies to design viable
-                      challenges) through intensive 72-hour hackathons to production deployment (8+ weeks
-                      of technical support) and commercialization (startup formation with Antler partnership).
-                      We&apos;ve shipped 30+ AI projects to production, with partner companies including Valmet,
-                      Sandvik, Kongsberg, ElevenLabs, and Antler. Beyond individual projects, we advance
-                      European AI sovereignty through open-source initiatives and bridge academic research
-                      to market through partnerships with University of Turku and Turku AMK. Since AI is
-                      a registered non-profit (Since AI ry, Business ID: 3593920-2). Learn more: sinceai.ai
+                      Since AI is a global, execution-focused AI innovation ecosystem that turns frontier AI into
+                      shipped products. Founded in 2025 and run by the Finnish non-profit Since AI ry (Business ID
+                      3593920-2), it connects 10,000+ AI builders in 100+ countries with leading companies,
+                      research groups and investors. Since AI works across the whole path: it designs hackathon
+                      challenges together with companies, runs high-intensity hackathons, gives the strongest teams
+                      eight weeks of production support, and connects founders with capital partners such as
+                      Antler. Projects from Since AI Hackathon 2025 run in production with Kongsberg and Sandvik.
+                      Since AI Hackathon 2026, on 6–8 November 2026 in Turku, Finland, brings together 1,000+
+                      builders, 15 company challenges and a €50,000 prize pool, and is an MLH 2027 Season Member
+                      Event. Learn more: sinceai.ai
                     </p>
                   </div>
                 </div>

@@ -35,10 +35,9 @@ const inter = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sinceai.ai"),
-  title:
-    "Since AI — Global Execution-Focused AI Innovation Ecosystem | Hackathons, Applied AI, Research",
+  title: "Since AI — Where Frontier AI Becomes Shipped Products",
   description:
-    "Where frontier AI becomes shipped products. Since AI connects 10,000+ AI builders globally with leading AI companies, research groups, and investors through hackathons, open-source collaboration, and applied AI projects. Based in Finland. Open globally.",
+    "A global ecosystem of 10,000+ AI builders. Hackathons with leading companies — and eight weeks of production support to take the best solutions to real users.",
   keywords: [
     "AI community global",
     "AI hackathon global",
@@ -56,9 +55,9 @@ export const metadata: Metadata = {
     canonical: "https://sinceai.ai",
   },
   openGraph: {
-    title: "Since AI — Global Execution-Focused AI Innovation Ecosystem",
+    title: "Since AI — Where Frontier AI Becomes Shipped Products",
     description:
-      "Where frontier AI becomes shipped products. 10,000+ AI builders globally. Backed by Google for Developers, Bayer, Sandvik, Antler, and more.",
+      "A global ecosystem of 10,000+ AI builders in 100+ countries, with Google for Developers, ElevenLabs, Bayer, Valmet, Antler and 100+ partners and supporters.",
     url: "https://sinceai.ai",
     siteName: "Since AI",
     locale: "en_US",
@@ -76,9 +75,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@sinceaihq",
     creator: "@sinceaihq",
-    title: "Since AI — Global Execution-Focused AI Innovation Ecosystem",
+    title: "Since AI — Where Frontier AI Becomes Shipped Products",
     description:
-      "Where frontier AI becomes shipped products. 10,000+ AI builders globally.",
+      "A global ecosystem of 10,000+ AI builders — hackathons with leading companies and eight weeks of production support.",
     images: ["https://sinceai.ai/assets/og/hero.png"],
   },
   robots: {

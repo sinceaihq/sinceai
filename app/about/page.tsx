@@ -179,7 +179,7 @@ export default function AboutPage() {
                       AI engineer and entrepreneur building intelligent systems at the
                       intersection of technical execution and commercial strategy. Founded
                       Since AI in 2025 and led its growth to a 10,000+ builder network
-                      and 30+ strategic partnerships.
+                      and 100+ partners and supporters.
                     </p>
                     <a
                       href="https://lauttia.ai"
