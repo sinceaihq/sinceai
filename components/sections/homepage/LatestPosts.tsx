@@ -1,110 +1,54 @@
-"use client";
-import React from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { ArrowRight, Clock } from "lucide-react";
 import { getLatestPosts } from "@/lib/blog";
+import { FadeInView } from "@/components/motion-primitives/fade-in";
+import { SectionIntro } from "./SectionIntro";
 
 const latestPosts = getLatestPosts(3);
 
-function formatDate(dateString: string): string {
-  return new Date(dateString).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
+const formatDate = (iso: string) =>
+  new Date(iso).toLocaleDateString("en-GB", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
 
 export function LatestPosts() {
   return (
-    <section className="py-24 px-6 border-t border-white/5">
-      <div className="max-w-5xl mx-auto">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
-            Latest from the blog
-          </h2>
-          <p className="text-neutral-400 mt-3 text-base">
-            Playbooks and guides from the Since AI community.
-          </p>
-        </motion.div>
-
-        {/* Post Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {latestPosts.map((post, index) => (
-            <motion.div
-              key={post.slug}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
-            >
-            <Link
-              href={`/blog/${post.slug}`}
-              className="group flex flex-col justify-between h-full p-8 border border-white/10 bg-white/[0.02] hover:bg-white/[0.03] hover:border-white/20 transition-all duration-300"
-            >
-              <div>
-                {/* Tags */}
-                <div className="flex flex-wrap gap-2 mb-5">
-                  {post.tags.slice(0, 3).map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-3 py-1 text-xs font-medium text-neutral-300 bg-white/5 border border-white/10 rounded-full"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Title */}
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-3 tracking-tight group-hover:text-neutral-200 transition-colors">
-                  {post.title}
-                </h3>
-
-                {/* Excerpt */}
-                <p className="text-sm text-neutral-400 leading-relaxed mb-4">
-                  {post.excerpt}
-                </p>
-
-                {/* Meta */}
-                <div className="flex items-center gap-3 text-xs text-white/55 mb-6">
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    {post.readingTime} min
+    <section aria-labelledby="home-blog-title" className="py-24 md:py-32 px-6 border-t border-white/10">
+      <FadeInView className="mx-auto max-w-6xl">
+        <SectionIntro
+          id="home-blog-title"
+          eyebrow="// from the blog"
+          title="Playbooks for builders."
+          lede="How to win an AI hackathon, form a team and ship a demo that works — from the Since AI community."
+        />
+        <ul className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-3">
+          {latestPosts.map((post) => (
+            <li key={post.slug}>
+              <Link
+                href={`/blog/${post.slug}`}
+                className="group flex h-full flex-col border border-white/10 p-7 transition-colors hover:border-white/25 hover:bg-white/[0.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+              >
+                <p className="text-xs font-mono uppercase tracking-widest text-white/55">{post.tags.slice(0, 2).join(" · ")}</p>
+                <h3 className="mt-4 text-xl font-bold tracking-tight text-white text-balance">{post.title}</h3>
+                <p className="mt-3 text-sm text-neutral-400 leading-relaxed">{post.excerpt}</p>
+                <p className="mt-auto flex items-center justify-between gap-4 pt-6 text-xs text-white/55">
+                  <span>
+                    <time dateTime={post.datePublished}>{formatDate(post.datePublished)}</time> · {post.readingTime} min read
                   </span>
-                  <time dateTime={post.datePublished}>
-                    {formatDate(post.datePublished)}
-                  </time>
-                </div>
-              </div>
-
-              {/* CTA */}
-              <div className="flex items-center gap-2 text-sm text-white font-semibold group-hover:gap-3 transition-all duration-300">
-                <span>Read article</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-              </div>
-            </Link>
-            </motion.div>
+                  <span aria-hidden="true" className="text-white transition-transform group-hover:translate-x-1">
+                    →
+                  </span>
+                </p>
+              </Link>
+            </li>
           ))}
-        </div>
-
-        {/* All posts link */}
-        <div className="mt-10 text-center">
+        </ul>
+        <p className="mt-8">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-neutral-400 hover:text-white transition-colors group"
+            className="inline-flex min-h-11 items-center text-sm text-neutral-300 underline decoration-white/25 underline-offset-4 hover:text-white hover:decoration-white transition-colors"
           >
-            All posts
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            All articles <span aria-hidden="true" className="ml-1">→</span>
           </Link>
-        </div>
-      </div>
+        </p>
+      </FadeInView>
     </section>
   );
 }

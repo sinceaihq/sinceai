@@ -374,11 +374,17 @@ html:has(body[data-scroll-locked]) {
 .fade-in {
   animation: site-fade-up var(--fade-duration, 0.8s) cubic-bezier(0.22, 1, 0.36, 1) var(--fade-delay, 0s) both;
 }
+/* Scroll reveal moves content only — never its opacity — so text keeps full contrast for
+   readers, crawlers and accessibility checkers that do not scroll. */
+@keyframes site-rise {
+  from { translate: 0 28px; }
+  to { translate: 0 0; }
+}
 @supports (animation-timeline: view()) {
   .fade-in-view {
-    animation: site-fade-up linear both;
+    animation: site-rise linear both;
     animation-timeline: view();
-    animation-range: entry 0% entry 55%;
+    animation-range: entry 0% entry 45%;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -398,4 +404,43 @@ html:has(body[data-scroll-locked]) {
 }
 @media (prefers-reduced-motion: reduce) {
   .announce-in { animation: none; }
+}
+
+/* ── Homepage hero backdrop: two soft light sources and a fine grid, CSS only ── */
+.hero-backdrop::before,
+.hero-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.hero-backdrop::before {
+  background:
+    radial-gradient(56rem 36rem at 88% -8%, color-mix(in srgb, var(--color-brand) 20%, transparent), transparent 62%),
+    radial-gradient(48rem 34rem at -6% 108%, color-mix(in srgb, var(--color-event-strong) 22%, transparent), transparent 64%);
+}
+.hero-backdrop::after {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--color-fg) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-fg) 5%, transparent) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 75%);
+}
+.hero-accent {
+  background: linear-gradient(92deg, var(--color-fg) 0%, color-mix(in srgb, var(--color-brand) 75%, var(--color-fg)) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Mobile menu (Navbar) */
+@keyframes menu-in {
+  from { opacity: 0; translate: 0 -12px; }
+  to { opacity: 1; translate: 0 0; }
+}
+.menu-in {
+  animation: menu-in 0.2s ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu-in { animation: none; }
 }

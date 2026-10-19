@@ -76,9 +76,7 @@ export const Footer: React.FC<FooterProps> = () => {
               Since AI
             </p>
             <p className="text-sm text-neutral-400 leading-relaxed mb-4">
-              A global execution-focused AI innovation ecosystem.
-              <br />
-              Turku-based, globally connected.
+              A global, execution-focused AI innovation ecosystem — where frontier AI becomes shipped products.
             </p>
             <p className="text-sm text-white font-medium mb-4">
               Since AI is a registered nonprofit association (ry) in Finland.

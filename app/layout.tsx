@@ -9,18 +9,25 @@ import { HackathonPopup } from "@/components/HackathonPopup";
 import { ORG } from "@/lib/org";
 import { GA_ID } from "@/lib/gtag";
 
+// The site font. Its fallback is a monospace stack with nearly the same advance width (0.6 em),
+// so text keeps its line breaks while JetBrains Mono loads — Next's default fallback is a
+// stretched Arial, which re-wraps headlines when the real font swaps in.
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-mono",
   weight: ["400", "500", "700"],
+  adjustFontFallback: false,
+  fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "Liberation Mono", "monospace"],
 });
 
+// Used only where explicitly needed, so it is not preloaded ahead of the site font.
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans",
   weight: ["400", "500"],
+  preload: false,
 });
 
 export const metadata: Metadata = {
