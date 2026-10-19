@@ -238,21 +238,21 @@ export default function FinlandAIPage() {
                 </p>
                 <div className="space-y-4">
                   <div className="p-5 border border-white/5 bg-white/[0.02]">
-                    <h4 className="text-base font-bold text-white mb-1">Maritime AI</h4>
+                    <h3 className="text-base font-bold text-white mb-1">Maritime AI</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Finnish team built a sound signal detection system deployed to production
                       at Kongsberg&apos;s vessel systems.
                     </p>
                   </div>
                   <div className="p-5 border border-white/5 bg-white/[0.02]">
-                    <h4 className="text-base font-bold text-white mb-1">Industrial AI</h4>
+                    <h3 className="text-base font-bold text-white mb-1">Industrial AI</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Turku-based solution for intelligent spare part discovery deployed in
                       production at Sandvik, saving 8+ hours per search.
                     </p>
                   </div>
                   <div className="p-5 border border-white/5 bg-white/[0.02]">
-                    <h4 className="text-base font-bold text-white mb-1">Research Commercialization</h4>
+                    <h3 className="text-base font-bold text-white mb-1">Research Commercialization</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       University researchers commercializing AI innovations through the Since AI
                       research-to-market pipeline.

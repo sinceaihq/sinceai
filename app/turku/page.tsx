@@ -168,35 +168,35 @@ export default function TurkuPage() {
                 </h2>
                 <div className="space-y-4">
                   <div className="p-5 border border-white/5 bg-white/[0.02]">
-                    <h4 className="text-base font-bold text-white mb-1">1. Strong Academic Foundation</h4>
+                    <h3 className="text-base font-bold text-white mb-1">1. Strong Academic Foundation</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Multiple universities producing AI talent — University of Turku, Turku AMK,
                       and &Aring;bo Akademi provide a steady pipeline of skilled developers and researchers.
                     </p>
                   </div>
                   <div className="p-5 border border-white/5 bg-white/[0.02]">
-                    <h4 className="text-base font-bold text-white mb-1">2. Lower Cost of Living</h4>
+                    <h3 className="text-base font-bold text-white mb-1">2. Lower Cost of Living</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       30-40% cheaper than Helsinki while maintaining excellent quality of life.
                       More affordable rent, good public transportation, and a walkable city center.
                     </p>
                   </div>
                   <div className="p-5 border border-white/5 bg-white/[0.02]">
-                    <h4 className="text-base font-bold text-white mb-1">3. Industrial AI Demand</h4>
+                    <h3 className="text-base font-bold text-white mb-1">3. Industrial AI Demand</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Companies like Valmet and Meyer Turku are driving real AI innovation,
                       creating demand for AI talent and practical applications.
                     </p>
                   </div>
                   <div className="p-5 border border-white/5 bg-white/[0.02]">
-                    <h4 className="text-base font-bold text-white mb-1">4. Strategic Location</h4>
+                    <h3 className="text-base font-bold text-white mb-1">4. Strategic Location</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Gateway between Nordic and Baltic tech ecosystems. Under 2 hours from
                       Helsinki by train, with ferry connections to Stockholm.
                     </p>
                   </div>
                   <div className="p-5 border border-white/5 bg-white/[0.02]">
-                    <h4 className="text-base font-bold text-white mb-1">5. Active Community</h4>
+                    <h3 className="text-base font-bold text-white mb-1">5. Active Community</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Since AI connects 1000+ developers through regular hackathons, meetups,
                       and an active Discord community with real company challenges.
