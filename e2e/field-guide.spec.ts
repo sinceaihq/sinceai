@@ -132,7 +132,8 @@ test.describe("content", () => {
     await expect(section).toContainText("Already have a team?");
     await expect(section).toContainText("not the building’s emergency exit plan");
     await expect(section.locator('img[src*="educity-team-formation"]').first()).toHaveAttribute("alt", /zones 1, 2, 3 and 4/);
-    const body = await page.locator("main").innerText();
+    // The Now / Next card shows the current Turku time, which can be any of these.
+    const body = (await page.locator("main").innerText()).replace(/Turku \d{2}:\d{2}/gi, "");
     expect(body).not.toMatch(/17:45|17:50|18:05|before 17:00|18:15–18:45/);
     expect(body).toContain("Team formation closes at 16:45");
     expect(body).toContain("17:00–17:30");
