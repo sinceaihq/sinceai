@@ -142,6 +142,35 @@ test.describe("public site", () => {
     await expect(card).toHaveCount(0);
   });
 
+  test("Google Analytics stays off the critical path until the visitor engages", async ({ page }) => {
+    const gtagRequests: string[] = [];
+    await page.route(/googletagmanager\.com\/gtag\/js/, (route) => {
+      gtagRequests.push(route.request().url());
+      return route.fulfill({ status: 200, contentType: "text/javascript", body: "" });
+    });
+    await acceptNoCookies(page);
+    await page.goto("/", { waitUntil: "load" });
+    await page.waitForTimeout(2000);
+    expect(gtagRequests).toHaveLength(0);
+    // The page view is queued at once, so nothing is lost while gtag.js waits.
+    const queued = await page.evaluate(() =>
+      ((window as unknown as { dataLayer?: IArguments[] }).dataLayer ?? []).some((e) => e[0] === "config"),
+    );
+    expect(queued).toBe(true);
+    await page.mouse.wheel(0, 400);
+    await expect.poll(() => gtagRequests.length, { timeout: 5000 }).toBe(1);
+    expect(gtagRequests[0]).toContain("id=G-");
+  });
+
+  test("the favicon is the small multi-size icon, not a full-size PNG", async ({ request }) => {
+    const res = await request.get("/favicon.ico");
+    expect(res.status()).toBe(200);
+    const body = await res.body();
+    // ICO header (reserved 0, type 1), and small enough to decode instantly on a phone.
+    expect([...body.subarray(0, 4)]).toEqual([0, 0, 1, 0]);
+    expect(body.length).toBeLessThan(40_000);
+  });
+
   test("blog Open Graph images render", async ({ request }) => {
     for (const q of ["", "?slug=ai-hackathon-project-ideas"]) {
       const res = await request.get(`/api/og/blog${q}`);

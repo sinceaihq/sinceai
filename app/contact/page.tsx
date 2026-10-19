@@ -345,7 +345,7 @@ const LeadCard: React.FC<{ person: TeamMember }> = ({ person }) => (
       ) : (
         <div className="w-full h-full flex items-center justify-center">
           <Image
-            src="/assets/logo/SINCE AI white.png"
+            src="/assets/logo/sinceai-white.png"
             alt={person.name}
             width={36}
             height={36}
@@ -407,7 +407,7 @@ const MemberCard: React.FC<{ person: TeamMember }> = ({ person }) => (
       ) : (
         <div className="w-full h-full flex items-center justify-center">
           <Image
-            src="/assets/logo/SINCE AI white.png"
+            src="/assets/logo/sinceai-white.png"
             alt={person.name}
             width={20}
             height={20}

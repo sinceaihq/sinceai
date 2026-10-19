@@ -154,17 +154,20 @@ export default function HackathonPage() {
 
         {/* ── SECTION 1: Hero ─────────────────────────────────── */}
         <section id="hackathon-hero" className="relative w-full flex flex-col px-6">
-          {/* Plain responsive image: images are served unoptimised, so the phone size is a file of its own. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/assets/images/educity-hero.webp"
-            srcSet="/assets/images/educity-hero-828.webp 828w, /assets/images/educity-hero.webp 1920w"
-            sizes="100vw"
-            alt="EduCity, Turku — venue for Since AI Hackathon 2026"
-            fetchPriority="high"
-            decoding="async"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
+          {/* Plain responsive image: images are served unoptimised, so the phone size is a file of its own.
+              <picture> keeps React from turning it into a preload hint in this route's RSC payload, which
+              would make every page that prefetches /hackathon download the hero too. */}
+          <picture>
+            <img
+              src="/assets/images/educity-hero.webp"
+              srcSet="/assets/images/educity-hero-828.webp 828w, /assets/images/educity-hero.webp 1920w"
+              sizes="100vw"
+              alt="EduCity, Turku — venue for Since AI Hackathon 2026"
+              fetchPriority="high"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          </picture>
           <div className="absolute inset-0" style={{ background: "rgba(0,0,0,0.72)" }} />
           <div
             className="absolute inset-x-0 bottom-0 h-3/5"
@@ -182,8 +185,10 @@ export default function HackathonPage() {
             className="absolute z-20 block right-4 sm:right-[50px] top-[84px]"
             style={{ width: "clamp(60px, 10vw, 100px)" }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element -- MLH serves the official badge; not optimised by us */}
-            <img src={MLH_2027.trustBadgeSrc} alt={MLH_2027.trustBadgeAlt} width={100} height={175} className="w-full h-auto" />
+            <picture className="block">
+              {/* MLH serves the official badge; it is not optimised by us. */}
+              <img src={MLH_2027.trustBadgeSrc} alt={MLH_2027.trustBadgeAlt} width={100} height={175} className="w-full h-auto" />
+            </picture>
             <span className="sr-only"> (opens in a new tab)</span>
           </a>
 
