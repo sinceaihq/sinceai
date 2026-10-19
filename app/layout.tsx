@@ -65,10 +65,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://sinceai.ai/assets/og/hero.png",
+        url: "https://sinceai.ai/assets/og/sinceai.png",
         width: 1200,
         height: 630,
-        alt: "Since AI — Global execution-focused AI innovation ecosystem",
+        alt: "Since AI — where frontier AI becomes shipped products: 10,000+ AI builders in 120+ countries",
       },
     ],
   },
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
     title: "Since AI | Global Execution-Focused AI Innovation Ecosystem",
     description:
       "A global ecosystem of 10,000+ AI builders — hackathons with leading companies and eight weeks of production support.",
-    images: ["https://sinceai.ai/assets/og/hero.png"],
+    images: ["https://sinceai.ai/assets/og/sinceai.png"],
   },
   robots: {
     index: true,

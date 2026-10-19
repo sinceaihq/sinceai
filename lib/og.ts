@@ -5,8 +5,8 @@
  * an image.
  */
 export const OG_IMAGE = {
-  url: "https://sinceai.ai/assets/og/hero.png",
+  url: "https://sinceai.ai/assets/og/sinceai.png",
   width: 1200,
   height: 630,
-  alt: "Since AI — Global execution-focused AI innovation ecosystem",
+  alt: "Since AI — where frontier AI becomes shipped products: 10,000+ AI builders in 120+ countries",
 } as const;

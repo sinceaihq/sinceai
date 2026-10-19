@@ -50,14 +50,14 @@ export const metadata: Metadata = {
     url: "https://sinceai.ai/hackathon",
     siteName: "Since AI",
     type: "website",
-    images: [{ url: "/assets/og/hero.png", width: 1200, height: 630 }],
+    images: [{ url: "/assets/og/hackathon-2026.png", width: 1200, height: 630, alt: "Since AI Hackathon 2026, 6–8 November 2026 in Turku, Finland" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Since AI Hackathon 2026 — November 6–8, Turku",
     description:
       `48-hour AI hackathon. 1,000+ builders targeted. 15 company challenges from ${SHORT}.`,
-    images: ["/assets/og/hero.png"],
+    images: ["/assets/og/hackathon-2026.png"],
   },
 };
 
@@ -111,7 +111,7 @@ const eventSchema = {
   // The confirmed challenge partners (organiser roster, 13 Oct 2026). Two more challenge places are still to be announced.
   sponsor: SPONSORS.map(({ name, url }) => ({ "@type": "Organization", name, url })),
   performer: { "@type": "Person", name: "Jason Mayes", jobTitle: "Web AI Lead, Google" },
-  image: "https://sinceai.ai/assets/og/hero.png",
+  image: "https://sinceai.ai/assets/og/hackathon-2026.png",
   url: "https://sinceai.ai/hackathon",
   offers: {
     "@type": "Offer",
