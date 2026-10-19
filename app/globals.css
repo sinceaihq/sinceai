@@ -433,6 +433,94 @@ html:has(body[data-scroll-locked]) {
   color: transparent;
 }
 
+/* ── Homepage "Global reach" map (components/sections/homepage/GlobalReach.tsx) ── */
+/* Two data layers, switched by the radio pair with :has() — no JavaScript. */
+.reach:has(input[value="members"]:checked) [data-layer="applicants"],
+.reach:has(input[value="applicants"]:checked) [data-layer="members"] {
+  display: none;
+}
+.reach-map path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-width: 0.6;
+}
+.reach-map .reach-land {
+  stroke: color-mix(in srgb, var(--color-fg) 15%, transparent);
+  stroke-width: 0.55;
+}
+.reach-map .reach-country {
+  stroke: var(--color-brand);
+  stroke-width: 0.72;
+  transition: stroke 0.15s;
+}
+.reach-map .reach-country:hover {
+  stroke: var(--color-fg);
+  stroke-opacity: 1 !important;
+}
+.reach-map .reach-arcs path {
+  stroke: var(--color-brand);
+  stroke-width: 0.12;
+  stroke-linecap: butt;
+  stroke-opacity: 0.28;
+  pointer-events: none;
+}
+@media (max-width: 767px) {
+  /* Bigger dots on a phone, where a grid step is ~2.4 px. */
+  .reach-map .reach-land { stroke-width: 0.66; }
+  .reach-map .reach-country { stroke-width: 0.84; }
+  .reach-map .reach-arcs path { stroke-width: 0.18; }
+}
+.reach-pulse {
+  fill: none;
+  stroke: var(--color-fg);
+  stroke-width: 0.2;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: reach-pulse 2.4s ease-out infinite;
+}
+@keyframes reach-pulse {
+  from { scale: 0.4; opacity: 0.9; }
+  to { scale: 1.8; opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reach-pulse { animation: none; opacity: 0.5; }
+}
+.reach-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.25rem 0;
+  break-inside: avoid;
+  color: var(--color-neutral-400, #a3a3a3);
+}
+.reach-list b {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.75rem;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--color-fg) 55%, transparent);
+}
+.reach-tab {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  padding: 0 1.1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--color-fg) 70%, transparent);
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+.reach-tab:hover { color: var(--color-fg); }
+.reach-tab:has(input:checked) {
+  background: var(--color-fg);
+  color: #000;
+}
+.reach-tab:has(input:focus-visible) {
+  outline: 2px solid var(--color-fg);
+  outline-offset: 2px;
+}
+
 /* Mobile menu (Navbar) */
 @keyframes menu-in {
   from { opacity: 0; translate: 0 -12px; }

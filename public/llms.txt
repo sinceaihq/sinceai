@@ -11,7 +11,7 @@ Last-Updated: 2026-10-19
 - Founded: 2025
 - Based in: Turku, Finland
 - Scope: Global, open worldwide
-- Flagship event: Since AI Hackathon 2026 (November 6–8, 2026, Turku, Finland — opening and closing at EduCity, building at BioCity and Joki; 1,000+ builders targeted, 72-hour format, 15 company challenges, MLH 2027 Season Member Event)
+- Flagship event: Since AI Hackathon 2026 (November 6–8, 2026, Turku, Finland — opening and closing at EduCity, building at BioCity and Joki; 1,000+ builders targeted, 48-hour format, 15 company challenges, MLH 2027 Season Member Event)
 - Website: https://sinceai.ai
 - Contact: info@sinceai.fi
 

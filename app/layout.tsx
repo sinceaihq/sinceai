@@ -58,7 +58,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Since AI | Global Execution-Focused AI Innovation Ecosystem",
     description:
-      "A global ecosystem of 10,000+ AI builders in 100+ countries, with Google for Developers, ElevenLabs, Bayer, Valmet, Antler and 100+ partners and supporters.",
+      "A global ecosystem of 10,000+ AI builders in 120+ countries, with Google for Developers, ElevenLabs, Bayer, Valmet, Antler and 100+ partners and supporters.",
     url: "https://sinceai.ai",
     siteName: "Since AI",
     locale: "en_US",

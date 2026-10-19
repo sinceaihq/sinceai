@@ -48,7 +48,7 @@ export const ORG = {
   },
   /**
    * Published metrics — the /impact page explains how each is counted.
-   * Last updated 18 Sep 2026 (#65); change them here and on /impact together.
+   * Last updated 18 Sep 2026 (#65), countries 19 Oct 2026; change them here and on /impact together.
    */
   stats: {
     lastUpdated: "September 2026",
@@ -59,7 +59,8 @@ export const ORG = {
     /** 107 organisations in lib/partners.ts (challenge, strategic, capital, research and community partners). */
     partners: "100+",
     projects: "100+",
-    countries: "100+",
+    /** 123 countries on sinceai.app profiles, 92 among Hackathon 2026 applicants (lib/reach.ts, 19 Oct 2026). */
+    countries: "120+",
   },
 } as const;
 

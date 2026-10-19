@@ -101,8 +101,10 @@ export default function AboutPage() {
               <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-12">
                 {ORG.legalName} is a{" "}
                 <strong className="text-white">registered Finnish nonprofit association</strong>
-                {" "}whose purpose is public-benefit education in artificial
-                intelligence — not commercial activity for private owners.
+                {" "}building a global AI innovation ecosystem: {ORG.stats.network} builders in{" "}
+                {ORG.stats.countries} countries, working with leading companies, investors and
+                researchers. Its purpose is public-benefit education in artificial intelligence —
+                not commercial activity for private owners.
               </p>
 
               {/* 2. Nonprofit mission — extractable statement for program review */}
@@ -234,10 +236,10 @@ export default function AboutPage() {
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-6">
                   {[
-                    { value: "10,000+", label: "AI builders in our network" },
-                    { value: "1,000+", label: "Builders targeted at Hackathon 2026" },
-                    { value: "100+", label: "Countries represented" },
-                    { value: "100+", label: "Partners & supporters" },
+                    { value: ORG.stats.network, label: "AI builders in our network" },
+                    { value: ORG.stats.hackathon2026Target, label: "Builders targeted at Hackathon 2026" },
+                    { value: ORG.stats.countries, label: "Countries represented" },
+                    { value: ORG.stats.partners, label: "Partners & supporters" },
                   ].map((s) => (
                     <div
                       key={s.label}

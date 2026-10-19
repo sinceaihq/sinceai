@@ -5,10 +5,8 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { ORG } from "@/lib/org";
+import { REACH, fmt } from "@/lib/reach";
 
-// TODO (Riku): verify "countries represented" before this page goes live.
-// Current value uses the hero's claim of 100+ — replace with the defensible
-// number from real hackathon applications + Discord analytics if lower.
 const metrics: {
   metric: string;
   value: string;
@@ -54,8 +52,12 @@ const metrics: {
   {
     metric: "Countries represented",
     value: ORG.stats.countries,
-    methodology:
-      "Via partner community reach, direct applications from Since AI Hackathon 2025, and Discord member analytics.",
+    methodology: `${REACH.members.countries} countries on the profiles of ${fmt(REACH.members.total)} sinceai.app accounts, ${REACH.asOfLabel}. Counted from the profile country; accounts without one are not counted.`,
+  },
+  {
+    metric: "Since AI Hackathon 2026 applications",
+    value: fmt(REACH.applicants.total),
+    methodology: `Registrations for 6–8 November 2026 as of ${REACH.asOfLabel}, from ${REACH.applicants.countries} countries of residence; ${fmt(REACH.applicants.travelling)} applicants plan to travel to Turku from abroad. The homepage map shows both datasets by country.`,
   },
 ];
 
@@ -129,7 +131,7 @@ export default function ImpactPage() {
                         {row.value}
                         {row.todo && <span className="ml-2 text-xs font-normal text-yellow-600">⚠ verify</span>}
                       </dd>
-                      <dd className="mt-2 text-xs leading-relaxed text-white/55">{row.methodology}</dd>
+                      <dd className="mt-2 text-sm leading-relaxed text-white/55">{row.methodology}</dd>
                     </div>
                   ))}
                 </dl>

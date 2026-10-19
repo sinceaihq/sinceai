@@ -6,7 +6,7 @@ import { ANALYTICS_EVENTS } from "@/lib/gtag";
 
 const FACTS = [
   { value: ORG.stats.network, label: "AI builders in our network" },
-  { value: ORG.stats.countries, label: "Countries represented" },
+  { value: ORG.stats.countries, label: "Countries in the community" },
   { value: ORG.stats.partners, label: "Partners and supporters" },
   { value: "8 weeks", label: "Production support for the strongest teams" },
 ] as const;
@@ -47,8 +47,9 @@ export function Hero() {
           </h1>
 
           <p className="mt-8 max-w-2xl text-base md:text-lg text-neutral-300 leading-relaxed text-pretty">
-            Since AI is a global ecosystem of AI builders. We run high-intensity hackathons with leading companies —
-            and give the strongest teams eight weeks of production support to take what they build to real users.
+            Since AI is a global, execution-focused AI innovation ecosystem. We connect builders in {ORG.stats.countries}{" "}
+            countries with leading companies, investors and researchers — and stay with the strongest teams until what
+            they build runs for real users.
           </p>
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -57,7 +58,7 @@ export function Hero() {
               analyticsEvent={ANALYTICS_EVENTS.REGISTER_CLICK}
               className="inline-flex min-h-12 items-center justify-center bg-white text-black rounded-none px-7 py-3 text-sm font-semibold hover:bg-neutral-100 transition-colors cursor-pointer"
             >
-              Apply for Hackathon 2026 <span aria-hidden="true" className="ml-2">→</span>
+              Join Since AI <span aria-hidden="true" className="ml-2">→</span>
               <span className="sr-only"> (opens in a new tab)</span>
             </TrackedLink>
             <Link

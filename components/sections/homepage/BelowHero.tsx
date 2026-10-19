@@ -8,6 +8,8 @@ import { ORG } from "@/lib/org";
 import { PARTNERS, type Partner } from "@/lib/partners";
 import { HACKATHON_2026_PARTNERS, MLH_2027 } from "@/lib/sinceai";
 import { SectionIntro } from "./SectionIntro";
+import { GlobalReach } from "./GlobalReach";
+import { REACH, fmt } from "@/lib/reach";
 
 const primaryButton =
   "inline-flex min-h-12 items-center justify-center bg-white text-black rounded-none px-7 py-3 text-sm font-semibold hover:bg-neutral-100 transition-colors cursor-pointer";
@@ -32,7 +34,7 @@ function HackathonFeature() {
             id="home-hackathon-title"
             eyebrow="// flagship event · 6–8 November 2026"
             title="Since AI Hackathon 2026."
-            lede={`Three days, 1,000+ builders and ${HACKATHON_2026_PARTNERS.challengeTarget} real challenges from ${HACKATHON_2026_PARTNERS.challengePartnersShort}. The best solutions don't end as demos — they get eight weeks of production support.`}
+            lede={`48 hours, 1,000+ builders and ${HACKATHON_2026_PARTNERS.challengeTarget} real challenges from ${HACKATHON_2026_PARTNERS.challengePartnersShort} — ${fmt(REACH.applicants.total)} applications from ${REACH.applicants.countries} countries so far. The best solutions don't end as demos: they get eight weeks of production support.`}
           />
           <dl className="mt-10 grid grid-cols-2 gap-px bg-white/10 border border-white/10">
             {HACKATHON_FACTS.map((f) => (
@@ -84,62 +86,122 @@ function HackathonFeature() {
   );
 }
 
-// ── How it works ───────────────────────────────────────────────────────────
+// ── The ecosystem: what Since AI does ─────────────────────────────────────
 
-const STEPS = [
+const STAGES: {
+  stage: string;
+  summary: string;
+  programs: { title: string; body: string; href: string; cta: string; highlight?: true }[];
+}[] = [
   {
-    n: "01",
-    title: "Build",
-    body: "High-intensity hackathons and applied AI projects built around real problems from industry partners — with mentors, tools and data from day one.",
+    stage: "Build",
+    summary: "Real problems, real teams",
+    programs: [
+      {
+        title: "Hackathons",
+        body: "48-hour hackathons on real challenges from leading companies, with mentors, tools and data from day one. The flagship brings 1,000+ builders to Finland every November.",
+        href: "/hackathon",
+        cta: "Since AI Hackathon 2026",
+      },
+      {
+        title: "Global builder community",
+        body: `${ORG.stats.network} builders in ${ORG.stats.countries} countries — on Discord, at events and on the Since AI platform, where builders find teams, challenges and each other.`,
+        href: "/for-builders",
+        cta: "For builders",
+      },
+    ],
   },
   {
-    n: "02",
-    title: "Ship",
-    body: "The strongest teams get eight weeks of production support: architecture review, production preparation and deployment, working with the challenge company.",
-    highlight: true,
+    stage: "Ship",
+    summary: "From demo to production",
+    programs: [
+      {
+        title: "Production support",
+        body: "The strongest teams get eight weeks with the challenge company: architecture review, production preparation and deployment to real users.",
+        href: "/production-support",
+        cta: "How production support works",
+        highlight: true,
+      },
+      {
+        title: "Playbooks and guides",
+        body: "Open, practical material on shipping AI — challenge design, evaluation, deployment and what we learn from every event.",
+        href: "/resources",
+        cta: "Resources",
+      },
+    ],
   },
   {
-    n: "03",
-    title: "Scale",
-    body: "Founders meet capital and commercialisation partners such as Antler, Inventure, Wave Ventures and Redstone VC — and the research-to-market programme.",
+    stage: "Scale",
+    summary: "Companies and capital",
+    programs: [
+      {
+        title: "Capital",
+        body: "Teams ready to build a company meet investors such as Antler, Inventure, Wave Ventures and Redstone VC.",
+        href: "/partners",
+        cta: "Capital partners",
+      },
+      {
+        title: "Research to market",
+        body: "A route for university research to reach the market: industry validation, builders and founders around each idea.",
+        href: "/research-to-market",
+        cta: "Research to market",
+      },
+    ],
   },
-] as const;
+];
 
-function HowItWorks() {
+function Programs() {
   return (
-    <section aria-labelledby="home-how-title" className="py-24 md:py-32 px-6 border-t border-white/10">
+    <section aria-labelledby="home-programs-title" className="py-24 md:py-32 px-6 border-t border-white/10">
       <div className="mx-auto max-w-6xl">
         <SectionIntro
-          id="home-how-title"
-          eyebrow="// how since ai works"
-          title="From idea to production — not just a demo."
-          lede="Most hackathons end with a pitch. Since AI stays with the teams that matter until their solution runs for real users."
+          id="home-programs-title"
+          eyebrow="// the ecosystem"
+          title="From first prototype to production — and on to a company."
+          lede="Most hackathons end with a pitch. Since AI is built around what happens next: one ecosystem that takes builders from a real problem to a product in use, and the best teams on to capital."
         />
-        <ol className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-3">
-          {STEPS.map((s) => (
-            <li
-              key={s.n}
-              className={
-                "flex flex-col border p-7 transition-colors " +
-                ("highlight" in s ? "border-(--color-brand)/50 bg-(--color-brand)/[0.04]" : "border-white/10 hover:border-white/20")
-              }
-            >
-              <span aria-hidden="true" className="font-mono text-sm text-white/55">
-                {s.n}
-              </span>
-              <h3 className="mt-6 text-2xl font-bold tracking-tight text-white">{s.title}</h3>
-              <p className="mt-3 text-sm text-neutral-300 leading-relaxed">{s.body}</p>
+        <ol className="mt-14 grid grid-cols-1 gap-px border border-white/10 bg-white/10 md:grid-cols-3">
+          {STAGES.map((s, i) => (
+            <li key={s.stage} className="flex flex-col bg-black">
+              <div className="flex items-baseline justify-between gap-4 border-b border-white/10 px-7 py-6">
+                <h3 className="text-2xl font-bold tracking-tight text-white">
+                  <span aria-hidden="true" className="mr-3 font-mono text-sm font-normal text-white/55">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  {s.stage}
+                </h3>
+                <span className="text-right text-xs font-mono uppercase tracking-widest text-white/55">{s.summary}</span>
+              </div>
+              <ul className="flex flex-1 flex-col divide-y divide-white/10">
+                {s.programs.map((p) => (
+                  <li
+                    key={p.title}
+                    className={
+                      "flex flex-1 flex-col px-7 py-7 " +
+                      (p.highlight ? "bg-(--color-brand)/[0.06] shadow-[inset_2px_0_0_var(--color-brand)]" : "")
+                    }
+                  >
+                    <h4 className="text-lg font-semibold text-white">
+                      {p.title}
+                      {p.highlight && (
+                        <span className="ml-3 inline-block translate-y-[-2px] border border-(--color-brand)/60 px-1.5 py-0.5 align-middle font-mono text-[10px] uppercase tracking-widest text-(--color-brand)">
+                          8 weeks
+                        </span>
+                      )}
+                    </h4>
+                    <p className="mt-3 flex-1 text-sm leading-relaxed text-neutral-300">{p.body}</p>
+                    <Link
+                      href={p.href}
+                      className="mt-5 inline-flex min-h-11 items-center self-start text-sm text-neutral-300 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white hover:decoration-white"
+                    >
+                      {p.cta} <span aria-hidden="true" className="ml-1">→</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </li>
           ))}
         </ol>
-        <p className="mt-8">
-          <Link
-            href="/production-support"
-            className="inline-flex min-h-11 items-center text-sm text-neutral-300 underline decoration-white/25 underline-offset-4 hover:text-white hover:decoration-white transition-colors"
-          >
-            How production support works <span aria-hidden="true" className="ml-1">→</span>
-          </Link>
-        </p>
       </div>
     </section>
   );
@@ -227,11 +289,12 @@ function Ecosystem() {
 export function BelowHero() {
   return (
     <div className="w-full bg-black">
+      <GlobalReach />
       <FadeInView>
-        <HackathonFeature />
+        <Programs />
       </FadeInView>
       <FadeInView>
-        <HowItWorks />
+        <HackathonFeature />
       </FadeInView>
       <FadeInView>
         <Ecosystem />

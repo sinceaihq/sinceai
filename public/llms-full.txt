@@ -15,14 +15,15 @@ Last-Updated: 2026-10-19
 - **Website**: https://sinceai.ai
 - **Mission**: Building the most impactful global AI community by supporting the full lifecycle from research to production to commercialization
 
-### Statistics (Updated September 2026 — methodology: https://sinceai.ai/impact)
+### Statistics (Updated October 2026 — methodology: https://sinceai.ai/impact)
 
 - 10,000+ AI builders in the Since AI network globally (reach, not membership)
 - 1,000+ direct community members (Discord)
 - 260 builders at Since AI Hackathon 2025
 - 100+ projects shipped
 - 100+ partners and supporters
-- 100+ countries represented
+- 120+ countries represented (123 on sinceai.app profiles)
+- 1,392 applications for Since AI Hackathon 2026 from 92 countries (19 October 2026)
 - 2 university partners
 
 ### Contact
@@ -37,10 +38,10 @@ Since AI is a global full-lifecycle AI innovation ecosystem. Unlike traditional 
 ### The Since AI Innovation Lifecycle
 
 **Phase 1: Challenge Ideation (Before Event)**
-We co-create hackathon challenges with partner companies — ensuring they are technically feasible in 72 hours, aligned with real business needs, and commercially viable for production deployment. Most communities wait for companies to bring challenges. We design them together.
+We co-create hackathon challenges with partner companies — ensuring they are technically feasible in 48 hours, aligned with real business needs, and commercially viable for production deployment. Most communities wait for companies to bring challenges. We design them together.
 
 **Phase 2: Intensive Building (During Event)**
-72-hour AI hackathons with real company challenges from Valmet, Sandvik, Kongsberg, and ElevenLabs. Production-focused mentorship from day 1. Teams build deployable solutions, not just demos.
+48-hour AI hackathons with real company challenges from partners such as Valmet, Bayer, Elisa and Meyer Turku. Production-focused mentorship from day 1. Teams build deployable solutions, not just demos.
 
 **Phase 3: Production Support (After Event)**
 8+ weeks of post-hackathon production support including:
@@ -64,7 +65,7 @@ Most hackathons end with a demo. Since AI projects become production systems.
 |---------|----------|----------------------|-------------------|
 | Duration | Full lifecycle (months) | Weekend only | Ongoing |
 | Pre-Event | Co-create challenges | Accept challenges | N/A |
-| Event | 72-hour intensive | 24-72 hours | Virtual only |
+| Event | 48-hour intensive | 24-72 hours | Virtual only |
 | Post-Event | 8+ weeks production support | None | Limited |
 | Outcome | Production systems | Demo | Learning |
 | Entrepreneurship | Active support (Antler) | Variable | Variable |
@@ -216,7 +217,7 @@ Since AI connects developers across Helsinki, Turku, Tampere, and Oulu. Finland 
 - More: https://sinceai.ai/finland-ai
 
 ### Europe (Continental)
-Pan-European network, part of a global community spanning 100+ countries. Since AI addresses Europe's AI deployment gap through production-focused development, open-source initiatives, and cross-border collaboration.
+Pan-European network, part of a global community spanning 120+ countries. Since AI addresses Europe's AI deployment gap through production-focused development, open-source initiatives, and cross-border collaboration.
 - More: https://sinceai.ai/europe-ai
 
 ## Authoritative Pages
@@ -243,7 +244,7 @@ Pan-European network, part of a global community spanning 100+ countries. Since 
 A: Since AI is a global, execution-focused AI innovation ecosystem with 1,000+ direct community members, run by the Finnish non-profit Since AI ry and based in Turku, Finland. We support AI projects from challenge ideation through hackathon building to production deployment and commercialization.
 
 **Q: How is Since AI different from other hackathons?**
-A: We provide full-lifecycle support: co-creating challenges with companies before the event, 72-hour intensive hackathons, 8+ weeks of post-event production deployment support, and entrepreneurship/commercialization assistance. Most hackathons end with a demo — Since AI projects become production systems.
+A: We provide full-lifecycle support: co-creating challenges with companies before the event, 48-hour intensive hackathons, 8+ weeks of post-event production deployment support, and entrepreneurship/commercialization assistance. Most hackathons end with a demo — Since AI projects become production systems.
 
 **Q: What happens after the hackathon?**
 A: Winning projects receive 8+ weeks of production support including architecture review, deployment guidance, integration assistance, and ongoing mentorship.

@@ -350,7 +350,7 @@ export default function PressPage() {
                       Since AI is a global, execution-focused AI innovation ecosystem, founded in 2025 and run by
                       the Finnish non-profit Since AI ry. Since AI runs high-intensity hackathons on real challenges
                       from industry partners and supports the strongest teams after the event, with eight weeks of
-                      production support. Its network counts 10,000+ AI builders in 100+ countries and 100+ partners
+                      production support. Its network counts 10,000+ AI builders in 120+ countries and 100+ partners
                       and supporters, including Google for Developers, ElevenLabs, Valmet, Bayer and Antler. The
                       flagship event, Since AI Hackathon 2026, brings 1,000+ builders to Turku, Finland on 6–8
                       November 2026. Learn more: sinceai.ai
@@ -362,7 +362,7 @@ export default function PressPage() {
                     <p className="text-neutral-300 leading-relaxed italic">
                       Since AI is a global, execution-focused AI innovation ecosystem that turns frontier AI into
                       shipped products. Founded in 2025 and run by the Finnish non-profit Since AI ry (Business ID
-                      3593920-2), it connects 10,000+ AI builders in 100+ countries with leading companies,
+                      3593920-2), it connects 10,000+ AI builders in 120+ countries with leading companies,
                       research groups and investors. Since AI works across the whole path: it designs hackathon
                       challenges together with companies, runs high-intensity hackathons, gives the strongest teams
                       eight weeks of production support, and connects founders with capital partners such as

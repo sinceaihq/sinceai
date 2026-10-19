@@ -142,6 +142,34 @@ test.describe("public site", () => {
     await expect(card).toHaveCount(0);
   });
 
+  test("the global reach map switches between the community and Hackathon 2026 applicants", async ({ page }) => {
+    await acceptNoCookies(page);
+    await page.goto("/");
+    const reach = page.locator("section.reach");
+    await expect(reach.getByRole("heading", { level: 2 })).toHaveText(/Builders from \d{3} countries/);
+    const map = reach.getByRole("img", { name: /World map of the Since AI community/ });
+    await expect(map).toBeVisible();
+    // One path per country and layer, not thousands of nodes.
+    expect(await map.locator("path").count()).toBeLessThan(300);
+
+    const members = reach.getByRole("radio", { name: "Community" });
+    const applicants = reach.getByRole("radio", { name: "Hackathon 2026" });
+    await expect(members).toBeChecked();
+    await expect(reach.getByText("Members by country")).toBeVisible();
+    await expect(reach.getByText("Hackathon 2026 applicants by country")).toBeHidden();
+
+    await reach.locator(".reach-tab", { hasText: "Hackathon 2026" }).click();
+    await expect(applicants).toBeChecked();
+    await expect(reach.getByText("Hackathon 2026 applicants by country")).toBeVisible();
+    await expect(reach.getByText("Members by country")).toBeHidden();
+    await expect(reach.getByText("Travelling to Turku from abroad")).toBeVisible();
+    // Keyboard: arrow keys move between the two layers.
+    await applicants.focus();
+    await page.keyboard.press("ArrowLeft");
+    await expect(members).toBeChecked();
+    await expect(reach.getByText("Members by country")).toBeVisible();
+  });
+
   test("Google Analytics stays off the critical path until the visitor engages", async ({ page }) => {
     const gtagRequests: string[] = [];
     await page.route(/googletagmanager\.com\/gtag\/js/, (route) => {
