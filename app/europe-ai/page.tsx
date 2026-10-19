@@ -348,7 +348,26 @@ export default function EuropeAIPage() {
                   Leading AI builder communities in Europe
                 </h2>
 
-                <div className="overflow-x-auto">
+                {/* Phones: one card per community instead of a five-column table that scrolls sideways. */}
+                <ul className="divide-y divide-white/10 border-y border-white/10 sm:hidden">
+                  {communities.map((c) => (
+                    <li key={c.name} className="py-5">
+                      <p className="text-base font-semibold text-white">{c.name}</p>
+                      <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+                        <dt className="text-white/55">Base</dt>
+                        <dd className="text-neutral-300">{c.base}</dd>
+                        <dt className="text-white/55">Focus</dt>
+                        <dd className="text-neutral-300">{c.focus}</dd>
+                        <dt className="text-white/55">Format</dt>
+                        <dd className="text-neutral-300">{c.format}</dd>
+                        <dt className="text-white/55">International</dt>
+                        <dd className="text-neutral-300">{c.international}</dd>
+                      </dl>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="hidden overflow-x-auto sm:block">
                   <table className="w-full text-sm text-left border-collapse">
                     <thead>
                       <tr className="border-b border-white/10">

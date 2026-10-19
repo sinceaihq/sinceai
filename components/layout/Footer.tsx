@@ -56,6 +56,9 @@ const SOCIAL_LINKS = [
   { name: "Facebook",  href: ORG.social.facebook },
 ];
 
+const SOCIAL_LINK =
+  "inline-flex min-h-11 items-center text-sm text-neutral-400 hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white whitespace-nowrap md:min-h-9";
+
 const LEGAL_LINKS = [
   { name: "Code of Conduct", href: "/code-of-conduct" },
   { name: "Privacy Policy",  href: "/privacy" },
@@ -78,12 +81,9 @@ export const Footer: React.FC<FooterProps> = () => {
             <p className="text-sm text-neutral-400 leading-relaxed mb-4">
               A global, execution-focused AI innovation ecosystem — where frontier AI becomes shipped products.
             </p>
-            <p className="text-sm text-white font-medium mb-4">
-              Since AI is a registered nonprofit association (ry) in Finland.
-            </p>
             <a
               href={`mailto:${ORG.contact.infoEmail}`}
-              className="text-sm text-neutral-400 hover:text-white transition-colors"
+              className="inline-flex min-h-11 items-center text-sm text-neutral-400 hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
             >
               {ORG.contact.infoEmail}
             </a>
@@ -94,14 +94,14 @@ export const Footer: React.FC<FooterProps> = () => {
             <span className="text-xs font-mono uppercase tracking-widest text-white/55 block mb-4">
               {"// community"}
             </span>
-            <div className="flex flex-wrap gap-x-6">
+            <div className="flex flex-wrap gap-x-6 gap-y-1">
               {SOCIAL_LINKS.map((s) =>
                 s.name === "Discord" ? (
                   <TrackedLink
                     key={s.name}
                     href={s.href}
                     analyticsEvent="discord_join_click"
-                    className="text-sm text-neutral-400 hover:text-white transition-colors leading-loose focus-visible:outline focus-visible:outline-2 focus-visible:outline-white whitespace-nowrap"
+                    className={SOCIAL_LINK}
                   >
                     {s.name} ↗
                   </TrackedLink>
@@ -111,7 +111,7 @@ export const Footer: React.FC<FooterProps> = () => {
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-neutral-400 hover:text-white transition-colors leading-loose focus-visible:outline focus-visible:outline-2 focus-visible:outline-white whitespace-nowrap"
+                    className={SOCIAL_LINK}
                   >
                     {s.name} ↗
                   </a>
@@ -122,17 +122,17 @@ export const Footer: React.FC<FooterProps> = () => {
         </div>
 
         {/* ── Navigation columns ──────────────────────────────── */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-16 pt-16 border-t border-white/10 mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-12 md:gap-16 pt-16 border-t border-white/10 mb-16">
           {NAV_COLUMNS.map((col) => (
             <nav key={col.label} aria-label={col.label}>
-              <span className="text-xs font-mono uppercase tracking-widest text-white/55 block mb-6">
+              <span className="text-xs font-mono uppercase tracking-widest text-white/55 block mb-4 md:mb-6">
                 {col.label}
               </span>
               {col.links.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-sm text-neutral-400 hover:text-white transition-colors leading-loose block focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
+                  className="flex min-h-11 items-center py-1 text-sm leading-snug text-neutral-400 hover:text-white transition-colors md:block md:min-h-0 md:py-0 md:leading-loose focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
                 >
                   {link.name}
                 </Link>
@@ -149,12 +149,12 @@ export const Footer: React.FC<FooterProps> = () => {
             © {year} Since AI. All rights reserved.
           </p>
 
-          <div className="flex flex-wrap items-center gap-6">
+          <div className="flex flex-wrap items-center gap-x-6">
             {LEGAL_LINKS.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
-                className="text-xs text-white/55 hover:text-white transition-colors whitespace-nowrap focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+                className="inline-flex min-h-11 items-center text-xs text-white/55 hover:text-white transition-colors whitespace-nowrap focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
               >
                 {l.name}
               </Link>

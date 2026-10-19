@@ -219,19 +219,19 @@ export default function ProjectsPage() {
                     </div>
 
                     {/* CTAs */}
-                    <div className="flex gap-3 pt-4 border-t border-white/5">
+                    <div className="flex flex-wrap gap-x-6 pt-3 border-t border-white/5">
                       <a
                         href={config.discordUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => trackEvent(ANALYTICS_EVENTS.DISCORD_JOIN_CLICK)}
-                        className="text-sm text-neutral-400 hover:text-white transition-colors"
+                        className="inline-flex min-h-11 items-center whitespace-nowrap text-sm text-neutral-400 hover:text-white transition-colors"
                       >
-                        Join builders →
+                        Join builders →<span className="sr-only"> (opens in a new tab)</span>
                       </a>
                       <Link
                         href="/partners"
-                        className="text-sm text-neutral-400 hover:text-white transition-colors"
+                        className="inline-flex min-h-11 items-center whitespace-nowrap text-sm text-neutral-400 hover:text-white transition-colors"
                       >
                         Sponsor a challenge →
                       </Link>

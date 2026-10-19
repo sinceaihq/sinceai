@@ -359,8 +359,8 @@ const LeadCard: React.FC<{ person: TeamMember }> = ({ person }) => (
       <p className="text-neutral-400 text-sm mt-0.5">{person.role}</p>
       <div className="mt-3 space-y-2">
         {person.email && (
-          <a href={`mailto:${person.email}`} className="text-sm text-white/55 hover:text-white transition-colors break-all block">
-            {person.email}
+          <a href={`mailto:${person.email}`} className="block py-1 text-sm text-white/55 hover:text-white transition-colors [overflow-wrap:anywhere]">
+            <EmailText email={person.email} />
           </a>
         )}
         {person.linkedin && (
@@ -378,6 +378,19 @@ const LeadCard: React.FC<{ person: TeamMember }> = ({ person }) => (
     </div>
   </div>
 );
+
+/** An e-mail address that, when it must wrap, breaks before the "@" rather than mid-word. */
+const EmailText: React.FC<{ email: string }> = ({ email }) => {
+  const at = email.indexOf("@");
+  if (at < 0) return <>{email}</>;
+  return (
+    <>
+      {email.slice(0, at)}
+      <wbr />
+      {email.slice(at)}
+    </>
+  );
+};
 
 // Compact member card — photo, name, role only
 const MemberCard: React.FC<{ person: TeamMember }> = ({ person }) => (
@@ -407,8 +420,8 @@ const MemberCard: React.FC<{ person: TeamMember }> = ({ person }) => (
       <p className="text-white text-sm font-medium tracking-tight truncate">{person.name}</p>
       <p className="text-white/55 text-xs truncate">{person.role}</p>
       {person.email && (
-        <a href={`mailto:${person.email}`} className="text-white/55 text-xs hover:text-white transition-colors break-all block mt-0.5">
-          {person.email}
+        <a href={`mailto:${person.email}`} className="block py-1 text-white/55 text-xs hover:text-white transition-colors [overflow-wrap:anywhere]">
+          <EmailText email={person.email} />
         </a>
       )}
     </div>

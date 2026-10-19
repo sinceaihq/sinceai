@@ -71,7 +71,7 @@ function SocialLink({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="text-white/55 hover:text-white transition-colors duration-300"
+      className="inline-flex h-11 w-11 items-center justify-center text-white/55 hover:text-white transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
     >
       <Icon size={18} strokeWidth={1.5} />
     </a>
@@ -90,11 +90,10 @@ function SpeakerCard({ speaker }: { speaker: Speaker }) {
             fill
             className="object-cover grayscale"
             sizes="(max-width: 768px) 192px, (max-width: 1024px) 224px, 280px"
-            priority
           />
         </div>
 
-        <div className="flex items-center gap-4 mt-6">
+        <div className="mt-4 flex items-center gap-1 lg:-ml-3">
           {speaker.socials.linkedin && (
             <SocialLink href={speaker.socials.linkedin} icon={Linkedin} label="LinkedIn" />
           )}

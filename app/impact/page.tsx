@@ -120,7 +120,21 @@ export default function ImpactPage() {
                   Our numbers
                 </h2>
 
-                <div className="overflow-x-auto">
+                {/* Phones: one card per metric, so the methodology is readable without sideways scrolling. */}
+                <dl className="divide-y divide-white/10 border-y border-white/10 sm:hidden">
+                  {metrics.map((row) => (
+                    <div key={row.metric} className="py-5">
+                      <dt className="text-sm font-medium leading-snug text-neutral-200">{row.metric}</dt>
+                      <dd className="mt-1 text-2xl font-bold tracking-tight text-white">
+                        {row.value}
+                        {row.todo && <span className="ml-2 text-xs font-normal text-yellow-600">⚠ verify</span>}
+                      </dd>
+                      <dd className="mt-2 text-xs leading-relaxed text-white/55">{row.methodology}</dd>
+                    </div>
+                  ))}
+                </dl>
+
+                <div className="hidden overflow-x-auto sm:block">
                   <table className="w-full text-sm text-left border-collapse">
                     <thead>
                       <tr className="border-b border-white/10">
@@ -166,7 +180,30 @@ export default function ImpactPage() {
               {/* 4. Events to date */}
               <section className="mb-16">
                 <h2 className="text-3xl font-bold text-white mb-6 tracking-tight">Events to date</h2>
-                <div className="overflow-x-auto">
+                <ul className="divide-y divide-white/10 border-y border-white/10 sm:hidden">
+                  {EVENTS.map((event) => (
+                    <li key={event.name} className="py-5">
+                      <p className="text-base font-semibold text-white">
+                        {event.href ? (
+                          <Link href={event.href} className="underline hover:text-neutral-300">
+                            {event.name}
+                          </Link>
+                        ) : (
+                          event.name
+                        )}
+                      </p>
+                      <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+                        <dt className="text-white/55">Dates</dt>
+                        <dd className="text-neutral-300">{event.dates}</dd>
+                        <dt className="text-white/55">Builders</dt>
+                        <dd className="text-neutral-300">{event.builders}</dd>
+                        <dt className="text-white/55">Projects</dt>
+                        <dd className="text-neutral-300">{event.projects}</dd>
+                      </dl>
+                    </li>
+                  ))}
+                </ul>
+                <div className="hidden overflow-x-auto sm:block">
                   <table className="w-full text-sm text-left border-collapse">
                     <thead>
                       <tr className="border-b border-white/10">
