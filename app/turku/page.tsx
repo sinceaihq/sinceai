@@ -265,7 +265,7 @@ export default function TurkuPage() {
                 <ul className="space-y-3 text-neutral-300 mb-4">
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">&bull;</span>
-                    <span><strong className="text-white">Annual AI Hackathon:</strong> 72-hour intensive ({UPCOMING_EVENT_2026.month} {UPCOMING_EVENT_2026.year})</span>
+                    <span><strong className="text-white">Annual AI Hackathon:</strong> 48-hour intensive ({UPCOMING_EVENT_2026.month} {UPCOMING_EVENT_2026.year})</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">&bull;</span>

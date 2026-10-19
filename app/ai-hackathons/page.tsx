@@ -14,7 +14,7 @@ import { TrackedLink } from "@/components/analytics/TrackedLink";
 export const metadata: Metadata = {
   title: "AI Hackathons 2026 — Best Global AI Hackathons & Events | Since AI",
   description:
-    "The definitive guide to AI hackathons globally. Since AI Hackathon 2026: November 6–8, Turku, Finland — 72-hour format, 1,000+ builders, 15 company challenges from Valmet, Bayer, Elisa and more. Free to attend.",
+    "The definitive guide to AI hackathons globally. Since AI Hackathon 2026: November 6–8, Turku, Finland — 48-hour format, 1,000+ builders, 15 company challenges from Valmet, Bayer, Elisa and more. Free to attend.",
   keywords: [
     "AI hackathons global",
     "AI hackathon 2026",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "AI Hackathons 2026 | Since AI",
     description:
-      "Since AI Hackathon 2026: November 6–8, Turku, Finland. 72 hours, 1,000+ builders, real partner challenges. Free to attend.",
+      "Since AI Hackathon 2026: November 6–8, Turku, Finland. 48 hours, 1,000+ builders, real partner challenges. Free to attend.",
     url: "https://sinceai.ai/ai-hackathons",
     siteName: "Since AI",
     type: "website",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "AI Hackathons 2026 | Since AI",
     description:
-      "Since AI Hackathon 2026: Nov 6–8, Turku. 72-hour format, 1,000+ builders, 15 company challenges from Valmet, Bayer, Elisa, Meyer Turku and more.",
+      "Since AI Hackathon 2026: Nov 6–8, Turku. 48-hour format, 1,000+ builders, 15 company challenges from Valmet, Bayer, Elisa, Meyer Turku and more.",
   },
 };
 
@@ -66,7 +66,7 @@ const whatMakesGreat = [
 const sinceAiEdge = [
   {
     label: "Duration",
-    since: "72 hours (Fri–Sun)",
+    since: "48 hours on site, Friday to Sunday",
     typical: "24–48 hours",
   },
   {
@@ -101,7 +101,7 @@ const upcomingEvents = [
     name: "Since AI Hackathon 2026",
     date: "November 6–8, 2026",
     location: "Turku, Finland",
-    format: "In-person, 72 hours",
+    format: "In-person, 48 hours",
     size: "1,000+ builders targeted",
     url: "/hackathon",
     highlight: true,
@@ -194,7 +194,7 @@ export default function AIHackathonsPage() {
             <div className="prose prose-invert prose-neutral max-w-none">
               <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-6">
                 The global AI hackathon ecosystem is growing fast. Since AI runs an
-                execution-focused AI hackathon — 72 hours, real
+                execution-focused AI hackathon — 48 hours, real
                 partner challenges, production mentorship, and post-event support.
               </p>
               <p className="text-lg text-neutral-400 leading-relaxed mb-12">

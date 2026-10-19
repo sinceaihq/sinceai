@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   title:
     "Since AI Hackathon 2026 — Global Execution-Focused AI Hackathon | November 6–8, Turku",
   description:
-    `72-hour AI hackathon in Turku, Finland, November 6–8. MLH 2027 Season Member Event. 1,000+ builders targeted, €50,000 prize pool, 15 company challenges from ${SHORT}. Open to builders worldwide.`,
+    `48-hour AI hackathon in Turku, Finland, November 6–8. MLH 2027 Season Member Event. 1,000+ builders targeted, €50,000 prize pool, 15 company challenges from ${SHORT}. Open to builders worldwide.`,
   keywords: [
     "Since AI Hackathon 2026",
     "AI hackathon Finland",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     "Since AI event",
     "AI builders hackathon",
     "hackathon Turku AMK EduCity",
-    "72 hour hackathon",
+    "48 hour hackathon",
   ],
   alternates: {
     canonical: "https://sinceai.ai/hackathon",
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     title:
       "Since AI Hackathon 2026 — Global Execution-Focused AI Hackathon | November 6–8, Turku",
     description:
-      `72-hour AI hackathon in Turku, Finland. 1,000+ builders targeted. 15 company challenges from ${SHORT}. Open to builders worldwide.`,
+      `48-hour AI hackathon in Turku, Finland. 1,000+ builders targeted. 15 company challenges from ${SHORT}. Open to builders worldwide.`,
     url: "https://sinceai.ai/hackathon",
     siteName: "Since AI",
     type: "website",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Since AI Hackathon 2026 — November 6–8, Turku",
     description:
-      `72-hour AI hackathon. 1,000+ builders targeted. 15 company challenges from ${SHORT}.`,
+      `48-hour AI hackathon. 1,000+ builders targeted. 15 company challenges from ${SHORT}.`,
     images: ["/assets/og/hero.png"],
   },
 };
@@ -67,7 +67,7 @@ const eventSchema = {
   "@id": "https://sinceai.ai/hackathon#event",
   name: "Since AI Hackathon 2026",
   description:
-    `A global execution-focused AI hackathon in a 72-hour format. 1,000+ builders targeted. €50,000 prize pool. 15 company challenges from ${SHORT}. Opening Friday 17:00 at EduCity; building at BioCity and Joki; finals Sunday 14:00.`,
+    `A global execution-focused AI hackathon in a 48-hour format. 1,000+ builders targeted. €50,000 prize pool. 15 company challenges from ${SHORT}. Opening Friday 17:00 at EduCity; building at BioCity and Joki; finals Sunday 14:00.`,
   startDate: UPCOMING_EVENT_2026.startDate,
   endDate: UPCOMING_EVENT_2026.endDate,
   eventStatus: "https://schema.org/EventScheduled",

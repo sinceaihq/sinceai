@@ -129,7 +129,7 @@ const steps = [
   {
     n: "03",
     title: "Execution",
-    body: "Hackathon, standalone project, or ongoing engagement. 1,000+ builders on your challenge in 72 hours, or a matched team on a defined problem.",
+    body: "Hackathon, standalone project, or ongoing engagement. 1,000+ builders on your challenge over one weekend, or a matched team on a defined problem.",
   },
   {
     n: "04",
@@ -212,7 +212,7 @@ export default function PartnersPage() {
                   </h3>
                   <p className="text-neutral-300 leading-relaxed mb-5">
                     Bring a real AI problem to Since AI Hackathon 2026. Get 1,000+
-                    builders working on it over 72 hours. Best teams continue into
+                    builders working on it over 48 hours. Best teams continue into
                     your pilot.
                   </p>
                   <ul className="space-y-2 text-neutral-400 text-sm mb-6">

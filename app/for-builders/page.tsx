@@ -180,7 +180,7 @@ export default function ForBuildersPage() {
                       Apply to Since AI Hackathon 2026
                     </h3>
                     <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-white/55 mb-4">
-                      <span>72 hours</span>
+                      <span>48 hours</span>
                       <span aria-hidden="true">·</span>
                       <span>1,000+ builders targeted</span>
                       <span aria-hidden="true">·</span>

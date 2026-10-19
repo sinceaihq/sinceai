@@ -36,7 +36,7 @@ const breadcrumbSchema = {
 const hackathonFaqs = [
   {
     q: "What is Since AI Hackathon?",
-    a: "Since AI Hackathon is the flagship annual event of Since AI — a global execution-focused AI innovation ecosystem based in Turku, Finland. The 2026 edition is a Major League Hacking (MLH) 2027 Season Member Event. Builders from across the world gather for a 72-hour AI hackathon format to solve real company challenges and ship working AI products.",
+    a: "Since AI Hackathon is the flagship annual event of Since AI — a global execution-focused AI innovation ecosystem based in Turku, Finland. The 2026 edition is a Major League Hacking (MLH) 2027 Season Member Event. Builders from across the world gather for a weekend-long, 48-hour AI hackathon to solve real company challenges and ship working AI products.",
   },
   {
     q: "When is Since AI Hackathon 2026?",
@@ -92,7 +92,7 @@ const keyFacts = [
   { label: "Date",           value: UPCOMING_EVENT_2026.dateNote },
   { label: "Venues",         value: "EduCity (opening and closing), BioCity and Joki (building) — Turku, Finland" },
   { label: "Prize pool",     value: "€50,000 cash" },
-  { label: "Format",         value: "72-hour AI hackathon" },
+  { label: "Format",         value: "48-hour AI hackathon, Friday to Sunday" },
   { label: "Schedule",       value: "Fri 15:00 check-in · Fri 17:00 opening · Sun 10:00 submissions close · Sun 13:15 closing ceremony · Sun 14:00 finals · ends around 15:30" },
   { label: "Challenges",     value: `15 company challenges — ${HACKATHON_2026_PARTNERS.challengePartners.length} partners confirmed, 2 to be announced` },
   { label: "Keynote",        value: HACKATHON_2026_PARTNERS.keynote },
@@ -199,7 +199,7 @@ export default function HackathonPage() {
             </h1>
 
             <p className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-6 leading-snug max-w-[720px]">
-              72 hours. 1,000+ builders.{" "}
+              48 hours. 1,000+ builders.{" "}
               <span style={{ color: "var(--color-brand)" }}>€50,000 in cash prizes.</span>
             </p>
 
@@ -344,7 +344,7 @@ export default function HackathonPage() {
                 {"// what is it"}
               </p>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-8">
-                72 hours. Real challenges. Shipped products.
+                48 hours. Real challenges. Shipped products.
               </h2>
 
               <div className="text-sm text-neutral-400 leading-relaxed max-w-[720px] space-y-4">

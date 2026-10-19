@@ -12,7 +12,7 @@ const stats = [
   { value: "€50,000", label: "// prize pool", desc: "In cash, awarded across tracks", brand: true },
   { value: "1,000+",  label: "// builders",   desc: "Expected from across the world" },
   { value: "Free",    label: "// entry",      desc: "No fee for any participant" },
-  { value: "72h",     label: "// format",     desc: "AI hackathon format — 15 company challenges" },
+  { value: "48h",     label: "// format",     desc: "AI hackathon format — 15 company challenges" },
 ];
 
 export function StatBand() {

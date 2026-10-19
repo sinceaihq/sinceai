@@ -167,6 +167,8 @@ test.describe("hackathon 2026 page", () => {
     // Former 2026 names appear only in the 2025 edition paragraph.
     const without2025 = main.replace(/The inaugural Since AI Hackathon[\s\S]*?72 hours\./, "");
     for (const name of ["Revvity", "Bo LKV", "Saarioinen", "Sandvik", "Kongsberg"]) expect(without2025).not.toContain(name);
+    // The 2026 programme runs Friday 15:00 to Sunday 15:30 — the 72-hour format belongs to 2025 only.
+    expect(without2025).not.toMatch(/72[\s-]*(h\b|hours?)/i);
     await expect(page.getByText("To be announced", { exact: true })).toHaveCount(2);
     const ld = await page.locator('script[type="application/ld+json"]').allTextContents();
     const event = ld.map((t) => JSON.parse(t)).find((d) => d["@type"] === "Event");
