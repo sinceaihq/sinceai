@@ -268,7 +268,7 @@ export default function HackathonPage() {
         <FadeInView>
           <section className="py-24 px-6 border-t border-white/10">
             <div className="mx-auto max-w-6xl">
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-12">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white mb-12">
                 Powered by world-class infrastructure.
               </h2>
 
@@ -285,10 +285,10 @@ export default function HackathonPage() {
                       href={partner.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-5 group"
+                      className="inline-flex max-w-full items-center gap-4 sm:gap-5 group"
                       aria-label={`${partner.name} — Since AI Hackathon 2026 infrastructure partner`}
                     >
-                      <h3 className="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white leading-none">
+                      <h3 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white leading-none">
                         {partner.name}
                       </h3>
                       <span className="relative w-20 h-10 md:w-24 md:h-12 shrink-0">

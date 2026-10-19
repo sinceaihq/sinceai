@@ -7,11 +7,12 @@ import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { getBreadcrumbSchema } from "@/lib/schema";
 import { ORG } from "@/lib/org";
 import type { Metadata } from "next";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Production Support — From Hackathon to Deployment | Since AI",
   description:
-    "Since AI provides 8+ weeks of post-hackathon production support. We help companies deploy winning AI projects to production with architecture review, deployment guidance, and ongoing mentorship.",
+    "Eight weeks of production support after the hackathon: Since AI helps companies take winning AI projects to production with architecture review and deployment.",
   keywords: [
     "AI production support",
     "hackathon to production",
@@ -29,11 +30,13 @@ export const metadata: Metadata = {
     url: "https://sinceai.ai/production-support",
     siteName: "Since AI",
     type: "website",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "Production Support — From Hackathon to Deployment | Since AI",
     description: "Most hackathons end with a demo. Since AI projects become production systems. 8+ weeks of deployment support for winning projects.",
+    images: [OG_IMAGE.url],
   },
 };
 

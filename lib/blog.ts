@@ -86,7 +86,7 @@ export const blogPosts: BlogPost[] = [
     slug: "ai-hackathon-project-ideas",
     title: "AI Hackathon Project Ideas: 30 Buildable Concepts in 72 Hours",
     description:
-      "30 actionable AI project ideas categorized by difficulty, each with demo structure, required data, stack suggestions, and evaluation methods for hackathon teams.",
+      "30 actionable AI project ideas by difficulty, each with a demo structure, required data, stack suggestions and evaluation methods for hackathon teams.",
     excerpt:
       "Discover 30 buildable AI project ideas for your next hackathon — from RAG Q&A to vision apps — organized by difficulty with stack suggestions and demo frameworks.",
     keyTakeaway:
@@ -136,7 +136,7 @@ export const blogPosts: BlogPost[] = [
     slug: "best-ai-hackathons-in-europe",
     title: "Best AI Hackathons in Europe",
     description:
-      "Curated guide to Europe's top AI hackathons including Junction, Datathon ETH Zurich, GenAI Zurich, Hack Kosice, MLH Europe, EU-backed challenges, and the Since AI Hackathon.",
+      "A curated guide to Europe's top AI hackathons: Junction, Datathon ETH Zurich, GenAI Zurich, Hack Kosice, MLH Europe, EU-backed challenges and Since AI.",
     excerpt:
       "Your curated guide to the best AI hackathons across Europe — from Junction in Finland to GenAI Zurich — with selection criteria and winning strategies.",
     keyTakeaway:
@@ -185,7 +185,7 @@ export const blogPosts: BlogPost[] = [
     slug: "hackathon-tech-stack-guide",
     title: "Hackathon Tech Stack Guide",
     description:
-      "Battle-tested technology stack recommendations for shipping reliable hackathon demos: the Next.js + FastAPI default stack, AI-specific choices, and deployment strategies.",
+      "Battle-tested stack recommendations for reliable hackathon demos: the Next.js + FastAPI default, AI-specific choices and deployment strategies.",
     excerpt:
       "Battle-tested tech stack recommendations for hackathon demos — from the default Next.js + FastAPI setup to AI-specific choices for RAG, extraction, and classification.",
     keyTakeaway:
@@ -238,7 +238,7 @@ export const blogPosts: BlogPost[] = [
     slug: "how-to-build-a-demo-in-72-hours",
     title: "How to Build a Demo in 72 Hours",
     description:
-      "A demo-first approach to hackathon success: build the skeleton first, add AI features incrementally, ensure reliability with caching and offline modes, and create measurable proof.",
+      "A demo-first approach to hackathons: build the skeleton first, add AI features step by step, stay reliable with caching and offline modes, and show proof.",
     excerpt:
       "Master the demo-first approach to hackathon success — build skeleton first, layer AI features incrementally, and ship a reliable product judges will remember.",
     keyTakeaway:

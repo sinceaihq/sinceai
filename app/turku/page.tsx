@@ -9,11 +9,12 @@ import { getBreadcrumbSchema } from "@/lib/schema";
 import { ORG } from "@/lib/org";
 import { FIRST_EVENT, UPCOMING_EVENT_2026 } from "@/lib/sinceai";
 import { ButtonPair } from "@/components/ui/ButtonPair";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "AI Community in Turku, Finland | Since AI",
   description:
-    "Join Turku's premier AI community. 1000+ developers, AI hackathons with real company challenges, production deployment support. Turku is Finland's rising AI development hub.",
+    "Join Turku's AI community: 1,000+ developers, AI hackathons with real company challenges and production support. Turku is Finland's rising AI hub.",
   keywords:
     "turku ai, ai turku, turku ai community, turku hackathon, ai developers turku, turku tech, turku finland ai",
   alternates: {
@@ -26,11 +27,13 @@ export const metadata: Metadata = {
     url: "https://sinceai.ai/turku",
     siteName: "Since AI",
     type: "website",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "AI Community in Turku, Finland | Since AI",
     description: "Join Turku's premier AI community. 1000+ developers, AI hackathons with real company challenges, production deployment support.",
+    images: [OG_IMAGE.url],
   },
 };
 

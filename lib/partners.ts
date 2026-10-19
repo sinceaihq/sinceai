@@ -544,7 +544,7 @@ export const PARTNERS: Partner[] = [
   {
     name: "HankenES",
     logo: "/assets/sponsors/HankenEs.png",
-    url: "https://hankenes.org",
+    url: "https://www.hankenes.org/",
     tier: 3,
   },
   {

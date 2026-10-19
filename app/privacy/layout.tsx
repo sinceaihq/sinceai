@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Privacy Policy - Since AI",
@@ -15,11 +16,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     siteName: "Since AI",
     url: "https://sinceai.ai/privacy",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary",
     title: "Privacy Policy — Since AI",
     description: "Learn how Since AI collects, uses, and protects your personal information. GDPR-compliant.",
+    images: [OG_IMAGE.url],
   },
   robots: {
     index: true,

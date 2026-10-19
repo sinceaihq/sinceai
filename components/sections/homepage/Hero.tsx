@@ -85,8 +85,8 @@ export function Hero() {
                 </div>
               ))}
             </dl>
-            <div className="flex items-center gap-3 lg:hidden">
-              <span className="text-sm text-neutral-400">Join the community</span>
+            <div className="flex flex-wrap items-center gap-3 lg:hidden">
+              <span className="w-full text-sm text-neutral-400 sm:w-auto">Join the community</span>
               {COMMUNITY.map(({ name, href, Icon, event }) => (
                 <TrackedLink
                   key={name}

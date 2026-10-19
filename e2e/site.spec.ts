@@ -52,6 +52,21 @@ test.describe("public site", () => {
       expect(response?.headers()["x-robots-tag"] ?? "").not.toContain("noindex");
       await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
       expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
+      // Search and social snippets: a share image on every page, and a title and
+      // description short enough that Google shows them whole.
+      const meta = await page.evaluate(() => ({
+        title: document.title,
+        description: document.querySelector<HTMLMetaElement>('meta[name="description"]')?.content ?? "",
+        og: document.querySelector<HTMLMetaElement>('meta[property="og:image"]')?.content ?? "",
+        twitter: document.querySelector<HTMLMetaElement>('meta[name="twitter:image"]')?.content ?? "",
+        canonical: document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href ?? "",
+      }));
+      expect(meta.og).toMatch(/^https:\/\//);
+      expect(meta.twitter).toMatch(/^https:\/\//);
+      expect(meta.canonical).toMatch(/^https:\/\/sinceai\.ai/);
+      expect(meta.description.length).toBeGreaterThan(50);
+      expect(meta.description.length).toBeLessThanOrEqual(165);
+      expect(meta.title.length).toBeLessThanOrEqual(route.startsWith("/blog/") ? 80 : 60);
       // three.js and the campus twin load only on the guide, on demand.
       const heavy = await page.evaluate(() =>
         performance

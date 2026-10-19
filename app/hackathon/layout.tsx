@@ -24,9 +24,9 @@ const SPONSORS = HACKATHON_2026_PARTNERS.challengePartners.map((name) => ({ name
 
 export const metadata: Metadata = {
   title:
-    "Since AI Hackathon 2026 — Global Execution-Focused AI Hackathon | November 6–8, Turku",
+    "Since AI Hackathon 2026 — 6–8 November, Turku, Finland",
   description:
-    `48-hour AI hackathon in Turku, Finland, November 6–8. MLH 2027 Season Member Event. 1,000+ builders targeted, €50,000 prize pool, 15 company challenges from ${SHORT}. Open to builders worldwide.`,
+    `48-hour AI hackathon in Turku, Finland, 6–8 November 2026: 1,000+ builders, a €50,000 prize pool and ${HACKATHON_2026_PARTNERS.challengeTarget} company challenges. MLH Member Event, open worldwide.`,
   keywords: [
     "Since AI Hackathon 2026",
     "AI hackathon Finland",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title:
-      "Since AI Hackathon 2026 — Global Execution-Focused AI Hackathon | November 6–8, Turku",
+      "Since AI Hackathon 2026 — 6–8 November, Turku, Finland",
     description:
       `48-hour AI hackathon in Turku, Finland. 1,000+ builders targeted. 15 company challenges from ${SHORT}. Open to builders worldwide.`,
     url: "https://sinceai.ai/hackathon",

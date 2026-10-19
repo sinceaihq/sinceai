@@ -9,12 +9,13 @@ import { ORG } from "@/lib/org";
 import StructuredData from "@/components/StructuredData";
 import { PartnersSection } from "@/components/sections/homepage/PartnersSection";
 import { ButtonPair } from "@/components/ui/ButtonPair";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title:
-    "Partner with Since AI — Recruit AI Talent, Sponsor Hackathon Challenges, Run AI Pilots",
+    "Partner with Since AI — AI Talent, Challenges and Pilots",
   description:
-    "Partner with Since AI to access 10,000+ AI builders globally. Sponsor hackathon challenges at Since AI Hackathon 2026, recruit top AI talent, and run applied AI pilots with proven builders.",
+    "Reach 10,000+ AI builders worldwide: sponsor Since AI Hackathon 2026 challenges, recruit top AI talent and run applied AI pilots with proven builders.",
   alternates: { canonical: "https://sinceai.ai/partners" },
   openGraph: {
     title: "Partner with Since AI — Recruit AI Talent, Sponsor Hackathon Challenges",
@@ -23,12 +24,14 @@ export const metadata: Metadata = {
     url: "https://sinceai.ai/partners",
     siteName: "Since AI",
     type: "website",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "Partner with Since AI",
     description:
       "Access 10,000+ AI builders. Sponsor Hackathon 2026, recruit talent, run AI pilots.",
+    images: [OG_IMAGE.url],
   },
 };
 

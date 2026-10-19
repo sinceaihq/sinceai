@@ -10,11 +10,12 @@ import { ORG } from "@/lib/org";
 import StructuredData from "@/components/StructuredData";
 import { ButtonPair } from "@/components/ui/ButtonPair";
 import { TrackedLink } from "@/components/analytics/TrackedLink";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
-  title: "AI Hackathons 2026 — Best Global AI Hackathons & Events | Since AI",
+  title: "AI Hackathons 2026 — The Best AI Hackathons | Since AI",
   description:
-    "The definitive guide to AI hackathons globally. Since AI Hackathon 2026: November 6–8, Turku, Finland — 48-hour format, 1,000+ builders, 15 company challenges from Valmet, Bayer, Elisa and more. Free to attend.",
+    "A guide to the best AI hackathons worldwide. Since AI Hackathon 2026: 6–8 November in Turku, Finland — 48 hours, 1,000+ builders, 15 company challenges. Free.",
   keywords: [
     "AI hackathons global",
     "AI hackathon 2026",
@@ -35,12 +36,14 @@ export const metadata: Metadata = {
     url: "https://sinceai.ai/ai-hackathons",
     siteName: "Since AI",
     type: "website",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "AI Hackathons 2026 | Since AI",
     description:
       "Since AI Hackathon 2026: Nov 6–8, Turku. 48-hour format, 1,000+ builders, 15 company challenges from Valmet, Bayer, Elisa, Meyer Turku and more.",
+    images: [OG_IMAGE.url],
   },
 };
 

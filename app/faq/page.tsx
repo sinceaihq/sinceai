@@ -9,27 +9,30 @@ import { ORG } from "@/lib/org";
 import StructuredData from "@/components/StructuredData";
 import { faqs } from "@/lib/faqs";
 import { ButtonPair } from "@/components/ui/ButtonPair";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title:
-    "Frequently Asked Questions about Since AI | Global AI Builders Ecosystem",
+    "FAQ — Since AI, the Global AI Builders Ecosystem",
   description:
-    "Answers to common questions about Since AI ry, a Finnish nonprofit association advancing AI education, practical skills and open collaboration for the broader community.",
+    "Answers to common questions about Since AI: the global AI ecosystem, its hackathons, community, partners and production support, and Since AI ry.",
   alternates: { canonical: "https://sinceai.ai/faq" },
   openGraph: {
     title:
-      "Frequently Asked Questions about Since AI | Global AI Builders Ecosystem",
+      "FAQ — Since AI, the Global AI Builders Ecosystem",
     description:
       "Answers to common questions about Since AI — partnerships, hackathons, joining, funding, and more.",
     url: "https://sinceai.ai/faq",
     siteName: "Since AI",
     type: "website",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "FAQ | Since AI",
     description:
       "Answers to common questions about Since AI ry, a Finnish nonprofit association.",
+    images: [OG_IMAGE.url],
   },
 };
 

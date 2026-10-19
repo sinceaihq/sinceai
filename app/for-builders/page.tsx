@@ -8,6 +8,7 @@ import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { ORG } from "@/lib/org";
 import StructuredData from "@/components/StructuredData";
 import { ButtonPair } from "@/components/ui/ButtonPair";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "For Builders — Join Since AI's Global AI Ecosystem",
@@ -21,12 +22,14 @@ export const metadata: Metadata = {
     url: "https://sinceai.ai/for-builders",
     siteName: "Since AI",
     type: "website",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "For Builders | Since AI",
     description:
       "Join 10,000+ AI builders. Hackathons, applied projects, startup pathways. Open globally.",
+    images: [OG_IMAGE.url],
   },
 };
 

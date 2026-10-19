@@ -8,11 +8,12 @@ import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { ORG } from "@/lib/org";
 import StructuredData from "@/components/StructuredData";
 import { ButtonPair } from "@/components/ui/ButtonPair";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "About Since AI — Finnish Nonprofit Advancing AI Education",
   description:
-    "Since AI ry is a Finnish nonprofit association whose mission is to advance AI education, practical skills, technological literacy, and open collaboration for the broader community.",
+    "Since AI ry is the Finnish nonprofit behind a global AI ecosystem, advancing AI education, practical skills and open collaboration for builders worldwide.",
   alternates: { canonical: "https://sinceai.ai/about" },
   openGraph: {
     title: "About Since AI — Finnish Nonprofit Advancing AI Education",
@@ -21,12 +22,14 @@ export const metadata: Metadata = {
     url: "https://sinceai.ai/about",
     siteName: "Since AI",
     type: "website",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "About Since AI — Finnish Nonprofit Advancing AI Education",
     description:
       "Since AI ry is a Finnish nonprofit association. We advance AI education and community benefit rather than private financial benefit for members or leadership.",
+    images: [OG_IMAGE.url],
   },
 };
 
