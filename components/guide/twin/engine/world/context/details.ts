@@ -258,6 +258,12 @@ export function buildDetails(kit: DetailKit, input: DetailInput): DetailResult {
       walkTo: [213.4, 8.6],
     },
     {
+      id: "parking-biocity",
+      // From over Joukahaisenkatu: the driveway between the buildings to BioCity's car park entrance.
+      view: { position: [150, 45, -95], target: [84, -1, -27.2], hfov: 62, fit: 30, open: null, labels: true },
+      walkTo: [97.5, -40.5],
+    },
+    {
       id: "kupittaa-station",
       // Over the railway cutting from the south-east: the platform, its canopy and the hall on the bridge.
       view: { position: [246, 26, -96], target: [202, -2, -132], hfov: 64, fit: 40, open: null, labels: true },

@@ -4,6 +4,7 @@ import {
   CriticalPath,
   FactsStrip,
   FoodSummary,
+  ParkingHubSection,
   GuideCards,
   GuideHero,
   GuideSection,
@@ -54,6 +55,7 @@ export default function FieldGuideHubPage() {
           { id: "guides", label: "Your guide" },
           { id: "weekend", label: "Weekend" },
           { id: "venues", label: "Venues" },
+          { id: "parking", label: "Parking" },
           { id: "food", label: "Food" },
           { id: "accommodation", label: "Hotels" },
           { id: "preview", label: "3D preview" },
@@ -141,6 +143,8 @@ export default function FieldGuideHubPage() {
           <RouteCard />
         </div>
       </GuideSection>
+
+      <ParkingHubSection />
 
       <FoodSummary />
 

@@ -19,6 +19,7 @@ export { PartnerDiscord } from "./PartnerDiscord";
 export { Accommodation } from "./Accommodation";
 export { AccommodationSection, DiscordSection } from "./GuideSections";
 export { CateringInfo, DietaryNotice, FoodSection, FoodSummary, MealSchedule } from "./FoodMenu";
+export { ParkingHubSection, ParkingNote, ParkingSection, ParkingSummary } from "./Parking";
 export { GuideCards } from "./GuideCards";
 export { PrintButton } from "./PrintButton";
 export { VenueExplorer } from "./maps/VenueExplorer";

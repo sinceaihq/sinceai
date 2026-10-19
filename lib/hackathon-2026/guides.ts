@@ -320,7 +320,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
   "challenge-partners": [
     {
       q: "Arriving by car",
-      a: "Friday: park in ParkCity (Joukahaisenkatu 8, paid guest parking on floors 1–3) — EduCity is across the street, about 190 m to door B. Saturday: get dropped off on Tykistökatu at BioCity's entrance recess, where the supercars are on display, or walk about 360 m from ParkCity to BioCity's main entrance. Every route is in the 3D campus, step by step.",
+      a: "Friday: park in ParkCity (Joukahaisenkatu 8, Aimo Park, paid guest parking on floors 1–3; entry 06:00–00:00, exit around the clock) — EduCity is across the street, about 190 m to door B, or step-free through the lifts between ICT-City and EduCity. Saturday: walk about 360 m from ParkCity to BioCity's main entrance on Tykistökatu, the way in to Joki. If someone drops you off, they stop only where the signs allow. P-Station Kupittaa (Joukahaisenkatu 2, EuroPark) is open 24/7. Prices and all options: Venue Explorer → Parking; every route is in the 3D campus, step by step.",
     },
     {
       q: "Q&A hours vs. your presence",
@@ -350,7 +350,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
   partners: [
     {
       q: "Arriving by car",
-      a: "Get dropped off on Tykistökatu at BioCity's entrance recess, where the supercars are on display — the stands are a 1–2 minute walk inside. To park, use ParkCity (Joukahaisenkatu 8, paid guest parking on floors 1–3), about 360 m from BioCity's main entrance.",
+      a: "Park in ParkCity (Joukahaisenkatu 8, Aimo Park, paid guest parking on floors 1–3; entry 06:00–00:00, exit around the clock), about 360 m from BioCity's main entrance on Tykistökatu — or at P-Station Kupittaa (Joukahaisenkatu 2, EuroPark), open 24/7. You can be dropped off on Tykistökatu at BioCity's entrance recess — the driver stops only where the signs allow it; the stands are a 1–2 minute walk inside. Bringing stand equipment? Agree unloading with the Since AI team in advance. Prices and all options: Venue Explorer → Parking.",
     },
     {
       q: "Is my stand staffed around the clock?",
