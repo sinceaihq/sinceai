@@ -289,7 +289,8 @@ export const PARTNERS: Partner[] = [
   {
     name: "HankenAI",
     logo: "/assets/sponsors/HankAI.png",
-    url: "https://hankai.info/",
+    // HankAI is a club of the Hanken student union (SHS); hankai.info became a closed web shop.
+    url: "https://shs.fi/en/",
     tier: 2,
   },
   {
