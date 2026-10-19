@@ -13,6 +13,7 @@ import {
   SectionNav,
   VenueCards,
   VenueExplorer,
+  ParkingNote,
 } from "@/components/guide";
 import {
   CHECKLISTS,
@@ -171,6 +172,7 @@ export default function JudgeGuidePage() {
           lede="The closing ceremony (13:15), each challenge's top three (13:30) and the finals with the five live finalist presentations (14:00) are at EduCity."
         />
         <VenueCards venues={["educity"]} />
+        <ParkingNote className="mt-6" />
         <div className="mt-8">
           <VenueExplorer mapIds={["educity-1", "educity-2"]} label="EduCity maps" />
         </div>

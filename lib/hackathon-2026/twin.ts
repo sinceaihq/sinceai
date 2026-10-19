@@ -46,7 +46,7 @@ export interface Target3D {
   label: string;
   detail: string;
   place: PlaceId;
-  kind: "company" | "room" | "stand" | "entrance" | "area" | "landmark";
+  kind: "company" | "room" | "stand" | "entrance" | "area" | "landmark" | "parking";
   href?: string;
   /** Where it is in a few words, for lists and switches: "Joki · Showroom counter 4", "EduCity · room 1001". */
   where?: string;
@@ -474,12 +474,25 @@ const areaTargets: Target3D[] = [
     place: "campus",
     kind: "landmark",
   },
+];
+
+/** Car parks with a verified position in the model (texts and prices: parking.ts). */
+const parkingTargets: Target3D[] = [
   {
     id: "parkcity",
     label: "ParkCity car park",
-    detail: "Joukahaisenkatu 8 · guest parking on floors 1–3 · 2 min on foot to EduCity",
+    detail: "Aimo Park · Joukahaisenkatu 8 · guest parking floors 1–3 · entry 06–24, exit 24 h · 3 min on foot to EduCity",
     place: "campus",
-    kind: "landmark",
+    kind: "parking",
+    href: `${GUIDE_BASE_PATH}/venue#parking`,
+  },
+  {
+    id: "parking-biocity",
+    label: "BioCity car park entrance",
+    detail: "Aimo Park · guest zone 703, limited spaces · driveway off Joukahaisenkatu",
+    place: "campus",
+    kind: "parking",
+    href: `${GUIDE_BASE_PATH}/venue#parking`,
   },
 ];
 
@@ -489,6 +502,7 @@ export const TARGETS_3D: readonly Target3D[] = [
   ...standTargets,
   ...entranceTargets,
   ...areaTargets,
+  ...parkingTargets,
 ];
 
 const TARGET_BY_ID = new Map(TARGETS_3D.map((t) => [t.id, t]));

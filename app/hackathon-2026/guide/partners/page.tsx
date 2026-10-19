@@ -17,6 +17,7 @@ import {
   SectionNav,
   StandPlan,
   VenueCards,
+  ParkingSummary,
 } from "@/components/guide";
 import { TwinTeaser } from "@/components/guide/twin/TwinTeaser";
 import {
@@ -27,6 +28,7 @@ import {
   getScheduleItem,
   GUIDE_BASE_PATH,
   scheduleFor,
+  CAR_ARRIVAL,
 } from "@/lib/hackathon-2026";
 
 const AUDIENCE = "partners" as const;
@@ -82,6 +84,7 @@ export default function PartnerGuidePage() {
           { id: "prepare", label: "Prepare" },
           { id: "discord", label: "Discord" },
           { id: "venues", label: "Venues" },
+          { id: "parking", label: "Parking" },
           { id: "accommodation", label: "Hotels" },
           { id: "details", label: "Details" },
           { id: "help", label: "Help" },
@@ -166,6 +169,18 @@ export default function PartnerGuidePage() {
         <div className="mt-8">
           <RouteCard />
         </div>
+      </GuideSection>
+
+      <GuideSection id="parking">
+        <SectionHeading
+          id="parking-title"
+          eyebrow="// arriving by car"
+          title="Parking & arriving by car."
+        />
+        <ParkingSummary
+          lede="Park in ParkCity and walk about 360 m to BioCity's main entrance on Tykistökatu — or use P-Station Kupittaa, open 24/7, if you arrive or leave at night."
+          extra={[CAR_ARRIVAL.unloading, CAR_ARRIVAL.dropOff]}
+        />
       </GuideSection>
 
       <AccommodationSection />

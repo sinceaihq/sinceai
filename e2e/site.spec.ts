@@ -88,6 +88,37 @@ test.describe("public site", () => {
     await expect(page.locator("#open-source")).toBeInViewport();
   });
 
+  test("the hackathon page shows the judging panel: two judges, two places to be announced", async ({ page }) => {
+    await acceptNoCookies(page);
+    await page.addInitScript(() => {
+      try {
+        localStorage.setItem("hackathon2026_popup_v1", String(Date.now()));
+      } catch {}
+    });
+    await page.goto("/hackathon", { waitUntil: "networkidle" });
+    const panel = page.getByRole("region", { name: "Meet the judges." });
+    await panel.scrollIntoViewIfNeeded();
+    const cards = panel.getByRole("listitem");
+    await expect(cards).toHaveCount(4);
+    await expect(cards.nth(0)).toContainText("Sarita Runeberg");
+    await expect(cards.nth(0)).toContainText("Chief Executive Officer");
+    await expect(cards.nth(1)).toContainText("Niko Elers");
+    await expect(cards.nth(1)).toContainText("Investment Director");
+    await expect(cards.nth(2)).toContainText("Judge to be announced");
+    await expect(cards.nth(3)).toContainText("Judge to be announced");
+    for (const name of [/Sarita Runeberg/, /Niko Elers/]) {
+      const portrait = panel.getByRole("img", { name });
+      await expect(portrait).toBeVisible();
+      expect(await portrait.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+    }
+    await expect(panel.getByRole("link", { name: /Voima Ventures/ })).toHaveAttribute("href", "https://voimaventures.com/");
+    // On desktop the four cards share one row at the same height.
+    if (!test.info().project.name.includes("mobile")) {
+      const heights = await cards.evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().height)));
+      expect(new Set(heights).size).toBe(1);
+    }
+  });
+
   test("the Hackathon announcement waits for engagement, never blocks the page, and stays closed", async ({ page }) => {
     await acceptNoCookies(page);
     await page.goto("/");

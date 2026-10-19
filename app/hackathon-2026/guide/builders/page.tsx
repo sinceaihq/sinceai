@@ -18,6 +18,7 @@ import {
   VenueExplorer,
   ghostButtonClass,
   primaryButtonClass,
+  ParkingNote,
 } from "@/components/guide";
 import { TwinTeaser } from "@/components/guide/twin/TwinTeaser";
 import {
@@ -222,6 +223,7 @@ export default function BuilderGuidePage() {
           lede="After the briefing (18:50–19:30), move with your team to BioCity or Joki, eat when it suits you and pick a workspace. Both stay open around the clock. Sunday's closing is back at EduCity."
         />
         <VenueCards venues={["educity", "biocity", "joki"]} />
+        <ParkingNote className="mt-6" />
         <div className="mt-8">
           <RouteCard />
         </div>

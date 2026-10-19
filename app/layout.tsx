@@ -35,7 +35,8 @@ const inter = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sinceai.ai"),
-  title: "Since AI — Where Frontier AI Becomes Shipped Products",
+  title:
+    "Since AI | Global Execution-Focused AI Innovation Ecosystem",
   description:
     "A global ecosystem of 10,000+ AI builders. Hackathons with leading companies — and eight weeks of production support to take the best solutions to real users.",
   keywords: [
@@ -55,7 +56,7 @@ export const metadata: Metadata = {
     canonical: "https://sinceai.ai",
   },
   openGraph: {
-    title: "Since AI — Where Frontier AI Becomes Shipped Products",
+    title: "Since AI | Global Execution-Focused AI Innovation Ecosystem",
     description:
       "A global ecosystem of 10,000+ AI builders in 100+ countries, with Google for Developers, ElevenLabs, Bayer, Valmet, Antler and 100+ partners and supporters.",
     url: "https://sinceai.ai",
@@ -75,7 +76,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@sinceaihq",
     creator: "@sinceaihq",
-    title: "Since AI — Where Frontier AI Becomes Shipped Products",
+    title: "Since AI | Global Execution-Focused AI Innovation Ecosystem",
     description:
       "A global ecosystem of 10,000+ AI builders — hackathons with leading companies and eight weeks of production support.",
     images: ["https://sinceai.ai/assets/og/hero.png"],
