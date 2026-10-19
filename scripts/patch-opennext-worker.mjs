@@ -34,3 +34,24 @@ const patchedWorkerSource = workerSource.replace(
 );
 
 await writeFile(workerPath, patchedWorkerSource);
+
+// Cache interception skips the homepage in @opennextjs/aws 3.x: the trailing slash is stripped
+// before the lookup, so "/" becomes "", which `?? "/"` does not replace. The prerendered
+// homepage then always waits for the Next.js server. Same fix as upstream 4.x
+// (`localizedPath === "/" ? "/index" : …`); remove once @opennextjs/cloudflare is upgraded.
+const middlewarePath = new URL("../.open-next/middleware/handler.mjs", import.meta.url);
+const middlewareSource = await readFile(middlewarePath, "utf8");
+const rootLookups = [
+  ['.includes(localizedPath ?? "/")', '.includes(localizedPath || "/")'],
+  ['incrementalCache.get(localizedPath ?? "/index")', 'incrementalCache.get(localizedPath || "/index")'],
+];
+
+let patchedMiddlewareSource = middlewareSource;
+for (const [from, to] of rootLookups) {
+  if (patchedMiddlewareSource.split(from).length !== 2) {
+    throw new Error(`OpenNext cache interceptor lookup not found once (${from}); patch needs updating.`);
+  }
+  patchedMiddlewareSource = patchedMiddlewareSource.replace(from, to);
+}
+
+await writeFile(middlewarePath, patchedMiddlewareSource);
