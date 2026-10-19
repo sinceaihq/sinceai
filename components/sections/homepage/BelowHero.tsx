@@ -8,7 +8,6 @@ import { ORG } from "@/lib/org";
 import { PARTNERS, type Partner } from "@/lib/partners";
 import { HACKATHON_2026_PARTNERS, MLH_2027 } from "@/lib/sinceai";
 import { SectionIntro } from "./SectionIntro";
-import { GlobalReach } from "./GlobalReach";
 import { REACH, fmt } from "@/lib/reach";
 
 const primaryButton =
@@ -289,7 +288,6 @@ function Ecosystem() {
 export function BelowHero() {
   return (
     <div className="w-full bg-black">
-      <GlobalReach />
       <FadeInView>
         <Programs />
       </FadeInView>

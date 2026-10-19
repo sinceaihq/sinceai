@@ -1,28 +1,37 @@
 #!/usr/bin/env node
 /**
- * The dot-matrix world map on the homepage ("Global reach").
+ * The dot-matrix ecosystem map in the homepage hero.
  *
- * Land is sampled on a regular grid in Natural Earth projection space, every
- * dot is assigned to the country that contains it, and each layer is written
- * as ONE <path> of zero-length segments (round caps draw the dots). That keeps
- * the whole map to a few dozen DOM nodes and a few KB of gzipped HTML, with no
- * client JavaScript and no image request.
+ * Land is sampled on a regular grid in Natural Earth projection space and every
+ * dot is assigned to the country that contains it. Each city of the community
+ * lights the land around it (a soft glow that grows with the city's size), and
+ * every layer is written as ONE <path> of zero-length segments — round caps
+ * draw the dots — so the whole map is a dozen DOM nodes and a few KB of HTML.
  *
- *   node scripts/build-world-map.mjs   → lib/world-map.generated.ts
+ *   node scripts/build-world-map.mjs
+ *     → lib/world-map.generated.ts      (the SVG paths, server only)
+ *     → lib/ecosystem-cities.generated.ts (city positions for the hover labels)
  *
- * Inputs: lib/reach-counts.json (aggregated counts, no personal data) and the
+ * Inputs: lib/ecosystem-cities.json (aggregated, no personal data) and the
  * Natural Earth 1:50m countries from world-atlas (public domain).
  */
 import fs from "node:fs";
 import path from "node:path";
 import { createRequire } from "node:module";
-import { geoNaturalEarth1, geoContains, geoBounds, geoCentroid, geoArea } from "d3-geo";
+import { geoNaturalEarth1, geoContains, geoBounds } from "d3-geo";
 import { feature } from "topojson-client";
 
 const require = createRequire(import.meta.url);
 const topology = require("world-atlas/countries-50m.json");
-const counts = JSON.parse(fs.readFileSync(path.resolve("lib/reach-counts.json"), "utf8"));
+const { cities } = JSON.parse(fs.readFileSync(path.resolve("lib/ecosystem-cities.json"), "utf8"));
 const OUT = path.resolve("lib/world-map.generated.ts");
+const OUT_CITIES = path.resolve("lib/ecosystem-cities.generated.ts");
+
+/**
+ * Countries that are counted in the totals but not drawn on the map — the
+ * brand does not put a light on them. Natural Earth names.
+ */
+const HIDDEN = new Set(["Russia", "Belarus", "Iran", "North Korea"]);
 
 /** Grid size in dots. 150 columns reads as a texture on a phone and stays light. */
 const COLS = 150;
@@ -30,18 +39,7 @@ const COLS = 150;
 const MIN_LAT = -56;
 const MAX_LAT = 84;
 
-/** Names in our data → Natural Earth names. */
-const ALIASES = {
-  "United States": "United States of America",
-  "Czech Republic": "Czechia",
-  "Antigua and Barbuda": "Antigua and Barb.",
-  Eswatini: "eSwatini",
-  "Bosnia and Herzegovina": "Bosnia and Herz.",
-  "North Macedonia": "Macedonia",
-};
-
 const countries = feature(topology, topology.objects.countries).features.filter((f) => f.properties.name !== "Antarctica");
-const byName = new Map(countries.map((f) => [f.properties.name, f]));
 const boxes = countries.map((f) => ({ f, b: geoBounds(f) }));
 
 // Fit the projection so that one grid step is exactly one unit.
@@ -75,34 +73,6 @@ for (let y = 0; y < ROWS; y++) {
   }
 }
 
-const wanted = new Set([...Object.keys(counts.applicants), ...Object.keys(counts.members)].map((n) => ALIASES[n] ?? n));
-for (const n of wanted) if (!byName.has(n)) throw new Error(`No Natural Earth country for "${n}" — add an alias.`);
-
-// Small countries (Singapore, Mauritius, Luxembourg…) can fall between grid
-// points; give each at least the dot nearest its centroid.
-// The nearest cell that no other listed country already owns is used, so a
-// tiny neighbour (Luxembourg) never takes the only dot of another (Belgium).
-const owned = new Set(dots.values());
-for (const n of [...wanted].sort()) {
-  if (owned.has(n)) continue;
-  const [px, py] = projection(geoCentroid(byName.get(n)));
-  const cx = Math.floor(px);
-  const cy = Math.floor(py);
-  let cell = null;
-  for (let r = 0; !cell && r < 4; r++) {
-    for (let dy = -r; dy <= r && !cell; dy++) {
-      for (let dx = -r; dx <= r && !cell; dx++) {
-        if (Math.max(Math.abs(dx), Math.abs(dy)) !== r) continue;
-        const k = `${cx + dx},${cy + dy}`;
-        if (!wanted.has(dots.get(k))) cell = k;
-      }
-    }
-  }
-  if (!cell) throw new Error(`No free cell near ${n}`);
-  dots.set(cell, n);
-  owned.add(n);
-}
-
 /** One path for a set of dots: absolute first move, then relative moves, row by row. */
 function toPath(keys) {
   const pts = keys.map((k) => k.split(",").map(Number)).sort((a, b) => a[1] - b[1] || a[0] - b[0]);
@@ -117,63 +87,57 @@ function toPath(keys) {
   return d;
 }
 
-const groups = new Map();
-for (const [k, n] of dots) {
-  if (!groups.has(n)) groups.set(n, []);
-  groups.get(n).push(k);
-}
+/** Size tier 1–4 → how far a city's glow reaches, in dots. */
+const REACH = [0, 1.7, 2.5, 3.4, 4.4];
 
-/** Deterministic shuffle (mulberry32 seeded by the name), so the map is stable between builds. */
-function shuffled(list, seedText) {
-  let seed = [...seedText].reduce((h, c) => Math.imul(h ^ c.charCodeAt(0), 2654435761) >>> 0, 2166136261);
-  const rand = () => {
-    seed = (seed + 0x6d2b79f5) >>> 0;
-    let t = seed;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-  const a = [...list].sort();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(rand() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+/** Well-known cities that give their name to a dot they share with a smaller neighbour. */
+const LANDMARK = new Set(["Helsinki", "London", "Paris", "Berlin", "Munich", "Amsterdam", "Stockholm", "Copenhagen", "Zurich", "Vienna", "Prague", "Warsaw", "Madrid", "Barcelona", "Milan", "Rome", "Istanbul", "New York", "San Francisco", "Toronto", "Bengaluru", "Mumbai", "New Delhi", "Delhi", "Lagos", "Nairobi", "Cairo", "Cape Town", "Johannesburg", "Dubai", "Riyadh", "Singapore", "Tokyo", "Seoul", "Shanghai", "Beijing", "Taipei", "Sydney", "São Paulo", "Mexico City"]);
+
+/** Every city on its nearest land dot; cities that share a dot merge into the larger one. */
+const nodes = new Map();
+for (const [city, country, lat, lon, tier] of cities) {
+  const [px, py] = projection([lon, lat]);
+  let key = `${Math.floor(px)},${Math.floor(py)}`;
+  if (!dots.has(key)) {
+    // A coastal or island city (Singapore, Port Louis) — the nearest land dot, else its own.
+    let best = null;
+    for (let dy = -2; dy <= 2; dy++)
+      for (let dx = -2; dx <= 2; dx++) {
+        const k = `${Math.floor(px) + dx},${Math.floor(py) + dy}`;
+        const d = dx * dx + dy * dy;
+        if (dots.has(k) && !nodes.has(k) && (!best || d < best.d)) best = { k, d };
+      }
+    if (best) key = best.k;
+    else dots.set(key, null);
   }
-  return a;
-}
-
-/**
- * Lit dots per country grow with the square root of the head count — one dot
- * for a single builder, a whole country for the largest communities — so the
- * map shows hotspots rather than a flat fill. The same shuffled order is used
- * for every layer, so a smaller layer lights a subset of a larger one.
- */
-const litCount = (count, available) => Math.min(available, Math.max(1, Math.round(Math.sqrt(count) * 1.15)));
-
-const land = toPath([...dots.keys()]);
-const layers = {};
-for (const layer of ["members", "applicants"]) {
-  layers[layer] = {};
-  for (const [original, count] of Object.entries(counts[layer]).sort(([a], [b]) => a.localeCompare(b))) {
-    const n = ALIASES[original] ?? original;
-    const own = shuffled(groups.get(n), n);
-    layers[layer][original] = toPath(own.slice(0, litCount(count, own.length)));
+  if (HIDDEN.has(country) || HIDDEN.has(dots.get(key))) continue;
+  const prev = nodes.get(key);
+  if (prev) {
+    prev.tier = Math.max(prev.tier, tier);
+    if (LANDMARK.has(city) && !LANDMARK.has(prev.city) && prev.city !== "Turku") Object.assign(prev, { city, country });
   }
+  else nodes.set(key, { city, country, tier, x: Number(key.split(",")[0]), y: Number(key.split(",")[1]) });
 }
-const countryDots = layers.members;
 
-/** Centre of a country's largest polygon, so France is not pulled towards French Guiana. */
-function mainCentroid(f) {
-  if (f.geometry.type !== "MultiPolygon") return geoCentroid(f);
-  const parts = f.geometry.coordinates.map((coordinates) => ({ type: "Polygon", coordinates }));
-  return geoCentroid(parts.reduce((a, b) => (geoArea(b) > geoArea(a) ? b : a)));
-}
-const centroids = {};
-for (const original of Object.keys(countryDots)) {
-  const [x, y] = projection(mainCentroid(byName.get(ALIASES[original] ?? original)));
-  centroids[original] = [+x.toFixed(1), +y.toFixed(1)];
+/** Glow: each land dot takes the strongest light of the cities around it, in three steps. */
+const glow = [[], [], []];
+for (const [key, owner] of dots) {
+  if (HIDDEN.has(owner) || nodes.has(key)) continue;
+  const [x, y] = key.split(",").map(Number);
+  let light = 0;
+  for (const n of nodes.values()) {
+    const r = REACH[n.tier];
+    const d = Math.hypot(n.x - x, n.y - y);
+    if (d < r) light = Math.max(light, (1 - d / r) ** 1.2);
+  }
+  if (light > 0.62) glow[2].push(key);
+  else if (light > 0.34) glow[1].push(key);
+  else if (light > 0.06) glow[0].push(key);
 }
 
 const [tx, ty] = projection([22.27, 60.45]); // Turku
+const hq = `${Math.floor(tx)},${Math.floor(ty)}`;
+const byTier = [1, 2, 3, 4].map((t) => [...nodes].filter(([k, n]) => n.tier === t && k !== hq).map(([k]) => k));
 
 const src = `// Generated by scripts/build-world-map.mjs — do not edit by hand.
 // Natural Earth 1:50m (public domain) sampled on a ${COLS} × ${ROWS} grid.
@@ -182,14 +146,26 @@ export const WORLD_MAP = {
   cols: ${COLS},
   rows: ${ROWS},
   /** Every land dot. */
-  land: ${JSON.stringify(land)},
-  /** Turku, the home of the flagship event, in grid units. */
-  turku: [${tx.toFixed(2)}, ${ty.toFixed(2)}] as const,
-  /** Lit dots per data layer and country (names as in lib/reach-counts.json). */
-  layers: ${JSON.stringify(layers, null, 2)} as Record<"members" | "applicants", Record<string, string>>,
-  /** Centre of each country's main landmass, in grid units. */
-  centroids: ${JSON.stringify(centroids)} as Record<string, readonly [number, number]>,
+  land: ${JSON.stringify(toPath([...dots.keys()]))} as string,
+  /** Land lit by the cities around it, faint to bright. */
+  glow: ${JSON.stringify(glow.map(toPath))} as readonly string[],
+  /** The cities themselves, by size tier 1–4. */
+  cities: ${JSON.stringify(byTier.map(toPath))} as readonly string[],
 } as const;
 `;
 fs.writeFileSync(OUT, src);
-console.log(`${COLS}×${ROWS}, ${dots.size} land dots, ${Object.keys(layers.members).length} countries, ${(src.length / 1024).toFixed(1)} KB → ${path.relative(process.cwd(), OUT)}`);
+
+// Largest first, so the idle tour and the hover pick favour the main hubs.
+const list = [...nodes.values()].sort((a, b) => b.tier - a.tier || a.city.localeCompare(b.city));
+const citySrc = `// Generated by scripts/build-world-map.mjs — do not edit by hand.
+// [city, country, x, y, tier] on the ${COLS} × ${ROWS} map grid (dot centres at +0.5).
+
+export const MAP_GRID = { cols: ${COLS}, rows: ${ROWS} } as const;
+
+/** Headquarters — Turku, Finland. */
+export const HQ = [${Math.floor(tx)}, ${Math.floor(ty)}] as const;
+
+export const CITIES: readonly (readonly [string, string, number, number, number])[] = ${JSON.stringify(list.map((n) => [n.city, n.country, n.x, n.y, n.tier]))};
+`;
+fs.writeFileSync(OUT_CITIES, citySrc);
+console.log(`${COLS}×${ROWS}, ${dots.size} land dots, ${nodes.size} city dots, glow ${glow.map((g) => g.length).join("/")}, ${(src.length / 1024).toFixed(1)} KB + ${(citySrc.length / 1024).toFixed(1)} KB`);

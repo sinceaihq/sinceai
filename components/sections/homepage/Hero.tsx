@@ -1,95 +1,111 @@
 import Link from "next/link";
+import { FaDiscord, FaTelegramPlane } from "react-icons/fa";
 import { PartnerMarquee } from "@/components/PartnerMarquee";
 import { TrackedLink } from "@/components/analytics/TrackedLink";
 import { ORG } from "@/lib/org";
 import { ANALYTICS_EVENTS } from "@/lib/gtag";
+import { EcosystemMap } from "./EcosystemMap";
 
 const FACTS = [
-  { value: ORG.stats.network, label: "AI builders in our network" },
-  { value: ORG.stats.countries, label: "Countries in the community" },
-  { value: ORG.stats.partners, label: "Partners and supporters" },
-  { value: "8 weeks", label: "Production support for the strongest teams" },
+  { value: ORG.stats.network, label: "AI builders" },
+  { value: ORG.stats.countries, label: "Countries" },
+  { value: ORG.stats.partners, label: "Partners" },
+] as const;
+
+const COMMUNITY = [
+  { name: "Discord", href: ORG.social.discord, Icon: FaDiscord, event: ANALYTICS_EVENTS.DISCORD_JOIN_CLICK },
+  { name: "Telegram", href: ORG.social.telegram, Icon: FaTelegramPlane, event: ANALYTICS_EVENTS.TELEGRAM_JOIN_CLICK },
 ] as const;
 
 /**
- * Homepage hero — server-rendered, so the headline is the first thing painted.
- * The backdrop is CSS (two soft light sources and a fine grid), no image.
+ * Homepage hero — the promise, two calls to action and the ecosystem map,
+ * all in the first screen. Server-rendered, so the headline and the map paint
+ * with the HTML; only the map's hover labels hydrate.
  */
 export function Hero() {
   return (
-    <section aria-labelledby="hero-title" className="hero-backdrop relative flex min-h-[min(100svh,1040px)] flex-col overflow-hidden bg-black">
-      <div className="relative flex flex-1 flex-col justify-center px-6 pt-32 pb-12 md:pt-36">
+    <section aria-labelledby="hero-title" className="hero-backdrop relative flex min-h-[min(100svh,1080px)] flex-col overflow-hidden bg-black">
+      <div className="relative flex flex-1 flex-col px-6 pt-28 md:pt-36">
         <div className="mx-auto w-full max-w-6xl">
-          <Link
-            href="/hackathon"
-            className="group inline-flex max-w-full items-center gap-2.5 border border-white/15 bg-white/[0.03] px-3 py-1.5 text-xs text-neutral-300 transition-colors hover:border-white/40 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
-          >
-            <span aria-hidden="true" className="relative flex h-2 w-2 shrink-0">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-(--color-brand) opacity-60 motion-reduce:animate-none" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-(--color-brand)" />
-            </span>
-            <span className="truncate">
-              <span className="font-semibold text-white">Since AI Hackathon 2026</span>
-              <span className="text-white/55 sm:hidden"> · 6–8 Nov · €50k</span>
-              <span className="hidden text-white/55 sm:inline"> · 6–8 November · €50,000 prize pool</span>
-            </span>
-            <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
-              →
-            </span>
-          </Link>
-
           <h1
             id="hero-title"
-            className="mt-8 max-w-5xl font-bold tracking-tight text-white leading-[0.95] text-balance"
-            style={{ fontSize: "clamp(2.6rem, 7.4vw, 6.25rem)" }}
+            className="font-bold tracking-tight text-white leading-[0.98] text-balance"
+            style={{ fontSize: "clamp(2.4rem, 4.6vw, 4.25rem)" }}
           >
-            Where frontier AI becomes <span className="hero-accent">shipped products.</span>
+            Where frontier AI becomes shipped products.
           </h1>
 
-          <p className="mt-8 max-w-2xl text-base md:text-lg text-neutral-300 leading-relaxed text-pretty">
-            Since AI is a global, execution-focused AI innovation ecosystem. We connect builders in {ORG.stats.countries}{" "}
-            countries with leading companies, investors and researchers — and stay with the strongest teams until what
-            they build runs for real users.
-          </p>
+          <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
+            <p className="max-w-xl text-base md:text-lg text-neutral-300 leading-relaxed text-pretty">
+              Since AI is a global AI ecosystem: {ORG.stats.network} builders in {ORG.stats.countries} countries, shipping
+              with leading companies, investors and researchers.
+            </p>
 
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <TrackedLink
-              href="https://sinceai.app/sign-up"
-              analyticsEvent={ANALYTICS_EVENTS.REGISTER_CLICK}
-              className="inline-flex min-h-12 items-center justify-center bg-white text-black rounded-none px-7 py-3 text-sm font-semibold hover:bg-neutral-100 transition-colors cursor-pointer"
-            >
-              Join Since AI <span aria-hidden="true" className="ml-2">→</span>
-              <span className="sr-only"> (opens in a new tab)</span>
-            </TrackedLink>
-            <Link
-              href="/partners"
-              className="inline-flex min-h-12 items-center justify-center border border-white/20 text-white rounded-none px-7 py-3 text-sm font-semibold hover:border-white transition-colors cursor-pointer"
-            >
-              Partner with Since AI
-            </Link>
-            <TrackedLink
-              href={ORG.social.discord}
-              analyticsEvent={ANALYTICS_EVENTS.DISCORD_JOIN_CLICK}
-              className="inline-flex min-h-12 items-center justify-center px-2 text-sm text-neutral-300 underline decoration-white/25 underline-offset-4 hover:text-white hover:decoration-white transition-colors cursor-pointer sm:ml-2"
-            >
-              Join the community on Discord
-              <span className="sr-only"> (opens in a new tab)</span>
-            </TrackedLink>
+            <div className="grid shrink-0 grid-cols-2 gap-3 sm:flex sm:items-center">
+              <TrackedLink
+                href="https://sinceai.app/sign-up"
+                analyticsEvent={ANALYTICS_EVENTS.REGISTER_CLICK}
+                className="inline-flex min-h-12 items-center justify-center bg-white text-black rounded-none px-4 py-3 text-sm font-semibold sm:px-7 hover:bg-neutral-200 transition-colors cursor-pointer"
+              >
+                Join Since AI <span aria-hidden="true" className="ml-2">→</span>
+                <span className="sr-only"> (opens in a new tab)</span>
+              </TrackedLink>
+              <Link
+                href="/partners"
+                className="inline-flex min-h-12 items-center justify-center border border-white/20 text-white rounded-none px-4 py-3 sm:px-7 text-sm font-semibold hover:border-white transition-colors cursor-pointer"
+              >
+                Partner with us
+              </Link>
+              {COMMUNITY.map(({ name, href, Icon, event }) => (
+                <TrackedLink
+                  key={name}
+                  href={href}
+                  analyticsEvent={event}
+                  ariaLabel={`Join Since AI on ${name} (opens in a new tab)`}
+                  className="hidden min-h-12 w-12 items-center justify-center border border-white/20 text-white transition-colors hover:border-white cursor-pointer lg:inline-flex"
+                >
+                  <Icon aria-hidden="true" className="h-[18px] w-[18px]" />
+                </TrackedLink>
+              ))}
+            </div>
           </div>
+        </div>
 
-          <dl className="mt-16 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-white/10 pt-8 lg:grid-cols-4">
-            {FACTS.map((fact) => (
-              <div key={fact.label}>
-                <dt className="sr-only">{fact.label}</dt>
-                <dd>
-                  <span className="block text-3xl md:text-4xl font-bold tracking-tight text-white leading-none">{fact.value}</span>
-                  <span aria-hidden="true" className="mt-2 block max-w-[14rem] text-sm text-neutral-400 leading-snug">
-                    {fact.label}
-                  </span>
-                </dd>
-              </div>
-            ))}
-          </dl>
+        <div className="relative -mx-6 mt-10 w-[calc(100%+3rem)] md:mx-auto md:mt-8 md:w-full md:max-w-7xl">
+          <EcosystemMap />
+        </div>
+
+        <div className="mx-auto w-full max-w-6xl pb-10">
+          <div className="flex flex-col gap-6 border-t border-white/10 pt-6 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+            <dl className="flex gap-8 sm:gap-12">
+              {FACTS.map((f) => (
+                <div key={f.label} className="flex flex-col-reverse">
+                  <dt className="mt-1.5 text-sm text-neutral-400">{f.label}</dt>
+                  <dd className="text-2xl md:text-3xl font-bold tracking-tight text-white leading-none tabular-nums">{f.value}</dd>
+                </div>
+              ))}
+            </dl>
+            <div className="flex items-center gap-3 lg:hidden">
+              <span className="text-sm text-neutral-400">Join the community</span>
+              {COMMUNITY.map(({ name, href, Icon, event }) => (
+                <TrackedLink
+                  key={name}
+                  href={href}
+                  analyticsEvent={event}
+                  className="inline-flex min-h-11 items-center gap-2 border border-white/15 px-3.5 text-sm text-white transition-colors hover:border-white cursor-pointer"
+                >
+                  <Icon aria-hidden="true" className="h-4 w-4" />
+                  {name}
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </TrackedLink>
+              ))}
+            </div>
+            <p className="max-w-xs text-sm leading-snug text-neutral-400 sm:text-right">
+              Every light is a city where Since AI builders study or work.
+              <span className="hidden md:inline"> Hover to explore.</span>
+              <span className="md:hidden"> Tap to explore.</span>
+            </p>
+          </div>
         </div>
       </div>
 

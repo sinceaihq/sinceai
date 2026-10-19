@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { acceptNoCookies, horizontalOverflow, watchConsole } from "./helpers";
+import { CITIES } from "../lib/ecosystem-cities.generated";
 
 /**
  * Regression guard for the public SinceAI.ai pages: the Field Guide and its 3D
@@ -142,32 +143,46 @@ test.describe("public site", () => {
     await expect(card).toHaveCount(0);
   });
 
-  test("the global reach map switches between the community and Hackathon 2026 applicants", async ({ page }) => {
+  test("the ecosystem map is in the first screen and names the city under the pointer", async ({ page }) => {
+    await acceptNoCookies(page);
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+    const hero = page.locator("section[aria-labelledby=hero-title]");
+    await expect(hero.getByRole("heading", { level: 1 })).toHaveText("Where frontier AI becomes shipped products.");
+    const map = hero.getByRole("img", { name: /World map of the Since AI ecosystem/ });
+    await expect(map).toBeVisible();
+    // A dozen paths, not thousands of nodes.
+    expect(await map.locator("path").count()).toBeLessThan(20);
+    // Most of the map is above the fold.
+    const box = (await map.boundingBox())!;
+    expect(box.y).toBeLessThan(600);
+    await expect(hero.getByText("Turku, Finland")).toBeVisible();
+    await expect(hero.getByText("HQ", { exact: true })).toBeVisible();
+
+    // Hovering London's dot labels it with the city and the country.
+    const canvas = hero.locator(".eco-map-canvas");
+    const at = await page.evaluate(() => {
+      const svg = document.querySelector(".eco-map-canvas svg")!;
+      const r = svg.getBoundingClientRect();
+      const [cols, rows] = svg.getAttribute("viewBox")!.split(" ").slice(2).map(Number);
+      return { r: { x: r.x, y: r.y, w: r.width, h: r.height }, cols, rows };
+    });
+    const london = CITIES.find((c) => c[0] === "London")!;
+    await page.mouse.move(at.r.x + ((london[2] + 0.5) / at.cols) * at.r.w, at.r.y + ((london[3] + 0.5) / at.rows) * at.r.h);
+    const tip = canvas.locator(".eco-tip");
+    await expect(tip).toContainText("London");
+    await expect(tip).toContainText("United Kingdom");
+  });
+
+  test("the hero keeps the hackathon out of the headline and offers the community channels", async ({ page }) => {
     await acceptNoCookies(page);
     await page.goto("/");
-    const reach = page.locator("section.reach");
-    await expect(reach.getByRole("heading", { level: 2 })).toHaveText(/Builders from \d{3} countries/);
-    const map = reach.getByRole("img", { name: /World map of the Since AI community/ });
-    await expect(map).toBeVisible();
-    // One path per country and layer, not thousands of nodes.
-    expect(await map.locator("path").count()).toBeLessThan(300);
-
-    const members = reach.getByRole("radio", { name: "Community" });
-    const applicants = reach.getByRole("radio", { name: "Hackathon 2026" });
-    await expect(members).toBeChecked();
-    await expect(reach.getByText("Members by country")).toBeVisible();
-    await expect(reach.getByText("Hackathon 2026 applicants by country")).toBeHidden();
-
-    await reach.locator(".reach-tab", { hasText: "Hackathon 2026" }).click();
-    await expect(applicants).toBeChecked();
-    await expect(reach.getByText("Hackathon 2026 applicants by country")).toBeVisible();
-    await expect(reach.getByText("Members by country")).toBeHidden();
-    await expect(reach.getByText("Travelling to Turku from abroad")).toBeVisible();
-    // Keyboard: arrow keys move between the two layers.
-    await applicants.focus();
-    await page.keyboard.press("ArrowLeft");
-    await expect(members).toBeChecked();
-    await expect(reach.getByText("Members by country")).toBeVisible();
+    const hero = page.locator("section[aria-labelledby=hero-title]");
+    await expect(hero.getByRole("link", { name: /Since AI Hackathon 2026/ })).toHaveCount(0);
+    await expect(hero.getByRole("link", { name: /Join Since AI/ }).first()).toBeVisible();
+    for (const name of [/Discord/, /Telegram/]) expect(await hero.getByRole("link", { name }).count()).toBeGreaterThan(0);
+    // The brand does not put a light on these countries.
+    for (const n of ["Russia", "Belarus", "Iran", "North Korea"]) expect(CITIES.some((c) => c[1] === n)).toBe(false);
   });
 
   test("Google Analytics stays off the critical path until the visitor engages", async ({ page }) => {

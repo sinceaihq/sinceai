@@ -426,99 +426,128 @@ html:has(body[data-scroll-locked]) {
   background-size: 64px 64px;
   mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 75%);
 }
-.hero-accent {
-  background: linear-gradient(92deg, var(--color-fg) 0%, color-mix(in srgb, var(--color-brand) 75%, var(--color-fg)) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
 
-/* ── Homepage "Global reach" map (components/sections/homepage/GlobalReach.tsx) ── */
-/* Two data layers, switched by the radio pair with :has() — no JavaScript. */
-.reach:has(input[value="members"]:checked) [data-layer="applicants"],
-.reach:has(input[value="applicants"]:checked) [data-layer="members"] {
-  display: none;
+/* ── Homepage ecosystem map (components/sections/homepage/EcosystemMap.tsx) ── */
+/* Phones: the map is wider than the screen and centred on Europe, Africa and Asia. */
+.eco-map-frame {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
 }
-.reach-map path {
+.eco-map-canvas {
+  container-type: inline-size;
+  width: 142%;
+  margin-left: -31%;
+}
+@media (min-width: 768px) {
+  .eco-map-canvas { width: 116%; margin-left: -10%; }
+}
+@media (min-width: 1280px) {
+  .eco-map-canvas { width: 100%; margin-left: 0; }
+}
+.eco-map path {
   fill: none;
   stroke-linecap: round;
-  stroke-width: 0.6;
 }
-.reach-map .reach-land {
-  stroke: color-mix(in srgb, var(--color-fg) 15%, transparent);
-  stroke-width: 0.55;
+.eco-land {
+  stroke: color-mix(in srgb, var(--color-fg) 17%, transparent);
+  stroke-width: 0.5;
 }
-.reach-map .reach-country {
-  stroke: var(--color-brand);
-  stroke-width: 0.72;
-  transition: stroke 0.15s;
-}
-.reach-map .reach-country:hover {
-  stroke: var(--color-fg);
-  stroke-opacity: 1 !important;
-}
-.reach-map .reach-arcs path {
-  stroke: var(--color-brand);
-  stroke-width: 0.12;
-  stroke-linecap: butt;
-  stroke-opacity: 0.28;
-  pointer-events: none;
-}
+.eco-glow { stroke: var(--color-brand); stroke-width: 0.56; }
+.eco-glow-1 { stroke-opacity: 0.32; }
+.eco-glow-2 { stroke-opacity: 0.6; }
+.eco-glow-3 { stroke-opacity: 0.92; }
+.eco-city path { stroke: var(--color-fg); }
+.eco-city .eco-halo { stroke: var(--color-brand); stroke-opacity: 0.16; }
+.eco-city-1 path { stroke-width: 0.6; }
+.eco-city-1 .eco-halo { stroke-width: 1.2; }
+.eco-city-2 path { stroke-width: 0.72; }
+.eco-city-2 .eco-halo { stroke-width: 1.7; }
+.eco-city-3 path { stroke-width: 0.86; }
+.eco-city-3 .eco-halo { stroke-width: 2.4; }
+.eco-city-4 path { stroke-width: 1; }
+.eco-city-4 .eco-halo { stroke-width: 3.2; }
 @media (max-width: 767px) {
-  /* Bigger dots on a phone, where a grid step is ~2.4 px. */
-  .reach-map .reach-land { stroke-width: 0.66; }
-  .reach-map .reach-country { stroke-width: 0.84; }
-  .reach-map .reach-arcs path { stroke-width: 0.18; }
+  /* A grid step is ~3.5 px on a phone: slightly fuller dots read better. */
+  .eco-land { stroke-width: 0.58; }
+  .eco-glow { stroke-width: 0.64; }
 }
-.reach-pulse {
+.eco-hq-pulse,
+.eco-ring {
   fill: none;
   stroke: var(--color-fg);
-  stroke-width: 0.2;
+  stroke-width: 0.16;
   transform-box: fill-box;
   transform-origin: center;
-  animation: reach-pulse 2.4s ease-out infinite;
 }
-@keyframes reach-pulse {
-  from { scale: 0.4; opacity: 0.9; }
-  to { scale: 1.8; opacity: 0; }
+.eco-hq-pulse { animation: eco-pulse 2.8s ease-out infinite; }
+.eco-ring { animation: eco-pulse 1.4s ease-out both; }
+@keyframes eco-pulse {
+  from { scale: 0.3; opacity: 1; }
+  to { scale: 1.9; opacity: 0; }
+}
+.eco-arc {
+  fill: none;
+  stroke: color-mix(in srgb, var(--color-fg) 70%, var(--color-brand));
+  stroke-width: 0.14;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: eco-draw 1.1s cubic-bezier(0.45, 0, 0.2, 1) 0.1s forwards, eco-fade 2.5s linear both;
+}
+@keyframes eco-draw { to { stroke-dashoffset: 0; } }
+@keyframes eco-fade {
+  0%, 70% { opacity: 0.9; }
+  100% { opacity: 0.25; }
+}
+.eco-hq-label,
+.eco-tip {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  pointer-events: none;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+.eco-hq-label {
+  /* Clear of the HQ dot and its neighbour (Helsinki): two grid steps to the right. */
+  translate: calc(100cqw / 150 * 2.1) -50%;
+  padding: 0.3rem 0.3rem 0.3rem 0.55rem;
+  background: color-mix(in srgb, #000 78%, transparent);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  letter-spacing: 0.02em;
+}
+.eco-hq-badge {
+  padding: 0.2rem 0.35rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #000;
+  background: var(--color-fg);
+}
+.eco-tip {
+  padding: 0.5rem 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--color-fg) 16%, transparent);
+  background: color-mix(in srgb, #000 82%, transparent);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 10px 30px -10px #000;
+  translate: -50% calc(-100% - 0.9rem);
+  animation: eco-tip 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.eco-tip[data-x="left"] { translate: -0.9rem calc(-100% - 0.9rem); }
+.eco-tip[data-x="right"] { translate: calc(-100% + 0.9rem) calc(-100% - 0.9rem); }
+.eco-tip[data-y="below"] { translate: -50% 0.9rem; }
+.eco-tip[data-y="below"][data-x="left"] { translate: -0.9rem 0.9rem; }
+.eco-tip[data-y="below"][data-x="right"] { translate: calc(-100% + 0.9rem) 0.9rem; }
+@keyframes eco-tip {
+  from { opacity: 0; filter: blur(3px); }
+  to { opacity: 1; filter: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .reach-pulse { animation: none; opacity: 0.5; }
-}
-.reach-list li {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.25rem 0;
-  break-inside: avoid;
-  color: var(--color-neutral-400, #a3a3a3);
-}
-.reach-list b {
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 0.75rem;
-  font-weight: 400;
-  font-variant-numeric: tabular-nums;
-  color: color-mix(in srgb, var(--color-fg) 55%, transparent);
-}
-.reach-tab {
-  display: inline-flex;
-  min-height: 2.75rem;
-  align-items: center;
-  padding: 0 1.1rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: color-mix(in srgb, var(--color-fg) 70%, transparent);
-  cursor: pointer;
-  transition: background-color 0.15s, color 0.15s;
-}
-.reach-tab:hover { color: var(--color-fg); }
-.reach-tab:has(input:checked) {
-  background: var(--color-fg);
-  color: #000;
-}
-.reach-tab:has(input:focus-visible) {
-  outline: 2px solid var(--color-fg);
-  outline-offset: 2px;
+  .eco-hq-pulse { animation: none; opacity: 0.5; }
+  .eco-ring, .eco-tip { animation: none; }
+  .eco-arc { animation: none; stroke-dashoffset: 0; opacity: 0.6; }
 }
 
 /* Mobile menu (Navbar) */

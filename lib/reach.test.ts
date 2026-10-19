@@ -4,6 +4,8 @@ import counts from "@/lib/reach-counts.json";
 import { REACH, fmt } from "@/lib/reach";
 import { ORG } from "@/lib/org";
 import { WORLD_MAP } from "@/lib/world-map.generated";
+import { CITIES, HQ } from "@/lib/ecosystem-cities.generated";
+import cities from "@/lib/ecosystem-cities.json";
 
 describe("global reach data", () => {
   it("is aggregated counts only — country names and whole numbers, no personal fields", () => {
@@ -34,12 +36,29 @@ describe("global reach data", () => {
     expect(REACH.members.countries).toBeLessThan(floor + 20);
   });
 
-  it("has map dots for every country in both layers, and a world map that matches the data", () => {
-    for (const layer of ["members", "applicants"] as const) {
-      expect(Object.keys(WORLD_MAP.layers[layer]).sort()).toEqual(Object.keys(counts[layer]).sort());
-      for (const d of Object.values(WORLD_MAP.layers[layer])) expect(d).toMatch(/^M[\d.]+ [\d.]+h0/);
+  it("puts every member country on the ecosystem map, except the ones the brand does not light", () => {
+    const hidden = new Set(["Russia", "Belarus", "Iran", "North Korea"]);
+    const onMap = new Set(cities.cities.map((c) => c[1] as string));
+    for (const c of REACH.members.ranked) expect(onMap.has(c.name) || hidden.has(c.name)).toBe(true);
+    for (const n of hidden) expect(CITIES.some(([, country]) => country === n)).toBe(false);
+    expect(WORLD_MAP.glow).toHaveLength(3);
+    expect(WORLD_MAP.cities).toHaveLength(4);
+    for (const d of [...WORLD_MAP.glow, ...WORLD_MAP.cities]) expect(d).toMatch(/^M[\d.]+ [\d.]+h0/);
+    // Turku is the headquarters, on its own dot.
+    expect(CITIES.find(([, , x, y]) => x === HQ[0] && y === HQ[1])?.[0]).toBe("Turku");
+  });
+
+  it("keeps the city list aggregated — names, coordinates and a size tier, no counts", () => {
+    for (const row of cities.cities) {
+      expect(row).toHaveLength(5);
+      const [city, country, lat, lon, tier] = row as [string, string, number, number, number];
+      expect(city.length).toBeGreaterThan(1);
+      expect(country.length).toBeGreaterThan(2);
+      expect(Math.abs(lat)).toBeLessThanOrEqual(90);
+      expect(Math.abs(lon)).toBeLessThanOrEqual(180);
+      expect([1, 2, 3, 4]).toContain(tier);
     }
-    for (const c of REACH.applicants.ranked) expect(WORLD_MAP.centroids[c.name]).toHaveLength(2);
+    expect(Object.keys(cities).sort()).toEqual(["_comment", "asOf", "cities"]);
   });
 
   it("is quoted the same in the files written for AI assistants", () => {
