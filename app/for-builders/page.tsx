@@ -34,7 +34,7 @@ const builderFaqs = [
   {
     question: "Do I need to be based in Europe to join Since AI?",
     answer:
-      "No. Since AI is open to builders globally. Our network spans 100+ countries. Since AI Hackathon 2026 accepts international applications, and our Discord community is active worldwide.",
+      "No. Since AI is open to builders globally. Our network spans 120+ countries. Since AI Hackathon 2026 accepts international applications, and our Discord community is active worldwide.",
   },
   {
     question: "Is there a cost to join Since AI?",
@@ -101,7 +101,7 @@ export default function ForBuildersPage() {
             <div className="prose prose-invert prose-neutral max-w-none">
 
               {/* 1. H1 */}
-              <p className="text-xs uppercase tracking-[0.2em] font-semibold text-neutral-500 mb-5">
+              <p className="text-xs uppercase tracking-[0.2em] font-semibold text-white/55 mb-5">
                 For Builders
               </p>
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight leading-tight">
@@ -162,7 +162,7 @@ export default function ForBuildersPage() {
                     </h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       10,000+ AI builders, researchers, and founders across Europe and
-                      beyond — across 100+ countries. Year-round channels for job postings,
+                      beyond — across 120+ countries. Year-round channels for job postings,
                       project collaboration, and applied AI discussion.
                     </p>
                   </div>
@@ -179,8 +179,8 @@ export default function ForBuildersPage() {
                     <h3 className="text-lg font-bold text-white mb-2 tracking-tight">
                       Apply to Since AI Hackathon 2026
                     </h3>
-                    <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-neutral-500 mb-4">
-                      <span>72 hours</span>
+                    <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-white/55 mb-4">
+                      <span>48 hours</span>
                       <span aria-hidden="true">·</span>
                       <span>1,000+ builders targeted</span>
                       <span aria-hidden="true">·</span>
@@ -206,7 +206,7 @@ export default function ForBuildersPage() {
                     </h3>
                     <p className="text-neutral-400 text-sm leading-relaxed mb-5">
                       Day-to-day conversation, project collaboration, job postings, and
-                      event announcements. 10,000+ builders across 100+ countries.
+                      event announcements. 10,000+ builders across 120+ countries.
                     </p>
                     <a
                       href={ORG.social.discord}
@@ -316,7 +316,7 @@ export default function ForBuildersPage() {
                       key={item.title}
                       className="flex gap-4 items-start p-5 border border-white/5 bg-white/[0.02]"
                     >
-                      <span className="text-neutral-700 font-bold mt-0.5 min-w-[8px]">—</span>
+                      <span className="text-neutral-700 font-bold mt-0.5 min-w-[8px]" aria-hidden="true">—</span>
                       <div>
                         <span className="text-white font-semibold">{item.title}</span>
                         <span className="text-neutral-400"> — </span>
@@ -374,23 +374,23 @@ export default function ForBuildersPage() {
                   <Link href="/hackathon" className="text-neutral-400 hover:text-white underline">
                     Hackathon 2026
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link href="/ai-hackathons" className="text-neutral-400 hover:text-white underline">
                     AI hackathons in Europe
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link href="/europe-ai" className="text-neutral-400 hover:text-white underline">
                     European AI ecosystem
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link href="/partners" className="text-neutral-400 hover:text-white underline">
                     For partners
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link href="/research-to-market" className="text-neutral-400 hover:text-white underline">
                     Research to Market
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link href="/faq" className="text-neutral-400 hover:text-white underline">
                     FAQ
                   </Link>

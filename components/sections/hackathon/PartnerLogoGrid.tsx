@@ -72,7 +72,7 @@ function TbaItem({ boxClass }: { boxClass: string }) {
   return (
     <div className="flex items-center justify-center w-full py-3 sm:py-4">
       <div
-        className={`flex flex-shrink-0 items-center justify-center border border-white/10 text-center font-mono text-[11px] uppercase tracking-widest text-neutral-500 ${boxClass}`}
+        className={`flex flex-shrink-0 items-center justify-center border border-white/10 text-center font-mono text-[11px] uppercase tracking-widest text-white/55 ${boxClass}`}
       >
         To be announced
       </div>
@@ -115,7 +115,7 @@ export function PartnerLogoGrid() {
   return (
     <section className="py-24 px-6 border-t border-white/10">
       <div className="mx-auto max-w-6xl">
-        <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+        <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
           {"// challenge partners"}
         </p>
         <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-4">
@@ -129,7 +129,7 @@ export function PartnerLogoGrid() {
 
         {groups.map((group, i) => (
           <div key={group.label} className={i > 0 ? "mt-14 pt-14 border-t border-white/5" : ""}>
-            <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-8">
+            <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-8">
               {group.label}
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-y-2 gap-x-2">

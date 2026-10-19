@@ -14,6 +14,7 @@ It does **not** grant rights to the following, which stay with their owners:
 | **Written content** — page copy, blog articles, guides, FAQs, event information | `content/`, `lib/` copy strings, `app/` page text, `public/*.txt` | © Since AI ry, all rights reserved. Quoting with attribution and a link to [sinceai.ai](https://sinceai.ai) is welcome. |
 | **Partner, sponsor and supporter logos** | `public/assets/sponsors/`, `public/assets/supports/` | Trademarks of their respective owners, used with permission to show our partnerships. |
 | **Photographs** of people and venues (speakers, team, venues) | `public/assets/speakers/`, `public/assets/team/`, `public/assets/images/`, `public/assets/guide/` | Owned by the photographers or organisations credited on the site. |
+| **Fonts** JetBrains Mono and Inter | `app/fonts/` | SIL Open Font License 1.1 — licence texts next to the font files. |
 | **Open data** used by the campus 3D model | `data/campus-twin/` and assets derived from it | OpenStreetMap data under the [ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/) (© OpenStreetMap contributors); City of Turku data © Turun kaupunki, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Provenance per file: [`data/campus-twin/sources/README.md`](data/campus-twin/sources/README.md). |
 
 If you fork this repository to build your own site, replace the Since AI brand,

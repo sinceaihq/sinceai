@@ -92,19 +92,19 @@ export default function TurkuPage() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">1000+</div>
-                    <div className="text-sm text-neutral-500">Developers in network</div>
+                    <div className="text-sm text-white/55">Developers in network</div>
                   </div>
                   <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">{FIRST_EVENT.attendance}+</div>
-                    <div className="text-sm text-neutral-500">Hackathon participants</div>
+                    <div className="text-sm text-white/55">Hackathon participants</div>
                   </div>
                   <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">30+</div>
-                    <div className="text-sm text-neutral-500">AI projects built</div>
+                    <div className="text-sm text-white/55">AI projects built</div>
                   </div>
                   <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">15+</div>
-                    <div className="text-sm text-neutral-500">Company partnerships</div>
+                    <div className="text-sm text-white/55">Company partnerships</div>
                   </div>
                 </div>
               </section>
@@ -168,35 +168,35 @@ export default function TurkuPage() {
                 </h2>
                 <div className="space-y-4">
                   <div className="p-5 border border-white/5 bg-white/[0.02]">
-                    <h4 className="text-base font-bold text-white mb-1">1. Strong Academic Foundation</h4>
+                    <h3 className="text-base font-bold text-white mb-1">1. Strong Academic Foundation</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Multiple universities producing AI talent — University of Turku, Turku AMK,
                       and &Aring;bo Akademi provide a steady pipeline of skilled developers and researchers.
                     </p>
                   </div>
                   <div className="p-5 border border-white/5 bg-white/[0.02]">
-                    <h4 className="text-base font-bold text-white mb-1">2. Lower Cost of Living</h4>
+                    <h3 className="text-base font-bold text-white mb-1">2. Lower Cost of Living</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       30-40% cheaper than Helsinki while maintaining excellent quality of life.
                       More affordable rent, good public transportation, and a walkable city center.
                     </p>
                   </div>
                   <div className="p-5 border border-white/5 bg-white/[0.02]">
-                    <h4 className="text-base font-bold text-white mb-1">3. Industrial AI Demand</h4>
+                    <h3 className="text-base font-bold text-white mb-1">3. Industrial AI Demand</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Companies like Valmet and Meyer Turku are driving real AI innovation,
                       creating demand for AI talent and practical applications.
                     </p>
                   </div>
                   <div className="p-5 border border-white/5 bg-white/[0.02]">
-                    <h4 className="text-base font-bold text-white mb-1">4. Strategic Location</h4>
+                    <h3 className="text-base font-bold text-white mb-1">4. Strategic Location</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Gateway between Nordic and Baltic tech ecosystems. Under 2 hours from
                       Helsinki by train, with ferry connections to Stockholm.
                     </p>
                   </div>
                   <div className="p-5 border border-white/5 bg-white/[0.02]">
-                    <h4 className="text-base font-bold text-white mb-1">5. Active Community</h4>
+                    <h3 className="text-base font-bold text-white mb-1">5. Active Community</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Since AI connects 1000+ developers through regular hackathons, meetups,
                       and an active Discord community with real company challenges.
@@ -265,7 +265,7 @@ export default function TurkuPage() {
                 <ul className="space-y-3 text-neutral-300 mb-4">
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">&bull;</span>
-                    <span><strong className="text-white">Annual AI Hackathon:</strong> 72-hour intensive ({UPCOMING_EVENT_2026.month} {UPCOMING_EVENT_2026.year})</span>
+                    <span><strong className="text-white">Annual AI Hackathon:</strong> 48-hour intensive ({UPCOMING_EVENT_2026.month} {UPCOMING_EVENT_2026.year})</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">&bull;</span>
@@ -377,18 +377,18 @@ export default function TurkuPage() {
                 </h2>
                 <div className="flex flex-wrap gap-3">
                   <Link href="/finland-ai" className="text-neutral-400 hover:text-white underline">Finland AI Community</Link>
-                  <span className="text-neutral-600">&bull;</span>
+                  <span className="text-neutral-600" aria-hidden="true">&bull;</span>
                   <Link href="/europe-ai" className="text-neutral-400 hover:text-white underline">Europe AI Community</Link>
-                  <span className="text-neutral-600">&bull;</span>
+                  <span className="text-neutral-600" aria-hidden="true">&bull;</span>
                   <Link href="/events" className="text-neutral-400 hover:text-white underline">Events</Link>
-                  <span className="text-neutral-600">&bull;</span>
+                  <span className="text-neutral-600" aria-hidden="true">&bull;</span>
                   <Link href="/projects" className="text-neutral-400 hover:text-white underline">Projects</Link>
-                  <span className="text-neutral-600">&bull;</span>
+                  <span className="text-neutral-600" aria-hidden="true">&bull;</span>
                   <Link href="/research-to-market" className="text-neutral-400 hover:text-white underline">Research to Market</Link>
                 </div>
               </section>
 
-              <p className="text-xs text-neutral-600 mt-16 pt-6 border-t border-white/5">
+              <p className="text-xs text-white/55 mt-16 pt-6 border-t border-white/5">
                 Last updated: February 2026
               </p>
             </div>

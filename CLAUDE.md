@@ -9,7 +9,7 @@ Since AI website (sinceai.ai), open source under the MIT License (see NOTICE.md 
 ## Commands
 
 - `npm run dev` — Start development server
-- `npm run build` — Production build (webpack: Turbopack's production chunking duplicated framer-motion three times, so public pages shipped ~35 % more JS; same pixels, smaller worker — measured 5 Oct 2026. `npm run dev` stays on Turbopack.)
+- `npm run build` — Production build (webpack: Turbopack's production chunking produced ~35 % more JS on public pages, measured 5 Oct 2026. `npm run dev` stays on Turbopack.)
 - `npm run lint` — Run ESLint
 - `npm start` — Start production server
 - `npm ci --legacy-peer-deps` — Install dependencies (legacy-peer-deps required for CI)
@@ -28,9 +28,11 @@ Jest is configured (`npm run test`). Add tests when introducing testable logic.
 - `components/sections/` — Page-specific section components, organized by page (currently only `homepage/`). Each subdirectory has a barrel `index.ts`.
 - `components/ui/` — shadcn/ui components (new-york style, RSC-enabled, lucide icons). Add new ones via `npx shadcn@latest add <component>`.
 - `components/ui/ButtonPair.tsx` — reusable CTA button pair (primary white + ghost border). Use this for all hero/section CTA pairs.
-- `components/motion-primitives/` — Reusable animation components (Framer Motion wrappers).
+- `components/motion-primitives/` — `FadeIn` / `FadeInView`: CSS-only entrance motion (no framer-motion). Content must be in the HTML and visible without JavaScript — never start text at opacity 0.
+- Performance rules (public site): pages are server components unless they need state; no scroll-jacking libraries; Google Analytics loads on first engagement (`components/analytics/GoogleAnalytics.tsx`); fonts are self-hosted in `app/fonts/` (`next/font/local`); new images are pre-sized and compressed (`images.unoptimized` is on) — by pixel dimensions, not only bytes: a logo is at most 480 px on its long side, because every pixel is decoded on the main thread. The favicon lives in `app/favicon.ico` only (a file in `public/` shadows it). A large above-the-fold `<img>` in a server component goes inside `<picture>`, or React turns it into a preload hint that every page prefetching that route downloads.
 - `lib/org.ts` — Single source of truth for organization constants (name, contact info, social links, stats).
 - `lib/sinceai.ts` — Site-wide constants (event dates, copy, links).
+- `lib/reach.ts` + `lib/reach-counts.json` — per-country counts behind the /impact country figures, `public/ai.txt` and `llms-full.txt`. `lib/ecosystem-cities.json` — the cities on the homepage hero map (city, country, lat/lon, size tier 1–4; no counts). Only aggregates go into the repository — never the raw sinceai.app or registration exports (names, e-mails). After updating either file run `node scripts/build-world-map.mjs` (regenerates `lib/world-map.generated.ts` and `lib/ecosystem-cities.generated.ts`) and update the figures in the two AI text files; `lib/reach.test.ts` checks they agree. Countries in `HIDDEN` in the script (Russia, Belarus, Iran, North Korea) count in the totals but get no light on the map.
 - `lib/projects.ts` — Challenge theme data with typed `ChallengeTheme` interface.
 - `lib/schema.ts` — JSON-LD structured data generators (Organization, Event, FAQ schemas).
 - `lib/utils.ts` — `cn()` helper (clsx + tailwind-merge).

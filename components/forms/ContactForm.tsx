@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import emailjs from '@emailjs/browser'
-import { motion } from 'framer-motion'
 
 type Status = 'idle' | 'submitting' | 'success' | 'error'
 
@@ -50,13 +49,7 @@ export default function ContactForm() {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="border border-white/5 p-8 md:p-10 hover:border-white/10 transition-colors"
-    >
+    <div className="fade-in-view border border-white/5 p-8 md:p-10 hover:border-white/10 transition-colors">
       <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
         Send a message
       </h2>
@@ -164,6 +157,6 @@ export default function ContactForm() {
           {status === 'submitting' ? 'Sending...' : 'Send Message'}
         </button>
       </form>
-    </motion.div>
+    </div>
   )
 }

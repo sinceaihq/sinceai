@@ -3,6 +3,7 @@ export const GA_ID = "G-1WG6MNLS9M";
 /** Single source of truth for analytics event names. */
 export const ANALYTICS_EVENTS = {
   DISCORD_JOIN_CLICK: "discord_join_click",
+  TELEGRAM_JOIN_CLICK: "telegram_join_click",
   REGISTER_CLICK: "register_click",
 } as const;
 

@@ -1,61 +1,38 @@
-"use client";
-import { motion, type HTMLMotionProps } from "framer-motion";
-import { type ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
-interface FadeInProps extends Omit<HTMLMotionProps<"div">, "children"> {
+interface FadeInProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
+  /** Seconds before the animation starts. */
   delay?: number;
+  /** Seconds the animation takes. */
   duration?: number;
 }
 
+const timing = (delay: number, duration: number) =>
+  ({ "--fade-delay": `${delay}s`, "--fade-duration": `${duration}s` }) as React.CSSProperties;
+
 /**
- * Client-side animation wrapper for fade-in effects
- * Use this to add motion to server components without making them client components
+ * Fade and rise in on first paint — pure CSS, so the content is in the HTML,
+ * visible to crawlers and counted for LCP from the first frame (the animation
+ * starts at opacity 0.01, not 0). Reduced motion: no animation.
  */
-export function FadeIn({
-  children,
-  delay = 0,
-  duration = 0.8,
-  ...props
-}: FadeInProps) {
+export function FadeIn({ children, delay = 0, duration = 0.8, className, style, ...props }: FadeInProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration,
-        delay,
-        ease: [0.22, 1, 0.36, 1],
-      }}
-      {...props}
-    >
+    <div className={cn("fade-in", className)} style={{ ...timing(delay, duration), ...style }} {...props}>
       {children}
-    </motion.div>
+    </div>
   );
 }
 
 /**
- * Client-side animation wrapper for fade-in on scroll
+ * Fade and rise in as the block scrolls into view — CSS scroll-driven
+ * animation (no JavaScript). Browsers without it show the content at once.
  */
-export function FadeInView({
-  children,
-  delay = 0,
-  duration = 0.8,
-  ...props
-}: FadeInProps) {
+export function FadeInView({ children, delay = 0, duration = 0.8, className, style, ...props }: FadeInProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{
-        duration,
-        delay,
-        ease: [0.22, 1, 0.36, 1],
-      }}
-      {...props}
-    >
+    <div className={cn("fade-in-view", className)} style={{ ...timing(delay, duration), ...style }} {...props}>
       {children}
-    </motion.div>
+    </div>
   );
 }

@@ -12,7 +12,7 @@ const stats = [
   { value: "€50,000", label: "// prize pool", desc: "In cash, awarded across tracks", brand: true },
   { value: "1,000+",  label: "// builders",   desc: "Expected from across the world" },
   { value: "Free",    label: "// entry",      desc: "No fee for any participant" },
-  { value: "72h",     label: "// format",     desc: "AI hackathon format — 15 company challenges" },
+  { value: "48h",     label: "// format",     desc: "AI hackathon format — 15 company challenges" },
 ];
 
 export function StatBand() {
@@ -22,7 +22,7 @@ export function StatBand() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {stats.map((stat) => (
             <div key={stat.label} className="border-l border-white/10 pl-6">
-              <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-2">
+              <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-2">
                 {stat.label}
               </p>
               <p
@@ -38,7 +38,7 @@ export function StatBand() {
           ))}
         </div>
 
-        <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mt-12 pt-6 border-t border-white/10">
+        <p className="text-xs font-mono uppercase tracking-widest text-white/55 mt-12 pt-6 border-t border-white/10">
           MLH 2027 Season Member Event &nbsp;·&nbsp; EduCity · BioCity · Joki, Turku, Finland
           &nbsp;·&nbsp; Open to builders worldwide
         </p>

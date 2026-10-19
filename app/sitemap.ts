@@ -3,11 +3,10 @@ import { blogPosts } from "@/lib/blog";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://sinceai.ai";
-  const now = new Date();
 
   // Note: /blog/[slug] pages are self-hosted articles and included below.
   // Note: /research and /europe do not exist → excluded.
-  // Note: /european-ai is a separate page from /europe-ai — both included.
+  // Note: /stats and /european-ai were merged into /impact and /europe-ai (lib/redirects.ts) — never list them.
   // Note: /hackathon-2026/guide/* (Field Guide) is noindex and intentionally
   // NOT listed — shared by direct link only. Covered by a unit test.
   const staticPages: {
@@ -24,7 +23,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/about", priority: 0.8, changeFreq: "monthly" },
     { path: "/faq", priority: 0.8, changeFreq: "monthly" },
     { path: "/press", priority: 0.7, changeFreq: "monthly" },
-    { path: "/stats", priority: 0.7, changeFreq: "monthly" },
     { path: "/impact", priority: 0.7, changeFreq: "monthly" },
     { path: "/production-support", priority: 0.7, changeFreq: "monthly" },
     { path: "/research-to-market", priority: 0.7, changeFreq: "monthly" },
@@ -35,15 +33,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/contact", priority: 0.5, changeFreq: "yearly" },
     { path: "/turku", priority: 0.6, changeFreq: "monthly" },
     { path: "/finland-ai", priority: 0.7, changeFreq: "monthly" },
-    { path: "/european-ai", priority: 0.7, changeFreq: "monthly" },
     { path: "/code-of-conduct", priority: 0.3, changeFreq: "yearly" },
     { path: "/privacy", priority: 0.3, changeFreq: "yearly" },
     { path: "/terms", priority: 0.3, changeFreq: "yearly" },
   ];
 
+  // No lastModified for static pages: a build timestamp would mark every page as changed on every
+  // deploy, and search engines then ignore lastmod for the whole site. Blog posts carry real dates.
   const staticEntries: MetadataRoute.Sitemap = staticPages.map((p) => ({
     url: `${base}${p.path}`,
-    lastModified: now,
     changeFrequency: p.changeFreq,
     priority: p.priority,
   }));

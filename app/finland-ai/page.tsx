@@ -178,19 +178,19 @@ export default function FinlandAIPage() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">1000+</div>
-                    <div className="text-sm text-neutral-500">Finnish AI developers</div>
+                    <div className="text-sm text-white/55">Finnish AI developers</div>
                   </div>
                   <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">10+</div>
-                    <div className="text-sm text-neutral-500">Countries represented</div>
+                    <div className="text-sm text-white/55">Countries represented</div>
                   </div>
                   <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">4</div>
-                    <div className="text-sm text-neutral-500">Major cities</div>
+                    <div className="text-sm text-white/55">Major cities</div>
                   </div>
                   <div className="p-6 border border-white/5 bg-white/[0.02] text-center">
                     <div className="text-3xl md:text-4xl font-bold text-white mb-2">30+</div>
-                    <div className="text-sm text-neutral-500">AI projects built</div>
+                    <div className="text-sm text-white/55">AI projects built</div>
                   </div>
                 </div>
               </section>
@@ -238,21 +238,21 @@ export default function FinlandAIPage() {
                 </p>
                 <div className="space-y-4">
                   <div className="p-5 border border-white/5 bg-white/[0.02]">
-                    <h4 className="text-base font-bold text-white mb-1">Maritime AI</h4>
+                    <h3 className="text-base font-bold text-white mb-1">Maritime AI</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Finnish team built a sound signal detection system deployed to production
                       at Kongsberg&apos;s vessel systems.
                     </p>
                   </div>
                   <div className="p-5 border border-white/5 bg-white/[0.02]">
-                    <h4 className="text-base font-bold text-white mb-1">Industrial AI</h4>
+                    <h3 className="text-base font-bold text-white mb-1">Industrial AI</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       Turku-based solution for intelligent spare part discovery deployed in
                       production at Sandvik, saving 8+ hours per search.
                     </p>
                   </div>
                   <div className="p-5 border border-white/5 bg-white/[0.02]">
-                    <h4 className="text-base font-bold text-white mb-1">Research Commercialization</h4>
+                    <h3 className="text-base font-bold text-white mb-1">Research Commercialization</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">
                       University researchers commercializing AI innovations through the Since AI
                       research-to-market pipeline.
@@ -291,18 +291,16 @@ export default function FinlandAIPage() {
                 </h2>
                 <div className="flex flex-wrap gap-3">
                   <Link href="/turku" className="text-neutral-400 hover:text-white underline">Turku AI</Link>
-                  <span className="text-neutral-600">&bull;</span>
+                  <span className="text-neutral-600" aria-hidden="true">&bull;</span>
                   <Link href="/europe-ai" className="text-neutral-400 hover:text-white underline">Europe AI Community</Link>
-                  <span className="text-neutral-600">&bull;</span>
-                  <Link href="/european-ai" className="text-neutral-400 hover:text-white underline">European AI Sovereignty</Link>
-                  <span className="text-neutral-600">&bull;</span>
+                  <span className="text-neutral-600" aria-hidden="true">&bull;</span>
                   <Link href="/research-to-market" className="text-neutral-400 hover:text-white underline">Research to Market</Link>
-                  <span className="text-neutral-600">&bull;</span>
-                  <Link href="/stats" className="text-neutral-400 hover:text-white underline">Stats &amp; Impact</Link>
+                  <span className="text-neutral-600" aria-hidden="true">&bull;</span>
+                  <Link href="/impact" className="text-neutral-400 hover:text-white underline">Impact &amp; Numbers</Link>
                 </div>
               </section>
 
-              <p className="text-xs text-neutral-600 mt-16 pt-6 border-t border-white/5">
+              <p className="text-xs text-white/55 mt-16 pt-6 border-t border-white/5">
                 Last updated: February 2026
               </p>
             </div>

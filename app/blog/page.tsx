@@ -4,7 +4,6 @@ import SmoothScroll from "@/components/smoothScroll";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import StructuredData from "@/components/StructuredData";
-import { motion } from "framer-motion";
 import { ArrowRight, ArrowUpRight, Clock, ChevronRight } from "lucide-react";
 import {
   blogPosts,
@@ -67,15 +66,10 @@ export default function BlogPage() {
         {/* Hero */}
         <section className="relative w-full px-6 py-24 md:py-32">
           <div className="max-w-5xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="text-center"
-            >
+            <div className="fade-in text-center">
               {/* Breadcrumb */}
               <nav aria-label="Breadcrumb" className="mb-8">
-                <ol className="flex items-center justify-center gap-1 text-sm text-neutral-500">
+                <ol className="flex items-center justify-center gap-1 text-sm text-white/55">
                   <li>
                     <Link
                       href="/"
@@ -101,19 +95,14 @@ export default function BlogPage() {
                 community. Learn hackathon strategies, AI development
                 techniques, and discover the best developer events globally.
               </p>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Category Filter */}
         <section className="relative w-full px-6 pb-4">
           <div className="max-w-5xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
-              className="flex flex-wrap gap-2 justify-center"
-            >
+            <div className="fade-in flex flex-wrap gap-2 justify-center">
               {FILTER_OPTIONS.map((option) => (
                 <button
                   key={option.value}
@@ -127,7 +116,7 @@ export default function BlogPage() {
                   {option.label}
                 </button>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -135,14 +124,8 @@ export default function BlogPage() {
         <section className="relative w-full px-6 py-24 border-t border-white/5">
           <div className="max-w-5xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {filteredPosts.map((post, index) => (
-                <motion.div
-                  key={post.slug}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
-                >
+              {filteredPosts.map((post) => (
+                <div className="fade-in-view" key={post.slug}>
                 <Link
                   href={`/blog/${post.slug}`}
                   className="group flex flex-col justify-between h-full p-8 md:p-10 border border-white/10 bg-white/[0.02] hover:bg-white/[0.03] hover:border-white/20 transition-all duration-300"
@@ -171,12 +154,12 @@ export default function BlogPage() {
                     </p>
 
                     {/* Key Takeaway — citable content for AI engines */}
-                    <p className="text-sm text-neutral-500 italic leading-relaxed mb-6">
+                    <p className="text-sm text-white/55 italic leading-relaxed mb-6">
                       {post.keyTakeaway}
                     </p>
 
                     {/* Meta: Reading time + Date */}
-                    <div className="flex items-center gap-4 text-sm text-neutral-500 mb-8">
+                    <div className="flex items-center gap-4 text-sm text-white/55 mb-8">
                       <span className="flex items-center gap-1.5">
                         <Clock className="w-3.5 h-3.5" />
                         {post.readingTime} min read
@@ -193,7 +176,7 @@ export default function BlogPage() {
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                   </div>
                 </Link>
-                </motion.div>
+                </div>
               ))}
             </div>
 
@@ -218,12 +201,7 @@ export default function BlogPage() {
         {/* Follow CTA */}
         <section className="relative w-full px-6 py-24 border-t border-white/5">
           <div className="max-w-3xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            >
+            <div className="fade-in-view">
               <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
                 Follow Since AI
               </h3>
@@ -252,7 +230,7 @@ export default function BlogPage() {
                   <ArrowUpRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </a>
               </div>
-              <p className="mt-6 text-sm text-neutral-500">
+              <p className="mt-6 text-sm text-white/55">
                 Prefer a reader? Subscribe via{" "}
                 <a
                   href="/blog/feed.xml"
@@ -262,7 +240,7 @@ export default function BlogPage() {
                 </a>
                 .
               </p>
-            </motion.div>
+            </div>
           </div>
         </section>
       </main>

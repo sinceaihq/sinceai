@@ -129,7 +129,7 @@ const steps = [
   {
     n: "03",
     title: "Execution",
-    body: "Hackathon, standalone project, or ongoing engagement. 1,000+ builders on your challenge in 72 hours, or a matched team on a defined problem.",
+    body: "Hackathon, standalone project, or ongoing engagement. 1,000+ builders on your challenge over one weekend, or a matched team on a defined problem.",
   },
   {
     n: "04",
@@ -152,7 +152,7 @@ export default function PartnersPage() {
         <div className="w-full max-w-4xl mx-auto px-6 py-24 md:py-32">
           <FadeIn>
             <div className="prose prose-invert prose-neutral max-w-none">
-              <p className="text-xs uppercase tracking-[0.2em] font-semibold text-neutral-500 mb-5">
+              <p className="text-xs uppercase tracking-[0.2em] font-semibold text-white/55 mb-5">
                 For Organizations
               </p>
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight leading-tight">
@@ -193,7 +193,7 @@ export default function PartnersPage() {
                   className="p-5 border border-white/5 bg-white/[0.02] text-center"
                 >
                   <div className="text-2xl font-bold text-white mb-1">{s.value}</div>
-                  <div className="text-xs text-neutral-500 leading-snug">{s.label}</div>
+                  <div className="text-xs text-white/55 leading-snug">{s.label}</div>
                 </div>
               ))}
             </div>
@@ -212,7 +212,7 @@ export default function PartnersPage() {
                   </h3>
                   <p className="text-neutral-300 leading-relaxed mb-5">
                     Bring a real AI problem to Since AI Hackathon 2026. Get 1,000+
-                    builders working on it over 72 hours. Best teams continue into
+                    builders working on it over 48 hours. Best teams continue into
                     your pilot.
                   </p>
                   <ul className="space-y-2 text-neutral-400 text-sm mb-6">
@@ -302,7 +302,7 @@ export default function PartnersPage() {
               <h2 className="text-3xl font-bold text-white mb-3 tracking-tight">
                 Challenge themes from past partners
               </h2>
-              <p className="text-neutral-500 text-sm mb-8">
+              <p className="text-white/55 text-sm mb-8">
                 Public summaries only. Full challenge materials and solutions are not
                 published.{" "}
                 <Link
@@ -324,7 +324,7 @@ export default function PartnersPage() {
                         {cs.partner}
                       </span>
                       <span className="text-neutral-700 text-xs">·</span>
-                      <span className="text-xs text-neutral-500">{cs.sector}</span>
+                      <span className="text-xs text-white/55">{cs.sector}</span>
                     </div>
                     <h3 className="text-base font-bold text-white mb-2">{cs.title}</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed mb-4">
@@ -334,7 +334,7 @@ export default function PartnersPage() {
                       {cs.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="px-2 py-0.5 rounded-full border border-white/10 bg-white/[0.02] text-neutral-500 text-xs"
+                          className="px-2 py-0.5 rounded-full border border-white/10 bg-white/[0.02] text-white/55 text-xs"
                         >
                           {tag}
                         </span>
@@ -356,7 +356,7 @@ export default function PartnersPage() {
                     key={s.n}
                     className="flex gap-6 p-6 border border-white/5 bg-white/[0.02]"
                   >
-                    <span className="text-2xl font-bold text-neutral-700 leading-none pt-0.5 min-w-[2.5rem]">
+                    <span className="text-2xl font-bold text-white/40 leading-none pt-0.5 min-w-[2.5rem]">
                       {s.n}
                     </span>
                     <div>
@@ -422,7 +422,7 @@ export default function PartnersPage() {
                 <span key={href} className="whitespace-nowrap">
                   <Link
                     href={href}
-                    className="text-neutral-500 hover:text-white transition-colors duration-300"
+                    className="text-white/55 hover:text-white transition-colors duration-300"
                   >
                     {label}
                   </Link>

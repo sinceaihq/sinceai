@@ -36,7 +36,7 @@ const breadcrumbSchema = {
 const hackathonFaqs = [
   {
     q: "What is Since AI Hackathon?",
-    a: "Since AI Hackathon is the flagship annual event of Since AI — a global execution-focused AI innovation ecosystem based in Turku, Finland. The 2026 edition is a Major League Hacking (MLH) 2027 Season Member Event. Builders from across the world gather for a 72-hour AI hackathon format to solve real company challenges and ship working AI products.",
+    a: "Since AI Hackathon is the flagship annual event of Since AI — a global execution-focused AI innovation ecosystem based in Turku, Finland. The 2026 edition is a Major League Hacking (MLH) 2027 Season Member Event. Builders from across the world gather for a weekend-long, 48-hour AI hackathon to solve real company challenges and ship working AI products.",
   },
   {
     q: "When is Since AI Hackathon 2026?",
@@ -92,7 +92,7 @@ const keyFacts = [
   { label: "Date",           value: UPCOMING_EVENT_2026.dateNote },
   { label: "Venues",         value: "EduCity (opening and closing), BioCity and Joki (building) — Turku, Finland" },
   { label: "Prize pool",     value: "€50,000 cash" },
-  { label: "Format",         value: "72-hour AI hackathon" },
+  { label: "Format",         value: "48-hour AI hackathon, Friday to Sunday" },
   { label: "Schedule",       value: "Fri 15:00 check-in · Fri 17:00 opening · Sun 10:00 submissions close · Sun 13:15 closing ceremony · Sun 14:00 finals · ends around 15:30" },
   { label: "Challenges",     value: `15 company challenges — ${HACKATHON_2026_PARTNERS.challengePartners.length} partners confirmed, 2 to be announced` },
   { label: "Keynote",        value: HACKATHON_2026_PARTNERS.keynote },
@@ -154,14 +154,20 @@ export default function HackathonPage() {
 
         {/* ── SECTION 1: Hero ─────────────────────────────────── */}
         <section id="hackathon-hero" className="relative w-full flex flex-col px-6">
-          <Image
-            src="/assets/images/educity-hero.webp"
-            alt="EduCity, Turku — venue for Since AI Hackathon 2026"
-            fill
-            sizes="100vw"
-            className="object-cover"
-            priority
-          />
+          {/* Plain responsive image: images are served unoptimised, so the phone size is a file of its own.
+              <picture> keeps React from turning it into a preload hint in this route's RSC payload, which
+              would make every page that prefetches /hackathon download the hero too. */}
+          <picture>
+            <img
+              src="/assets/images/educity-hero.webp"
+              srcSet="/assets/images/educity-hero-828.webp 828w, /assets/images/educity-hero.webp 1920w"
+              sizes="100vw"
+              alt="EduCity, Turku — venue for Since AI Hackathon 2026"
+              fetchPriority="high"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          </picture>
           <div className="absolute inset-0" style={{ background: "rgba(0,0,0,0.72)" }} />
           <div
             className="absolute inset-x-0 bottom-0 h-3/5"
@@ -179,8 +185,10 @@ export default function HackathonPage() {
             className="absolute z-20 block right-4 sm:right-[50px] top-[84px]"
             style={{ width: "clamp(60px, 10vw, 100px)" }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element -- MLH serves the official badge; not optimised by us */}
-            <img src={MLH_2027.trustBadgeSrc} alt={MLH_2027.trustBadgeAlt} width={100} height={175} className="w-full h-auto" />
+            <picture className="block">
+              {/* MLH serves the official badge; it is not optimised by us. */}
+              <img src={MLH_2027.trustBadgeSrc} alt={MLH_2027.trustBadgeAlt} width={100} height={175} className="w-full h-auto" />
+            </picture>
             <span className="sr-only"> (opens in a new tab)</span>
           </a>
 
@@ -196,7 +204,7 @@ export default function HackathonPage() {
             </h1>
 
             <p className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-6 leading-snug max-w-[720px]">
-              72 hours. 1,000+ builders.{" "}
+              48 hours. 1,000+ builders.{" "}
               <span style={{ color: "var(--color-brand)" }}>€50,000 in cash prizes.</span>
             </p>
 
@@ -270,7 +278,7 @@ export default function HackathonPage() {
                     key={partner.name}
                     className={`py-6 md:px-6 md:flex-1 ${i > 0 ? "border-t md:border-t-0 md:border-l border-white/10" : ""}`}
                   >
-                    <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+                    <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
                       {partner.label}
                     </p>
                     <a
@@ -337,11 +345,11 @@ export default function HackathonPage() {
         <FadeInView>
           <section className="py-24 px-6 border-t border-white/10">
             <div className="mx-auto max-w-6xl">
-              <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+              <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
                 {"// what is it"}
               </p>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-8">
-                72 hours. Real challenges. Shipped products.
+                48 hours. Real challenges. Shipped products.
               </h2>
 
               <div className="text-sm text-neutral-400 leading-relaxed max-w-[720px] space-y-4">
@@ -369,7 +377,7 @@ export default function HackathonPage() {
         <FadeInView>
           <section className="py-24 px-6 border-t border-white/10">
             <div className="mx-auto max-w-6xl">
-              <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+              <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
                 {"// why participate"}
               </p>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-10">
@@ -382,7 +390,7 @@ export default function HackathonPage() {
                     key={item.num}
                     className="border border-white/5 p-8 hover:border-white/20 hover:bg-white/[0.02] transition-all duration-300"
                   >
-                    <p className="text-xs font-mono text-neutral-500 mb-4" aria-hidden="true">
+                    <p className="text-xs font-mono text-white/55 mb-4" aria-hidden="true">
                       {item.num}
                     </p>
                     <h3 className="text-2xl font-bold tracking-tight text-white mb-3">
@@ -402,7 +410,7 @@ export default function HackathonPage() {
         <FadeInView>
           <section className="py-24 px-6 border-t border-white/10">
             <div className="mx-auto max-w-6xl">
-              <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+              <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
                 {"// venue"}
               </p>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-8">
@@ -454,7 +462,7 @@ export default function HackathonPage() {
         <FadeInView>
           <section className="py-24 px-6 border-t border-white/10">
             <div className="mx-auto max-w-6xl">
-              <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+              <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
                 {"// previous editions"}
               </p>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-8">
@@ -491,7 +499,7 @@ export default function HackathonPage() {
         {/* ── SECTION 11: Key facts ────────────────────────────── */}
         <section className="py-24 px-6 border-t border-white/10">
           <div className="mx-auto max-w-6xl">
-            <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+            <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
               {"// key facts"}
             </p>
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-8">
@@ -504,7 +512,7 @@ export default function HackathonPage() {
                   key={fact.label}
                   className="flex flex-col sm:flex-row sm:items-baseline gap-3 py-4 border-b border-white/10"
                 >
-                  <dt className="text-xs font-mono uppercase tracking-widest text-neutral-500 shrink-0 w-40">
+                  <dt className="text-xs font-mono uppercase tracking-widest text-white/55 shrink-0 w-40">
                     {fact.label}
                   </dt>
                   <dd className="text-sm text-white">
@@ -523,7 +531,7 @@ export default function HackathonPage() {
           style={{ scrollMarginTop: "80px" }}
         >
           <div className="mx-auto max-w-6xl">
-            <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+            <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
               {"// registrations"}
             </p>
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-6">
@@ -571,7 +579,7 @@ export default function HackathonPage() {
         {/* ── SECTION 13: FAQ ───────────────────────────────────── */}
         <section className="py-24 px-6 border-t border-white/10">
           <div className="mx-auto max-w-6xl">
-            <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">
+            <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
               {"// faq"}
             </p>
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-10">

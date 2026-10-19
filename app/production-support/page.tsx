@@ -139,7 +139,7 @@ export default function ProductionSupportPage() {
                       architecture review and deployment guidance, the system was deployed to actual vessel
                       systems for real-time maritime safety monitoring.
                     </p>
-                    <div className="flex flex-wrap gap-4 text-xs text-neutral-500">
+                    <div className="flex flex-wrap gap-4 text-xs text-white/55">
                       <span>Built: 72 hours</span>
                       <span>Support: 8 weeks</span>
                       <span>Status: Production</span>
@@ -153,7 +153,7 @@ export default function ProductionSupportPage() {
                       systems over 6 weeks of production support. Now in production use, saving 8+ hours
                       per spare part search.
                     </p>
-                    <div className="flex flex-wrap gap-4 text-xs text-neutral-500">
+                    <div className="flex flex-wrap gap-4 text-xs text-white/55">
                       <span>Built: 72 hours</span>
                       <span>Support: 6 weeks</span>
                       <span>Impact: 8+ hours saved per search</span>
@@ -172,8 +172,8 @@ export default function ProductionSupportPage() {
                   <table className="w-full text-sm text-left">
                     <thead>
                       <tr className="border-b border-white/10">
-                        <th className="py-3 pr-4 text-neutral-500 font-semibold">Stage</th>
-                        <th className="py-3 pr-4 text-neutral-500 font-semibold">Traditional Hackathon</th>
+                        <th className="py-3 pr-4 text-white/55 font-semibold">Stage</th>
+                        <th className="py-3 pr-4 text-white/55 font-semibold">Traditional Hackathon</th>
                         <th className="py-3 text-white font-semibold">Since AI</th>
                       </tr>
                     </thead>
@@ -247,7 +247,7 @@ export default function ProductionSupportPage() {
                 </div>
               </section>
 
-              <p className="text-xs text-neutral-600 mt-16 pt-6 border-t border-white/5">
+              <p className="text-xs text-white/55 mt-16 pt-6 border-t border-white/5">
                 Last updated: February 2026
               </p>
             </div>

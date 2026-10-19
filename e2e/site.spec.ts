@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { acceptNoCookies, horizontalOverflow, watchConsole } from "./helpers";
+import { CITIES } from "../lib/ecosystem-cities.generated";
 
 /**
  * Regression guard for the public SinceAI.ai pages: the Field Guide and its 3D
@@ -27,7 +28,6 @@ const SITE_ROUTES = [
   "/projects",
   "/research-to-market",
   "/resources",
-  "/stats",
   "/terms",
   "/turku",
 ] as const;
@@ -64,6 +64,31 @@ test.describe("public site", () => {
     });
   }
 
+  test("merged pages answer with permanent redirects to their canonical page", async ({ request, page }) => {
+    for (const [from, to] of [
+      ["/stats", "/impact"],
+      ["/european-ai", "/europe-ai#open-source"],
+    ]) {
+      const res = await request.get(from, { maxRedirects: 0 });
+      expect(res.status(), from).toBe(308);
+      expect(new URL(res.headers()["location"], "http://x").pathname + (to.includes("#") ? "#" + to.split("#")[1] : "")).toBe(to);
+    }
+    await acceptNoCookies(page);
+    await page.addInitScript(() => {
+      try {
+        localStorage.setItem("hackathon2026_popup_v1", String(Date.now()));
+      } catch {}
+    });
+    await page.goto("/impact");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Impact & numbers");
+    await expect(page.getByRole("heading", { name: "Events to date" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "From hackathon to production" })).toBeVisible();
+    await expect(page.locator("main")).not.toContainText(/72 hours/);
+    await page.goto("/european-ai");
+    await expect(page).toHaveURL(/\/europe-ai#open-source$/);
+    await expect(page.locator("#open-source")).toBeInViewport();
+  });
+
   test("the hackathon page shows the judging panel: two judges, two places to be announced", async ({ page }) => {
     await acceptNoCookies(page);
     await page.addInitScript(() => {
@@ -95,16 +120,98 @@ test.describe("public site", () => {
     }
   });
 
-  test("the Apply popup opens once and closes", async ({ page }) => {
+  test("the Hackathon announcement waits for engagement, never blocks the page, and stays closed", async ({ page }) => {
     await acceptNoCookies(page);
     await page.goto("/");
-    const dialog = page.getByRole("dialog");
-    await expect(dialog).toBeVisible({ timeout: 10_000 });
-    await dialog.getByRole("button").last().click();
-    await expect(dialog).toHaveCount(0);
-    await page.reload();
+    const card = page.getByRole("complementary", { name: "Since AI Hackathon 2026" });
+    // Not on arrival: no modal, no announcement until the visitor engages.
     await page.waitForTimeout(3000);
     await expect(page.getByRole("dialog")).toHaveCount(0);
+    await expect(card).toHaveCount(0);
+    // After scrolling a third of the page it appears, and the page still scrolls.
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight * 0.5));
+    await expect(card).toBeVisible({ timeout: 10_000 });
+    const before = await page.evaluate(() => window.scrollY);
+    await page.mouse.wheel(0, 300);
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(before);
+    await expect(card.getByRole("link", { name: "Apply →" })).toHaveAttribute("href", "https://sinceai.app/sign-up");
+    await page.keyboard.press("Escape");
+    await expect(card).toHaveCount(0);
+    await page.reload();
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight * 0.5));
+    await page.waitForTimeout(1500);
+    await expect(card).toHaveCount(0);
+  });
+
+  test("the ecosystem map is in the first screen and names the city under the pointer", async ({ page }) => {
+    await acceptNoCookies(page);
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+    const hero = page.locator("section[aria-labelledby=hero-title]");
+    await expect(hero.getByRole("heading", { level: 1 })).toHaveText("Where frontier AI becomes shipped products.");
+    const map = hero.getByRole("img", { name: /World map of the Since AI ecosystem/ });
+    await expect(map).toBeVisible();
+    // A dozen paths, not thousands of nodes.
+    expect(await map.locator("path").count()).toBeLessThan(20);
+    // Most of the map is above the fold.
+    const box = (await map.boundingBox())!;
+    expect(box.y).toBeLessThan(600);
+    await expect(hero.getByText("Turku, Finland")).toBeVisible();
+    await expect(hero.getByText("HQ", { exact: true })).toBeVisible();
+
+    // Hovering London's dot labels it with the city and the country.
+    const canvas = hero.locator(".eco-map-canvas");
+    const at = await page.evaluate(() => {
+      const svg = document.querySelector(".eco-map-canvas svg")!;
+      const r = svg.getBoundingClientRect();
+      const [cols, rows] = svg.getAttribute("viewBox")!.split(" ").slice(2).map(Number);
+      return { r: { x: r.x, y: r.y, w: r.width, h: r.height }, cols, rows };
+    });
+    const london = CITIES.find((c) => c[0] === "London")!;
+    await page.mouse.move(at.r.x + ((london[2] + 0.5) / at.cols) * at.r.w, at.r.y + ((london[3] + 0.5) / at.rows) * at.r.h);
+    const tip = canvas.locator(".eco-tip");
+    await expect(tip).toContainText("London");
+    await expect(tip).toContainText("United Kingdom");
+  });
+
+  test("the hero keeps the hackathon out of the headline and offers the community channels", async ({ page }) => {
+    await acceptNoCookies(page);
+    await page.goto("/");
+    const hero = page.locator("section[aria-labelledby=hero-title]");
+    await expect(hero.getByRole("link", { name: /Since AI Hackathon 2026/ })).toHaveCount(0);
+    await expect(hero.getByRole("link", { name: /Join Since AI/ }).first()).toBeVisible();
+    for (const name of [/Discord/, /Telegram/]) expect(await hero.getByRole("link", { name }).count()).toBeGreaterThan(0);
+    // The brand does not put a light on these countries.
+    for (const n of ["Russia", "Belarus", "Iran", "North Korea"]) expect(CITIES.some((c) => c[1] === n)).toBe(false);
+  });
+
+  test("Google Analytics stays off the critical path until the visitor engages", async ({ page }) => {
+    const gtagRequests: string[] = [];
+    await page.route(/googletagmanager\.com\/gtag\/js/, (route) => {
+      gtagRequests.push(route.request().url());
+      return route.fulfill({ status: 200, contentType: "text/javascript", body: "" });
+    });
+    await acceptNoCookies(page);
+    await page.goto("/", { waitUntil: "load" });
+    await page.waitForTimeout(2000);
+    expect(gtagRequests).toHaveLength(0);
+    // The page view is queued at once, so nothing is lost while gtag.js waits.
+    const queued = await page.evaluate(() =>
+      ((window as unknown as { dataLayer?: IArguments[] }).dataLayer ?? []).some((e) => e[0] === "config"),
+    );
+    expect(queued).toBe(true);
+    await page.mouse.wheel(0, 400);
+    await expect.poll(() => gtagRequests.length, { timeout: 5000 }).toBe(1);
+    expect(gtagRequests[0]).toContain("id=G-");
+  });
+
+  test("the favicon is the small multi-size icon, not a full-size PNG", async ({ request }) => {
+    const res = await request.get("/favicon.ico");
+    expect(res.status()).toBe(200);
+    const body = await res.body();
+    // ICO header (reserved 0, type 1), and small enough to decode instantly on a phone.
+    expect([...body.subarray(0, 4)]).toEqual([0, 0, 1, 0]);
+    expect(body.length).toBeLessThan(40_000);
   });
 
   test("blog Open Graph images render", async ({ request }) => {
@@ -163,6 +270,8 @@ test.describe("hackathon 2026 page", () => {
     // Former 2026 names appear only in the 2025 edition paragraph.
     const without2025 = main.replace(/The inaugural Since AI Hackathon[\s\S]*?72 hours\./, "");
     for (const name of ["Revvity", "Bo LKV", "Saarioinen", "Sandvik", "Kongsberg"]) expect(without2025).not.toContain(name);
+    // The 2026 programme runs Friday 15:00 to Sunday 15:30 — the 72-hour format belongs to 2025 only.
+    expect(without2025).not.toMatch(/72[\s-]*(h\b|hours?)/i);
     await expect(page.getByText("To be announced", { exact: true })).toHaveCount(2);
     const ld = await page.locator('script[type="application/ld+json"]').allTextContents();
     const event = ld.map((t) => JSON.parse(t)).find((d) => d["@type"] === "Event");

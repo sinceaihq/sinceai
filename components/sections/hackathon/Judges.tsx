@@ -104,7 +104,7 @@ export function Judges() {
   return (
     <section aria-labelledby="judges-title" className="py-24 px-6 border-t border-white/10">
       <div className="mx-auto max-w-6xl">
-        <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3">{"// judging panel"}</p>
+        <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">{"// judging panel"}</p>
         <h2 id="judges-title" className="text-3xl font-bold tracking-tight text-white">
           Meet the judges.
         </h2>

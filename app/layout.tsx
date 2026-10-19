@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Inter } from "next/font/google";
+import localFont from "next/font/local";
 import Script from "next/script";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import "./globals.css";
 import StructuredData from "@/components/StructuredData";
 import { CookieConsent } from "@/components/CookieConsent";
@@ -9,18 +9,28 @@ import { HackathonPopup } from "@/components/HackathonPopup";
 import { ORG } from "@/lib/org";
 import { GA_ID } from "@/lib/gtag";
 
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
+// Self-hosted variable fonts (app/fonts, SIL Open Font License): builds never depend on the
+// Google Fonts network, and visitors never contact a third party for them.
+// The site font's fallback is a monospace stack with nearly the same advance width (0.6 em),
+// so text keeps its line breaks while JetBrains Mono loads.
+const jetbrainsMono = localFont({
+  src: "./fonts/JetBrainsMono-latin-variable.woff2",
+  weight: "100 800",
+  style: "normal",
   display: "swap",
   variable: "--font-mono",
-  weight: ["400", "500", "700"],
+  adjustFontFallback: false,
+  fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "Liberation Mono", "monospace"],
 });
 
-const inter = Inter({
-  subsets: ["latin"],
+// Used only where explicitly needed, so it is not preloaded ahead of the site font.
+const inter = localFont({
+  src: "./fonts/Inter-latin-variable.woff2",
+  weight: "100 900",
+  style: "normal",
   display: "swap",
   variable: "--font-sans",
-  weight: ["400", "500"],
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -28,7 +38,7 @@ export const metadata: Metadata = {
   title:
     "Since AI | Global Execution-Focused AI Innovation Ecosystem",
   description:
-    "Where frontier AI becomes shipped products. Since AI connects 10,000+ AI builders globally with leading AI companies, research groups, and investors through hackathons, open-source collaboration, and applied AI projects. Based in Finland. Open globally.",
+    "A global ecosystem of 10,000+ AI builders. Hackathons with leading companies — and eight weeks of production support to take the best solutions to real users.",
   keywords: [
     "AI community global",
     "AI hackathon global",
@@ -48,7 +58,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Since AI | Global Execution-Focused AI Innovation Ecosystem",
     description:
-      "Where frontier AI becomes shipped products. 10,000+ AI builders globally. Backed by Google for Developers, Bayer, Sandvik, Antler, and more.",
+      "A global ecosystem of 10,000+ AI builders in 120+ countries, with Google for Developers, ElevenLabs, Bayer, Valmet, Antler and 100+ partners and supporters.",
     url: "https://sinceai.ai",
     siteName: "Since AI",
     locale: "en_US",
@@ -68,7 +78,7 @@ export const metadata: Metadata = {
     creator: "@sinceaihq",
     title: "Since AI | Global Execution-Focused AI Innovation Ecosystem",
     description:
-      "Where frontier AI becomes shipped products. 10,000+ AI builders globally.",
+      "A global ecosystem of 10,000+ AI builders — hackathons with leading companies and eight weeks of production support.",
     images: ["https://sinceai.ai/assets/og/hero.png"],
   },
   robots: {
@@ -93,12 +103,11 @@ const organizationSchema = {
   alternateName: ORG.legalName,
   legalName: ORG.legalName,
   url: ORG.baseUrl,
-  logo: `${ORG.baseUrl}/assets/logo/SINCE AI white.png`,
+  logo: { "@type": "ImageObject", url: ORG.logoUrl, width: 4000, height: 4000 },
   description: ORG.mission.purpose,
   foundingDate: "2025",
   taxID: ORG.businessId,
   email: ORG.contact.infoEmail,
-  nonprofitStatus: "NonprofitType",
   location: {
     "@type": "Place",
     address: {
@@ -125,6 +134,8 @@ const organizationSchema = {
     ORG.social.facebook,
     ORG.social.youtube,
     ORG.social.substack,
+    ORG.social.reddit,
+    ORG.social.tiktok,
   ],
   knowsAbout: [
     "Artificial Intelligence",

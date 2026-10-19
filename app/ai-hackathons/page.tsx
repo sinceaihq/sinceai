@@ -14,7 +14,7 @@ import { TrackedLink } from "@/components/analytics/TrackedLink";
 export const metadata: Metadata = {
   title: "AI Hackathons 2026 — Best Global AI Hackathons & Events | Since AI",
   description:
-    "The definitive guide to AI hackathons globally. Since AI Hackathon 2026: November 6–8, Turku, Finland — 72-hour format, 1,000+ builders, 15 company challenges from Valmet, Bayer, Elisa and more. Free to attend.",
+    "The definitive guide to AI hackathons globally. Since AI Hackathon 2026: November 6–8, Turku, Finland — 48-hour format, 1,000+ builders, 15 company challenges from Valmet, Bayer, Elisa and more. Free to attend.",
   keywords: [
     "AI hackathons global",
     "AI hackathon 2026",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "AI Hackathons 2026 | Since AI",
     description:
-      "Since AI Hackathon 2026: November 6–8, Turku, Finland. 72 hours, 1,000+ builders, real partner challenges. Free to attend.",
+      "Since AI Hackathon 2026: November 6–8, Turku, Finland. 48 hours, 1,000+ builders, real partner challenges. Free to attend.",
     url: "https://sinceai.ai/ai-hackathons",
     siteName: "Since AI",
     type: "website",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "AI Hackathons 2026 | Since AI",
     description:
-      "Since AI Hackathon 2026: Nov 6–8, Turku. 72-hour format, 1,000+ builders, 15 company challenges from Valmet, Bayer, Elisa, Meyer Turku and more.",
+      "Since AI Hackathon 2026: Nov 6–8, Turku. 48-hour format, 1,000+ builders, 15 company challenges from Valmet, Bayer, Elisa, Meyer Turku and more.",
   },
 };
 
@@ -66,7 +66,7 @@ const whatMakesGreat = [
 const sinceAiEdge = [
   {
     label: "Duration",
-    since: "72 hours (Fri–Sun)",
+    since: "48 hours on site, Friday to Sunday",
     typical: "24–48 hours",
   },
   {
@@ -101,7 +101,7 @@ const upcomingEvents = [
     name: "Since AI Hackathon 2026",
     date: "November 6–8, 2026",
     location: "Turku, Finland",
-    format: "In-person, 72 hours",
+    format: "In-person, 48 hours",
     size: "1,000+ builders targeted",
     url: "/hackathon",
     highlight: true,
@@ -184,7 +184,7 @@ export default function AIHackathonsPage() {
       <main className="flex flex-col w-full bg-black min-h-screen">
         <div className="w-full max-w-4xl mx-auto px-6 py-24 md:py-32">
           <FadeIn>
-            <p className="text-xs uppercase tracking-[0.2em] font-semibold text-neutral-500 mb-5">
+            <p className="text-xs uppercase tracking-[0.2em] font-semibold text-white/55 mb-5">
               AI Hackathons
             </p>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight leading-tight">
@@ -194,7 +194,7 @@ export default function AIHackathonsPage() {
             <div className="prose prose-invert prose-neutral max-w-none">
               <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-6">
                 The global AI hackathon ecosystem is growing fast. Since AI runs an
-                execution-focused AI hackathon — 72 hours, real
+                execution-focused AI hackathon — 48 hours, real
                 partner challenges, production mentorship, and post-event support.
               </p>
               <p className="text-lg text-neutral-400 leading-relaxed mb-12">
@@ -240,7 +240,7 @@ export default function AIHackathonsPage() {
                     </div>
                   ))}
                 </div>
-                <p className="text-neutral-500 text-sm mt-4">
+                <p className="text-white/55 text-sm mt-4">
                   More events announced on our{" "}
                   <TrackedLink
                     href={ORG.social.discord}
@@ -284,9 +284,9 @@ export default function AIHackathonsPage() {
                   <table className="w-full text-sm text-left">
                     <thead>
                       <tr className="border-b border-white/10">
-                        <th className="py-3 pr-6 text-neutral-500 font-semibold">Feature</th>
+                        <th className="py-3 pr-6 text-white/55 font-semibold">Feature</th>
                         <th className="py-3 pr-6 text-white font-semibold">Since AI Hackathon</th>
-                        <th className="py-3 text-neutral-500 font-semibold">Typical AI hackathon</th>
+                        <th className="py-3 text-white/55 font-semibold">Typical AI hackathon</th>
                       </tr>
                     </thead>
                     <tbody className="text-neutral-400">
@@ -428,30 +428,30 @@ export default function AIHackathonsPage() {
                   <Link href="/hackathon" className="text-neutral-400 hover:text-white underline">
                     Since AI Hackathon 2026
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link href="/for-builders" className="text-neutral-400 hover:text-white underline">
                     For builders
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link href="/europe-ai" className="text-neutral-400 hover:text-white underline">
                     European AI ecosystem
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link href="/partners" className="text-neutral-400 hover:text-white underline">
                     Partner with Since AI
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link href="/faq" className="text-neutral-400 hover:text-white underline">
                     FAQ
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link href="/about" className="text-neutral-400 hover:text-white underline">
                     About
                   </Link>
                 </div>
               </section>
 
-              <p className="text-xs text-neutral-600 mt-16 pt-6 border-t border-white/5">
+              <p className="text-xs text-white/55 mt-16 pt-6 border-t border-white/5">
                 Last updated: April 2026
               </p>
             </div>

@@ -101,8 +101,10 @@ export default function AboutPage() {
               <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-12">
                 {ORG.legalName} is a{" "}
                 <strong className="text-white">registered Finnish nonprofit association</strong>
-                {" "}whose purpose is public-benefit education in artificial
-                intelligence — not commercial activity for private owners.
+                {" "}building a global AI innovation ecosystem: {ORG.stats.network} builders in{" "}
+                {ORG.stats.countries} countries, working with leading companies, investors and
+                researchers. Its purpose is public-benefit education in artificial intelligence —
+                not commercial activity for private owners.
               </p>
 
               {/* 2. Nonprofit mission — extractable statement for program review */}
@@ -112,7 +114,7 @@ export default function AboutPage() {
                 className="mb-16"
               >
                 <div className="p-8 md:p-10 border border-white/10 bg-white/[0.02]">
-                  <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+                  <p className="text-xs font-semibold text-white/55 uppercase tracking-wider mb-4">
                     Registered nonprofit · Finland
                   </p>
                   <h2
@@ -179,7 +181,7 @@ export default function AboutPage() {
                       AI engineer and entrepreneur building intelligent systems at the
                       intersection of technical execution and commercial strategy. Founded
                       Since AI in 2025 and led its growth to a 10,000+ builder network
-                      and 30+ strategic partnerships.
+                      and 100+ partners and supporters.
                     </p>
                     <a
                       href="https://lauttia.ai"
@@ -193,7 +195,7 @@ export default function AboutPage() {
                 </div>
 
                 {/* Team pointer */}
-                <p className="text-neutral-500 text-sm mt-6">
+                <p className="text-white/55 text-sm mt-6">
                   The full Since AI team — spanning Sales & Partnerships, Community,
                   Technology, Production, and Finance — is listed on the{" "}
                   <Link
@@ -217,7 +219,7 @@ export default function AboutPage() {
                   Boost Turku, and HankenAI. A formal advisory board will be announced
                   as Since AI expands in 2026.
                 </p>
-                <p className="text-neutral-500 text-sm">
+                <p className="text-white/55 text-sm">
                   <Link
                     href="/partners"
                     className="text-neutral-400 hover:text-white underline"
@@ -234,27 +236,27 @@ export default function AboutPage() {
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-6">
                   {[
-                    { value: "10,000+", label: "AI builders in our network" },
-                    { value: "1,000+", label: "Builders targeted at Hackathon 2026" },
-                    { value: "100+", label: "Countries represented" },
-                    { value: "100+", label: "Partners & supporters" },
+                    { value: ORG.stats.network, label: "AI builders in our network" },
+                    { value: ORG.stats.hackathon2026Target, label: "Builders targeted at Hackathon 2026" },
+                    { value: ORG.stats.countries, label: "Countries represented" },
+                    { value: ORG.stats.partners, label: "Partners & supporters" },
                   ].map((s) => (
                     <div
                       key={s.label}
                       className="p-5 border border-white/5 bg-white/[0.02] text-center"
                     >
                       <div className="text-2xl font-bold text-white mb-1">{s.value}</div>
-                      <div className="text-xs text-neutral-500 leading-snug">{s.label}</div>
+                      <div className="text-xs text-white/55 leading-snug">{s.label}</div>
                     </div>
                   ))}
                 </div>
                 <p className="text-neutral-400 text-sm">
                   We publish our real numbers, including methodology notes, at{" "}
                   <Link
-                    href="/stats"
+                    href="/impact"
                     className="text-neutral-300 hover:text-white underline"
                   >
-                    sinceai.ai/stats
+                    sinceai.ai/impact
                   </Link>
                   .
                 </p>
@@ -269,13 +271,13 @@ export default function AboutPage() {
                 <div className="p-6 border border-white/10 bg-white/[0.02]">
                   <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5 text-sm">
                     <div>
-                      <dt className="text-neutral-500 font-semibold uppercase tracking-wider text-xs mb-1">
+                      <dt className="text-white/55 font-semibold uppercase tracking-wider text-xs mb-1">
                         Legal entity
                       </dt>
                       <dd className="text-neutral-200">{ORG.legalName}</dd>
                     </div>
                     <div>
-                      <dt className="text-neutral-500 font-semibold uppercase tracking-wider text-xs mb-1">
+                      <dt className="text-white/55 font-semibold uppercase tracking-wider text-xs mb-1">
                         Organizational form
                       </dt>
                       <dd className="text-neutral-200">
@@ -283,7 +285,7 @@ export default function AboutPage() {
                       </dd>
                     </div>
                     <div className="sm:col-span-2">
-                      <dt className="text-neutral-500 font-semibold uppercase tracking-wider text-xs mb-1">
+                      <dt className="text-white/55 font-semibold uppercase tracking-wider text-xs mb-1">
                         Nonprofit purpose
                       </dt>
                       <dd className="text-neutral-200">
@@ -298,19 +300,19 @@ export default function AboutPage() {
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-neutral-500 font-semibold uppercase tracking-wider text-xs mb-1">
+                      <dt className="text-white/55 font-semibold uppercase tracking-wider text-xs mb-1">
                         Business ID
                       </dt>
                       <dd className="text-neutral-200">3593920-2</dd>
                     </div>
                     <div>
-                      <dt className="text-neutral-500 font-semibold uppercase tracking-wider text-xs mb-1">
+                      <dt className="text-white/55 font-semibold uppercase tracking-wider text-xs mb-1">
                         Registered in
                       </dt>
                       <dd className="text-neutral-200">Finland</dd>
                     </div>
                     <div>
-                      <dt className="text-neutral-500 font-semibold uppercase tracking-wider text-xs mb-1">
+                      <dt className="text-white/55 font-semibold uppercase tracking-wider text-xs mb-1">
                         Registered address
                       </dt>
                       <dd className="text-neutral-200">
@@ -318,13 +320,13 @@ export default function AboutPage() {
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-neutral-500 font-semibold uppercase tracking-wider text-xs mb-1">
+                      <dt className="text-white/55 font-semibold uppercase tracking-wider text-xs mb-1">
                         Founded
                       </dt>
                       <dd className="text-neutral-200">2025</dd>
                     </div>
                     <div className="sm:col-span-2">
-                      <dt className="text-neutral-500 font-semibold uppercase tracking-wider text-xs mb-2">
+                      <dt className="text-white/55 font-semibold uppercase tracking-wider text-xs mb-2">
                         Governance documents
                       </dt>
                       <dd className="flex flex-wrap gap-4">
@@ -381,7 +383,7 @@ export default function AboutPage() {
                       key={item.label}
                       className="p-5 border border-white/5 bg-white/[0.02]"
                     >
-                      <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">
+                      <div className="text-xs font-semibold text-white/55 uppercase tracking-wider mb-2">
                         {item.label}
                       </div>
                       <a
@@ -410,23 +412,23 @@ export default function AboutPage() {
                   <Link href="/hackathon" className="text-neutral-400 hover:text-white underline">
                     Hackathon 2026
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link href="/partners" className="text-neutral-400 hover:text-white underline">
                     Partners
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link href="/for-builders" className="text-neutral-400 hover:text-white underline">
                     For builders
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link href="/europe-ai" className="text-neutral-400 hover:text-white underline">
                     European AI ecosystem
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link href="/faq" className="text-neutral-400 hover:text-white underline">
                     FAQ
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link href="/press" className="text-neutral-400 hover:text-white underline">
                     Press
                   </Link>

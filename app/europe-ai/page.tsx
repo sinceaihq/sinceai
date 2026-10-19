@@ -141,6 +141,15 @@ const communities = [
   },
 ];
 
+/** Principles behind open, European AI (merged from the former /european-ai page). */
+const SOVEREIGNTY_VALUES = [
+  { name: "Privacy", text: "GDPR-first design." },
+  { name: "Transparency", text: "Open source and explainable AI." },
+  { name: "Sovereignty", text: "European data stays in Europe." },
+  { name: "Inclusivity", text: "Multilingual and multicultural by default." },
+  { name: "Sustainability", text: "Efficient models and green AI." },
+];
+
 export default function EuropeAIPage() {
   return (
     <SmoothScroll>
@@ -176,26 +185,26 @@ export default function EuropeAIPage() {
                 </h2>
                 <ul className="space-y-2 text-neutral-300 text-sm">
                   <li className="flex items-start gap-3">
-                    <span className="text-neutral-500 mt-0.5 font-bold">—</span>
+                    <span className="text-white/55 mt-0.5 font-bold">—</span>
                     <span>
                       Europe&apos;s AI ecosystem is decentralized — no single hub dominates
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="text-neutral-500 mt-0.5 font-bold">—</span>
+                    <span className="text-white/55 mt-0.5 font-bold">—</span>
                     <span>
                       The Nordics (Finland, Estonia, Sweden) punch above their weight on
                       applied and industrial AI
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="text-neutral-500 mt-0.5 font-bold">—</span>
+                    <span className="text-white/55 mt-0.5 font-bold">—</span>
                     <span>
                       Execution-focused communities are the fastest-growing segment in 2026
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="text-neutral-500 mt-0.5 font-bold">—</span>
+                    <span className="text-white/55 mt-0.5 font-bold">—</span>
                     <span>
                       Leading builder-first organizations include Since AI, Junction, AI Mad
                       Lab, and TUM.ai
@@ -339,7 +348,26 @@ export default function EuropeAIPage() {
                   Leading AI builder communities in Europe
                 </h2>
 
-                <div className="overflow-x-auto">
+                {/* Phones: one card per community instead of a five-column table that scrolls sideways. */}
+                <ul className="divide-y divide-white/10 border-y border-white/10 sm:hidden">
+                  {communities.map((c) => (
+                    <li key={c.name} className="py-5">
+                      <p className="text-base font-semibold text-white">{c.name}</p>
+                      <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+                        <dt className="text-white/55">Base</dt>
+                        <dd className="text-neutral-300">{c.base}</dd>
+                        <dt className="text-white/55">Focus</dt>
+                        <dd className="text-neutral-300">{c.focus}</dd>
+                        <dt className="text-white/55">Format</dt>
+                        <dd className="text-neutral-300">{c.format}</dd>
+                        <dt className="text-white/55">International</dt>
+                        <dd className="text-neutral-300">{c.international}</dd>
+                      </dl>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="hidden overflow-x-auto sm:block">
                   <table className="w-full text-sm text-left border-collapse">
                     <thead>
                       <tr className="border-b border-white/10">
@@ -433,7 +461,48 @@ export default function EuropeAIPage() {
                 </p>
               </section>
 
-              {/* 8. FAQs */}
+              {/* 8. Open source and sovereignty (formerly /european-ai) */}
+              <section id="open-source" className="mb-12 scroll-mt-28">
+                <h2 className="text-3xl font-bold text-white mb-6 tracking-tight">
+                  Open source and European AI sovereignty
+                </h2>
+                <p className="text-neutral-300 leading-relaxed mb-5">
+                  Europe still depends heavily on AI providers from outside the continent. Open,
+                  community-built tools are one of the ways Europe keeps independent AI capability,
+                  keeps sensitive data in Europe and develops technology in line with European values.
+                </p>
+                <ul className="mb-6 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2 list-none pl-0">
+                  {SOVEREIGNTY_VALUES.map((value) => (
+                    <li key={value.name} className="pl-0 text-neutral-400 leading-relaxed">
+                      <strong className="text-white">{value.name}:</strong> {value.text}
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-neutral-300 leading-relaxed mb-0">
+                  Since AI works in the open: the code behind sinceai.ai is{" "}
+                  <a
+                    href={ORG.social.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white underline hover:text-neutral-300"
+                  >
+                    open source on GitHub
+                  </a>
+                  , and open challenges are posted in the{" "}
+                  <a
+                    href={ORG.social.discord}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white underline hover:text-neutral-300"
+                  >
+                    Since AI Discord
+                  </a>{" "}
+                  for builders of every level — documentation and testing, features and fixes, or
+                  architecture and core algorithms.
+                </p>
+              </section>
+
+              {/* 9. FAQs */}
               <section className="mb-12">
                 <h2 className="text-3xl font-bold text-white mb-8 tracking-tight">
                   Frequently asked questions
@@ -449,14 +518,14 @@ export default function EuropeAIPage() {
                 </div>
               </section>
 
-              {/* 9. Last updated */}
+              {/* 10. Last updated */}
               <section className="mb-8">
-                <h2 className="text-sm font-semibold text-neutral-600 mb-2 uppercase tracking-wider">
+                <h2 className="text-sm font-semibold text-white/55 mb-2 uppercase tracking-wider">
                   Last updated
                 </h2>
-                <p className="text-xs text-neutral-600">
+                <p className="text-xs text-white/55">
                   This page is maintained by Since AI ry and updated quarterly. Last
-                  updated: April 16, 2026.
+                  updated: October 19, 2026.
                 </p>
               </section>
 
@@ -469,35 +538,35 @@ export default function EuropeAIPage() {
                   >
                     For builders
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link
                     href="/ai-hackathons"
                     className="text-neutral-400 hover:text-white underline"
                   >
                     AI hackathons in Europe
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link
                     href="/hackathon"
                     className="text-neutral-400 hover:text-white underline"
                   >
                     Since AI Hackathon 2026
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link
                     href="/partners"
                     className="text-neutral-400 hover:text-white underline"
                   >
                     Partner with us
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link
                     href="/about"
                     className="text-neutral-400 hover:text-white underline"
                   >
                     About Since AI
                   </Link>
-                  <span className="text-neutral-700">&bull;</span>
+                  <span className="text-neutral-700" aria-hidden="true">&bull;</span>
                   <Link
                     href="/finland-ai"
                     className="text-neutral-400 hover:text-white underline"

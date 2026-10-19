@@ -49,7 +49,7 @@ export default function NewsletterSignup() {
           </button>
         </div>
 
-        <p className="text-neutral-500 text-xs mt-4">
+        <p className="text-white/55 text-xs mt-4">
           No spam. Unsubscribe anytime.
         </p>
       </form>

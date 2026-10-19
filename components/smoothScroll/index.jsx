@@ -1,32 +1,9 @@
-'use client';
-import { useEffect } from 'react'
-import Lenis from '@studio-freight/lenis'
-
-export default function SmoothScroll({children}) {
-
-    useEffect( () => {
-        window.scrollTo(0,0);
-        
-        const lenis = new Lenis({
-            lerp: 0.1,
-            smoothWheel: true,
-        })
-        
-        let rafId;
-        
-        function raf(time) {
-          lenis.raf(time)
-          rafId = requestAnimationFrame(raf)
-        }
-        
-        rafId = requestAnimationFrame(raf)
-        
-        // Cleanup on unmount
-        return () => {
-            cancelAnimationFrame(rafId)
-            lenis.destroy()
-        }
-    }, [])
-
-    return children
+/**
+ * Page wrapper kept for the pages that use it. Scrolling is the browser's own:
+ * no scroll-jacking library, so scrolling stays fast and accessible, the
+ * keyboard and screen readers behave as expected, and deep links (#section)
+ * land where they point.
+ */
+export default function SmoothScroll({ children }) {
+  return children;
 }
