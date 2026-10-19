@@ -26,7 +26,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("https://sinceai.ai"),
   title:
-    "Since AI — Global Execution-Focused AI Innovation Ecosystem | Hackathons, Applied AI, Research",
+    "Since AI | Global Execution-Focused AI Innovation Ecosystem",
   description:
     "Where frontier AI becomes shipped products. Since AI connects 10,000+ AI builders globally with leading AI companies, research groups, and investors through hackathons, open-source collaboration, and applied AI projects. Based in Finland. Open globally.",
   keywords: [
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     canonical: "https://sinceai.ai",
   },
   openGraph: {
-    title: "Since AI — Global Execution-Focused AI Innovation Ecosystem",
+    title: "Since AI | Global Execution-Focused AI Innovation Ecosystem",
     description:
       "Where frontier AI becomes shipped products. 10,000+ AI builders globally. Backed by Google for Developers, Bayer, Sandvik, Antler, and more.",
     url: "https://sinceai.ai",
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@sinceaihq",
     creator: "@sinceaihq",
-    title: "Since AI — Global Execution-Focused AI Innovation Ecosystem",
+    title: "Since AI | Global Execution-Focused AI Innovation Ecosystem",
     description:
       "Where frontier AI becomes shipped products. 10,000+ AI builders globally.",
     images: ["https://sinceai.ai/assets/og/hero.png"],
