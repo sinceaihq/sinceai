@@ -281,6 +281,7 @@ export const TARGET_GROUPS: readonly { label: string; targets: readonly Target3D
     { label: "Companies · Friday briefing room (EduCity)", kinds: ["room"] },
     { label: "Partner stands", kinds: ["stand"] },
     { label: "Entrances", kinds: ["entrance"] },
+    { label: "Parking", kinds: ["parking"] },
     { label: "Places", kinds: ["area", "landmark"] },
   ] as const
 )
@@ -421,6 +422,7 @@ export const KIND_LABEL: Readonly<Record<Target3D["kind"], string>> = {
   entrance: "Entrance",
   area: "Area",
   landmark: "Landmark",
+  parking: "Car park",
 };
 
 export { tourFacts };

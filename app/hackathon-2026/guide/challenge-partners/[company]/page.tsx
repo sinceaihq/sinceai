@@ -20,6 +20,7 @@ import {
   StatusTag,
   VenueExplorer,
   ghostButtonClass,
+  ParkingSummary,
 } from "@/components/guide";
 import { TwinTeaser } from "@/components/guide/twin/TwinTeaser";
 import {
@@ -35,6 +36,7 @@ import {
   keepDots,
   qaLocationLabel,
   qaStandSentence,
+  CAR_ARRIVAL,
 } from "@/lib/hackathon-2026";
 
 const AUDIENCE = "challenge-partners" as const;
@@ -173,6 +175,18 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
       </GuideSection>
 
       <DiscordSection audience={AUDIENCE} company={company.name} />
+
+      <GuideSection id="parking">
+        <SectionHeading
+          id="parking-title"
+          eyebrow="// arriving by car"
+          title="Parking & arriving by car."
+        />
+        <ParkingSummary
+          lede="Friday: park in ParkCity — EduCity is across the street, about 190 m to door B, or step-free through the lifts between ICT-City and EduCity. Saturday: from ParkCity it is about 360 m to BioCity's main entrance on Tykistökatu, the way in to Joki."
+          extra={[CAR_ARRIVAL.dropOff, CAR_ARRIVAL.lateArrival]}
+        />
+      </GuideSection>
 
       <AccommodationSection />
 

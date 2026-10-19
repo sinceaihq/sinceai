@@ -17,3 +17,4 @@ export * from "./twin";
 export * from "./discord";
 export * from "./accommodation";
 export * from "./food";
+export * from "./parking";

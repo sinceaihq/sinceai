@@ -109,6 +109,7 @@ export const FALLBACK_TARGETS: Record<string, CameraView> = {
   // Over the railway cutting from the south-east: the platform, the station hall on its bridge.
   "kupittaa-station": { position: [250, 50, -90], target: [205, 2, -128], hfov: 60, open: null },
   parkcity: { position: [170, 50, 40], target: [223, 10, -14], hfov: 60, open: null },
+  "parking-biocity": { position: [150, 45, -95], target: [84, -1, -27.2], hfov: 62, open: null },
 };
 
 // ── Routes ──────────────────────────────────────────────────────────────────

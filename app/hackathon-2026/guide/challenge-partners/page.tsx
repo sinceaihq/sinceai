@@ -19,6 +19,7 @@ import {
   StatusTag,
   VenueCards,
   VenueExplorer,
+  ParkingSummary,
 } from "@/components/guide";
 import {
   CHALLENGE_COMPANIES,
@@ -29,6 +30,7 @@ import {
   getScheduleItem,
   GUIDE_BASE_PATH,
   scheduleFor,
+  CAR_ARRIVAL,
 } from "@/lib/hackathon-2026";
 
 const AUDIENCE = "challenge-partners" as const;
@@ -68,6 +70,7 @@ export default function ChallengePartnerGuidePage() {
           { id: "prepare", label: "Prepare" },
           { id: "discord", label: "Discord" },
           { id: "venues", label: "Venues" },
+          { id: "parking", label: "Parking" },
           { id: "accommodation", label: "Hotels" },
           { id: "maps", label: "Maps" },
           { id: "details", label: "Details" },
@@ -150,6 +153,18 @@ export default function ChallengePartnerGuidePage() {
         <div className="mt-8">
           <RouteCard />
         </div>
+      </GuideSection>
+
+      <GuideSection id="parking">
+        <SectionHeading
+          id="parking-title"
+          eyebrow="// arriving by car"
+          title="Parking & arriving by car."
+        />
+        <ParkingSummary
+          lede="Friday: park in ParkCity — EduCity is across the street, about 190 m to door B, or step-free through the lifts between ICT-City and EduCity. Saturday: from ParkCity it is about 360 m to BioCity's main entrance on Tykistökatu, the way in to Joki."
+          extra={[CAR_ARRIVAL.dropOff, CAR_ARRIVAL.lateArrival]}
+        />
       </GuideSection>
 
       <AccommodationSection />

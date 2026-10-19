@@ -222,6 +222,25 @@ test.describe("content", () => {
     await expect(calendar).toHaveAttribute("download", "since-ai-hackathon-2026-fonecta.ics");
   });
 
+  test("parking: five car parks with official terms, directions and the 3D link", async ({ page }) => {
+    await page.goto(`${GUIDE}/venue#parking`);
+    const parking = page.locator("#parking");
+    await expect(parking.locator("[data-parking]")).toHaveCount(5);
+    const pc = parking.locator("#parking-parkcity");
+    await expect(pc).toContainText("Entry daily 06:00–00:00 · exit 24 h");
+    await expect(pc).toContainText("€1.60 per started 30 min · Maximum €15 per 24 h");
+    await expect(pc).toContainText("service fee");
+    await expect(pc.getByRole("link", { name: /Driving directions to ParkCity/ })).toHaveAttribute("href", /destination=60\.449441%2C22\.297308/);
+    await expect(parking.locator("#parking-p-station-kupittaa")).toContainText("Entry and exit 24/7");
+    await expect(parking).toContainText("Free parking may be available on certain public streets");
+    await expect(parking).toContainText("P-Intelligate (Joukahaisenkatu 6) is for Original Sokos Hotel Kupittaa guests");
+    await pc.getByRole("link", { name: /Show in 3D/ }).click();
+    // Consent Mode's url_passthrough may add its _gl parameter to the link; the 3D reads ?focus either way.
+    await expect(page).toHaveURL(/\/venue\?focus=parkcity(&[^#]*)?#preview-3d$/);
+    await page.goto(GUIDE);
+    await expect(page.locator("#parking [data-parking]")).toHaveCount(2);
+  });
+
   test("venue photos are credited", async ({ page }) => {
     await page.goto(`${GUIDE}/venue#photos`);
     const figures = page.locator("#photos figure");
@@ -384,6 +403,7 @@ test.describe("3D campus", () => {
       await expect(page.locator("#preview-3d").getByText(/can.t show the 3D model/).first()).toBeVisible();
       await expect(page.locator("#preview-3d")).toContainText("Kupittaa station");
       await expect(page.locator("#preview-3d")).toContainText("Kupittaa station → EduCity company arrival");
+      await expect(page.locator("#preview-3d")).toContainText("BioCity car park entrance");
       expect(problems).toEqual([]);
       return;
     }
@@ -392,6 +412,10 @@ test.describe("3D campus", () => {
     await expect(page.locator("canvas").first()).toBeVisible();
     await page.getByLabel("Go to").selectOption("elisa");
     await expect(page.getByText("Joki floor 1 · Showroom · counter 4 of 6", { exact: true }).first()).toBeVisible();
+    // Parking: its own group in "Go to"; the BioCity car park entrance is a verified marker.
+    await expect(page.getByLabel("Go to").locator('optgroup[label="Parking"] option')).toHaveCount(2);
+    await page.getByLabel("Go to").selectOption("parking-biocity");
+    await expect(page.getByText("Aimo Park · guest zone 703, limited spaces · driveway off Joukahaisenkatu").first()).toBeVisible();
     await page.locator("#preview-3d").getByRole("tab", { name: "BioCity", exact: true }).click();
     await expect(page.locator("#preview-3d").getByRole("tab", { name: "BioCity", exact: true })).toHaveAttribute("aria-selected", "true");
     await expect(page.getByRole("group", { name: "BioCity views" })).toBeVisible({ timeout: 30_000 });
