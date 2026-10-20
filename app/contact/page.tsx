@@ -153,6 +153,12 @@ const teamSections = [
         email: "radin@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/radin-dabbagh-rezeiyeh-b64687225/",
       },
+      {
+        name: "Jenny Bertills",
+        role: "Production",
+        email: "jenny.bertills@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/jennybertills/",
+      },
     ],
   },
   {
@@ -209,6 +215,12 @@ const teamSections = [
         role: "Technology",
         email: "zain@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/zain-taufique-20273179/",
+      },
+      {
+        name: "Khang Nguyen",
+        role: "Technology",
+        email: "khang@sinceai.fi",
+        linkedin: "https://www.linkedin.com/in/khang-nguyen3902/",
       },
     ],
   },
