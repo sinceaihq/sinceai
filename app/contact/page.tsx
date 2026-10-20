@@ -30,6 +30,7 @@ const teamSections = [
         role: "Sales Lead",
         email: "tuomas.rikkonen@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/tuomas-rikkonen-8664421a9/",
+        image: "/assets/team/tuomas.webp",
       },
       {
         name: "Aman Vyas",
@@ -219,6 +220,7 @@ const teamSections = [
         role: "Marketing Lead",
         email: "aarne.ollila@sinceai.fi",
         linkedin: "https://www.linkedin.com/in/aarneollila/",
+        image: "/assets/team/aarne.webp",
       },
       {
         name: "Abdul Wasay",
