@@ -21,3 +21,4 @@ export * from "./parking";
 export * from "./computing";
 export * from "./submission";
 export * from "./resources";
+export * from "./wifi";

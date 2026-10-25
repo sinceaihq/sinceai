@@ -491,6 +491,15 @@ export default function EuropeAIPage() {
                   >
                     open source on GitHub
                   </a>
+                  , our open models, datasets and demos are on{" "}
+                  <a
+                    href={ORG.social.huggingface}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white underline hover:text-neutral-300"
+                  >
+                    Hugging Face
+                  </a>
                   , and open challenges are posted in the{" "}
                   <a
                     href={ORG.social.discord}

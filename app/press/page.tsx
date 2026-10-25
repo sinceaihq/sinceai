@@ -267,6 +267,16 @@ export default function PressPage() {
                     <span className="text-sm text-white/55">@sinceaihq</span>
                   </a>
                   <a
+                    href={ORG.social.huggingface}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-4 border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-neutral-300 hover:text-white"
+                  >
+                    <strong>Hugging Face</strong>
+                    <br />
+                    <span className="text-sm text-white/55">@sinceaihq</span>
+                  </a>
+                  <a
                     href="https://www.youtube.com/@sinceaihq"
                     target="_blank"
                     rel="noopener noreferrer"

@@ -19,6 +19,7 @@ import {
   SectionNav,
   VenueCards,
   VenueExplorer,
+  WifiSection,
   ghostButtonClass,
   primaryButtonClass,
   ParkingNote,
@@ -126,6 +127,7 @@ export default function BuilderGuidePage() {
           { id: "app", label: "sinceai.app" },
           { id: "building", label: "Build & submit" },
           { id: "venues", label: "Venues" },
+          { id: "wifi", label: "Wi-Fi" },
           { id: "accommodation", label: "Hotels" },
           { id: "bring", label: "Checklist" },
           { id: "maps", label: "Maps" },
@@ -247,6 +249,8 @@ export default function BuilderGuidePage() {
           />
         </div>
       </GuideSection>
+
+      <WifiSection />
 
       <AccommodationSection />
 

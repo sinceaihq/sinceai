@@ -11,7 +11,7 @@
 
 The open-source website of **Since AI**, a global, execution-focused AI innovation ecosystem.
 
-[**sinceai.ai**](https://sinceai.ai) · [Hackathon 2026](https://sinceai.ai/hackathon) · [Discord](https://discord.gg/vMWdrVUPws) · [LinkedIn](https://www.linkedin.com/company/sinceai) · [Contact](https://sinceai.ai/contact)
+[**sinceai.ai**](https://sinceai.ai) · [Hackathon 2026](https://sinceai.ai/hackathon) · [Discord](https://discord.gg/vMWdrVUPws) · [LinkedIn](https://www.linkedin.com/company/sinceai) · [Hugging Face](https://huggingface.co/sinceaihq) · [Contact](https://sinceai.ai/contact)
 
 [![CI](https://github.com/sinceaihq/sinceai/actions/workflows/nextjs.yml/badge.svg)](https://github.com/sinceaihq/sinceai/actions/workflows/nextjs.yml)
 [![Deploy](https://github.com/sinceaihq/sinceai/actions/workflows/cloudflare.yml/badge.svg)](https://github.com/sinceaihq/sinceai/actions/workflows/cloudflare.yml)
@@ -159,6 +159,6 @@ the MIT License. See [`NOTICE.md`](NOTICE.md) for what you may and may not reuse
 
 **Since AI ry** · Registered non-profit association in Finland · Business ID 3593920-2
 
-[sinceai.ai](https://sinceai.ai) · [info@sinceai.fi](mailto:info@sinceai.fi) · [GitHub](https://github.com/sinceaihq)
+[sinceai.ai](https://sinceai.ai) · [info@sinceai.fi](mailto:info@sinceai.fi) · [GitHub](https://github.com/sinceaihq) · [Hugging Face](https://huggingface.co/sinceaihq)
 
 </div>

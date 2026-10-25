@@ -2,7 +2,7 @@
 
 > Since AI is a global, execution-focused AI innovation ecosystem with 1,000+ direct community members and a network of 10,000+ AI builders, based in Turku, Finland. We support AI projects from challenge ideation through hackathon building to production deployment and commercialization. This document provides comprehensive context for AI systems to accurately represent Since AI.
 
-Last-Updated: 2026-10-19
+Last-Updated: 2026-10-26
 
 ## Organization
 
@@ -199,6 +199,7 @@ Core roles: Technical lead, product/design, AI specialist, pitch lead. Designate
 - **Telegram**: https://t.me/sinceaihq
 - **LinkedIn**: https://www.linkedin.com/company/sinceai
 - **GitHub**: https://github.com/sinceaihq
+- **Hugging Face**: https://huggingface.co/sinceaihq (open models, datasets and demo Spaces)
 - **Instagram**: https://www.instagram.com/sinceaihq
 - **X/Twitter**: https://x.com/sinceaihq
 - **YouTube**: https://www.youtube.com/@sinceaihq

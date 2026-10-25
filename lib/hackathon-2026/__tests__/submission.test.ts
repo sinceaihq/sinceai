@@ -151,19 +151,12 @@ describe("builder FAQ and checklist", () => {
     expect(answer).not.toMatch(/automatically (approved|allowed)/i);
   });
 
-  it("attributes the EduCity Wi-Fi to Turku UAS and invents nothing for BioCity and Joki", () => {
+  it("answers Wi-Fi and Linux briefly and points to the Wi-Fi instructions", () => {
     const item = DETAILS.builders.find((i) => /Wi-Fi/.test(i.q))!;
-    const text = `${item.a} ${item.points!.join(" ")}`;
-    expect(text).toMatch(/EduCity \(Turku University of Applied Sciences\): connect to TUAS Guest and register in the browser with your email address/);
-    expect(text).toMatch(/eduroam/);
-    expect(text).toMatch(/Linux, Windows and macOS/);
-    const venues = item.points!.find((p) => p.startsWith("BioCity and Joki"))!;
-    expect(venues).not.toMatch(/password|SSID|“|"/i);
-    expect(text).not.toMatch(/unlimited|guaranteed (speed|bandwidth)|Mbit|Gbit/i);
-    expect(item.links!.map((l) => l.href)).toEqual([
-      "https://www.turkuamk.fi/en/about-us/campuses/",
-      "https://www.turkuamk.fi/en/about-us/contact-us/it-services/",
-    ]);
+    expect(item.a).toMatch(/free Wi-Fi is arranged/);
+    expect(item.a).toMatch(/TUAS Guest or eduroam at EduCity/);
+    expect(item.a).toMatch(/Linux, Windows and macOS/);
+    expect(item.links).toEqual([{ label: "Wi-Fi instructions", href: "#wifi" }]);
   });
 
   it("qualifies food and drink: meals by RSVP, the rest sold separately, nothing promised overnight", () => {

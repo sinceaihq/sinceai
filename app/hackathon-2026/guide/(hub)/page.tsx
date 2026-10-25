@@ -18,6 +18,7 @@ import {
   SectionHeading,
   SectionNav,
   VenueCards,
+  WifiSection,
   primaryButtonClass,
 } from "@/components/guide";
 import { TwinTeaser } from "@/components/guide/twin/TwinTeaser";
@@ -62,6 +63,7 @@ export default function FieldGuideHubPage() {
           { id: COMPUTING_ANCHOR, label: "AI resources" },
           { id: "weekend", label: "Weekend" },
           { id: "venues", label: "Venues" },
+          { id: "wifi", label: "Wi-Fi" },
           { id: "parking", label: "Parking" },
           { id: "food", label: "Food" },
           { id: "accommodation", label: "Hotels" },
@@ -156,6 +158,8 @@ export default function FieldGuideHubPage() {
           <RouteCard />
         </div>
       </GuideSection>
+
+      <WifiSection />
 
       <ParkingHubSection />
 
