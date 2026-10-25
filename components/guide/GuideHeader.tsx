@@ -3,12 +3,21 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
-import { DISCORD_GUIDE, DISCORD_GUIDE_PATH, GUIDE_BASE_PATH, GUIDES, guidePath } from "@/lib/hackathon-2026";
+import {
+  DISCORD_GUIDE,
+  DISCORD_GUIDE_PATH,
+  GUIDE_BASE_PATH,
+  GUIDES,
+  guidePath,
+  RESOURCES_GUIDE,
+  RESOURCES_PATH,
+} from "@/lib/hackathon-2026";
 import { cn } from "@/lib/utils";
 
 const NAV = [
   ...GUIDES.map((g) => ({ href: guidePath(g.audience), label: g.navLabel })),
   { href: `${GUIDE_BASE_PATH}/venue`, label: "Venue & 3D" },
+  { href: RESOURCES_PATH, label: RESOURCES_GUIDE.navLabel },
   { href: DISCORD_GUIDE_PATH, label: DISCORD_GUIDE.navLabel },
 ];
 
@@ -66,12 +75,12 @@ export function GuideHeader() {
             className="flex min-h-11 items-center gap-[0.45em] truncate text-[13px] font-bold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             aria-current={pathname === GUIDE_BASE_PATH ? "page" : undefined}
           >
-            Field Guide <span className="hidden font-normal text-white/55 min-[360px]:inline">2026</span>
+            Field Guide <span className="hidden font-normal text-white/55 min-[360px]:inline lg:hidden xl:inline">2026</span>
           </Link>
         </div>
 
         <nav aria-label="Field Guide" className="hidden lg:block">
-          <ul className="flex items-center gap-4 xl:gap-6">
+          <ul className="flex items-center gap-3 xl:gap-6">
             {NAV.map(({ href, label }) => (
               <li key={href}>
                 <Link

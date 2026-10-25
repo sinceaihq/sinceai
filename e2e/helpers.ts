@@ -11,6 +11,7 @@ export const GUIDE_ROUTES = [
   `${GUIDE}/speakers`,
   `${GUIDE}/venue`,
   `${GUIDE}/discord`,
+  `${GUIDE}/resources`,
 ] as const;
 
 export const COMPANY_IDS = [

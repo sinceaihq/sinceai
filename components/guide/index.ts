@@ -22,6 +22,7 @@ export { CateringInfo, DietaryNotice, FoodSection, FoodSummary, MealSchedule } f
 export { ParkingHubSection, ParkingNote, ParkingSection, ParkingSummary } from "./Parking";
 export { ComputingCallout, ComputingNote, ComputingSection } from "./Computing";
 export { BuildingHubLink, BuildingSection } from "./Building";
+export { OnSitePartners, ResourceCard, ResourcesHubLink, ToolItem } from "./Resources";
 export { GuideCards } from "./GuideCards";
 export { PrintButton } from "./PrintButton";
 export { VenueExplorer } from "./maps/VenueExplorer";
