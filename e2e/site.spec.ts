@@ -129,6 +129,10 @@ test.describe("public site", () => {
       expect(await portrait.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
     }
     await expect(panel.getByRole("link", { name: /Voima Ventures/ })).toHaveAttribute("href", "https://voimaventures.com/");
+    await expect(panel.getByRole("link", { name: /Tuomas Mäkilä on LinkedIn/ })).toHaveAttribute(
+      "href",
+      "https://www.linkedin.com/in/mckila/",
+    );
     await expect(panel.getByRole("link", { name: /Tuomas Mäkilä on Google Scholar/ })).toHaveAttribute(
       "href",
       "https://scholar.google.com/citations?user=fhE_eJYAAAAJ",

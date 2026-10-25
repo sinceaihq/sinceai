@@ -77,6 +77,7 @@ export const judges: Judge[] = [
     organization: "University of Turku",
     organizationUrl: "https://www.utu.fi/en",
     profiles: [
+      { kind: "linkedin", url: "https://www.linkedin.com/in/mckila/" },
       { kind: "university", url: "https://www.utu.fi/en/people/tuomas-makila" },
       { kind: "scholar", url: "https://scholar.google.com/citations?user=fhE_eJYAAAAJ" },
     ],

@@ -41,6 +41,7 @@ describe("judging panel data", () => {
       for (const profile of judge.profiles) expect(profile.url).toMatch(PROFILE_URL[profile.kind]);
     }
     expect(judges[2]!.profiles.map((p) => p.url)).toEqual([
+      "https://www.linkedin.com/in/mckila/",
       "https://www.utu.fi/en/people/tuomas-makila",
       "https://scholar.google.com/citations?user=fhE_eJYAAAAJ",
     ]);
@@ -50,6 +51,7 @@ describe("judging panel data", () => {
     const [sarita, , tuomas] = judges;
     expect(profileLabel(sarita!, sarita!.profiles[0]!)).toBe("Sarita Runeberg on LinkedIn");
     expect(tuomas!.profiles.map((p) => profileLabel(tuomas!, p))).toEqual([
+      "Tuomas Mäkilä on LinkedIn",
       "Tuomas Mäkilä on the University of Turku website",
       "Tuomas Mäkilä on Google Scholar",
     ]);
