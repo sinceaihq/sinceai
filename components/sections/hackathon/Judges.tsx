@@ -1,11 +1,17 @@
 import Image from "next/image";
-import { Linkedin } from "lucide-react";
-import { initials, JUDGE_PANEL_SIZE, judges, type Judge } from "@/lib/judges";
+import { GraduationCap, Landmark, Linkedin, type LucideIcon } from "lucide-react";
+import { initials, JUDGE_PANEL_SIZE, judges, profileLabel, type Judge, type JudgeProfileKind } from "@/lib/judges";
 
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 
 const focusRing =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
+
+const PROFILE_ICON: Record<JudgeProfileKind, LucideIcon> = {
+  linkedin: Linkedin,
+  university: Landmark,
+  scholar: GraduationCap,
+};
 
 /** Square portrait area shared by every card, so all four line up. */
 function Portrait({ judge }: { judge?: Judge }) {
@@ -63,15 +69,23 @@ function JudgeCard({ judge }: { judge: Judge }) {
           <span className="sr-only"> (opens in a new tab)</span>
         </a>
         <p className="mt-4 text-sm text-neutral-400 leading-relaxed">{judge.bio}</p>
-        <div className="mt-auto pt-5">
-          <a
-            href={judge.profileUrl}
-            {...external}
-            aria-label={`${judge.name} on LinkedIn (opens in a new tab)`}
-            className={`inline-flex h-11 w-11 items-center justify-center border border-white/15 text-neutral-400 transition-colors hover:border-white hover:text-white ${focusRing}`}
-          >
-            <Linkedin size={18} strokeWidth={1.5} aria-hidden="true" />
-          </a>
+        <div className="mt-auto flex gap-2 pt-5">
+          {judge.profiles.map((profile) => {
+            const Icon = PROFILE_ICON[profile.kind];
+            const label = profileLabel(judge, profile);
+            return (
+              <a
+                key={profile.url}
+                href={profile.url}
+                {...external}
+                aria-label={`${label} (opens in a new tab)`}
+                title={label}
+                className={`inline-flex h-11 w-11 items-center justify-center border border-white/15 text-neutral-400 transition-colors hover:border-white hover:text-white ${focusRing}`}
+              >
+                <Icon size={18} strokeWidth={1.5} aria-hidden="true" />
+              </a>
+            );
+          })}
         </div>
       </div>
     </li>

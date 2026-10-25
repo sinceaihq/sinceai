@@ -104,7 +104,7 @@ test.describe("public site", () => {
     await expect(page.locator("#open-source")).toBeInViewport();
   });
 
-  test("the hackathon page shows the judging panel: two judges, two places to be announced", async ({ page }) => {
+  test("the hackathon page shows the judging panel: three judges, one place to be announced", async ({ page }) => {
     await acceptNoCookies(page);
     await page.addInitScript(() => {
       try {
@@ -120,14 +120,19 @@ test.describe("public site", () => {
     await expect(cards.nth(0)).toContainText("Chief Executive Officer");
     await expect(cards.nth(1)).toContainText("Niko Elers");
     await expect(cards.nth(1)).toContainText("Investment Director");
-    await expect(cards.nth(2)).toContainText("Judge to be announced");
+    await expect(cards.nth(2)).toContainText("Tuomas Mäkilä");
+    await expect(cards.nth(2)).toContainText("Associate Professor, Software Engineering");
     await expect(cards.nth(3)).toContainText("Judge to be announced");
-    for (const name of [/Sarita Runeberg/, /Niko Elers/]) {
+    for (const name of [/Sarita Runeberg/, /Niko Elers/, /Tuomas Mäkilä/]) {
       const portrait = panel.getByRole("img", { name });
       await expect(portrait).toBeVisible();
       expect(await portrait.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
     }
     await expect(panel.getByRole("link", { name: /Voima Ventures/ })).toHaveAttribute("href", "https://voimaventures.com/");
+    await expect(panel.getByRole("link", { name: /Tuomas Mäkilä on Google Scholar/ })).toHaveAttribute(
+      "href",
+      "https://scholar.google.com/citations?user=fhE_eJYAAAAJ",
+    );
     // On desktop the four cards share one row at the same height.
     if (!test.info().project.name.includes("mobile")) {
       const heights = await cards.evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().height)));
