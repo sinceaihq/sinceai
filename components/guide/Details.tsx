@@ -1,5 +1,5 @@
 import type { GuideDetail } from "@/lib/hackathon-2026";
-import { StatusTag } from "./primitives";
+import { StatusTag, TextLink } from "./primitives";
 
 /** Edge cases behind native disclosure — short page, details on demand. */
 export function Details({ items }: { items: readonly GuideDetail[] }) {
@@ -23,7 +23,30 @@ export function Details({ items }: { items: readonly GuideDetail[] }) {
               <path d="M1.5 4l4.5 4.5L10.5 4" stroke="currentColor" strokeWidth="1.5" fill="none" />
             </svg>
           </summary>
-          <p className="max-w-3xl pb-5 text-sm text-neutral-400 leading-relaxed">{item.a}</p>
+          <div className="max-w-3xl pb-5">
+            <p className="text-sm text-neutral-400 leading-relaxed">{item.a}</p>
+            {item.points && item.points.length > 0 && (
+              <ul className="mt-3 space-y-1.5 text-sm text-neutral-400 leading-relaxed">
+                {item.points.map((point) => (
+                  <li key={point} className="flex gap-2">
+                    <span aria-hidden="true" className="text-white/55">
+                      —
+                    </span>
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {item.links && item.links.length > 0 && (
+              <p className="mt-2 flex flex-wrap gap-x-5">
+                {item.links.map((link) => (
+                  <TextLink key={link.href} href={link.href}>
+                    {link.label}
+                  </TextLink>
+                ))}
+              </p>
+            )}
+          </div>
         </details>
       ))}
     </div>

@@ -144,6 +144,17 @@ test.describe("public site", () => {
     }
   });
 
+  test("the hackathon page names sinceai.app for submissions and does not rule out slide decks", async ({ page }) => {
+    await acceptNoCookies(page);
+    await page.goto("/hackathon");
+    const main = page.locator("main");
+    await expect(main).not.toContainText("No slide decks");
+    await expect(main).toContainText("a slide deck is optional, never a substitute");
+    await expect(main).toContainText("select one of 15 company challenges at the 17:00 opening");
+    await expect(main).toContainText("the official submission platform, not Devpost");
+    await expect(main).toContainText("AI-assisted development is permitted and encouraged");
+  });
+
   test("the Hackathon announcement waits for engagement, never blocks the page, and stays closed", async ({ page }) => {
     await acceptNoCookies(page);
     await page.goto("/");

@@ -1,6 +1,7 @@
 import { GUIDE_BASE_PATH, GUIDE_LINKS } from "./facts";
-import { COMPUTING } from "./computing";
-import { DIETARY } from "./food";
+import { COMPUTING, COMPUTING_HREF } from "./computing";
+import { CATERING, DIETARY } from "./food";
+import { AI_POLICY, SUBMISSION } from "./submission";
 import type { Audience, ChecklistGroup, GuideDefinition, GuideDetail } from "./types";
 
 /**
@@ -99,7 +100,7 @@ export const CRITICAL_PATH: Partial<Record<Audience, readonly { label: string; t
     { label: "Keynote · move", time: "17:30 · 18:30", text: "Jason Mayes, then follow your team's route to your briefing room." },
     { label: "Briefing", time: "18:50–19:30", text: "Your company's room at EduCity." },
     { label: "Build", time: "from 19:30", text: "Dinner and building in BioCity or Joki, around the clock." },
-    { label: "Submit", time: "Sun 10:00", text: "Your team submits in the app — the deadline is fixed." },
+    { label: "Submit", time: "Sun 10:00", text: "Your team submits in sinceai.app, not Devpost — the deadline is fixed." },
   ],
   "challenge-partners": [
     { label: "Arrive", time: "Fri 15:30", text: "EduCity — weekend briefing at 15:45." },
@@ -135,9 +136,14 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
     {
       title: "Before you arrive",
       items: [
+        "You are accepted to the hackathon and can sign in to your own sinceai.app account — every member needs their own.",
         "Everyone in your team has joined the same team in sinceai.app.",
         "Your team has agreed which challenge it wants — the team's owner selects it in sinceai.app on Friday, 17:00–17:30.",
         "You have joined the Since AI Discord for updates and teammates.",
+        "Attendance confirmed on your sinceai.app dashboard, if it asks you to.",
+        `Meal RSVP done on your sinceai.app dashboard by ${DIETARY.deadlineLabel}, with any dietary needs.`,
+        "Your team's repository is set up and everyone can push to it.",
+        "Everyone has read this Builder Guide — especially Build & submit.",
         "If you plan to sleep, you have your own accommodation booked.",
         `Optional: if you want CSC / LUMI computing, you registered by ${COMPUTING.deadlineLabel} — instructions are in your Since AI email.`,
       ],
@@ -149,6 +155,7 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
         "Adapters you need (Finland: EU plug, type C/F, 230 V)",
         "Reusable water bottle",
         "A pen",
+        "Optional: a phone hotspot as a network backup",
       ],
     },
     {
@@ -160,6 +167,7 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
         "Fri 17:00–17:30 — opening ceremony; your team's owner selects the challenge in sinceai.app before 17:30.",
         "17:30–18:30 — Jason Mayes' keynote and tech talk; your team's route is in the app from 17:30.",
         "From 18:30 — leave at your departure time and follow the route to your briefing room (18:50–19:30).",
+        "Before Sun 10:00 — every team member has accepted the challenge IP terms in sinceai.app.",
         "Sun 10:00 — your team's submission is in. Then vote until 12:00 on the ten solutions the app gives you.",
       ],
     },
@@ -279,8 +287,14 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
       a: "Yes — solo participation is allowed. You can still look for teammates on Discord and at Friday's team formation area. A one-person team needs a quick check by the tech team at registration.",
     },
     {
-      q: "A teammate arrives late",
-      a: "Tell the registration desk on Friday. The teammate must already be in your team in sinceai.app before team formation closes at 16:45 — after that nobody can join a team and members cannot be changed.",
+      q: "What if a team member arrives after Friday's Team check?",
+      a: `Only with a late arrival the organisers have approved for that person in advance — ask at ${GUIDE_LINKS.contactEmail} before the event. Even then, the member must already be accepted to the hackathon and in your team in sinceai.app before teams lock at 16:45; after that nobody can join a team and members cannot be changed. A late arrival never reopens a locked team.`,
+      points: [
+        "On Friday, tell registration or the Team check volunteer about the approved late arrival.",
+        "The late member checks in personally with event staff on arrival — checking in is individual, and browsing the app from elsewhere is not checking in.",
+        "Challenges open for preview in sinceai.app at 15:00 on Friday: an accepted member can read them on a phone and discuss with the team, but the team's owner makes the selection at 17:00–17:30.",
+        "Since AI Hackathon is an on-site event; there is no remote participation.",
+      ],
     },
     {
       q: "How does team formation work?",
@@ -291,12 +305,36 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
       a: "Every challenge and its template opens for preview in sinceai.app at 15:00 on Friday. Teams lock at 16:45, and at 16:50 the places per challenge are set — shared as evenly as possible across the 15 challenges. Challenge selection then opens in sinceai.app at 17:00, as the opening ceremony starts, and closes at 17:30: the team's owner selects one challenge for the whole team. Places per challenge are limited. At 17:30 the app shows your team's route: the challenge, your departure time, room, floor, route and floor plan. The teams move in turn from 18:30, after Jason Mayes' programme, and the briefings run 18:50–19:30. If your team has no challenge when selection closes, go straight to event staff — never guess a room.",
     },
     {
-      q: "Who submits for the team?",
-      a: "Any member of the team can submit the team's solution in sinceai.app — agree who does it. The deadline, Sunday 10:00, is fixed.",
+      q: "Can I bring my own food? Will food and drinks be provided?",
+      a: `Yes, bring your own snacks and food — keep the spaces clean and handle food safely. The scheduled event meals at ${CATERING.restaurant}, BioCity, are free: confirm which ones you will join in the Meal RSVP on your sinceai.app dashboard by ${DIETARY.deadlineLabel}, with any dietary needs, so a meal is reserved for you. Each meal includes a warm main course, bread and spread, and water. The restaurant sells ${CATERING.forSale.join(", ").replace(/, ([^,]*)$/, " and $1")} separately.`,
+      points: [
+        "The build spaces are open around the clock; food service is not. Bring a reusable water bottle and some snacks for the night.",
+        "Pre-arranged special meals are collected from Restaurant Mauno's open kitchen. With food allergies, always ask the restaurant staff before eating.",
+        "Any extra snacks or drinks from partners are a bonus — don't count on them overnight.",
+      ],
+      links: [{ label: "Meal times and menu", href: `${GUIDE_BASE_PATH}/venue#food` }],
     },
     {
-      q: "Meals and dietary needs",
-      a: `Main meals are served buffet-style at Restaurant Mauno, BioCity: Friday dinner 18:30–21:30; Saturday lunch 10:30–13:30 and dinner 17:00–20:00; Sunday lunch 10:00–13:00. Breakfast is around 07:00 on Saturday and Sunday — the menu is coming soon. The full menu and dietary labels are in the Venue Explorer. Eat at your own pace within each window. Tell us about vegetarian, vegan, gluten-free or other dietary needs by ${DIETARY.deadlineLabel} through the Meal RSVP on your sinceai.app dashboard; pre-arranged special meals are collected from Restaurant Mauno's open kitchen. With food allergies, always ask the restaurant staff before eating. Dishes are disposable and takeaway containers are available.`,
+      q: "Is there Wi-Fi? Can we use Linux?",
+      a: "Bring any laptop: Linux, Windows and macOS all work, and no brand or operating system is required. Event Wi-Fi is free for participants.",
+      points: [
+        "EduCity (Turku University of Applied Sciences): connect to TUAS Guest and register in the browser with your email address. eduroam works if your own institution takes part in it.",
+        "BioCity and Joki: network access is arranged with the venue operator — follow the instructions event staff give on site.",
+        "Download dependencies, models and container images before you arrive, and bring a phone hotspot as a backup if you can. No connection is guaranteed to be fast or uninterrupted.",
+        "Never scan or security-test the venue networks.",
+      ],
+      links: [
+        { label: "Turku UAS: visitor Wi-Fi", href: "https://www.turkuamk.fi/en/about-us/campuses/" },
+        { label: "Turku UAS: eduroam", href: "https://www.turkuamk.fi/en/about-us/contact-us/it-services/" },
+      ],
+    },
+    {
+      q: "Can we use CSC / LUMI computing?",
+      a: `Optionally, yes. Eligible participants can request access to the LUMI supercomputer and the Aitta inference service. Registration closes on ${COMPUTING.deadlineLabel} and needs approval in advance; activation can take several days. Access is limited to participants affiliated with organisations in EU Member States or Horizon Europe-associated countries, and a new CSC account needs an individual institutional email address. The registration instructions were sent to you privately by email.`,
+      links: [
+        { label: "AI resources in the Field Guide", href: COMPUTING_HREF },
+        { label: "LUMI AI Factory onboarding guide", href: "https://lumi-ai-factory.github.io/LUMI_AIF_Onboarding/" },
+      ],
     },
     {
       q: "What happens at the finals?",
@@ -307,12 +345,8 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
       a: "The build spaces stay open around the clock and you can leave and come back. There are no beds, sleeping rooms or lodging; a short rest is fine in suitable event areas. Accommodation is your own choice and cost.",
     },
     {
-      q: "Can we use AI tools?",
-      a: "Yes. AI-assisted development is allowed. Disclose the main AI tools you used and separate earlier work from what you built at the event. Your team is responsible for the solution working.",
-    },
-    {
       q: "What does it cost?",
-      a: "Participation and the event meals are free.",
+      a: "Participation is free, and so are the event meals — confirm yours in the Meal RSVP on your sinceai.app dashboard.",
     },
     {
       q: "Under 18?",
@@ -407,6 +441,81 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
 };
 
 /** Public, verified help routes. No personal numbers. */
+/**
+ * Builder FAQ on building with AI, open source, IP and submitting — shown in the builder guide's
+ * Build & submit section. Submission facts come from ./submission (verified against sinceai.app).
+ */
+export const BUILDING_FAQ: readonly GuideDetail[] = [
+  {
+    q: "Can we use ChatGPT, Claude, Cursor, GitHub Copilot, Gemini, Lovable and other AI tools?",
+    a: `Yes — absolutely. AI-assisted development is permitted and encouraged. ${AI_POLICY.message}`,
+    points: [
+      `For example: ${AI_POLICY.tools.join(", ")} ${AI_POLICY.toolsNote}`,
+      `Use it for anything: ${AI_POLICY.uses.charAt(0).toLowerCase()}${AI_POLICY.uses.slice(1)}`,
+      AI_POLICY.notRequired,
+    ],
+  },
+  {
+    q: "Will using AI-generated code hurt our judging score?",
+    a: "No. Using AI — even for most of your code — does not count against you. AI is a tool, not a shortcut around responsibility: we care about the problem you solve, the value you create, the working product you demonstrate and your ability to explain the decisions behind it. AI never excuses code that doesn't work or data you weren't allowed to use.",
+    points: [
+      "Evaluators look at what your team built during the event, whether it works and whether it answers the challenge.",
+      "They also weigh real-world relevance and business value, technical quality, feasibility, how well you understand and explain your system, and responsible handling of privacy, security and data.",
+      "Each challenge company evaluates its own challenge with its own criteria and picks its top three. The five most-voted solutions present in the finals, where the jury selects the overall winner.",
+    ],
+  },
+  {
+    q: "What should we disclose about AI and third-party technology?",
+    a: "The submission form asks for your main AI tools and how you used generative AI — that is the required part. We also recommend a short technology inventory in your README; a concise list is enough, not a full software bill of materials.",
+    points: [
+      "AI development tools, models and APIs you used",
+      "Frameworks and libraries, with their licences where it matters",
+      "Third-party datasets and significant external services",
+      "Pre-existing code and assets — kept apart from what you built at the event",
+      "Material security and privacy considerations",
+    ],
+  },
+  {
+    q: "Can we use our own GitHub repositories and let AI coding agents modify the code?",
+    a: "Yes. Work in your own repositories — private ones too, where that suits you — and let AI assistants and agents read and change your project files, as long as you have the rights to do so. No VPN or virtual machine is required; if a challenge sets rules for its environment or data, follow them.",
+    points: [
+      "Commit often with meaningful messages; keep a README with reproducible setup steps.",
+      "Keep secrets in environment variables or a secrets manager — never in a commit.",
+      "Give tools and agents the least access they need, and review the changes an agent makes.",
+      "Test before you deploy.",
+      "Don't send personal or confidential data to an external AI provider without permission.",
+      "Respect open-source licences and their attribution requirements.",
+      "Don't misuse the venue networks or run unauthorised security tests.",
+    ],
+  },
+  {
+    q: "Who owns what we build? What are the challenge IP terms?",
+    a: "It depends on the challenge. Some challenges transfer the new work made for them to the challenge company; others let you keep ownership and grant the company a licence. The submission page shows the terms for your challenge, and every team member must read and accept them personally before your team can submit. Your pre-existing work and general know-how are not transferred, and open-source material stays under its own licence.",
+    points: [
+      "Never publish confidential agreements, private datasets, partner credentials or protected challenge material.",
+      "A public repository is fine only where your challenge's terms allow it.",
+    ],
+  },
+  {
+    q: "Where do we submit? Do we need Devpost?",
+    a: `${SUBMISSION.notDevpost} Submit in sinceai.app by ${SUBMISSION.deadlineLabel}. ${SUBMISSION.whereToSubmit}`,
+    links: [{ label: "Open your sinceai.app dashboard", href: SUBMISSION.dashboardHref }],
+  },
+  {
+    q: "Is a demo video or a pitch deck required? Which files can we upload?",
+    a: "Neither is required. A short demo video — about two minutes — is strongly recommended: add a YouTube link, or upload MP4 or WebM. A pitch deck can be PDF, PPT or PPTX; supporting documents can be PDF, PPT, PPTX, DOC, DOCX, TXT or Markdown. ZIP files are not accepted — share code through your repository link. Files can be added once the submission is saved.",
+  },
+  {
+    q: "Who submits for the team?",
+    a: `Any member of the team can submit the team's solution in sinceai.app — agree who does it. There is one entry per team, and it goes through once every member has accepted the challenge IP terms. The deadline, ${SUBMISSION.deadlineLabel}, is fixed.`,
+  },
+  {
+    q: "What should my team complete before arriving?",
+    a: "Three separate things must be true for each member: they are accepted to the hackathon, they are an accepted member of your team in sinceai.app, and they check in personally on site on Friday. Then work through the checklist under Bring and do.",
+    links: [{ label: "Bring and do", href: "#bring" }],
+  },
+];
+
 export const HELP = {
   email: GUIDE_LINKS.contactEmail,
   discord: GUIDE_LINKS.discord,

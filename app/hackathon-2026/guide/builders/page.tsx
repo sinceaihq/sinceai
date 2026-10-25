@@ -1,5 +1,6 @@
 import {
   AccommodationSection,
+  BuildingSection,
   CalendarButton,
   Checklist,
   ComputingCallout,
@@ -123,6 +124,7 @@ export default function BuilderGuidePage() {
           { id: "team-formation", label: "Team formation" },
           { id: "schedule", label: "Schedule" },
           { id: "app", label: "sinceai.app" },
+          { id: "building", label: "Build & submit" },
           { id: "venues", label: "Venues" },
           { id: "accommodation", label: "Hotels" },
           { id: "bring", label: "Checklist" },
@@ -217,6 +219,8 @@ export default function BuilderGuidePage() {
           </a>
         </div>
       </GuideSection>
+
+      <BuildingSection />
 
       <GuideSection id="venues">
         <SectionHeading

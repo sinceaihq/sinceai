@@ -375,6 +375,46 @@ test.describe("CSC / LUMI computing resources", () => {
   });
 });
 
+test.describe("Build & submit (builder guide)", () => {
+  test("the nav chip leads to the AI policy and the submission guide, visible without expanding anything", async ({ page }) => {
+    await page.goto(`${GUIDE}/builders`);
+    await page.getByRole("navigation", { name: "On this page" }).getByRole("link", { name: "Build & submit" }).click();
+    await expect(page).toHaveURL(/#building$/);
+    await expect(page.locator("#building-title")).toBeInViewport();
+    const section = page.locator("#building");
+    await expect(section.getByRole("heading", { name: "Build with AI. We encourage it." })).toBeVisible();
+    const submit = section.locator("#submit");
+    await expect(submit.getByText("Sunday 8 November, 10:00 EET")).toBeVisible();
+    await expect(submit).toContainText("not Devpost");
+    await expect(submit.locator('[data-file-kind="Demo video"]')).toContainText("MP4, WebM");
+    await expect(submit).toContainText("ZIP archives are not accepted");
+  });
+
+  test("FAQ answers open, and their links point to the right places", async ({ page }) => {
+    await page.goto(`${GUIDE}/builders#building`);
+    const q = page.getByText("Can we use ChatGPT, Claude, Cursor, GitHub Copilot, Gemini, Lovable and other AI tools?");
+    await q.click();
+    await expect(page.locator("#building details[open]")).toContainText("permitted and encouraged");
+    await page.getByText("Is there Wi-Fi? Can we use Linux?").click();
+    const wifi = page.locator("details[open]").filter({ hasText: "TUAS Guest" });
+    await expect(wifi.getByRole("link", { name: /Turku UAS: visitor Wi-Fi/ })).toHaveAttribute(
+      "href",
+      "https://www.turkuamk.fi/en/about-us/campuses/",
+    );
+    await page.getByText("Can we use CSC / LUMI computing?").click();
+    await page.getByRole("link", { name: "AI resources in the Field Guide" }).first().click();
+    await expect(page).toHaveURL(new RegExp(`${GUIDE}#ai-resources$`));
+    await expect(page.locator("#ai-resources-title")).toBeInViewport();
+  });
+
+  test("the hub links builders to the section", async ({ page }) => {
+    await page.goto(GUIDE);
+    await page.locator("#guides").getByRole("link", { name: /Build with AI\. Submit in sinceai\.app\./ }).click();
+    await expect(page).toHaveURL(new RegExp(`${GUIDE}/builders#building$`));
+    await expect(page.locator("#building-title")).toBeInViewport();
+  });
+});
+
 test.describe("photo lightbox", () => {
   test("opens, pages with arrow keys, closes with Escape and returns focus", async ({ page }) => {
     await page.goto(`${GUIDE}/venue#photos`);

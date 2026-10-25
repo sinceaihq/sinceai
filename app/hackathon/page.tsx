@@ -71,6 +71,14 @@ const hackathonFaqs = [
     a: "On Friday, teams of up to five form in sinceai.app at EduCity by 16:45, and each team's owner selects one company challenge in the app during the 17:00 opening ceremony. After the opening and Jason Mayes' keynote and tech talk, each company briefs its teams. Teams then build at BioCity and Joki, which stay open around the clock, with company Q&A on Saturday. Submissions close Sunday at 10:00. Each company picks the top three teams of its challenge, and in the 14:00 finals five finalist teams present live on stage to the jury, which selects the overall winner.",
   },
   {
+    q: "Can we use AI tools like ChatGPT, Claude, Cursor or GitHub Copilot?",
+    a: "Yes — AI-assisted development is permitted and encouraged, with any AI assistant, coding agent, model or platform. Teams stay responsible for their solution: understand and verify what you ship, be ready to explain it, disclose the main AI tools you used, and keep pre-existing work apart from what you build at the event. Licences and each challenge's rules and data restrictions still apply.",
+  },
+  {
+    q: "How do teams submit their projects?",
+    a: "In sinceai.app — the official submission platform, not Devpost — by Sunday 8 November 2026 at 10:00 (EET). Each team submits one entry with its project details, a submission URL and a repository or demo link, and every team member accepts the challenge's IP terms in the app. A demo video, a pitch deck and supporting documents are optional.",
+  },
+  {
     q: "Which code of conduct applies?",
     a: `Since AI's Code of Conduct (sinceai.ai/code-of-conduct) and the MLH Code of Conduct (${MLH_2027.codeOfConduct}) both apply to everyone at the event.`,
   },
@@ -359,14 +367,14 @@ export default function HackathonPage() {
                   by 100+ strategic, capital, and research partners.
                 </p>
                 <p>
-                  Teams form on Friday afternoon, select one of 15 company challenges before the
+                  Teams form on Friday afternoon, select one of 15 company challenges at the
                   17:00 opening, and ship by Sunday&apos;s 10:00 deadline. 1,000+ builders are
                   expected in 2026, with challenges set by {HACKATHON_2026_CHALLENGE_LIST} — and
                   two more partners still to be announced. Open to developers, researchers, and
                   entrepreneurs worldwide.
                 </p>
                 <p className="text-white font-semibold">
-                  No slide decks. No mockups. Only working demos.
+                  No mockups. Working demos first — a slide deck is optional, never a substitute.
                 </p>
               </div>
             </div>
