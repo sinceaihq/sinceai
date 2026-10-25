@@ -415,6 +415,55 @@ test.describe("Build & submit (builder guide)", () => {
   });
 });
 
+test.describe("Builder Resources", () => {
+  test("four verified event resources with their access state, help and original-source links", async ({ page }) => {
+    await page.goto(`${GUIDE}/resources`);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Builder Resources");
+    const cards = page.locator("[data-resource]");
+    await expect(cards).toHaveCount(4);
+    await expect(page.locator('[data-resource="csc-lumi"]')).toContainText("Register by Fri 30 Oct");
+    await expect(page.locator('[data-resource="pruna-ai"]')).toContainText("Shared key Fri 6 Nov");
+    await expect(page.locator('[data-resource="elevenlabs"]')).toContainText("Activation pending");
+    const featherless = page.locator('[data-resource="featherless"]');
+    await expect(featherless).toContainText("Instructions 4–5 Nov");
+    await expect(featherless).toContainText("never published on this website");
+    for (const card of await cards.all()) {
+      for (const link of await card.getByRole("link").all()) {
+        const href = (await link.getAttribute("href"))!;
+        if (href.startsWith("/")) continue;
+        expect(href).toMatch(/^https:\/\//);
+        await expect(link).toHaveAttribute("target", "_blank");
+        await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+      }
+    }
+    await expect(page.locator('[data-resource="csc-lumi"]').getByRole("link", { name: "Eligibility and deadline" })).toHaveAttribute(
+      "href",
+      `${GUIDE}#ai-resources`,
+    );
+    await expect(page.locator("[data-stand-partner]")).toHaveCount(6);
+    await expect(page.locator("[data-tool]")).toHaveCount(4);
+    // Logos load.
+    for (const img of await page.locator("[data-resource] img").all()) {
+      await img.scrollIntoViewIfNeeded();
+      expect(await img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
+    }
+  });
+
+  test("is reachable from the guide header, the hub and the builder guide", async ({ page, isMobile }) => {
+    await page.goto(GUIDE);
+    await page.locator("#guides").getByRole("link", { name: /Builder Resources/ }).click();
+    await expect(page).toHaveURL(new RegExp(`${GUIDE}/resources$`));
+    await page.goto(`${GUIDE}/builders#building`);
+    await page.locator("#building").getByRole("link", { name: "Builder Resources" }).click();
+    await expect(page).toHaveURL(new RegExp(`${GUIDE}/resources$`));
+    if (!isMobile) {
+      await page.goto(`${GUIDE}/venue`);
+      await page.getByRole("banner").getByRole("link", { name: "Resources", exact: true }).click();
+      await expect(page).toHaveURL(new RegExp(`${GUIDE}/resources$`));
+    }
+  });
+});
+
 test.describe("photo lightbox", () => {
   test("opens, pages with arrow keys, closes with Escape and returns focus", async ({ page }) => {
     await page.goto(`${GUIDE}/venue#photos`);
@@ -595,6 +644,7 @@ test.describe("accessibility", () => {
     `${GUIDE}/challenge-partners`,
     `${GUIDE}/partners`,
     `${GUIDE}/venue`,
+    `${GUIDE}/resources`,
   ]) {
     test(`${route} has no serious axe violations`, async ({ page }) => {
       await page.goto(route, { waitUntil: "networkidle" });

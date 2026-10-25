@@ -143,7 +143,7 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
         "Attendance confirmed on your sinceai.app dashboard, if it asks you to.",
         `Meal RSVP done on your sinceai.app dashboard by ${DIETARY.deadlineLabel}, with any dietary needs.`,
         "Your team's repository is set up and everyone can push to it.",
-        "Everyone has read this Builder Guide — especially Build & submit.",
+        "Everyone has read this Builder Guide — especially Build & submit — and Builder Resources for partner tools, credits and their dates.",
         "If you plan to sleep, you have your own accommodation booked.",
         `Optional: if you want CSC / LUMI computing, you registered by ${COMPUTING.deadlineLabel} — instructions are in your Since AI email.`,
       ],
