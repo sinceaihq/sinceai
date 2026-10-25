@@ -1,6 +1,8 @@
 import Link from "next/link";
 import {
   AccommodationSection,
+  ComputingCallout,
+  ComputingSection,
   CriticalPath,
   FactsStrip,
   FoodSummary,
@@ -18,6 +20,7 @@ import {
 } from "@/components/guide";
 import { TwinTeaser } from "@/components/guide/twin/TwinTeaser";
 import {
+  COMPUTING_ANCHOR,
   DISCORD_GUIDE,
   DISCORD_GUIDE_PATH,
   EVENT_2026,
@@ -48,11 +51,13 @@ export default function FieldGuideHubPage() {
           ]}
         />
         <p className="text-sm text-neutral-400">{HUB.openingNote}</p>
+        <ComputingCallout inPage />
       </GuideHero>
 
       <SectionNav
         items={[
           { id: "guides", label: "Your guide" },
+          { id: COMPUTING_ANCHOR, label: "AI resources" },
           { id: "weekend", label: "Weekend" },
           { id: "venues", label: "Venues" },
           { id: "parking", label: "Parking" },
@@ -108,6 +113,8 @@ export default function FieldGuideHubPage() {
           </Link>
         </div>
       </GuideSection>
+
+      <ComputingSection />
 
       <GuideSection id="weekend">
         <SectionHeading

@@ -295,6 +295,86 @@ test.describe("content", () => {
   });
 });
 
+test.describe("CSC / LUMI computing resources", () => {
+  // A fixed moment before CSC's deadline (Fri 30 Oct 2026), so the test does not change with the calendar.
+  const BEFORE = "now=2026-10-26T12:00";
+
+  test("the hub shows the section, its nav chip and the hero callout", async ({ page }) => {
+    await page.goto(`${GUIDE}?${BEFORE}`);
+    const section = page.locator("#ai-resources");
+    await expect(section.getByRole("heading", { level: 2 })).toHaveText("CSC / LUMI AI Factory computing resources.");
+    await expect(section.locator('[data-computing-status="open"]')).toContainText("Friday 30 October 2026");
+    await expect(section).toContainText("Optional");
+    await expect(section).toContainText("Horizon Europe-associated country");
+    await expect(section).toContainText("SUPERCOMPUTER");
+    await expect(section.getByRole("link", { name: "info@sinceai.fi" })).toHaveAttribute("href", "mailto:info@sinceai.fi");
+    // Right after the role guides.
+    const order = await page.$$eval("main section[id]", (els) => els.map((e) => e.id));
+    expect(order.indexOf("ai-resources")).toBe(order.indexOf("guides") + 1);
+
+    const nav = page.getByRole("navigation", { name: "On this page" });
+    await nav.getByRole("link", { name: "AI resources" }).click();
+    await expect(page).toHaveURL(/#ai-resources$/);
+    await expect(page.locator("#ai-resources-title")).toBeInViewport();
+
+    await page.goto(`${GUIDE}?${BEFORE}`);
+    await page.getByRole("link", { name: /Register by Fri 30 Oct/ }).click();
+    await expect(page).toHaveURL(new RegExp(`\\?${BEFORE}#ai-resources$`));
+    await expect(page.locator("#ai-resources-title")).toBeInViewport();
+  });
+
+  test("the builder guide links to the hub section from its hero and its checklist", async ({ page }) => {
+    await page.goto(`${GUIDE}/builders?${BEFORE}`);
+    await expect(page.locator("#bring")).toContainText("CSC / LUMI computing");
+    await expect(page.locator("#bring").getByRole("link", { name: "AI resources in the Field Guide" })).toHaveAttribute(
+      "href",
+      `${GUIDE}#ai-resources`,
+    );
+    await page.getByRole("link", { name: /Register by Fri 30 Oct/ }).click();
+    await expect(page).toHaveURL(new RegExp(`${GUIDE}#ai-resources$`));
+    await expect(page.locator("#ai-resources-title")).toBeInViewport();
+  });
+
+  test("after the deadline the section says registration has closed and the callout is gone", async ({ page }) => {
+    await page.goto(`${GUIDE}?now=2026-10-31T09:00`);
+    await expect(page.locator('#ai-resources [data-computing-status="closed"]')).toContainText("Registration closed");
+    await expect(page.getByRole("link", { name: /Register by Fri 30 Oct/ })).toHaveCount(0);
+  });
+
+  test("every in-page nav anchor on the hub and the builder guide has its section", async ({ page }) => {
+    for (const route of [GUIDE, `${GUIDE}/builders`]) {
+      await page.goto(route);
+      const ids = await page
+        .getByRole("navigation", { name: "On this page" })
+        .getByRole("link")
+        .evaluateAll((as) => as.map((a) => new URL((a as HTMLAnchorElement).href).hash.slice(1)));
+      expect(ids.length).toBeGreaterThan(5);
+      for (const id of ids) await expect(page.locator(`[id="${id}"]`), `${route}#${id}`).toHaveCount(1);
+    }
+  });
+
+  test("no private joining details in the served HTML or JavaScript", async ({ page, request }) => {
+    const patterns = [
+      /\bmy\.csc\.fi\b/i,
+      /\bproject_\d{5,}\b/i,
+      /https?:\/\/[^\s"'`)<>]*(?:[?&](?:invite|invitation|invitation_?code|invite_?code|token|join)=|\/(?:invite|invitations?|join)\/[\w-]{6,})/i,
+    ];
+    const scripts = new Set<string>();
+    for (const route of [GUIDE, `${GUIDE}/builders`]) {
+      const html = await (await request.get(route)).text();
+      for (const p of patterns) expect(p.test(html), `${route} ${p}`).toBe(false);
+      await page.goto(route);
+      for (const src of await page.$$eval("script[src]", (els) => els.map((e) => (e as HTMLScriptElement).src))) scripts.add(src);
+    }
+    expect(scripts.size).toBeGreaterThan(0);
+    for (const src of scripts) {
+      if (new URL(src).origin !== new URL(page.url()).origin) continue;
+      const js = await (await request.get(src)).text();
+      for (const p of patterns) expect(p.test(js), `${src} ${p}`).toBe(false);
+    }
+  });
+});
+
 test.describe("photo lightbox", () => {
   test("opens, pages with arrow keys, closes with Escape and returns focus", async ({ page }) => {
     await page.goto(`${GUIDE}/venue#photos`);

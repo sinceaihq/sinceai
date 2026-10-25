@@ -2,6 +2,8 @@ import {
   AccommodationSection,
   CalendarButton,
   Checklist,
+  ComputingCallout,
+  ComputingNote,
   CriticalPath,
   Details,
   FactsStrip,
@@ -111,6 +113,7 @@ export default function BuilderGuidePage() {
             { label: "Finals", value: "Sun 14:00", sub: "Five teams live on stage · ends around 15:30" },
           ]}
         />
+        <ComputingCallout />
         <NowNext items={schedule} audience={AUDIENCE} firstMoment={getScheduleItem(guide.firstMomentId)} />
       </GuideHero>
 
@@ -246,6 +249,7 @@ export default function BuilderGuidePage() {
       <GuideSection id="bring">
         <SectionHeading id="bring-title" eyebrow="// checklist" title="Bring and do." />
         <Checklist storageKey="builders" groups={CHECKLISTS.builders} />
+        <ComputingNote className="mt-6 max-w-3xl" />
       </GuideSection>
 
       <GuideSection id="maps">

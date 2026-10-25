@@ -1,4 +1,5 @@
 import { GUIDE_BASE_PATH, GUIDE_LINKS } from "./facts";
+import { COMPUTING } from "./computing";
 import { DIETARY } from "./food";
 import type { Audience, ChecklistGroup, GuideDefinition, GuideDetail } from "./types";
 
@@ -138,6 +139,7 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
         "Your team has agreed which challenge it wants — the team's owner selects it in sinceai.app on Friday, 17:00–17:30.",
         "You have joined the Since AI Discord for updates and teammates.",
         "If you plan to sleep, you have your own accommodation booked.",
+        `Optional: if you want CSC / LUMI computing, you registered by ${COMPUTING.deadlineLabel} — instructions are in your Since AI email.`,
       ],
     },
     {
