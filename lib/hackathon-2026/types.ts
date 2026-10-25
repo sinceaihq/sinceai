@@ -189,6 +189,10 @@ export interface ChecklistGroup {
 export interface GuideDetail {
   q: string;
   a: string;
+  /** Short list after the answer, when a list reads better than a sentence. */
+  points?: readonly string[];
+  /** Where to read more — Field Guide paths or official pages. */
+  links?: readonly { label: string; href: string }[];
   status?: Publishability;
 }
 

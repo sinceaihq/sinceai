@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   AccommodationSection,
+  BuildingHubLink,
   ComputingCallout,
   ComputingSection,
   CriticalPath,
@@ -111,6 +112,9 @@ export default function FieldGuideHubPage() {
               →
             </span>
           </Link>
+        </div>
+        <div className="mt-4">
+          <BuildingHubLink />
         </div>
       </GuideSection>
 

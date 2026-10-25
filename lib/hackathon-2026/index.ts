@@ -19,3 +19,4 @@ export * from "./accommodation";
 export * from "./food";
 export * from "./parking";
 export * from "./computing";
+export * from "./submission";
