@@ -36,6 +36,10 @@ describe("Judges", () => {
     const profile = screen.getByRole("link", { name: "Niko Elers on LinkedIn (opens in a new tab)" });
     expect(profile).toHaveAttribute("href", "https://www.linkedin.com/in/niko-elers-7a87a941/");
     expect(screen.getByRole("link", { name: /^University of Turku/ })).toHaveAttribute("href", "https://www.utu.fi/en");
+    expect(screen.getByRole("link", { name: "Tuomas Mäkilä on LinkedIn (opens in a new tab)" })).toHaveAttribute(
+      "href",
+      "https://www.linkedin.com/in/mckila/",
+    );
     expect(
       screen.getByRole("link", { name: "Tuomas Mäkilä on the University of Turku website (opens in a new tab)" }),
     ).toHaveAttribute("href", "https://www.utu.fi/en/people/tuomas-makila");
