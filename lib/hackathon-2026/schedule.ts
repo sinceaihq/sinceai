@@ -607,12 +607,12 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     end: at(SUN, "15:10"),
     title: "Finals: five finalist teams present live",
     detail:
-      "The five finalist teams chosen in the participant vote present live on stage to the jury: ten minutes each — at most four minutes to present and up to six for the jury's questions, one question from each judge — with a five-minute break between presentations. The jury then selects the overall winner of Since AI Hackathon 2026.",
+      "The five finalist teams chosen in the participant vote present live on stage to the jury: ten minutes each — at most four minutes to present, then up to six minutes of questions from the jury — with a five-minute break between presentations. The jury then selects the overall winner of Since AI Hackathon 2026.",
     detailFor: {
       builders:
-        "If your team is a finalist, you present live on stage at EduCity — not a recorded video: at most four minutes, then up to six minutes for the jury's questions, one from each judge. The jury then selects the overall winner.",
+        "If your team is a finalist, you present live on stage at EduCity — not a recorded video: at most four minutes, then up to six minutes of questions from the jury. The jury then selects the overall winner.",
       judges:
-        "Overall jury: the five finalists present live on stage, ten minutes each — at most four minutes of presentation, then up to six of questions, one question from each judge — with five-minute breaks. The jury's area is marked off on Taidon portaat. Be ready before 14:00 — your personal call time comes from Since AI.",
+        "Overall jury: the five finalists present live on stage, ten minutes each — at most four minutes of presentation, then up to six minutes of questions from the jury — with five-minute breaks. The jury's area is marked off on Taidon portaat. Be ready before 14:00 — your personal call time comes from Since AI.",
     },
     place: "educity",
     audiences: ALL_AUDIENCES,

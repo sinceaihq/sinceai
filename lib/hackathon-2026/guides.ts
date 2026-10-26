@@ -342,7 +342,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
     {
       q: "What happens at the finals?",
-      a: "The five finalist teams — the five most-voted solutions — come to the side of the stage at 13:00 on Sunday, and from 14:00 they present live on stage at EduCity, not as recorded videos: at most four minutes each, then up to six minutes for the jury's questions, one from each judge. The jury selects the overall winner, and the event ends around 15:30.",
+      a: "The five finalist teams — the five most-voted solutions — come to the side of the stage at 13:00 on Sunday, and from 14:00 they present live on stage at EduCity, not as recorded videos: at most four minutes each, then up to six minutes of questions from the jury. The jury selects the overall winner, and the event ends around 15:30.",
     },
     {
       q: "Can we sleep at the venue?",

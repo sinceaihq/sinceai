@@ -1,9 +1,9 @@
 /**
- * The judging panel of Since AI Hackathon 2026: four judges who select the
+ * The judging panel of Since AI Hackathon 2026: five judges who select the
  * overall winner at the Sunday finals. This is separate from the company
  * challenge evaluation, which each challenge company does for its own challenge.
  *
- * All four places are confirmed (organiser, 26 Oct 2026); a place still open
+ * All five places are confirmed (organiser, 26 Oct 2026); a place still open
  * would show "to be announced". Titles match the judges' own organisations'
  * descriptions, and their organisations are judges' employers, not event sponsors.
  */
@@ -40,7 +40,7 @@ export interface Judge {
 }
 
 /** Size of the panel; any open place renders as "to be announced". */
-export const JUDGE_PANEL_SIZE = 4;
+export const JUDGE_PANEL_SIZE = 5;
 
 export const judges: Judge[] = [
   {
@@ -102,6 +102,21 @@ export const judges: Judge[] = [
     portrait: {
       src: "/assets/judges/rasmus-harmaala.webp",
       alt: "Portrait of Rasmus Harmaala, deep tech investor at Inovexus",
+    },
+  },
+  {
+    name: "Chandra Challagonda",
+    // CEO of FIWARE Foundation (organiser, 26 Oct 2026; fiware.org/governance/team). A judge only:
+    // FIWARE's open-track terms are separate and stay unpublished until confirmed.
+    title: "Chief Executive Officer",
+    organization: "FIWARE Foundation",
+    organizationUrl: "https://fiware.org/",
+    profiles: [{ kind: "linkedin", url: "https://www.linkedin.com/in/challagonda/" }],
+    bio: "CEO of FIWARE Foundation, advancing open, sovereign data ecosystems for trustworthy AI and bringing real-world innovation expertise across cities, industry, energy and agriculture.",
+    // Portrait supplied by the organiser (26 Oct 2026), converted to WebP without other changes.
+    portrait: {
+      src: "/assets/judges/chandra-challagonda.webp",
+      alt: "Portrait of Chandra Challagonda, CEO of FIWARE Foundation",
     },
   },
 ];

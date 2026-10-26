@@ -35,7 +35,7 @@ const ROLES = [
     title: "Overall hackathon jury",
     points: [
       "Builders vote 10:00–12:00 on the ten solutions sinceai.app gives each of them; at 12:00 the five teams with the most votes are confirmed as finalists.",
-      "The five finalist teams present live on stage in the 14:00–15:10 finals at EduCity: ten minutes each — at most four minutes of presentation, then up to six for questions, one from each judge — with five-minute breaks. The event ends around 15:30.",
+      "The five finalist teams present live on stage in the 14:00–15:10 finals at EduCity: ten minutes each — at most four minutes of presentation, then up to six minutes of questions from the jury — with five-minute breaks. The event ends around 15:30.",
       "The jury selects the overall winner of Since AI Hackathon 2026.",
       "Be ready before 14:00 — your call time comes in your personal briefing.",
     ],
