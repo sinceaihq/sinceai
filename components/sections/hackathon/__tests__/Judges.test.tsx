@@ -2,7 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import { Judges } from "@/components/sections/hackathon/Judges";
 
 describe("Judges", () => {
-  it("shows four equal cards: three confirmed judges and one place to be announced", () => {
+  it("shows the complete four-judge panel, with no place left to be announced", () => {
     render(<Judges />);
     const section = screen.getByRole("region", { name: "Meet the judges." });
     const cards = within(section).getAllByRole("listitem");
@@ -10,11 +10,9 @@ describe("Judges", () => {
     expect(within(cards[0]).getByRole("heading", { name: "Sarita Runeberg" })).toBeInTheDocument();
     expect(within(cards[1]).getByRole("heading", { name: "Niko Elers" })).toBeInTheDocument();
     expect(within(cards[2]).getByRole("heading", { name: "Tuomas Mäkilä" })).toBeInTheDocument();
-    for (const card of cards.slice(3)) {
-      expect(within(card).getByRole("heading", { name: "Judge to be announced" })).toBeInTheDocument();
-      expect(within(card).getByText("More judges will be announced soon.")).toBeInTheDocument();
-      expect(within(card).queryByRole("link")).not.toBeInTheDocument();
-    }
+    expect(within(cards[3]).getByRole("heading", { name: "Rasmus Harmaala" })).toBeInTheDocument();
+    expect(within(section).queryByRole("heading", { name: "Judge to be announced" })).not.toBeInTheDocument();
+    expect(within(section).queryByText("Coming soon")).not.toBeInTheDocument();
   });
 
   it("shows every judge's portrait, with the source credit where one is required", () => {
@@ -24,9 +22,10 @@ describe("Judges", () => {
     expect(
       screen.getByRole("img", { name: "Portrait of Tuomas Mäkilä, Associate Professor at the University of Turku" }),
     ).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "Portrait of Rasmus Harmaala, deep tech investor at Inovexus" })).toBeInTheDocument();
     expect(screen.getByText("Photo: Voima Ventures")).toBeInTheDocument();
     expect(screen.getByText("Photo: University of Turku")).toBeInTheDocument();
-    for (const fallback of ["SR", "NE", "TM"]) expect(screen.queryByText(fallback)).not.toBeInTheDocument();
+    for (const fallback of ["SR", "NE", "TM", "RH"]) expect(screen.queryByText(fallback)).not.toBeInTheDocument();
   });
 
   it("links each organisation and profile safely in a new tab", () => {
@@ -46,6 +45,11 @@ describe("Judges", () => {
     expect(screen.getByRole("link", { name: "Tuomas Mäkilä on Google Scholar (opens in a new tab)" })).toHaveAttribute(
       "href",
       "https://scholar.google.com/citations?user=fhE_eJYAAAAJ",
+    );
+    expect(screen.getByRole("link", { name: /^Inovexus/ })).toHaveAttribute("href", "https://inovexus.com/");
+    expect(screen.getByRole("link", { name: "Rasmus Harmaala on LinkedIn (opens in a new tab)" })).toHaveAttribute(
+      "href",
+      "https://www.linkedin.com/in/rasmus-harmaala/",
     );
     for (const link of screen.getAllByRole("link")) {
       expect(link).toHaveAttribute("target", "_blank");

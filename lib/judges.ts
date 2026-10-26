@@ -3,9 +3,9 @@
  * overall winner at the Sunday finals. This is separate from the company
  * challenge evaluation, which each challenge company does for its own challenge.
  *
- * Only confirmed judges are listed (organiser, Oct 2026); the remaining places
- * show "to be announced". Titles match the judges' own organisations' pages,
- * and their organisations are judges' employers, not event sponsors.
+ * All four places are confirmed (organiser, 26 Oct 2026); a place still open
+ * would show "to be announced". Titles match the judges' own organisations'
+ * descriptions, and their organisations are judges' employers, not event sponsors.
  */
 
 export interface JudgePortrait {
@@ -39,7 +39,7 @@ export interface Judge {
   portrait?: JudgePortrait;
 }
 
-/** Planned size of the panel; open places render as "to be announced". */
+/** Size of the panel; any open place renders as "to be announced". */
 export const JUDGE_PANEL_SIZE = 4;
 
 export const judges: Judge[] = [
@@ -87,6 +87,21 @@ export const judges: Judge[] = [
       src: "/assets/judges/tuomas-makila.webp",
       alt: "Portrait of Tuomas Mäkilä, Associate Professor at the University of Turku",
       credit: "Photo: University of Turku",
+    },
+  },
+  {
+    name: "Rasmus Harmaala",
+    // Inovexus' own description of him (organiser handoff, 26 Oct 2026). Judge place accepted 23 Jun,
+    // in-person attendance on Sunday 8 Nov confirmed 26 Oct. A judge, not a sponsor.
+    title: "Deep Tech Investor & Founder",
+    organization: "Inovexus",
+    organizationUrl: "https://inovexus.com/",
+    profiles: [{ kind: "linkedin", url: "https://www.linkedin.com/in/rasmus-harmaala/" }],
+    bio: "Deep tech investor and founder at Inovexus, bringing early-stage investing, founder potential and commercial viability expertise to the final jury.",
+    // Portrait supplied by the organiser for the website (26 Oct 2026).
+    portrait: {
+      src: "/assets/judges/rasmus-harmaala.webp",
+      alt: "Portrait of Rasmus Harmaala, deep tech investor at Inovexus",
     },
   },
 ];

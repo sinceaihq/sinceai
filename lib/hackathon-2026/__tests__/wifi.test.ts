@@ -21,6 +21,9 @@ describe("event Wi-Fi", () => {
   it("promises no speed or uninterrupted service, and forbids testing the networks", () => {
     const text = JSON.stringify(WIFI);
     expect(text).not.toMatch(/unlimited|guaranteed|Mbit|Gbit|24\/7 connectivity/i);
+    // The build-space network is not load-verified yet: no promise of capacity for the crowd.
+    expect(WIFI.buildSpaces.text).not.toMatch(/more capacity|enough capacity|for the number of developers/i);
+    expect(WIFI.buildSpaces.text).toMatch(/capacity is shared/);
     expect(WIFI.beforeArriving.join(" ")).toMatch(/Do not scan, attack or run unauthorised security tests/);
     expect(WIFI.beforeArriving.join(" ")).toMatch(/mobile hotspot/);
   });

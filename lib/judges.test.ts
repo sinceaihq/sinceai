@@ -9,14 +9,17 @@ const PROFILE_URL = {
 };
 
 describe("judging panel data", () => {
-  it("lists exactly the three confirmed judges, with their organisations' own titles", () => {
+  it("lists exactly the four confirmed judges, with their organisations' own titles", () => {
     expect(judges.map((j) => [j.name, j.title, j.organization])).toEqual([
       ["Sarita Runeberg", "Chief Executive Officer", "Maria 01"],
       ["Niko Elers", "Investment Director", "Voima Ventures"],
       ["Tuomas Mäkilä", "Associate Professor, Software Engineering", "University of Turku"],
+      ["Rasmus Harmaala", "Deep Tech Investor & Founder", "Inovexus"],
     ]);
+    // The panel is complete: no fifth place and no open place left.
     expect(JUDGE_PANEL_SIZE).toBe(4);
-    expect(judges.length).toBeLessThanOrEqual(JUDGE_PANEL_SIZE);
+    expect(judges).toHaveLength(JUDGE_PANEL_SIZE);
+    expect(new Set(judges.map((j) => j.name)).size).toBe(judges.length);
   });
 
   it("never describes Niko Elers as a partner or CEO, nor names unconfirmed candidates", () => {
@@ -30,11 +33,23 @@ describe("judging panel data", () => {
     expect(`${tuomas.title} ${tuomas.bio}`).not.toMatch(/full professor|\bdean\b|\bhead of department\b|\bdirector\b/i);
   });
 
+  it("presents Rasmus Harmaala as an overall-jury judge, never as a sponsor or company evaluator", () => {
+    const rasmus = judges.find((j) => j.name === "Rasmus Harmaala")!;
+    expect(rasmus.profiles).toEqual([{ kind: "linkedin", url: "https://www.linkedin.com/in/rasmus-harmaala/" }]);
+    expect(rasmus.bio).toMatch(/final jury/);
+    expect(`${rasmus.title} ${rasmus.bio}`).not.toMatch(/sponsor|partner|challenge|evaluat/i);
+    expect(rasmus.portrait).toEqual({
+      src: "/assets/judges/rasmus-harmaala.webp",
+      alt: "Portrait of Rasmus Harmaala, deep tech investor at Inovexus",
+    });
+  });
+
   it("links the verified organisation sites and profiles", () => {
     expect(judges.map((j) => j.organizationUrl)).toEqual([
       "https://maria.io/",
       "https://voimaventures.com/",
       "https://www.utu.fi/en",
+      "https://inovexus.com/",
     ]);
     for (const judge of judges) {
       expect(judge.profiles.length).toBeGreaterThan(0);
@@ -68,5 +83,6 @@ describe("judging panel data", () => {
     // Initials remain the fallback for a judge announced before a portrait is cleared.
     expect(initials("Niko Elers")).toBe("NE");
     expect(initials("Tuomas Mäkilä")).toBe("TM");
+    expect(initials("Rasmus Harmaala")).toBe("RH");
   });
 });

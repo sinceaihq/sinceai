@@ -29,7 +29,8 @@ export const WIFI = {
   buildSpaces: {
     title: "BioCity & Visitor Center Joki",
     when: "The main build spaces",
-    text: "Event Wi-Fi is being prepared with the venue's network operator, including more capacity for the number of developers expected over the weekend.",
+    // Not yet load-tested for the expected numbers (organiser, 26 Oct 2026): no capacity claim until it is.
+    text: "Event Wi-Fi for the weekend is being prepared with the venue's network operator. Network capacity is shared, so download what you need before you arrive.",
     pending:
       "The network name and connection instructions will come from event staff and the official event channels once they are confirmed.",
   },
