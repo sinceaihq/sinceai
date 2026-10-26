@@ -4,7 +4,6 @@ import {
   BUILDING_ANCHOR,
   BUILDING_FAQ,
   BUILDING_HREF,
-  EVENT_RESOURCES,
   SUBMISSION,
   RESOURCES_GUIDE,
   RESOURCES_PATH,
@@ -167,8 +166,8 @@ export function BuildingSection() {
       />
       <AiPolicy />
       <p className="mt-4 text-sm text-neutral-400 leading-relaxed">
-        <span className="font-semibold text-white">Partner tools and credits:</span>{" "}
-        {EVENT_RESOURCES.map((r) => r.name).join(", ")} — event access, dates and quickstarts in{" "}
+        <span className="font-semibold text-white">Partner tools and benefits:</span> computing, AI models, app
+        builders and developer tools from our technology partners, with quickstarts and where to get help, in{" "}
         <Link
           href={RESOURCES_PATH}
           className="text-white underline decoration-white/30 underline-offset-4 hover:decoration-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"

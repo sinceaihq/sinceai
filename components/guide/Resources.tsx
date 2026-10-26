@@ -1,37 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
-  EVENT_RESOURCES,
-  HELP_LABEL,
   RESOURCES_GUIDE,
   RESOURCES_PATH,
   STAND_PARTNERS,
-  type AccessState,
-  type BuilderResource,
+  type PartnerResource,
   type ToolLink,
 } from "@/lib/hackathon-2026";
-import { cn } from "@/lib/utils";
 import { TextLink } from "./primitives";
-
-const ACCENT: Record<AccessState, boolean> = { closing: true, scheduled: true, ready: true, pending: false };
-
-function AccessTag({ state, label }: { state: AccessState; label: string }) {
-  const accent = ACCENT[state];
-  return (
-    <span
-      className={cn(
-        "inline-flex shrink-0 items-center gap-1.5 border px-2 py-0.5 font-mono text-[11px] uppercase tracking-widest",
-        accent ? "border-(--color-event)/50 text-(--color-event)" : "border-dashed border-white/25 text-neutral-400",
-      )}
-    >
-      <span
-        aria-hidden="true"
-        className={cn("inline-block h-1.5 w-1.5 rounded-full", accent ? "bg-(--color-event)" : "bg-neutral-500")}
-      />
-      {label}
-    </span>
-  );
-}
 
 function Logo({ logo, name }: { logo: { src: string; width: number; height: number }; name: string }) {
   return (
@@ -54,54 +30,50 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
   );
 }
 
-/** One verified event resource: what it is, access, instructions, help and the original-source links. */
-export function ResourceCard({ resource }: { resource: BuilderResource }) {
+/** One partner resource: what it is, what to build, the benefit, where access details come from, help and links. */
+export function ResourceCard({ resource }: { resource: PartnerResource }) {
   const r = resource;
   return (
     <li id={`resource-${r.id}`} data-resource={r.id} className="guide-avoid-break flex flex-col border border-white/10 p-5 md:p-6">
-      <div className="flex flex-wrap items-start justify-between gap-3">
+      <div className="flex flex-col items-start gap-3">
         <Logo logo={r.logo} name={r.name} />
-        <AccessTag state={r.access.state} label={r.access.label} />
+        <span className="border border-white/15 px-2 py-0.5 font-mono text-[11px] uppercase tracking-widest text-neutral-400">
+          {r.relationship}
+        </span>
       </div>
       <h3 className="mt-4 text-xl font-bold tracking-tight text-white">{r.name}</h3>
-      <p className="mt-2 text-sm text-neutral-300 leading-relaxed">{r.what}</p>
-      <ul className="mt-3 flex flex-wrap gap-2" aria-label={`Good for, with ${r.name}`}>
-        {r.useCases.map((u) => (
-          <li key={u} className="border border-white/15 px-2 py-0.5 text-xs text-neutral-300">
-            {u}
+      <p className="mt-2 text-sm text-neutral-300 leading-relaxed">{r.description}</p>
+      <ul className="mt-3 flex flex-wrap gap-2" aria-label={`What you can build with ${r.name}`}>
+        {r.buildIdeas.map((idea) => (
+          <li key={idea} className="border border-white/15 px-2 py-0.5 text-xs text-neutral-300">
+            {idea}
           </li>
         ))}
       </ul>
       <dl className="mt-4">
-        <Row label="Event access">{r.access.text}</Row>
-        <Row label="Your instructions">{r.instructions}</Row>
-        <Row label={`Help · ${HELP_LABEL[r.help.kind]}`}>{r.help.text}</Row>
+        {r.benefit && <Row label="Participant benefit">{r.benefit}</Row>}
+        <Row label="Access">{r.access}</Row>
+        <Row label="Help">{r.help}</Row>
       </dl>
       <div className="guide-no-print mt-auto flex flex-wrap gap-x-5 pt-3">
-        <TextLink href={r.quickstart.href} className="font-semibold text-white">
-          {r.quickstart.label}
+        <TextLink href={r.getStarted.href} className="font-semibold text-white">
+          {r.getStarted.label}
         </TextLink>
-        <TextLink href={r.docs.href}>{r.docs.label}</TextLink>
-        {r.more?.map((l) => (
-          <TextLink key={l.href} href={l.href}>
-            {l.label}
-          </TextLink>
-        ))}
+        {r.partnerGuide && <TextLink href={r.partnerGuide.href}>{r.partnerGuide.label}</TextLink>}
+        {r.docs && <TextLink href={r.docs.href}>{r.docs.label}</TextLink>}
       </div>
     </li>
   );
 }
 
-/** A tool or partner with public documentation only. */
+/** A popular developer tool: name, one line and its documentation. */
 export function ToolItem({ tool }: { tool: ToolLink }) {
   return (
-    <li className="guide-avoid-break flex flex-col border border-white/10 p-5" data-tool={tool.name}>
-      {tool.logo && <Logo logo={tool.logo} name={tool.name} />}
-      <h3 className={cn("text-lg font-bold tracking-tight text-white", tool.logo && "mt-4")}>{tool.name}</h3>
-      <p className="mt-2 text-sm text-neutral-400 leading-relaxed">{tool.text}</p>
-      <TextLink href={tool.docs.href} className="mt-auto self-start pt-2">
-        {tool.docs.label}
+    <li className="flex flex-col border-b border-r border-white/10 p-4" data-tool={tool.name}>
+      <TextLink href={tool.href} className="min-h-0 font-semibold text-white">
+        {tool.name}
       </TextLink>
+      <p className="mt-1 text-sm text-neutral-400 leading-relaxed">{tool.text}</p>
     </li>
   );
 }
@@ -131,10 +103,11 @@ export function ResourcesHubLink() {
       className="group flex h-full items-center justify-between gap-6 border border-white/10 p-6 transition-colors hover:border-white/30 hover:bg-white/[0.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:p-8"
     >
       <span>
-        <span className="block font-mono text-xs uppercase tracking-widest text-white/55">Builders · tools & credits</span>
+        <span className="block font-mono text-xs uppercase tracking-widest text-white/55">Builders · partners & tools</span>
         <span className="mt-3 block text-2xl md:text-3xl font-bold tracking-tight text-white">{RESOURCES_GUIDE.name}</span>
         <span className="mt-3 block max-w-2xl text-sm text-neutral-400 leading-relaxed">
-          {EVENT_RESOURCES.map((r) => r.name).join(", ")}: event access, dates, quickstarts and help.
+          Computing, AI models, app builders and developer tools from our technology partners — quickstarts,
+          participant benefits and where to get help.
         </span>
       </span>
       <span aria-hidden="true" className="text-2xl text-white/55 transition-colors group-hover:text-white">

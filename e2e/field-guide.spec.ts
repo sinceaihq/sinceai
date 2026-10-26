@@ -417,17 +417,24 @@ test.describe("Build & submit (builder guide)", () => {
 });
 
 test.describe("Builder Resources", () => {
-  test("four verified event resources with their access state, help and original-source links", async ({ page }) => {
+  test("partner resources by category, with benefits, access, help and original-source links", async ({ page }) => {
     await page.goto(`${GUIDE}/resources`);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Builder Resources");
+    await expect(page.locator("[data-resources-intro]")).toContainText("official Since AI participant messages and designated event channels");
+    for (const [section, ids] of [
+      ["computing", ["csc-lumi", "red-hat", "aiven"]],
+      ["models", ["pruna-ai", "featherless", "elevenlabs"]],
+      ["building", ["lovable", "n8n"]],
+    ] as const) {
+      const cards = page.locator(`#${section} [data-resource]`);
+      expect(await cards.evaluateAll((els) => els.map((e) => e.getAttribute("data-resource")))).toEqual([...ids]);
+    }
+    await expect(page.locator('[data-resource="lovable"]')).toContainText("100 Lovable credits per participant");
+    await expect(page.locator('[data-resource="n8n"]')).toContainText("limited to 200 redemptions");
+    await expect(page.locator('[data-resource="featherless"]')).toContainText("never on this website");
+    await expect(page.locator('[data-resource="red-hat"]')).toContainText("free for 30 days");
+    await expect(page.locator("main")).not.toContainText(/Best Use of Gemini|Activation pending|exclusive/i);
     const cards = page.locator("[data-resource]");
-    await expect(cards).toHaveCount(4);
-    await expect(page.locator('[data-resource="csc-lumi"]')).toContainText("Register by Fri 30 Oct");
-    await expect(page.locator('[data-resource="pruna-ai"]')).toContainText("Shared key Fri 6 Nov");
-    await expect(page.locator('[data-resource="elevenlabs"]')).toContainText("Activation pending");
-    const featherless = page.locator('[data-resource="featherless"]');
-    await expect(featherless).toContainText("Instructions 4–5 Nov");
-    await expect(featherless).toContainText("never published on this website");
     for (const card of await cards.all()) {
       for (const link of await card.getByRole("link").all()) {
         const href = (await link.getAttribute("href"))!;
@@ -441,8 +448,9 @@ test.describe("Builder Resources", () => {
       "href",
       `${GUIDE}#ai-resources`,
     );
+    await expect(page.locator("[data-tool]")).toHaveCount(6);
     await expect(page.locator("[data-stand-partner]")).toHaveCount(6);
-    await expect(page.locator("[data-tool]")).toHaveCount(4);
+    await expect(page.locator("[data-mlh-note]")).toContainText("2027 Season Member Event");
     // Logos load.
     for (const img of await page.locator("[data-resource] img").all()) {
       await img.scrollIntoViewIfNeeded();

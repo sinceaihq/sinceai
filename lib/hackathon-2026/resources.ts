@@ -1,30 +1,36 @@
-import { COMPUTING, COMPUTING_HREF } from "./computing";
-import { GUIDE_BASE_PATH, GUIDE_LINKS } from "./facts";
+import { COMPUTING_HREF } from "./computing";
+import { GUIDE_BASE_PATH } from "./facts";
 
 /**
- * Builder Resources — tools, computing and partner benefits for Since AI Hackathon 2026.
+ * Builder Resources — technology partners, tools and participant benefits for
+ * Since AI Hackathon 2026. The one place to add or change a resource.
  *
- * Only what is verified is published (organiser and partners, 25–26 Oct 2026):
+ * Evergreen by design: the page says what exists, why it is useful, where to
+ * start, where event-specific access details are communicated and where to get
+ * help. Restricted coupons, keys and redemption steps are never published here —
+ * they reach participants through official Since AI participant messages and
+ * designated event channels, so this file does not change when a coupon arrives.
  *
- * - CSC / LUMI AI Factory: confirmed compute partner — public facts in ./computing.
- * - Pruna AI: confirmed technology partner. Its public onepager (checked 26 Oct
- *   2026) says every team shares one hackathon API key, added to that page on
- *   Friday 6 November, and that the Pruna team helps in the Pruna channel on the
- *   Since AI Discord. Credit amounts and prizes are Pruna's to state; not repeated.
- * - ElevenLabs: one free month of the Creator plan, redeemed through
- *   ElevenLabs' own Discord bot (its Hacker Guide, checked 26 Oct 2026). The
- *   bot's activation for this event is NOT yet confirmed.
- * - Featherless AI: confirmed inference sponsor — $25 of credit, no credit
- *   card. Featherless requires its redemption instructions to reach
- *   participants only 1–2 days before the event and never on a public page:
- *   no code, link, QR code or PDF of it belongs in this repository. Since AI
- *   sends them separately on 4–5 November 2026.
- * - Aiven: organisation-level technology partner; no event-specific benefit
- *   or on-site presence is confirmed — public documentation only.
- * - Lovable, n8n, Gemini API: tools anyone can use; no confirmed event
- *   benefit, so they are listed as tools, not as event sponsors.
+ * Verified with the organiser (26 Oct 2026):
+ * - CSC / LUMI AI Factory: compute partner; private instructions already sent.
+ * - Red Hat: technology partner; the Developer Sandbox is free for 30 days
+ *   (developers.redhat.com/developer-sandbox, checked 26 Oct 2026).
+ * - Aiven: organisation-level technology partner; no event-specific benefit.
+ * - Pruna AI: shared hackathon API key and help on Discord (Pruna's public
+ *   onepager). The key is never reproduced here.
+ * - Featherless AI: $25 inference credit, up to 1,200 redemptions, no card;
+ *   private instructions only, never public.
+ * - ElevenLabs: one free month of Creator through ElevenLabs' own Discord
+ *   process; its Showcase is separate from the official submission. No other
+ *   ElevenLabs prize is published until its arrangements are confirmed.
+ * - Lovable: 100 credits per participant (Lovable Community Team, 23 Apr 2026).
+ *   Its community playbook is for event hosts only and is not linked.
+ * - n8n: 200 n8n Cloud Pro licences, one month each (n8n, 10 Mar 2026).
+ * - Google Cloud promotional credits for this event were revoked (20 May 2026);
+ *   Gemini and Google Cloud appear as ordinary tools only. No MLH partner prize
+ *   is published until MLH confirms the allocation.
  *
- * `__tests__/resources.test.ts` guards the restrictions.
+ * `__tests__/resources.test.ts` guards these rules.
  */
 
 export const RESOURCES_PATH = `${GUIDE_BASE_PATH}/resources`;
@@ -32,169 +38,225 @@ export const RESOURCES_PATH = `${GUIDE_BASE_PATH}/resources`;
 export const RESOURCES_GUIDE = {
   name: "Builder Resources",
   navLabel: "Resources",
-  lede: "Computing, models and partner tools for your build — what each one does, whether there is event access, where your instructions are and who can help.",
+  lede: "Explore the technologies available for your build. Since AI works with technology partners to provide computing resources, development tools, learning materials and selected participant benefits.",
   metaDescription:
-    "Since AI Hackathon 2026 Builder Resources: CSC / LUMI AI Factory computing, Pruna AI, ElevenLabs and Featherless AI for builders — access, deadlines, quickstarts and help.",
+    "Since AI Hackathon 2026 Builder Resources: computing, AI models, app builders and developer tools from our technology partners — quickstarts, participant benefits and where to get help.",
 } as const;
 
-export type AccessState = "ready" | "scheduled" | "pending" | "closing";
-export type HelpKind = "on-site" | "online" | "external" | "docs-only";
+/** Shown under the hero: how access works, and the freedom to choose tools. */
+export const RESOURCES_INTRO = {
+  start:
+    "Start with the public quickstarts below. Event-specific access details — limited credits, coupons and redemption steps — are shared through official Since AI participant messages and designated event channels when available.",
+  freedom:
+    "You are free to use the AI tools and development platforms that fit your project best. Always follow your challenge's rules, licences and data-security requirements.",
+  security:
+    "Keep keys, coupons and credits to yourself: never commit them, never put them in browser code and never share them outside your team.",
+} as const;
+
+/** The default access route for a benefit with restricted details. */
+export const EVENT_ACCESS =
+  "Access details are shared through official Since AI participant messages and designated event channels — never on this website.";
+
+export type ResourceCategoryId = "computing" | "models" | "building";
+
+export const RESOURCE_CATEGORIES: readonly { id: ResourceCategoryId; title: string; lede: string }[] = [
+  {
+    id: "computing",
+    title: "Computing & infrastructure",
+    lede: "GPUs, cloud platforms and managed data services for heavier builds.",
+  },
+  {
+    id: "models",
+    title: "AI models & inference",
+    lede: "Image, video, voice and open-weight language models behind simple APIs.",
+  },
+  {
+    id: "building",
+    title: "Application building & automation",
+    lede: "Go from prompt to working app, and connect services into workflows.",
+  },
+];
 
 export interface ResourceLink {
   label: string;
   href: string;
 }
 
-export interface BuilderResource {
+export interface PartnerResource {
   id: string;
   name: string;
   logo: { src: string; width: number; height: number };
+  category: ResourceCategoryId;
+  /** The confirmed relationship, as agreed. */
+  relationship: string;
   /** What it is, in one sentence. */
-  what: string;
-  /** Hackathon uses, short. */
-  useCases: readonly string[];
-  access: {
-    state: AccessState;
-    /** Short status label for the card's tag. */
-    label: string;
-    text: string;
-  };
-  /** Where an eligible builder finds the instructions. */
-  instructions: string;
-  help: { kind: HelpKind; text: string };
-  quickstart: ResourceLink;
-  docs: ResourceLink;
-  more?: readonly ResourceLink[];
+  description: string;
+  /** What builders can make with it. */
+  buildIdeas: readonly string[];
+  /** The first place to go. */
+  getStarted: ResourceLink;
+  /** A partner-approved public onepager or guide, when there is one. */
+  partnerGuide?: ResourceLink;
+  docs?: ResourceLink;
+  /** A confirmed participant benefit, described generally and with its limits. */
+  benefit?: string;
+  /** Where event-specific access details come from. */
+  access: string;
+  /** Where to get help. */
+  help: string;
 }
 
-export const HELP_LABEL: Record<HelpKind, string> = {
-  "on-site": "On site",
-  online: "Online",
-  external: "Partner's own channels",
-  "docs-only": "Documentation",
-};
-
-/** Event resources: a confirmed partner and something builders can use at this hackathon. */
-export const EVENT_RESOURCES: readonly BuilderResource[] = [
+export const PARTNER_RESOURCES: readonly PartnerResource[] = [
+  // ── Computing & infrastructure ───────────────────────────────────────────
   {
     id: "csc-lumi",
     name: "CSC / LUMI AI Factory",
     logo: { src: "/assets/sponsors/Lumi.svg", width: 1815, height: 337 },
-    what: "The LUMI supercomputer's GPUs and the Aitta inference service — open AI models through a web interface and an OpenAI-compatible API.",
-    useCases: ["Fine-tuning or training a model", "Running open models at scale", "Heavy data processing"],
-    access: {
-      state: "closing",
-      label: `Register by ${COMPUTING.deadlineShort}`,
-      text: `Optional, for eligible participants: register by ${COMPUTING.deadlineLabel}. Approval and activation can take several days, and nobody can newly join after the deadline.`,
-    },
-    instructions:
-      "In your Since AI acceptance or welcome email, or the email of 25 October with “SUPERCOMPUTER” in the subject. The joining instructions are private.",
-    help: { kind: "on-site", text: "LUMI AI Factory experts are on site during the hackathon." },
-    quickstart: { label: "LUMI AI Factory onboarding", href: "https://lumi-ai-factory.github.io/LUMI_AIF_Onboarding/" },
+    category: "computing",
+    relationship: "Compute partner",
+    description:
+      "The LUMI supercomputer's GPUs and the Aitta inference service — open AI models through a web interface and an OpenAI-compatible API.",
+    buildIdeas: ["Fine-tune or train a model", "Run open models at scale", "Process large datasets"],
+    getStarted: { label: "LUMI AI Factory onboarding", href: "https://lumi-ai-factory.github.io/LUMI_AIF_Onboarding/" },
+    partnerGuide: { label: "Eligibility and deadline", href: COMPUTING_HREF },
     docs: { label: "LUMI documentation", href: "https://docs.lumi-supercomputer.eu/" },
-    more: [
-      { label: "Aitta", href: "https://aitta.csc.fi/" },
-      { label: "Eligibility and deadline", href: COMPUTING_HREF },
-    ],
+    benefit: "Optional access for eligible participants who registered by Friday 30 October 2026.",
+    access: "Registered participants received private instructions by email from Since AI.",
+    help: "LUMI AI Factory experts are on site during the hackathon.",
   },
+  {
+    id: "red-hat",
+    name: "Red Hat",
+    logo: { src: "/assets/sponsors/red-hat.svg", width: 613, height: 145 },
+    category: "computing",
+    relationship: "Technology partner",
+    description:
+      "Red Hat OpenShift and OpenShift AI — a Kubernetes application platform with tools to build, serve and monitor AI models.",
+    buildIdeas: ["Deploy your app and model together", "Serve a model behind an API", "Try a production-style setup"],
+    getStarted: { label: "Developer Sandbox", href: "https://developers.redhat.com/developer-sandbox" },
+    docs: { label: "Red Hat OpenShift AI", href: "https://www.redhat.com/en/products/ai/openshift-ai" },
+    benefit:
+      "The Developer Sandbox is free for 30 days for anyone. Set it up before the event, so your account and sandbox are ready when you start building.",
+    access: "Self-service from Red Hat's Developer Sandbox page — no event code needed.",
+    help: "Red Hat has a stand planned in BioCity's partner corner. Any office hours are announced in the event channels.",
+  },
+  {
+    id: "aiven",
+    name: "Aiven",
+    logo: { src: "/assets/sponsors/aiven.png", width: 480, height: 160 },
+    category: "computing",
+    relationship: "Technology partner",
+    description: "Managed open-source data services — PostgreSQL, Kafka, Valkey, OpenSearch and more.",
+    buildIdeas: ["A real database behind your demo", "Event streams between services", "Search over your data"],
+    getStarted: { label: "Aiven: get started", href: "https://aiven.io/docs/get-started" },
+    access: "Sign up on Aiven's own site; there is no event-specific benefit.",
+    help: "Aiven's public documentation.",
+  },
+
+  // ── AI models & inference ────────────────────────────────────────────────
   {
     id: "pruna-ai",
     name: "Pruna AI",
     logo: { src: "/assets/sponsors/Pruna.svg", width: 608, height: 181 },
-    what: "Fast image and video generation and editing models behind one API — most images come back in about a second.",
-    useCases: ["Product visuals and UI assets", "Image editing and try-on", "Short video clips and talking avatars"],
-    access: {
-      state: "scheduled",
-      label: "Shared key Fri 6 Nov",
-      text: "Pruna covers usage with one shared hackathon API key — no sign-up or billing. Pruna adds the key to its onepager on Friday 6 November. Keep it in your backend, never in browser or mobile code.",
-    },
-    instructions: "Pruna's onepager for this hackathon: models, a two-minute quickstart and the fair-use rules for the shared key.",
-    help: {
-      kind: "online",
-      text: "The Pruna team answers in the Pruna channel on the Since AI Discord during the hackathon; a Pruna stand is planned in BioCity's partner corner.",
-    },
-    quickstart: { label: "Building with Pruna at Since AI", href: "https://pruna.notion.site/building-with-pruna-at-since-ai-hackathon" },
-    docs: { label: "Pruna API docs", href: "https://docs.api.pruna.ai/guides/quickstart" },
-    more: [{ label: "All models", href: "https://www.pruna.ai/all-models" }],
-  },
-  {
-    id: "elevenlabs",
-    name: "ElevenLabs",
-    logo: { src: "/assets/sponsors/elevenlabs.png", width: 480, height: 62 },
-    what: "Voice AI: text to speech and speech to text in 32 languages, music and sound effects, dubbing, and conversational voice agents.",
-    useCases: ["Voice interfaces and agents", "Narration and accessibility", "Transcribing meetings or calls"],
-    access: {
-      state: "pending",
-      label: "Activation pending",
-      text: "One free month of the Creator plan, redeemed through ElevenLabs' own Discord bot. The bot is not yet confirmed as active for Since AI Hackathon 2026 — the free plan works meanwhile.",
-    },
-    instructions:
-      "ElevenLabs' Hacker Guide: products, quickstarts and the redemption steps. Its optional Showcase is ElevenLabs' own — your official submission is always in sinceai.app.",
-    help: { kind: "external", text: "#hackathon-support in ElevenLabs' Discord, where its moderators help with products and redemption." },
-    quickstart: {
-      label: "ElevenLabs Hacker Guide",
-      href: "https://docs.google.com/document/d/1mCh5MtOzBw0aJpurQVUmIVFfPMAHW3MjNemE-LNiMto/edit?usp=sharing",
-    },
-    docs: { label: "ElevenLabs docs", href: "https://elevenlabs.io/docs/quickstart" },
+    category: "models",
+    relationship: "Technology partner",
+    description: "Fast image and video generation and editing models behind one API — most images come back in about a second.",
+    buildIdeas: ["Product visuals and UI assets", "Image editing and virtual try-on", "Short video clips and talking avatars"],
+    getStarted: { label: "Pruna API quickstart", href: "https://docs.api.pruna.ai/guides/quickstart" },
+    partnerGuide: { label: "Building with Pruna at Since AI", href: "https://pruna.notion.site/building-with-pruna-at-since-ai-hackathon" },
+    docs: { label: "All Pruna models", href: "https://www.pruna.ai/all-models" },
+    benefit:
+      "Pruna covers usage during the hackathon through a shared hackathon API key — use it from your backend only, never in browser or mobile code.",
+    access: EVENT_ACCESS,
+    help: "The Pruna team answers in the Pruna channel on the Since AI Discord; a Pruna stand is planned in BioCity's partner corner.",
   },
   {
     id: "featherless",
     name: "Featherless AI",
     logo: { src: "/assets/sponsors/featherless.svg", width: 790, height: 137 },
-    what: "Serverless inference for a growing library of open-weight models — Qwen, Llama, Mistral, DeepSeek and more — through an OpenAI-style API, plus text to speech.",
-    useCases: ["Trying many open models quickly", "LLM features without your own GPUs", "Swapping models behind one API"],
-    access: {
-      state: "scheduled",
-      label: "Instructions 4–5 Nov",
-      text: "$25 of inference credit for eligible participants, no credit card needed, while the event's redemptions last. Since AI sends the redemption instructions separately on 4–5 November — they are never published on this website.",
-    },
-    instructions: "Sent to eligible participants by Since AI on 4–5 November. Until then, the public docs show how the API works.",
-    help: { kind: "docs-only", text: "Featherless' public documentation; no event-specific support is confirmed." },
-    quickstart: { label: "Featherless quickstart", href: "https://featherless.ai/docs/quickstart-guide" },
+    category: "models",
+    relationship: "Technology partner",
+    description:
+      "Serverless inference for a growing library of open-weight models — Qwen, Llama, Mistral, DeepSeek and more — through an OpenAI-style API, plus text to speech.",
+    buildIdeas: ["Compare open models quickly", "Add LLM features without your own GPUs", "Swap models behind one API"],
+    getStarted: { label: "Featherless quickstart", href: "https://featherless.ai/docs/quickstart-guide" },
     docs: { label: "Featherless docs", href: "https://featherless.ai/docs/overview" },
+    benefit:
+      "$25 of inference credit per eligible participant, no credit card needed, for a limited number of redemptions (up to 1,200).",
+    access: EVENT_ACCESS,
+    help: "Featherless' public documentation.",
+  },
+  {
+    id: "elevenlabs",
+    name: "ElevenLabs",
+    logo: { src: "/assets/sponsors/elevenlabs.png", width: 480, height: 62 },
+    category: "models",
+    relationship: "Technology partner",
+    description:
+      "Voice AI: text to speech and speech to text in 32 languages, music and sound effects, dubbing and conversational voice agents.",
+    buildIdeas: ["Voice interfaces and agents", "Narration and accessibility", "Transcribing meetings or calls"],
+    getStarted: { label: "ElevenLabs quickstart", href: "https://elevenlabs.io/docs/quickstart" },
+    partnerGuide: {
+      label: "ElevenLabs Hacker Guide",
+      href: "https://docs.google.com/document/d/1mCh5MtOzBw0aJpurQVUmIVFfPMAHW3MjNemE-LNiMto/edit?usp=sharing",
+    },
+    benefit:
+      "One free month of the Creator plan for participants, claimed through ElevenLabs' own Discord process. ElevenLabs' optional Showcase is separate from your official submission in sinceai.app.",
+    access: `${EVENT_ACCESS} Claim the month once those details say the event's redemption is open.`,
+    help: "#hackathon-support in ElevenLabs' Discord.",
+  },
+
+  // ── Application building & automation ────────────────────────────────────
+  {
+    id: "lovable",
+    name: "Lovable",
+    logo: { src: "/assets/sponsors/lovable.png", width: 480, height: 82 },
+    category: "building",
+    relationship: "Technology partner",
+    description: "Build full-stack web apps by describing them in plain language, then refine the code.",
+    buildIdeas: ["A working front end in minutes", "Internal tools and dashboards", "Clickable demos of your idea"],
+    getStarted: { label: "Lovable docs", href: "https://docs.lovable.dev/introduction/welcome" },
+    benefit: "100 Lovable credits per participant, shared as a coupon shortly before the event.",
+    access: EVENT_ACCESS,
+    help: "Lovable's documentation and in-product help.",
+  },
+  {
+    id: "n8n",
+    name: "n8n",
+    logo: { src: "/assets/sponsors/n8n.svg", width: 576, height: 160 },
+    category: "building",
+    relationship: "Technology partner",
+    description: "Workflow automation with AI agent and LLM nodes — connect APIs, databases and models without glue code.",
+    buildIdeas: ["AI agents that call your tools", "Automated data pipelines", "Connect your app to chat, email or sheets"],
+    getStarted: { label: "n8n docs", href: "https://docs.n8n.io/" },
+    partnerGuide: { label: "How to redeem an n8n voucher", href: "https://n8n.notion.site/voucher-code" },
+    benefit: "One month of n8n Cloud Pro per redemption, limited to 200 redemptions.",
+    access: EVENT_ACCESS,
+    help: "n8n's documentation and community forum.",
   },
 ];
 
 export interface ToolLink {
   name: string;
-  logo?: { src: string; width: number; height: number };
   text: string;
-  docs: ResourceLink;
+  href: string;
 }
 
-/** A technology partner with public documentation and no confirmed event benefit. */
-export const PARTNER_DOCS: readonly ToolLink[] = [
-  {
-    name: "Aiven",
-    logo: { src: "/assets/sponsors/aiven.png", width: 480, height: 160 },
-    text: "Managed open-source data services — PostgreSQL, Kafka, Valkey, OpenSearch and more — when your project needs a real database or stream. No event-specific benefit.",
-    docs: { label: "Aiven: get started", href: "https://aiven.io/docs/get-started" },
-  },
+/** Popular tools anyone may use. Not partners, no event benefits — free tiers and pricing are the provider's. */
+export const DEVELOPER_TOOLS: readonly ToolLink[] = [
+  { name: "GitHub", text: "Repositories, Copilot and Actions.", href: "https://docs.github.com/en/get-started" },
+  { name: "Cursor", text: "AI code editor.", href: "https://cursor.com/docs" },
+  { name: "Claude", text: "Claude and Claude Code.", href: "https://code.claude.com/docs/en/overview" },
+  { name: "ChatGPT & OpenAI API", text: "OpenAI's models and API.", href: "https://developers.openai.com/api/docs" },
+  { name: "Gemini API", text: "Google's Gemini models through an API.", href: "https://ai.google.dev/gemini-api/docs" },
+  { name: "Google Cloud", text: "Cloud infrastructure and AI services.", href: "https://docs.cloud.google.com/docs" },
 ];
 
-/** Tools anyone may use; listed for convenience, not as event sponsors. */
-export const OTHER_TOOLS: readonly ToolLink[] = [
-  {
-    name: "Lovable",
-    text: "Build web apps from a prompt.",
-    docs: { label: "Lovable docs", href: "https://docs.lovable.dev/" },
-  },
-  {
-    name: "n8n",
-    text: "Workflow automation with AI nodes.",
-    docs: { label: "n8n docs", href: "https://docs.n8n.io/" },
-  },
-  {
-    name: "Gemini API",
-    text: "Google's models through an API. MLH runs a Best Use of Gemini API prize category — the submission form asks for your project number.",
-    docs: { label: "Gemini API docs", href: "https://ai.google.dev/gemini-api/docs" },
-  },
-];
+export const DEVELOPER_TOOLS_NOTE =
+  "Popular tools you are free to use. They are not event partners and come with no event credits — free tiers and pricing are set by each provider.";
 
-export const RESOURCES_NOTES = {
-  anyTool:
-    "Any AI tool is welcome — these are resources with something extra for this event, not a list of permitted tools.",
-  security:
-    "Keep keys and credits to yourself: never commit them, never put them in browser code, and never share them outside your team.",
-  discord: GUIDE_LINKS.discord,
-} as const;
+/** The MLH relationship, without unconfirmed prizes or allocations. */
+export const MLH_NOTE =
+  "Since AI Hackathon 2026 is an official Major League Hacking 2027 Season Member Event. Any MLH prize categories or resources for this event are announced through official channels once confirmed.";
+
+export const resourcesIn = (category: ResourceCategoryId) => PARTNER_RESOURCES.filter((r) => r.category === category);
