@@ -147,6 +147,7 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
         "Everyone has read this Builder Guide — especially Build & submit — and Builder Resources for partner tools, credits and their dates.",
         "If you plan to sleep, you have your own accommodation booked.",
         `Optional: if you want CSC / LUMI computing, you registered by ${COMPUTING.deadlineLabel} — instructions are in your Since AI email.`,
+        "Optional: planning to use Red Hat OpenShift? Your free 30-day Developer Sandbox is set up before the event.",
       ],
     },
     {

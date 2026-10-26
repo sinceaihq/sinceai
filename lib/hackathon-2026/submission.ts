@@ -69,7 +69,7 @@ export const SUBMISSION = {
     { name: "Submission video URL", note: "A YouTube video link." },
     { name: "Files", note: "Pitch deck, supporting documents and an uploaded demo video." },
     { name: "Domain name, opt-in prizes and schools of team members" },
-    { name: "Gemini API project number", note: "Only for the Best Use of Gemini API prize category." },
+    { name: "Gemini API project number", note: "Leave it blank unless a prize category you enter asks for it." },
   ] satisfies readonly SubmissionField[],
   /** The attachment allow-list (attachment.constants.ts). */
   files: [

@@ -1,27 +1,27 @@
 import Link from "next/link";
-import {
-  FactsStrip,
-  GuideHero,
-  GuideSection,
-  HelpSection,
-  SectionHeading,
-  SectionNav,
-} from "@/components/guide";
+import { GuideHero, GuideSection, HelpSection, SectionHeading, SectionNav } from "@/components/guide";
 import { OnSitePartners, ResourceCard, ToolItem } from "@/components/guide/Resources";
 import {
   BUILDING_HREF,
-  COMPUTING,
-  EVENT_RESOURCES,
+  DEVELOPER_TOOLS,
+  DEVELOPER_TOOLS_NOTE,
   GUIDE_BASE_PATH,
-  OTHER_TOOLS,
+  MLH_NOTE,
   PARTNER_CORNER,
-  PARTNER_DOCS,
+  RESOURCE_CATEGORIES,
   RESOURCES_GUIDE,
-  RESOURCES_NOTES,
+  RESOURCES_INTRO,
+  resourcesIn,
 } from "@/lib/hackathon-2026";
 
 const inlineLink =
   "text-white underline decoration-white/30 underline-offset-4 hover:decoration-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
+
+const NAV_LABEL: Record<string, string> = {
+  computing: "Computing",
+  models: "AI models",
+  building: "App building",
+};
 
 export default function ResourcesGuidePage() {
   return (
@@ -35,47 +35,60 @@ export default function ResourcesGuidePage() {
         title={RESOURCES_GUIDE.name}
         lede={RESOURCES_GUIDE.lede}
       >
-        <FactsStrip
-          facts={[
-            { label: "CSC / LUMI", value: COMPUTING.deadlineShort, sub: "Registration deadline", strong: true },
-            { label: "Featherless AI", value: "4–5 Nov", sub: "Instructions sent separately" },
-            { label: "Pruna AI", value: "Fri 6 Nov", sub: "Shared API key on Pruna's onepager" },
-            { label: "ElevenLabs", value: "Pending", sub: "Redemption activation" },
-          ]}
-        />
-        <p className="max-w-3xl text-sm text-neutral-400 leading-relaxed">
-          {RESOURCES_NOTES.anyTool}{" "}
-          <Link href={BUILDING_HREF} className={inlineLink}>
-            The AI tools policy
-          </Link>
-          .
-        </p>
+        <div className="grid max-w-4xl grid-cols-1 gap-4 text-sm leading-relaxed md:grid-cols-2" data-resources-intro>
+          <p className="border-l-2 border-(--color-event) pl-4 text-neutral-300">{RESOURCES_INTRO.start}</p>
+          <p className="border-l-2 border-white/15 pl-4 text-neutral-400">
+            {RESOURCES_INTRO.freedom}{" "}
+            <Link href={BUILDING_HREF} className={inlineLink}>
+              The AI tools policy
+            </Link>
+            .
+          </p>
+        </div>
       </GuideHero>
 
       <SectionNav
         items={[
-          { id: "event", label: "Event resources" },
+          ...RESOURCE_CATEGORIES.map((c) => ({ id: c.id, label: NAV_LABEL[c.id] ?? c.title })),
+          { id: "tools", label: "Developer tools" },
           { id: "on-site", label: "On site" },
-          { id: "tools", label: "More tools" },
           { id: "help", label: "Help" },
         ]}
       />
 
-      <GuideSection id="event">
+      {RESOURCE_CATEGORIES.map((category, i) => (
+        <GuideSection key={category.id} id={category.id}>
+          <SectionHeading
+            id={`${category.id}-title`}
+            eyebrow={`// ${category.title.toLowerCase()}`}
+            title={`${category.title}.`}
+            lede={category.lede}
+          />
+          <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {resourcesIn(category.id).map((r) => (
+              <ResourceCard key={r.id} resource={r} />
+            ))}
+          </ul>
+          {i === RESOURCE_CATEGORIES.length - 1 && (
+            <p className="mt-6 max-w-3xl text-sm text-neutral-300 leading-relaxed">
+              <span className="font-semibold text-white">Keep it safe.</span> {RESOURCES_INTRO.security}
+            </p>
+          )}
+        </GuideSection>
+      ))}
+
+      <GuideSection id="tools">
         <SectionHeading
-          id="event-title"
-          eyebrow="// event resources"
-          title="Computing, models and credits."
-          lede="Each card says whether there is event access, when it opens, where your instructions are and who helps. Links go to each partner's own pages."
+          id="tools-title"
+          eyebrow="// additional developer tools"
+          title="Additional developer tools."
+          lede={DEVELOPER_TOOLS_NOTE}
         />
-        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {EVENT_RESOURCES.map((r) => (
-            <ResourceCard key={r.id} resource={r} />
+        <ul className="grid grid-cols-1 border-l border-t border-white/10 sm:grid-cols-2 lg:grid-cols-3">
+          {DEVELOPER_TOOLS.map((t) => (
+            <ToolItem key={t.name} tool={t} />
           ))}
         </ul>
-        <p className="mt-6 max-w-3xl text-sm text-neutral-300 leading-relaxed">
-          <span className="font-semibold text-white">Keep it safe.</span> {RESOURCES_NOTES.security}
-        </p>
       </GuideSection>
 
       <GuideSection id="on-site">
@@ -86,20 +99,9 @@ export default function ResourcesGuidePage() {
           lede="Six partner stands are planned in BioCity's main lobby, beside the build hall. Solita and BearingPoint also mentor builders."
         />
         <OnSitePartners />
-      </GuideSection>
-
-      <GuideSection id="tools">
-        <SectionHeading
-          id="tools-title"
-          eyebrow="// more tools"
-          title="Documentation for other tools."
-          lede="No event-specific credits or support are confirmed for these — use them like any other tool."
-        />
-        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {[...PARTNER_DOCS, ...OTHER_TOOLS].map((t) => (
-            <ToolItem key={t.name} tool={t} />
-          ))}
-        </ul>
+        <p className="mt-6 max-w-3xl text-sm text-neutral-400 leading-relaxed" data-mlh-note>
+          {MLH_NOTE}
+        </p>
       </GuideSection>
 
       <GuideSection id="help">
