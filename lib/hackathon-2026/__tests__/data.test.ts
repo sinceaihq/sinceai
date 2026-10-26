@@ -123,29 +123,35 @@ describe("canonical event facts", () => {
     expect(SCHEDULE.some((i) => i.start.startsWith("2026-11-07T13:30"))).toBe(false);
   });
 
-  it("runs Friday's team and challenge flow by the 14 Oct 2026 production update", () => {
+  it("runs Thursday and Friday by the Tech Team Implementation Guide v1.2 (25 Oct 2026)", () => {
+    const summaries = getScheduleItem("thu-challenge-summaries");
+    expect(summaries.start).toBe("2026-11-05T15:00:00+02:00");
+    expect(summaries.detail).toMatch(/Public-safe summaries/);
+    expect(summaries.detail).toMatch(/All 15 company challenges offer the same cash prize/);
+    expect(EVENT_2026.challengePreview).toBe("2026-11-05T15:00:00+02:00");
     const formation = getScheduleItem("fri-team-formation");
     expect([formatTime(formation.start), formatTime(formation.end!)]).toEqual(["15:00", "16:45"]);
-    expect(formatTime(getScheduleItem("fri-challenge-preview").start)).toBe("15:00");
     const lock = getScheduleItem("fri-team-lock");
     expect(formatTime(lock.start)).toBe("16:45");
     expect(lock.kind).toBe("deadline");
-    expect(lock.detail).toMatch(/16:50.*final number of teams is locked/);
-    expect(lock.detail).toMatch(/as evenly as possible across all 15 challenges/);
+    expect(lock.detail).toMatch(/can still be marked ready and select its challenge until 17:30/);
     const selection = getScheduleItem("fri-challenge-selection");
-    expect([formatTime(selection.start), formatTime(selection.end!)]).toEqual(["17:00", "17:30"]);
-    expect(selection.detail).toMatch(/team's owner selects one challenge/);
+    expect([formatTime(selection.start), formatTime(selection.end!)]).toEqual(["15:00", "17:30"]);
+    expect(selection.detail).toMatch(/marks the team as ready/);
+    expect(selection.detail).toMatch(/final and cannot be changed/);
     expect(selection.place).toBe("app");
-    expect(selection.note).toBeUndefined();
-    expect(selection.start).toBe(getScheduleItem("fri-opening").start);
     const routes = getScheduleItem("fri-routes");
     expect(formatTime(routes.start)).toBe("17:30");
-    expect(routes.detail).toMatch(/selected challenge, your departure time, the room, floor, route and floor plan/);
+    expect(routes.detail).toMatch(/no new selections are accepted/);
+    expect(formatTime(EVENT_2026.challengeSelectionOpens)).toBe("15:00");
     expect(formatTime(EVENT_2026.teamFormationCloses)).toBe("16:45");
-    expect(formatTime(EVENT_2026.teamCountLocked)).toBe("16:50");
     expect(formatTime(EVENT_2026.challengeSelectionCloses)).toBe("17:30");
-    // The superseded drafts: 17:45–18:05 and 17:50 windows, "before 17:00" selection, first-come wording.
-    expect(JSON.stringify(SCHEDULE)).not.toMatch(/17:45|17:50|18:05|before 17:00|first come/i);
+    expect(formatTime(EVENT_2026.fullChallengeMaterials)).toBe("19:30");
+    expect(getScheduleItem("fri-build-start").detail).toMatch(/19:30 the full challenge view.*only for the teams that chose that company/);
+    // Superseded: the 17:00–17:30 window, the team owner wording, the 16:50 split and the Friday preview with templates.
+    const text = JSON.stringify({ SCHEDULE, DETAILS, CHECKLISTS });
+    expect(text).not.toMatch(/17:45|17:50|18:05|16:50|before 17:00|selects the challenge in sinceai.app before 17:30|team's owner|evenly as possible|its template is open/i);
+    expect(SCHEDULE.some((i) => i.id === "fri-challenge-preview")).toBe(false);
   });
 
   it("sets the challenge partners' Friday and Saturday evening briefings", () => {
@@ -194,10 +200,10 @@ describe("canonical event facts", () => {
     expect(JSON.stringify(SCHEDULE)).not.toMatch(/pre-?recorded/i);
   });
 
-  it("publishes the official meal times of 18 Oct 2026, with approximate breakfasts on Saturday and Sunday", () => {
+  it("publishes the meal times (18 Oct 2026; Friday dinner until 22:00 by v1.2), with approximate breakfasts", () => {
     const meals = SCHEDULE.filter((i) => i.kind === "meal").map((i) => [i.id, formatTimeRange(i)]);
     expect(meals).toEqual([
-      ["fri-dinner", "18:30–21:30"],
+      ["fri-dinner", "18:30–22:00"],
       ["sat-breakfast", "~07:00"],
       ["sat-lunch", "10:30–13:30"],
       ["sat-dinner", "17:00–20:00"],
@@ -205,7 +211,7 @@ describe("canonical event facts", () => {
       ["sun-lunch", "10:00–13:00"],
     ]);
     // The superseded times and breakfast menus of the 14 Oct 2026 update.
-    expect(JSON.stringify({ SCHEDULE, DETAILS })).not.toMatch(/18:30–22:00|until 22:00|10:00–12:30|from 07:30|taskurieska|by Mauno/);
+    expect(JSON.stringify({ SCHEDULE, DETAILS })).not.toMatch(/21:30|10:00–12:30|from 07:30|taskurieska|by Mauno/);
   });
 
   it("tears visibility stands down after the event, not at the 10:00 deadline", () => {
@@ -277,7 +283,7 @@ describe("challenge companies", () => {
     );
   });
 
-  it("has 13 named challenge partners and two places to be announced — 15 in all (organiser, 13 Oct 2026)", () => {
+  it("has 14 named challenge partners and one place to be announced — 15 in all (Europress since 23 Oct 2026)", () => {
     expect(CHALLENGE_COMPANIES).toHaveLength(15);
     expect(NAMED_CHALLENGE_PARTNERS.map((c) => c.name).sort()).toEqual(
       [
@@ -286,6 +292,7 @@ describe("challenge companies", () => {
         "Business Turku",
         "DNA",
         "Elisa",
+        "Europress",
         "Fonecta",
         "Forcit Group",
         "Lindström",
@@ -296,8 +303,17 @@ describe("challenge companies", () => {
         "Valmet",
       ].sort(),
     );
-    expect(TBA_CHALLENGE_PLACES.map((c) => c.id)).toEqual(["tba", "tba-2"]);
+    expect(TBA_CHALLENGE_PLACES.map((c) => c.id)).toEqual(["tba-2"]);
     for (const c of TBA_CHALLENGE_PLACES) expect(c.logo).toBeUndefined();
+    // Europress is one of the 15, never a sixteenth; spelled as the company does.
+    const europress = getCompany("europress")!;
+    expect(europress.url).toBe("https://europressgroup.com/");
+    expect(europress.logo?.src).toBe("/assets/sponsors/europress.svg");
+    expect(JSON.stringify([CHALLENGE_COMPANIES, VENUE_MAPS, GUIDES, DETAILS])).not.toMatch(/Neuropress/i);
+  });
+
+  it("labels only Forcit Group as running its own NDA", () => {
+    expect(CHALLENGE_COMPANIES.filter((c) => c.ndaRequired).map((c) => c.id)).toEqual(["forcit-group"]);
   });
 
   it("lists none of the former or unconfirmed 2026 challenge companies", () => {
@@ -311,11 +327,11 @@ describe("challenge companies", () => {
   });
 
   it("marks the three reconciled positions provisional", () => {
-    for (const id of ["fonecta", "tba", "tba-2"]) expect(getCompany(id)!.placementStatus).toBe("pending");
+    for (const id of ["fonecta", "europress", "tba-2"]) expect(getCompany(id)!.placementStatus).toBe("pending");
   });
 
-  it("places the first to-be-announced place, Valmet and Traficom on Joki floor 2", () => {
-    expect(byQaFloor(2)).toEqual(["To be announced (1)", "Traficom", "Valmet"]);
+  it("places Europress (provisional), Valmet and Traficom on Joki floor 2", () => {
+    expect(byQaFloor(2)).toEqual(["Europress", "Traficom", "Valmet"]);
   });
 
   it("places six companies on Joki floor 3", () => {
@@ -325,28 +341,28 @@ describe("challenge companies", () => {
       "Forcit Group",
       "Lindström",
       "Takomo Golf",
-      "To be announced (2)",
+      "To be announced",
     ]);
   });
 
-  it("matches the canonical Friday briefing rooms", () => {
+  it("matches the organiser's final EduCity briefing room maps (26 Oct 2026)", () => {
     const rooms = Object.fromEntries(
       CHALLENGE_COMPANIES.map((c) => [c.name, `${c.briefing.floor}:${briefingRoomLabel(c)}`]),
     );
     expect(rooms).toEqual({
       Elisa: "1:1001 Dromberg",
       Bayer: "1:1002 Moriaberg",
-      "To be announced (1)": "1:1090 Ringsberg",
+      Europress: "1:1090 Ringsberg",
       Traficom: "1:1091 Hammarbacka",
-      "Business Turku": "2:2072 Työkahvila / Aurinkokylpy",
+      "Business Turku": "3:3027",
       Fonecta: "2:2001 Elias",
       "Takomo Golf": "2:2002 Ivar",
       "Forcit Group": "2:2003 Erik",
       Lindström: "2:2004 Johannes",
-      "To be announced (2)": "2:2067",
+      "To be announced": "2:2067",
       Valmet: "2:2006 / 2007",
       DNA: "2:2026 Orvokki",
-      "Turku Energia": "2:2029 / 2031",
+      "Turku Energia": "3:3006",
       "Meyer Turku": "2:2030 Evert",
       Apetit: "2:2027 Frans",
     });
@@ -371,10 +387,10 @@ describe("challenge companies", () => {
 describe("BioCity visibility & tech partner stands", () => {
   const ranked = [...BIOCITY_STANDS].sort((a, b) => a.rank - b.rank);
 
-  it("ranks six stands: Red Hat, Solita, Pruna AI, BearingPoint, CSC / LUMI AI Factory, MLH", () => {
+  it("ranks six positions: one open (Red Hat needs no booth), Solita, Pruna AI, BearingPoint, CSC / LUMI AI Factory, MLH", () => {
     expect(ranked.map((s) => s.rank)).toEqual([1, 2, 3, 4, 5, 6]);
     expect(ranked.map((s) => standDisplayName(s))).toEqual([
-      "Red Hat",
+      "Visibility / Tech Partner stand",
       "Solita",
       "Pruna AI",
       "BearingPoint",
@@ -384,8 +400,9 @@ describe("BioCity visibility & tech partner stands", () => {
     expect(OPEN_STAND_LABEL).toBe("Visibility / Tech Partner stand");
   });
 
-  it("gives each of the six visibility / tech partners exactly one stand, none a challenge partner", () => {
-    expect(STAND_PARTNERS).toHaveLength(6);
+  it("gives each of the five stand partners exactly one stand, none a challenge partner, and no stand to Red Hat", () => {
+    expect(STAND_PARTNERS).toHaveLength(5);
+    expect(STAND_PARTNERS.some((p) => p.id === "red-hat")).toBe(false);
     for (const p of STAND_PARTNERS) {
       expect(BIOCITY_STANDS.filter((s) => s.partnerId === p.id)).toHaveLength(1);
       expect(CHALLENGE_COMPANIES.some((c) => c.name === p.name)).toBe(false);
@@ -417,7 +434,7 @@ describe("BioCity visibility & tech partner stands", () => {
       const h = findHotspot("biocity-lobby", id)!;
       return `${h.label} — ${h.description}`;
     };
-    expect(label("bc-1")).toMatch(/^Stand 1 · Red Hat — Main lobby · partner corner/);
+    expect(label("bc-1")).toMatch(/^Stand 1 — Visibility \/ Tech Partner stand · Main lobby · partner corner/);
     expect(label("bc-2")).toMatch(/^Stand 2 · Solita — Main lobby · partner corner/);
     expect(label("bc-3")).toMatch(/^Stand 3 · Pruna AI — Main lobby · partner corner/);
     expect(label("bc-4")).toMatch(/^Stand 4 · BearingPoint — Main lobby · partner corner/);

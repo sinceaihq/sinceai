@@ -21,7 +21,7 @@ describe("TwinTeaser", () => {
   });
 
   it("maps partner ids to their stand", () => {
-    expect(twinHref({ focus: "red-hat" })).toBe(`${VENUE}?focus=bc-1#preview-3d`);
+    expect(twinHref({ focus: "solita" })).toBe(`${VENUE}?focus=bc-2#preview-3d`);
   });
 
   it("opens a place", () => {

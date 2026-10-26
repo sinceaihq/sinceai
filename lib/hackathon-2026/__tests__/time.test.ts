@@ -30,7 +30,7 @@ describe("time formatting (always Turku time)", () => {
     // 00:30 local on Sunday is still Sunday even though it is Saturday in UTC.
     expect(dayOf("2026-11-07T22:30:00Z")).toBe("sun");
     const groups = groupByDay(scheduleFor("builders"));
-    expect(groups.map((g) => g.day.id)).toEqual(["fri", "sat", "sun"]);
+    expect(groups.map((g) => g.day.id)).toEqual(["thu", "fri", "sat", "sun"]);
   });
 
   it("formats countdowns", () => {
@@ -47,7 +47,7 @@ describe("now / next", () => {
   it("counts down before the event", () => {
     const state = getNowNext(builders, at("2026-10-04T12:00:00+03:00"));
     expect(state.phase).toBe("before");
-    if (state.phase === "before") expect(state.next?.id).toBe("fri-registration");
+    if (state.phase === "before") expect(state.next?.id).toBe("thu-challenge-summaries");
   });
 
   it("shows the live item and what is next during the event", () => {

@@ -23,7 +23,7 @@ const summary = (id: string) => {
 describe("Hackathon 2026 food (organiser, 18 Oct 2026)", () => {
   it("publishes exactly the official menu, in order", () => {
     expect(MEALS.map((m) => summary(m.id))).toEqual([
-      { when: "Fri 6 Nov 18:30–21:30", course: "Dinner", main: ["Chicken pasta bake", "lactose-free"], dessert: undefined, mauno: true },
+      { when: "Fri 6 Nov 18:30–22:00", course: "Dinner", main: ["Chicken pasta bake", "lactose-free"], dessert: undefined, mauno: true },
       { when: "Sat 7 Nov ~07:00", course: "Breakfast", main: undefined, dessert: undefined, mauno: false },
       { when: "Sat 7 Nov 10:30–13:30", course: "Lunch", main: ["Macaroni casserole", "lactose-free"], dessert: undefined, mauno: true },
       {

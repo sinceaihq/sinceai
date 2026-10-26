@@ -174,7 +174,7 @@ export default function JudgeGuidePage() {
         <VenueCards venues={["educity"]} />
         <ParkingNote className="mt-6" />
         <div className="mt-8">
-          <VenueExplorer mapIds={["educity-1", "educity-2"]} label="EduCity maps" />
+          <VenueExplorer mapIds={["educity-1", "educity-2", "educity-3"]} label="EduCity maps" />
         </div>
       </GuideSection>
 

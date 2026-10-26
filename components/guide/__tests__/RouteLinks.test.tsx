@@ -35,7 +35,7 @@ describe("RouteLinks", () => {
     for (const link of screen.getAllByRole("link")) {
       expect(link.textContent).not.toMatch(/\b[12]0\d\d\b/);
     }
-    expect(screen.getAllByRole("link")[0]).toHaveTextContent("the company briefing rooms on floors 1–2");
+    expect(screen.getAllByRole("link")[0]).toHaveTextContent("the company briefing rooms on floors 1–3");
   });
 
   it("on a company's page, leads each route to that company's own room or stand (text and 3D)", () => {
@@ -50,7 +50,9 @@ describe("RouteLinks", () => {
       );
       const links = screen.getAllByRole("link");
       links.slice(0, 3).forEach((link, i) => {
-        expect(link).toHaveAttribute("href", `${VENUE}?tour=${fri[i]}&focus=room-${c.id}#preview-3d`);
+        // Floor 3 is not modelled in 3D: those routes end at the company arrival (the route's own end).
+        if (c.briefing.floor <= 2) expect(link).toHaveAttribute("href", `${VENUE}?tour=${fri[i]}&focus=room-${c.id}#preview-3d`);
+        else expect(link.getAttribute("href")).toMatch(new RegExp(`^${VENUE}\\?tour=${fri[i]}(&focus=company-arrival)?#preview-3d$`));
         expect(link).toHaveTextContent(`your briefing room for 18:50 is room ${briefingRoomLabel(c)}`);
         expect(link).toHaveTextContent("event staff meet");
         // No other company's room number.

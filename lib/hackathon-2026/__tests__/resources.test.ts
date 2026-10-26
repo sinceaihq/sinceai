@@ -28,6 +28,7 @@ const allText = (r: unknown) => JSON.stringify(r);
 const HOSTS: Record<string, RegExp> = {
   "csc-lumi": /^(lumi-ai-factory\.github\.io|docs\.lumi-supercomputer\.eu)$/,
   "red-hat": /^(developers\.redhat\.com|www\.redhat\.com)$/,
+  fiware: /^(www\.fiware\.org|fiware-tutorials\.readthedocs\.io)$/,
   aiven: /^aiven\.io$/,
   "pruna-ai": /^(pruna\.notion\.site|docs\.api\.pruna\.ai|www\.pruna\.ai)$/,
   featherless: /^featherless\.ai$/,
@@ -41,7 +42,7 @@ describe("builder resources: structure", () => {
     expect(RESOURCE_CATEGORIES.map((c) => c.id)).toEqual(["computing", "models", "building"]);
     expect(resourcesIn("computing").map((r) => r.id)).toEqual(["csc-lumi", "red-hat", "aiven"]);
     expect(resourcesIn("models").map((r) => r.id)).toEqual(["pruna-ai", "featherless", "elevenlabs"]);
-    expect(resourcesIn("building").map((r) => r.id)).toEqual(["lovable", "n8n"]);
+    expect(resourcesIn("building").map((r) => r.id)).toEqual(["lovable", "fiware", "n8n"]);
     expect(RESOURCES_PATH).toBe("/hackathon-2026/guide/resources");
   });
 
@@ -88,7 +89,10 @@ describe("builder resources: what each partner's card says", () => {
     expect(r.getStarted.href).toBe("https://developers.redhat.com/developer-sandbox");
     expect(r.benefit).toMatch(/free for 30 days/);
     expect(r.benefit).toMatch(/Set it up before the event/);
-    expect(r.help).toMatch(/Any office hours are announced/);
+    expect(r.help).toMatch(/supports builders remotely/);
+    expect(r.help).toMatch(/office hours are announced in the event channels/);
+    // No booth (Red Hat, 21 Oct 2026) and no award before the contract is signed by both parties.
+    expect(allText(r)).not.toMatch(/stand|booth|award|prize|€|EUR|1[ ,.]?000/i);
     expect(allText(r)).not.toMatch(/\d{1,2}:\d{2}/);
   });
 
@@ -175,7 +179,7 @@ describe("developer tools, Google and MLH", () => {
   });
 
   it("shows on-site partners with their registered roles only", () => {
-    expect(STAND_PARTNERS.map((p) => p.id)).toEqual(["red-hat", "solita", "pruna-ai", "bearingpoint", "csc-lumi", "mlh"]);
+    expect(STAND_PARTNERS.map((p) => p.id)).toEqual(["solita", "pruna-ai", "bearingpoint", "csc-lumi", "mlh"]);
   });
 
   it("is in the builders' checklist, with the Red Hat sandbox as an optional step", () => {
@@ -209,7 +213,10 @@ const RESTRICTED: readonly [string, RegExp, "published"?][] = [
   ["Featherless redemption or coupon URL", /featherless\.ai\/[^\s"'`)]*(redeem|coupon|promo|claim|code)/i],
   ["Pruna shared API key value", /PRUNA_API_KEY\s*[:=]\s*["'`]?(?!<|\$)[A-Za-z0-9_-]{12,}/],
   ["API key header value", /\bapikey["']?\s*[:=]\s*["'`]?(?!<|\$|\{)[A-Za-z0-9_-]{20,}/i],
-  ["Google Docs link other than the approved ElevenLabs Hacker Guide", /docs\.google\.com\/(?!document\/d\/1mCh5MtOzBw0aJpurQVUmIVFfPMAHW3MjNemE-LNiMto\b)[^\s"'`)]+/],
+  [
+    "Google Docs link other than the approved ElevenLabs Hacker Guide or the public volunteer application form",
+    /docs\.google\.com\/(?!document\/d\/1mCh5MtOzBw0aJpurQVUmIVFfPMAHW3MjNemE-LNiMto\b|forms\/d\/e\/1FAIpQLSdro-RK8jjZ8BVLXq4ij8m4FcBUOl7Z3QycKwFCFj-xub7dqQ\/viewform\b)[^\s"'`)]+/,
+  ],
   ["Google Drive file link", /drive\.google\.com\/file\//],
   ["Notion page other than Pruna's onepager or n8n's redemption guide", /\.notion\.site\/(?!building-with-pruna-at-since-ai-hackathon\b|voucher-code\b)[\w-]+/],
   ["Lovable's host-only community playbook", /community-hackathon-playbook\.lovable\.app/, "published"],

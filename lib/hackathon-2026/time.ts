@@ -63,6 +63,7 @@ export function localDate(iso: string | number | Date): string {
 }
 
 const DAY_BY_DATE: Record<string, DayId> = {
+  "2026-11-05": "thu",
   "2026-11-06": "fri",
   "2026-11-07": "sat",
   "2026-11-08": "sun",
@@ -75,6 +76,7 @@ export function dayOf(iso: string): DayId {
 }
 
 export const DAYS: readonly { id: DayId; label: string; date: string }[] = [
+  { id: "thu", label: "Thursday 5 November", date: "2026-11-05" },
   { id: "fri", label: "Friday 6 November", date: "2026-11-06" },
   { id: "sat", label: "Saturday 7 November", date: "2026-11-07" },
   { id: "sun", label: "Sunday 8 November", date: "2026-11-08" },

@@ -1,5 +1,6 @@
 import { ALL_AUDIENCES, type Audience, type ScheduleItem } from "./types";
 
+const THU = "2026-11-05";
 const FRI = "2026-11-06";
 const SAT = "2026-11-07";
 const SUN = "2026-11-08";
@@ -19,20 +20,22 @@ const BREAKFAST_TBA = "Menu coming soon — the breakfast menu will be announced
  * of show "Since AI 2026 tapahtuman kulku" (11 Oct 2026).
  *
  * Meals — the official food schedule of 18 Oct 2026: main meals at Restaurant
- * Mauno, BioCity — Fri dinner 18:30–21:30, Sat lunch 10:30–13:30 and dinner
+ * Mauno, BioCity — Fri dinner 18:30–22:00 (extended in v1.2, 25 Oct), Sat lunch 10:30–13:30 and dinner
  * 17:00–20:00, Sun lunch 10:00–13:00; breakfast around 07:00 on Sat and Sun,
  * menus to be announced. Menus, dietary labels and special diets live in
  * food.ts. Builders eat at their own pace within the windows.
  *
- * Friday: registration, team formation and the challenge preview in
- * sinceai.app from 15:00; team formation closes at 16:45 (staff resolve
- * exceptions until 16:50, when the final team count is locked and the places
- * per challenge are set as evenly as possible across the 15 challenges).
- * Challenge selection is open in sinceai.app 17:00–17:30, during the opening
- * ceremony; the team owner selects. At 17:30 every team gets its own route in
- * the app, Jason Mayes' keynote and tech talk run 17:30–18:30, the teams move
- * in turn from 18:30, the briefings run 18:50–19:30 (a hard end) and the build
- * starts at 19:30. In-app challenge selection is tracked in sinceai-platform#371.
+ * Thursday and Friday: the Tech Team Implementation Guide v1.2 (25 Oct 2026)
+ * supersedes the earlier half-hour selection window at the opening. Public-safe challenge
+ * summaries open in sinceai.app on Thu 5 Nov at 15:00. On Friday, registration,
+ * team formation and challenge selection open at 15:00: once its lead has
+ * marked the team as ready (the roster is then fixed), the lead selects one of
+ * the 15 company challenges — final, places limited. Team formation closes at
+ * 16:45; selection closes at 17:30, when every team's route is in the app.
+ * Opening ceremony 17:00–17:30, Jason Mayes 17:30–18:30, the teams move in
+ * turn from 18:30, briefings 18:50–19:30 (a hard end), and at 19:30 the full
+ * challenge opens in the app for each company's own teams. Dinner at BioCity
+ * 18:30–22:00. Places per challenge and their formula are internal, not here.
  *
  * Sunday: the closing ceremony starts at 13:15, each challenge's top three are
  * announced 13:30–14:00, the five finalists present 14:00–15:10 and the event
@@ -42,6 +45,19 @@ const BREAKFAST_TBA = "Menu coming soon — the breakfast menu will be announced
  * and not confirmed for publication are left out of this public schedule.
  */
 export const SCHEDULE: readonly ScheduleItem[] = [
+  // ── Thursday 5 November ────────────────────────────────────────────────────
+  {
+    id: "thu-challenge-summaries",
+    start: at(THU, "15:00"),
+    title: "Challenge summaries open in sinceai.app",
+    detail:
+      "Public-safe summaries of all 15 company challenges open for registered participants — with or without a team. Choose from these summaries only: full templates and datasets go only to the teams that chose that company, after its briefing. All 15 company challenges offer the same cash prize. Agree on at least three you would be happy with — places are limited.",
+    place: "app",
+    audiences: ["builders"],
+    kind: "milestone",
+    status: "confirmed",
+  },
+
   // ── Friday 6 November ──────────────────────────────────────────────────────
   {
     id: "fri-registration",
@@ -49,12 +65,12 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     title: "Builder registration opens",
     titleFor: { builders: "Registration opens" },
     detail:
-      "Check in at EduCity — both main entrances lead to registration. From registration, walk on to the team formation area beside Taidon portaat. Teams that arrive complete go through Team check too.",
+      "Check in at EduCity — both main entrances lead to registration. Every team member must check in in person on Friday. Already have a team? Route A: go straight to Team Check on the left. No team yet? Route B: pick a skill card and find your team.",
     place: "educity",
     placeDetail: "Main entrances → registration",
     audiences: ["builders"],
     kind: "milestone",
-    status: "working",
+    status: "confirmed",
   },
   {
     id: "fri-team-formation",
@@ -62,31 +78,34 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     end: at(FRI, "16:45"),
     title: "Team formation",
     detail:
-      "Teams of up to five are formed in sinceai.app — every member must join the same team in the app. Need teammates? Stand in the zone for the number of open places in your team. Then leave via the exit side and show your full team member list in the app at Team check.",
+      "Teams of up to five are formed in sinceai.app — every member must join the same team in the app. No team yet? Pick a skill card beside registration and meet people in the Aula and room 1091. Then leave via Team Check on the left: show every member in the app and return your skill card.",
     place: "educity",
-    placeDetail: "Floor 1 · lobby and room 1091 beside Taidon portaat",
+    placeDetail: "Floor 1 · Aula and room 1091 beside Taidon portaat",
     audiences: ["builders"],
     kind: "session",
-    status: "working",
+    status: "confirmed",
     note: "Team formation closes at 16:45.",
   },
   {
-    id: "fri-challenge-preview",
+    id: "fri-challenge-selection",
     start: at(FRI, "15:00"),
-    title: "Challenge preview opens in sinceai.app",
+    end: at(FRI, "17:30"),
+    title: "Ready teams select their challenge",
+    titleFor: { builders: "Mark your team ready, then select" },
     detail:
-      "From 15:00, while the teams form, every challenge and its template is open for preview in sinceai.app. Read through the options with your team before challenge selection opens at 17:00.",
+      "From 15:00 the team lead marks the team as ready in sinceai.app — the roster is then fixed — and selects one of the 15 company challenges for the whole team. The choice is final and cannot be changed. Places are limited, first come first served. All 15 company challenges offer the same cash prize.",
     place: "app",
     audiences: ["builders"],
-    kind: "milestone",
+    kind: "session",
     status: "confirmed",
+    note: "Selection closes at 17:30.",
   },
   {
     id: "fri-team-lock",
     start: at(FRI, "16:45"),
     title: "Team formation closes",
     detail:
-      "After 16:45 no new teams can be created, nobody can join a team and members cannot be changed. The tech team resolves exceptions until 16:50, when the final number of teams is locked and the places per challenge are set — shared as evenly as possible across all 15 challenges, so capacities differ by at most one team.",
+      "After 16:45 no new teams can be created, nobody can join a team and members cannot be changed. A team that is complete but not yet marked ready can still be marked ready and select its challenge until 17:30.",
     place: "app",
     audiences: ["builders"],
     kind: "deadline",
@@ -129,19 +148,6 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     status: "working",
   },
   {
-    id: "fri-challenge-selection",
-    start: at(FRI, "17:00"),
-    end: at(FRI, "17:30"),
-    title: "Challenge selection open",
-    titleFor: { builders: "Select your team's challenge" },
-    detail:
-      "Challenge selection opens in sinceai.app at 17:00, as the opening ceremony starts, and closes at 17:30, when Jason Mayes' programme begins. The team's owner selects one challenge for the whole team. Places per challenge are limited.",
-    place: "app",
-    audiences: ["builders"],
-    kind: "session",
-    status: "confirmed",
-  },
-  {
     id: "fri-opening",
     start: at(FRI, "17:00"),
     end: at(FRI, "17:30"),
@@ -150,7 +156,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
       "The official start of Since AI Hackathon 2026. The hosts welcome everyone and read out the introductions of the company challenges — at most a minute each.",
     detailFor: {
       builders:
-        "The official start. The hosts welcome everyone and read out the introductions of the company challenges — at most a minute each. Challenge selection is open in sinceai.app until 17:30; your team's owner selects.",
+        "The official start. The hosts welcome everyone and read out the introductions of the company challenges — at most a minute each. Challenge selection stays open in sinceai.app until 17:30 for teams their lead has marked ready.",
       "challenge-partners":
         "The hosts read out your challenge introduction — at most a minute per company — from the short introduction you send in advance; if we do not receive one, Since AI writes it. Company representatives do not present on stage. Jason Mayes' keynote and tech talk follow.",
       speakers: "The hosts open the event and introduce the company challenges; Jason Mayes' keynote and tech talk follow — your run sheet has your exact cue.",
@@ -183,7 +189,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     start: at(FRI, "17:30"),
     title: "Challenge selection closes — your route is in the app",
     detail:
-      "At 17:30 sinceai.app shows your team's route: the selected challenge, your departure time, the room, floor, route and floor plan. If your team has no challenge when selection closes, go straight to event staff — never guess a room.",
+      "At 17:30 no new selections are accepted and sinceai.app shows your team's route: the selected challenge, your departure time, the room and floor. The briefing rooms and maps are also in this guide. If your team has no challenge when selection closes, go straight to event staff — never guess a room.",
     place: "app",
     audiences: ["builders"],
     kind: "deadline",
@@ -202,7 +208,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
         "From 18:30 the teams are sent to the rooms in turn, guided by volunteers. Stay in your room — they come to you.",
     },
     place: "educity",
-    placeDetail: "Floors 1–2",
+    placeDetail: "Floors 1–3",
     audiences: ["builders", "challenge-partners"],
     kind: "move",
     status: "confirmed",
@@ -219,9 +225,9 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     detail: "Each company presents its challenge to its teams in its own EduCity room, 18:50–19:30.",
     detailFor: {
       builders:
-        "Your challenge company explains the task, expected result, boundaries, resources, evaluation and how to reach them during the event. Afterwards a volunteer walks you to BioCity.",
+        "Your challenge company presents the full task: expected result, boundaries, resources, evaluation and how to reach them during the event. It shares its own materials with its teams in its own way. Afterwards a volunteer walks you to BioCity.",
       "challenge-partners":
-        "Your briefing runs 18:50–19:30: problem, expected result, boundaries, resources, evaluation and your live support route. 19:30 is a hard end for every briefing — the volunteer in your room then walks the teams to BioCity.",
+        "Your briefing runs 18:50–19:30: the full task, expected result, boundaries, resources, evaluation and your live support route. Share your materials only with the teams that chose your challenge. 19:30 is a hard end for every briefing — the volunteer in your room then walks the teams to BioCity.",
     },
     place: "educity",
     placeDetail: "Company briefing rooms",
@@ -248,9 +254,9 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   {
     id: "fri-build-start",
     start: at(FRI, "19:30"),
-    title: "Move to BioCity, dinner and start building",
+    title: "Full challenge in the app — move to BioCity and start building",
     detail:
-      "At 19:30, after your briefing, a volunteer walks your team to BioCity. Eat when it suits you — dinner runs until 21:30 — find a workspace in BioCity or Joki and start building as soon as you arrive. Build spaces stay open around the clock.",
+      "At 19:30 the full challenge view and materials open in sinceai.app for your team — only for the teams that chose that company. A volunteer walks your team to BioCity. Eat when it suits you — dinner runs until 22:00 — find a workspace in BioCity or Joki and start building as soon as you arrive. Build spaces stay open around the clock.",
     place: "biocity-joki",
     audiences: ["builders"],
     kind: "move",
@@ -270,7 +276,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   {
     id: "fri-dinner",
     start: at(FRI, "18:30"),
-    end: at(FRI, "21:30"),
+    end: at(FRI, "22:00"),
     title: "Dinner",
     detail:
       "Buffet at Restaurant Mauno, BioCity, open the whole window — builders come over after their briefings; eat whenever suits you.",
@@ -285,7 +291,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   },
   {
     id: "fri-night",
-    start: at(FRI, "21:30"),
+    start: at(FRI, "22:00"),
     title: "Building continues through the night",
     detail: "Build spaces stay open. Short rest is fine in suitable event areas; there are no sleeping facilities.",
     place: "biocity-joki",

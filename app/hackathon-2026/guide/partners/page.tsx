@@ -96,7 +96,7 @@ export default function PartnerGuidePage() {
           id="stands-title"
           eyebrow="// biocity stand plan"
           title="Visibility & tech partner stands."
-          lede="Six visibility and tech partner stands — Red Hat, Solita, Pruna AI, BearingPoint, CSC / LUMI AI Factory and Major League Hacking — are together in BioCity’s partner corner, at the far end of the build hall by the passage to Joki, on the way to the meals and to Joki. They stay open for the whole event."
+          lede="The visibility and tech partner stands — Solita, Pruna AI, BearingPoint, CSC / LUMI AI Factory and Major League Hacking, with one open position — are together in BioCity’s partner corner, at the far end of the build hall by the passage to Joki, on the way to the meals and to Joki. They stay open for the whole event."
         />
         <StandPlan />
         <div className="mt-10">

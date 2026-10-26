@@ -278,7 +278,7 @@ test.describe("public site", () => {
 });
 
 test.describe("hackathon 2026 page", () => {
-  test("carries the MLH 2027 Trust Badge, both codes of conduct and the 13 Oct 2026 roster", async ({ page }) => {
+  test("carries the MLH 2027 Trust Badge, both codes of conduct and the 26 Oct 2026 roster", async ({ page }) => {
     await acceptNoCookies(page);
     await page.addInitScript(() => {
       try {
@@ -311,16 +311,20 @@ test.describe("hackathon 2026 page", () => {
     );
     const main = await page.locator("main").innerText();
     expect(main).not.toMatch(/MLH 2026 season|2026 Season Member Event/i);
-    for (const name of ["Fonecta", "Lindström", "Business Turku", "Forcit Group"]) expect(main).toContain(name);
+    for (const name of ["Fonecta", "Lindström", "Business Turku", "Forcit Group", "All 15 company challenges offer the same cash prize"]) expect(main).toContain(name);
+    await expect(page.locator("[data-volunteer-cta]")).toHaveAttribute("href", /^https:\/\/docs\.google\.com\/forms\/d\/e\/1FAIpQLSdro-RK8jjZ8BVLXq4ij8m4FcBUOl7Z3QycKwFCFj-xub7dqQ\/viewform/);
+    await expect(page.locator("[data-volunteer-cta]")).toHaveCount(1);
     // Former 2026 names appear only in the 2025 edition paragraph.
     const without2025 = main.replace(/The inaugural Since AI Hackathon[\s\S]*?72 hours\./, "");
     for (const name of ["Revvity", "Bo LKV", "Saarioinen", "Sandvik", "Kongsberg"]) expect(without2025).not.toContain(name);
     // The 2026 programme runs Friday 15:00 to Sunday 15:30 — the 72-hour format belongs to 2025 only.
     expect(without2025).not.toMatch(/72[\s-]*(h\b|hours?)/i);
-    await expect(page.getByText("To be announced", { exact: true })).toHaveCount(2);
+    await expect(page.getByText("To be announced", { exact: true })).toHaveCount(1);
+    await expect(page.getByRole("link", { name: /^Europress — Since AI Hackathon 2026 partner website/ }).first()).toHaveAttribute("href", "https://europressgroup.com/");
+    await expect(page.getByRole("link", { name: /Forcit Group .*\(NDA required\)/ }).first()).toBeVisible();
     const ld = await page.locator('script[type="application/ld+json"]').allTextContents();
     const event = ld.map((t) => JSON.parse(t)).find((d) => d["@type"] === "Event");
-    expect(event.sponsor.map((s: { name: string }) => s.name)).toHaveLength(13);
+    expect(event.sponsor.map((s: { name: string }) => s.name)).toHaveLength(14);
     expect(event.location.map((l: { name: string }) => l.name)).toEqual(["EduCity", "BioCity", "Joki"]);
   });
 });

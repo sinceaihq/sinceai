@@ -19,6 +19,7 @@ const SPONSOR_URLS: Record<(typeof HACKATHON_2026_PARTNERS.challengePartners)[nu
   "Business Turku": "https://businessturku.fi/",
   DNA: "https://www.dna.fi/",
   Fonecta: "https://www.fonecta.fi/",
+  Europress: "https://europressgroup.com/",
 };
 const SPONSORS = HACKATHON_2026_PARTNERS.challengePartners.map((name) => ({ name, url: SPONSOR_URLS[name] }));
 

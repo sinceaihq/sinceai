@@ -13,13 +13,14 @@ import {
   type ChallengeCompany,
   type VenueMap,
 } from "@/lib/hackathon-2026";
+import { NdaLabel } from "./ChallengeRules";
 import { CompanyLogo } from "./CompanyLogo";
 import { MapViewer } from "./maps/MapViewer";
 
 const normalise = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 
 /**
- * All 15 challenge places (13 named partners + 2 to be announced): Friday room, Saturday Q&A and maps. Search is a
+ * All 15 company challenges (14 named partners + 1 place to be announced): Friday room, Saturday Q&A and maps. Search is a
  * progressive enhancement — the full list renders on the server.
  */
 export function CompanyDirectory({ companies }: { companies: readonly ChallengeCompany[] }) {
@@ -84,6 +85,7 @@ export function CompanyDirectory({ companies }: { companies: readonly ChallengeC
                 >
                   {company.name}
                 </span>
+                {company.ndaRequired && <NdaLabel className="md:mt-2" />}
               </div>
               <div className="min-w-0">
                 <p className="text-[11px] font-mono uppercase tracking-widest text-white/55">
@@ -125,7 +127,7 @@ export function CompanyDirectory({ companies }: { companies: readonly ChallengeC
         })}
       </ul>
       {visible.length === 0 && (
-        <p className="py-8 text-sm text-neutral-400">No match. Clear the search to see all 15 challenge places.</p>
+        <p className="py-8 text-sm text-neutral-400">No match. Clear the search to see all 15 company challenges.</p>
       )}
 
       {viewer && (

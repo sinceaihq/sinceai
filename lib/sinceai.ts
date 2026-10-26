@@ -40,13 +40,14 @@ export const UPCOMING_EVENT_2026 = {
 } as const;
 
 /**
- * Since AI Hackathon 2026 partners for marketing copy (organiser roster, 13 Oct 2026).
+ * Since AI Hackathon 2026 partners for marketing copy (organiser roster, 13 Oct 2026, plus
+ * Europress Group, confirmed as a company challenge on 23 Oct 2026).
  * The operational source is lib/hackathon-2026 (companies.ts, partners.ts); a test keeps
  * these lists equal to it. Former or unconfirmed 2026 names (Revvity, Bo LKV, Saarioinen,
  * Sandvik, Kongsberg) must not appear as 2026 challenge partners.
  */
 export const HACKATHON_2026_PARTNERS = {
-  /** Company challenges the event is built for: 13 named + 2 to be announced. */
+  /** Company challenges the event is built for: 14 named + 1 to be announced. */
   challengeTarget: 15,
   challengePartners: [
     "Valmet",
@@ -62,16 +63,28 @@ export const HACKATHON_2026_PARTNERS = {
     "Business Turku",
     "DNA",
     "Fonecta",
+    "Europress",
   ],
   /** Short form for metadata and one-liners. */
   challengePartnersShort: "Valmet, Bayer, Elisa, Meyer Turku, DNA, Traficom and more",
   /** Visibility / technology partners (not challenge partners). */
   visibilityPartners: ["Solita", "Red Hat", "BearingPoint", "Pruna AI", "CSC / LUMI AI Factory", "Major League Hacking"],
+  /** The one statement on company challenge prizes (Tech guide v1.2 §25) — never a derived euro amount. */
+  equalPrize: "All 15 company challenges offer the same cash prize.",
   /** Keynote speaker. */
   keynote: "Jason Mayes, Web AI Lead at Google",
 } as const;
 
-/** "Valmet, Bayer, … and Fonecta" */
+/**
+ * Volunteer applications for Since AI Hackathon 2026 (organiser, 26 Oct 2026: still open). A link to the
+ * public Google Form only — never to its responses. Remove the CTA when applications close.
+ */
+export const VOLUNTEER_2026 = {
+  href: "https://docs.google.com/forms/d/e/1FAIpQLSdro-RK8jjZ8BVLXq4ij8m4FcBUOl7Z3QycKwFCFj-xub7dqQ/viewform?usp=dialog",
+  label: "Become a volunteer",
+} as const;
+
+/** "Valmet, Bayer, … and Europress" */
 export const HACKATHON_2026_CHALLENGE_LIST = `${HACKATHON_2026_PARTNERS.challengePartners.slice(0, -1).join(", ")} and ${HACKATHON_2026_PARTNERS.challengePartners.at(-1)}`;
 
 /** MLH: the 2027 Season Member Event Agreement was signed on 13 Oct 2026. */

@@ -2,24 +2,29 @@ import { scheduleFor } from "./schedule";
 import type { ChallengeCompany, ScheduleItem } from "./types";
 
 /**
- * The 15 challenge places — 13 named challenge partners and two places held
- * for partners still to be announced — with their Friday briefing room
+ * The 15 company challenges — 14 named challenge partners and one place held
+ * for a partner still to be announced — with their Friday briefing room
  * (EduCity) and Saturday Q&A location (Joki).
  *
- * Source: the early-October placement maps (2 Oct 2026, compiled 3 Oct) are the
- * baseline. Organiser roster of 13 Oct 2026: Valmet, Bayer, Turku Energia,
- * Apetit, Takomo Golf, Forcit Group, Elisa, Meyer Turku, Traficom, Lindström,
- * Business Turku, DNA and Fonecta, plus two "to be announced" places — 15 in
- * all. Revvity (cancelled 7 Oct), Bo LKV and Saarioinen are not 2026 challenge
- * partners; their three positions were reconciled without moving anyone else:
- *   - Fonecta takes Bo LKV's positions (2001 Elias · Joki floor 3),
- *   - `tba-2` takes Saarioinen's (2067 · Joki floor 3),
- *   - `tba` keeps Revvity's (1090 Ringsberg · Joki floor 2).
- * Those three reassignments are `pending` (provisional) until production
- * confirms them; the twelve others are `working` until production locks them.
- * Replace a `tba` entry when its partner is confirmed. Change a room here and
- * every page, map highlight and 3D label follows (the venue map images carry
- * the logos too — scripts/patch-guide-maps.mjs).
+ * Friday briefing rooms: the organiser's final EduCity maps (supplied 26 Oct
+ * 2026, "Yritysten briiffaushuoneet" floors 1–2 and the floor 3 plan). They
+ * supersede the 2 Oct placement maps. Floor 1: Elisa 1001 Dromberg, Bayer 1002
+ * Moriaberg, Europress 1090 Ringsberg, Traficom 1091 Hammarbacka. Floor 2:
+ * Fonecta 2001, Takomo Golf 2002, Forcit Group 2003, Lindström 2004, TBA 2067,
+ * Valmet 2006/2007, DNA 2026, Meyer Turku 2030, Apetit 2027. Floor 3: Turku
+ * Energia 3006 and Business Turku 3027 (their earlier floor-2 rooms 2029/2031
+ * and 2072 are no longer used).
+ *
+ * Roster: the organiser roster of 13 Oct 2026 (13 named) plus Europress Group,
+ * confirmed as a 2026 company challenge on 23 Oct 2026 — it fills the place
+ * held as "To be announced (1)", so the event still has exactly 15 company
+ * challenges. Its challenge brief and data are not public. The remaining
+ * place (2067) is still to be announced: it is never a company.
+ *
+ * Saturday Q&A stands still follow the 2 Oct Joki maps (unchanged); Europress
+ * takes the floor-2 stand held for the place it fills, provisional (`pending`)
+ * until production confirms it. Change a room here and every page, map
+ * highlight and 3D label follows.
  */
 export const CHALLENGE_COMPANIES: readonly ChallengeCompany[] = [
   {
@@ -39,10 +44,13 @@ export const CHALLENGE_COMPANIES: readonly ChallengeCompany[] = [
     placementStatus: "working",
   },
   {
-    id: "tba",
-    name: "To be announced (1)",
-    // A challenge place held for a partner still to be announced. No logo — the UI renders the name.
+    id: "europress",
+    name: "Europress",
+    // Official logo pack supplied by the organiser (white RGB variant for the dark site).
+    logo: { src: "/assets/sponsors/europress.svg", width: 802, height: 215 },
+    url: "https://europressgroup.com/",
     briefing: { venue: "educity", floor: 1, room: "1090", roomName: "Ringsberg" },
+    // The Joki stand held for the place Europress fills — provisional until production confirms it.
     qa: { venue: "joki", floor: 2, zone: "Floor 2" },
     placementStatus: "pending",
   },
@@ -58,12 +66,7 @@ export const CHALLENGE_COMPANIES: readonly ChallengeCompany[] = [
     id: "business-turku",
     name: "Business Turku",
     logo: { src: "/assets/sponsors/businessturku.png", width: 2902, height: 938 },
-    briefing: {
-      venue: "educity",
-      floor: 2,
-      room: "2072",
-      roomName: "Työkahvila / Aurinkokylpy",
-    },
+    briefing: { venue: "educity", floor: 3, room: "3027" },
     qa: { venue: "joki", floor: 3, zone: "Floor 3" },
     placementStatus: "working",
   },
@@ -72,8 +75,8 @@ export const CHALLENGE_COMPANIES: readonly ChallengeCompany[] = [
     name: "Fonecta",
     // Official white logo (yrityksille.fonecta.fi footer artwork, 13 Oct 2026).
     logo: { src: "/assets/sponsors/fonecta.svg", width: 1105, height: 276 },
-    // Bo LKV's former positions — provisional until production confirms.
     briefing: { venue: "educity", floor: 2, room: "2001", roomName: "Elias" },
+    // Joki stand: Bo LKV's former position (13 Oct 2026) — provisional until production confirms.
     qa: { venue: "joki", floor: 3, zone: "Floor 3" },
     placementStatus: "pending",
   },
@@ -89,6 +92,8 @@ export const CHALLENGE_COMPANIES: readonly ChallengeCompany[] = [
     id: "forcit-group",
     name: "Forcit Group",
     logo: { src: "/assets/sponsors/Forcit-Group.png", width: 500, height: 107 },
+    // Forcit runs its own NDA process (signing and verification) at its briefing — Tech guide v1.2 §3.
+    ndaRequired: true,
     briefing: { venue: "educity", floor: 2, room: "2003", roomName: "Erik" },
     qa: { venue: "joki", floor: 3, zone: "Floor 3" },
     placementStatus: "working",
@@ -103,8 +108,8 @@ export const CHALLENGE_COMPANIES: readonly ChallengeCompany[] = [
   },
   {
     id: "tba-2",
-    name: "To be announced (2)",
-    // The second place held for a partner still to be announced, in Saarioinen's former positions.
+    name: "To be announced",
+    // The place still held for a partner to be announced (2067 on the final map). Never a company.
     briefing: { venue: "educity", floor: 2, room: "2067" },
     qa: { venue: "joki", floor: 3, zone: "Floor 3" },
     placementStatus: "pending",
@@ -129,7 +134,7 @@ export const CHALLENGE_COMPANIES: readonly ChallengeCompany[] = [
     id: "turku-energia",
     name: "Turku Energia",
     logo: { src: "/assets/sponsors/turku-energia.png", width: 820, height: 510 },
-    briefing: { venue: "educity", floor: 2, room: "2029 / 2031" },
+    briefing: { venue: "educity", floor: 3, room: "3006" },
     qa: { venue: "joki", floor: 1, zone: "Showroom" },
     placementStatus: "working",
   },
@@ -156,17 +161,17 @@ export function isTbaPlace(company: ChallengeCompany): boolean {
   return company.id === "tba" || company.id.startsWith("tba-");
 }
 
-/** The named, confirmed challenge partners (13 on 13 Oct 2026). */
+/** The named challenge partners (14 on 26 Oct 2026). */
 export const NAMED_CHALLENGE_PARTNERS: readonly ChallengeCompany[] = CHALLENGE_COMPANIES.filter((c) => !isTbaPlace(c));
 
-/** Challenge places still held for partners to be announced (2 on 13 Oct 2026). */
+/** Challenge places still held for partners to be announced (1 on 26 Oct 2026). */
 export const TBA_CHALLENGE_PLACES: readonly ChallengeCompany[] = CHALLENGE_COMPANIES.filter(isTbaPlace);
 
 export function getCompany(id: string): ChallengeCompany | undefined {
   return CHALLENGE_COMPANIES.find((c) => c.id === id);
 }
 
-/** "1001 Dromberg", "2006 / 2007" */
+/** "1001 Dromberg", "2006 / 2007", "3006" */
 export function briefingRoomLabel(company: ChallengeCompany): string {
   const { room, roomName } = company.briefing;
   return roomName ? `${room} ${roomName}` : room;
@@ -209,7 +214,7 @@ export function companySchedule(company: ChallengeCompany): ScheduleItem[] {
 /** Map ids used for a company's briefing room and Q&A stand. */
 export function companyMapIds(company: ChallengeCompany): { briefing: string; qa: string } {
   return {
-    briefing: company.briefing.floor === 1 ? "educity-1" : "educity-2",
+    briefing: `educity-${company.briefing.floor}`,
     qa: company.qa.floor === 1 ? "joki-showroom" : "joki-2-3",
   };
 }

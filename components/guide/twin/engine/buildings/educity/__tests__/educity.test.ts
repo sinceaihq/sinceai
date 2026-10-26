@@ -173,11 +173,13 @@ describe("EduCity windows", () => {
 
 describe("EduCity rooms and plans", () => {
   it("has a briefing room for every company's room number", () => {
-    for (const c of CHALLENGE_COMPANIES) {
+    // The 3D models floors 1–2; floor 3's two rooms (Turku Energia 3006, Business Turku 3027) are on the 2D plan only.
+    for (const c of CHALLENGE_COMPANIES.filter((x) => x.briefing.floor <= 2)) {
       const room = BRIEFING_ROOMS.find((r) => r.number === c.briefing.room);
       expect(room).toBeDefined();
       expect(room?.level).toBe(c.briefing.floor === 1 ? "f1" : "f2");
     }
+    expect(CHALLENGE_COMPANIES.filter((x) => x.briefing.floor === 3).map((c) => c.briefing.room).sort()).toEqual(["3006", "3027"]);
   });
 
   it("puts every room door on its polygon's edge, opening outwards", () => {
