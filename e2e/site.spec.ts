@@ -104,7 +104,7 @@ test.describe("public site", () => {
     await expect(page.locator("#open-source")).toBeInViewport();
   });
 
-  test("the hackathon page shows the complete four-judge panel", async ({ page }) => {
+  test("the hackathon page shows the complete five-judge panel", async ({ page }) => {
     await acceptNoCookies(page);
     await page.addInitScript(() => {
       try {
@@ -115,7 +115,7 @@ test.describe("public site", () => {
     const panel = page.getByRole("region", { name: "Meet the judges." });
     await panel.scrollIntoViewIfNeeded();
     const cards = panel.getByRole("listitem");
-    await expect(cards).toHaveCount(4);
+    await expect(cards).toHaveCount(5);
     await expect(cards.nth(0)).toContainText("Sarita Runeberg");
     await expect(cards.nth(0)).toContainText("Chief Executive Officer");
     await expect(cards.nth(1)).toContainText("Niko Elers");
@@ -124,8 +124,11 @@ test.describe("public site", () => {
     await expect(cards.nth(2)).toContainText("Associate Professor, Software Engineering");
     await expect(cards.nth(3)).toContainText("Rasmus Harmaala");
     await expect(cards.nth(3)).toContainText("Deep Tech Investor & Founder");
+    await expect(cards.nth(4)).toContainText("Chandra Challagonda");
+    await expect(cards.nth(4)).toContainText("Chief Executive Officer");
+    await expect(cards.nth(4)).toContainText("FIWARE Foundation");
     await expect(panel).not.toContainText("Judge to be announced");
-    for (const name of [/Sarita Runeberg/, /Niko Elers/, /Tuomas Mäkilä/, /Rasmus Harmaala/]) {
+    for (const name of [/Sarita Runeberg/, /Niko Elers/, /Tuomas Mäkilä/, /Rasmus Harmaala/, /Chandra Challagonda/]) {
       const portrait = panel.getByRole("img", { name });
       await expect(portrait).toBeVisible();
       expect(await portrait.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
@@ -144,11 +147,27 @@ test.describe("public site", () => {
       "href",
       "https://www.linkedin.com/in/rasmus-harmaala/",
     );
-    // On desktop the four cards share one row at the same height.
-    if (!test.info().project.name.includes("mobile")) {
-      const heights = await cards.evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().height)));
-      expect(new Set(heights).size).toBe(1);
+    await expect(panel.getByRole("link", { name: /^FIWARE Foundation/ })).toHaveAttribute("href", "https://fiware.org/");
+    await expect(panel.getByRole("link", { name: /Chandra Challagonda on LinkedIn/ })).toHaveAttribute(
+      "href",
+      "https://www.linkedin.com/in/challagonda/",
+    );
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
+    const boxes = await cards.evaluateAll((els) =>
+      els.map((e) => {
+        const r = e.getBoundingClientRect();
+        return { top: Math.round(r.top), left: r.left, right: r.right, height: Math.round(r.height) };
+      }),
+    );
+    if (test.info().project.name.includes("mobile")) {
+      // One column: every card starts below the previous one.
+      for (let i = 1; i < boxes.length; i++) expect(boxes[i]!.top).toBeGreaterThan(boxes[i - 1]!.top);
+    } else {
+      // Wide desktop: all five cards share one row at the same height.
+      expect(new Set(boxes.map((b) => b.top)).size).toBe(1);
+      expect(new Set(boxes.map((b) => b.height)).size).toBe(1);
     }
+    for (const box of boxes) expect(box.right).toBeLessThanOrEqual(page.viewportSize()!.width);
   });
 
   test("the hackathon page names sinceai.app for submissions and does not rule out slide decks", async ({ page }) => {

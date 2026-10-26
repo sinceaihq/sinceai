@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, statSync } from "node:fs";
 import path from "node:path";
 import { initials, JUDGE_PANEL_SIZE, judges, profileLabel } from "@/lib/judges";
 
@@ -9,15 +9,16 @@ const PROFILE_URL = {
 };
 
 describe("judging panel data", () => {
-  it("lists exactly the four confirmed judges, with their organisations' own titles", () => {
+  it("lists exactly the five confirmed judges, with their organisations' own titles", () => {
     expect(judges.map((j) => [j.name, j.title, j.organization])).toEqual([
       ["Sarita Runeberg", "Chief Executive Officer", "Maria 01"],
       ["Niko Elers", "Investment Director", "Voima Ventures"],
       ["Tuomas Mäkilä", "Associate Professor, Software Engineering", "University of Turku"],
       ["Rasmus Harmaala", "Deep Tech Investor & Founder", "Inovexus"],
+      ["Chandra Challagonda", "Chief Executive Officer", "FIWARE Foundation"],
     ]);
-    // The panel is complete: no fifth place and no open place left.
-    expect(JUDGE_PANEL_SIZE).toBe(4);
+    // The panel is complete: five judges and no open place left.
+    expect(JUDGE_PANEL_SIZE).toBe(5);
     expect(judges).toHaveLength(JUDGE_PANEL_SIZE);
     expect(new Set(judges.map((j) => j.name)).size).toBe(judges.length);
   });
@@ -31,6 +32,18 @@ describe("judging panel data", () => {
   it("never gives Tuomas Mäkilä a title his university does not state", () => {
     const tuomas = judges.find((j) => j.name === "Tuomas Mäkilä")!;
     expect(`${tuomas.title} ${tuomas.bio}`).not.toMatch(/full professor|\bdean\b|\bhead of department\b|\bdirector\b/i);
+  });
+
+  it("presents Chandra Challagonda as an overall-jury judge, never as a sponsor, partner or award", () => {
+    const chandra = judges.find((j) => j.name === "Chandra Challagonda")!;
+    expect(chandra.profiles).toEqual([{ kind: "linkedin", url: "https://www.linkedin.com/in/challagonda/" }]);
+    expect(chandra.bio).toMatch(/^CEO of FIWARE Foundation/);
+    // FIWARE's optional open track is separate and unpublished until its terms are confirmed.
+    expect(`${chandra.title} ${chandra.bio}`).not.toMatch(/sponsor|partner|challenge|evaluat|award|prize|track/i);
+    expect(chandra.portrait).toEqual({
+      src: "/assets/judges/chandra-challagonda.webp",
+      alt: "Portrait of Chandra Challagonda, CEO of FIWARE Foundation",
+    });
   });
 
   it("presents Rasmus Harmaala as an overall-jury judge, never as a sponsor or company evaluator", () => {
@@ -50,6 +63,7 @@ describe("judging panel data", () => {
       "https://voimaventures.com/",
       "https://www.utu.fi/en",
       "https://inovexus.com/",
+      "https://fiware.org/",
     ]);
     for (const judge of judges) {
       expect(judge.profiles.length).toBeGreaterThan(0);
@@ -76,7 +90,10 @@ describe("judging panel data", () => {
     for (const judge of judges) {
       expect(judge.portrait).toBeDefined();
       expect(judge.portrait!.src).toMatch(/^\/assets\/judges\/.+\.webp$/);
-      expect(existsSync(path.join(process.cwd(), "public", judge.portrait!.src))).toBe(true);
+      const file = path.join(process.cwd(), "public", judge.portrait!.src);
+      expect(existsSync(file)).toBe(true);
+      // Served as is (images are unoptimised on Cloudflare), so keep each one small.
+      expect(statSync(file).size).toBeLessThan(100_000);
       expect(judge.portrait!.alt).toContain(judge.name);
       if (judge.portrait!.credit) expect(judge.portrait!.credit).toMatch(/^Photo: /);
     }
@@ -84,5 +101,6 @@ describe("judging panel data", () => {
     expect(initials("Niko Elers")).toBe("NE");
     expect(initials("Tuomas Mäkilä")).toBe("TM");
     expect(initials("Rasmus Harmaala")).toBe("RH");
+    expect(initials("Chandra Challagonda")).toBe("CC");
   });
 });
