@@ -109,7 +109,7 @@ const eventSchema = {
     },
   ],
   organizer: { "@id": "https://sinceai.ai/#organization" },
-  // The confirmed challenge partners (organiser roster, 13 Oct 2026). Two more challenge places are still to be announced.
+  // The confirmed challenge partners (organiser roster, 26 Oct 2026). One more challenge place is still to be announced.
   sponsor: SPONSORS.map(({ name, url }) => ({ "@type": "Organization", name, url })),
   performer: { "@type": "Person", name: "Jason Mayes", jobTitle: "Web AI Lead, Google" },
   image: "https://sinceai.ai/assets/og/hackathon-2026.png",

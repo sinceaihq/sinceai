@@ -18,6 +18,7 @@ import {
 } from "@/components/sections/hackathon";
 import { TrackedLink } from "@/components/analytics/TrackedLink";
 import ORG from "@/lib/org";
+import { COMPUTING_HREF } from "@/lib/hackathon-2026";
 import {
   HACKATHON_2026_CHALLENGE_LIST,
   HACKATHON_2026_PARTNERS,
@@ -102,13 +103,16 @@ const faqSchema = {
 
 // ── Content data ──────────────────────────────────────────────────────────
 
+/** Challenge places still to be announced (1 on 26 Oct 2026: 15 challenges, 14 partners named). */
+const TBA_PLACES = HACKATHON_2026_PARTNERS.challengeTarget - HACKATHON_2026_PARTNERS.challengePartners.length;
+
 const keyFacts = [
   { label: "Date",           value: UPCOMING_EVENT_2026.dateNote },
   { label: "Venues",         value: "EduCity (opening and closing), BioCity and Joki (building) — Turku, Finland" },
   { label: "Prize pool",     value: "€50,000 cash" },
   { label: "Format",         value: "48-hour AI hackathon, Friday to Sunday" },
   { label: "Schedule",       value: "Fri 15:00 check-in · Fri 17:00 opening · Sun 10:00 submissions close · Sun 13:15 closing ceremony · Sun 14:00 finals · ends around 15:30" },
-  { label: "Challenges",     value: `15 company challenges — ${HACKATHON_2026_PARTNERS.challengePartners.length} partners confirmed, 2 to be announced` },
+  { label: "Challenges",     value: `${HACKATHON_2026_PARTNERS.challengeTarget} company challenges — ${HACKATHON_2026_PARTNERS.challengePartners.length} partners confirmed, ${TBA_PLACES} to be announced` },
   { label: "Keynote",        value: HACKATHON_2026_PARTNERS.keynote },
   { label: "Expected",       value: "1,000+ builders" },
   { label: "Participation",  value: "Free" },
@@ -140,16 +144,11 @@ const whyItems = [
   },
 ];
 
+// Google is not a 2026 compute partner: its event credits were revoked (lib/hackathon-2026/resources.ts).
 const headlinePartners = [
   {
-    name: "Google",
-    label: "Compute partner",
-    logo: "/assets/sponsors/GoogleForDevelopers.png",
-    href: "https://developers.google.com/",
-  },
-  {
     name: "LUMI",
-    label: "Supercomputer access",
+    label: "Compute partner · CSC / LUMI AI Factory",
     logo: "/assets/sponsors/Lumi.svg",
     href: "https://lumi-ai-factory.eu/",
   },
@@ -320,7 +319,13 @@ export default function HackathonPage() {
               </div>
 
               <p className="text-sm text-neutral-400 leading-relaxed mt-8 max-w-2xl">
-                Google and LUMI provide hackathon participants with compute access and GPU usage throughout the event — so you can focus on building, not on infrastructure.
+                CSC / LUMI AI Factory gives eligible, pre-registered participants access to the LUMI
+                supercomputer and the Aitta inference service, with LUMI AI Factory experts on site. Using
+                it is optional; eligibility and the other tools are in the{" "}
+                <Link href={COMPUTING_HREF} className="text-white underline underline-offset-4 hover:text-neutral-300">
+                  Field Guide
+                </Link>
+                .
               </p>
             </div>
           </section>
@@ -373,10 +378,12 @@ export default function HackathonPage() {
                   by 100+ strategic, capital, and research partners.
                 </p>
                 <p>
-                  Teams form on Friday afternoon, select one of 15 company challenges at the
-                  17:00 opening, and ship by Sunday&apos;s 10:00 deadline. 1,000+ builders are
-                  expected in 2026, with challenges set by {HACKATHON_2026_CHALLENGE_LIST} — and
-                  two more partners still to be announced. Open to developers, researchers, and
+                  Teams form on Friday afternoon, select one of 15 company challenges in
+                  sinceai.app between 15:00 and 17:30, and ship by Sunday&apos;s 10:00 deadline.
+                  1,000+ builders are expected in 2026, with challenges set by{" "}
+                  {HACKATHON_2026_CHALLENGE_LIST} — and{" "}
+                  {TBA_PLACES === 1 ? "one more partner" : `${TBA_PLACES} more partners`} still to be
+                  announced. Open to developers, researchers, and
                   entrepreneurs worldwide.
                 </p>
                 <p className="text-white font-semibold">

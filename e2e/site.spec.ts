@@ -104,7 +104,7 @@ test.describe("public site", () => {
     await expect(page.locator("#open-source")).toBeInViewport();
   });
 
-  test("the hackathon page shows the judging panel: three judges, one place to be announced", async ({ page }) => {
+  test("the hackathon page shows the complete four-judge panel", async ({ page }) => {
     await acceptNoCookies(page);
     await page.addInitScript(() => {
       try {
@@ -122,8 +122,10 @@ test.describe("public site", () => {
     await expect(cards.nth(1)).toContainText("Investment Director");
     await expect(cards.nth(2)).toContainText("Tuomas Mäkilä");
     await expect(cards.nth(2)).toContainText("Associate Professor, Software Engineering");
-    await expect(cards.nth(3)).toContainText("Judge to be announced");
-    for (const name of [/Sarita Runeberg/, /Niko Elers/, /Tuomas Mäkilä/]) {
+    await expect(cards.nth(3)).toContainText("Rasmus Harmaala");
+    await expect(cards.nth(3)).toContainText("Deep Tech Investor & Founder");
+    await expect(panel).not.toContainText("Judge to be announced");
+    for (const name of [/Sarita Runeberg/, /Niko Elers/, /Tuomas Mäkilä/, /Rasmus Harmaala/]) {
       const portrait = panel.getByRole("img", { name });
       await expect(portrait).toBeVisible();
       expect(await portrait.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
@@ -136,6 +138,11 @@ test.describe("public site", () => {
     await expect(panel.getByRole("link", { name: /Tuomas Mäkilä on Google Scholar/ })).toHaveAttribute(
       "href",
       "https://scholar.google.com/citations?user=fhE_eJYAAAAJ",
+    );
+    await expect(panel.getByRole("link", { name: /^Inovexus/ })).toHaveAttribute("href", "https://inovexus.com/");
+    await expect(panel.getByRole("link", { name: /Rasmus Harmaala on LinkedIn/ })).toHaveAttribute(
+      "href",
+      "https://www.linkedin.com/in/rasmus-harmaala/",
     );
     // On desktop the four cards share one row at the same height.
     if (!test.info().project.name.includes("mobile")) {
@@ -150,7 +157,16 @@ test.describe("public site", () => {
     const main = page.locator("main");
     await expect(main).not.toContainText("No slide decks");
     await expect(main).toContainText("a slide deck is optional, never a substitute");
-    await expect(main).toContainText("select one of 15 company challenges at the 17:00 opening");
+    // Selection is in the app, 15:00–17:30 (guide v1.2), and one challenge place is still to be announced.
+    await expect(main).toContainText("select one of 15 company challenges in sinceai.app between 15:00 and 17:30");
+    await expect(main).not.toContainText("at the 17:00 opening");
+    await expect(main).toContainText("14 partners confirmed, 1 to be announced");
+    await expect(main).toContainText("and one more partner still to be announced");
+    await expect(main).not.toContainText(/two more partners|2 to be announced/);
+    // Google is not a 2026 compute partner (its event credits were revoked); LUMI is for eligible participants.
+    await expect(main).not.toContainText("Google and LUMI provide");
+    await expect(main.getByRole("link", { name: /Google — Since AI Hackathon 2026 infrastructure partner/ })).toHaveCount(0);
+    await expect(main).toContainText("gives eligible, pre-registered participants access to the LUMI");
     await expect(main).toContainText("the official submission platform, not Devpost");
     await expect(main).toContainText("AI-assisted development is permitted and encouraged");
   });
