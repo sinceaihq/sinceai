@@ -254,6 +254,11 @@ export default function ResourcesPage() {
                       open-source repos on GitHub
                     </a>
                   </p>
+                  <p>&bull; Use our open models, datasets and demos on{" "}
+                    <a href={ORG.social.huggingface} target="_blank" rel="noopener noreferrer" className="text-white hover:text-neutral-300 underline">
+                      Hugging Face
+                    </a>
+                  </p>
                 </div>
               </section>
 

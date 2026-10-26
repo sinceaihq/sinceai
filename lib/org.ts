@@ -40,6 +40,8 @@ export const ORG = {
     instagram: "https://www.instagram.com/sinceaihq",
     x: "https://x.com/sinceaihq",
     github: "https://github.com/sinceaihq",
+    /** Open models, datasets and demo Spaces from Since AI research. */
+    huggingface: "https://huggingface.co/sinceaihq",
     facebook: "https://www.facebook.com/sinceai",
     youtube: "https://www.youtube.com/@sinceaihq",
     tiktok: "https://www.tiktok.com/@sinceaihq",

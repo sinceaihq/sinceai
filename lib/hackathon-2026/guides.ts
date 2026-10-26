@@ -2,6 +2,7 @@ import { GUIDE_BASE_PATH, GUIDE_LINKS } from "./facts";
 import { COMPUTING, COMPUTING_HREF } from "./computing";
 import { CATERING, DIETARY } from "./food";
 import { AI_POLICY, SUBMISSION } from "./submission";
+import { WIFI_ANCHOR } from "./wifi";
 import type { Audience, ChecklistGroup, GuideDefinition, GuideDetail } from "./types";
 
 /**
@@ -316,17 +317,8 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
     {
       q: "Is there Wi-Fi? Can we use Linux?",
-      a: "Bring any laptop: Linux, Windows and macOS all work, and no brand or operating system is required. Event Wi-Fi is free for participants.",
-      points: [
-        "EduCity (Turku University of Applied Sciences): connect to TUAS Guest and register in the browser with your email address. eduroam works if your own institution takes part in it.",
-        "BioCity and Joki: network access is arranged with the venue operator — follow the instructions event staff give on site.",
-        "Download dependencies, models and container images before you arrive, and bring a phone hotspot as a backup if you can. No connection is guaranteed to be fast or uninterrupted.",
-        "Never scan or security-test the venue networks.",
-      ],
-      links: [
-        { label: "Turku UAS: visitor Wi-Fi", href: "https://www.turkuamk.fi/en/about-us/campuses/" },
-        { label: "Turku UAS: eduroam", href: "https://www.turkuamk.fi/en/about-us/contact-us/it-services/" },
-      ],
+      a: "Yes — free Wi-Fi is arranged at the event venues: TUAS Guest or eduroam at EduCity, and at BioCity and Joki the network details come from event staff once they are confirmed. The steps are under Wi-Fi on this page. Bring any laptop: Linux, Windows and macOS all work, and no brand or operating system is required.",
+      links: [{ label: "Wi-Fi instructions", href: `#${WIFI_ANCHOR}` }],
     },
     {
       q: "Can we use CSC / LUMI computing?",

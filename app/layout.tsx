@@ -129,6 +129,7 @@ const organizationSchema = {
     ORG.social.linkedin,
     ORG.social.x,
     ORG.social.github,
+    ORG.social.huggingface,
     ORG.social.instagram,
     ORG.social.telegram,
     ORG.social.facebook,

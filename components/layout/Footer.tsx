@@ -47,6 +47,7 @@ const SOCIAL_LINKS = [
   { name: "LinkedIn",  href: ORG.social.linkedin },
   { name: "X",         href: ORG.social.x },
   { name: "GitHub",    href: ORG.social.github },
+  { name: "Hugging Face", href: ORG.social.huggingface },
   { name: "Instagram", href: ORG.social.instagram },
   { name: "YouTube",   href: ORG.social.youtube },
   { name: "Telegram",  href: ORG.social.telegram },

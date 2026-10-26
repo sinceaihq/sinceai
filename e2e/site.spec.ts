@@ -155,6 +155,16 @@ test.describe("public site", () => {
     await expect(main).toContainText("AI-assisted development is permitted and encouraged");
   });
 
+  test("the footer links the Hugging Face organisation and the JSON-LD lists it", async ({ page }) => {
+    await acceptNoCookies(page);
+    await page.goto("/");
+    const link = page.locator("footer").getByRole("link", { name: /Hugging Face/ });
+    await expect(link).toHaveAttribute("href", "https://huggingface.co/sinceaihq");
+    await expect(link).toHaveAttribute("target", "_blank");
+    const jsonLd = (await page.locator('script[type="application/ld+json"]').allTextContents()).join("\n");
+    expect(jsonLd).toContain("https://huggingface.co/sinceaihq");
+  });
+
   test("the Hackathon announcement waits for engagement, never blocks the page, and stays closed", async ({ page }) => {
     await acceptNoCookies(page);
     await page.goto("/");

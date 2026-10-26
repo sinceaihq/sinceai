@@ -397,7 +397,8 @@ test.describe("Build & submit (builder guide)", () => {
     await expect(page.locator("#building details[open]")).toContainText("permitted and encouraged");
     await page.getByText("Is there Wi-Fi? Can we use Linux?").click();
     const wifi = page.locator("details[open]").filter({ hasText: "TUAS Guest" });
-    await expect(wifi.getByRole("link", { name: /Turku UAS: visitor Wi-Fi/ })).toHaveAttribute(
+    await expect(wifi.getByRole("link", { name: "Wi-Fi instructions" })).toHaveAttribute("href", "#wifi");
+    await expect(page.locator("#wifi").getByRole("link", { name: /Turku UAS visitor Wi-Fi/ })).toHaveAttribute(
       "href",
       "https://www.turkuamk.fi/en/about-us/campuses/",
     );
@@ -461,6 +462,25 @@ test.describe("Builder Resources", () => {
       await page.getByRole("banner").getByRole("link", { name: "Resources", exact: true }).click();
       await expect(page).toHaveURL(new RegExp(`${GUIDE}/resources$`));
     }
+  });
+});
+
+test.describe("Wi-Fi", () => {
+  test("the hub's Wi-Fi chip leads to the venue instructions", async ({ page }) => {
+    await page.goto(GUIDE);
+    await page.getByRole("navigation", { name: "On this page" }).getByRole("link", { name: "Wi-Fi" }).click();
+    await expect(page).toHaveURL(/#wifi$/);
+    await expect(page.locator("#wifi-title")).toBeInViewport();
+    await expect(page.locator('#wifi [data-wifi="educity"]')).toContainText("TUAS Guest");
+    await expect(page.locator('#wifi [data-wifi="build-spaces"]')).toContainText("Instructions to be confirmed");
+  });
+
+  test("the builder FAQ answer links to the instructions on the same page", async ({ page }) => {
+    await page.goto(`${GUIDE}/builders`);
+    await page.getByText("Is there Wi-Fi? Can we use Linux?").click();
+    await page.getByRole("link", { name: "Wi-Fi instructions" }).click();
+    await expect(page).toHaveURL(/\/builders#wifi$/);
+    await expect(page.locator("#wifi-title")).toBeInViewport();
   });
 });
 

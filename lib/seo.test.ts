@@ -85,6 +85,18 @@ describe("structured data basics", () => {
     for (const key of Object.keys(ORG.social)) expect(layout).toContain(`ORG.social.${key}`);
     expect(layout).not.toContain("nonprofitStatus");
   });
+
+  it("links every social profile from the site footer", () => {
+    const footer = readFileSync(path.join(root, "components/layout/Footer.tsx"), "utf8");
+    for (const key of Object.keys(ORG.social)) expect(footer).toContain(`ORG.social.${key}`);
+  });
+
+  it("includes the Hugging Face organisation, also in the AI-readable files", () => {
+    expect(ORG.social.huggingface).toBe("https://huggingface.co/sinceaihq");
+    for (const file of ["public/llms.txt", "public/llms-full.txt"]) {
+      expect(readFileSync(path.join(root, file), "utf8")).toContain(ORG.social.huggingface);
+    }
+  });
 });
 
 describe("share images", () => {
