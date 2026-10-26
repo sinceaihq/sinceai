@@ -107,9 +107,9 @@ Since AI's flagship launch event brought together 260 AI builders to collaborate
 
 ### Since AI Hackathon 2026 (Upcoming)
 
-- **Dates**: November 6–8, 2026 (check-in Fri 15:00, opening Fri 17:00, submissions close Sun 10:00, closing ceremony Sun 13:15, finals Sun 14:00, ends around 15:30; challenge selection in sinceai.app Fri 17:00–17:30)
+- **Dates**: November 6–8, 2026 (challenge summaries in sinceai.app Thu 5 Nov 15:00; check-in and challenge selection open Fri 15:00, team formation closes 16:45, opening Fri 17:00, selection closes 17:30; submissions close Sun 10:00, closing ceremony Sun 13:15, finals Sun 14:00, ends around 15:30)
 - **Location**: Turku, Finland — EduCity (opening and closing), BioCity and Joki (building)
-- **Challenges**: 15 company challenges — Valmet, Bayer, Turku Energia, Apetit, Takomo Golf, Forcit Group, Elisa, Meyer Turku, Traficom, Lindström, Business Turku, DNA and Fonecta, plus two partners to be announced
+- **Challenges**: 15 company challenges, all with the same cash prize — Valmet, Bayer, Turku Energia, Apetit, Takomo Golf, Forcit Group, Elisa, Meyer Turku, Traficom, Lindström, Business Turku, DNA, Fonecta and Europress, plus one partner to be announced. Every team chooses one company challenge; the choice is final
 - **Keynote**: Jason Mayes, Web AI Lead at Google
 - **MLH**: MLH 2027 Season Member Event
 - **Apply**: https://sinceai.app

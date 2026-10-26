@@ -3,6 +3,8 @@ import {
   CalendarButton,
   Checklist,
   CompanyDirectory,
+  ContentStages,
+  EqualPrize,
   CriticalPath,
   Details,
   DiscordSection,
@@ -65,6 +67,7 @@ export default function ChallengePartnerGuidePage() {
       <SectionNav
         items={[
           { id: "your-place", label: "Your place" },
+          { id: "selection", label: "Team selection" },
           { id: "steps", label: "Steps" },
           { id: "schedule", label: "Schedule" },
           { id: "prepare", label: "Prepare" },
@@ -83,15 +86,31 @@ export default function ChallengePartnerGuidePage() {
           id="your-place-title"
           eyebrow="// your place"
           title="Your room and your stand."
-          lede="Friday briefing room at EduCity and Saturday Q&A stand at Joki for all 15 challenge places — 13 named challenge partners and two places held for partners still to be announced. Open your company page for a one-link summary to share with your team."
+          lede="Friday briefing room at EduCity and Saturday Q&A stand at Joki for all 15 company challenges — 14 named challenge partners and one place still to be announced. Open your company page for a one-link summary to share with your team."
         />
         <p className="mb-6 flex flex-wrap items-center gap-3 text-xs text-white/55">
           <StatusTag status="working" />
-          Placements follow the 2 Oct 2026 venue maps; Fonecta&rsquo;s and the two to-be-announced positions were
-          reassigned on 13 Oct 2026 and are provisional. Production does a final lock — this page updates if anything
-          moves.
+          Briefing rooms follow the organiser&rsquo;s final EduCity maps (26 Oct 2026) — Turku Energia and Business
+          Turku are on floor 3. Saturday stands follow the 2 Oct 2026 Joki maps; Fonecta&rsquo;s and Europress&rsquo;s
+          stands are provisional until production confirms them. This page updates if anything moves.
         </p>
         <CompanyDirectory companies={CHALLENGE_COMPANIES} />
+      </GuideSection>
+
+      <GuideSection id="selection">
+        <SectionHeading
+          id="selection-title"
+          eyebrow="// how teams choose you"
+          title="Summary on Thursday, your teams on Friday."
+          lede="Teams choose from your public-safe summary alone. Each team's lead selects one company challenge on Friday 15:00–17:30 — final, with a limited number of places per company. Your full brief and materials reach only the teams that chose you."
+        />
+        <EqualPrize className="mb-8" />
+        <ContentStages audience="challenge-partners" />
+        <p className="mt-6 max-w-3xl text-sm text-neutral-300 leading-relaxed">
+          Share your materials in your own way, only with your own teams — if you use an external service, its sharing
+          settings must limit it to them. If your challenge needs an NDA, your company runs it (text, signing and
+          records); sinceai.app does not collect NDA signatures.
+        </p>
       </GuideSection>
 
       <GuideSection id="steps">
@@ -174,10 +193,10 @@ export default function ChallengePartnerGuidePage() {
           id="maps-title"
           eyebrow="// maps"
           title="Rooms and stands."
-          lede="EduCity briefing rooms, then the Joki Showroom and floors 2–3. Tap a map to zoom."
+          lede="EduCity briefing rooms on floors 1–3, then the Joki Showroom and floors 2–3. Tap a map to zoom."
         />
         <VenueExplorer
-          mapIds={["educity-1", "educity-2", "educity-flow-1", "joki-showroom", "joki-2-3", "joki-1"]}
+          mapIds={["educity-1", "educity-2", "educity-3", "joki-showroom", "joki-2-3", "joki-1"]}
           label="Challenge partner maps"
         />
       </GuideSection>

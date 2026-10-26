@@ -57,7 +57,7 @@ export const VENUE_PHOTOS: readonly VenuePhoto[] = [
     cardWidth: 800,
     cardHeight: 545,
     alt: "EduCity's multi-storey atrium with timber-clad meeting boxes, glass balconies and a lounge on the ground floor.",
-    caption: "The EduCity atrium. The company briefing rooms are on floors 1 and 2.",
+    caption: "The EduCity atrium. The company briefing rooms are on floors 1, 2 and 3.",
     credit: "Photo: Vesa Loikas",
     creator: "Vesa Loikas",
     copyrightHolder: "Vesa Loikas Photography",

@@ -3,6 +3,7 @@ import { COMPUTING, COMPUTING_HREF } from "./computing";
 import { CATERING, DIETARY } from "./food";
 import { AI_POLICY, SUBMISSION } from "./submission";
 import { WIFI_ANCHOR } from "./wifi";
+import { EQUAL_PRIZE, LATE_ARRIVAL_RULE } from "./selection";
 import type { Audience, ChecklistGroup, GuideDefinition, GuideDetail } from "./types";
 
 /**
@@ -15,7 +16,7 @@ export const GUIDES: readonly GuideDefinition[] = [
     slug: "builders",
     name: "Builder Guide",
     navLabel: "Builders",
-    lede: "Arrival, team, challenge, venue moves, the build weekend and submission — in one place.",
+    lede: "Your team, your company challenge, Friday's rooms and routes, the build weekend and submission — in one place.",
     forWho: "Accepted participants and their teams",
     firstMomentId: "fri-registration",
     metaDescription:
@@ -78,7 +79,7 @@ export const guidePath = (audience: Audience) => `${GUIDE_BASE_PATH}/${getGuide(
 export const HUB = {
   name: "Hackathon 2026 / Field Guide",
   shortName: "Field Guide",
-  lede: "Three venues, one event flow. Friday starts at EduCity with arrival, the opening and the challenge briefings. The build continues across BioCity and Joki. On Sunday, everyone returns to EduCity: the closing ceremony at 13:15, each challenge's top three at 13:30, then the finals at 14:00.",
+  lede: "Three venues, one event flow. Challenge summaries open in sinceai.app on Thursday at 15:00. Friday starts at EduCity with registration, team formation, challenge selection, the opening and the challenge briefings. The build continues across BioCity and Joki. On Sunday, everyone returns to EduCity: the closing ceremony at 13:15, each challenge's top three at 13:30, then the finals at 14:00.",
   openingNote:
     "The official opening is Friday 6 November at 17:00. Arrival times differ by role — your guide has yours.",
   metaDescription:
@@ -95,17 +96,17 @@ export const VENUE_GUIDE = {
 /** The first-view critical path per audience: short, action-first. */
 export const CRITICAL_PATH: Partial<Record<Audience, readonly { label: string; time: string; text: string }[]>> = {
   builders: [
-    { label: "Check in", time: "Fri 15:00", text: "EduCity — either main entrance." },
-    { label: "Team", time: "by 16:45", text: "Everyone in the same team in sinceai.app — then Team check." },
-    { label: "Opening · select", time: "17:00–17:30", text: "Taidon portaat — your team's owner selects the challenge in the app." },
-    { label: "Keynote · move", time: "17:30 · 18:30", text: "Jason Mayes, then follow your team's route to your briefing room." },
+    { label: "Read", time: "Thu 15:00", text: "Challenge summaries in sinceai.app — agree on at least three." },
+    { label: "Check in", time: "Fri 15:00", text: "EduCity — every member, in person. Then Team Check." },
+    { label: "Ready · select", time: "15:00–17:30", text: "Team lead marks the team ready, then selects one company challenge — final." },
+    { label: "Opening · move", time: "17:00 · 18:30", text: "Taidon portaat and Jason Mayes, then follow your route to your briefing room." },
     { label: "Briefing", time: "18:50–19:30", text: "Your company's room at EduCity." },
     { label: "Build", time: "from 19:30", text: "Dinner and building in BioCity or Joki, around the clock." },
     { label: "Submit", time: "Sun 10:00", text: "Your team submits in sinceai.app, not Devpost — the deadline is fixed." },
   ],
   "challenge-partners": [
     { label: "Arrive", time: "Fri 15:30", text: "EduCity — weekend briefing at 15:45." },
-    { label: "Brief", time: "18:50–19:30", text: "Your teams come to your EduCity room." },
+    { label: "Brief", time: "18:50–19:30", text: "Your teams come to your EduCity room; share materials only with them." },
     { label: "Q&A", time: "Sat 09–18", text: "At your Joki stand (pause 12:00–14:30)." },
     { label: "Evaluate", time: "Sun 10–13", text: "Arrive 08:45, briefing 09:00, then confirm your top three by 13:00." },
     { label: "Top three · finals", time: "Sun 13:30", text: "Your top three announced at EduCity, then the 14:00 finals." },
@@ -138,8 +139,9 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
       title: "Before you arrive",
       items: [
         "You are accepted to the hackathon and can sign in to your own sinceai.app account — every member needs their own.",
-        "Everyone in your team has joined the same team in sinceai.app.",
-        "Your team has agreed which challenge it wants — the team's owner selects it in sinceai.app on Friday, 17:00–17:30.",
+        "Everyone in your team has joined the same team in sinceai.app — build it before the event (up to five members).",
+        "From Thu 5 Nov 15:00: your team has read the challenge summaries in sinceai.app and agreed on at least three challenges it would be happy with — places are limited.",
+        "Your team knows who its team lead is: on Friday the lead marks the team as ready and selects the challenge (15:00–17:30). The roster and the choice are then final.",
         "You have joined the Since AI Discord for updates and teammates.",
         "Attendance confirmed on your sinceai.app dashboard, if it asks you to.",
         `Meal RSVP done on your sinceai.app dashboard by ${DIETARY.deadlineLabel}, with any dietary needs.`,
@@ -163,12 +165,13 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
     {
       title: "On the day",
       items: [
-        "Fri 15:00 — check in at EduCity, then team formation beside Taidon portaat.",
-        "Fri 15:00 — the challenges open for preview in sinceai.app.",
-        "By 16:45 — every member in the team in the app and Team check passed; teams lock at 16:45.",
-        "Fri 17:00–17:30 — opening ceremony; your team's owner selects the challenge in sinceai.app before 17:30.",
+        "Fri 15:00 — every team member checks in in person at EduCity, then Team Check (route A) or team formation (route B).",
+        "From 15:00 — your team lead marks the team as ready in sinceai.app and selects your company challenge. Final.",
+        "16:45 — team formation closes: no new teams, joining or roster changes.",
+        "Fri 17:00–17:30 — opening ceremony at Taidon portaat. Selection closes at 17:30.",
         "17:30–18:30 — Jason Mayes' keynote and tech talk; your team's route is in the app from 17:30.",
         "From 18:30 — leave at your departure time and follow the route to your briefing room (18:50–19:30).",
+        "19:30 — your company's full challenge opens in sinceai.app for your team.",
         "Before Sun 10:00 — every team member has accepted the challenge IP terms in sinceai.app.",
         "Sun 10:00 — your team's submission is in. Then vote until 12:00 on the ten solutions the app gives you.",
       ],
@@ -182,7 +185,8 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
         "Friday onsite representatives",
         "Saturday Q&A presence hours and support owner",
         "Sunday evaluator and backup",
-        "Final approved challenge brief: task, expected deliverable, data, tools and resources",
+        "A public-safe challenge summary — topic, problem, intended result and relevant skills, safe to print in a newspaper. It opens to registered participants on Thu 5 Nov at 15:00, and teams choose from it alone",
+        "Final approved challenge brief: task, expected deliverable, data, tools and resources — shared only with your own teams, at your briefing and in the app from Fri 19:30",
         "Your evaluation criteria",
         "Data, IP and NDA boundaries — and the signing process if an NDA is needed",
         "Live support channel and the hours it is monitored",
@@ -196,7 +200,7 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
       items: [
         "A laptop suitable for presenting, charger and adapters",
         "An offline (PDF) copy of your briefing",
-        "Anything teams need to start: access instructions, datasets, examples",
+        "Anything teams need to start: access instructions, datasets, examples — for the teams that chose your challenge only",
         "Your Q&A stand materials (roll-up, table items) — leave them at the agreed drop-off point at EduCity; Since AI sets your stand up at Joki for Saturday",
       ],
     },
@@ -289,22 +293,29 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
       a: "Yes — solo participation is allowed. You can still look for teammates on Discord and at Friday's team formation area. A one-person team needs a quick check by the tech team at registration.",
     },
     {
-      q: "What if a team member arrives after Friday's Team check?",
-      a: `Only with a late arrival the organisers have approved for that person in advance — ask at ${GUIDE_LINKS.contactEmail} before the event. Even then, the member must already be accepted to the hackathon and in your team in sinceai.app before teams lock at 16:45; after that nobody can join a team and members cannot be changed. A late arrival never reopens a locked team.`,
+      q: "What if a team member cannot check in on Friday?",
+      a: `Friday check-in is the rule: every team member checks in in person at EduCity on Friday to take part and to share in any prize. ${LATE_ARRIVAL_RULE} Without a check-in or an approval given in advance, a member may be removed from the team overnight by the organisers. Need an exception? Ask at ${GUIDE_LINKS.contactEmail} before the event — do not assume one.`,
       points: [
-        "On Friday, tell registration or the Team check volunteer about the approved late arrival.",
-        "The late member checks in personally with event staff on arrival — checking in is individual, and browsing the app from elsewhere is not checking in.",
-        "Challenges open for preview in sinceai.app at 15:00 on Friday: an accepted member can read them on a phone and discuss with the team, but the team's owner makes the selection at 17:00–17:30.",
+        "The member must already be in your team in sinceai.app before your team lead marks it as ready, and before 16:45 on Friday — after that, nobody can be added or swapped.",
+        "Checking in is individual: browsing the app from elsewhere is not checking in.",
+        "Removing a member who did not check in is an organiser action. It never reopens the team or changes your challenge.",
         "Since AI Hackathon is an on-site event; there is no remote participation.",
       ],
     },
     {
       q: "How does team formation work?",
-      a: "From registration, walk to the team formation area beside Taidon portaat on EduCity's first floor (the lobby and room 1091). Teams have up to five members. Looking for people? Stand in the zone for the number of open places in your team — 1, 2, 3 or 4. Every member must join the same team in sinceai.app. Then leave via the exit side: at Team check a volunteer looks at your full team member list in the app before you go on to the opening. Already have a team? You pass Team check too. Team formation closes at 16:45.",
+      a: "Best: build your team in sinceai.app before the event. On Friday, after registration on EduCity's first floor, there are two routes. Route A — you already have a team: turn left and go straight to Team Check, and show on your phone that you are in your team. Route B — no team yet: pick a skill card at the table beside registration (red: AI & Data, yellow: Software & Development, green: Business & Design), meet people in the Aula and room 1091 — the company posters there are meeting points, not briefing rooms — and build your team in sinceai.app, up to five members. Then leave only via Team Check on the left: show every member in the app and return your skill card. Team formation closes at 16:45.",
     },
     {
       q: "How does challenge selection work?",
-      a: "Every challenge and its template opens for preview in sinceai.app at 15:00 on Friday. Teams lock at 16:45, and at 16:50 the places per challenge are set — shared as evenly as possible across the 15 challenges. Challenge selection then opens in sinceai.app at 17:00, as the opening ceremony starts, and closes at 17:30: the team's owner selects one challenge for the whole team. Places per challenge are limited. At 17:30 the app shows your team's route: the challenge, your departure time, room, floor, route and floor plan. The teams move in turn from 18:30, after Jason Mayes' programme, and the briefings run 18:50–19:30. If your team has no challenge when selection closes, go straight to event staff — never guess a room.",
+      a: `${EQUAL_PRIZE} Every team must choose exactly one of them. Public-safe summaries open in sinceai.app on Thursday 5 November at 15:00 — choose from these only, and agree on at least three you would be happy with. On Friday from 15:00, your team lead checks the member list and confirms Mark team as ready; the roster is then fixed. Straight after, the lead selects your company challenge. The choice is final — it cannot be changed or cancelled — and places are limited, first come first served. Team formation closes at 16:45 and selection at 17:30.`,
+      points: [
+        "Only the team lead of a ready team can select; other members see the choice in the app.",
+        "At 17:30 the app shows your team's route: challenge, departure time, room and floor. The briefing rooms are also in this guide.",
+        "Your company presents the full challenge in its briefing, 18:50–19:30, and the full challenge view opens in the app at 19:30 — only for the teams that chose it.",
+        "No challenge when selection closes? Go straight to event staff — never guess a room.",
+        "Optional open challenges, when announced, are extra: they never replace your company challenge or use its places.",
+      ],
     },
     {
       q: "Can I bring my own food? Will food and drinks be provided?",
@@ -357,7 +368,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
     {
       q: "The opening ceremony",
-      a: "At 17:00 the hosts introduce every challenge — at most a minute per company — from the short introduction you send in advance; if we do not receive one, Since AI writes it. Company representatives do not present on stage. Jason Mayes' keynote and tech talk follow, 17:30–18:30. Teams select their challenge in sinceai.app until 17:30, move to the rooms in turn from 18:30 and come to your room for your briefing, 18:50–19:30 — 19:30 is a hard end.",
+      a: "At 17:00 the hosts introduce every challenge — at most a minute per company — from the short introduction you send in advance; if we do not receive one, Since AI writes it. Company representatives do not present on stage. Jason Mayes' keynote and tech talk follow, 17:30–18:30. Teams have chosen from your public-safe summary since Thursday 15:00; selection in sinceai.app runs Friday 15:00–17:30 and is final. The teams move to the rooms in turn from 18:30 and come to your room for your briefing, 18:50–19:30 — 19:30 is a hard end.",
     },
     {
       q: "Stand setup at Joki",
@@ -365,7 +376,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
     {
       q: "NDA and confidential data",
-      a: "Your company owns any NDA process, signatures and records. Do not reveal confidential content before signatures are complete, and plan a signing method that works for a full room of teams — with a paper backup.",
+      a: "Your company owns any NDA process, its text, signatures and records — sinceai.app does not collect NDA signatures, and choosing a challenge is not signing one. Do not reveal confidential content before signatures are complete, and plan a signing method that works for a full room of teams — with a paper backup. Your Thursday summary must be safe to publish without an NDA. If your challenge needs an NDA, the guide shows a small \"NDA required\" label beside your company before teams choose.",
     },
     {
       q: "Meals",

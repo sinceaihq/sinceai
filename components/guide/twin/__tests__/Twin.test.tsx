@@ -240,7 +240,7 @@ describe("readTwinParams", () => {
 
   it("normalises focus targets (partners → their stand, place names → places)", () => {
     const stand = firstWith(TARGETS_3D, (t) => t.kind === "stand");
-    expect(readTwinParams("?focus=red-hat").intent).toMatchObject({ focus: "bc-1", place: "biocity" });
+    expect(readTwinParams("?focus=solita").intent).toMatchObject({ focus: "bc-2", place: "biocity" });
     expect(readTwinParams(`?focus=${stand.id}`).intent).toMatchObject({ focus: stand.id, place: stand.place });
     expect(readTwinParams("?focus=biocity").intent).toMatchObject({ place: "biocity", focus: undefined });
   });
@@ -703,13 +703,13 @@ describe("Twin", () => {
   });
 
   it("opens deep links on desktop straight away (partner ids map to their stand)", async () => {
-    setUrl("?focus=red-hat#preview-3d");
+    setUrl("?focus=solita#preview-3d");
     render(<Twin />);
     await screen.findByRole("button", { name: "Show names" });
     const { engine } = last();
-    expect(engine.focus).toHaveBeenCalledWith("bc-1", false);
+    expect(engine.focus).toHaveBeenCalledWith("bc-2", false);
     expect(screen.getByRole("tab", { name: getPlace3D("biocity").tab })).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByLabelText("Go to")).toHaveValue("bc-1");
+    expect(screen.getByLabelText("Go to")).toHaveValue("bc-2");
   });
 
   it("applies ?view, ?time, ?quality and ?walk", async () => {
@@ -1247,7 +1247,7 @@ describe("Twin keyboard focus", () => {
   });
 
   it("leaves focus alone when a deep link starts the 3D by itself", async () => {
-    setUrl("?focus=red-hat");
+    setUrl("?focus=solita");
     render(<Twin />);
     await screen.findByRole("button", { name: "Show names" });
     expect(document.body).toHaveFocus();

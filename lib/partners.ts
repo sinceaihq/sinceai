@@ -189,6 +189,13 @@ export const PARTNERS: Partner[] = [
     tier: 1,
   },
   {
+    // 2026 company challenge (confirmed 23 Oct 2026); official logo pack, white RGB variant.
+    name: "Europress",
+    logo: "/assets/sponsors/europress.svg",
+    url: "https://europressgroup.com/",
+    tier: 1,
+  },
+  {
     name: "Red Hat",
     logo: "/assets/sponsors/red-hat.svg",
     url: "https://www.redhat.com/en/products/ai",

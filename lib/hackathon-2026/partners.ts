@@ -5,29 +5,20 @@ import type { EventPartner, PartnerStand } from "./types";
  *
  * Organiser decisions: every visibility / tech partner stand is in one partner
  * corner — the south-east corner of BioCity's main lobby, where Solita's stand
- * already was (6 Oct 2026) — and the corner now plans six stands (13 Oct 2026):
- * Red Hat, Solita, Pruna AI, BearingPoint, CSC / LUMI AI Factory and Major
- * League Hacking. None of them is a challenge partner. Solita and BearingPoint
- * also mentor builders.
+ * already was (6 Oct 2026) — with six stand positions (13 Oct 2026). Red Hat
+ * needs no booth (Red Hat, 21 Oct 2026: remote support Fri–Sat, on site on
+ * Sunday), so its position is open: Solita, Pruna AI, BearingPoint, CSC / LUMI
+ * AI Factory and Major League Hacking. None of them is a challenge partner.
+ * Solita and BearingPoint also mentor builders.
  *
  * MLH's stand is an organiser-planned requirement; MLH has not separately
  * confirmed who staffs it on site, so it stays `working` with a note.
  *
  * Logos: official artwork only, white / reverse variants for the dark site —
- * Red Hat from the Red Hat Design System's reverse logo (colour on black),
  * BearingPoint from its press brand assets, MLH from mlh.com/brand-guidelines,
  * LUMI AI Factory from its media kit (the CSC logo has no usable reverse file).
  */
 export const STAND_PARTNERS: readonly EventPartner[] = [
-  {
-    id: "red-hat",
-    name: "Red Hat",
-    logo: { src: "/assets/sponsors/red-hat.svg", width: 613, height: 145 },
-    url: "https://www.redhat.com/en/products/ai",
-    category: "visibility-tech",
-    role: "Red Hat AI",
-    status: "confirmed",
-  },
   {
     id: "solita",
     name: "Solita",
@@ -103,7 +94,8 @@ export const BIOCITY_STANDS: readonly PartnerStand[] = [
     area: PARTNER_CORNER,
     location: "First in the partner row, by the corridor to the meals",
     visibility: "Everyone walking between the build hall, the meals and the Aulagalleria passes it.",
-    partnerId: "red-hat",
+    // Red Hat's earlier position — Red Hat needs no booth (21 Oct 2026), so it is open.
+    partnerId: null,
     hotspotId: "stand-bc-1",
     status: "working",
   },

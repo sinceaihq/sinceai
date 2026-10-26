@@ -14,7 +14,12 @@ import { GUIDE_BASE_PATH } from "./facts";
  * Verified with the organiser (26 Oct 2026):
  * - CSC / LUMI AI Factory: compute partner; private instructions already sent.
  * - Red Hat: technology partner; the Developer Sandbox is free for 30 days
- *   (developers.redhat.com/developer-sandbox, checked 26 Oct 2026).
+ *   (developers.redhat.com/developer-sandbox, checked 26 Oct 2026). No booth:
+ *   remote support Fri–Sat (Red Hat, 21 Oct 2026). Nothing beyond the sandbox
+ *   and public docs is published until the organiser confirms it.
+ * - FIWARE: technology partner (Tech guide v1.2); open-source docs only. Any
+ *   optional open challenge, its name and its terms are announced only once
+ *   confirmed — nothing about them is published here.
  * - Aiven: organisation-level technology partner; no event-specific benefit.
  * - Pruna AI: shared hackathon API key and help on Discord (Pruna's public
  *   onepager). The key is never reproduced here.
@@ -73,7 +78,7 @@ export const RESOURCE_CATEGORIES: readonly { id: ResourceCategoryId; title: stri
   {
     id: "building",
     title: "Application building & automation",
-    lede: "Go from prompt to working app, and connect services into workflows.",
+    lede: "Go from prompt to working app, and connect services, data and workflows.",
   },
 ];
 
@@ -138,7 +143,7 @@ export const PARTNER_RESOURCES: readonly PartnerResource[] = [
     benefit:
       "The Developer Sandbox is free for 30 days for anyone. Set it up before the event, so your account and sandbox are ready when you start building.",
     access: "Self-service from Red Hat's Developer Sandbox page — no event code needed.",
-    help: "Red Hat has a stand planned in BioCity's partner corner. Any office hours are announced in the event channels.",
+    help: "Red Hat supports builders remotely during the event. Any session or office hours are announced in the event channels.",
   },
   {
     id: "aiven",
@@ -219,6 +224,20 @@ export const PARTNER_RESOURCES: readonly PartnerResource[] = [
     benefit: "100 Lovable credits per participant, shared as a coupon shortly before the event.",
     access: EVENT_ACCESS,
     help: "Lovable's documentation and in-product help.",
+  },
+  {
+    id: "fiware",
+    name: "FIWARE",
+    logo: { src: "/assets/sponsors/FIWARE.png", width: 480, height: 115 },
+    category: "building",
+    relationship: "Technology partner",
+    description:
+      "Open-source building blocks for context data — the Orion Context Broker, NGSI-LD APIs and Smart Data Models for cities, energy, industry and more.",
+    buildIdeas: ["Real-time context data for your app", "Digital twins of places or machines", "Interoperable smart-city data"],
+    getStarted: { label: "FIWARE", href: "https://www.fiware.org/" },
+    docs: { label: "Step-by-step tutorials", href: "https://fiware-tutorials.readthedocs.io/" },
+    access: "Open source — free to use, no event code needed.",
+    help: "FIWARE's public documentation and community. Optional open challenges are announced through official event channels once their terms are confirmed.",
   },
   {
     id: "n8n",

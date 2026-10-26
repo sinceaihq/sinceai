@@ -139,16 +139,17 @@ describe("submission facts (as built in sinceai.app)", () => {
 });
 
 describe("builder FAQ and checklist", () => {
-  it("treats a late arrival as an approved exception that never reopens a locked team", () => {
-    const answer = faq(DETAILS.builders, /arrives after Friday's Team check/);
-    expect(answer).toMatch(/approved for that person in advance/);
-    expect(answer).toMatch(/before teams lock at 16:45/);
-    expect(answer).toMatch(/never reopens a locked team/);
-    expect(answer).toMatch(/checks in personally/);
+  it("keeps Friday check-in as the rule, with only pre-approved Saturday arrivals keeping their team (organiser, 26 Oct 2026)", () => {
+    const answer = faq(DETAILS.builders, /cannot check in on Friday/);
+    expect(answer).toMatch(/Friday check-in is the rule/);
+    expect(answer).toMatch(/approved your Saturday arrival in advance, you keep your team membership/);
+    expect(answer).toMatch(/before team formation closes at 16:45 on Friday/);
+    expect(answer).toMatch(/check in with event staff personally when you arrive on Saturday/);
+    expect(answer).toMatch(/may be removed from the team overnight by the organisers/);
+    expect(answer).toMatch(/never reopens the team or changes your challenge/);
     expect(answer).toMatch(/browsing the app from elsewhere is not checking in/);
-    expect(answer).toMatch(/team's owner makes the selection at 17:00–17:30/);
     expect(answer).toMatch(/no remote participation/);
-    expect(answer).not.toMatch(/automatically (approved|allowed)/i);
+    expect(answer).not.toMatch(/automatically (approved|allowed)|Team check status/i);
   });
 
   it("answers Wi-Fi and Linux briefly and points to the Wi-Fi instructions", () => {

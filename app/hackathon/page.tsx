@@ -18,7 +18,13 @@ import {
 } from "@/components/sections/hackathon";
 import { TrackedLink } from "@/components/analytics/TrackedLink";
 import ORG from "@/lib/org";
-import { HACKATHON_2026_CHALLENGE_LIST, HACKATHON_2026_PARTNERS, MLH_2027, UPCOMING_EVENT_2026 } from "@/lib/sinceai";
+import {
+  HACKATHON_2026_CHALLENGE_LIST,
+  HACKATHON_2026_PARTNERS,
+  MLH_2027,
+  UPCOMING_EVENT_2026,
+  VOLUNTEER_2026,
+} from "@/lib/sinceai";
 
 const APPLY_URL = "https://sinceai.app/sign-up";
 
@@ -40,7 +46,7 @@ const hackathonFaqs = [
   },
   {
     q: "When is Since AI Hackathon 2026?",
-    a: `Since AI Hackathon 2026 runs November 6–8, 2026 in Turku, Finland. Check-in and team formation open Friday 6 November at 15:00 at EduCity; the opening ceremony starts at 17:00, and teams select their challenge in sinceai.app until 17:30. Submissions close Sunday 8 November at 10:00, the closing ceremony starts at 13:15, each company challenge's top three teams are announced from 13:30, the finals start at 14:00 and the event ends around 15:30. Registration is open — apply at sinceai.app/sign-up.`,
+    a: `Since AI Hackathon 2026 runs November 6–8, 2026 in Turku, Finland. Challenge summaries open in sinceai.app on Thursday 5 November at 15:00. Check-in, team formation and challenge selection open Friday 6 November at 15:00 at EduCity; team formation closes at 16:45, the opening ceremony starts at 17:00 and challenge selection closes at 17:30. Submissions close Sunday 8 November at 10:00, the closing ceremony starts at 13:15, each company challenge's top three teams are announced from 13:30, the finals start at 14:00 and the event ends around 15:30. Registration is open — apply at sinceai.app/sign-up.`,
   },
   {
     q: "Is Since AI Hackathon an official MLH event?",
@@ -64,11 +70,11 @@ const hackathonFaqs = [
   },
   {
     q: "What companies set challenges?",
-    a: `Since AI Hackathon 2026 is built for 15 company challenges. The challenge partners are ${HACKATHON_2026_CHALLENGE_LIST}; two more challenge partners are still to be announced.`,
+    a: `Since AI Hackathon 2026 has 15 company challenges. ${HACKATHON_2026_PARTNERS.equalPrize} The challenge partners are ${HACKATHON_2026_CHALLENGE_LIST}; one more challenge partner is still to be announced. Every team chooses one company challenge.`,
   },
   {
     q: "What happens over the weekend?",
-    a: "On Friday, teams of up to five form in sinceai.app at EduCity by 16:45, and each team's owner selects one company challenge in the app during the 17:00 opening ceremony. After the opening and Jason Mayes' keynote and tech talk, each company briefs its teams. Teams then build at BioCity and Joki, which stay open around the clock, with company Q&A on Saturday. Submissions close Sunday at 10:00. Each company picks the top three teams of its challenge, and in the 14:00 finals five finalist teams present live on stage to the jury, which selects the overall winner.",
+    a: "Teams of up to five form in sinceai.app — ideally before the event. On Friday at EduCity every member checks in, the team lead marks the team as ready and selects one of the 15 company challenges in the app between 15:00 and 17:30; the choice is final, and all 15 company challenges offer the same cash prize. After the 17:00 opening and Jason Mayes' keynote and tech talk, each company briefs its teams. Teams then build at BioCity and Joki, which stay open around the clock, with company Q&A on Saturday. Submissions close Sunday at 10:00. Each company picks the top three teams of its challenge, and in the 14:00 finals five finalist teams present live on stage to the jury, which selects the overall winner.",
   },
   {
     q: "Can we use AI tools like ChatGPT, Claude, Cursor or GitHub Copilot?",
@@ -570,7 +576,7 @@ export default function HackathonPage() {
               </a>
             </div>
 
-            <div className="border-t border-white/10 pt-6">
+            <div className="border-t border-white/10 pt-6 space-y-3">
               <p className="text-sm text-neutral-400">
                 Setting a challenge or sponsoring?{" "}
                 <Link
@@ -579,6 +585,18 @@ export default function HackathonPage() {
                 >
                   Partner with Since AI →
                 </Link>
+              </p>
+              <p className="text-sm text-neutral-400">
+                Want to help run the weekend in Turku?{" "}
+                <a
+                  href={VOLUNTEER_2026.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-11 items-center text-neutral-400 hover:text-white transition-colors underline sm:min-h-0"
+                  data-volunteer-cta
+                >
+                  {VOLUNTEER_2026.label} ↗<span className="sr-only"> (application form, opens in a new tab)</span>
+                </a>
               </p>
             </div>
           </div>

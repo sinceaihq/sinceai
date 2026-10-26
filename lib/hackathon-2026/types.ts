@@ -31,7 +31,7 @@ export type VenueId = "educity" | "biocity" | "joki";
 /** Where a schedule item happens. `app` = in sinceai.app. */
 export type Place = VenueId | "biocity-joki" | "app";
 
-export type DayId = "fri" | "sat" | "sun";
+export type DayId = "thu" | "fri" | "sat" | "sun";
 
 export interface ScheduleItem {
   id: string;
@@ -93,9 +93,13 @@ export interface ChallengeCompany {
   name: string;
   /** Approved logo already in /public (white logo for dark backgrounds). */
   logo?: { src: string; width: number; height: number };
+  /** Official website, when the company page links it. */
+  url?: string;
+  /** The company runs its own NDA process (shown as a small "NDA required" label before teams choose). */
+  ndaRequired?: boolean;
   briefing: {
     venue: "educity";
-    floor: 1 | 2;
+    floor: 1 | 2 | 3;
     /** Room number(s) as signposted, e.g. "1001" or "2006 / 2007". */
     room: string;
     /** Room name, e.g. "Dromberg". */

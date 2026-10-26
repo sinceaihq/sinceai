@@ -118,7 +118,7 @@ const standById = (id: string): PartnerStand => {
   if (!stand) throw new Error(`Unknown BioCity stand: ${id}`);
   return stand;
 };
-/** "Stand 1 · Red Hat", or "Stand 3" for an open stand. */
+/** "Stand 2 · Solita", or "Stand 1" for an open stand. */
 const standLabel = (stand: PartnerStand) => {
   const partner = getStandPartner(stand);
   return partner ? `Stand ${stand.rank} · ${partner.name}` : `Stand ${stand.rank}`;
@@ -126,7 +126,7 @@ const standLabel = (stand: PartnerStand) => {
 /** "Aulagalleria, facing the event entrance" */
 const standWhere = (stand: PartnerStand) =>
   `${stand.area}, ${stand.location.charAt(0).toLowerCase()}${stand.location.slice(1)}`;
-/** "Red Hat's stand (Stand 1)" / "Stand 3 (open)" */
+/** "Solita's stand (Stand 2)" / "Stand 1 (open)" */
 const standMention = (stand: PartnerStand) => {
   const partner = getStandPartner(stand);
   return partner ? `${partner.name}'s stand (Stand ${stand.rank})` : `Stand ${stand.rank}`;
@@ -165,7 +165,7 @@ export const PLACES_3D: readonly Place3D[] = [
     tab: "EduCity",
     title: "EduCity · arrival, opening and briefings",
     caption:
-      "Both main entrances are in the glass pavilion at deck level; challenge partners come in through door B on the south-east side. Registration and the team formation area are on floor 1, the opening ceremony is on Taidon portaat, and the company briefing rooms are on floors 1 and 2.",
+      "Both main entrances are in the glass pavilion at deck level; challenge partners come in through door B on the south-east side. Registration and the team formation area are on floor 1, the opening ceremony is on Taidon portaat, and the company briefing rooms are on floors 1 and 2 (the two floor-3 rooms are on the floor plans).",
     alt: "3D model of EduCity with its roof lifted off: the lobby with registration by the east entrance, the team formation area and the Taidon portaat stair seating, and the company briefing rooms on floors 1 and 2, each marked with the company's name.",
     poster: "/assets/guide/3d/posters/educity.webp",
     views: [
@@ -252,7 +252,11 @@ const companyTargets: Target3D[] = [...CHALLENGE_COMPANIES].sort(byName).map((c)
   map: companyMapIds(c).qa,
 }));
 
-const roomTargets: Target3D[] = [...CHALLENGE_COMPANIES].sort(byName).map((c) => ({
+/** Briefing rooms the 3D models: EduCity floors 1–2 (floor 3's two rooms are on the 2D floor plan only). */
+const roomTargets: Target3D[] = [...CHALLENGE_COMPANIES]
+  .filter((c) => c.briefing.floor <= 2)
+  .sort(byName)
+  .map((c) => ({
   id: `room-${c.id}`,
   label: `${c.name} briefing room`,
   detail: `EduCity floor ${c.briefing.floor} · Room ${briefingRoomLabel(c)} · ${BRIEFING_TIME}`,
@@ -304,7 +308,7 @@ const entranceTargets: Target3D[] = [
     place: "educity",
     kind: "entrance",
     href: VENUES_HREF,
-    map: "educity-flow-1",
+    map: "educity-1",
   },
   {
     id: "entrance-educity-east",
@@ -313,7 +317,7 @@ const entranceTargets: Target3D[] = [
     place: "educity",
     kind: "entrance",
     href: VENUES_HREF,
-    map: "educity-flow-1",
+    map: "educity-1",
   },
   {
     id: "entrance-educity-b",
@@ -322,7 +326,7 @@ const entranceTargets: Target3D[] = [
     place: "educity",
     kind: "entrance",
     href: VENUES_HREF,
-    map: "educity-flow-1",
+    map: "educity-1",
   },
   {
     id: "entrance-educity-gateway",
@@ -420,17 +424,17 @@ const areaTargets: Target3D[] = [
     detail: `EduCity floor 1 · just inside the east main entrance · from Fri ${formatTime(registration.start)}`,
     place: "educity",
     kind: "area",
-    href: mapHref("educity-flow-1"),
-    map: "educity-flow-1",
+    href: mapHref("educity-team-formation"),
+    map: "educity-team-formation",
   },
   {
     id: "team-formation",
     label: "Team formation area",
-    detail: `EduCity floor 1 · north lobby, beside Taidon portaat · Fri ${formatTimeRange(teamFormation)}`,
+    detail: `EduCity floor 1 · Aula and room 1091, beside Taidon portaat · Team Check on the left · Fri ${formatTimeRange(teamFormation)}`,
     place: "educity",
     kind: "area",
-    href: mapHref("educity-flow-1"),
-    map: "educity-flow-1",
+    href: mapHref("educity-team-formation"),
+    map: "educity-team-formation",
   },
   {
     id: "taidon-portaat",
@@ -438,8 +442,8 @@ const areaTargets: Target3D[] = [
     detail: `EduCity floor 1 · stair seating · opening ceremony Fri ${formatTime(opening.start)}`,
     place: "educity",
     kind: "area",
-    href: mapHref("educity-flow-1"),
-    map: "educity-flow-1",
+    href: mapHref("educity-1"),
+    map: "educity-1",
   },
   {
     id: "restaurant-kisalli",
@@ -447,8 +451,8 @@ const areaTargets: Target3D[] = [
     detail: "EduCity floor 1 · behind Taidon portaat",
     place: "educity",
     kind: "area",
-    href: mapHref("educity-flow-1"),
-    map: "educity-flow-1",
+    href: mapHref("educity-1"),
+    map: "educity-1",
   },
   {
     id: "company-arrival",
@@ -456,8 +460,8 @@ const areaTargets: Target3D[] = [
     detail: `EduCity floor 1 · just inside door B · Fri from ${formatTime(EVENT_2026.challengePartnerArrival)} · event staff show you to your room`,
     place: "educity",
     kind: "area",
-    href: mapHref("educity-flow-1"),
-    map: "educity-flow-1",
+    href: mapHref("educity-1"),
+    map: "educity-1",
   },
   {
     id: "jussin-aukio",
@@ -518,7 +522,7 @@ export function targetsForPlace(place: PlaceId): Target3D[] {
 // ── Walking routes ───────────────────────────────────────────────────────────
 
 const stand2 = standById("bc-2");
-/** "Red Hat's stand (Stand 1), …and Major League Hacking's stand (Stand 6) are in the row by the corridor to the meals." */
+/** "Pruna AI's stand (Stand 3), …and Major League Hacking's stand (Stand 6) are in the row by the corridor to the meals." */
 function partnerRowSentence(): string {
   const row = BIOCITY_STANDS.filter((s) => s.id !== "bc-2");
   const taken = row.filter((s) => getStandPartner(s)).map(standMention);
@@ -533,7 +537,7 @@ function partnerRowSentence(): string {
 const MAIN_STAIRS = "climb the wide outdoor stairs at its east corner (about 30 steps)";
 /** Friday, inside door B: no single room — each company has its own (see tourForCompany). */
 const DOOR_B_INSIDE =
-  "Inside, event staff meet you and guide you on — the company briefing rooms are on floors 1 and 2. Bring your Q&A stand materials: the Since AI team sets your stand up in Joki for Saturday.";
+  "Inside, event staff meet you and guide you on — the company briefing rooms are on floors 1, 2 and 3. Bring your Q&A stand materials: the Since AI team sets your stand up in Joki for Saturday.";
 
 /** A tour step that begins at a point on the route ([x, z] in the campus frame, see routes.json). */
 const step = (text: string, at: [number, number], where: string): TourStep => ({ text, at, where });
@@ -621,7 +625,7 @@ export const TOURS_3D: readonly Tour3D[] = [
     label: "ParkCity → EduCity company arrival",
     audience: "Challenge partners arriving by car on Friday",
     summary:
-      "From the ParkCity car park across Joukahaisenkatu, up EduCity's outdoor stairs and in through door B to the company briefing rooms on floors 1–2.",
+      "From the ParkCity car park across Joukahaisenkatu, up EduCity's outdoor stairs and in through door B to the company briefing rooms on floors 1–3.",
     place: "educity",
     legs: ["out-arr-parkcity-edu-b", "int-edu-doorB-to-1002"],
     to: "company-arrival",
@@ -648,7 +652,7 @@ export const TOURS_3D: readonly Tour3D[] = [
     label: "Kupittaa station → EduCity company arrival",
     audience: "Challenge partners arriving by train on Friday",
     summary:
-      "From the platform over the covered Kalevansilta footbridge, across Joukahaisenkatu, up EduCity's outdoor stairs and in through door B to the company briefing rooms on floors 1–2.",
+      "From the platform over the covered Kalevansilta footbridge, across Joukahaisenkatu, up EduCity's outdoor stairs and in through door B to the company briefing rooms on floors 1–3.",
     place: "educity",
     legs: ["out-arr-train-edu-b", "int-edu-doorB-to-1002"],
     to: "company-arrival",
@@ -991,18 +995,22 @@ export function tourForCompany(tour: Tour3D, companyId: string | null | undefine
     const own =
       floor === 1
         ? `your briefing room for ${briefingAt} is ${room}, on this floor`
-        : `your briefing room for ${briefingAt} is ${room}, one floor up on floor 2`;
+        : floor === 2
+          ? `your briefing room for ${briefingAt} is ${room}, one floor up on floor 2`
+          : `your briefing room for ${briefingAt} is ${room}, two floors up on floor 3 (east side)`;
     if (tour.to === "entrance-educity-gateway") {
       summary = `${withoutStop(tour.summary)}, then up to floor 1, where event staff meet company arrivals; your briefing room for ${briefingAt} is ${room} (floor ${floor}).`;
       text = `EduCity's street-level door is in the passage: take the lift up to floor 1, where event staff meet company arrivals and take you to the ${formatTime(weekendBriefing.start)} weekend briefing — ${own}. ${materials}`;
     } else {
       summary = tour.summary.replace(
-        "the company briefing rooms on floors 1–2",
+        "the company briefing rooms on floors 1–3",
         `the company arrival on floor 1, where event staff meet you; your briefing room for ${briefingAt} is ${room} (floor ${floor})`,
       );
       text = `Inside, event staff meet company arrivals in the floor-1 corridor and take you to the ${formatTime(weekendBriefing.start)} weekend briefing — ${floor === 1 ? own : `${own}: the stairs and lift are just inside door B`}. ${materials}`;
     }
-    return { ...tour, summary, steps: [...steps.slice(0, last), { ...steps[last], text }], arrival: `room-${company.id}` };
+    // Floor 3 is not modelled in 3D: the route ends at the company arrival, the text names the room.
+    const arrival = floor <= 2 ? `room-${company.id}` : "company-arrival";
+    return { ...tour, summary, steps: [...steps.slice(0, last), { ...steps[last], text }], arrival };
   }
   const counter = showroomCounter(company);
   const showroom = company.qa.floor === 1;
@@ -1072,7 +1080,7 @@ export function placeForTarget(id: string | null | undefined): PlaceId {
 
 /**
  * Normalise a deep-link target to a known target id: case-insensitive;
- * partner ids map to their stand (red-hat → bc-1, solita → bc-2) and room
+ * partner ids map to their stand (solita → bc-2, mlh → bc-6) and room
  * numbers to the company's room (room-1002 → room-bayer). Unknown → null.
  */
 export function normaliseTarget(id: string | null | undefined): string | null {

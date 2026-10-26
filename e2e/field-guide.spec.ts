@@ -93,9 +93,11 @@ test.describe("content", () => {
     await page.goto(`${GUIDE}/challenge-partners`);
     for (const [id, room, qa] of [
       ["meyer-turku", "2030 Evert", "Joki · Floor 1 · Showroom"],
-      ["tba", "1090 Ringsberg", "Joki · Floor 2"],
+      ["europress", "1090 Ringsberg", "Joki · Floor 2"],
       ["fonecta", "2001 Elias", "Joki · Floor 3"],
       ["tba-2", "2067", "Joki · Floor 3"],
+      ["turku-energia", "3006", "Joki · Floor 1 · Showroom"],
+      ["business-turku", "3027", "Joki · Floor 3"],
     ]) {
       const row = page.locator(`#company-${id}`);
       await expect(row).toContainText(room);
@@ -103,7 +105,19 @@ test.describe("content", () => {
     }
     await expect(page.locator('[id^="company-"]')).toHaveCount(15);
     const text = await page.locator("main").innerText();
-    for (const name of ["Revvity", "Bo LKV", "Saarioinen", "Sandvik", "Kongsberg"]) expect(text).not.toContain(name);
+    for (const name of ["Revvity", "Bo LKV", "Saarioinen", "Sandvik", "Kongsberg", "Neuropress"]) expect(text).not.toContain(name);
+    // Forcit Group runs its own NDA: the label is visible before teams choose, on every viewport.
+    await expect(page.locator("#company-forcit-group").getByText("NDA required")).toBeVisible();
+    await expect(page.getByText("NDA required", { exact: true })).toHaveCount(1);
+    await expect(page.locator("#selection [data-equal-prize]")).toHaveText("All 15 company challenges offer the same cash prize.");
+  });
+
+  test("Europress company page: official link, room 1090 Ringsberg on floor 1", async ({ page }) => {
+    await page.goto(`${GUIDE}/challenge-partners/europress`);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Europress");
+    await expect(page.getByRole("link", { name: /europressgroup\.com/ })).toHaveAttribute("href", "https://europressgroup.com/");
+    await expect(page.locator("main")).toContainText("1090 Ringsberg");
+    await expect(page.locator("main")).toContainText("EduCity · floor 1");
   });
 
   test("company search narrows the list", async ({ page }) => {
@@ -113,31 +127,55 @@ test.describe("content", () => {
     await expect(page.locator("#company-traficom")).toContainText("1091 Hammarbacka");
   });
 
-  test("partner guide groups the six stands in the partner corner", async ({ page }) => {
+  test("partner guide groups the six stand positions in the partner corner, with no Red Hat booth", async ({ page }) => {
     await page.goto(`${GUIDE}/partners#stands`);
     const stands = page.locator('[id^="stand-bc-"]');
     await expect(stands).toHaveCount(6);
     await expect(page.locator("#stand-bc-1")).toContainText("Stand 1 · most visible");
-    const names = ["Red Hat", "Solita", "Pruna AI", "BearingPoint", "CSC / LUMI AI Factory", "Major League Hacking"];
+    await expect(page.locator("#stands")).not.toContainText("Red Hat");
+    const names = ["Visibility / Tech Partner stand", "Solita", "Pruna AI", "BearingPoint", "CSC / LUMI AI Factory", "Major League Hacking"];
     for (const [i, name] of names.entries()) await expect(page.locator(`#stand-bc-${i + 1}`)).toContainText(name);
     await expect(page.locator("#stand-bc-6")).toContainText("confirmed separately");
     for (let i = 1; i <= 6; i++) await expect(page.locator(`#stand-bc-${i}`)).toContainText("partner corner");
   });
 
-  test("builder guide shows the team formation plan with a text version", async ({ page }) => {
+  test("builder guide shows the final team formation map with routes A and B as text", async ({ page }) => {
     await page.goto(`${GUIDE}/builders#team-formation`);
     const section = page.locator("#team-formation");
-    for (const step of ["Choose your zone", "Build your team", "Join in the app", "Leave via the other side"])
-      await expect(section.getByRole("heading", { name: step, exact: true })).toBeVisible();
-    await expect(section).toContainText("Already have a team?");
+    await expect(section.locator("#route-a")).toContainText("I already have a team");
+    await expect(section.locator("#route-a")).toContainText("directly to Team Check on the left");
+    await expect(section.locator("#route-b")).toContainText("I don't have a team yet");
+    await expect(section.locator("#route-b")).toContainText("return your skill card");
+    const cards = section.getByRole("list", { name: "Skill-card colours" });
+    await expect(cards).toContainText("Red — AI & Data");
+    await expect(cards).toContainText("Yellow — Software & Development");
+    await expect(cards).toContainText("Green — Business & Design");
     await expect(section).toContainText("not the building’s emergency exit plan");
-    await expect(section.locator('img[src*="educity-team-formation"]').first()).toHaveAttribute("alt", /zones 1, 2, 3 and 4/);
+    await expect(section.locator('img[src*="educity-team-formation"]').first()).toHaveAttribute("alt", /route A .* route B/i);
     // The Now / Next card shows the current Turku time, which can be any of these.
     const body = (await page.locator("main").innerText()).replace(/Turku \d{2}:\d{2}/gi, "");
-    expect(body).not.toMatch(/17:45|17:50|18:05|before 17:00|18:15–18:45/);
+    expect(body).not.toMatch(/17:45|17:50|18:05|16:50|before 17:00|18:15–18:45|open places|zones? 1/);
     expect(body).toContain("Team formation closes at 16:45");
-    expect(body).toContain("17:00–17:30");
+    expect(body).toContain("15:00–17:30");
     expect(body).toContain("18:50–19:30");
+  });
+
+  test("builder guide states the challenge rules and lists every briefing room", async ({ page }) => {
+    await page.goto(`${GUIDE}/builders#rules`);
+    await expect(page.locator("#rules [data-equal-prize]")).toHaveText("All 15 company challenges offer the same cash prize.");
+    await expect(page.locator("#rules")).toContainText("Mark team as ready");
+    await expect(page.locator("#rules")).toContainText("Thu 5 Nov · 15:00");
+    await expect(page.locator("#rules")).toContainText("Full challenge in the app");
+    const rooms = page.locator("#briefing-rooms [data-briefing-room]");
+    await expect(rooms).toHaveCount(15);
+    await expect(page.locator('#briefing-rooms [data-briefing-room="europress"]')).toContainText("1090 Ringsberg");
+    await expect(page.locator('#briefing-rooms [data-briefing-room="turku-energia"]')).toContainText("3006");
+    await expect(page.locator('#briefing-rooms [data-briefing-room="business-turku"]')).toContainText("3027");
+    await expect(page.locator('#briefing-rooms [data-briefing-room="tba-2"]')).toContainText("Held for a partner to be announced");
+    await expect(page.locator('#briefing-rooms [data-briefing-room="forcit-group"]')).toContainText("NDA required");
+    // The floor link selects that floor's map.
+    await page.locator('#briefing-rooms [data-briefing-room="business-turku"]').getByRole("link", { name: /3/ }).click();
+    await expect(page.locator("#briefing-rooms").getByRole("tab", { selected: true })).toContainText("Floor 3");
   });
 
   test("partner Discord onboarding: challenge partners vs tech / visibility partners", async ({ page }) => {
@@ -271,7 +309,7 @@ test.describe("content", () => {
 
     const card = (id: string) => food.locator(`#meal-${id}`);
     await expect(food.locator("[data-meal]")).toHaveCount(6);
-    await expect(card("fri-dinner")).toContainText("18:30–21:30");
+    await expect(card("fri-dinner")).toContainText("18:30–22:00");
     await expect(card("fri-dinner")).toContainText("Chicken pasta bake");
     await expect(card("sat-lunch")).toContainText("10:30–13:30");
     await expect(card("sat-lunch")).toContainText("Macaroni casserole");
@@ -424,7 +462,7 @@ test.describe("Builder Resources", () => {
     for (const [section, ids] of [
       ["computing", ["csc-lumi", "red-hat", "aiven"]],
       ["models", ["pruna-ai", "featherless", "elevenlabs"]],
-      ["building", ["lovable", "n8n"]],
+      ["building", ["lovable", "fiware", "n8n"]],
     ] as const) {
       const cards = page.locator(`#${section} [data-resource]`);
       expect(await cards.evaluateAll((els) => els.map((e) => e.getAttribute("data-resource")))).toEqual([...ids]);
@@ -433,6 +471,9 @@ test.describe("Builder Resources", () => {
     await expect(page.locator('[data-resource="n8n"]')).toContainText("limited to 200 redemptions");
     await expect(page.locator('[data-resource="featherless"]')).toContainText("never on this website");
     await expect(page.locator('[data-resource="red-hat"]')).toContainText("free for 30 days");
+    await expect(page.locator('[data-resource="fiware"]').getByRole("link", { name: /FIWARE/ }).first()).toHaveAttribute("href", "https://www.fiware.org/");
+    await expect(page.locator('[data-resource="fiware"]')).not.toContainText(/award|prize/i);
+    await expect(page.locator('[data-resource="red-hat"]')).not.toContainText(/award|prize|€/i);
     await expect(page.locator("main")).not.toContainText(/Best Use of Gemini|Activation pending|exclusive/i);
     const cards = page.locator("[data-resource]");
     for (const card of await cards.all()) {
@@ -449,7 +490,8 @@ test.describe("Builder Resources", () => {
       `${GUIDE}#ai-resources`,
     );
     await expect(page.locator("[data-tool]")).toHaveCount(6);
-    await expect(page.locator("[data-stand-partner]")).toHaveCount(6);
+    await expect(page.locator("[data-stand-partner]")).toHaveCount(5);
+    await expect(page.locator('[data-stand-partner="red-hat"]')).toHaveCount(0);
     await expect(page.locator("[data-mlh-note]")).toContainText("2027 Season Member Event");
     // Logos load.
     for (const img of await page.locator("[data-resource] img").all()) {
@@ -543,7 +585,7 @@ test.describe("venue explorer", () => {
     await trigger.click();
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible();
-    const viewport = dialog.getByRole("group", { name: /EduCity floor 1 arrival flow/ });
+    const viewport = dialog.getByRole("group", { name: /EduCity floor 1 team formation plan/ });
     await expect(viewport).toBeFocused();
     const stage = viewport.locator("> div").first();
     const before = await stage.evaluate((el) => getComputedStyle(el).transform);
@@ -574,10 +616,11 @@ test.describe("venue explorer", () => {
     const locations = page.locator("#locations");
     await expect(locations).toContainText("1001 Dromberg");
     await expect(locations).toContainText("Company Lounge");
-    await expect(locations).toContainText("Stand 1 · Red Hat");
+    await expect(locations).not.toContainText("Red Hat");
     await expect(locations).toContainText("Stand 2 · Solita");
     await expect(locations).toContainText("Stand 6 · Major League Hacking");
-    await expect(locations).toContainText("Team check");
+    await expect(locations).toContainText("Team Check + card return");
+    await expect(locations).toContainText("3027");
   });
 });
 
@@ -658,9 +701,9 @@ test.describe("3D campus", () => {
   });
 
   test("deep links open the right place and target", async ({ page }) => {
-    await page.goto(`${GUIDE}/venue?focus=red-hat#preview-3d`);
+    await page.goto(`${GUIDE}/venue?focus=solita#preview-3d`);
     // The poster names the target before anything heavy loads.
-    await expect(page.locator("#preview-3d")).toContainText("Red Hat");
+    await expect(page.locator("#preview-3d")).toContainText("Solita");
     await expect(page.locator("#preview-3d").getByRole("tab", { name: "BioCity", exact: true })).toHaveAttribute("aria-selected", "true");
   });
 });

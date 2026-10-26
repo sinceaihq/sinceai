@@ -2,14 +2,15 @@ import { HACKATHON_2026_CHALLENGE_LIST, HACKATHON_2026_PARTNERS } from "@/lib/si
 import { NAMED_CHALLENGE_PARTNERS, STAND_PARTNERS, TBA_CHALLENGE_PLACES } from "@/lib/hackathon-2026";
 
 describe("marketing partner lists follow the Field Guide data", () => {
-  it("names the same 13 challenge partners and the 15-challenge target", () => {
+  it("names the same 14 challenge partners and the 15-challenge target", () => {
     expect([...HACKATHON_2026_PARTNERS.challengePartners].sort()).toEqual(NAMED_CHALLENGE_PARTNERS.map((c) => c.name).sort());
     expect(HACKATHON_2026_PARTNERS.challengeTarget).toBe(NAMED_CHALLENGE_PARTNERS.length + TBA_CHALLENGE_PLACES.length);
-    expect(HACKATHON_2026_CHALLENGE_LIST).toMatch(/^Valmet, Bayer, .* and Fonecta$/);
+    expect(HACKATHON_2026_CHALLENGE_LIST).toMatch(/^Valmet, Bayer, .* Fonecta and Europress$/);
+    expect(HACKATHON_2026_PARTNERS.equalPrize).toBe("All 15 company challenges offer the same cash prize.");
   });
 
-  it("names the same six visibility / technology partners", () => {
-    expect([...HACKATHON_2026_PARTNERS.visibilityPartners].sort()).toEqual(STAND_PARTNERS.map((p) => p.name).sort());
+  it("names the stand partners plus Red Hat, a visibility / technology partner without a booth", () => {
+    expect([...HACKATHON_2026_PARTNERS.visibilityPartners].sort()).toEqual([...STAND_PARTNERS.map((p) => p.name), "Red Hat"].sort());
   });
 
   it("never lists a former or unconfirmed company as a 2026 challenge partner", () => {

@@ -54,9 +54,9 @@ import {
 /**
  * BioCity's event fit-out and signage (SPEC §7.1): the build hall's 56 tables
  * and 280 chairs with laptops and seated builders, the six visibility /
- * tech partner stands in the partner corner (a row of five facing the walkway
- * to Joki — Red Hat, Pruna AI, BearingPoint, CSC / LUMI AI Factory, MLH — and
- * Solita facing the build hall), Since AI wayfinding totems,
+ * tech partner stand positions in the partner corner (a row of five facing the
+ * walkway to Joki — an open position, Pruna AI, BearingPoint, CSC / LUMI AI
+ * Factory, MLH — and Solita facing the build hall), Since AI wayfinding totems,
  * the Mauno restaurant (tables, chairs, pendants, curtains) and its serving
  * lines, the bistro bar, the info desk, and the building's own lettering
  * (vertical BIOCITY, rooftop SCIENCE PARK, the Tykistökatu "A" door board).
@@ -65,7 +65,6 @@ import {
 
 /** White-on-dark (or reverse) partner logos for the stand graphics; a partner without one is set in lettering. */
 const STAND_LOGOS_3D: Record<string, string> = {
-  "red-hat": "/assets/guide/3d/logos/red-hat.png",
   solita: "/assets/guide/3d/logos/solita.png",
   "pruna-ai": "/assets/guide/3d/logos/pruna-ai.png",
   bearingpoint: "/assets/guide/3d/logos/bearingpoint.png",

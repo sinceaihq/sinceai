@@ -11,7 +11,9 @@ import {
   GuideHero,
   GuideSection,
   HelpSection,
+  NdaLabel,
   NowNext,
+  TextLink,
   RouteLinks,
   Schedule,
   SectionHeading,
@@ -71,6 +73,12 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
         }
         lede={`Your rooms, times and maps for Since AI Hackathon 2026 — share this page with everyone representing ${company.name}.`}
       >
+        {(company.ndaRequired || company.url) && (
+          <p className="flex flex-wrap items-center gap-3 text-sm text-neutral-300">
+            {company.ndaRequired && <NdaLabel />}
+            {company.url && <TextLink href={company.url}>{company.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}</TextLink>}
+          </p>
+        )}
         <FactsStrip
           facts={[
             { label: "Arrive", value: "Fri 15:30", sub: "EduCity · briefing 15:45" },
@@ -94,8 +102,8 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
         <p className="flex flex-wrap items-center gap-3 text-xs text-white/55">
           <StatusTag status={company.placementStatus} />
           {company.placementStatus === "pending"
-            ? "Provisional: this room and stand were reassigned on 13 Oct 2026 and await production's confirmation — this page updates if anything moves."
-            : "Room and stand follow the 2 Oct 2026 venue maps; production does a final lock — this page updates if anything moves."}
+            ? "Your briefing room follows the organiser's final EduCity map (26 Oct 2026). Your Saturday stand is provisional until production confirms it — this page updates if anything moves."
+            : "Your briefing room follows the organiser's final EduCity map (26 Oct 2026); your stand follows the 2 Oct 2026 Joki maps. This page updates if anything moves."}
         </p>
         <div className="flex flex-wrap gap-3">
           <ShareButton title={`${company.name} · Since AI Hackathon 2026`} />
@@ -122,7 +130,7 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
           id="friday-title"
           eyebrow="// friday · educity"
           title={`Briefing room ${room}.`}
-          lede={`EduCity floor ${company.briefing.floor}. Challenge selection closes at 17:30; after Jason Mayes' programme, from 18:30, the teams move to the rooms in turn, each following its own route in sinceai.app — stay put, they come to you. Your briefing runs 18:50–19:30, and 19:30 is a hard end for every briefing.`}
+          lede={`EduCity floor ${company.briefing.floor}${company.briefing.floor > 1 ? " — up the stairs from Taidon portaat or by lift" : ""}. Teams choose from your public-safe summary; selection closes at 17:30; after Jason Mayes' programme, from 18:30, the teams move to the rooms in turn, each following its own route in sinceai.app — stay put, they come to you. Your briefing runs 18:50–19:30, and 19:30 is a hard end for every briefing.`}
         />
         <VenueExplorer mapIds={[maps.briefing]} highlight={[company.id]} label={`${company.name} briefing room`} />
         <div className="mt-10">

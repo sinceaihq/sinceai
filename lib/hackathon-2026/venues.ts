@@ -38,7 +38,7 @@ export const VENUES: readonly Venue[] = [
       width: 1440,
       height: 1177,
     },
-    mapIds: ["educity-1", "educity-2", "educity-flow-1", "educity-team-formation", "educity-flow-2"],
+    mapIds: ["educity-team-formation", "educity-1", "educity-2", "educity-3"],
     status: "confirmed",
   },
   {

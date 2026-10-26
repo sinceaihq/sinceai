@@ -187,14 +187,17 @@ describe("targets", () => {
     expect(getTarget3D("elisa")!.detail).toBe("Joki floor 1 · Showroom · counter 4 of 6");
   });
 
-  it("give every company its Friday briefing room in EduCity", () => {
-    for (const c of CHALLENGE_COMPANIES) {
+  it("give every company on the modelled floors (1–2) its Friday briefing room in EduCity", () => {
+    const modelled = CHALLENGE_COMPANIES.filter((c) => c.briefing.floor <= 2);
+    expect(modelled.length).toBe(CHALLENGE_COMPANIES.length - 2);
+    for (const c of CHALLENGE_COMPANIES.filter((x) => x.briefing.floor === 3)) expect(getTarget3D(`room-${c.id}`)).toBeUndefined();
+    for (const c of modelled) {
       const t = getTarget3D(`room-${c.id}`)!;
       expect(t).toMatchObject({ place: "educity", kind: "room" });
       expect(t.detail).toContain(`EduCity floor ${c.briefing.floor} · Room ${briefingRoomLabel(c)}`);
       expect(t.detail).toContain("Fri 18:50–19:30");
     }
-    expect(TARGETS_3D.filter((t) => t.kind === "room")).toHaveLength(CHALLENGE_COMPANIES.length);
+    expect(TARGETS_3D.filter((t) => t.kind === "room")).toHaveLength(modelled.length);
   });
 
   it("include every BioCity stand with its partner from the stand plan", () => {
@@ -204,7 +207,7 @@ describe("targets", () => {
       const partner = getStandPartner(s);
       expect(t.label).toBe(partner ? `Stand ${s.rank} · ${partner.name}` : `Stand ${s.rank}`);
     }
-    expect(getTarget3D("bc-1")!.label).toBe("Stand 1 · Red Hat");
+    expect(getTarget3D("bc-1")!.label).toBe("Stand 1");
     expect(getTarget3D("bc-2")!.label).toBe("Stand 2 · Solita");
   });
 
@@ -414,7 +417,8 @@ describe("company routes", () => {
         const text = `${t.summary} ${t.steps.at(-1)!.text}`;
         expect(t.steps.at(-1)!.text).toMatch(/^[A-Z].*[.)]$/);
         if (FRI.includes(id)) {
-          expect(t.arrival).toBe(`room-${c.id}`);
+          // Floor 3 is not modelled in 3D: the route ends at the company arrival; the text names the room.
+          expect(t.arrival).toBe(c.briefing.floor <= 2 ? `room-${c.id}` : "company-arrival");
           expect(text).toContain(`room ${briefingRoomLabel(c)}`);
           expect(text).toContain(`floor ${c.briefing.floor}`);
           for (const o of CHALLENGE_COMPANIES.filter((x) => x.briefing.room !== c.briefing.room))
@@ -443,9 +447,10 @@ describe("company routes", () => {
   it("pair each company's Q&A stand with its Friday room and point at their floor plans", () => {
     for (const c of CHALLENGE_COMPANIES) {
       const stand = getTarget3D(c.id)!;
-      const room = getTarget3D(`room-${c.id}`)!;
       expect(stand).toMatchObject({ company: c.id, day: "Sat", map: c.qa.floor === 1 ? "joki-showroom" : "joki-2-3" });
-      expect(room).toMatchObject({ company: c.id, day: "Fri", map: c.briefing.floor === 1 ? "educity-1" : "educity-2" });
+      if (c.briefing.floor === 3) continue;
+      const room = getTarget3D(`room-${c.id}`)!;
+      expect(room).toMatchObject({ company: c.id, day: "Fri", map: `educity-${c.briefing.floor}` });
       expect(room.where).toBe(`EduCity · room ${c.briefing.room}`);
     }
     for (const t of TARGETS_3D) if (t.href?.includes("#map-")) expect(t.href).toBe(twin.mapHref(t.map!));
@@ -481,9 +486,10 @@ describe("time presets", () => {
 
 describe("deep links", () => {
   it("normalise partners to their stands and ignore case", () => {
-    expect(normaliseTarget("red-hat")).toBe("bc-1");
+    // Red Hat has no booth (21 Oct 2026): its id is no longer a stand.
+    expect(normaliseTarget("red-hat")).toBeNull();
     expect(normaliseTarget("solita")).toBe("bc-2");
-    expect(normaliseTarget("Red-Hat")).toBe("bc-1");
+    expect(normaliseTarget("Solita")).toBe("bc-2");
     expect(normaliseTarget(" ELISA ")).toBe("elisa");
     expect(normaliseTarget("BC-3")).toBe("bc-3");
   });
@@ -505,7 +511,7 @@ describe("deep links", () => {
     expect(placeForTarget("room-elisa")).toBe("educity");
     expect(placeForTarget("room-1001")).toBe("educity");
     expect(placeForTarget("bc-4")).toBe("biocity");
-    expect(placeForTarget("red-hat")).toBe("biocity");
+    expect(placeForTarget("mlh")).toBe("biocity");
     expect(placeForTarget("solita")).toBe("biocity");
     expect(placeForTarget("entrance-joki-street")).toBe("joki");
     expect(placeForTarget("entrance-educity-something")).toBe("educity");
@@ -551,7 +557,8 @@ describe("copy", () => {
   it("names the companies and stands from the shared data", () => {
     for (const c of CHALLENGE_COMPANIES) expect(corpus).toContain(c.name);
     expect(getPlace3D("joki").alt).toContain("Meyer Turku, DNA, Apetit, Elisa, Turku Energia and Bayer");
-    expect(getPlace3D("biocity").alt).toContain("Red Hat's stand (Stand 1)");
+    expect(getPlace3D("biocity").alt).toContain("Solita's stand (Stand 2)");
+    expect(getPlace3D("biocity").alt).not.toContain("Red Hat");
   });
 
   it("credits the open data", () => {

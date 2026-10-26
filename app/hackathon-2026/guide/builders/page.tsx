@@ -1,6 +1,8 @@
 import {
   AccommodationSection,
+  BriefingRoomTable,
   BuildingSection,
+  ChallengeRules,
   CalendarButton,
   Checklist,
   ComputingCallout,
@@ -17,6 +19,7 @@ import {
   Schedule,
   SectionHeading,
   SectionNav,
+  TeamFormationRoutes,
   VenueCards,
   VenueExplorer,
   WifiSection,
@@ -26,6 +29,7 @@ import {
 } from "@/components/guide";
 import { TwinTeaser } from "@/components/guide/twin/TwinTeaser";
 import {
+  BRIEFING_ROOMS_ANCHOR,
   CHECKLISTS,
   CRITICAL_PATH,
   DETAILS,
@@ -42,22 +46,28 @@ const schedule = scheduleFor(AUDIENCE);
 
 const APP_STEPS = [
   {
-    title: "Your team",
+    title: "Read the summaries",
     who: "Everyone",
-    when: "Fri 15:00–16:45",
-    text: "Create or join your team — up to five members. Every member must appear in the same team: that list is what the volunteer checks at Team check. Teams lock at 16:45.",
+    when: "From Thu 5 Nov 15:00",
+    text: "Public-safe summaries of all 15 company challenges. Choose from these only — agree on at least three with your team.",
   },
   {
-    title: "Challenge selection",
-    who: "Your team's owner",
-    when: "Fri 17:00–17:30",
-    text: "Preview every challenge from 15:00, then the team's owner selects one for the whole team while selection is open. Places per challenge are limited.",
+    title: "Your team",
+    who: "Everyone",
+    when: "Before the event · by Fri 16:45",
+    text: "Create or join your team — up to five members. Every member must appear in the same team: that is what you show at Team Check. Team formation closes at 16:45.",
+  },
+  {
+    title: "Ready, then select",
+    who: "Your team lead",
+    when: "Fri 15:00–17:30",
+    text: "The lead confirms Mark team as ready — the roster is then fixed — and selects one company challenge for the whole team. Final; places are limited.",
   },
   {
     title: "Where to go",
     who: "Everyone",
     when: "From Fri 17:30",
-    text: "When selection closes, the app shows your team's route: the challenge, your departure time, room, floor, route and floor plan. The teams move in turn from 18:30. The company's page in this guide has the same room and map.",
+    text: "The app shows your team's route: challenge, departure time, room and floor. The full challenge opens in the app at 19:30, for your team only.",
   },
   {
     title: "Submission",
@@ -70,26 +80,6 @@ const APP_STEPS = [
     who: "Everyone",
     when: "Sun 10:00–12:00",
     text: "The app gives you ten solutions to review and vote on. The five teams with the most votes present live in the finals at 14:00.",
-  },
-] as const;
-
-/** The organiser's team formation plan (EduCity floor 1, beside Taidon portaat), as text. */
-const TEAM_FORMATION_STEPS = [
-  {
-    title: "Choose your zone",
-    text: "Go to the zone that matches the number of open places in your team: 4, 3, 2 or 1 open places. The zones run through the lobby and room 1091 next to it.",
-  },
-  {
-    title: "Build your team",
-    text: "Meet builders and fill the open places. A team has at most five members.",
-  },
-  {
-    title: "Join in the app",
-    text: "Create your team in sinceai.app. Every member must join and appear in the team member list.",
-  },
-  {
-    title: "Leave via the other side",
-    text: "You came in from registration on the right; leave on the opposite side. At Team check, show the full team member list in the app to the volunteer — every member is checked before the team continues to the opening ceremony. Team formation closes at 16:45.",
   },
 ] as const;
 
@@ -107,11 +97,11 @@ export default function BuilderGuidePage() {
       >
         <FactsStrip
           facts={[
-            { label: "Registration", value: "Fri 15:00", sub: "EduCity", strong: true },
-            { label: "Official opening", value: "Fri 17:00", sub: "EduCity · Taidon portaat" },
+            { label: "Challenge summaries", value: "Thu 15:00", sub: "In sinceai.app · choose from these" },
+            { label: "Registration", value: "Fri 15:00", sub: "EduCity · every member in person", strong: true },
+            { label: "Ready · select", value: "Fri 15:00–17:30", sub: "Team lead · final · places limited", strong: true },
             { label: "Build spaces", value: "BioCity + Joki", sub: "From Fri 19:30, around the clock" },
             { label: "Submission deadline", value: "Sun 10:00", sub: "In sinceai.app · fixed", strong: true },
-            { label: "Closing ceremony", value: "Sun 13:15", sub: "EduCity · top three per challenge 13:30" },
             { label: "Finals", value: "Sun 14:00", sub: "Five teams live on stage · ends around 15:30" },
           ]}
         />
@@ -122,7 +112,9 @@ export default function BuilderGuidePage() {
       <SectionNav
         items={[
           { id: "steps", label: "Steps" },
+          { id: "rules", label: "Challenge rules" },
           { id: "team-formation", label: "Team formation" },
+          { id: BRIEFING_ROOMS_ANCHOR, label: "Briefing rooms" },
           { id: "schedule", label: "Schedule" },
           { id: "app", label: "sinceai.app" },
           { id: "building", label: "Build & submit" },
@@ -145,33 +137,55 @@ export default function BuilderGuidePage() {
         <CriticalPath label="Builder steps" steps={CRITICAL_PATH.builders ?? []} />
       </GuideSection>
 
+      <GuideSection id="rules">
+        <SectionHeading
+          id="rules-title"
+          eyebrow="// company challenge · team · friday"
+          title="One company challenge per team. Ready, select — final."
+          lede="The rules for choosing your challenge, in one place. The app enforces the same times; your guide and sinceai.app say the same thing."
+        />
+        <ChallengeRules />
+      </GuideSection>
+
       <GuideSection id="team-formation">
         <SectionHeading
           id="team-formation-title"
-          eyebrow="// friday · team formation"
-          title="Find a team. Join in the app. Show your team at the exit."
-          lede="EduCity floor 1, beside Taidon portaat — from 15:00, straight after registration. Team formation closes at 16:45; challenge selection follows in sinceai.app at 17:00–17:30."
+          eyebrow="// friday · team formation · educity floor 1"
+          title="Route A: you have a team. Route B: find one."
+          lede="Straight after registration, from 15:00, beside Taidon portaat. Team formation closes at 16:45. Everyone leaves through Team Check on the left."
         />
-        <ol className="grid grid-cols-1 border-l border-t border-white/10 sm:grid-cols-2 lg:grid-cols-4">
-          {TEAM_FORMATION_STEPS.map((step, i) => (
-            <li key={step.title} className="guide-avoid-break border-b border-r border-white/10 p-5">
-              <p className="font-mono text-[11px] uppercase tracking-widest text-(--color-event)">Step {i + 1}</p>
-              <h3 className="mt-3 text-lg font-bold tracking-tight text-white">{step.title}</h3>
-              <p className="mt-3 text-sm text-neutral-400 leading-relaxed">{step.text}</p>
-            </li>
-          ))}
-        </ol>
+        <TeamFormationRoutes />
         <p className="mt-6 max-w-3xl text-sm text-neutral-300 leading-relaxed">
-          <span className="font-semibold text-white">Already have a team?</span> You pass Team check too — every member
-          must be in the team in sinceai.app.
+          <span className="font-semibold text-white">At Team Check</span> you show on your phone that you belong to your
+          team in sinceai.app. It is not the same as your team lead marking the team as ready — the lead does that in the
+          app, and only then can the team select its challenge.
         </p>
         <div className="mt-8">
-          <VenueExplorer mapIds={["educity-team-formation"]} label="Team formation area" />
+          <VenueExplorer mapIds={["educity-team-formation"]} label="Team formation" />
         </div>
         <p className="mt-4 max-w-3xl text-xs text-white/55 leading-relaxed">
           This plan shows the team formation flow only — it is not the building&rsquo;s emergency exit plan. In an
           emergency, follow the exit signs and staff instructions.
         </p>
+      </GuideSection>
+
+      <GuideSection id={BRIEFING_ROOMS_ANCHOR}>
+        <SectionHeading
+          id={`${BRIEFING_ROOMS_ANCHOR}-title`}
+          eyebrow="// friday · briefing rooms · educity floors 1–3"
+          title="Your company's briefing room."
+          lede="Your route in sinceai.app names your room from 17:30. Stay for the opening and Jason Mayes' programme; from 18:30 the teams leave in turn, at the departure time in their route, with volunteers showing the way. Briefings run 18:50–19:30."
+        />
+        <div className="max-w-3xl">
+          <BriefingRoomTable />
+          <p className="mt-4 text-sm text-neutral-400 leading-relaxed">
+            Floors 2 and 3: take the stairs up from Taidon portaat or the lifts on either side of the lobby. Floor 3
+            rooms are on the east side. After your briefing, a volunteer walks your team to BioCity.
+          </p>
+        </div>
+        <div className="mt-10">
+          <VenueExplorer mapIds={["educity-1", "educity-2", "educity-3"]} syncHash label="Briefing room maps" />
+        </div>
       </GuideSection>
 
       <GuideSection id="schedule">
@@ -192,9 +206,9 @@ export default function BuilderGuidePage() {
           id="app-title"
           eyebrow="// sinceai.app"
           title="The app runs your weekend."
-          lede="Your team, your challenge and your submission all live in sinceai.app. Your team's owner selects its challenge on Friday 17:00–17:30; any team member can submit."
+          lede="Your team, your challenge and your submission all live in sinceai.app. Your team lead marks the team as ready and selects its challenge on Friday 15:00–17:30; any team member can submit."
         />
-        <ol className="grid grid-cols-1 border-l border-t border-white/10 sm:grid-cols-2 lg:grid-cols-5">
+        <ol className="grid grid-cols-1 border-l border-t border-white/10 sm:grid-cols-2 lg:grid-cols-3">
           {APP_STEPS.map((step) => (
             <li key={step.title} className="guide-avoid-break border-b border-r border-white/10 p-5">
               <p className="font-mono text-[11px] uppercase tracking-widest text-(--color-event)">{step.when}</p>
@@ -265,15 +279,14 @@ export default function BuilderGuidePage() {
           id="maps-title"
           eyebrow="// maps"
           title="Find your way."
-          lede="Friday arrival and briefing rooms at EduCity, then the build spaces. Tap a map to zoom."
+          lede="Friday team formation and briefing rooms at EduCity, then the build spaces. Tap a map to zoom."
         />
         <VenueExplorer
           mapIds={[
-            "educity-flow-1",
             "educity-team-formation",
-            "educity-flow-2",
             "educity-1",
             "educity-2",
+            "educity-3",
             "biocity-lobby",
             "joki-1",
             "joki-showroom",

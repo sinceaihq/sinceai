@@ -3,6 +3,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { PARTNERS, type Partner } from "@/lib/partners";
 import { HACKATHON_2026_PARTNERS } from "@/lib/sinceai";
+import { CHALLENGE_COMPANIES, NDA_LABEL, NDA_NOTE } from "@/lib/hackathon-2026";
+
+/** Challenge partners that run their own NDA process — labelled before builders choose (Tech guide v1.2 §3). */
+const NDA_COMPANIES = new Set(CHALLENGE_COMPANIES.filter((c) => c.ndaRequired).map((c) => c.name));
 
 /**
  * Partner logo grid for /hackathon.
@@ -21,7 +25,7 @@ function byName(name: string): Partner {
   return partner;
 }
 
-/** Challenge places still to be announced (lib/hackathon-2026: 15 challenges, 13 partners named). */
+/** Challenge places still to be announced (lib/hackathon-2026: 15 challenges, 14 partners named). */
 const TBA_PLACES = HACKATHON_2026_PARTNERS.challengeTarget - HACKATHON_2026_PARTNERS.challengePartners.length;
 
 const groups: {
@@ -38,10 +42,10 @@ const groups: {
     boxClass: "w-32 h-12 sm:w-36 sm:h-14 lg:w-40 lg:h-16",
     sizes: "(max-width: 640px) 128px, (max-width: 1024px) 144px, 160px",
     tba: TBA_PLACES,
-    note: `${TBA_PLACES} more challenge partners to be announced.`,
+    note: `${HACKATHON_2026_PARTNERS.equalPrize} ${TBA_PLACES === 1 ? "One more challenge partner" : `${TBA_PLACES} more challenge partners`} to be announced.`,
   },
   {
-    // On site at BioCity's partner corner; Solita and BearingPoint also mentor builders.
+    // Solita and BearingPoint also mentor builders. Not a stand list — see the Field Guide's stand plan.
     label: "Visibility & technology partners",
     names: ["Red Hat", "Solita", "BearingPoint", "Pruna AI", "LUMI AI Factory", "Major League Hacking"],
     boxClass: "w-28 h-10 sm:w-32 sm:h-11 lg:w-36 lg:h-12",
@@ -84,18 +88,21 @@ function LogoItem({
   partner,
   boxClass,
   sizes,
+  nda = false,
 }: {
   partner: Partner;
   boxClass: string;
   sizes: string;
+  nda?: boolean;
 }) {
   return (
     <a
       href={partner.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex items-center justify-center w-full py-3 sm:py-4"
-      aria-label={`${partner.name} — Since AI Hackathon 2026 partner website`}
+      className="group flex flex-col items-center justify-center gap-2 w-full py-3 sm:py-4"
+      aria-label={`${partner.name} — Since AI Hackathon 2026 partner website${nda ? ` (${NDA_LABEL})` : ""}`}
+      title={nda ? NDA_NOTE : undefined}
     >
       {/* Fixed-size bounding box — every logo renders inside the same rectangle */}
       <div className={`relative flex-shrink-0 ${boxClass}`}>
@@ -107,6 +114,11 @@ function LogoItem({
           sizes={sizes}
         />
       </div>
+      {nda && (
+        <span className="border border-white/30 px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-widest text-white/80">
+          {NDA_LABEL}
+        </span>
+      )}
     </a>
   );
 }
@@ -139,6 +151,7 @@ export function PartnerLogoGrid() {
                   partner={byName(name)}
                   boxClass={group.boxClass}
                   sizes={group.sizes}
+                  nda={i === 0 && NDA_COMPANIES.has(name)}
                 />
               ))}
               {Array.from({ length: group.tba ?? 0 }, (_, i) => (

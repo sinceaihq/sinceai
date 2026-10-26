@@ -16,7 +16,7 @@ describe("FoodSection", () => {
 
     const friday = container.querySelector<HTMLElement>("#meal-fri-dinner")!;
     expect(within(friday).getByText("Chicken pasta bake")).toBeInTheDocument();
-    expect(within(friday).getByText("18:30 to 21:30")).toHaveClass("sr-only");
+    expect(within(friday).getByText("18:30 to 22:00")).toHaveClass("sr-only");
     expect(within(friday).getByText("Lactose-free")).toBeInTheDocument();
     expect(within(friday).queryByText("Gluten-free")).not.toBeInTheDocument();
 

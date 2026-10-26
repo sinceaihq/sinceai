@@ -32,11 +32,10 @@ const photoSchema = {
 };
 
 const MAP_ORDER = [
-  "educity-flow-1",
   "educity-team-formation",
   "educity-1",
   "educity-2",
-  "educity-flow-2",
+  "educity-3",
   "biocity-lobby",
   "joki-1",
   "joki-showroom",
