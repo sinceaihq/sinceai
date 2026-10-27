@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   AI_POLICY,
+  AWARDS_HREF,
   BUILDING_ANCHOR,
   BUILDING_FAQ,
   BUILDING_HREF,
@@ -12,6 +13,9 @@ import {
 } from "@/lib/hackathon-2026";
 import { Details } from "./Details";
 import { Arrow, ghostButtonClass, GuideSection, SectionHeading } from "./primitives";
+
+const inlineLink =
+  "text-white underline decoration-white/30 underline-offset-4 hover:decoration-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
 
 function Dash() {
   return (
@@ -28,6 +32,11 @@ function FieldList({ fields }: { fields: readonly SubmissionField[] }) {
         <li key={f.name} className="border-t border-white/10 py-2.5 text-sm">
           <span className="font-semibold text-white">{f.name}</span>
           {f.note && <span className="block text-neutral-400 leading-relaxed">{f.note}</span>}
+          {f.link && (
+            <Link href={f.link.href} className={inlineLink}>
+              {f.link.label}
+            </Link>
+          )}
         </li>
       ))}
     </ul>
@@ -126,6 +135,14 @@ function HowToSubmit() {
           </li>
         ))}
       </ol>
+      <p className="mt-4 text-sm text-neutral-400 leading-relaxed" data-submit-awards>
+        <span className="font-semibold text-white">Optional awards:</span> tick MLH categories on the same submission and
+        enter Red Hat or FIWARE in sinceai.app —{" "}
+        <Link href={AWARDS_HREF} className={inlineLink}>
+          how to enter the optional awards
+        </Link>
+        .
+      </p>
 
       <div className="mt-6 grid grid-cols-1 items-start gap-6 md:grid-cols-[1fr_auto]">
         <div>
@@ -168,10 +185,7 @@ export function BuildingSection() {
       <p className="mt-4 text-sm text-neutral-400 leading-relaxed">
         <span className="font-semibold text-white">Partner tools and benefits:</span> computing, AI models, app
         builders and developer tools from our technology partners, with quickstarts and where to get help, in{" "}
-        <Link
-          href={RESOURCES_PATH}
-          className="text-white underline decoration-white/30 underline-offset-4 hover:decoration-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-        >
+        <Link href={RESOURCES_PATH} className={inlineLink}>
           {RESOURCES_GUIDE.name}
         </Link>
         .

@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
-  AWARDS_HREF,
+  awardHref,
   RESOURCES_GUIDE,
   RESOURCES_PATH,
   STAND_PARTNERS,
+  technologyAwardByTitle,
   type PartnerResource,
   type ToolLink,
 } from "@/lib/hackathon-2026";
@@ -34,6 +35,7 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
 /** One partner resource: what it is, what to build, the benefit, where access details come from, help and links. */
 export function ResourceCard({ resource }: { resource: PartnerResource }) {
   const r = resource;
+  const award = r.award ? technologyAwardByTitle(r.award) : undefined;
   return (
     <li id={`resource-${r.id}`} data-resource={r.id} className="guide-avoid-break flex flex-col border border-white/10 p-5 md:p-6">
       <div className="flex flex-col items-start gap-3">
@@ -55,14 +57,15 @@ export function ResourceCard({ resource }: { resource: PartnerResource }) {
         {r.benefit && <Row label="Participant benefit">{r.benefit}</Row>}
         <Row label="Access">{r.access}</Row>
         <Row label="Help">{r.help}</Row>
-        {r.award && (
+        {award && (
           <Row label="Optional award">
             <a
-              href={AWARDS_HREF}
+              href={awardHref(award.id)}
               className="text-white underline decoration-white/30 underline-offset-4 hover:decoration-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
-              {r.award}
-            </a>
+              {award.title}
+            </a>{" "}
+            <span data-award-short>· {award.prizeShort}</span>
           </Row>
         )}
       </dl>

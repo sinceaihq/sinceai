@@ -20,7 +20,7 @@ export const VOTING = {
   window: "Sunday 10:00–12:00",
   /** Short form for timelines. */
   short: `${VOTE_COMPARISONS} comparisons in sinceai.app`,
-  how: `Between 10:00 and 12:00 on Sunday, sinceai.app shows every eligible builder — an accepted participant of the event — two solutions at a time — pick the stronger one. Every eligible builder is asked to complete ${VOTE_COMPARISONS} comparisons; you never see your own team's project.`,
+  how: `Between 10:00 and 12:00 on Sunday, sinceai.app shows every eligible builder (an accepted participant of the event) two solutions at a time, and you pick the stronger one. Every eligible builder is asked to complete ${VOTE_COMPARISONS} comparisons. You never see your own team's project.`,
   finalists:
     "Voting closes at 12:00. The five finalists are the five highest-ranked eligible projects from five different official company challenges — one per challenge, so it is not simply the overall top five.",
   /** One line for a schedule row or fact strip. */

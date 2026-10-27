@@ -2,7 +2,7 @@ import { GUIDE_LINKS } from "./facts";
 import { RESOURCES_PATH } from "./resources";
 
 /**
- * Optional awards — Since AI Hackathon 2026. Extra prizes a team can win with
+ * Optional awards — Since AI Hackathon 2026. Awards a team can win with
  * the project it builds for its company challenge (and, for FIWARE only, with
  * a separate prototype). None of them replaces the company challenge, uses its
  * places or changes its evaluation.
@@ -28,6 +28,8 @@ export const AWARDS_ANCHOR = "awards";
 export const AWARDS_HREF = `${RESOURCES_PATH}#${AWARDS_ANCHOR}`;
 export const FIWARE_RESOURCES_ANCHOR = "fiware";
 export const CONFIDENTIAL_ANCHOR = "confidential";
+/** The MLH categories block inside the awards section. */
+export const MLH_AWARDS_ANCHOR = "mlh-awards";
 
 export const MLH_PRIZE_PAGE = "https://www.mlh.com/events/since-ai-hackathon/prizes";
 
@@ -98,6 +100,10 @@ export const MLH_AWARDS: readonly MlhAward[] = [
   },
 ];
 
+/** Where to ask about the MLH categories — MLH's own introduction and prize page, no new contacts. */
+export const MLH_QUESTIONS =
+  "Come to MLH's introduction at 16:50 on Friday, at Taidon portaat, or see MLH's prize page.";
+
 export const MLH_AWARDS_NOTE =
   "Prizes provided through Major League Hacking (MLH) and its sponsors; MLH runs these categories and their judging. Tick any categories that fit on your team's submission in sinceai.app: zero, one or several, with the same project. MLH's prize page has the full details.";
 
@@ -107,11 +113,15 @@ export interface TechnologyAward {
   provider: string;
   /** The prize or benefit, exactly as confirmed. */
   prize: string;
+  /** A few words for compact places (resource cards, at a glance). */
+  prizeShort: string;
   eligibility: readonly string[];
   /** What the team submits as evidence. */
   evidence: readonly string[];
   criteria: readonly { name: string; weight: number; text?: string }[];
   evaluation: string;
+  /** Where to ask — only support already published elsewhere in the guide. */
+  questions: { text: string; link: { label: string; href: string } };
   docs: readonly { label: string; href: string }[];
 }
 
@@ -120,6 +130,7 @@ export const RED_HAT_AWARD: TechnologyAward = {
   title: "Red Hat OpenShift AI Technology Award",
   provider: "Red Hat",
   prize: "€1,000, subject to the partnership terms.",
+  prizeShort: "€1,000",
   eligibility: [
     "Only a solution built for an official company challenge — your team's submission in sinceai.app. It is not an extra company challenge, and a standalone app built for this award alone is not eligible.",
     "The solution must meaningfully use Red Hat OpenShift AI — for example to build, serve or monitor the model your solution relies on.",
@@ -136,6 +147,10 @@ export const RED_HAT_AWARD: TechnologyAward = {
     { name: "Documentation and clarity", weight: 10 },
   ],
   evaluation: "A Red Hat reviewer evaluates the eligible entries in sinceai.app; Since AI confirms the winner.",
+  questions: {
+    text: "Red Hat supports builders remotely during the event. Any session or office hours are announced in the event channels.",
+    link: { label: "Red Hat in Builder Resources", href: `${RESOURCES_PATH}#resource-red-hat` },
+  },
   docs: [
     { label: "Developer Sandbox (free for 30 days)", href: "https://developers.redhat.com/developer-sandbox" },
     { label: "Red Hat OpenShift AI", href: "https://www.redhat.com/en/products/ai/openshift-ai" },
@@ -152,6 +167,7 @@ export const FIWARE_AWARD: TechnologyAward & {
   title: "FIWARE Open Innovation Award",
   provider: "FIWARE Foundation",
   prize: "A non-cash prize package from FIWARE Foundation — membership, a Global Summit invitation, mentorship, recognition and iHub introductions.",
+  prizeShort: "non-cash package",
   routes: [
     {
       letter: "A",
@@ -182,6 +198,10 @@ export const FIWARE_AWARD: TechnologyAward & {
   ],
   evaluation:
     "Jason Fox, FIWARE expert and trainer, is the sole evaluator of this award. He evaluates the eligible entries on Sunday 8 November, and the award is announced at the closing ceremony.",
+  questions: {
+    text: "Ask Jason Fox, the FIWARE technical mentor, on site at EduCity all three days — or the FIWARE mentors on the Since AI Discord.",
+    link: { label: "Since AI Discord", href: GUIDE_LINKS.discord },
+  },
   mentor:
     "Jason Fox is also the primary FIWARE technical mentor, on site at EduCity all three days, 6–8 November. Bring him your NGSI-LD design questions, entity modelling and architecture reviews.",
   benefits: [
@@ -223,15 +243,95 @@ export const HOW_TO_ENTER = [
 
 export const HOW_TO_ENTER_LINK = { label: "Open your sinceai.app dashboard", href: GUIDE_LINKS.appDashboard } as const;
 
+export const TECHNOLOGY_AWARDS = [RED_HAT_AWARD, FIWARE_AWARD] as const;
+
+/** The in-page anchor of a technology award's card. */
+export const awardAnchor = (id: TechnologyAward["id"]) => `award-${id}`;
+/** A technology award's card, from anywhere on the site. */
+export const awardHref = (id: TechnologyAward["id"]) => `${RESOURCES_PATH}#${awardAnchor(id)}`;
+/** The technology award a partner resource names (by its title). */
+export const technologyAwardByTitle = (title: string) => TECHNOLOGY_AWARDS.find((a) => a.title === title);
+
+export interface AwardGlanceRow {
+  id: "mlh" | TechnologyAward["id"];
+  name: string;
+  /** In-page anchor of the award's card or block. */
+  href: string;
+  win: string;
+  enter: string;
+  /** Only what is already confirmed — otherwise "announced in the event channels". */
+  decided: string;
+  ask: string;
+}
+
+/** The three optional awards side by side, at the top of the awards section. */
+export const AWARDS_AT_A_GLANCE: readonly AwardGlanceRow[] = [
+  {
+    id: "mlh",
+    name: `MLH prize categories (${MLH_AWARDS.length})`,
+    href: `#${MLH_AWARDS_ANCHOR}`,
+    win: "A prize provided through MLH in each category.",
+    enter: "Tick the categories that fit on your team's submission in sinceai.app.",
+    decided: "MLH runs the judging. Winners are announced in the event channels.",
+    ask: "MLH's introduction, Fri 16:50 at Taidon portaat, and MLH's prize page.",
+  },
+  {
+    id: RED_HAT_AWARD.id,
+    name: RED_HAT_AWARD.title,
+    href: `#${awardAnchor(RED_HAT_AWARD.id)}`,
+    win: RED_HAT_AWARD.prize,
+    enter: "Enter the same project under optional awards in sinceai.app, with evidence.",
+    decided: "A Red Hat reviewer evaluates; Since AI confirms the winner. Announced in the event channels.",
+    ask: "Red Hat's remote support during the event.",
+  },
+  {
+    id: FIWARE_AWARD.id,
+    name: FIWARE_AWARD.title,
+    href: `#${awardAnchor(FIWARE_AWARD.id)}`,
+    win: "A non-cash prize package from FIWARE Foundation.",
+    enter: "Under optional awards in sinceai.app: the same project (route A) or a separate prototype (route B).",
+    decided: "Evaluated on Sunday 8 November during judging; announced at the closing ceremony.",
+    ask: "Jason Fox on site at EduCity, and the Since AI Discord.",
+  },
+];
+
 export interface FiwareResourceGroup {
   title: string;
   items: readonly { label: string; href?: string; text?: string; code?: string }[];
 }
 
-/** From the FIWARE Builder Pack — public technical resources only. */
+/**
+ * From the FIWARE Builder Pack — public technical resources only. Orion-LD
+ * needs a MongoDB to start, so step 1 runs both on one Docker network. Run
+ * end to end on 27 Oct 2026 (mongo:4.4, fiware/orion-ld latest): the POST
+ * answers 201 Created and the GET returns the entity.
+ */
 export const FIWARE_QUICK_START = [
-  { step: "Run a Context Broker", code: "docker run -d --name orion-ld -p 1026:1026 fiware/orion-ld" },
-  { step: "Create your first NGSI-LD entity", code: "POST http://localhost:1026/ngsi-ld/v1/entities/" },
+  {
+    step: "Run a Context Broker (Orion-LD with its MongoDB)",
+    code: [
+      "docker network create fiware",
+      "docker run -d --name mongo-db --network fiware mongo:4.4",
+      "docker run -d --name orion-ld --network fiware -p 1026:1026 fiware/orion-ld -dbhost mongo-db",
+    ].join("\n"),
+  },
+  {
+    step: "Create your first NGSI-LD entity (201 Created)",
+    code: [
+      "curl -i -X POST http://localhost:1026/ngsi-ld/v1/entities \\",
+      "  -H 'Content-Type: application/ld+json' \\",
+      "  -d '{",
+      '    "id": "urn:ngsi-ld:Building:001",',
+      '    "type": "Building",',
+      '    "name": {"type": "Property", "value": "My first building"},',
+      '    "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.9.jsonld"',
+      "  }'",
+    ].join("\n"),
+  },
+  {
+    step: "Read it back",
+    code: "curl http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:Building:001 -H 'Accept: application/ld+json'",
+  },
   { step: "Pick a Smart Data Model for your domain", code: "https://smartdatamodels.org/" },
 ] as const;
 
@@ -243,9 +343,8 @@ export const FIWARE_RESOURCE_GROUPS: readonly FiwareResourceGroup[] = [
     title: "Learn NGSI-LD",
     items: [
       { label: "FIWARE step-by-step tutorials (NGSI-LD)", href: "https://fiware-tutorials.readthedocs.io/en/latest/" },
-      { label: "NGSI-LD Hello World (linked data)", href: "https://fiware-tutorials.readthedocs.io/en/latest/linked-data/" },
+      { label: "NGSI-LD Hello World (linked data)", href: "https://fiware-tutorials.readthedocs.io/en/latest/linked-data.html" },
       { label: "NGSI-LD tutorials with Docker Compose", href: "https://github.com/FIWARE/tutorials.NGSI-LD" },
-      { label: "NGSI-LD Postman collection", href: "https://github.com/FIWARE/tutorials.NGSI-LD/tree/master/postman" },
       { label: "FIWARE Academy — free video courses", href: "https://fiware-academy.readthedocs.io/en/latest/" },
       { label: "NGSI-LD v1.9.1 specification, part 1 (API and data model)", href: "https://ngsild.org/ts104175/html/index.html" },
       { label: "NGSI-LD v1.9.1 specification, part 2 (operations and semantics)", href: "https://ngsild.org/ts104176/html/index.html" },
@@ -255,7 +354,7 @@ export const FIWARE_RESOURCE_GROUPS: readonly FiwareResourceGroup[] = [
     title: "Smart Data Models",
     items: [
       { label: "Browse 1,000+ Smart Data Models", href: "https://smartdatamodels.org/" },
-      { label: "Validate your entity", href: "https://smartdatamodels.org/index.php/validate-your-entity/" },
+      { label: "Validate your entity", href: "https://smartdatamodels.org/index.php/check-a-schema-validates-a-payload/" },
       { label: "Smart Data Models on GitHub", href: "https://github.com/smart-data-models/data-models" },
     ],
   },

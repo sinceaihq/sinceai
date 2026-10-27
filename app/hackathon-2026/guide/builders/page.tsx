@@ -77,7 +77,7 @@ const APP_STEPS = [
     title: "Submission",
     who: "Any team member",
     when: "Before Sun 10:00",
-    text: "Submit your team's final solution and tick any MLH award categories. A confidential challenge also needs a public-safe summary. The deadline is fixed — submit early, not at 09:59.",
+    text: "Submit your team's final solution and tick any MLH categories. A confidential challenge also needs a public-safe summary. The deadline is fixed — submit early, not at 09:59.",
   },
   {
     title: "Voting",

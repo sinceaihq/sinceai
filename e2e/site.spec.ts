@@ -190,6 +190,20 @@ test.describe("public site", () => {
     await expect(main).toContainText("AI-assisted development is permitted and encouraged");
   });
 
+  test("the awards FAQ answer links to Optional awards; its JSON-LD answer stays plain text", async ({ page }) => {
+    await acceptNoCookies(page);
+    await page.goto("/hackathon");
+    const item = page.locator("details.faq-item").filter({ hasText: "Are there prizes besides the company challenges?" });
+    await item.locator("summary").click();
+    await expect(item.getByRole("link", { name: "Optional awards in the Field Guide" })).toHaveAttribute(
+      "href",
+      "/hackathon-2026/guide/resources#awards",
+    );
+    const jsonLd = (await page.locator('script[type="application/ld+json"]').allTextContents()).join("\n");
+    expect(jsonLd).toContain("under Optional awards.");
+    expect(jsonLd).not.toContain("Optional awards in the Field Guide");
+  });
+
   test("the footer links the Hugging Face organisation and the JSON-LD lists it", async ({ page }) => {
     await acceptNoCookies(page);
     await page.goto("/");

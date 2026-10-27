@@ -1,5 +1,7 @@
 import {
+  AWARDS_AT_A_GLANCE,
   AWARDS_HREF,
+  awardHref,
   CHALLENGE_PRIZE_EXCEPTIONS,
   CHALLENGE_PRIZES_STATEMENT,
   CHALLENGE_COMPANIES,
@@ -10,12 +12,18 @@ import {
   FIWARE_RESOURCE_GROUPS,
   HOW_TO_ENTER,
   MLH_AWARDS,
+  MLH_AWARDS_ANCHOR,
   MLH_AWARDS_NOTE,
+  MLH_PRIZE_PAGE,
+  MLH_QUESTIONS,
+  PARTNER_RESOURCES,
   prizeLine,
   prizesFor,
   prizeTotal,
   RED_HAT_AWARD,
   STANDARD_CHALLENGE_PRIZES,
+  SUBMISSION,
+  technologyAwardByTitle,
   VOTE_COMPARISONS,
   VOTING,
 } from "@/lib/hackathon-2026";
@@ -123,7 +131,7 @@ describe("FIWARE Open Innovation Award", () => {
   });
 
   it("publishes the technical resources without any personal contact detail", () => {
-    expect(FIWARE_QUICK_START[0].code).toBe("docker run -d --name orion-ld -p 1026:1026 fiware/orion-ld");
+    expect(FIWARE_QUICK_START.map((s) => s.step)[0]).toMatch(/Orion-LD with its MongoDB/);
     const all = text([FIWARE_AWARD, FIWARE_RESOURCE_GROUPS]);
     for (const broker of ["Orion-LD", "Scorpio", "Stellio", "Antares", "coraine"]) expect(all).toContain(broker);
     expect(all).not.toMatch(/@[a-z-]+\.(org|com|fi|nl|fr|jp)|\+358|mailto:/i);
@@ -154,5 +162,108 @@ describe("voting, finalists and confidential challenges", () => {
     const faq = DETAILS.builders.map((d) => d.links?.map((l) => l.href) ?? []).flat();
     expect(faq).toContain(AWARDS_HREF);
     expect(faq).toContain("/hackathon-2026/guide/resources#confidential");
+  });
+});
+
+describe("FIWARE ten-minute start", () => {
+  it("starts Orion-LD next to a MongoDB on one Docker network — Orion-LD alone does not start", () => {
+    expect(FIWARE_QUICK_START[0].code.split("\n")).toEqual([
+      "docker network create fiware",
+      "docker run -d --name mongo-db --network fiware mongo:4.4",
+      "docker run -d --name orion-ld --network fiware -p 1026:1026 fiware/orion-ld -dbhost mongo-db",
+    ]);
+  });
+
+  it("creates an entity with a copy-pasteable JSON-LD request and reads it back", () => {
+    const create = FIWARE_QUICK_START[1].code;
+    expect(create).toMatch(/^curl -i -X POST http:\/\/localhost:1026\/ngsi-ld\/v1\/entities \\\n/);
+    expect(create).toContain("-H 'Content-Type: application/ld+json'");
+    const body = create.slice(create.indexOf("-d '") + 4, create.lastIndexOf("'"));
+    const entity = JSON.parse(body);
+    expect(entity).toMatchObject({ id: "urn:ngsi-ld:Building:001", type: "Building" });
+    expect(entity["@context"]).toMatch(/^https:\/\/uri\.etsi\.org\/ngsi-ld\//);
+    // Every continued line ends in a backslash, so the command pastes as one.
+    const lines = create.split("\n");
+    for (const line of lines.slice(0, 2)) expect(line.endsWith(" \\")).toBe(true);
+    expect(FIWARE_QUICK_START[2].code).toContain("/ngsi-ld/v1/entities/urn:ngsi-ld:Building:001");
+  });
+});
+
+describe("award links", () => {
+  const allHrefs = () => [
+    ...FIWARE_RESOURCE_GROUPS.flatMap((g) => g.items.map((i) => i.href).filter(Boolean)),
+    ...[RED_HAT_AWARD, FIWARE_AWARD].flatMap((a) => [...a.docs.map((d) => d.href), a.questions.link.href]),
+    ...MLH_AWARDS.map((a) => a.href),
+    MLH_PRIZE_PAGE,
+  ];
+
+  it("never points to the three dead FIWARE links found on 27 Oct 2026", () => {
+    const hrefs = allHrefs();
+    for (const dead of [
+      "https://fiware-tutorials.readthedocs.io/en/latest/linked-data/",
+      "https://github.com/FIWARE/tutorials.NGSI-LD/tree/master/postman",
+      "https://smartdatamodels.org/index.php/validate-your-entity/",
+    ])
+      expect(hrefs).not.toContain(dead);
+    expect(hrefs).toContain("https://fiware-tutorials.readthedocs.io/en/latest/linked-data.html");
+    expect(hrefs).toContain("https://smartdatamodels.org/index.php/check-a-schema-validates-a-payload/");
+  });
+
+  it("deep-links each partner resource to its own award card, with a short prize", () => {
+    const withAward = PARTNER_RESOURCES.filter((r) => r.award);
+    expect(withAward.map((r) => r.id).sort()).toEqual(["fiware", "red-hat"]);
+    for (const r of withAward) expect(technologyAwardByTitle(r.award!)).toBeDefined();
+    expect(awardHref(RED_HAT_AWARD.id)).toBe("/hackathon-2026/guide/resources#award-red-hat-openshift-ai");
+    expect(awardHref(FIWARE_AWARD.id)).toBe("/hackathon-2026/guide/resources#award-fiware-open-innovation");
+    expect(RED_HAT_AWARD.prizeShort).toBe("€1,000");
+    expect(FIWARE_AWARD.prizeShort).toBe("non-cash package");
+  });
+
+  it("answers questions only with support already published — Red Hat's resource card, FIWARE's mentor and Discord, MLH's introduction", () => {
+    const redHat = PARTNER_RESOURCES.find((r) => r.id === "red-hat")!;
+    expect(RED_HAT_AWARD.questions.text).toBe(redHat.help);
+    expect(RED_HAT_AWARD.questions.link.href).toBe("/hackathon-2026/guide/resources#resource-red-hat");
+    expect(FIWARE_AWARD.questions.text).toMatch(/Jason Fox.*on site at EduCity.*Discord/);
+    expect(FIWARE_AWARD.questions.link.href).toMatch(/^https:\/\/discord\./);
+    expect(MLH_QUESTIONS).toMatch(/16:50 on Friday, at Taidon portaat/);
+    expect(text([RED_HAT_AWARD.questions, FIWARE_AWARD.questions, MLH_QUESTIONS])).not.toMatch(/@[a-z-]+\.[a-z]|\+\d{3}|mailto:/i);
+  });
+});
+
+describe("optional awards at a glance", () => {
+  it("compares MLH, Red Hat and FIWARE, each linking to its own card", () => {
+    expect(AWARDS_AT_A_GLANCE.map((r) => [r.id, r.href])).toEqual([
+      ["mlh", `#${MLH_AWARDS_ANCHOR}`],
+      ["red-hat-openshift-ai", "#award-red-hat-openshift-ai"],
+      ["fiware-open-innovation", "#award-fiware-open-innovation"],
+    ]);
+    expect(AWARDS_AT_A_GLANCE[0]!.name).toBe("MLH prize categories (7)");
+    for (const r of AWARDS_AT_A_GLANCE) for (const k of ["win", "enter", "decided", "ask"] as const) expect(r[k].length).toBeGreaterThan(10);
+  });
+
+  it("states only confirmed prizes and timing", () => {
+    const [mlh, redHat, fiware] = AWARDS_AT_A_GLANCE;
+    expect(mlh!.win).toMatch(/provided through MLH/);
+    expect(redHat!.win).toBe("€1,000, subject to the partnership terms.");
+    expect(fiware!.win).toMatch(/non-cash/);
+    expect(text([mlh, fiware])).not.toMatch(/€|EUR|\$\d/);
+    expect(fiware!.decided).toMatch(/Sunday 8 November.*closing ceremony/);
+    expect(mlh!.decided).toMatch(/announced in the event channels/);
+    expect(redHat!.decided).toMatch(/announced in the event channels/i);
+    expect(mlh!.ask).toMatch(/Fri 16:50/);
+    // The reviewer stays unnamed; no dates or times beyond the ones in the guide data.
+    expect(text(AWARDS_AT_A_GLANCE)).not.toMatch(/reviewed by|contract|fee|coupon/i);
+    expect(text(AWARDS_AT_A_GLANCE).match(/\d{1,2}:\d{2}/g)).toEqual(["16:50"]);
+  });
+});
+
+describe("submission form pointers", () => {
+  it("says where MLH categories are ticked and lists the public-safe summary for confidential challenges", () => {
+    const optIn = SUBMISSION.optional.find((f) => /opt-in prizes/.test(f.name))!;
+    expect(optIn.note).toMatch(/tick the MLH categories/);
+    expect(optIn.link?.href).toBe(AWARDS_HREF);
+    const summary = SUBMISSION.optional.find((f) => f.name === "Public-safe summary")!;
+    expect(summary.note).toMatch(/^For confidential challenges/);
+    expect(summary.link?.href).toBe("/hackathon-2026/guide/resources#confidential");
   });
 });

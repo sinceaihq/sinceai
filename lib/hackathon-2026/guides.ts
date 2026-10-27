@@ -105,8 +105,8 @@ export const CRITICAL_PATH: Partial<Record<Audience, readonly { label: string; t
     { label: "MLH · opening", time: "16:50 · 17:00", text: "MLH intro, then the opening and Jason Mayes at Taidon portaat; from 18:30 follow your route." },
     { label: "Briefing", time: "18:50–19:30", text: "Your company's room at EduCity." },
     { label: "Build", time: "from 19:30", text: "Dinner and building in BioCity or Joki, around the clock." },
-    { label: "Submit", time: "Sun 10:00", text: "Your team submits in sinceai.app, not Devpost — the deadline is fixed. Tick any MLH awards." },
-    { label: "Vote", time: "Sun 10–12", text: `Complete your ${VOTE_COMPARISONS} comparisons in sinceai.app.` },
+    { label: "Submit", time: "Sun 10:00", text: "Your team submits in sinceai.app, not Devpost — the deadline is fixed. Tick any MLH categories; enter Red Hat or FIWARE under optional awards." },
+    { label: "Vote", time: "Sun 10:00–12:00", text: `Complete your ${VOTE_COMPARISONS} comparisons in sinceai.app.` },
   ],
   "challenge-partners": [
     { label: "Arrive", time: "Fri 15:30", text: "EduCity — weekend briefing at 15:45." },

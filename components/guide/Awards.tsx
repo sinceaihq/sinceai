@@ -1,4 +1,6 @@
 import {
+  AWARDS_AT_A_GLANCE,
+  awardAnchor,
   CONFIDENTIAL_CHALLENGE,
   CONFIDENTIAL_NOTE,
   CONFIDENTIAL_RULES,
@@ -12,14 +14,88 @@ import {
   HOW_TO_ENTER,
   HOW_TO_ENTER_LINK,
   MLH_AWARDS,
+  MLH_AWARDS_ANCHOR,
   MLH_AWARDS_NOTE,
   MLH_PRIZE_PAGE,
+  MLH_QUESTIONS,
   RED_HAT_AWARD,
   type TechnologyAward,
 } from "@/lib/hackathon-2026";
 import { TextLink } from "./primitives";
 
 const eyebrow = "font-mono text-[11px] uppercase tracking-widest";
+
+const GLANCE_COLUMNS = [
+  { key: "win", label: "What you win" },
+  { key: "enter", label: "How to enter" },
+  { key: "decided", label: "Decided and announced" },
+  { key: "ask", label: "Where to ask" },
+] as const;
+
+/**
+ * MLH, Red Hat and FIWARE side by side. A grid of rows on wide screens; on a
+ * phone each award stacks as a card with its own labels, so nothing scrolls sideways.
+ */
+export function AwardsAtAGlance() {
+  return (
+    <div data-awards-glance>
+      <div
+        aria-hidden="true"
+        className="hidden border-l border-t border-white/10 md:grid md:grid-cols-[minmax(0,1.1fr)_repeat(4,minmax(0,1fr))]"
+      >
+        <p className={`${eyebrow} border-b border-r border-white/10 px-4 py-2 text-white/55`}>Award</p>
+        {GLANCE_COLUMNS.map((c) => (
+          <p key={c.key} className={`${eyebrow} border-b border-r border-white/10 px-4 py-2 text-white/55`}>
+            {c.label}
+          </p>
+        ))}
+      </div>
+      <ul className="grid grid-cols-1 border-l border-t border-white/10 md:border-t-0">
+        {AWARDS_AT_A_GLANCE.map((row) => (
+          <li
+            key={row.id}
+            data-awards-glance-row={row.id}
+            className="guide-avoid-break grid grid-cols-1 border-b border-r border-white/10 md:grid-cols-[minmax(0,1.1fr)_minmax(0,4fr)] md:border-r-0"
+          >
+            <p className="p-4 pb-2 md:border-r md:border-white/10 md:pb-4">
+              <a
+                href={row.href}
+                className="font-semibold text-white underline decoration-white/30 underline-offset-4 hover:decoration-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              >
+                {row.name}
+              </a>
+            </p>
+            <dl className="grid grid-cols-1 pb-2.5 md:grid-cols-4 md:pb-0">
+              {GLANCE_COLUMNS.map((c) => (
+                <div key={c.key} className="px-4 py-1.5 md:border-r md:border-white/10 md:py-4">
+                  <dt className={`${eyebrow} text-white/55 md:sr-only`}>{c.label}</dt>
+                  <dd className="mt-0.5 text-sm text-neutral-300 leading-relaxed md:mt-0">{row[c.key]}</dd>
+                </div>
+              ))}
+            </dl>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/** "Questions?" — where to ask about an award, only support already published in the guide. */
+function Questions({ text, link }: { text: string; link?: { label: string; href: string } }) {
+  return (
+    <p className="border-t border-white/10 py-3 text-sm text-neutral-300 leading-relaxed" data-award-questions>
+      <span className="font-semibold text-white">Questions?</span> {text}
+      {link && (
+        <>
+          {" "}
+          <TextLink href={link.href} className="min-h-0">
+            {link.label}
+          </TextLink>
+        </>
+      )}
+    </p>
+  );
+}
 
 /** Three steps: everything is entered in sinceai.app, the main submission stays the source of truth. */
 export function HowToEnter() {
@@ -46,7 +122,7 @@ export function HowToEnter() {
 /** The seven MLH categories, labelled as prizes provided through MLH. */
 export function MlhAwards() {
   return (
-    <div data-mlh-awards>
+    <div id={MLH_AWARDS_ANCHOR} data-mlh-awards>
       <p className="max-w-3xl text-sm text-neutral-300 leading-relaxed">{MLH_AWARDS_NOTE}</p>
       <ul className="mt-5 grid grid-cols-1 border-l border-t border-white/10 sm:grid-cols-2 lg:grid-cols-4">
         {MLH_AWARDS.map((a) => (
@@ -63,9 +139,9 @@ export function MlhAwards() {
           </li>
         ))}
       </ul>
-      <p className="guide-no-print mt-3">
-        <TextLink href={MLH_PRIZE_PAGE}>MLH prize page for Since AI Hackathon</TextLink>
-      </p>
+      <div className="mt-3 max-w-3xl">
+        <Questions text={MLH_QUESTIONS} link={{ label: "MLH prize page for Since AI Hackathon", href: MLH_PRIZE_PAGE }} />
+      </div>
     </div>
   );
 }
@@ -110,6 +186,31 @@ function Criteria({ award }: { award: TechnologyAward }) {
   );
 }
 
+/** Closed by default, opened for printing (PrintButton and the print stylesheet). */
+function Disclosure({
+  label,
+  children,
+  ...data
+}: { label: string; children: React.ReactNode } & Record<`data-${string}`, boolean>) {
+  return (
+    <details className="guide-details group border-t border-white/10" {...data}>
+      <summary className="flex min-h-11 items-center justify-between gap-4 py-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+        <span className={`${eyebrow} text-white/55 group-hover:text-white`}>{label}</span>
+        <svg
+          aria-hidden="true"
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          className="guide-chevron shrink-0 text-white/55 transition-transform duration-200"
+        >
+          <path d="M1.5 4l4.5 4.5L10.5 4" stroke="currentColor" strokeWidth="1.5" fill="none" />
+        </svg>
+      </summary>
+      <div className="pb-3">{children}</div>
+    </details>
+  );
+}
+
 /** One technology award: provider, prize, eligibility, evidence, criteria and docs. */
 export function TechnologyAwardCard({
   award,
@@ -123,7 +224,7 @@ export function TechnologyAwardCard({
 }) {
   return (
     <article
-      id={`award-${award.id}`}
+      id={awardAnchor(award.id)}
       data-award={award.id}
       aria-labelledby={`award-${award.id}-title`}
       className="guide-avoid-break flex flex-col border border-white/10 p-5 md:p-6"
@@ -142,6 +243,7 @@ export function TechnologyAwardCard({
         <Criteria award={award} />
         <p className="border-t border-white/10 py-3 text-sm text-neutral-400 leading-relaxed">{award.evaluation}</p>
         {children}
+        <Questions text={award.questions.text} link={award.questions.link} />
       </div>
       <div className="guide-no-print mt-auto flex flex-wrap gap-x-5">
         {award.docs.map((d) => (
@@ -177,17 +279,27 @@ export function TechnologyAwards() {
           </div>
         }
       >
-        <div className="border-t border-white/10 py-3" data-fiware-benefits>
-          <p className={`${eyebrow} text-white/55`}>Prize package</p>
-          <ol className="mt-2 space-y-1.5">
+        <Disclosure label="Prize package" data-fiware-benefits>
+          <ol className="space-y-1.5">
             {FIWARE_AWARD.benefits.map((b) => (
               <li key={b.title} className="text-sm text-neutral-300 leading-relaxed">
                 <span className="font-semibold text-white">{b.title}.</span> {b.text}
               </li>
             ))}
           </ol>
-        </div>
-        <List label="Conditions" items={FIWARE_AWARD.conditions} />
+        </Disclosure>
+        <Disclosure label="Conditions" data-fiware-conditions>
+          <ul className="space-y-1.5">
+            {FIWARE_AWARD.conditions.map((item) => (
+              <li key={item} className="flex gap-2 text-sm text-neutral-300 leading-relaxed">
+                <span aria-hidden="true" className="text-white/55">
+                  —
+                </span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </Disclosure>
         <p className="border-t border-white/10 py-3 text-sm text-neutral-400 leading-relaxed">{FIWARE_AWARD.mentor}</p>
       </TechnologyAwardCard>
     </div>
@@ -202,13 +314,17 @@ export function FiwareResources() {
         <p className={`${eyebrow} text-(--color-event)`}>Start in under ten minutes</p>
         <ol className="mt-3 space-y-3">
           {FIWARE_QUICK_START.map((s, i) => (
-            <li key={s.step} className="text-sm text-neutral-300">
+            <li key={s.step} className="min-w-0 text-sm text-neutral-300">
               <span className="font-semibold text-white">
                 {i + 1}. {s.step}
               </span>
-              <code className="mt-1 block whitespace-pre-wrap break-all border border-white/10 bg-white/[0.03] px-3 py-2 font-mono text-xs text-white">
-                {s.code}
-              </code>
+              {/* One command per line, never wrapped mid-flag: a phone scrolls the block sideways (keyboard too), not the page. */}
+              <pre
+                tabIndex={0}
+                className="mt-1 overflow-x-auto whitespace-pre border border-white/10 bg-white/[0.03] px-3 py-2 font-mono text-xs leading-relaxed text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              >
+                <code>{s.code}</code>
+              </pre>
             </li>
           ))}
         </ol>

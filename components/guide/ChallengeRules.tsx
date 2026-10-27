@@ -8,8 +8,10 @@ import {
   formatEur,
   GUIDE_BASE_PATH,
   isTbaPlace,
+  CONFIDENTIAL_ANCHOR,
   NDA_LABEL,
   NDA_NOTE,
+  RESOURCES_PATH,
   SELECTION_RULES,
   SELECTION_TIMELINE,
   SKILL_CARDS,
@@ -20,18 +22,24 @@ import {
 } from "@/lib/hackathon-2026";
 import { cn } from "@/lib/utils";
 
-/** Small, readable "NDA required" label next to a company that runs its own NDA (mobile too). */
+/**
+ * Small, readable "NDA required" label next to a company that runs its own NDA (mobile too).
+ * It links to what a confidential challenge means; the note is in the link's accessible
+ * name (not only in a hover title, which touch and keyboard users never see).
+ */
 export function NdaLabel({ className }: { className?: string }) {
   return (
-    <span
+    <Link
+      href={`${RESOURCES_PATH}#${CONFIDENTIAL_ANCHOR}`}
       className={cn(
-        "inline-flex shrink-0 items-center border border-(--color-event)/60 px-1.5 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-widest text-(--color-event)",
+        "inline-flex shrink-0 items-center border border-(--color-event)/60 px-1.5 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-widest text-(--color-event) transition-colors hover:border-(--color-event) hover:bg-(--color-event)/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
         className,
       )}
       title={NDA_NOTE}
     >
-      {NDA_LABEL}
-    </span>
+      <span>{NDA_LABEL}</span>
+      <span className="sr-only">: {NDA_NOTE} What a confidential challenge means.</span>
+    </Link>
   );
 }
 

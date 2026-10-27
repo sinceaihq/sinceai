@@ -18,7 +18,7 @@ import {
 } from "@/components/sections/hackathon";
 import { TrackedLink } from "@/components/analytics/TrackedLink";
 import ORG from "@/lib/org";
-import { COMPUTING_HREF } from "@/lib/hackathon-2026";
+import { AWARDS_HREF, COMPUTING_HREF } from "@/lib/hackathon-2026";
 import {
   HACKATHON_2026_CHALLENGE_LIST,
   HACKATHON_2026_PARTNERS,
@@ -80,6 +80,8 @@ const hackathonFaqs = [
   {
     q: "Are there prizes besides the company challenges?",
     a: "Yes — optional awards a team can enter with the same project in sinceai.app: seven Major League Hacking prize categories, the Red Hat OpenShift AI Technology Award and the non-cash FIWARE Open Innovation Award. They never replace the company challenge. Details and how to enter are in the Field Guide's Builder Resources, under Optional awards.",
+    href: AWARDS_HREF,
+    linkLabel: "Optional awards in the Field Guide",
   },
   {
     q: "Can we use AI tools like ChatGPT, Claude, Cursor or GitHub Copilot?",

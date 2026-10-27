@@ -81,7 +81,7 @@ export default function JudgeGuidePage() {
           facts={[
             { label: "Submissions close", value: "Sun 10:00", sub: "Hard deadline", strong: true },
             { label: "Company evaluation", value: "10:00–13:00", sub: "Arrive 08:45 · briefing 09:00 · EduCity" },
-            { label: "Builder voting", value: "10:00–12:00", sub: "Top five from five different challenges" },
+            { label: "Builder voting", value: "10:00–12:00", sub: "Five finalists from five different challenges" },
             { label: "Top three per challenge", value: "Sun 13:30", sub: "Announced at EduCity" },
             { label: "Finals", value: "Sun 14:00–15:10", sub: "EduCity · jury decides", strong: true },
             { label: "Event ends", value: "Sun ~15:30", sub: "EduCity · around 15:30" },

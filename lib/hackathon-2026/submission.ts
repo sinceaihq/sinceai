@@ -1,4 +1,6 @@
+import { AWARDS_HREF, CONFIDENTIAL_ANCHOR } from "./awards";
 import { GUIDE_BASE_PATH, GUIDE_LINKS } from "./facts";
+import { RESOURCES_PATH } from "./resources";
 
 /**
  * Building with AI and submitting a project — Since AI Hackathon 2026.
@@ -41,6 +43,8 @@ export const AI_POLICY = {
 export interface SubmissionField {
   name: string;
   note?: string;
+  /** A guide page that explains the field further. */
+  link?: { label: string; href: string };
 }
 
 export const SUBMISSION = {
@@ -68,7 +72,16 @@ export const SUBMISSION = {
   optional: [
     { name: "Submission video URL", note: "A YouTube video link." },
     { name: "Files", note: "Pitch deck, supporting documents and an uploaded demo video." },
-    { name: "Domain name, opt-in prizes and schools of team members" },
+    {
+      name: "Domain name, opt-in prizes and schools of team members",
+      note: "Opt-in prizes is where you tick the MLH categories that fit; Red Hat and FIWARE are entered under optional awards.",
+      link: { label: "Optional awards", href: AWARDS_HREF },
+    },
+    {
+      name: "Public-safe summary",
+      note: "For confidential challenges: the summary voters, the public and optional-award reviewers see instead of restricted material.",
+      link: { label: "What is confidential", href: `${RESOURCES_PATH}#${CONFIDENTIAL_ANCHOR}` },
+    },
     { name: "Gemini API project number", note: "Leave it blank unless a prize category you enter asks for it." },
   ] satisfies readonly SubmissionField[],
   /** The attachment allow-list (attachment.constants.ts). */

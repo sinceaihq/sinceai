@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { GuideHero, GuideSection, HelpSection, SectionHeading, SectionNav } from "@/components/guide";
-import { ConfidentialRules, FiwareResources, HowToEnter, MlhAwards, TechnologyAwards } from "@/components/guide/Awards";
+import {
+  AwardsAtAGlance,
+  ConfidentialRules,
+  FiwareResources,
+  HowToEnter,
+  MlhAwards,
+  TechnologyAwards,
+} from "@/components/guide/Awards";
 import { OnSitePartners, ResourceCard, ToolItem } from "@/components/guide/Resources";
 import {
   AWARDS_ANCHOR,
@@ -31,7 +38,7 @@ const NAV_LABEL: Record<string, string> = {
 /** The page at a glance: what a new builder needs to find within seconds. */
 const AT_A_GLANCE = [
   { href: "#computing", label: "Tools & benefits", text: "Partner technologies, credits and quickstarts." },
-  { href: `#${AWARDS_ANCHOR}`, label: "Extra prizes", text: "7 MLH categories, Red Hat and FIWARE awards." },
+  { href: `#${AWARDS_ANCHOR}`, label: "Optional awards", text: "7 MLH categories, Red Hat and FIWARE awards." },
   { href: "#how-to-enter", label: "How to enter", text: "All in sinceai.app — one submission, tick the awards." },
   { href: `#${FIWARE_RESOURCES_ANCHOR}`, label: "Start with FIWARE", text: "A context broker running in ten minutes." },
   { href: `#${CONFIDENTIAL_ANCHOR}`, label: "What is confidential", text: "FORCIT's NDA challenge and public-safe summaries." },
@@ -58,6 +65,9 @@ export default function ResourcesGuidePage() {
               The AI tools policy
             </Link>
             .
+          </p>
+          <p className="border-l-2 border-white/15 pl-4 text-neutral-400 md:col-span-2" data-resources-security>
+            <span className="font-semibold text-white">Keep it safe.</span> {RESOURCES_INTRO.security}
           </p>
         </div>
         <nav aria-label="This page at a glance" className="mt-8" data-at-a-glance>
@@ -91,7 +101,7 @@ export default function ResourcesGuidePage() {
         ]}
       />
 
-      {RESOURCE_CATEGORIES.map((category, i) => (
+      {RESOURCE_CATEGORIES.map((category) => (
         <GuideSection key={category.id} id={category.id}>
           <SectionHeading
             id={`${category.id}-title`}
@@ -104,22 +114,19 @@ export default function ResourcesGuidePage() {
               <ResourceCard key={r.id} resource={r} />
             ))}
           </ul>
-          {i === RESOURCE_CATEGORIES.length - 1 && (
-            <p className="mt-6 max-w-3xl text-sm text-neutral-300 leading-relaxed">
-              <span className="font-semibold text-white">Keep it safe.</span> {RESOURCES_INTRO.security}
-            </p>
-          )}
         </GuideSection>
       ))}
 
       <GuideSection id={AWARDS_ANCHOR}>
         <SectionHeading
           id={`${AWARDS_ANCHOR}-title`}
-          eyebrow="// optional awards · extra prizes"
+          eyebrow="// optional awards"
           title="Win more with the same project."
           lede="Optional awards on top of your company challenge. They never replace it, never use its places and never change its evaluation — enter as many as fit."
         />
-        <div id="how-to-enter" className="scroll-mt-28">
+        <h3 className="mb-4 text-xl font-bold tracking-tight text-white">At a glance</h3>
+        <AwardsAtAGlance />
+        <div id="how-to-enter" className="mt-12">
           <h3 className="mb-4 text-xl font-bold tracking-tight text-white">How to enter</h3>
           <HowToEnter />
         </div>

@@ -109,6 +109,9 @@ test.describe("content", () => {
     // FORCIT Group runs its own NDA: the label is visible before teams choose, on every viewport.
     await expect(page.locator("#company-forcit-group").getByText("NDA required")).toBeVisible();
     await expect(page.getByText("NDA required", { exact: true })).toHaveCount(1);
+    // The label explains itself to touch, keyboard and screen-reader users, not only in a hover title.
+    const nda = page.locator("#company-forcit-group").getByRole("link", { name: /NDA required.*paper NDA/ });
+    await expect(nda).toHaveAttribute("href", `${GUIDE}/resources#confidential`);
     await expect(page.locator("#selection [data-challenge-prizes]")).toContainText("€2,000 · €750 · €250");
     await expect(page.locator("#selection [data-challenge-prizes]")).toContainText("€3,000 · €1,500 · €500");
     await expect(page.locator("main")).not.toContainText("same cash prize");
@@ -433,6 +436,10 @@ test.describe("Build & submit (builder guide)", () => {
     await expect(submit).toContainText("not Devpost");
     await expect(submit.locator('[data-file-kind="Demo video"]')).toContainText("MP4, WebM");
     await expect(submit).toContainText("ZIP archives are not accepted");
+    // Under the steps: one line to the optional awards; the form's opt-in prizes and public-safe summary say where to look.
+    await expect(submit.locator("[data-submit-awards]").getByRole("link")).toHaveAttribute("href", `${GUIDE}/resources#awards`);
+    await expect(submit).toContainText("Opt-in prizes is where you tick the MLH categories");
+    await expect(submit).toContainText("For confidential challenges");
   });
 
   test("FAQ answers open, and their links point to the right places", async ({ page }) => {
@@ -480,10 +487,18 @@ test.describe("Builder Resources", () => {
     await expect(page.locator('[data-resource="featherless"]')).toContainText("never on this website");
     await expect(page.locator('[data-resource="red-hat"]')).toContainText("free for 30 days");
     await expect(page.locator('[data-resource="fiware"]').getByRole("link", { name: "FIWARE builder resources" })).toHaveAttribute("href", "#fiware");
-    // The cards name their award and link to it; the terms live in the awards section only.
-    await expect(page.locator('[data-resource="fiware"]').getByRole("link", { name: "FIWARE Open Innovation Award" })).toHaveAttribute("href", `${GUIDE}/resources#awards`);
-    await expect(page.locator('[data-resource="red-hat"]').getByRole("link", { name: "Red Hat OpenShift AI Technology Award" })).toHaveAttribute("href", `${GUIDE}/resources#awards`);
-    await expect(page.locator('[data-resource="red-hat"]')).not.toContainText(/€|booth/i);
+    // The cards name their award, link to its own card and give the prize in a few words; the terms live in the awards section.
+    await expect(page.locator('[data-resource="fiware"]').getByRole("link", { name: "FIWARE Open Innovation Award" })).toHaveAttribute(
+      "href",
+      `${GUIDE}/resources#award-fiware-open-innovation`,
+    );
+    await expect(page.locator('[data-resource="fiware"] [data-award-short]')).toHaveText("· non-cash package");
+    await expect(page.locator('[data-resource="red-hat"]').getByRole("link", { name: "Red Hat OpenShift AI Technology Award" })).toHaveAttribute(
+      "href",
+      `${GUIDE}/resources#award-red-hat-openshift-ai`,
+    );
+    await expect(page.locator('[data-resource="red-hat"] [data-award-short]')).toHaveText("· €1,000");
+    await expect(page.locator('[data-resource="red-hat"]')).not.toContainText(/booth/i);
     await expect(page.locator("main")).not.toContainText(/Google Cloud credit|Activation pending|exclusive/i);
     const cards = page.locator("[data-resource]");
     for (const card of await cards.all()) {
@@ -515,9 +530,34 @@ test.describe("Builder Resources", () => {
     // At a glance: the six things a new builder looks for, each an in-page link.
     const glance = page.getByRole("navigation", { name: "This page at a glance" });
     await expect(glance.getByRole("link")).toHaveCount(6);
-    await glance.getByRole("link", { name: /Extra prizes/ }).click();
+    await glance.getByRole("link", { name: /Optional awards/ }).click();
     await expect(page).toHaveURL(/#awards$/);
     await expect(page.locator("#awards-title")).toBeInViewport();
+    await expect(page.locator("main")).not.toContainText(/extra prizes/i);
+    // The heading lands below the sticky header and section nav, never under them.
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const bars = [...document.querySelectorAll("header, nav")].filter((e) => getComputedStyle(e).position === "sticky");
+          const bottom = Math.max(0, ...bars.map((e) => e.getBoundingClientRect().bottom));
+          return document.getElementById("awards")!.getBoundingClientRect().top - bottom;
+        }),
+      )
+      .toBeGreaterThanOrEqual(0);
+    // At a glance: MLH, Red Hat and FIWARE side by side, each linking to its own card.
+    const rows = page.locator("[data-awards-glance-row]");
+    await expect(rows).toHaveCount(3);
+    for (const [id, href] of [
+      ["mlh", "#mlh-awards"],
+      ["red-hat-openshift-ai", "#award-red-hat-openshift-ai"],
+      ["fiware-open-innovation", "#award-fiware-open-innovation"],
+    ] as const) {
+      await expect(page.locator(`[data-awards-glance-row="${id}"] a`)).toHaveAttribute("href", href);
+      await expect(page.locator(href)).toHaveCount(1);
+    }
+    await expect(page.locator('[data-awards-glance-row="fiware-open-innovation"]')).toContainText("announced at the closing ceremony");
+    const glanceBox = await page.locator("[data-awards-glance]").boundingBox();
+    expect(glanceBox!.x + glanceBox!.width).toBeLessThanOrEqual(page.viewportSize()!.width);
     await expect(page.locator("[data-how-to-enter] li")).toHaveCount(3);
     await expect(page.locator("[data-how-to-enter]")).toContainText("never an API key");
     const redHat = page.locator('[data-award="red-hat-openshift-ai"]');
@@ -530,12 +570,29 @@ test.describe("Builder Resources", () => {
     await expect(fiware).toContainText("travel and accommodation are not included");
     await expect(fiware).toContainText("sole evaluator");
     await expect(fiware.locator("[data-fiware-benefits] li")).toHaveCount(5);
+    // The prize package and conditions sit behind native disclosures, closed by default; prize and criteria stay visible.
+    for (const sel of ["[data-fiware-benefits]", "[data-fiware-conditions]"]) await expect(fiware.locator(sel)).not.toHaveAttribute("open", "");
+    await expect(fiware.locator("[data-award-prize]")).toBeVisible();
+    await expect(fiware.getByRole("table")).toBeVisible();
+    await expect(fiware.getByText("One prize package per winning team")).toBeHidden();
+    await fiware.locator("[data-fiware-conditions] summary").focus();
+    await page.keyboard.press("Enter");
+    await expect(fiware.getByText("One prize package per winning team")).toBeVisible();
+    for (const id of ["red-hat-openshift-ai", "fiware-open-innovation"]) await expect(page.locator(`[data-award="${id}"] [data-award-questions]`)).toContainText("Questions?");
+    await expect(page.locator("[data-mlh-awards] [data-award-questions]")).toContainText("16:50");
     const mlh = page.locator("[data-mlh-award]");
     await expect(mlh).toHaveCount(7);
     await expect(page.locator("[data-mlh-awards]")).toContainText("Prizes provided through Major League Hacking");
     await expect(page.locator('[data-mlh-award="mlh-gemini"]')).toContainText("MLH Swag Kits");
     for (const link of await page.locator("[data-mlh-award] a").all()) await expect(link).toHaveAttribute("href", /^https:\/\/mlh\.link\//);
-    await expect(page.locator("[data-fiware-resources]")).toContainText("docker run -d --name orion-ld -p 1026:1026 fiware/orion-ld");
+    await expect(page.locator("[data-fiware-resources]")).toContainText("docker run -d --name mongo-db --network fiware mongo:4.4");
+    await expect(page.locator("[data-fiware-resources]")).toContainText("Content-Type: application/ld+json");
+    // Commands keep one line each (no mid-flag wraps); a long one scrolls inside its block, never the page.
+    for (const pre of await page.locator("[data-fiware-resources] pre").all()) {
+      await expect(pre).toHaveCSS("white-space", "pre");
+      await expect(pre).toHaveAttribute("tabindex", "0");
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
     await expect(page.locator("[data-confidential-rules] li")).toHaveCount(5);
     const main = await page.locator("main").innerText();
     expect(main).not.toMatch(/@fiware\.org|@seamware|@joinedcontext|@indoorsos|\+358/);
