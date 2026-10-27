@@ -346,7 +346,8 @@ test.describe("hackathon 2026 page", () => {
     );
     const main = await page.locator("main").innerText();
     expect(main).not.toMatch(/MLH 2026 season|2026 Season Member Event/i);
-    for (const name of ["Fonecta", "Lindström", "Business Turku", "Forcit Group", "All 15 company challenges offer the same cash prize"]) expect(main).toContain(name);
+    for (const name of ["Fonecta", "Lindström", "Business Turku", "FORCIT Group", "€5,000 prize pot to be confirmed in writing"]) expect(main).toContain(name);
+    expect(main).not.toContain("same cash prize");
     await expect(page.locator("[data-volunteer-cta]")).toHaveAttribute("href", /^https:\/\/docs\.google\.com\/forms\/d\/e\/1FAIpQLSdro-RK8jjZ8BVLXq4ij8m4FcBUOl7Z3QycKwFCFj-xub7dqQ\/viewform/);
     await expect(page.locator("[data-volunteer-cta]")).toHaveCount(1);
     // Former 2026 names appear only in the 2025 edition paragraph.
@@ -356,7 +357,7 @@ test.describe("hackathon 2026 page", () => {
     expect(without2025).not.toMatch(/72[\s-]*(h\b|hours?)/i);
     await expect(page.getByText("To be announced", { exact: true })).toHaveCount(1);
     await expect(page.getByRole("link", { name: /^Europress — Since AI Hackathon 2026 partner website/ }).first()).toHaveAttribute("href", "https://europressgroup.com/");
-    await expect(page.getByRole("link", { name: /Forcit Group .*\(NDA required\)/ }).first()).toBeVisible();
+    await expect(page.getByRole("link", { name: /FORCIT Group .*\(NDA required\)/ }).first()).toBeVisible();
     const ld = await page.locator('script[type="application/ld+json"]').allTextContents();
     const event = ld.map((t) => JSON.parse(t)).find((d) => d["@type"] === "Event");
     expect(event.sponsor.map((s: { name: string }) => s.name)).toHaveLength(14);

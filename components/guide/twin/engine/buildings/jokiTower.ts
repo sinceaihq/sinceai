@@ -18,7 +18,7 @@ import { exitSign, floorScreen, mapWall, patchworkCarpet, rollupAtlas, screenCon
  * ducts and black track spots, grey patchwork carpet, convector benches
  * along the glass. Floor 2: Europress (provisional), Valmet, Traficom (east) and the Chill
  * Zone in the Turku Futurescapes exhibition (west). Floor 3: Takomo Golf,
- * Forcit Group, a partner to be announced (east), Lindström, Fonecta, Business Turku
+ * FORCIT Group, a partner to be announced (east), Lindström, Fonecta, Business Turku
  * (west) in front of the dark timber bleachers. Stand = black counter
  * 1.8 × 0.6 × 1.05 m with a violet kick light, two bar stools and a
  * 0.85 × 2.0 m roll-up with the company's logo (repo logos only).

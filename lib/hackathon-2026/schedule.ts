@@ -1,3 +1,4 @@
+import { CHALLENGE_PRIZES_STATEMENT } from "./prizes";
 import { ALL_AUDIENCES, type Audience, type ScheduleItem } from "./types";
 
 const THU = "2026-11-05";
@@ -32,14 +33,19 @@ const BREAKFAST_TBA = "Menu coming soon — the breakfast menu will be announced
  * marked the team as ready (the roster is then fixed), the lead selects one of
  * the 15 company challenges — final, places limited. Team formation closes at
  * 16:45; selection closes at 17:30, when every team's route is in the app.
- * Opening ceremony 17:00–17:30, Jason Mayes 17:30–18:30, the teams move in
+ * Major League Hacking introduces its tools, sponsor technologies and awards
+ * 16:50–17:00 at Taidon portaat (organiser, 27 Oct 2026: exactly ten minutes,
+ * a hard stop at 17:00). Opening ceremony 17:00–17:30, Jason Mayes 17:30–18:30, the teams move in
  * turn from 18:30, briefings 18:50–19:30 (a hard end), and at 19:30 the full
  * challenge opens in the app for each company's own teams. Dinner at BioCity
  * 18:30–22:00. Places per challenge and their formula are internal, not here.
  *
- * Sunday: the closing ceremony starts at 13:15, each challenge's top three are
- * announced 13:30–14:00, the five finalists present 14:00–15:10 and the event
- * ends around 15:30.
+ * Sunday: builders complete 20 pairwise comparisons in sinceai.app 10:00–12:00;
+ * the five finalists are the highest-ranked eligible projects from five
+ * different company challenges (organiser, 27 Oct 2026 — see voting.ts). The
+ * closing ceremony starts at 13:15, each challenge's top three are announced
+ * 13:30–14:00, the five finalists present 14:00–15:10 and the event ends
+ * around 15:30.
  *
  * Items in the run of show that are internal to the companies' own programme
  * and not confirmed for publication are left out of this public schedule.
@@ -51,7 +57,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     start: at(THU, "15:00"),
     title: "Challenge summaries open in sinceai.app",
     detail:
-      "Public-safe summaries of all 15 company challenges open for registered participants — with or without a team. Choose from these summaries only: full templates and datasets go only to the teams that chose that company, after its briefing. All 15 company challenges offer the same cash prize. Agree on at least three you would be happy with — places are limited.",
+      `Public-safe summaries of all 15 company challenges open for registered participants — with or without a team. Choose from these summaries only: full templates and datasets go only to the teams that chose that company, after its briefing. ${CHALLENGE_PRIZES_STATEMENT} Agree on at least three you would be happy with — places are limited.`,
     place: "app",
     audiences: ["builders"],
     kind: "milestone",
@@ -93,7 +99,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     title: "Ready teams select their challenge",
     titleFor: { builders: "Mark your team ready, then select" },
     detail:
-      "From 15:00 the team lead marks the team as ready in sinceai.app — the roster is then fixed — and selects one of the 15 company challenges for the whole team. The choice is final and cannot be changed. Places are limited, first come first served. All 15 company challenges offer the same cash prize.",
+      `From 15:00 the team lead marks the team as ready in sinceai.app — the roster is then fixed — and selects one of the 15 company challenges for the whole team. The choice is final and cannot be changed. Places are limited, first come first served. ${CHALLENGE_PRIZES_STATEMENT}`,
     place: "app",
     audiences: ["builders"],
     kind: "session",
@@ -146,6 +152,19 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     audiences: ["partners"],
     kind: "milestone",
     status: "working",
+  },
+  {
+    id: "fri-mlh-intro",
+    start: at(FRI, "16:50"),
+    end: at(FRI, "17:00"),
+    title: "Major League Hacking: Introduction & Hacker Resources",
+    detail:
+      "A ten-minute introduction from Major League Hacking (MLH): its tools, sponsor technologies, the MLH award categories and how builders can take part. The opening ceremony starts right after, at 17:00.",
+    place: "educity",
+    placeDetail: "Lobby · Taidon portaat",
+    audiences: ALL_AUDIENCES,
+    kind: "session",
+    status: "confirmed",
   },
   {
     id: "fri-opening",
@@ -497,13 +516,13 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     end: at(SUN, "12:00"),
     title: "Vote for the best solutions",
     detail:
-      "sinceai.app gives every builder ten solutions to review and vote on. The five teams with the most votes go through to the finals at 14:00 and compete for the overall win.",
+      "sinceai.app shows every eligible builder two solutions at a time — pick the stronger one. Every eligible builder is asked to complete 20 comparisons. The five highest-ranked projects from five different company challenges go through to the finals at 14:00 and compete for the overall win.",
     place: "app",
     audiences: ["builders", "judges"],
     titleFor: { judges: "Participant voting window" },
     detailFor: {
       judges:
-        "Every builder is given ten solutions to review and vote on in sinceai.app; the five teams with the most votes become the finalists.",
+        "Every eligible builder completes 20 pairwise comparisons in sinceai.app; the five highest-ranked projects from five different company challenges become the finalists.",
     },
     kind: "session",
     status: "working",
@@ -514,7 +533,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     start: at(SUN, "12:00"),
     title: "Voting closes — five finalists confirmed",
     detail:
-      "The votes are checked and the five finalists confirmed. The finalist teams are told they are through and get their presentation instructions.",
+      "The votes are checked and the five finalists confirmed — the highest-ranked projects from five different company challenges. The finalist teams are told they are through and get their presentation instructions.",
     place: "app",
     audiences: ["builders", "judges"],
     kind: "milestone",
@@ -607,7 +626,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     end: at(SUN, "15:10"),
     title: "Finals: five finalist teams present live",
     detail:
-      "The five finalist teams chosen in the participant vote present live on stage to the jury: ten minutes each — at most four minutes to present, then up to six minutes of questions from the jury — with a five-minute break between presentations. The jury then selects the overall winner of Since AI Hackathon 2026.",
+      "The five finalist teams chosen in the participant vote — from five different company challenges — present live on stage to the jury: ten minutes each — at most four minutes to present, then up to six minutes of questions from the jury — with a five-minute break between presentations. The jury then selects the overall winner of Since AI Hackathon 2026.",
     detailFor: {
       builders:
         "If your team is a finalist, you present live on stage at EduCity — not a recorded video: at most four minutes, then up to six minutes of questions from the jury. The jury then selects the overall winner.",

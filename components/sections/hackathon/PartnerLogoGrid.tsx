@@ -42,7 +42,7 @@ const groups: {
     boxClass: "w-32 h-12 sm:w-36 sm:h-14 lg:w-40 lg:h-16",
     sizes: "(max-width: 640px) 128px, (max-width: 1024px) 144px, 160px",
     tba: TBA_PLACES,
-    note: `${HACKATHON_2026_PARTNERS.equalPrize} ${TBA_PLACES === 1 ? "One more challenge partner" : `${TBA_PLACES} more challenge partners`} to be announced.`,
+    note: `${HACKATHON_2026_PARTNERS.prizes} ${TBA_PLACES === 1 ? "One more challenge partner" : `${TBA_PLACES} more challenge partners`} to be announced.`,
   },
   {
     // Solita and BearingPoint also mentor builders. Not a stand list — see the Field Guide's stand plan.

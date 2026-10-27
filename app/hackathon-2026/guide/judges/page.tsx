@@ -23,6 +23,7 @@ import {
   getScheduleItem,
   GUIDE_BASE_PATH,
   scheduleFor,
+  VOTE_COMPARISONS,
 } from "@/lib/hackathon-2026";
 
 const AUDIENCE = "judges" as const;
@@ -34,17 +35,18 @@ const ROLES = [
     eyebrow: "Role A",
     title: "Overall hackathon jury",
     points: [
-      "Builders vote 10:00–12:00 on the ten solutions sinceai.app gives each of them; at 12:00 the five teams with the most votes are confirmed as finalists.",
+      `Builders vote 10:00–12:00 in sinceai.app — ${VOTE_COMPARISONS} pairwise comparisons each. At 12:00 the five highest-ranked projects from five different company challenges are confirmed as finalists.`,
       "The five finalist teams present live on stage in the 14:00–15:10 finals at EduCity: ten minutes each — at most four minutes of presentation, then up to six minutes of questions from the jury — with five-minute breaks. The event ends around 15:30.",
       "The jury selects the overall winner of Since AI Hackathon 2026.",
       "Be ready before 14:00 — your call time comes in your personal briefing.",
+      "The optional MLH, Red Hat and FIWARE awards have their own reviewers; the jury role does not include reviewing them.",
     ],
   },
   {
     eyebrow: "Role B",
     title: "Company challenge evaluator",
     points: [
-      "Reviews the submissions to one company's challenge.",
+      "Reviews the submissions to one company's challenge — in full, including any confidential challenge's restricted work.",
       "Arrive at EduCity at 08:45 for the evaluation briefing at 09:00; reviewing starts when submissions close at 10:00.",
       "Uses the company's agreed criteria and decides that challenge's top three teams by 13:00.",
       "Each challenge's top three are announced from 13:30 at EduCity, after the 13:15 start of the closing ceremony — prepared from the results confirmed by 13:00.",
@@ -79,7 +81,7 @@ export default function JudgeGuidePage() {
           facts={[
             { label: "Submissions close", value: "Sun 10:00", sub: "Hard deadline", strong: true },
             { label: "Company evaluation", value: "10:00–13:00", sub: "Arrive 08:45 · briefing 09:00 · EduCity" },
-            { label: "Builder voting", value: "10:00–12:00", sub: "Top five become finalists" },
+            { label: "Builder voting", value: "10:00–12:00", sub: "Top five from five different challenges" },
             { label: "Top three per challenge", value: "Sun 13:30", sub: "Announced at EduCity" },
             { label: "Finals", value: "Sun 14:00–15:10", sub: "EduCity · jury decides", strong: true },
             { label: "Event ends", value: "Sun ~15:30", sub: "EduCity · around 15:30" },

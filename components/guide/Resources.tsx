@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
+  AWARDS_HREF,
   RESOURCES_GUIDE,
   RESOURCES_PATH,
   STAND_PARTNERS,
@@ -54,6 +55,16 @@ export function ResourceCard({ resource }: { resource: PartnerResource }) {
         {r.benefit && <Row label="Participant benefit">{r.benefit}</Row>}
         <Row label="Access">{r.access}</Row>
         <Row label="Help">{r.help}</Row>
+        {r.award && (
+          <Row label="Optional award">
+            <a
+              href={AWARDS_HREF}
+              className="text-white underline decoration-white/30 underline-offset-4 hover:decoration-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              {r.award}
+            </a>
+          </Row>
+        )}
       </dl>
       <div className="guide-no-print mt-auto flex flex-wrap gap-x-5 pt-3">
         <TextLink href={r.getStarted.href} className="font-semibold text-white">
@@ -106,8 +117,8 @@ export function ResourcesHubLink() {
         <span className="block font-mono text-xs uppercase tracking-widest text-white/55">Builders · partners & tools</span>
         <span className="mt-3 block text-2xl md:text-3xl font-bold tracking-tight text-white">{RESOURCES_GUIDE.name}</span>
         <span className="mt-3 block max-w-2xl text-sm text-neutral-400 leading-relaxed">
-          Computing, AI models, app builders and developer tools from our technology partners — quickstarts,
-          participant benefits and where to get help.
+          Computing, AI models, app builders, FIWARE and developer tools — quickstarts, participant benefits, the
+          optional MLH, Red Hat and FIWARE awards and where to get help.
         </span>
       </span>
       <span aria-hidden="true" className="text-2xl text-white/55 transition-colors group-hover:text-white">

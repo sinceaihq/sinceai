@@ -17,9 +17,10 @@ import { GUIDE_BASE_PATH } from "./facts";
  *   (developers.redhat.com/developer-sandbox, checked 26 Oct 2026). No booth:
  *   remote support Fri–Sat (Red Hat, 21 Oct 2026). Nothing beyond the sandbox
  *   and public docs is published until the organiser confirms it.
- * - FIWARE: technology partner (Tech guide v1.2); open-source docs only. Any
- *   optional open challenge, its name and its terms are announced only once
- *   confirmed — nothing about them is published here.
+ * - FIWARE: technology partner and provider of the FIWARE Open Innovation
+ *   Award; its Builder Pack (Oct 2026) grants publication of its technical
+ *   resources — see awards.ts. Red Hat's OpenShift AI Technology Award and the
+ *   seven MLH categories are there too.
  * - Aiven: organisation-level technology partner; no event-specific benefit.
  * - Pruna AI: shared hackathon API key and help on Discord (Pruna's public
  *   onepager). The key is never reproduced here.
@@ -32,8 +33,8 @@ import { GUIDE_BASE_PATH } from "./facts";
  *   Its community playbook is for event hosts only and is not linked.
  * - n8n: 200 n8n Cloud Pro licences, one month each (n8n, 10 Mar 2026).
  * - Google Cloud promotional credits for this event were revoked (20 May 2026);
- *   Gemini and Google Cloud appear as ordinary tools only. No MLH partner prize
- *   is published until MLH confirms the allocation.
+ *   Gemini and Google Cloud appear as ordinary tools only. "Best Use of Gemini
+ *   API" is an MLH prize category (MLH swag kits), not Google credits.
  *
  * `__tests__/resources.test.ts` guards these rules.
  */
@@ -43,9 +44,9 @@ export const RESOURCES_PATH = `${GUIDE_BASE_PATH}/resources`;
 export const RESOURCES_GUIDE = {
   name: "Builder Resources",
   navLabel: "Resources",
-  lede: "Explore the technologies available for your build. Since AI works with technology partners to provide computing resources, development tools, learning materials and selected participant benefits.",
+  lede: "Explore the technologies available for your build. Since AI works with technology partners to provide computing resources, development tools, learning materials and selected participant benefits — and you can win optional awards with the same project.",
   metaDescription:
-    "Since AI Hackathon 2026 Builder Resources: computing, AI models, app builders and developer tools from our technology partners — quickstarts, participant benefits and where to get help.",
+    "Since AI Hackathon 2026 Builder Resources: computing, AI models, app builders, FIWARE and developer tools — quickstarts, participant benefits, optional MLH, Red Hat and FIWARE awards and where to get help.",
 } as const;
 
 /** Shown under the hero: how access works, and the freedom to choose tools. */
@@ -62,7 +63,7 @@ export const RESOURCES_INTRO = {
 export const EVENT_ACCESS =
   "Access details are shared through official Since AI participant messages and designated event channels — never on this website.";
 
-export type ResourceCategoryId = "computing" | "models" | "building";
+export type ResourceCategoryId = "computing" | "models" | "building" | "standards";
 
 export const RESOURCE_CATEGORIES: readonly { id: ResourceCategoryId; title: string; lede: string }[] = [
   {
@@ -79,6 +80,11 @@ export const RESOURCE_CATEGORIES: readonly { id: ResourceCategoryId; title: stri
     id: "building",
     title: "Application building & automation",
     lede: "Go from prompt to working app, and connect services, data and workflows.",
+  },
+  {
+    id: "standards",
+    title: "Open standards & context data",
+    lede: "Open-source building blocks for real-world data — with an optional award of their own.",
   },
 ];
 
@@ -109,6 +115,8 @@ export interface PartnerResource {
   access: string;
   /** Where to get help. */
   help: string;
+  /** The optional award this partner provides, shown as a link to the awards section. */
+  award?: string;
 }
 
 export const PARTNER_RESOURCES: readonly PartnerResource[] = [
@@ -144,6 +152,7 @@ export const PARTNER_RESOURCES: readonly PartnerResource[] = [
       "The Developer Sandbox is free for 30 days for anyone. Set it up before the event, so your account and sandbox are ready when you start building.",
     access: "Self-service from Red Hat's Developer Sandbox page — no event code needed.",
     help: "Red Hat supports builders remotely during the event. Any session or office hours are announced in the event channels.",
+    award: "Red Hat OpenShift AI Technology Award",
   },
   {
     id: "aiven",
@@ -229,15 +238,16 @@ export const PARTNER_RESOURCES: readonly PartnerResource[] = [
     id: "fiware",
     name: "FIWARE",
     logo: { src: "/assets/sponsors/FIWARE.png", width: 480, height: 115 },
-    category: "building",
+    category: "standards",
     relationship: "Technology partner",
     description:
-      "Open-source building blocks for context data — the Orion Context Broker, NGSI-LD APIs and Smart Data Models for cities, energy, industry and more.",
-    buildIdeas: ["Real-time context data for your app", "Digital twins of places or machines", "Interoperable smart-city data"],
-    getStarted: { label: "FIWARE", href: "https://www.fiware.org/" },
-    docs: { label: "Step-by-step tutorials", href: "https://fiware-tutorials.readthedocs.io/" },
+      "FIWARE Foundation is the independent, neutral guardian of NGSI-LD — the open standard for context data management — with open-source Generic Enablers, Smart Data Models and a European iHub network.",
+    buildIdeas: ["Real-time context data for your app", "Digital twins of places or machines", "Sovereign AI on your own data"],
+    getStarted: { label: "FIWARE builder resources", href: "#fiware" },
+    docs: { label: "Step-by-step tutorials", href: "https://fiware-tutorials.readthedocs.io/en/latest/" },
     access: "Open source — free to use, no event code needed.",
-    help: "FIWARE's public documentation and community. Optional open challenges are announced through official event channels once their terms are confirmed.",
+    help: "Jason Fox, FIWARE's primary technical mentor, is on site all three days; FIWARE's mentors also answer on the Since AI Discord.",
+    award: "FIWARE Open Innovation Award",
   },
   {
     id: "n8n",
@@ -274,8 +284,8 @@ export const DEVELOPER_TOOLS: readonly ToolLink[] = [
 export const DEVELOPER_TOOLS_NOTE =
   "Popular tools you are free to use. They are not event partners and come with no event credits — free tiers and pricing are set by each provider.";
 
-/** The MLH relationship, without unconfirmed prizes or allocations. */
+/** The MLH relationship; its seven prize categories are in awards.ts. */
 export const MLH_NOTE =
-  "Since AI Hackathon 2026 is an official Major League Hacking 2027 Season Member Event. Any MLH prize categories or resources for this event are announced through official channels once confirmed.";
+  "Since AI Hackathon 2026 is an official Major League Hacking 2027 Season Member Event. MLH introduces its tools, sponsor technologies and award categories at 16:50 on Friday, at Taidon portaat — the seven MLH categories are under Optional awards on this page.";
 
 export const resourcesIn = (category: ResourceCategoryId) => PARTNER_RESOURCES.filter((r) => r.category === category);

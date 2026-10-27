@@ -38,11 +38,12 @@ const HOSTS: Record<string, RegExp> = {
 };
 
 describe("builder resources: structure", () => {
-  it("groups the verified partner resources into three categories", () => {
-    expect(RESOURCE_CATEGORIES.map((c) => c.id)).toEqual(["computing", "models", "building"]);
+  it("groups the verified partner resources into four categories", () => {
+    expect(RESOURCE_CATEGORIES.map((c) => c.id)).toEqual(["computing", "models", "building", "standards"]);
     expect(resourcesIn("computing").map((r) => r.id)).toEqual(["csc-lumi", "red-hat", "aiven"]);
     expect(resourcesIn("models").map((r) => r.id)).toEqual(["pruna-ai", "featherless", "elevenlabs"]);
-    expect(resourcesIn("building").map((r) => r.id)).toEqual(["lovable", "fiware", "n8n"]);
+    expect(resourcesIn("building").map((r) => r.id)).toEqual(["lovable", "n8n"]);
+    expect(resourcesIn("standards").map((r) => r.id)).toEqual(["fiware"]);
     expect(RESOURCES_PATH).toBe("/hackathon-2026/guide/resources");
   });
 
@@ -56,6 +57,11 @@ describe("builder resources: structure", () => {
       for (const link of [r.getStarted, r.partnerGuide, r.docs].filter(Boolean)) {
         if (link!.href.startsWith("/")) {
           expect(link!.href).toBe(COMPUTING_HREF);
+          continue;
+        }
+        if (link!.href.startsWith("#")) {
+          // FIWARE starts at the Builder Pack resources further down the same page.
+          expect([r.id, link!.href]).toEqual(["fiware", "#fiware"]);
           continue;
         }
         const url = new URL(link!.href);
@@ -91,8 +97,10 @@ describe("builder resources: what each partner's card says", () => {
     expect(r.benefit).toMatch(/Set it up before the event/);
     expect(r.help).toMatch(/supports builders remotely/);
     expect(r.help).toMatch(/office hours are announced in the event channels/);
-    // No booth (Red Hat, 21 Oct 2026) and no award before the contract is signed by both parties.
-    expect(allText(r)).not.toMatch(/stand|booth|award|prize|€|EUR|1[ ,.]?000/i);
+    // No booth (Red Hat, 21 Oct 2026). The award is named and linked; its terms live in awards.ts only.
+    const { award, ...card } = r;
+    expect(award).toBe("Red Hat OpenShift AI Technology Award");
+    expect(allText(card)).not.toMatch(/stand|booth|award|prize|€|EUR|1[ ,.]?000/i);
     expect(allText(r)).not.toMatch(/\d{1,2}:\d{2}/);
   });
 
@@ -173,9 +181,10 @@ describe("developer tools, Google and MLH", () => {
     expect(SUBMISSION.optional.find((f) => f.name === "Gemini API project number")?.note).toMatch(/unless a prize category you enter asks for it/);
   });
 
-  it("acknowledges MLH without inventing prizes or allocations", () => {
+  it("acknowledges MLH, its Friday introduction and points to the seven categories", () => {
     expect(MLH_NOTE).toMatch(/official Major League Hacking 2027 Season Member Event/);
-    expect(MLH_NOTE).toMatch(/announced through official channels once confirmed/);
+    expect(MLH_NOTE).toMatch(/16:50 on Friday, at Taidon portaat/);
+    expect(MLH_NOTE).toMatch(/seven MLH categories are under Optional awards/);
   });
 
   it("shows on-site partners with their registered roles only", () => {
@@ -221,7 +230,7 @@ const RESTRICTED: readonly [string, RegExp, "published"?][] = [
   ["Notion page other than Pruna's onepager or n8n's redemption guide", /\.notion\.site\/(?!building-with-pruna-at-since-ai-hackathon\b|voucher-code\b)[\w-]+/],
   ["Lovable's host-only community playbook", /community-hackathon-playbook\.lovable\.app/, "published"],
   ["Google Cloud credit or coupon link", /(cloud\.google\.com|google\.com)\/[^\s"'`)]*(credit|coupon|redeem|promo)/i],
-  ["a Gemini API prize claim", /Best Use of Gemini/i, "published"],
+  ["Gemini or Google credits, money or coupons (MLH's Gemini category is swag kits only)", /Gemini[^.\n"]{0,40}(credits?\b|€\s?\d|\$\d|coupon)/i, "published"],
 ];
 
 describe("no restricted redemption material in the public repository", () => {
@@ -263,7 +272,7 @@ describe("no restricted redemption material in the public repository", () => {
       "https://acme.notion.site/secret-page",
       "https://community-hackathon-playbook.lovable.app/",
       "https://cloud.google.com/billing/redeem?code=x",
-      "the Best Use of Gemini API prize",
+      "Gemini API credits for every team",
     ];
     RESTRICTED.forEach(([, re], i) => expect(re.test(samples[i]!)).toBe(true));
     // What is published passes.
@@ -274,6 +283,7 @@ describe("no restricted redemption material in the public repository", () => {
       "https://docs.cloud.google.com/docs",
       'export PRUNA_API_KEY="<key>"',
       "https://featherless.ai/docs/quickstart-guide",
+      "Best Use of Gemini API — MLH Swag Kits",
     ]) {
       expect(RESTRICTED.some(([, re]) => re.test(ok))).toBe(false);
     }

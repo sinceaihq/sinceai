@@ -106,10 +106,12 @@ test.describe("content", () => {
     await expect(page.locator('[id^="company-"]')).toHaveCount(15);
     const text = await page.locator("main").innerText();
     for (const name of ["Revvity", "Bo LKV", "Saarioinen", "Sandvik", "Kongsberg", "Neuropress"]) expect(text).not.toContain(name);
-    // Forcit Group runs its own NDA: the label is visible before teams choose, on every viewport.
+    // FORCIT Group runs its own NDA: the label is visible before teams choose, on every viewport.
     await expect(page.locator("#company-forcit-group").getByText("NDA required")).toBeVisible();
     await expect(page.getByText("NDA required", { exact: true })).toHaveCount(1);
-    await expect(page.locator("#selection [data-equal-prize]")).toHaveText("All 15 company challenges offer the same cash prize.");
+    await expect(page.locator("#selection [data-challenge-prizes]")).toContainText("€2,000 · €750 · €250");
+    await expect(page.locator("#selection [data-challenge-prizes]")).toContainText("€3,000 · €1,500 · €500");
+    await expect(page.locator("main")).not.toContainText("same cash prize");
   });
 
   test("Europress company page: official link, room 1090 Ringsberg on floor 1", async ({ page }) => {
@@ -154,7 +156,8 @@ test.describe("content", () => {
     await expect(section.locator('img[src*="educity-team-formation"]').first()).toHaveAttribute("alt", /route A .* route B/i);
     // The Now / Next card shows the current Turku time, which can be any of these.
     const body = (await page.locator("main").innerText()).replace(/Turku \d{2}:\d{2}/gi, "");
-    expect(body).not.toMatch(/17:45|17:50|18:05|16:50|before 17:00|18:15–18:45|open places|zones? 1/);
+    // 16:50 is now only the MLH introduction (27 Oct 2026), never the retired capacity split.
+    expect(body).not.toMatch(/17:45|17:50|18:05|16:50[^\n]{0,60}(capacity|split|places)|before 17:00|18:15–18:45|open places|zones? 1/);
     expect(body).toContain("Team formation closes at 16:45");
     expect(body).toContain("15:00–17:30");
     expect(body).toContain("18:50–19:30");
@@ -162,7 +165,11 @@ test.describe("content", () => {
 
   test("builder guide states the challenge rules and lists every briefing room", async ({ page }) => {
     await page.goto(`${GUIDE}/builders#rules`);
-    await expect(page.locator("#rules [data-equal-prize]")).toHaveText("All 15 company challenges offer the same cash prize.");
+    const prizes = page.locator("#rules [data-challenge-prizes]");
+    await expect(prizes).toContainText("All other company challenges");
+    await expect(prizes).toContainText("€2,000 · €750 · €250");
+    await expect(prizes).toContainText("FORCIT Group — Drill and Blast Cycle Intelligence (€5,000 prize pot)");
+    await expect(prizes).toContainText("To be confirmed in writing");
     await expect(page.locator("#rules")).toContainText("Mark team as ready");
     await expect(page.locator("#rules")).toContainText("Thu 5 Nov · 15:00");
     await expect(page.locator("#rules")).toContainText("Full challenge in the app");
@@ -462,7 +469,8 @@ test.describe("Builder Resources", () => {
     for (const [section, ids] of [
       ["computing", ["csc-lumi", "red-hat", "aiven"]],
       ["models", ["pruna-ai", "featherless", "elevenlabs"]],
-      ["building", ["lovable", "fiware", "n8n"]],
+      ["building", ["lovable", "n8n"]],
+      ["standards", ["fiware"]],
     ] as const) {
       const cards = page.locator(`#${section} [data-resource]`);
       expect(await cards.evaluateAll((els) => els.map((e) => e.getAttribute("data-resource")))).toEqual([...ids]);
@@ -471,15 +479,17 @@ test.describe("Builder Resources", () => {
     await expect(page.locator('[data-resource="n8n"]')).toContainText("limited to 200 redemptions");
     await expect(page.locator('[data-resource="featherless"]')).toContainText("never on this website");
     await expect(page.locator('[data-resource="red-hat"]')).toContainText("free for 30 days");
-    await expect(page.locator('[data-resource="fiware"]').getByRole("link", { name: /FIWARE/ }).first()).toHaveAttribute("href", "https://www.fiware.org/");
-    await expect(page.locator('[data-resource="fiware"]')).not.toContainText(/award|prize/i);
-    await expect(page.locator('[data-resource="red-hat"]')).not.toContainText(/award|prize|€/i);
-    await expect(page.locator("main")).not.toContainText(/Best Use of Gemini|Activation pending|exclusive/i);
+    await expect(page.locator('[data-resource="fiware"]').getByRole("link", { name: "FIWARE builder resources" })).toHaveAttribute("href", "#fiware");
+    // The cards name their award and link to it; the terms live in the awards section only.
+    await expect(page.locator('[data-resource="fiware"]').getByRole("link", { name: "FIWARE Open Innovation Award" })).toHaveAttribute("href", `${GUIDE}/resources#awards`);
+    await expect(page.locator('[data-resource="red-hat"]').getByRole("link", { name: "Red Hat OpenShift AI Technology Award" })).toHaveAttribute("href", `${GUIDE}/resources#awards`);
+    await expect(page.locator('[data-resource="red-hat"]')).not.toContainText(/€|booth/i);
+    await expect(page.locator("main")).not.toContainText(/Google Cloud credit|Activation pending|exclusive/i);
     const cards = page.locator("[data-resource]");
     for (const card of await cards.all()) {
       for (const link of await card.getByRole("link").all()) {
         const href = (await link.getAttribute("href"))!;
-        if (href.startsWith("/")) continue;
+        if (href.startsWith("/") || href.startsWith("#")) continue;
         expect(href).toMatch(/^https:\/\//);
         await expect(link).toHaveAttribute("target", "_blank");
         await expect(link).toHaveAttribute("rel", "noopener noreferrer");
@@ -500,6 +510,37 @@ test.describe("Builder Resources", () => {
     }
   });
 
+  test("optional awards: how to enter, Red Hat, FIWARE and the seven MLH categories", async ({ page }) => {
+    await page.goto(`${GUIDE}/resources`);
+    // At a glance: the six things a new builder looks for, each an in-page link.
+    const glance = page.getByRole("navigation", { name: "This page at a glance" });
+    await expect(glance.getByRole("link")).toHaveCount(6);
+    await glance.getByRole("link", { name: /Extra prizes/ }).click();
+    await expect(page).toHaveURL(/#awards$/);
+    await expect(page.locator("#awards-title")).toBeInViewport();
+    await expect(page.locator("[data-how-to-enter] li")).toHaveCount(3);
+    await expect(page.locator("[data-how-to-enter]")).toContainText("never an API key");
+    const redHat = page.locator('[data-award="red-hat-openshift-ai"]');
+    await expect(redHat.getByRole("heading", { level: 4 })).toHaveText("Red Hat OpenShift AI Technology Award");
+    await expect(redHat.locator("[data-award-prize]")).toHaveText("€1,000, subject to the partnership terms.");
+    await expect(redHat.getByRole("table")).toContainText("OpenShift AI use");
+    await expect(redHat).toContainText("35%");
+    const fiware = page.locator('[data-award="fiware-open-innovation"]');
+    await expect(fiware.getByRole("heading", { level: 4 })).toHaveText("FIWARE Open Innovation Award");
+    await expect(fiware).toContainText("travel and accommodation are not included");
+    await expect(fiware).toContainText("sole evaluator");
+    await expect(fiware.locator("[data-fiware-benefits] li")).toHaveCount(5);
+    const mlh = page.locator("[data-mlh-award]");
+    await expect(mlh).toHaveCount(7);
+    await expect(page.locator("[data-mlh-awards]")).toContainText("Prizes provided through Major League Hacking");
+    await expect(page.locator('[data-mlh-award="mlh-gemini"]')).toContainText("MLH Swag Kits");
+    for (const link of await page.locator("[data-mlh-award] a").all()) await expect(link).toHaveAttribute("href", /^https:\/\/mlh\.link\//);
+    await expect(page.locator("[data-fiware-resources]")).toContainText("docker run -d --name orion-ld -p 1026:1026 fiware/orion-ld");
+    await expect(page.locator("[data-confidential-rules] li")).toHaveCount(5);
+    const main = await page.locator("main").innerText();
+    expect(main).not.toMatch(/@fiware\.org|@seamware|@joinedcontext|@indoorsos|\+358/);
+  });
+
   test("is reachable from the guide header, the hub and the builder guide", async ({ page, isMobile }) => {
     await page.goto(GUIDE);
     await page.locator("#guides").getByRole("link", { name: /Builder Resources/ }).click();
@@ -512,6 +553,23 @@ test.describe("Builder Resources", () => {
       await page.getByRole("banner").getByRole("link", { name: "Resources", exact: true }).click();
       await expect(page).toHaveURL(new RegExp(`${GUIDE}/resources$`));
     }
+    // The Venue Explorer stays about places, with prominent links to tools and awards.
+    await page.goto(`${GUIDE}/venue`);
+    const links = page.locator("[data-venue-resource-links]");
+    await expect(links.getByRole("link", { name: /Builder Resources/ })).toHaveAttribute("href", `${GUIDE}/resources`);
+    await links.getByRole("link", { name: /Optional awards/ }).click();
+    await expect(page).toHaveURL(new RegExp(`${GUIDE}/resources#awards$`));
+    await expect(page.locator("#awards-title")).toBeInViewport();
+  });
+
+  test("the builder schedule has the MLH introduction at 16:50, right before the 17:00 opening", async ({ page }) => {
+    await page.goto(`${GUIDE}/builders#schedule`);
+    const schedule = page.locator("#schedule");
+    await expect(schedule).toContainText("Major League Hacking: Introduction & Hacker Resources");
+    const text = await schedule.innerText();
+    expect(text.indexOf("Major League Hacking: Introduction")).toBeLessThan(text.indexOf("Opening ceremony"));
+    await expect(page.locator("#app")).toContainText("Complete all 20 comparisons");
+    await expect(page.locator("main")).not.toContainText(/ten solutions|most votes/);
   });
 });
 

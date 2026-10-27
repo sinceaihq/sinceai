@@ -23,3 +23,7 @@ export * from "./submission";
 export * from "./resources";
 export * from "./wifi";
 export * from "./selection";
+export * from "./prizes";
+export * from "./awards";
+export * from "./voting";
+export * from "./confidential";
