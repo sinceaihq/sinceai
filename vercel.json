@@ -1,0 +1,7 @@
+{
+  "git": {
+    "deploymentEnabled": {
+      "feat/hackathon-2026-awards-guide": false
+    }
+  }
+}
