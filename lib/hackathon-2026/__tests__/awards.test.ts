@@ -259,10 +259,10 @@ describe("optional awards at a glance", () => {
 
 describe("submission form pointers", () => {
   it("says where MLH categories are ticked and lists the public-safe summary for confidential challenges", () => {
-    const optIn = SUBMISSION.optional.find((f) => /opt-in prizes/.test(f.name))!;
-    expect(optIn.note).toMatch(/tick the MLH categories/);
+    const optIn = SUBMISSION.optional.find((f) => /MLH prize categories/.test(f.name))!;
+    expect(optIn.note).toMatch(/tick the MLH categories/i);
     expect(optIn.link?.href).toBe(AWARDS_HREF);
-    const summary = SUBMISSION.optional.find((f) => f.name === "Public-safe summary")!;
+    const summary = SUBMISSION.optional.find((f) => f.name === "Public summary")!;
     expect(summary.note).toMatch(/^For confidential challenges/);
     expect(summary.link?.href).toBe("/hackathon-2026/guide/resources#confidential");
   });

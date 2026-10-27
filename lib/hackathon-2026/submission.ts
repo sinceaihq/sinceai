@@ -73,12 +73,12 @@ export const SUBMISSION = {
     { name: "Submission video URL", note: "A YouTube video link." },
     { name: "Files", note: "Pitch deck, supporting documents and an uploaded demo video." },
     {
-      name: "Domain name, opt-in prizes and schools of team members",
-      note: "Opt-in prizes is where you tick the MLH categories that fit; Red Hat and FIWARE are entered under optional awards.",
+      name: "Domain name, MLH prize categories and schools of team members",
+      note: "Tick the MLH categories that fit here; Red Hat and FIWARE are entered under optional awards.",
       link: { label: "Optional awards", href: AWARDS_HREF },
     },
     {
-      name: "Public-safe summary",
+      name: "Public summary",
       note: "For confidential challenges: the summary voters, the public and optional-award reviewers see instead of restricted material.",
       link: { label: "What is confidential", href: `${RESOURCES_PATH}#${CONFIDENTIAL_ANCHOR}` },
     },

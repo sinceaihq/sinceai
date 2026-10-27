@@ -436,9 +436,9 @@ test.describe("Build & submit (builder guide)", () => {
     await expect(submit).toContainText("not Devpost");
     await expect(submit.locator('[data-file-kind="Demo video"]')).toContainText("MP4, WebM");
     await expect(submit).toContainText("ZIP archives are not accepted");
-    // Under the steps: one line to the optional awards; the form's opt-in prizes and public-safe summary say where to look.
+    // Under the steps: one line to the optional awards; the form's MLH prize categories and public summary say where to look.
     await expect(submit.locator("[data-submit-awards]").getByRole("link")).toHaveAttribute("href", `${GUIDE}/resources#awards`);
-    await expect(submit).toContainText("Opt-in prizes is where you tick the MLH categories");
+    await expect(submit).toContainText("Tick the MLH categories that fit here");
     await expect(submit).toContainText("For confidential challenges");
   });
 
