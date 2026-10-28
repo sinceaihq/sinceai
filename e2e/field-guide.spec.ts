@@ -159,7 +159,7 @@ test.describe("content", () => {
     await expect(section.locator('img[src*="educity-team-formation"]').first()).toHaveAttribute("alt", /route A .* route B/i);
     // The Now / Next card shows the current Turku time, which can be any of these.
     const body = (await page.locator("main").innerText()).replace(/Turku \d{2}:\d{2}/gi, "");
-    // 16:50 is now only the MLH introduction (27 Oct 2026), never the retired capacity split.
+    // 16:50 is never the retired capacity split; the MLH introduction is 16:45–16:55 (28 Oct 2026).
     expect(body).not.toMatch(/17:45|17:50|18:05|16:50[^\n]{0,60}(capacity|split|places)|before 17:00|18:15–18:45|open places|zones? 1/);
     expect(body).toContain("Team formation closes at 16:45");
     expect(body).toContain("15:00–17:30");
@@ -172,7 +172,7 @@ test.describe("content", () => {
     await expect(prizes).toContainText("All other company challenges");
     await expect(prizes).toContainText("€2,000 · €750 · €250");
     await expect(prizes).toContainText("FORCIT Group — Drill and Blast Cycle Intelligence (€5,000 prize pot)");
-    await expect(prizes).toContainText("To be confirmed in writing");
+    await expect(prizes).not.toContainText("To be confirmed in writing");
     await expect(page.locator("#rules")).toContainText("Mark team as ready");
     await expect(page.locator("#rules")).toContainText("Thu 5 Nov · 15:00");
     await expect(page.locator("#rules")).toContainText("Full challenge in the app");
@@ -579,7 +579,7 @@ test.describe("Builder Resources", () => {
     await page.keyboard.press("Enter");
     await expect(fiware.getByText("One prize package per winning team")).toBeVisible();
     for (const id of ["red-hat-openshift-ai", "fiware-open-innovation"]) await expect(page.locator(`[data-award="${id}"] [data-award-questions]`)).toContainText("Questions?");
-    await expect(page.locator("[data-mlh-awards] [data-award-questions]")).toContainText("16:50");
+    await expect(page.locator("[data-mlh-awards] [data-award-questions]")).toContainText("16:45");
     const mlh = page.locator("[data-mlh-award]");
     await expect(mlh).toHaveCount(7);
     await expect(page.locator("[data-mlh-awards]")).toContainText("Prizes provided through Major League Hacking");
@@ -619,7 +619,7 @@ test.describe("Builder Resources", () => {
     await expect(page.locator("#awards-title")).toBeInViewport();
   });
 
-  test("the builder schedule has the MLH introduction at 16:50, right before the 17:00 opening", async ({ page }) => {
+  test("the builder schedule has the MLH introduction at 16:45–16:55, before the 17:00 opening", async ({ page }) => {
     await page.goto(`${GUIDE}/builders#schedule`);
     const schedule = page.locator("#schedule");
     await expect(schedule).toContainText("Major League Hacking: Introduction & Hacker Resources");
