@@ -4,7 +4,7 @@ import { GUIDE_BASE_PATH } from "./route";
 /**
  * Canonical operational facts for Since AI Hackathon 2026.
  *
- * Source precedence (newest wins): organiser decisions of 27 Oct 2026 (MLH introduction Fri 16:50–17:00; 20 vote
+ * Source precedence (newest wins): organiser decisions of 27 Oct 2026 (MLH introduction Fri 16:45–16:55, moved 28 Oct; 20 vote
  * comparisons; five finalists from five different company challenges; FORCIT's prize pot and NDA; optional MLH, Red Hat
  * and FIWARE awards — see prizes.ts, voting.ts, awards.ts, confidential.ts) → the organiser's final EduCity maps of 26 Oct 2026 (team formation, briefing rooms
  * on floors 1–3; they supersede the 2 Oct zone plan) → the Tech Team Implementation Guide v1.2 of 25 Oct 2026
@@ -42,8 +42,8 @@ export const EVENT_2026 = {
   challengeSelectionOpens: "2026-11-06T15:00:00+02:00",
   /** Team formation closes: no new teams, joining or member changes after this. */
   teamFormationCloses: "2026-11-06T16:45:00+02:00",
-  /** Major League Hacking: Introduction & Hacker Resources, 16:50–17:00 at Taidon portaat — a hard stop at 17:00. */
-  mlhIntroduction: "2026-11-06T16:50:00+02:00",
+  /** Major League Hacking: Introduction & Hacker Resources, 16:45–16:55 on the Taidon portaat stage (28 Oct 2026). */
+  mlhIntroduction: "2026-11-06T16:45:00+02:00",
   /** Official opening ceremony at Taidon portaat. */
   officialOpening: "2026-11-06T17:00:00+02:00",
   /** Challenge selection closes; every team's route to its briefing room is in sinceai.app. */
@@ -76,8 +76,8 @@ export const EVENT_2026 = {
     end: "2026-11-08T15:30:00+02:00",
   },
   /** Bump when operational content changes. */
-  lastUpdated: "2026-10-27",
-  lastUpdatedLabel: "27 Oct 2026",
+  lastUpdated: "2026-10-28",
+  lastUpdatedLabel: "28 Oct 2026",
 } as const;
 
 /** Verified public links. App paths were checked against sinceai.app on 3 Oct 2026. */

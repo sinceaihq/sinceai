@@ -133,13 +133,13 @@ describe("canonical event facts", () => {
     expect(summaries.detail).toMatch(/Public-safe summaries/);
     expect(summaries.detail).toMatch(/top three teams €2,000, €750 and €250.*FORCIT Group's Drill and Blast Cycle Intelligence: €3,000, €1,500 and €500/);
     const mlh = getScheduleItem("fri-mlh-intro");
-    expect([formatTime(mlh.start), formatTime(mlh.end!)]).toEqual(["16:50", "17:00"]);
+    expect([formatTime(mlh.start), formatTime(mlh.end!)]).toEqual(["16:45", "16:55"]);
     expect(mlh.title).toBe("Major League Hacking: Introduction & Hacker Resources");
     expect(mlh.placeDetail).toBe("Lobby · Taidon portaat");
-    expect(EVENT_2026.mlhIntroduction).toBe("2026-11-06T16:50:00+02:00");
-    // The opening still starts at exactly 17:00, after the ten-minute MLH slot.
+    expect(EVENT_2026.mlhIntroduction).toBe("2026-11-06T16:45:00+02:00");
+    // The opening still starts at exactly 17:00; the stage is clear from 16:55 (organiser, 28 Oct 2026).
     expect(getScheduleItem("fri-opening").start).toBe("2026-11-06T17:00:00+02:00");
-    expect(mlh.end).toBe(getScheduleItem("fri-opening").start);
+    expect(Date.parse(mlh.end!)).toBeLessThan(Date.parse(getScheduleItem("fri-opening").start));
     expect(EVENT_2026.challengePreview).toBe("2026-11-05T15:00:00+02:00");
     const formation = getScheduleItem("fri-team-formation");
     expect([formatTime(formation.start), formatTime(formation.end!)]).toEqual(["15:00", "16:45"]);
@@ -161,10 +161,10 @@ describe("canonical event facts", () => {
     expect(formatTime(EVENT_2026.fullChallengeMaterials)).toBe("19:30");
     expect(getScheduleItem("fri-build-start").detail).toMatch(/19:30 the full challenge view.*only for the teams that chose that company/);
     // Superseded: the 17:00–17:30 window, the team owner wording, the 16:50 split and the Friday preview with templates.
-    // 16:50 is now only the MLH introduction (organiser, 27 Oct 2026).
+    // Nothing starts at 16:50 any more: the MLH introduction moved to 16:45–16:55 (organiser, 28 Oct 2026).
     const text = JSON.stringify({ SCHEDULE, DETAILS, CHECKLISTS });
     expect(text).not.toMatch(/17:45|17:50|18:05|before 17:00|selects the challenge in sinceai.app before 17:30|team's owner|evenly as possible|its template is open/i);
-    expect(SCHEDULE.filter((i) => i.start.endsWith("T16:50:00+02:00")).map((i) => i.id)).toEqual(["fri-mlh-intro"]);
+    expect(SCHEDULE.filter((i) => i.start.endsWith("T16:50:00+02:00")).map((i) => i.id)).toEqual([]);
     expect(text).not.toMatch(/16:50[^"]{0,80}(capacity|split|places)/i);
     expect(SCHEDULE.some((i) => i.id === "fri-challenge-preview")).toBe(false);
   });

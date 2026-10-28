@@ -34,8 +34,8 @@ const BREAKFAST_TBA = "Menu coming soon — the breakfast menu will be announced
  * the 15 company challenges — final, places limited. Team formation closes at
  * 16:45; selection closes at 17:30, when every team's route is in the app.
  * Major League Hacking introduces its tools, sponsor technologies and awards
- * 16:50–17:00 at Taidon portaat (organiser, 27 Oct 2026: exactly ten minutes,
- * a hard stop at 17:00). Opening ceremony 17:00–17:30, Jason Mayes 17:30–18:30, the teams move in
+ * 16:45–16:55 on the Taidon portaat stage (organiser, 28 Oct 2026: ten minutes,
+ * moved from 16:50–17:00). Opening ceremony 17:00–17:30, Jason Mayes 17:30–18:30, the teams move in
  * turn from 18:30, briefings 18:50–19:30 (a hard end), and at 19:30 the full
  * challenge opens in the app for each company's own teams. Dinner at BioCity
  * 18:30–22:00. Places per challenge and their formula are internal, not here.
@@ -155,11 +155,11 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   },
   {
     id: "fri-mlh-intro",
-    start: at(FRI, "16:50"),
-    end: at(FRI, "17:00"),
+    start: at(FRI, "16:45"),
+    end: at(FRI, "16:55"),
     title: "Major League Hacking: Introduction & Hacker Resources",
     detail:
-      "A ten-minute introduction from Major League Hacking (MLH): its tools, sponsor technologies, the MLH award categories and how builders can take part. The opening ceremony starts right after, at 17:00.",
+      "A ten-minute introduction from Major League Hacking (MLH): its tools, sponsor technologies, the MLH award categories and how builders can take part, on the Taidon portaat stage. The opening ceremony follows at 17:00.",
     place: "educity",
     placeDetail: "Lobby · Taidon portaat",
     audiences: ALL_AUDIENCES,

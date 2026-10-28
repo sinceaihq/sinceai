@@ -102,7 +102,7 @@ export const MLH_AWARDS: readonly MlhAward[] = [
 
 /** Where to ask about the MLH categories — MLH's own introduction and prize page, no new contacts. */
 export const MLH_QUESTIONS =
-  "Come to MLH's introduction at 16:50 on Friday, at Taidon portaat, or see MLH's prize page.";
+  "Come to MLH's introduction at 16:45 on Friday, on the Taidon portaat stage, or see MLH's prize page.";
 
 export const MLH_AWARDS_NOTE =
   "Prizes provided through Major League Hacking (MLH) and its sponsors; MLH runs these categories and their judging. Tick any categories that fit on your team's submission in sinceai.app: zero, one or several, with the same project. MLH's prize page has the full details.";
@@ -273,7 +273,7 @@ export const AWARDS_AT_A_GLANCE: readonly AwardGlanceRow[] = [
     win: "A prize provided through MLH in each category.",
     enter: "Tick the categories that fit on your team's submission in sinceai.app.",
     decided: "MLH runs the judging. Winners are announced in the event channels.",
-    ask: "MLH's introduction, Fri 16:50 at Taidon portaat, and MLH's prize page.",
+    ask: "MLH's introduction, Fri 16:45 on the Taidon portaat stage, and MLH's prize page.",
   },
   {
     id: RED_HAT_AWARD.id,

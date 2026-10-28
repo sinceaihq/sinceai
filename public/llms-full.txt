@@ -107,11 +107,11 @@ Since AI's flagship launch event brought together 260 AI builders to collaborate
 
 ### Since AI Hackathon 2026 (Upcoming)
 
-- **Dates**: November 6–8, 2026 (challenge summaries in sinceai.app Thu 5 Nov 15:00; check-in and challenge selection open Fri 15:00, team formation closes 16:45, MLH introduction 16:50, opening Fri 17:00, selection closes 17:30; submissions close Sun 10:00, closing ceremony Sun 13:15, finals Sun 14:00, ends around 15:30)
+- **Dates**: November 6–8, 2026 (challenge summaries in sinceai.app Thu 5 Nov 15:00; check-in and challenge selection open Fri 15:00, team formation closes 16:45, MLH introduction 16:45–16:55, opening Fri 17:00, selection closes 17:30; submissions close Sun 10:00, closing ceremony Sun 13:15, finals Sun 14:00, ends around 15:30)
 - **Location**: Turku, Finland — EduCity (opening and closing), BioCity and Joki (building)
 - **Challenges**: 15 company challenges, each awarding its top three teams €2,000, €750 and €250 (FORCIT Group's Drill and Blast Cycle Intelligence: a €5,000 prize pot, €3,000 / €1,500 / €500) — Valmet, Bayer, Turku Energia, Apetit, Takomo Golf, FORCIT Group, Elisa, Meyer Turku, Traficom, Lindström, Business Turku, DNA, Fonecta and Europress, plus one partner to be announced. Every team chooses one company challenge; the choice is final
 - **Keynote**: Jason Mayes, Web AI Lead at Google
-- **MLH**: MLH 2027 Season Member Event — MLH introduction Fri 16:50; seven optional MLH prize categories
+- **MLH**: MLH 2027 Season Member Event — MLH introduction Fri 16:45–16:55 on the Taidon portaat stage; seven optional MLH prize categories
 - **Optional awards**: Red Hat OpenShift AI Technology Award and FIWARE Open Innovation Award (https://sinceai.ai/hackathon-2026/guide/resources#awards)
 - **Finalists**: participant vote Sun 10:00–12:00 (20 comparisons per builder); the five highest-ranked projects from five different company challenges present in the finals
 - **Apply**: https://sinceai.app

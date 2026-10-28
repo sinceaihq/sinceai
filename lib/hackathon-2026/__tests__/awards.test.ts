@@ -226,7 +226,7 @@ describe("award links", () => {
     expect(RED_HAT_AWARD.questions.link.href).toBe("/hackathon-2026/guide/resources#resource-red-hat");
     expect(FIWARE_AWARD.questions.text).toMatch(/Jason Fox.*on site at EduCity.*Discord/);
     expect(FIWARE_AWARD.questions.link.href).toMatch(/^https:\/\/discord\./);
-    expect(MLH_QUESTIONS).toMatch(/16:50 on Friday, at Taidon portaat/);
+    expect(MLH_QUESTIONS).toMatch(/16:45 on Friday, on the Taidon portaat stage/);
     expect(text([RED_HAT_AWARD.questions, FIWARE_AWARD.questions, MLH_QUESTIONS])).not.toMatch(/@[a-z-]+\.[a-z]|\+\d{3}|mailto:/i);
   });
 });
@@ -251,10 +251,10 @@ describe("optional awards at a glance", () => {
     expect(fiware!.decided).toMatch(/Sunday 8 November.*closing ceremony/);
     expect(mlh!.decided).toMatch(/announced in the event channels/);
     expect(redHat!.decided).toMatch(/announced in the event channels/i);
-    expect(mlh!.ask).toMatch(/Fri 16:50/);
+    expect(mlh!.ask).toMatch(/Fri 16:45/);
     // The reviewer stays unnamed; no dates or times beyond the ones in the guide data.
     expect(text(AWARDS_AT_A_GLANCE)).not.toMatch(/reviewed by|contract|fee|coupon/i);
-    expect(text(AWARDS_AT_A_GLANCE).match(/\d{1,2}:\d{2}/g)).toEqual(["16:50"]);
+    expect(text(AWARDS_AT_A_GLANCE).match(/\d{1,2}:\d{2}/g)).toEqual(["16:45"]);
   });
 });
 

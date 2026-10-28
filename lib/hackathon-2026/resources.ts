@@ -286,6 +286,6 @@ export const DEVELOPER_TOOLS_NOTE =
 
 /** The MLH relationship; its seven prize categories are in awards.ts. */
 export const MLH_NOTE =
-  "Since AI Hackathon 2026 is an official Major League Hacking 2027 Season Member Event. MLH introduces its tools, sponsor technologies and award categories at 16:50 on Friday, at Taidon portaat — the seven MLH categories are under Optional awards on this page.";
+  "Since AI Hackathon 2026 is an official Major League Hacking 2027 Season Member Event. MLH introduces its tools, sponsor technologies and award categories at 16:45 on Friday, on the Taidon portaat stage — the seven MLH categories are under Optional awards on this page.";
 
 export const resourcesIn = (category: ResourceCategoryId) => PARTNER_RESOURCES.filter((r) => r.category === category);
