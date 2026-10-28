@@ -24,7 +24,7 @@ export { ComputingCallout, ComputingNote, ComputingSection } from "./Computing";
 export { BuildingHubLink, BuildingSection } from "./Building";
 export { OnSitePartners, ResourceCard, ResourcesHubLink, ToolItem } from "./Resources";
 export { WifiSection } from "./Wifi";
-export { BriefingRoomTable, ChallengeRules, ContentStages, EqualPrize, NdaLabel, TeamFormationRoutes } from "./ChallengeRules";
+export { BriefingRoomTable, ChallengeRules, ChallengePrizes, ContentStages, NdaLabel, TeamFormationRoutes } from "./ChallengeRules";
 export { GuideCards } from "./GuideCards";
 export { PrintButton } from "./PrintButton";
 export { VenueExplorer } from "./maps/VenueExplorer";

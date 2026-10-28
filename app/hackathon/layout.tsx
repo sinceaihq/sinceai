@@ -11,7 +11,7 @@ const SPONSOR_URLS: Record<(typeof HACKATHON_2026_PARTNERS.challengePartners)[nu
   "Turku Energia": "https://www.turkuenergia.fi/en",
   Apetit: "https://apetit.fi/",
   "Takomo Golf": "https://takomogolf.com/",
-  "Forcit Group": "https://forcitgroup.com/",
+  "FORCIT Group": "https://forcitgroup.com/",
   Elisa: "https://www.elisa.com/",
   "Meyer Turku": "https://www.meyerturku.fi/en/",
   Traficom: "https://www.traficom.fi/",

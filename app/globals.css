@@ -239,10 +239,10 @@ html:has(body[data-scroll-locked]) {
    violet ambient light. Scoped to .guide-root so nothing leaks elsewhere. */
 .guide-root {
   --guide-header-h: 3.5rem;
-  scroll-padding-top: calc(var(--guide-header-h) + 3.25rem);
+  scroll-padding-top: calc(var(--guide-header-h) + 3.5rem);
 }
 .guide-root [id] {
-  scroll-margin-top: calc(var(--guide-header-h) + 3.25rem);
+  scroll-margin-top: calc(var(--guide-header-h) + 3.5rem);
 }
 
 .guide-ambient {
@@ -269,6 +269,14 @@ html:has(body[data-scroll-locked]) {
 }
 .guide-details[open] > summary .guide-chevron {
   transform: rotate(180deg);
+}
+/* Closed details print open: PrintButton opens them on beforeprint; this also
+   covers printing without JavaScript where ::details-content is supported. */
+@media print {
+  .guide-root details::details-content {
+    content-visibility: visible;
+    display: block;
+  }
 }
 
 /* Map hotspots */

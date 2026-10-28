@@ -91,7 +91,9 @@ describe("canonical event facts", () => {
     expect(arrival.audiences).toEqual(["challenge-partners", "judges"]);
     const voting = getScheduleItem("sun-voting");
     expect([formatTime(voting.start), formatTime(voting.end!)]).toEqual(["10:00", "12:00"]);
-    expect(voting.detail).toMatch(/ten solutions to review and vote on/);
+    expect(voting.detail).toMatch(/two solutions at a time.*complete 20 comparisons/);
+    expect(voting.detail).toMatch(/five highest-ranked projects from five different company challenges/);
+    expect(JSON.stringify(SCHEDULE)).not.toMatch(/ten solutions|most votes|most-voted/);
     expect(formatTime(getScheduleItem("sun-finalists").start)).toBe("12:00");
     expect(formatTime(getScheduleItem("sun-evaluator-arrival").start)).toBe("09:00");
     expect(formatTime(getScheduleItem("sun-evaluation-ready").start)).toBe("09:45");
@@ -129,7 +131,15 @@ describe("canonical event facts", () => {
     const summaries = getScheduleItem("thu-challenge-summaries");
     expect(summaries.start).toBe("2026-11-05T15:00:00+02:00");
     expect(summaries.detail).toMatch(/Public-safe summaries/);
-    expect(summaries.detail).toMatch(/All 15 company challenges offer the same cash prize/);
+    expect(summaries.detail).toMatch(/top three teams €2,000, €750 and €250.*FORCIT Group's Drill and Blast Cycle Intelligence: €3,000, €1,500 and €500/);
+    const mlh = getScheduleItem("fri-mlh-intro");
+    expect([formatTime(mlh.start), formatTime(mlh.end!)]).toEqual(["16:50", "17:00"]);
+    expect(mlh.title).toBe("Major League Hacking: Introduction & Hacker Resources");
+    expect(mlh.placeDetail).toBe("Lobby · Taidon portaat");
+    expect(EVENT_2026.mlhIntroduction).toBe("2026-11-06T16:50:00+02:00");
+    // The opening still starts at exactly 17:00, after the ten-minute MLH slot.
+    expect(getScheduleItem("fri-opening").start).toBe("2026-11-06T17:00:00+02:00");
+    expect(mlh.end).toBe(getScheduleItem("fri-opening").start);
     expect(EVENT_2026.challengePreview).toBe("2026-11-05T15:00:00+02:00");
     const formation = getScheduleItem("fri-team-formation");
     expect([formatTime(formation.start), formatTime(formation.end!)]).toEqual(["15:00", "16:45"]);
@@ -151,8 +161,11 @@ describe("canonical event facts", () => {
     expect(formatTime(EVENT_2026.fullChallengeMaterials)).toBe("19:30");
     expect(getScheduleItem("fri-build-start").detail).toMatch(/19:30 the full challenge view.*only for the teams that chose that company/);
     // Superseded: the 17:00–17:30 window, the team owner wording, the 16:50 split and the Friday preview with templates.
+    // 16:50 is now only the MLH introduction (organiser, 27 Oct 2026).
     const text = JSON.stringify({ SCHEDULE, DETAILS, CHECKLISTS });
-    expect(text).not.toMatch(/17:45|17:50|18:05|16:50|before 17:00|selects the challenge in sinceai.app before 17:30|team's owner|evenly as possible|its template is open/i);
+    expect(text).not.toMatch(/17:45|17:50|18:05|before 17:00|selects the challenge in sinceai.app before 17:30|team's owner|evenly as possible|its template is open/i);
+    expect(SCHEDULE.filter((i) => i.start.endsWith("T16:50:00+02:00")).map((i) => i.id)).toEqual(["fri-mlh-intro"]);
+    expect(text).not.toMatch(/16:50[^"]{0,80}(capacity|split|places)/i);
     expect(SCHEDULE.some((i) => i.id === "fri-challenge-preview")).toBe(false);
   });
 
@@ -296,7 +309,7 @@ describe("challenge companies", () => {
         "Elisa",
         "Europress",
         "Fonecta",
-        "Forcit Group",
+        "FORCIT Group",
         "Lindström",
         "Meyer Turku",
         "Takomo Golf",
@@ -314,7 +327,7 @@ describe("challenge companies", () => {
     expect(JSON.stringify([CHALLENGE_COMPANIES, VENUE_MAPS, GUIDES, DETAILS])).not.toMatch(/Neuropress/i);
   });
 
-  it("labels only Forcit Group as running its own NDA", () => {
+  it("labels only FORCIT Group as running its own NDA", () => {
     expect(CHALLENGE_COMPANIES.filter((c) => c.ndaRequired).map((c) => c.id)).toEqual(["forcit-group"]);
   });
 
@@ -339,8 +352,8 @@ describe("challenge companies", () => {
   it("places six companies on Joki floor 3", () => {
     expect(byQaFloor(3)).toEqual([
       "Business Turku",
+      "FORCIT Group",
       "Fonecta",
-      "Forcit Group",
       "Lindström",
       "Takomo Golf",
       "To be announced",
@@ -359,7 +372,7 @@ describe("challenge companies", () => {
       "Business Turku": "3:3027",
       Fonecta: "2:2001 Elias",
       "Takomo Golf": "2:2002 Ivar",
-      "Forcit Group": "2:2003 Erik",
+      "FORCIT Group": "2:2003 Erik",
       Lindström: "2:2004 Johannes",
       "To be announced": "2:2067",
       Valmet: "2:2006 / 2007",

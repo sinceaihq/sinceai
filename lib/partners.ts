@@ -177,7 +177,7 @@ export const PARTNERS: Partner[] = [
     tier: 1,
   },
   {
-    name: "Forcit Group",
+    name: "FORCIT Group",
     logo: "/assets/sponsors/Forcit-Group.png",
     url: "https://forcitgroup.com/",
     tier: 1,

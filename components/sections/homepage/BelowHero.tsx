@@ -221,7 +221,7 @@ const ECOSYSTEM: { label: string; names: readonly string[] }[] = [
   },
   {
     label: "Industry challenges",
-    names: ["Valmet", "Bayer", "Elisa", "Meyer Turku", "DNA", "Traficom", "Lindström", "Forcit Group", "Sandvik", "Kongsberg"],
+    names: ["Valmet", "Bayer", "Elisa", "Meyer Turku", "DNA", "Traficom", "Lindström", "FORCIT Group", "Sandvik", "Kongsberg"],
   },
   {
     label: "Capital",

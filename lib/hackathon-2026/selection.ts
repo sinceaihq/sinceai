@@ -1,4 +1,5 @@
 import { EVENT_2026, GUIDE_LINKS } from "./facts";
+import { CHALLENGE_PRIZES_STATEMENT } from "./prizes";
 import { formatTime } from "./time";
 
 /**
@@ -7,18 +8,18 @@ import { formatTime } from "./time";
  * §§13–14, 16, 18, 24–26; final EduCity maps of 26 Oct 2026).
  *
  * Public on purpose: the rules, the times and the three content stages. Not
- * here on purpose: the slot formula, host scripts, internal responsibilities,
- * any euro amount for the company prizes (none has been confirmed for
- * publication), and anything from a company's private brief or data.
+ * here on purpose: the slot formula, host scripts, internal responsibilities
+ * and anything from a company's private brief or data. The company prize
+ * amounts come from ./prizes (organiser, 27 Oct 2026).
  */
 
-/** The one statement used everywhere the company challenges or prizes come up. */
-export const EQUAL_PRIZE = "All 15 company challenges offer the same cash prize.";
+/** The one statement used everywhere the company challenges or prizes come up (from ./prizes). */
+export const CHALLENGE_PRIZES = CHALLENGE_PRIZES_STATEMENT;
 
-/** Small label shown beside a company that runs its own NDA process (Forcit Group). */
+/** Small label shown beside a company whose challenge requires an NDA (FORCIT Group). */
 export const NDA_LABEL = "NDA required";
 export const NDA_NOTE =
-  "This company runs its own NDA process at its briefing. Its Thursday summary is public-safe; choosing the challenge is not signing an NDA.";
+  "This challenge requires FORCIT's paper NDA, signed on site, before its detailed data is shared. Its Thursday summary is public-safe; choosing the challenge is not signing an NDA.";
 
 const t = formatTime;
 
@@ -82,8 +83,8 @@ export const SELECTION_RULES = [
     text: "Every team member checks in in person at EduCity on Friday to take part and to share in any prize. A Saturday arrival counts only if the organisers approved it in advance for that person. Members without a check-in or such an approval may be removed from teams overnight by the organisers.",
   },
   {
-    title: "Optional open challenges are extra",
-    text: "Optional open challenges, when announced, never replace your company challenge and do not use its places. Your company challenge entry is the one that goes through evaluation.",
+    title: "Optional awards are extra",
+    text: "The MLH, Red Hat and FIWARE awards never replace your company challenge and do not use its places. Your company challenge entry is the one that goes through company evaluation and the participant vote.",
   },
 ] as const;
 

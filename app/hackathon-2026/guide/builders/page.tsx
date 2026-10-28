@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   AccommodationSection,
   BriefingRoomTable,
@@ -29,6 +30,7 @@ import {
 } from "@/components/guide";
 import { TwinTeaser } from "@/components/guide/twin/TwinTeaser";
 import {
+  AWARDS_HREF,
   BRIEFING_ROOMS_ANCHOR,
   CHECKLISTS,
   CRITICAL_PATH,
@@ -38,6 +40,8 @@ import {
   GUIDE_BASE_PATH,
   GUIDE_LINKS,
   scheduleFor,
+  VOTE_COMPARISONS,
+  VOTING,
 } from "@/lib/hackathon-2026";
 
 const AUDIENCE = "builders" as const;
@@ -73,13 +77,13 @@ const APP_STEPS = [
     title: "Submission",
     who: "Any team member",
     when: "Before Sun 10:00",
-    text: "Submit your team's final solution. The deadline is fixed — submit early, not at 09:59.",
+    text: "Submit your team's final solution and tick any MLH categories. A confidential challenge also needs a public-safe summary. The deadline is fixed — submit early, not at 09:59.",
   },
   {
     title: "Voting",
     who: "Everyone",
     when: "Sun 10:00–12:00",
-    text: "The app gives you ten solutions to review and vote on. The five teams with the most votes present live in the finals at 14:00.",
+    text: `Two solutions at a time — pick the stronger one. Complete all ${VOTE_COMPARISONS} comparisons. ${VOTING.finalistsShort}`,
   },
 ] as const;
 
@@ -102,7 +106,7 @@ export default function BuilderGuidePage() {
             { label: "Ready · select", value: "Fri 15:00–17:30", sub: "Team lead · final · places limited", strong: true },
             { label: "Build spaces", value: "BioCity + Joki", sub: "From Fri 19:30, around the clock" },
             { label: "Submission deadline", value: "Sun 10:00", sub: "In sinceai.app · fixed", strong: true },
-            { label: "Finals", value: "Sun 14:00", sub: "Five teams live on stage · ends around 15:30" },
+            { label: "Finals", value: "Sun 14:00", sub: "Five teams, five challenges · ends around 15:30" },
           ]}
         />
         <ComputingCallout />
@@ -131,8 +135,8 @@ export default function BuilderGuidePage() {
       <GuideSection id="steps">
         <SectionHeading
           id="steps-title"
-          eyebrow="// your weekend in seven moves"
-          title="Seven moves, check-in to submission."
+          eyebrow="// your weekend in eight moves"
+          title="Eight moves, check-in to the vote."
         />
         <CriticalPath label="Builder steps" steps={CRITICAL_PATH.builders ?? []} />
       </GuideSection>
@@ -233,6 +237,12 @@ export default function BuilderGuidePage() {
             </span>
             <span className="sr-only"> (opens in a new tab)</span>
           </a>
+          <Link href={AWARDS_HREF} className={ghostButtonClass}>
+            Optional awards: MLH, Red Hat, FIWARE{" "}
+            <span aria-hidden="true" className="ml-2">
+              →
+            </span>
+          </Link>
         </div>
       </GuideSection>
 

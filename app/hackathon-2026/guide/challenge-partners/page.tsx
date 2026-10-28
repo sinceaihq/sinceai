@@ -4,7 +4,7 @@ import {
   Checklist,
   CompanyDirectory,
   ContentStages,
-  EqualPrize,
+  ChallengePrizes,
   CriticalPath,
   Details,
   DiscordSection,
@@ -104,7 +104,7 @@ export default function ChallengePartnerGuidePage() {
           title="Summary on Thursday, your teams on Friday."
           lede="Teams choose from your public-safe summary alone. Each team's lead selects one company challenge on Friday 15:00–17:30 — final, with a limited number of places per company. Your full brief and materials reach only the teams that chose you."
         />
-        <EqualPrize className="mb-8" />
+        <ChallengePrizes className="mb-8" />
         <ContentStages audience="challenge-partners" />
         <p className="mt-6 max-w-3xl text-sm text-neutral-300 leading-relaxed">
           Share your materials in your own way, only with your own teams — if you use an external service, its sharing

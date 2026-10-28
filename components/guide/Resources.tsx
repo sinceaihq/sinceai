@@ -1,9 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
+  awardHref,
   RESOURCES_GUIDE,
   RESOURCES_PATH,
   STAND_PARTNERS,
+  technologyAwardByTitle,
   type PartnerResource,
   type ToolLink,
 } from "@/lib/hackathon-2026";
@@ -33,6 +35,7 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
 /** One partner resource: what it is, what to build, the benefit, where access details come from, help and links. */
 export function ResourceCard({ resource }: { resource: PartnerResource }) {
   const r = resource;
+  const award = r.award ? technologyAwardByTitle(r.award) : undefined;
   return (
     <li id={`resource-${r.id}`} data-resource={r.id} className="guide-avoid-break flex flex-col border border-white/10 p-5 md:p-6">
       <div className="flex flex-col items-start gap-3">
@@ -54,6 +57,17 @@ export function ResourceCard({ resource }: { resource: PartnerResource }) {
         {r.benefit && <Row label="Participant benefit">{r.benefit}</Row>}
         <Row label="Access">{r.access}</Row>
         <Row label="Help">{r.help}</Row>
+        {award && (
+          <Row label="Optional award">
+            <a
+              href={awardHref(award.id)}
+              className="text-white underline decoration-white/30 underline-offset-4 hover:decoration-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              {award.title}
+            </a>{" "}
+            <span data-award-short>· {award.prizeShort}</span>
+          </Row>
+        )}
       </dl>
       <div className="guide-no-print mt-auto flex flex-wrap gap-x-5 pt-3">
         <TextLink href={r.getStarted.href} className="font-semibold text-white">
@@ -106,8 +120,8 @@ export function ResourcesHubLink() {
         <span className="block font-mono text-xs uppercase tracking-widest text-white/55">Builders · partners & tools</span>
         <span className="mt-3 block text-2xl md:text-3xl font-bold tracking-tight text-white">{RESOURCES_GUIDE.name}</span>
         <span className="mt-3 block max-w-2xl text-sm text-neutral-400 leading-relaxed">
-          Computing, AI models, app builders and developer tools from our technology partners — quickstarts,
-          participant benefits and where to get help.
+          Computing, AI models, app builders, FIWARE and developer tools — quickstarts, participant benefits, the
+          optional MLH, Red Hat and FIWARE awards and where to get help.
         </span>
       </span>
       <span aria-hidden="true" className="text-2xl text-white/55 transition-colors group-hover:text-white">

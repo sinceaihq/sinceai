@@ -6,8 +6,8 @@ import {
   CHECKLISTS,
   CONTENT_STAGES,
   CRITICAL_PATH,
+  CHALLENGE_PRIZES,
   DETAILS,
-  EQUAL_PRIZE,
   EVENT_2026,
   formatTime,
   getMap,
@@ -27,11 +27,13 @@ import {
  * Field Guide states them.
  */
 describe("Friday rules (v1.2)", () => {
-  it("uses one equal-prize statement, with no euro amount", () => {
-    expect(EQUAL_PRIZE).toBe("All 15 company challenges offer the same cash prize.");
+  it("uses one data-driven prize statement: the standard split and FORCIT's pending exception", () => {
+    expect(CHALLENGE_PRIZES).toBe(
+      "Each company challenge awards its top three teams €2,000, €750 and €250 in cash — except FORCIT Group's Drill and Blast Cycle Intelligence: €3,000, €1,500 and €500, a €5,000 prize pot to be confirmed in writing.",
+    );
     const text = JSON.stringify({ SELECTION_RULES, SELECTION_TIMELINE, CONTENT_STAGES, SCHEDULE, DETAILS, CHECKLISTS });
-    expect(text).toContain(EQUAL_PRIZE);
-    expect(text).not.toMatch(/(€|EUR)\s?\d|\d\s?(€|EUR)\b/);
+    expect(text).toContain(CHALLENGE_PRIZES);
+    expect(text).not.toMatch(/same cash prize|same prize/i);
   });
 
   it("states readiness, the team lead's final choice, three preferences and one required company challenge", () => {
@@ -43,6 +45,7 @@ describe("Friday rules (v1.2)", () => {
     expect(rules).toMatch(/at least three challenges/);
     expect(rules).toMatch(/Friday 15:00–17:30/);
     expect(rules).toMatch(/never replace your company challenge/);
+    expect(rules).toMatch(/MLH, Red Hat and FIWARE awards/);
   });
 
   it("times Thursday's summaries, 15:00, 16:45, 17:30 and 19:30 from the canonical facts", () => {
@@ -126,15 +129,23 @@ function files(dir: string): string[] {
   });
 }
 
-/** Shapes only. Each is something the organiser has not approved for publication (26 Oct 2026). */
+/**
+ * Shapes only. Each is something the organiser has not approved for publication (26–27 Oct 2026). The Red Hat
+ * OpenShift AI Technology Award and the FIWARE Open Innovation Award are published since 27 Oct; Red Hat's
+ * agreement and the Builder Pack's personal contact details stay organiser-only.
+ */
 const UNPUBLISHED: readonly [string, RegExp][] = [
-  ["a Red Hat / OpenShift award, prize or amount", /(Red Hat|OpenShift)[^.\n]{0,80}(award|prize|€|EUR\b)/i],
-  ["a FIWARE award or prize", /FIWARE[^.\n]{0,60}(award|prize)/i],
+  ["Red Hat agreement details", /(Red Hat|OpenShift)[^.\n]{0,80}(contract|countersign|participation fee|invoice)/i],
+  [
+    "a personal contact from the FIWARE Builder Pack",
+    /@(fiware\.org|seamware\.com|joinedcontext\.com|indoorsos\.com|denhaag\.nl|xamk\.fi|tuni\.fi|oasc\.fr|gunma-u\.ac\.jp)|\+358 44/i,
+  ],
+  ["a blanket equal-prize claim", /same cash prize/i],
   ["the misspelt company name", /Neuropress/i],
   ["the retired 1–4 open-slot zones and their signs", /\b[1-4] SLOTS? OPEN\b|TEAM READY\? EXIT|zone for the number of open places/i],
   ["the draft skill-card colours", /TECH \(red\)|AI \(blue\)/],
   ["the superseded 17:00–17:30 selection window", /select(s|ion)?[^.\n]{0,60}17:00–17:30|17:00–17:30[^.\n]{0,40}select/i],
-  ["the superseded 16:50 capacity split", /16:50/],
+  ["the superseded 16:50 capacity split", /16:50[^.\n]{0,60}(capacity|split|places)/i],
 ];
 
 describe("published content has no unapproved or retired material", () => {
@@ -151,13 +162,14 @@ describe("published content has no unapproved or retired material", () => {
 
   it("would catch each shape (synthetic examples)", () => {
     const examples = [
-      "Red Hat prize of EUR 500",
-      "FIWARE award",
+      "Red Hat contract countersigned",
+      "someone@fiware.org",
+      "All 15 company challenges offer the same cash prize.",
       "Neuropress",
       "3 SLOTS OPEN",
       "TECH (red)",
       "selects the challenge 17:00–17:30",
-      "16:50",
+      "16:50 capacity split",
     ];
     for (const [i, [, re]] of UNPUBLISHED.entries()) expect(re.test(examples[i])).toBe(true);
   });

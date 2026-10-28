@@ -3,47 +3,84 @@ import {
   BRIEFING_ROOMS_ANCHOR,
   briefingRoomLabel,
   CHALLENGE_COMPANIES,
+  CHALLENGE_PRIZE_EXCEPTIONS,
   CONTENT_STAGES,
-  EQUAL_PRIZE,
+  formatEur,
   GUIDE_BASE_PATH,
   isTbaPlace,
+  CONFIDENTIAL_ANCHOR,
   NDA_LABEL,
   NDA_NOTE,
+  RESOURCES_PATH,
   SELECTION_RULES,
   SELECTION_TIMELINE,
   SKILL_CARDS,
+  STANDARD_CHALLENGE_PRIZES,
   TEAM_FORMATION_ROUTES,
   type ChallengeCompany,
+  type PrizeSplit,
 } from "@/lib/hackathon-2026";
 import { cn } from "@/lib/utils";
 
-/** Small, readable "NDA required" label next to a company that runs its own NDA (mobile too). */
+/**
+ * Small, readable "NDA required" label next to a company that runs its own NDA (mobile too).
+ * It links to what a confidential challenge means; the note is in the link's accessible
+ * name (not only in a hover title, which touch and keyboard users never see).
+ */
 export function NdaLabel({ className }: { className?: string }) {
   return (
-    <span
+    <Link
+      href={`${RESOURCES_PATH}#${CONFIDENTIAL_ANCHOR}`}
       className={cn(
-        "inline-flex shrink-0 items-center border border-(--color-event)/60 px-1.5 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-widest text-(--color-event)",
+        "inline-flex shrink-0 items-center border border-(--color-event)/60 px-1.5 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-widest text-(--color-event) transition-colors hover:border-(--color-event) hover:bg-(--color-event)/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
         className,
       )}
       title={NDA_NOTE}
     >
-      {NDA_LABEL}
-    </span>
+      <span>{NDA_LABEL}</span>
+      <span className="sr-only">: {NDA_NOTE} What a confidential challenge means.</span>
+    </Link>
   );
 }
 
-/** The one equal-prize statement, as a high-visibility lead line. */
-export function EqualPrize({ className }: { className?: string }) {
+function PrizeRow({ label, prizes, note }: { label: string; prizes: PrizeSplit; note?: string }) {
   return (
-    <p
-      className={cn(
-        "border-l-4 border-(--color-event) pl-4 text-xl font-bold uppercase tracking-tight text-white md:text-2xl",
-        className,
-      )}
-      data-equal-prize
-    >
-      {EQUAL_PRIZE}
-    </p>
+    <li className="flex flex-col gap-1 border-b border-r border-white/10 p-4 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+      <span className="text-sm text-neutral-300">
+        {label}
+        {note && <span className="block font-mono text-[11px] uppercase tracking-widest text-(--color-event)">{note}</span>}
+      </span>
+      <span className="whitespace-nowrap font-mono text-sm text-white">
+        <span aria-hidden="true">
+          {formatEur(prizes.first)} · {formatEur(prizes.second)} · {formatEur(prizes.third)}
+        </span>
+        <span className="sr-only">
+          First {formatEur(prizes.first)}, second {formatEur(prizes.second)}, third {formatEur(prizes.third)}
+        </span>
+      </span>
+    </li>
+  );
+}
+
+/** The company challenge prizes, from lib/hackathon-2026/prizes — a lead line and the top-three amounts. */
+export function ChallengePrizes({ className }: { className?: string }) {
+  return (
+    <div className={className} data-challenge-prizes>
+      <p className="border-l-4 border-(--color-event) pl-4 text-xl font-bold uppercase tracking-tight text-white md:text-2xl">
+        Cash prizes for each challenge&apos;s top three teams
+      </p>
+      <ul className="mt-4 max-w-3xl border-l border-t border-white/10" aria-label="Company challenge prizes: first, second, third">
+        <PrizeRow label="All other company challenges" prizes={STANDARD_CHALLENGE_PRIZES} />
+        {CHALLENGE_PRIZE_EXCEPTIONS.map((e) => (
+          <PrizeRow
+            key={e.companyId}
+            label={`${e.company} — ${e.challenge} (${formatEur(e.prizes.first + e.prizes.second + e.prizes.third)} prize pot)`}
+            prizes={e.prizes}
+            note={e.confirmation === "pending" ? "To be confirmed in writing" : undefined}
+          />
+        ))}
+      </ul>
+    </div>
   );
 }
 
@@ -51,7 +88,7 @@ export function EqualPrize({ className }: { className?: string }) {
 export function ChallengeRules() {
   return (
     <div>
-      <EqualPrize />
+      <ChallengePrizes />
       <ul className="mt-8 grid grid-cols-1 border-l border-t border-white/10 sm:grid-cols-2 lg:grid-cols-3">
         {SELECTION_RULES.map((rule) => (
           <li key={rule.title} className="guide-avoid-break border-b border-r border-white/10 p-5">

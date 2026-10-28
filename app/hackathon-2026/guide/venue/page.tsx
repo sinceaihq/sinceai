@@ -1,5 +1,7 @@
+import Link from "next/link";
 import {
   FoodSection,
+  ghostButtonClass,
   ParkingSection,
   GuideHero,
   GuideSection,
@@ -13,7 +15,17 @@ import {
 import StructuredData from "@/components/StructuredData";
 import { PhotoGallery } from "@/components/guide/PhotoGallery";
 import { Twin } from "@/components/guide/twin/Twin";
-import { getVenue, GUIDE_BASE_PATH, keepDots, VENUE_GUIDE, VENUE_MAPS, VENUE_PHOTOS, VENUES } from "@/lib/hackathon-2026";
+import {
+  AWARDS_HREF,
+  getVenue,
+  GUIDE_BASE_PATH,
+  keepDots,
+  RESOURCES_PATH,
+  VENUE_GUIDE,
+  VENUE_MAPS,
+  VENUE_PHOTOS,
+  VENUES,
+} from "@/lib/hackathon-2026";
 import { ORG } from "@/lib/org";
 
 /** Machine-readable credits for every photo on the page. */
@@ -54,7 +66,23 @@ export default function VenueExplorerPage() {
         ]}
         title={VENUE_GUIDE.name}
         lede={VENUE_GUIDE.lede}
-      />
+      >
+        {/* The Venue Explorer stays about places; tools and awards live in Builder Resources. */}
+        <nav aria-label="Builder Resources" className="flex flex-col gap-3 sm:flex-row" data-venue-resource-links>
+          <Link href={RESOURCES_PATH} className={ghostButtonClass}>
+            Builder Resources: tools and credits{" "}
+            <span aria-hidden="true" className="ml-2">
+              →
+            </span>
+          </Link>
+          <Link href={AWARDS_HREF} className={ghostButtonClass}>
+            Optional awards: MLH, Red Hat, FIWARE{" "}
+            <span aria-hidden="true" className="ml-2">
+              →
+            </span>
+          </Link>
+        </nav>
+      </GuideHero>
 
       <SectionNav
         items={[

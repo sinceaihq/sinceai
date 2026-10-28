@@ -18,7 +18,7 @@ import {
 } from "@/components/sections/hackathon";
 import { TrackedLink } from "@/components/analytics/TrackedLink";
 import ORG from "@/lib/org";
-import { COMPUTING_HREF } from "@/lib/hackathon-2026";
+import { AWARDS_HREF, COMPUTING_HREF } from "@/lib/hackathon-2026";
 import {
   HACKATHON_2026_CHALLENGE_LIST,
   HACKATHON_2026_PARTNERS,
@@ -71,11 +71,17 @@ const hackathonFaqs = [
   },
   {
     q: "What companies set challenges?",
-    a: `Since AI Hackathon 2026 has 15 company challenges. ${HACKATHON_2026_PARTNERS.equalPrize} The challenge partners are ${HACKATHON_2026_CHALLENGE_LIST}; one more challenge partner is still to be announced. Every team chooses one company challenge.`,
+    a: `Since AI Hackathon 2026 has 15 company challenges. ${HACKATHON_2026_PARTNERS.prizes} The challenge partners are ${HACKATHON_2026_CHALLENGE_LIST}; one more challenge partner is still to be announced. Every team chooses one company challenge.`,
   },
   {
     q: "What happens over the weekend?",
-    a: "Teams of up to five form in sinceai.app — ideally before the event. On Friday at EduCity every member checks in, the team lead marks the team as ready and selects one of the 15 company challenges in the app between 15:00 and 17:30; the choice is final, and all 15 company challenges offer the same cash prize. After the 17:00 opening and Jason Mayes' keynote and tech talk, each company briefs its teams. Teams then build at BioCity and Joki, which stay open around the clock, with company Q&A on Saturday. Submissions close Sunday at 10:00. Each company picks the top three teams of its challenge, and in the 14:00 finals five finalist teams present live on stage to the jury, which selects the overall winner.",
+    a: "Teams of up to five form in sinceai.app — ideally before the event. On Friday at EduCity every member checks in, the team lead marks the team as ready and selects one of the 15 company challenges in the app between 15:00 and 17:30; the choice is final. Major League Hacking introduces its tools and awards at 16:50; after the 17:00 opening and Jason Mayes' keynote and tech talk, each company briefs its teams. Teams then build at BioCity and Joki, which stay open around the clock, with company Q&A on Saturday. Submissions close Sunday at 10:00, and every eligible builder completes 20 comparisons in the participant vote by 12:00. Each company picks the top three teams of its challenge, and in the 14:00 finals five finalist teams — the highest-ranked projects from five different company challenges — present live on stage to the jury, which selects the overall winner.",
+  },
+  {
+    q: "Are there prizes besides the company challenges?",
+    a: "Yes — optional awards a team can enter with the same project in sinceai.app: seven Major League Hacking prize categories, the Red Hat OpenShift AI Technology Award and the non-cash FIWARE Open Innovation Award. They never replace the company challenge. Details and how to enter are in the Field Guide's Builder Resources, under Optional awards.",
+    href: AWARDS_HREF,
+    linkLabel: "Optional awards in the Field Guide",
   },
   {
     q: "Can we use AI tools like ChatGPT, Claude, Cursor or GitHub Copilot?",

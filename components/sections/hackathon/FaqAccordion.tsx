@@ -1,6 +1,12 @@
+import Link from "next/link";
+
 export interface Faq {
   q: string;
+  /** Plain text — also the FAQPage JSON-LD answer. */
   a: string;
+  /** Optional link shown after the answer (never part of the JSON-LD text). */
+  href?: string;
+  linkLabel?: string;
 }
 
 /**
@@ -25,7 +31,20 @@ export function FaqAccordion({ faqs }: { faqs: readonly Faq[] }) {
               <path d="M2 5l5 5 5-5" stroke="currentColor" strokeWidth="1.5" fill="none" />
             </svg>
           </summary>
-          <p className="max-w-[720px] pb-5 text-sm text-neutral-400 leading-relaxed">{faq.a}</p>
+          <p className="max-w-[720px] pb-5 text-sm text-neutral-400 leading-relaxed">
+            {faq.a}
+            {faq.href && faq.linkLabel && (
+              <>
+                {" "}
+                <Link
+                  href={faq.href}
+                  className="text-white underline decoration-white/30 underline-offset-4 hover:decoration-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                >
+                  {faq.linkLabel}
+                </Link>
+              </>
+            )}
+          </p>
         </details>
       ))}
     </div>

@@ -10,7 +10,7 @@ import type { ChallengeCompany, ScheduleItem } from "./types";
  * 2026, "Yritysten briiffaushuoneet" floors 1–2 and the floor 3 plan). They
  * supersede the 2 Oct placement maps. Floor 1: Elisa 1001 Dromberg, Bayer 1002
  * Moriaberg, Europress 1090 Ringsberg, Traficom 1091 Hammarbacka. Floor 2:
- * Fonecta 2001, Takomo Golf 2002, Forcit Group 2003, Lindström 2004, TBA 2067,
+ * Fonecta 2001, Takomo Golf 2002, FORCIT Group 2003, Lindström 2004, TBA 2067,
  * Valmet 2006/2007, DNA 2026, Meyer Turku 2030, Apetit 2027. Floor 3: Turku
  * Energia 3006 and Business Turku 3027 (their earlier floor-2 rooms 2029/2031
  * and 2072 are no longer used).
@@ -90,9 +90,10 @@ export const CHALLENGE_COMPANIES: readonly ChallengeCompany[] = [
   },
   {
     id: "forcit-group",
-    name: "Forcit Group",
+    name: "FORCIT Group",
     logo: { src: "/assets/sponsors/Forcit-Group.png", width: 500, height: 107 },
-    // Forcit runs its own NDA process (signing and verification) at its briefing — Tech guide v1.2 §3.
+    // FORCIT Group (Oy Forcit Ab): Drill and Blast Cycle Intelligence requires FORCIT's paper NDA, signed on site,
+    // before its detailed data is shared (organiser, 27 Oct 2026) — see confidential.ts. Its prize pot is in prizes.ts.
     ndaRequired: true,
     briefing: { venue: "educity", floor: 2, room: "2003", roomName: "Erik" },
     qa: { venue: "joki", floor: 3, zone: "Floor 3" },

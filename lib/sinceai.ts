@@ -3,6 +3,8 @@
  * Core constants for consistent messaging across the site
  */
 
+import { CHALLENGE_PRIZES_STATEMENT } from "./hackathon-2026/prizes";
+
 export const FOUNDING_YEAR = 2025;
 
 // Official Links
@@ -55,7 +57,7 @@ export const HACKATHON_2026_PARTNERS = {
     "Turku Energia",
     "Apetit",
     "Takomo Golf",
-    "Forcit Group",
+    "FORCIT Group",
     "Elisa",
     "Meyer Turku",
     "Traficom",
@@ -69,8 +71,8 @@ export const HACKATHON_2026_PARTNERS = {
   challengePartnersShort: "Valmet, Bayer, Elisa, Meyer Turku, DNA, Traficom and more",
   /** Visibility / technology partners (not challenge partners). */
   visibilityPartners: ["Solita", "Red Hat", "BearingPoint", "Pruna AI", "CSC / LUMI AI Factory", "Major League Hacking"],
-  /** The one statement on company challenge prizes (Tech guide v1.2 §25) — never a derived euro amount. */
-  equalPrize: "All 15 company challenges offer the same cash prize.",
+  /** The one statement on company challenge prizes — built from lib/hackathon-2026/prizes. */
+  prizes: CHALLENGE_PRIZES_STATEMENT,
   /** Keynote speaker. */
   keynote: "Jason Mayes, Web AI Lead at Google",
 } as const;
