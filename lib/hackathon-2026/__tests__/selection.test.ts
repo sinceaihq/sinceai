@@ -29,7 +29,7 @@ import {
 describe("Friday rules (v1.2)", () => {
   it("uses one data-driven prize statement: the standard split and FORCIT's pending exception", () => {
     expect(CHALLENGE_PRIZES).toBe(
-      "Each company challenge awards its top three teams €2,000, €750 and €250 in cash — except FORCIT Group's Drill and Blast Cycle Intelligence: €3,000, €1,500 and €500, a €5,000 prize pot to be confirmed in writing.",
+      "Each company challenge awards its top three teams €2,000, €750 and €250 in cash — except FORCIT Group's Drill and Blast Cycle Intelligence: €3,000, €1,500 and €500, a €5,000 prize pot.",
     );
     const text = JSON.stringify({ SELECTION_RULES, SELECTION_TIMELINE, CONTENT_STAGES, SCHEDULE, DETAILS, CHECKLISTS });
     expect(text).toContain(CHALLENGE_PRIZES);

@@ -5,9 +5,8 @@
  * Organiser, 26–27 Oct 2026:
  * - Every other company challenge awards its top three teams €2,000, €750 and €250.
  * - FORCIT Group's Drill and Blast Cycle Intelligence is the one exception: a
- *   €5,000 prize pot split €3,000 / €1,500 / €500. Its written confirmation is
- *   still pending, so it is published as "to be confirmed in writing", never as
- *   an executed contractual term.
+ *   €5,000 prize pot split €3,000 / €1,500 / €500, confirmed by FORCIT on
+ *   28 Oct 2026.
  *
  * The advertised prize pool (app/hackathon) is not derived from here; any
  * change to it is the organiser's decision.
@@ -37,7 +36,7 @@ export const CHALLENGE_PRIZE_EXCEPTIONS: readonly PrizeException[] = [
     company: "FORCIT Group",
     challenge: "Drill and Blast Cycle Intelligence",
     prizes: { first: 3_000, second: 1_500, third: 500 },
-    confirmation: "pending",
+    confirmation: "confirmed",
   },
 ];
 

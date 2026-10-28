@@ -44,11 +44,12 @@ describe("company challenge prizes", () => {
     expect(CHALLENGE_COMPANIES.some((c) => c.id === "forcit-group" && c.name === "FORCIT Group")).toBe(true);
   });
 
-  it("marks FORCIT's split as awaiting written confirmation, never as an executed contract", () => {
-    expect(CHALLENGE_PRIZE_EXCEPTIONS.map((e) => e.confirmation)).toEqual(["pending"]);
-    expect(prizeLine("forcit-group")).toBe("€3,000 / €1,500 / €500 (to be confirmed in writing)");
+  it("publishes FORCIT's confirmed €5,000 split without a pending note", () => {
+    expect(CHALLENGE_PRIZE_EXCEPTIONS.map((e) => e.confirmation)).toEqual(["confirmed"]);
+    expect(prizeLine("forcit-group")).toBe("€3,000 / €1,500 / €500");
     expect(prizeLine("valmet")).toBe("€2,000 / €750 / €250");
-    expect(CHALLENGE_PRIZES_STATEMENT).toMatch(/to be confirmed in writing/);
+    expect(CHALLENGE_PRIZES_STATEMENT).toMatch(/€5,000 prize pot\./);
+    expect(CHALLENGE_PRIZES_STATEMENT).not.toMatch(/to be confirmed/i);
     expect(CHALLENGE_PRIZES_STATEMENT).not.toMatch(/same|contract|guarantee/i);
   });
 });

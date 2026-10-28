@@ -172,7 +172,7 @@ test.describe("content", () => {
     await expect(prizes).toContainText("All other company challenges");
     await expect(prizes).toContainText("€2,000 · €750 · €250");
     await expect(prizes).toContainText("FORCIT Group — Drill and Blast Cycle Intelligence (€5,000 prize pot)");
-    await expect(prizes).toContainText("To be confirmed in writing");
+    await expect(prizes).not.toContainText("To be confirmed in writing");
     await expect(page.locator("#rules")).toContainText("Mark team as ready");
     await expect(page.locator("#rules")).toContainText("Thu 5 Nov · 15:00");
     await expect(page.locator("#rules")).toContainText("Full challenge in the app");

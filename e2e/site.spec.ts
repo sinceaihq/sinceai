@@ -360,7 +360,7 @@ test.describe("hackathon 2026 page", () => {
     );
     const main = await page.locator("main").innerText();
     expect(main).not.toMatch(/MLH 2026 season|2026 Season Member Event/i);
-    for (const name of ["Fonecta", "Lindström", "Business Turku", "FORCIT Group", "€5,000 prize pot to be confirmed in writing"]) expect(main).toContain(name);
+    for (const name of ["Fonecta", "Lindström", "Business Turku", "FORCIT Group", "€5,000 prize pot"]) expect(main).toContain(name);
     expect(main).not.toContain("same cash prize");
     await expect(page.locator("[data-volunteer-cta]")).toHaveAttribute("href", /^https:\/\/docs\.google\.com\/forms\/d\/e\/1FAIpQLSdro-RK8jjZ8BVLXq4ij8m4FcBUOl7Z3QycKwFCFj-xub7dqQ\/viewform/);
     await expect(page.locator("[data-volunteer-cta]")).toHaveCount(1);
