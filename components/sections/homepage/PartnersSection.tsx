@@ -20,14 +20,27 @@ function LogoItem({
       aria-label={`${partner.name} — Since AI partner website`}
     >
       {/* Fixed-size bounding box — every logo renders inside the same rectangle */}
-      <div className={`relative flex-shrink-0 ${boxClass}`}>
-        <Image
-          src={partner.logo}
-          alt={`${partner.name} logo — Since AI partner`}
-          fill
-          className="object-contain object-center grayscale opacity-45 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
-          sizes={sizes}
-        />
+      <div
+        className={`relative flex-shrink-0 ${boxClass} ${
+          partner.surface === "light"
+            ? "rounded-md bg-white p-1.5 opacity-55 group-hover:opacity-100 transition-opacity duration-300"
+            : ""
+        }`}
+        data-partner-surface={partner.surface}
+      >
+        <div className="relative h-full w-full">
+          <Image
+            src={partner.logo}
+            alt={`${partner.name} logo — Since AI partner`}
+            fill
+            className={
+              partner.surface === "light"
+                ? "object-contain object-center"
+                : "object-contain object-center grayscale opacity-45 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
+            }
+            sizes={sizes}
+          />
+        </div>
       </div>
     </a>
   );
