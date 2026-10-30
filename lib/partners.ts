@@ -9,6 +9,12 @@ export interface Partner {
    * 3 = Community Supporters
    */
   tier: 1 | 2 | 3;
+  /**
+   * "light": the official logo is dark artwork with no reverse version, so it
+   * sits on a light plate to stay visible on the black page. Brand colours
+   * are kept as they are.
+   */
+  surface?: "light";
 }
 
 export const PARTNERS: Partner[] = [
@@ -470,6 +476,14 @@ export const PARTNERS: Partner[] = [
     logo: "/assets/sponsors/Study-in-Turku.png",
     url: "https://www.turku.fi/en/study-turku",
     tier: 3,
+  },
+  {
+    // Official purple (#3c1053) logo; there is no white version, hence the light plate.
+    name: "Insinööriopiskelijaliitto IOL ry",
+    logo: "/assets/supports/iol.svg",
+    url: "https://www.ilry.fi/opiskelijat/insinooriopiskelijaliitto-iol/",
+    tier: 3,
+    surface: "light",
   },
   {
     name: "Lagos AI Summit",

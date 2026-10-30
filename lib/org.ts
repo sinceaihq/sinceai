@@ -58,7 +58,7 @@ export const ORG = {
     members: "1,000+",
     hackathonParticipants: "260",
     hackathon2026Target: "1,000+",
-    /** 107 organisations in lib/partners.ts (challenge, strategic, capital, research and community partners). */
+    /** 109 organisations in lib/partners.ts (challenge, strategic, capital, research and community partners). */
     partners: "100+",
     projects: "100+",
     /** 123 countries on sinceai.app profiles, 92 among Hackathon 2026 applicants (lib/reach.ts, 19 Oct 2026). */
