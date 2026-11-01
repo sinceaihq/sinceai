@@ -451,6 +451,7 @@ describe("company routes", () => {
     expect(getTarget3D("room-trusted")).toMatchObject({ company: "trusted", day: "Fri", map: "educity-2", where: "EduCity · room 2067" });
     const trusted = getCompany("trusted");
     for (const tour of TOURS_3D) expect(twin.tourForCompany(tour, trusted?.id)).toBeNull();
+    for (const id of ["trusted", "tba-2", "room-tba-2", "room-2067"]) expect(twin.normaliseTarget(id)).toBe("room-trusted");
   });
 
   it("pair each company's Q&A stand with its Friday room and point at their floor plans", () => {

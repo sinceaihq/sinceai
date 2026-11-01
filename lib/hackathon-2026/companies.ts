@@ -224,9 +224,11 @@ export function companySchedule(company: ChallengeCompany): ScheduleItem[] {
 
 /**
  * A remote partner's timeline: only what it does itself, with the on-site
- * partner's arrivals, stands, meals and briefings left out.
+ * partner's arrivals, stands, meals and briefings left out. Its Discord hours
+ * are not a schedule item: nothing here may imply hours it has not confirmed.
  */
 function remoteCompanySchedule(company: ChallengeCompany): ScheduleItem[] {
+  const REMOTE_BRIEFING_LOCATION = "Online (video call; Since AI sends the link)";
   const room = `Room ${briefingRoomLabel(company)} · floor ${company.briefing.floor}`;
   const own: Record<string, Partial<ScheduleItem>> = {
     "fri-move-to-briefings": {
@@ -235,12 +237,14 @@ function remoteCompanySchedule(company: ChallengeCompany): ScheduleItem[] {
         "challenge-partners": "From 18:30 volunteers guide the teams to the rooms in turn. A Since AI host receives them.",
       },
       placeDetailFor: { "challenge-partners": room },
+      calendarLocation: REMOTE_BRIEFING_LOCATION,
     },
     "fri-briefings": {
       detailFor: {
         "challenge-partners": `A Since AI host in the room introduces the challenge, shows your approved brief on screen and runs the AV and the video call. Your experts join by video to give context and answer questions, which the teams ask in the room. Share materials only with the teams that chose ${company.name}. 19:30 is a hard end for every briefing.`,
       },
       placeDetailFor: { "challenge-partners": `${room} · by video` },
+      calendarLocation: REMOTE_BRIEFING_LOCATION,
     },
     "sun-evaluation": {
       place: "app",
@@ -254,25 +258,12 @@ function remoteCompanySchedule(company: ChallengeCompany): ScheduleItem[] {
       detailFor: {
         "challenge-partners": "Since AI announces your top three teams at EduCity. There is no need to travel.",
       },
+      calendarLocation: "Online (announced at EduCity)",
     },
   };
-  const saturday: ScheduleItem = {
-    id: "sat-remote-support",
-    start: "2026-11-07T00:00:00+02:00",
-    allDay: true,
-    title: "Remote technical support on Discord",
-    detail: `No stand at Joki. ${company.name}'s experts answer teams' technical questions in its Discord channel. ${remoteSupportStatement(company)}.`,
-    place: "app",
-    placeDetail: "Discord",
-    audiences: ["challenge-partners"],
-    kind: "note",
-    status: company.remote?.supportWindows.length ? "confirmed" : "pending",
-  };
-  const items = scheduleFor("challenge-partners")
+  return scheduleFor("challenge-partners")
     .filter((item) => item.id === "sun-submission-deadline" || item.id in own)
     .map((item) => ({ ...item, ...own[item.id] }));
-  const firstSunday = items.findIndex((item) => item.start.startsWith("2026-11-08"));
-  return [...items.slice(0, firstSunday), saturday, ...items.slice(firstSunday)];
 }
 
 /** A remote partner's Discord hours, only once it has confirmed them. */

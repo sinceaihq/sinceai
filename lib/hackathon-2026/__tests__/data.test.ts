@@ -514,7 +514,6 @@ describe("company schedule", () => {
       expect(schedule.map((i) => i.id)).toEqual([
         "fri-move-to-briefings",
         "fri-briefings",
-        "sat-remote-support",
         "sun-submission-deadline",
         "sun-evaluation",
         "sun-closing",
@@ -529,9 +528,9 @@ describe("company schedule", () => {
     it("never promises support hours the partner has not confirmed", () => {
       expect(trusted.remote?.supportWindows).toEqual([]);
       expect(remoteSupportStatement(trusted)).toBe("Remote support schedule to be confirmed");
-      const text = JSON.stringify([trusted, companySchedule(trusted)]);
-      expect(text).toContain("Remote support schedule to be confirmed");
-      expect(text).not.toMatch(/19:30–20:30|10:00–12:00|15:00–17:00/);
+      const schedule = companySchedule(trusted);
+      expect(schedule.some((i) => i.allDay)).toBe(false);
+      expect(JSON.stringify([trusted, schedule])).not.toMatch(/19:30–20:30|10:00–12:00|15:00–17:00/);
     });
   });
 

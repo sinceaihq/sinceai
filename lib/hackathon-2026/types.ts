@@ -53,6 +53,8 @@ export interface ScheduleItem {
   /** Sub-location, e.g. "Lobby · Taidon portaat". */
   placeDetail?: string;
   placeDetailFor?: Partial<Record<Audience, string>>;
+  /** Replaces the venue's address in a calendar file, for someone who takes part remotely. */
+  calendarLocation?: string;
   audiences: readonly Audience[];
   kind: "milestone" | "deadline" | "meal" | "session" | "move" | "note";
   status: Publishability;

@@ -1092,6 +1092,11 @@ export function normaliseTarget(id: string | null | undefined): string | null {
   const key = id?.trim().toLowerCase();
   if (!key) return null;
   if (TARGET_BY_ID.has(key)) return key;
+  // The last challenge place was shared as tba-2 before it was TrustED's.
+  if (key === "tba-2" || key === "room-tba-2") return "room-trusted";
+  // A company without a stand is found in its Friday room.
+  const remote = getCompany(key);
+  if (remote && !hasStand(remote)) return `room-${remote.id}`;
   const stand = BIOCITY_STANDS.find((s) => s.partnerId === key);
   if (stand) return stand.id;
   const room = /^room-(\d{4})$/.exec(key);

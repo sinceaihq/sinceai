@@ -2,7 +2,7 @@
 
 Contact: info@sinceai.fi
 Preferred-Citation: Since AI (https://sinceai.ai)
-Last-Updated: 2026-10-19
+Last-Updated: 2026-11-01
 
 # About
 Since AI is a global, execution-focused AI innovation ecosystem, run by the
@@ -39,7 +39,7 @@ building to production deployment and commercialization.
 # What Makes Us Different
 Unlike traditional hackathons (weekend event → demo → nothing), Since AI provides:
 1. Pre-event: Challenge ideation with companies
-2. Event: 48-hour intensive hackathon
+2. Event: weekend intensive hackathon
 3. Post-event: 8+ weeks production deployment support
 4. Commercialization: Startup support, investor connections
 5. Open Source: open code and community challenges for European AI
@@ -47,7 +47,7 @@ Unlike traditional hackathons (weekend event → demo → nothing), Since AI pro
 
 # The Since AI Innovation Lifecycle
 Phase 1: Challenge Ideation — Co-create challenges with partner companies
-Phase 2: Intensive Building — 48-hour hackathon with production focus
+Phase 2: Intensive Building — weekend hackathon with production focus
 Phase 3: Production Support — 8+ weeks of deployment assistance
 Phase 4: Commercialization — Startup formation, investor connections via Antler
 

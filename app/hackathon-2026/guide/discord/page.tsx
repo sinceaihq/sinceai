@@ -89,7 +89,7 @@ export default function DiscordGuidePage() {
             { label: "Time needed", value: "About 10 min", sub: "One-time setup" },
             { label: "Cost", value: "Free", sub: "No subscription needed" },
             { label: "Works in", value: "Your browser", sub: "Or the phone and computer apps" },
-            { label: "When", value: "Before you travel", sub: "Every onsite representative", strong: true },
+            { label: "When", value: "Before the event", sub: "Every representative", strong: true },
           ]}
         />
         <div className="guide-no-print flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -153,7 +153,7 @@ export default function DiscordGuidePage() {
           id="setup-title"
           eyebrow="// set up in six steps"
           title="From invite to your company channel."
-          lede="Do this once, before you travel. The pink outline in each picture shows where to click."
+          lede="Do this once, before the event. The pink outline in each picture shows where to click."
         />
         <ol className="space-y-6">
           {steps.map((step, i) => (
@@ -257,7 +257,7 @@ export default function DiscordGuidePage() {
           id="phone-title"
           eyebrow="// on the move"
           title="Put Discord on your phone."
-          lede="At the event you will be walking between rooms. With the app on your phone, questions reach you wherever you are. At least one onsite representative per company keeps phone notifications on."
+          lede="With the app on your phone, questions reach you wherever you are during the event. At least one representative per company keeps phone notifications on."
         />
         <div className="grid grid-cols-1 gap-10 md:grid-cols-[3fr_2fr] md:items-center">
           <div>
@@ -288,7 +288,7 @@ export default function DiscordGuidePage() {
           lede="Tick each item off. Your ticks are saved in this browser only."
         />
         <div className="max-w-2xl">
-          <Checklist single storageKey="discord-guide" groups={[{ title: "Before you arrive in Turku", items: DISCORD_CHECKLIST }]} />
+          <Checklist single storageKey="discord-guide" groups={[{ title: "Before the event", items: DISCORD_CHECKLIST }]} />
         </div>
       </GuideSection>
 

@@ -156,6 +156,7 @@ export function RemoteCompanyGuide({ company }: { company: ChallengeCompany }) {
         <div className="guide-no-print flex flex-wrap gap-3">
           <a href={DISCORD_INVITE} target="_blank" rel="noopener noreferrer" className={ghostButtonClass}>
             Join the Since AI Discord
+            <span className="sr-only"> (opens in a new tab)</span>
           </a>
           <Link href={DISCORD_GUIDE_PATH} className={ghostButtonClass}>
             Discord Guide
@@ -177,7 +178,7 @@ export function RemoteCompanyGuide({ company }: { company: ChallengeCompany }) {
           id="schedule-title"
           eyebrow="// schedule"
           title="Your timeline."
-          lede="Local Turku time (EET, UTC+2). Only what applies to a remote partner."
+          lede="Local Turku time (EET, UTC+2). Only what applies to a remote partner: Discord support hours are added when they are confirmed."
         />
         <div className="mb-8 flex flex-wrap gap-3">
           <CalendarButton company={company} />

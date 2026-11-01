@@ -14,14 +14,14 @@ export const DISCORD_GUIDE_PATH = `${GUIDE_BASE_PATH}/discord`;
 
 export type DiscordAudience = "challenge-partners" | "partners";
 
-/** Before arriving in Turku — the same for every partner. */
+/** Before the event — the same for every partner. */
 export const DISCORD_CHECKLIST: readonly string[] = [
   "Join the Since AI Discord",
   "Verify your Discord account (email)",
   "Set a recognisable display name: First name | Company",
   "Confirm your company role and access",
   "Check your company and partner channels",
-  "Turn on notifications on at least one onsite representative’s phone",
+  "Turn on notifications on at least one representative’s phone",
 ];
 
 /**
@@ -108,7 +108,7 @@ export function discordSteps(example: string): DiscordStep[] {
       id: "channels",
       title: "Find your company channel",
       text: "The Since AI team gives your account your company role. Your company's channels then appear in the channel list on the left. Click a channel to open it.",
-      tip: "Channels still missing a day before you travel? Tell us — see Help below.",
+      tip: "Channels still missing a day before the event? Tell us — see Help below.",
       illustration: "channels",
     },
   ];

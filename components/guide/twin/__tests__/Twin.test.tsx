@@ -1,3 +1,4 @@
+import { getTarget3D } from "@/lib/hackathon-2026/twin";
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
@@ -262,6 +263,11 @@ describe("readTwinParams", () => {
 });
 
 describe("tourForTarget", () => {
+  it("offers no walking route to a remote partner's room, whose arrival routes tell people to bring a stand", () => {
+    expect(tourForTarget(getTarget3D("room-trusted")!)).toBeNull();
+    expect(tourForTarget(getTarget3D("room-valmet")!)).not.toBeNull();
+  });
+
   const target = (over: Partial<Target3D>): Target3D => ({
     id: "x",
     label: "X",
@@ -322,7 +328,9 @@ describe("tourForTarget", () => {
 
   it("picks the expected routes in the real data", () => {
     const pick = (id: string) => tourForTarget(TARGETS_3D.find((t) => t.id === id)!)?.id;
-    for (const t of TARGETS_3D.filter((x) => x.kind === "company" || x.kind === "room" || x.kind === "stand")) {
+    for (const t of TARGETS_3D.filter(
+      (x) => (x.kind === "company" || x.kind === "room" || x.kind === "stand") && x.company !== "trusted",
+    )) {
       expect(tourForTarget(t)).not.toBeNull();
     }
     expect(pick("elisa")).toBe("companies-tykistokatu-to-showroom");
