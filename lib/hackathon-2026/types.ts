@@ -105,14 +105,34 @@ export interface ChallengeCompany {
     /** Room name, e.g. "Dromberg". */
     roomName?: string;
   };
-  qa: {
+  /** Saturday Q&A stand at Joki. Absent for a remote partner, which has no physical stand. */
+  qa?: {
     venue: "joki";
     floor: 1 | 2 | 3;
     /** e.g. "Showroom" */
     zone: string;
   };
+  /** Set when the partner takes part remotely: see RemoteParticipation. */
+  remote?: RemoteParticipation;
   /** Room/stand placement status (2 Oct maps, production lock pending). */
   placementStatus: Publishability;
+}
+
+/**
+ * A partner with nobody on site: a Since AI host runs its Friday briefing room,
+ * its experts join by video, Saturday support is on Discord and its evaluator
+ * reviews the submissions remotely on Sunday.
+ */
+export interface RemoteParticipation {
+  /** The organisation that coordinates the project, shown with the partner's name. */
+  coordinator: { name: string; url: string };
+  /** One sentence on what the partner is, from its own public website. */
+  about: string;
+  /**
+   * Discord support windows the partner has confirmed, e.g. "Sat 10:00–12:00".
+   * Empty until it confirms: the page then says the schedule is to be confirmed.
+   */
+  supportWindows: readonly string[];
 }
 
 export type StandCategory = "visibility-tech";

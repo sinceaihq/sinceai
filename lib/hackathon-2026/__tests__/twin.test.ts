@@ -4,6 +4,8 @@ import {
   BIOCITY_STANDS,
   briefingRoomLabel,
   CHALLENGE_COMPANIES,
+  getCompany,
+  STAND_COMPANIES,
   DEFAULT_TIME,
   EVENT_2026,
   getPlace3D,
@@ -164,8 +166,8 @@ describe("targets", () => {
     }
   });
 
-  it("give every company its Saturday Q&A stand in Joki", () => {
-    for (const c of CHALLENGE_COMPANIES) {
+  it("give every company with a stand its Saturday Q&A stand in Joki", () => {
+    for (const c of STAND_COMPANIES) {
       const t = getTarget3D(c.id)!;
       expect(t).toMatchObject({
         label: c.name,
@@ -407,7 +409,7 @@ describe("company routes", () => {
   });
 
   it("lead each company to its own Friday room and Saturday stand, keeping the steps' anchors", () => {
-    for (const c of CHALLENGE_COMPANIES) {
+    for (const c of STAND_COMPANIES) {
       for (const id of [...FRI, ...SAT]) {
         const base = getTour3D(id)!;
         const t = twin.tourForCompany(base, c.id)!;
@@ -444,8 +446,15 @@ describe("company routes", () => {
     for (const t of TOURS_3D) for (const s of t.steps) expect(s.where?.trim()).toBeTruthy();
   });
 
+  it("give TrustED its Friday room in 3D, no stand and no arrival route", () => {
+    expect(getTarget3D("trusted")).toBeUndefined();
+    expect(getTarget3D("room-trusted")).toMatchObject({ company: "trusted", day: "Fri", map: "educity-2", where: "EduCity · room 2067" });
+    const trusted = getCompany("trusted");
+    for (const tour of TOURS_3D) expect(twin.tourForCompany(tour, trusted?.id)).toBeNull();
+  });
+
   it("pair each company's Q&A stand with its Friday room and point at their floor plans", () => {
-    for (const c of CHALLENGE_COMPANIES) {
+    for (const c of STAND_COMPANIES) {
       const stand = getTarget3D(c.id)!;
       expect(stand).toMatchObject({ company: c.id, day: "Sat", map: c.qa.floor === 1 ? "joki-showroom" : "joki-2-3" });
       if (c.briefing.floor === 3) continue;
@@ -507,7 +516,7 @@ describe("deep links", () => {
   });
 
   it("place targets: companies in Joki, rooms in EduCity, stands in BioCity", () => {
-    for (const c of CHALLENGE_COMPANIES) expect(placeForTarget(c.id)).toBe("joki");
+    for (const c of STAND_COMPANIES) expect(placeForTarget(c.id)).toBe("joki");
     expect(placeForTarget("room-elisa")).toBe("educity");
     expect(placeForTarget("room-1001")).toBe("educity");
     expect(placeForTarget("bc-4")).toBe("biocity");

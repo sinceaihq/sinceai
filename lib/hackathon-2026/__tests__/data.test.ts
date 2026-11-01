@@ -15,7 +15,6 @@ import {
   getCompany,
   getScheduleItem,
   GUIDES,
-  NAMED_CHALLENGE_PARTNERS,
   OPEN_STAND_LABEL,
   PARTNER_CORNER,
   placeDetailFor,
@@ -30,13 +29,16 @@ import {
   SHOWROOM_ORDER,
   standDisplayName,
   STAND_PARTNERS,
-  TBA_CHALLENGE_PLACES,
+  STAND_COMPANIES,
+  standMapId,
+  hasStand,
+  remoteSupportStatement,
   VENUE_MAPS,
   VENUES,
 } from "@/lib/hackathon-2026";
 
 const byQaFloor = (floor: 1 | 2 | 3) =>
-  CHALLENGE_COMPANIES.filter((c) => c.qa.floor === floor)
+  STAND_COMPANIES.filter((c) => c.qa.floor === floor)
     .map((c) => c.name)
     .sort();
 
@@ -131,7 +133,7 @@ describe("canonical event facts", () => {
     const summaries = getScheduleItem("thu-challenge-summaries");
     expect(summaries.start).toBe("2026-11-05T15:00:00+02:00");
     expect(summaries.detail).toMatch(/Public-safe summaries/);
-    expect(summaries.detail).toMatch(/top three teams €2,000, €750 and €250.*FORCIT Group's Drill and Blast Cycle Intelligence: €3,000, €1,500 and €500/);
+    expect(summaries.detail).toMatch(/top three teams €2,000, €750 and €250.*FORCIT Group's Drill and Blast Cycle Intelligence: €2,500, €1,000 and €500/);
     const mlh = getScheduleItem("fri-mlh-intro");
     expect([formatTime(mlh.start), formatTime(mlh.end!)]).toEqual(["16:45", "16:55"]);
     expect(mlh.title).toBe("Major League Hacking: Introduction & Hacker Resources");
@@ -292,15 +294,15 @@ describe("challenge companies", () => {
   it("places the six Showroom companies on Joki floor 1", () => {
     expect(byQaFloor(1)).toEqual(["Apetit", "Bayer", "DNA", "Elisa", "Meyer Turku", "Turku Energia"]);
     expect([...SHOWROOM_ORDER].sort()).toEqual(
-      CHALLENGE_COMPANIES.filter((c) => c.qa.floor === 1)
+      STAND_COMPANIES.filter((c) => c.qa.floor === 1)
         .map((c) => c.id)
         .sort(),
     );
   });
 
-  it("has 14 named challenge partners and one place to be announced — 15 in all (Europress since 23 Oct 2026)", () => {
+  it("has 15 named challenge partners and no place left to be announced (TrustED since 1 Nov 2026)", () => {
     expect(CHALLENGE_COMPANIES).toHaveLength(15);
-    expect(NAMED_CHALLENGE_PARTNERS.map((c) => c.name).sort()).toEqual(
+    expect(CHALLENGE_COMPANIES.map((c) => c.name).sort()).toEqual(
       [
         "Apetit",
         "Bayer",
@@ -314,12 +316,13 @@ describe("challenge companies", () => {
         "Meyer Turku",
         "Takomo Golf",
         "Traficom",
+        "TrustED",
         "Turku Energia",
         "Valmet",
       ].sort(),
     );
-    expect(TBA_CHALLENGE_PLACES.map((c) => c.id)).toEqual(["tba-2"]);
-    for (const c of TBA_CHALLENGE_PLACES) expect(c.logo).toBeUndefined();
+    for (const c of CHALLENGE_COMPANIES) expect(c.id).not.toMatch(/^tba/);
+    expect(JSON.stringify([CHALLENGE_COMPANIES, VENUE_MAPS, PLACES_3D, TARGETS_3D, TOURS_3D])).not.toMatch(/tba-2|to be announced/i);
     // Europress is one of the 15, never a sixteenth; spelled as the company does.
     const europress = getCompany("europress")!;
     expect(europress.url).toBe("https://europressgroup.com/");
@@ -336,27 +339,28 @@ describe("challenge companies", () => {
     for (const name of ["Revvity", "Bo LKV", "Saarioinen", "Sandvik", "Kongsberg"]) expect(text).not.toContain(name);
   });
 
-  it("keeps 15 distinct briefing rooms and 15 Q&A stands", () => {
+  it("keeps 15 distinct briefing rooms and 14 Q&A stands: TrustED is remote", () => {
     expect(new Set(CHALLENGE_COMPANIES.map((c) => briefingRoomLabel(c))).size).toBe(15);
-    expect(CHALLENGE_COMPANIES.every((c) => c.qa.venue === "joki")).toBe(true);
+    expect(STAND_COMPANIES).toHaveLength(14);
+    expect(STAND_COMPANIES.every((c) => c.qa.venue === "joki")).toBe(true);
+    expect(CHALLENGE_COMPANIES.filter((c) => !hasStand(c)).map((c) => c.id)).toEqual(["trusted"]);
   });
 
-  it("marks the three reconciled positions provisional", () => {
-    for (const id of ["fonecta", "europress", "tba-2"]) expect(getCompany(id)!.placementStatus).toBe("pending");
+  it("marks the two reconciled positions provisional", () => {
+    for (const id of ["fonecta", "europress"]) expect(getCompany(id)!.placementStatus).toBe("pending");
   });
 
   it("places Europress (provisional), Valmet and Traficom on Joki floor 2", () => {
     expect(byQaFloor(2)).toEqual(["Europress", "Traficom", "Valmet"]);
   });
 
-  it("places six companies on Joki floor 3", () => {
+  it("places five companies on Joki floor 3", () => {
     expect(byQaFloor(3)).toEqual([
       "Business Turku",
       "FORCIT Group",
       "Fonecta",
       "Lindström",
       "Takomo Golf",
-      "To be announced",
     ]);
   });
 
@@ -374,7 +378,7 @@ describe("challenge companies", () => {
       "Takomo Golf": "2:2002 Ivar",
       "FORCIT Group": "2:2003 Erik",
       Lindström: "2:2004 Johannes",
-      "To be announced": "2:2067",
+      TrustED: "2:2067",
       Valmet: "2:2006 / 2007",
       DNA: "2:2026 Orvokki",
       "Turku Energia": "3:3006",
@@ -387,7 +391,7 @@ describe("challenge companies", () => {
     for (const company of CHALLENGE_COMPANIES) {
       const maps = companyMapIds(company);
       expect(findHotspot(maps.briefing, company.id)).toBeDefined();
-      expect(findHotspot(maps.qa, company.id)).toBeDefined();
+      if (maps.qa) expect(findHotspot(maps.qa, company.id)).toBeDefined();
     }
   });
 
@@ -474,8 +478,61 @@ describe("company schedule", () => {
     expect(showroomCounter(getCompany("meyer-turku")!)).toBe(1);
     expect(showroomCounter(getCompany("bayer")!)).toBe(6);
     expect(showroomCounter(getCompany("valmet")!)).toBeUndefined();
-    expect(qaStandSentence(getCompany("elisa")!)).toContain("counter 4 of 6");
+    expect(qaStandSentence(STAND_COMPANIES.find((c) => c.id === "elisa")!)).toContain("counter 4 of 6");
     expect(findHotspot("joki-showroom", "elisa")?.description).toBe("Counter 4 of 6 from the entrance");
+  });
+
+  describe("TrustED, the remote partner", () => {
+    const trusted = getCompany("trusted")!;
+
+    it("has its official logo, its own website and room 2067, but no stand", () => {
+      expect(trusted).toMatchObject({
+        name: "TrustED",
+        url: "https://trustedproject.eu/",
+        logo: { src: "/assets/sponsors/trusted.webp", width: 1200, height: 279 },
+        briefing: { venue: "educity", floor: 2, room: "2067" },
+      });
+      expect(hasStand(trusted)).toBe(false);
+      expect(companyMapIds(trusted)).toEqual({ briefing: "educity-2", qa: null });
+      expect(qaLocationLabel(trusted)).toBe("Remote · Discord");
+    });
+
+    it("is on the EduCity floor 2 map and on no Joki map", () => {
+      expect(findHotspot("educity-2", "trusted")).toMatchObject({ id: "e2-trusted", label: "2067", description: "TrustED" });
+      for (const map of VENUE_MAPS.filter((m) => m.venue === "joki")) {
+        expect(map.hotspots.some((h) => h.refId === "trusted")).toBe(false);
+        expect(`${map.alt} ${map.caption}`).not.toMatch(/TrustED|to be announced/i);
+      }
+    });
+
+    it("keeps every other company's rooms and stand hotspots", () => {
+      for (const c of STAND_COMPANIES) expect(findHotspot(standMapId(c), c.id)).toBeDefined();
+    });
+
+    it("gets a timeline with no arrival, stand, meal or on-site briefing", () => {
+      const schedule = companySchedule(trusted);
+      expect(schedule.map((i) => i.id)).toEqual([
+        "fri-move-to-briefings",
+        "fri-briefings",
+        "sat-remote-support",
+        "sun-submission-deadline",
+        "sun-evaluation",
+        "sun-closing",
+      ]);
+      expect(JSON.stringify(schedule)).not.toMatch(/your stand|Arrive at EduCity|Arrive at Joki|roll-up|materials you brought/);
+      const friday = schedule.find((i) => i.id === "fri-briefings")!;
+      expect(friday.start).toBe("2026-11-06T18:50:00+02:00");
+      expect(placeDetailFor(friday, "challenge-partners")).toBe("Room 2067 · floor 2 · by video");
+      expect(schedule.find((i) => i.id === "sun-evaluation")!.detailFor?.["challenge-partners"]).toMatch(/by 13:00/);
+    });
+
+    it("never promises support hours the partner has not confirmed", () => {
+      expect(trusted.remote?.supportWindows).toEqual([]);
+      expect(remoteSupportStatement(trusted)).toBe("Remote support schedule to be confirmed");
+      const text = JSON.stringify([trusted, companySchedule(trusted)]);
+      expect(text).toContain("Remote support schedule to be confirmed");
+      expect(text).not.toMatch(/19:30–20:30|10:00–12:00|15:00–17:00/);
+    });
   });
 
   it("leaves the shared schedule untouched", () => {

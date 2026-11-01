@@ -220,6 +220,13 @@ export const PARTNERS: Partner[] = [
     tier: 1,
   },
 
+  {
+    name: "TrustED",
+    logo: "/assets/sponsors/trusted.webp",
+    url: "https://trustedproject.eu/",
+    tier: 1,
+  },
+
   // ─── Tier 2: Capital & Research Partners ────────────────────────────────────
   {
     name: "Antler",

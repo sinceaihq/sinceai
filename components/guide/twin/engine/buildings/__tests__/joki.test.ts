@@ -37,7 +37,7 @@ import { hallRoofOutline, WALKWAY } from "../joki/lowwing";
 import { TOWER_STANDS, coreHides, slabHides, standLabelHeight, standPose } from "../jokiTower";
 import { CUT_EYE_LEVEL, ROOM_LABELS, f1RoomAt, f1Visible, jokiLevelAt, walkData } from "../joki";
 import type { Collider2D, LevelId } from "../../types";
-import { CHALLENGE_COMPANIES, SHOWROOM_ORDER } from "@/lib/hackathon-2026/companies";
+import { STAND_COMPANIES, SHOWROOM_ORDER } from "@/lib/hackathon-2026/companies";
 import { TARGETS_3D, PLACES_3D } from "@/lib/hackathon-2026/twin";
 import { pointInPolygon } from "../../nav/collision";
 
@@ -228,7 +228,7 @@ describe("Showroom counters (SPEC §7.2)", () => {
 
 describe("Tower stands (SPEC §7.3, event map joki-2-3)", () => {
   it("places every floor-2/3 company where the event map has it", () => {
-    for (const c of CHALLENGE_COMPANIES.filter((x) => x.qa.floor !== 1)) {
+    for (const c of STAND_COMPANIES.filter((x) => x.qa.floor !== 1)) {
       const s = TOWER_STANDS[c.id];
       expect(s).toBeDefined();
       expect(s.floor).toBe(c.qa.floor);
@@ -554,7 +554,7 @@ describe("Joki targets and views cover lib/hackathon-2026/twin.ts", () => {
   it("lists every Joki target id the module provides", () => {
     const joki = TARGETS_3D.filter((t) => t.place === "joki").map((t) => t.id);
     const provided = new Set([
-      ...CHALLENGE_COMPANIES.map((c) => c.id),
+      ...STAND_COMPANIES.map((c) => c.id),
       "showroom",
       "lounge",
       "aula",

@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import type { CSS2DObject } from "three/addons/renderers/CSS2DRenderer.js";
 import type { TwinContext, V2 } from "../types";
-import { CHALLENGE_COMPANIES } from "@/lib/hackathon-2026/companies";
+import { STAND_COMPANIES } from "@/lib/hackathon-2026/companies";
 import { LOGOS_3D } from "@/lib/hackathon-2026/logos3d";
 import { EVENT_VIOLET } from "../render/canvas";
 import { makeLabel } from "../labels";
@@ -18,7 +18,7 @@ import { exitSign, floorScreen, mapWall, patchworkCarpet, rollupAtlas, screenCon
  * ducts and black track spots, grey patchwork carpet, convector benches
  * along the glass. Floor 2: Europress (provisional), Valmet, Traficom (east) and the Chill
  * Zone in the Turku Futurescapes exhibition (west). Floor 3: Takomo Golf,
- * FORCIT Group, a partner to be announced (east), Lindström, Fonecta, Business Turku
+ * FORCIT Group (east), Lindström, Fonecta, Business Turku
  * (west) in front of the dark timber bleachers. Stand = black counter
  * 1.8 × 0.6 × 1.05 m with a violet kick light, two bar stools and a
  * 0.85 × 2.0 m roll-up with the company's logo (repo logos only).
@@ -32,7 +32,6 @@ export const TOWER_STANDS: Record<string, { floor: 2 | 3; x: number; z: number }
   traficom: { floor: 2, x: 6.08, z: 2.07 },
   "takomo-golf": { floor: 3, x: 5.29, z: -4.43 },
   "forcit-group": { floor: 3, x: 6.27, z: -1.01 },
-  "tba-2": { floor: 3, x: 6.08, z: 2.07 },
   lindstrom: { floor: 3, x: -3.45, z: -5.71 },
   fonecta: { floor: 3, x: -5.45, z: -1.32 },
   "business-turku": { floor: 3, x: -3.39, z: 4.27 },
@@ -359,7 +358,7 @@ export function buildJokiTower(
     }
     // The Q&A screens on the core (east face of the shaft, west face of the stair wall).
     {
-      const names = CHALLENGE_COMPANIES.filter((c) => c.qa.floor === floor).map((c) => c.name);
+      const names = STAND_COMPANIES.filter((c) => c.qa.floor === floor).map((c) => c.name);
       const fs = floorScreen(floor, names);
       owned.push(fs.texture);
       readies.push(fs.ready);
@@ -468,7 +467,7 @@ export function buildJokiTower(
     const stool = barStoolPbr();
     owned.push(stool);
     const stools: { x: number; y: number; z: number; yaw: number }[] = [];
-    const standCos = CHALLENGE_COMPANIES.filter((x) => x.qa.floor === 2 || x.qa.floor === 3);
+    const standCos = STAND_COMPANIES.filter((x) => x.qa.floor === 2 || x.qa.floor === 3);
     const atlas = rollupAtlas(
       standCos.map((c) => ({ src: LOGOS_3D[c.id], name: c.name })),
       { px: low ? 256 : 384 },

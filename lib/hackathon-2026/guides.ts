@@ -291,6 +291,37 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
   ],
 };
 
+/** Before the event for a partner that takes part remotely: its own list, without travel or a stand. */
+export const REMOTE_PARTNER_CHECKLIST: readonly ChecklistGroup[] = [
+  {
+    title: "Send Since AI before the event",
+    items: [
+      "The completed Challenge Brief Template: a public-safe summary, the final brief, your evaluation criteria and your data and IP boundaries",
+      "The technical experts who join Friday's briefing by video",
+      "Your Discord support contacts and the hours they cover",
+      "Your Sunday evaluator and a backup",
+      "Any approved example data, resources or API links",
+      "Your approved logo and a short introduction",
+    ],
+  },
+  {
+    title: "Friday's video call",
+    items: [
+      "Join with the link Since AI sends your named experts, ready for 18:50",
+      "Check your camera, microphone and connection beforehand",
+      "Be ready to answer questions from the teams in room 2067 until the hard end at 19:30",
+    ],
+  },
+  {
+    title: "Discord and Sunday",
+    items: [
+      "Follow the Discord Guide so your experts can reach your challenge channel",
+      "Agree your support hours with Since AI, so teams know when you answer",
+      "Evaluator: sign in to sinceai.app with the access Since AI sets up for you, and confirm your top three by 13:00 on Sunday",
+    ],
+  },
+];
+
 export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
   builders: [
     {

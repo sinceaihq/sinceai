@@ -11,7 +11,6 @@ import {
   EVENT_2026,
   formatTime,
   getMap,
-  isTbaPlace,
   LATE_ARRIVAL_RULE,
   SCHEDULE,
   SELECTION_RULES,
@@ -27,9 +26,9 @@ import {
  * Field Guide states them.
  */
 describe("Friday rules (v1.2)", () => {
-  it("uses one data-driven prize statement: the standard split and FORCIT's pending exception", () => {
+  it("uses one data-driven prize statement: the standard split and FORCIT's exception", () => {
     expect(CHALLENGE_PRIZES).toBe(
-      "Each company challenge awards its top three teams €2,000, €750 and €250 in cash — except FORCIT Group's Drill and Blast Cycle Intelligence: €3,000, €1,500 and €500, a €5,000 prize pot.",
+      "Each company challenge awards its top three teams €2,000, €750 and €250 in cash — except FORCIT Group's Drill and Blast Cycle Intelligence: €2,500, €1,000 and €500, a €4,000 prize pot.",
     );
     const text = JSON.stringify({ SELECTION_RULES, SELECTION_TIMELINE, CONTENT_STAGES, SCHEDULE, DETAILS, CHECKLISTS });
     expect(text).toContain(CHALLENGE_PRIZES);
@@ -94,7 +93,7 @@ describe("Friday rules (v1.2)", () => {
   });
 
   it("keeps company records to identity, room and stand — no challenge brief or data fields", () => {
-    const allowed = ["id", "name", "logo", "url", "ndaRequired", "briefing", "qa", "placementStatus"];
+    const allowed = ["id", "name", "logo", "url", "ndaRequired", "briefing", "qa", "remote", "placementStatus"];
     for (const c of CHALLENGE_COMPANIES) for (const key of Object.keys(c)) expect(allowed).toContain(key);
   });
 
@@ -102,7 +101,7 @@ describe("Friday rules (v1.2)", () => {
     expect(BRIEFING_ROOMS_ANCHOR).toBe("briefing-rooms");
     expect(new Set(CHALLENGE_COMPANIES.map((c) => c.briefing.floor))).toEqual(new Set([1, 2, 3]));
     expect(VENUE_MAPS.map((m) => m.id)).toEqual(expect.arrayContaining(["educity-1", "educity-2", "educity-3"]));
-    expect(CHALLENGE_COMPANIES.filter(isTbaPlace).map((c) => c.briefing.room)).toEqual(["2067"]);
+    expect(CHALLENGE_COMPANIES.find((c) => c.briefing.room === "2067")?.id).toBe("trusted");
   });
 
   it("tells builders to read on Thursday, mark ready and select first in their critical path", () => {

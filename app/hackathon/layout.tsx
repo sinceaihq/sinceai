@@ -20,6 +20,7 @@ const SPONSOR_URLS: Record<(typeof HACKATHON_2026_PARTNERS.challengePartners)[nu
   DNA: "https://www.dna.fi/",
   Fonecta: "https://www.fonecta.fi/",
   Europress: "https://europressgroup.com/",
+  TrustED: "https://trustedproject.eu/",
 };
 const SPONSORS = HACKATHON_2026_PARTNERS.challengePartners.map((name) => ({ name, url: SPONSOR_URLS[name] }));
 
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
   title:
     "Since AI Hackathon 2026 — 6–8 November, Turku, Finland",
   description:
-    `48-hour AI hackathon in Turku, Finland, 6–8 November 2026: 1,000+ builders, a €50,000 prize pool and ${HACKATHON_2026_PARTNERS.challengeTarget} company challenges. MLH Member Event, open worldwide.`,
+    `AI hackathon in Turku, Finland, 6–8 November 2026: 1,000+ builders, €50,000+ in cash prizes and ${HACKATHON_2026_PARTNERS.challengeTarget} company challenges. MLH Member Event, open worldwide.`,
   keywords: [
     "Since AI Hackathon 2026",
     "AI hackathon Finland",
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
     "Since AI event",
     "AI builders hackathon",
     "hackathon Turku AMK EduCity",
-    "48 hour hackathon",
+    "weekend AI hackathon",
   ],
   alternates: {
     canonical: "https://sinceai.ai/hackathon",
@@ -47,7 +48,7 @@ export const metadata: Metadata = {
     title:
       "Since AI Hackathon 2026 — 6–8 November, Turku, Finland",
     description:
-      `48-hour AI hackathon in Turku, Finland. 1,000+ builders targeted. 15 company challenges from ${SHORT}. Open to builders worldwide.`,
+      `AI hackathon in Turku, Finland, 6–8 November 2026. 1,000+ builders targeted. 15 company challenges from ${SHORT}. Open to builders worldwide.`,
     url: "https://sinceai.ai/hackathon",
     siteName: "Since AI",
     type: "website",
@@ -57,7 +58,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Since AI Hackathon 2026 — November 6–8, Turku",
     description:
-      `48-hour AI hackathon. 1,000+ builders targeted. 15 company challenges from ${SHORT}.`,
+      `AI hackathon, 6–8 November 2026. 1,000+ builders targeted. 15 company challenges from ${SHORT}.`,
     images: ["/assets/og/hackathon-2026.png"],
   },
 };
@@ -68,7 +69,7 @@ const eventSchema = {
   "@id": "https://sinceai.ai/hackathon#event",
   name: "Since AI Hackathon 2026",
   description:
-    `A global execution-focused AI hackathon in a 48-hour format. 1,000+ builders targeted. €50,000 prize pool. 15 company challenges from ${SHORT}. Opening Friday 17:00 at EduCity; building at BioCity and Joki; finals Sunday 14:00.`,
+    `A global execution-focused AI hackathon, 6–8 November 2026. 1,000+ builders targeted. €50,000+ in cash prizes. 15 company challenges from ${SHORT}. Opening Friday 17:00 at EduCity; building at BioCity and Joki; finals Sunday 14:00.`,
   startDate: UPCOMING_EVENT_2026.startDate,
   endDate: UPCOMING_EVENT_2026.endDate,
   eventStatus: "https://schema.org/EventScheduled",
@@ -109,7 +110,7 @@ const eventSchema = {
     },
   ],
   organizer: { "@id": "https://sinceai.ai/#organization" },
-  // The confirmed challenge partners (organiser roster, 26 Oct 2026). One more challenge place is still to be announced.
+  // The 15 challenge partners (organiser roster, 1 Nov 2026).
   sponsor: SPONSORS.map(({ name, url }) => ({ "@type": "Organization", name, url })),
   performer: { "@type": "Person", name: "Jason Mayes", jobTitle: "Web AI Lead, Google" },
   image: "https://sinceai.ai/assets/og/hackathon-2026.png",

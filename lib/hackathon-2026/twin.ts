@@ -2,6 +2,9 @@ import {
   briefingRoomLabel,
   CHALLENGE_COMPANIES,
   companyMapIds,
+  hasStand,
+  STAND_COMPANIES,
+  standMapId,
   getCompany,
   SHOWROOM_ORDER,
   showroomCounter,
@@ -11,6 +14,7 @@ import { BIOCITY_STANDS, getStandPartner, OPEN_STAND_LABEL } from "./partners";
 import { GUIDE_BASE_PATH } from "./route";
 import { getScheduleItem } from "./schedule";
 import { formatTime, formatTimeRange } from "./time";
+import type { StandCompany } from "./companies";
 import type { ChallengeCompany, PartnerStand } from "./types";
 
 /**
@@ -101,7 +105,7 @@ const ROUTE_HREF = `${GUIDE_BASE_PATH}/venue#route`;
 const wallClock = (iso: string) => iso.slice(0, 16);
 
 const byName = (a: ChallengeCompany, b: ChallengeCompany) => a.name.localeCompare(b.name, "en");
-const companiesOnFloor = (floor: 1 | 2 | 3) => CHALLENGE_COMPANIES.filter((c) => c.qa.floor === floor);
+const companiesOnFloor = (floor: 1 | 2 | 3) => STAND_COMPANIES.filter((c) => c.qa.floor === floor);
 const listNames = (names: readonly string[]) =>
   names.length < 2 ? names.join("") : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
 
@@ -110,7 +114,7 @@ const WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eig
 const inWords = (n: number) => WORDS[n] ?? String(n);
 
 const showroomNames = SHOWROOM_ORDER.map((id) => getCompany(id)!.name);
-const towerStandCount = CHALLENGE_COMPANIES.length - SHOWROOM_ORDER.length;
+const towerStandCount = STAND_COMPANIES.length - SHOWROOM_ORDER.length;
 const openStandCount = BIOCITY_STANDS.filter((s) => !s.partnerId).length;
 
 const standById = (id: string): PartnerStand => {
@@ -223,7 +227,7 @@ export const PLACES_3D: readonly Place3D[] = [
 // ── Targets ──────────────────────────────────────────────────────────────────
 
 /** "Joki floor 1 · Showroom · counter 4 of 6", "Joki floor 3 · glass tower" */
-function standDetail(company: ChallengeCompany): string {
+function standDetail(company: StandCompany): string {
   const counter = showroomCounter(company);
   if (company.qa.floor === 1) {
     const where = `Joki floor 1 · ${company.qa.zone}`;
@@ -233,13 +237,13 @@ function standDetail(company: ChallengeCompany): string {
 }
 
 /** "Showroom counter 4", "Showroom", "floor 3" — where a company's Q&A stand is, in a few words. */
-function standWhereShort(company: ChallengeCompany): string {
+function standWhereShort(company: StandCompany): string {
   const counter = showroomCounter(company);
   if (company.qa.floor === 1) return counter ? `Showroom counter ${counter}` : company.qa.zone;
   return `floor ${company.qa.floor}`;
 }
 
-const companyTargets: Target3D[] = [...CHALLENGE_COMPANIES].sort(byName).map((c) => ({
+const companyTargets: Target3D[] = [...STAND_COMPANIES].sort(byName).map((c) => ({
   id: c.id,
   label: c.name,
   detail: standDetail(c),
@@ -249,7 +253,7 @@ const companyTargets: Target3D[] = [...CHALLENGE_COMPANIES].sort(byName).map((c)
   where: `Joki · ${standWhereShort(c)}`,
   day: "Sat",
   company: c.id,
-  map: companyMapIds(c).qa,
+  map: standMapId(c),
 }));
 
 /** Briefing rooms the 3D models: EduCity floors 1–2 (floor 3's two rooms are on the 2D floor plan only). */
@@ -979,7 +983,8 @@ const withoutStop = (text: string) => text.replace(/[.\s]+$/, "");
 export function tourForCompany(tour: Tour3D, companyId: string | null | undefined): CompanyTour | null {
   const day = COMPANY_ROUTE_DAY[tour.id];
   const company = companyId ? getCompany(companyId) : undefined;
-  if (!day || !company) return null;
+  // A remote partner travels nowhere: its room is hosted and it has no stand.
+  if (!day || !company || !hasStand(company)) return null;
   const steps = tour.steps.slice();
   const last = steps.length - 1;
   const setUp = "set up by the Since AI team from the materials you brought on Friday";

@@ -735,7 +735,8 @@ z 34.4…36.3), EduCity gateway lift (street −1.55 → 3.40, near (196.9,76.8)
   lecture-chair arc → omit the chairs in the twin [D]; Forcit is ≈3 m from the F3 SE exit (keep ≥1.2 m clear).
 - Stand dressing [E]: counter 1.8 × 0.6 × 1.05 m + roll-up 0.85 × 2.0 m with the company logo (repo logos only).
 - **Roster of 13 Oct 2026 [D]:** Revvity's F2 spot is held for a partner to be announced (`tba`); Bo LKV's F3 spot is
-  Fonecta's and Saarioinen's F3 spot is the second to-be-announced place (`tba-2`). The positions above are unchanged.
+  Fonecta's and Saarioinen's F3 spot was the second to-be-announced place. Since 1 Nov 2026 that place is TrustED, which is
+  remote and has no stand, so this F3 spot is empty and not modelled. The other positions above are unchanged.
 
 ### 7.4 EduCity floors 1–2 (frame E; schematic maps ±0.3–0.5 m; rooms in `interiors.json educity`)
 - **1F (y 3.40):** exposed concrete column grid x_E ≈5.4/17.3/22.3/29.3/34.2/39.3, z_E ≈8.8/16.4/24.5/30/48.8/54.1/
@@ -761,7 +762,7 @@ z 34.4…36.3), EduCity gateway lift (street −1.55 → 3.40, near (196.9,76.8)
   at 3F (y 12.4) and 4F (y 16.4) around z 31–34.5** with white core / lilac halo `#d0a8db` LED lines; steel gantry under
   the glass.
 - **Roster of 13 Oct 2026 [D]:** 1090 Ringsberg is held for a partner to be announced; 2001 Elias is Fonecta's and
-  2067 the second to-be-announced place. The room geometry below is unchanged. During team formation (Fri 15:00 → before
+  2067 the second to-be-announced place, TrustED's since 1 Nov 2026 (remote, hosted by Since AI). The room geometry below is unchanged. During team formation (Fri 15:00 → before
   17:00) room 1091 Hammarbacka and the lobby in front of it are the team formation area (organiser's plan, zones 1–4);
   Traficom's briefing there is at 18:15.
 - **2F (y 8.40):** 2001 Elias (Bo LKV → Fonecta) x 0.27–12.3; 2002 Ivar (Takomo Golf) 12.3–22.4; 2003 Erik (Forcit) 22.5–32.2;

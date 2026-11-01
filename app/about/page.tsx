@@ -114,8 +114,8 @@ const CHAPTERS: { when: string; where: string; title: string; body: ReactNode; n
     now: true,
     body: (
       <>
-        48 hours, 1,000+ builders and {HACKATHON_2026_PARTNERS.challengeTarget} company challenges from{" "}
-        {HACKATHON_2026_PARTNERS.challengePartnersShort}, with a €50,000 prize pool, as an MLH 2027 Season Member Event.
+        6–8 November, 1,000+ builders and {HACKATHON_2026_PARTNERS.challengeTarget} company challenges from{" "}
+        {HACKATHON_2026_PARTNERS.challengePartnersShort}, with €50,000+ in cash prizes, as an MLH 2027 Season Member Event.
         The best teams get eight weeks of production support.{" "}
         <Link href="/hackathon" className={inline}>
           About the hackathon

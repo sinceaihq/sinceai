@@ -7,10 +7,10 @@ import {
   CONTENT_STAGES,
   formatEur,
   GUIDE_BASE_PATH,
-  isTbaPlace,
   CONFIDENTIAL_ANCHOR,
   NDA_LABEL,
   NDA_NOTE,
+  OVERALL_WINNER_STATEMENT,
   RESOURCES_PATH,
   SELECTION_RULES,
   SELECTION_TIMELINE,
@@ -80,6 +80,7 @@ export function ChallengePrizes({ className }: { className?: string }) {
           />
         ))}
       </ul>
+      <p className="mt-4 max-w-3xl text-sm text-neutral-300">{OVERALL_WINNER_STATEMENT}</p>
     </div>
   );
 }
@@ -189,7 +190,7 @@ const byRoom = (a: ChallengeCompany, b: ChallengeCompany) =>
 
 /**
  * The Friday briefing rooms as a text table, floor by floor — what the app's
- * selection pop-up points builders to. Held places say so; they are never a company.
+ * selection pop-up points builders to.
  */
 export function BriefingRoomTable({ mapHrefPrefix = "#map-" }: { mapHrefPrefix?: string }) {
   const rows = [...CHALLENGE_COMPANIES].sort(byRoom);
@@ -212,21 +213,16 @@ export function BriefingRoomTable({ mapHrefPrefix = "#map-" }: { mapHrefPrefix?:
         </thead>
         <tbody>
           {rows.map((c) => {
-            const held = isTbaPlace(c);
             return (
               <tr key={c.id} className="border-b border-white/10" data-briefing-room={c.id}>
                 <th scope="row" className="py-3 pr-4 font-semibold text-white">
                   <span className="flex flex-wrap items-center gap-2">
-                    {held ? (
-                      <span className="font-normal text-neutral-400">Held for a partner to be announced</span>
-                    ) : (
-                      <Link
-                        href={`${GUIDE_BASE_PATH}/challenge-partners/${c.id}`}
-                        className="underline decoration-white/25 underline-offset-4 hover:decoration-white"
-                      >
-                        {c.name}
-                      </Link>
-                    )}
+                    <Link
+                      href={`${GUIDE_BASE_PATH}/challenge-partners/${c.id}`}
+                      className="underline decoration-white/25 underline-offset-4 hover:decoration-white"
+                    >
+                      {c.name}
+                    </Link>
                     {c.ndaRequired && <NdaLabel />}
                   </span>
                 </th>

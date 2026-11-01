@@ -9,3 +9,19 @@ export const CONSOLIDATED_ROUTES: readonly { source: string; destination: string
   // /european-ai was a thin page beside /europe-ai; its open-source section now lives there.
   { source: "/european-ai", destination: "/europe-ai#open-source" },
 ];
+
+/**
+ * The final challenge place was shared as tba-2 until TrustED took it (1 Nov
+ * 2026). Permanent, so old links keep working; the routes themselves are
+ * generated from CHALLENGE_COMPANIES, which has no tba-2.
+ */
+export const GUIDE_ALIASES: readonly { source: string; destination: string }[] = [
+  {
+    source: "/hackathon-2026/guide/challenge-partners/tba-2",
+    destination: "/hackathon-2026/guide/challenge-partners/trusted",
+  },
+  {
+    source: "/hackathon-2026/guide/calendar/challenge-partners/tba-2",
+    destination: "/hackathon-2026/guide/calendar/challenge-partners/trusted",
+  },
+];
