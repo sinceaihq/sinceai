@@ -239,7 +239,7 @@ describe("optional awards at a glance", () => {
       ["red-hat-openshift-ai", "#award-red-hat-openshift-ai"],
       ["fiware-open-innovation", "#award-fiware-open-innovation"],
     ]);
-    expect(AWARDS_AT_A_GLANCE[0]!.name).toBe("MLH prize categories (7)");
+    expect(AWARDS_AT_A_GLANCE[0]!.name).toBe("MLH prize categories (8)");
     for (const r of AWARDS_AT_A_GLANCE) for (const k of ["win", "enter", "decided", "ask"] as const) expect(r[k].length).toBeGreaterThan(10);
   });
 
