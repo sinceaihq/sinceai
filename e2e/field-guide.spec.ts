@@ -474,7 +474,7 @@ test.describe("Builder Resources", () => {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Builder Resources");
     await expect(page.locator("[data-resources-intro]")).toContainText("official Since AI participant messages and designated event channels");
     for (const [section, ids] of [
-      ["computing", ["csc-lumi", "red-hat", "aiven"]],
+      ["computing", ["csc-lumi", "red-hat"]],
       ["models", ["pruna-ai", "featherless", "elevenlabs"]],
       ["building", ["lovable", "n8n"]],
       ["standards", ["fiware"]],
@@ -525,7 +525,7 @@ test.describe("Builder Resources", () => {
     }
   });
 
-  test("optional awards: how to enter, Red Hat, FIWARE and the seven MLH categories", async ({ page }) => {
+  test("optional awards: how to enter, Red Hat, FIWARE and the eight MLH categories", async ({ page }) => {
     await page.goto(`${GUIDE}/resources`);
     // At a glance: the six things a new builder looks for, each an in-page link.
     const glance = page.getByRole("navigation", { name: "This page at a glance" });
