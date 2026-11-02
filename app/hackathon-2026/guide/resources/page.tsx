@@ -17,6 +17,8 @@ import {
   DEVELOPER_TOOLS_NOTE,
   FIWARE_RESOURCES_ANCHOR,
   GUIDE_BASE_PATH,
+  MLH_AWARDS,
+  MLH_AWARDS_ANCHOR,
   MLH_NOTE,
   PARTNER_CORNER,
   RESOURCE_CATEGORIES,
@@ -37,12 +39,12 @@ const NAV_LABEL: Record<string, string> = {
 
 /** The page at a glance: what a new builder needs to find within seconds. */
 const AT_A_GLANCE = [
+  { href: `#${MLH_AWARDS_ANCHOR}`, label: "MLH prizes & free tools", text: "Gemini, Google Cloud, MongoDB, Snowflake and five more ways to start." },
   { href: "#computing", label: "Tools & benefits", text: "Partner technologies, credits and quickstarts." },
   { href: `#${AWARDS_ANCHOR}`, label: "Optional awards", text: "8 MLH categories, Red Hat and FIWARE awards." },
   { href: "#how-to-enter", label: "How to enter", text: "All in sinceai.app — one submission, tick the awards." },
   { href: `#${FIWARE_RESOURCES_ANCHOR}`, label: "Start with FIWARE", text: "A context broker running in ten minutes." },
   { href: `#${CONFIDENTIAL_ANCHOR}`, label: "What is confidential", text: "FORCIT's NDA challenge and public-safe summaries." },
-  { href: "#help", label: "Get help", text: "Discord, email and people on site." },
 ] as const;
 
 export default function ResourcesGuidePage() {
@@ -91,6 +93,7 @@ export default function ResourcesGuidePage() {
 
       <SectionNav
         items={[
+          { id: MLH_AWARDS_ANCHOR, label: "MLH prizes" },
           ...RESOURCE_CATEGORIES.map((c) => ({ id: c.id, label: NAV_LABEL[c.id] ?? c.title })),
           { id: AWARDS_ANCHOR, label: "Optional awards" },
           { id: FIWARE_RESOURCES_ANCHOR, label: "FIWARE resources" },
@@ -100,6 +103,16 @@ export default function ResourcesGuidePage() {
           { id: "help", label: "Help" },
         ]}
       />
+
+      <GuideSection id={MLH_AWARDS_ANCHOR}>
+        <SectionHeading
+          id={`${MLH_AWARDS_ANCHOR}-title`}
+          eyebrow={`// major league hacking · ${MLH_AWARDS.length} prize categories`}
+          title="Free tools and prizes through MLH."
+          lede="Use any of these in your project and you can win its prize on top of your company challenge. Most have a free tier, credits or a trial to get you started."
+        />
+        <MlhAwards />
+      </GuideSection>
 
       {RESOURCE_CATEGORIES.map((category) => (
         <GuideSection key={category.id} id={category.id}>
@@ -132,8 +145,6 @@ export default function ResourcesGuidePage() {
         </div>
         <h3 className="mb-4 mt-12 text-xl font-bold tracking-tight text-white">Technology awards</h3>
         <TechnologyAwards />
-        <h3 className="mb-4 mt-12 text-xl font-bold tracking-tight text-white">MLH prize categories</h3>
-        <MlhAwards />
       </GuideSection>
 
       <GuideSection id={FIWARE_RESOURCES_ANCHOR}>

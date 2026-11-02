@@ -612,7 +612,22 @@ test.describe("Builder Resources", () => {
     await expect(mlh).toHaveCount(8);
     await expect(page.locator("[data-mlh-awards]")).toContainText("Prizes provided through Major League Hacking");
     await expect(page.locator('[data-mlh-award="mlh-gemini"]')).toContainText("MLH Swag Kits");
-    for (const link of await page.locator("[data-mlh-award] a").all()) await expect(link).toHaveAttribute("href", /^https:\/\/mlh\.link\//);
+    for (const link of await page.locator("[data-mlh-award] a").all()) {
+      await expect(link).toHaveAttribute("href", /^https:\/\/(mlh\.link|www\.mlh\.com|elevenlabs\.io|developers\.google\.com|docs\.cloud\.google\.com)\//);
+    }
+    // First on the page, each card saying what is free and where to start; the codes themselves are never here.
+    const firstSection = await page.locator("main section[id]").first().getAttribute("id");
+    expect(firstSection).toBe("mlh-awards");
+    for (const card of await mlh.all()) {
+      await expect(card).toContainText("Prize:");
+      await expect(card).toContainText("Free to use");
+      await expect(card).toContainText("Start here");
+    }
+    const gemini = page.locator('[data-mlh-award="mlh-gemini"]');
+    await expect(gemini).toContainText("Google Cloud");
+    await expect(gemini).toContainText("Since AI has no Google credits of its own");
+    await expect(page.locator('[data-mlh-award="mlh-mongodb-atlas"]')).toContainText("free forever tier");
+    await expect(page.locator('[data-mlh-award="mlh-snowflake"]')).toContainText("120-day");
     await expect(page.locator("[data-fiware-resources]")).toContainText("docker run -d --name mongo-db --network fiware mongo:4.4");
     await expect(page.locator("[data-fiware-resources]")).toContainText("Content-Type: application/ld+json");
     // Commands keep one line each (no mid-flag wraps); a long one scrolls inside its block, never the page.

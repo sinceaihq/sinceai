@@ -177,7 +177,7 @@ describe("developer tools, Google and MLH", () => {
   it("acknowledges MLH, its Friday introduction and points to the eight categories", () => {
     expect(MLH_NOTE).toMatch(/official Major League Hacking 2027 Season Member Event/);
     expect(MLH_NOTE).toMatch(/16:45 on Friday, on the Taidon portaat stage/);
-    expect(MLH_NOTE).toMatch(/eight MLH categories are under Optional awards/);
+    expect(MLH_NOTE).toMatch(/eight MLH categories are at the top of this page/);
   });
 
   it("shows on-site partners with their registered roles only", () => {

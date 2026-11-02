@@ -4,7 +4,7 @@ import { CATERING, DIETARY } from "./food";
 import { AI_POLICY, SUBMISSION } from "./submission";
 import { WIFI_ANCHOR } from "./wifi";
 import { CHALLENGE_PRIZES, LATE_ARRIVAL_RULE } from "./selection";
-import { AWARDS_HREF, CONFIDENTIAL_ANCHOR, MLH_PRIZE_PAGE } from "./awards";
+import { AWARDS_HREF, CONFIDENTIAL_ANCHOR, MLH_AWARDS_HREF, MLH_PRIZE_PAGE } from "./awards";
 import { RESOURCES_PATH } from "./resources";
 import { VOTE_COMPARISONS, VOTING } from "./voting";
 import type { Audience, ChecklistGroup, GuideDefinition, GuideDetail } from "./types";
@@ -385,6 +385,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
       a: "Yes — optional awards, entered in sinceai.app with the same project: eight MLH categories (tick them on your submission), the Red Hat OpenShift AI Technology Award and the FIWARE Open Innovation Award. They never replace your company challenge or use its places.",
       links: [
         { label: "Optional awards in Builder Resources", href: AWARDS_HREF },
+        { label: "MLH prizes and free tools", href: MLH_AWARDS_HREF },
         { label: "MLH prize page", href: MLH_PRIZE_PAGE },
       ],
     },
