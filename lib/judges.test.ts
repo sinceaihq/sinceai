@@ -9,16 +9,17 @@ const PROFILE_URL = {
 };
 
 describe("judging panel data", () => {
-  it("lists exactly the five confirmed judges, with their organisations' own titles", () => {
+  it("lists exactly the six confirmed judges, with their organisations' own titles", () => {
     expect(judges.map((j) => [j.name, j.title, j.organization])).toEqual([
       ["Sarita Runeberg", "Chief Executive Officer", "Maria 01"],
       ["Niko Elers", "Investment Director", "Voima Ventures"],
       ["Tuomas Mäkilä", "Associate Professor, Software Engineering", "University of Turku"],
       ["Rasmus Harmaala", "Deep Tech Investor & Founder", "Inovexus"],
       ["Chandra Challagonda", "Chief Executive Officer", "FIWARE Foundation"],
+      ["Matyas Karel Stoch", "Founding Engineer", "Cloudroom"],
     ]);
-    // The panel is complete: five judges and no open place left.
-    expect(JUDGE_PANEL_SIZE).toBe(5);
+    // The panel is complete: six judges and no open place left.
+    expect(JUDGE_PANEL_SIZE).toBe(6);
     expect(judges).toHaveLength(JUDGE_PANEL_SIZE);
     expect(new Set(judges.map((j) => j.name)).size).toBe(judges.length);
   });
@@ -57,6 +58,21 @@ describe("judging panel data", () => {
     });
   });
 
+  it("shows Matyas Karel Stoch with the approved bio, and nothing unverified or private", () => {
+    const matyas = judges.find((j) => j.name === "Matyas Karel Stoch")!;
+    expect(matyas.bio).toBe(
+      "Founding Engineer at Cloudroom, a platform for AI coding agents. Matyas brings hands-on engineering experience with AI-powered developer tools to the Since AI Hackathon 2026 jury.",
+    );
+    // No company URL or profile has been verified, and his judging account stays internal.
+    expect(matyas.organizationUrl).toBeUndefined();
+    expect(matyas.profiles).toEqual([]);
+    expect(JSON.stringify(judges)).not.toMatch(/@|davidondrej/i);
+    expect(matyas.portrait).toEqual({
+      src: "/assets/judges/matyas-karel-stoch.webp",
+      alt: "Portrait of Matyas Karel Stoch, Founding Engineer at Cloudroom",
+    });
+  });
+
   it("links the verified organisation sites and profiles", () => {
     expect(judges.map((j) => j.organizationUrl)).toEqual([
       "https://maria.io/",
@@ -64,8 +80,9 @@ describe("judging panel data", () => {
       "https://www.utu.fi/en",
       "https://inovexus.com/",
       "https://fiware.org/",
+      undefined,
     ]);
-    for (const judge of judges) {
+    for (const judge of judges.filter((j) => j.organizationUrl)) {
       expect(judge.profiles.length).toBeGreaterThan(0);
       for (const profile of judge.profiles) expect(profile.url).toMatch(PROFILE_URL[profile.kind]);
     }
@@ -102,5 +119,6 @@ describe("judging panel data", () => {
     expect(initials("Tuomas Mäkilä")).toBe("TM");
     expect(initials("Rasmus Harmaala")).toBe("RH");
     expect(initials("Chandra Challagonda")).toBe("CC");
+    expect(initials("Matyas Karel Stoch")).toBe("MK");
   });
 });

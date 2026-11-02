@@ -2,17 +2,19 @@ import { render, screen, within } from "@testing-library/react";
 import { Judges } from "@/components/sections/hackathon/Judges";
 
 describe("Judges", () => {
-  it("shows the complete five-judge panel, with no place left to be announced", () => {
+  it("shows the complete six-judge panel, with no place left to be announced", () => {
     render(<Judges />);
     const section = screen.getByRole("region", { name: "Meet the judges." });
     const cards = within(section).getAllByRole("listitem");
-    expect(cards).toHaveLength(5);
+    expect(cards).toHaveLength(6);
     expect(within(cards[0]).getByRole("heading", { name: "Sarita Runeberg" })).toBeInTheDocument();
     expect(within(cards[1]).getByRole("heading", { name: "Niko Elers" })).toBeInTheDocument();
     expect(within(cards[2]).getByRole("heading", { name: "Tuomas Mäkilä" })).toBeInTheDocument();
     expect(within(cards[3]).getByRole("heading", { name: "Rasmus Harmaala" })).toBeInTheDocument();
     expect(within(cards[4]).getByRole("heading", { name: "Chandra Challagonda" })).toBeInTheDocument();
     expect(within(cards[4]).getByText("Chief Executive Officer")).toBeInTheDocument();
+    expect(within(cards[5]).getByRole("heading", { name: "Matyas Karel Stoch" })).toBeInTheDocument();
+    expect(within(cards[5]).getByText("Founding Engineer")).toBeInTheDocument();
     expect(within(section).queryByRole("heading", { name: "Judge to be announced" })).not.toBeInTheDocument();
     expect(within(section).queryByText("Coming soon")).not.toBeInTheDocument();
   });
@@ -26,9 +28,10 @@ describe("Judges", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "Portrait of Rasmus Harmaala, deep tech investor at Inovexus" })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "Portrait of Chandra Challagonda, CEO of FIWARE Foundation" })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "Portrait of Matyas Karel Stoch, Founding Engineer at Cloudroom" })).toBeInTheDocument();
     expect(screen.getByText("Photo: Voima Ventures")).toBeInTheDocument();
     expect(screen.getByText("Photo: University of Turku")).toBeInTheDocument();
-    for (const fallback of ["SR", "NE", "TM", "RH", "CC"]) expect(screen.queryByText(fallback)).not.toBeInTheDocument();
+    for (const fallback of ["SR", "NE", "TM", "RH", "CC", "MK"]) expect(screen.queryByText(fallback)).not.toBeInTheDocument();
   });
 
   it("links each organisation and profile safely in a new tab", () => {
@@ -65,17 +68,25 @@ describe("Judges", () => {
     }
   });
 
-  it("lays five cards out without a lone card at the left of a row", () => {
+  it("names Cloudroom without inventing a company link or profile for Matyas Karel Stoch", () => {
+    render(<Judges />);
+    const card = screen.getByRole("heading", { name: "Matyas Karel Stoch" }).closest("li")!;
+    expect(within(card).getByText("Cloudroom")).toBeInTheDocument();
+    expect(within(card).queryByRole("link")).not.toBeInTheDocument();
+    expect(card).not.toHaveTextContent("@");
+  });
+
+  it("lays six cards out in even rows, with no lone card", () => {
     render(<Judges />);
     const list = screen.getByRole("region", { name: "Meet the judges." }).querySelector("ul")!;
-    expect(list).toHaveClass("grid-cols-1", "sm:grid-cols-4", "lg:grid-cols-6", "xl:grid-cols-5");
+    expect(list).toHaveClass("grid-cols-1", "sm:grid-cols-4", "lg:grid-cols-6");
+    expect(list.className).not.toMatch(/xl:grid-cols/);
+    // Tablet 2 + 2 + 2; laptop and wider 3 + 3: nothing needs centring.
     const cards = within(list).getAllByRole("listitem");
-    for (const card of cards) expect(card).toHaveClass("sm:col-span-2", "xl:col-span-1", "xl:col-start-auto");
-    // Tablet 2 + 2 + 1 with the last card centred; laptop 3 + 2 with the second row centred.
-    expect(cards[4]).toHaveClass("sm:col-start-2");
-    expect(cards[4]).not.toHaveClass("lg:col-start-2");
-    expect(cards[3]).toHaveClass("lg:col-start-2");
-    for (const card of cards.slice(0, 3)) expect(card.className).not.toMatch(/col-start-[1-9]/);
+    for (const card of cards) {
+      expect(card).toHaveClass("sm:col-span-2");
+      expect(card.className).not.toMatch(/col-start-/);
+    }
   });
 
   it("keeps the panel separate from company evaluation", () => {
