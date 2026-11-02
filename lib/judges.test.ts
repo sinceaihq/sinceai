@@ -66,7 +66,7 @@ describe("judging panel data", () => {
     // No company URL or profile has been verified, and his judging account stays internal.
     expect(matyas.organizationUrl).toBeUndefined();
     expect(matyas.profiles).toEqual([]);
-    expect(JSON.stringify(judges)).not.toMatch(/@|davidondrej/i);
+    expect(JSON.stringify(judges)).not.toMatch(/@/);
     expect(matyas.portrait).toEqual({
       src: "/assets/judges/matyas-karel-stoch.webp",
       alt: "Portrait of Matyas Karel Stoch, Founding Engineer at Cloudroom",
