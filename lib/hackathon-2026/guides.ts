@@ -351,7 +351,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
     {
       q: "Can we win anything besides our company challenge?",
-      a: "Yes — optional awards, entered in sinceai.app with the same project: seven MLH categories (tick them on your submission), the Red Hat OpenShift AI Technology Award and the FIWARE Open Innovation Award. They never replace your company challenge or use its places.",
+      a: "Yes — optional awards, entered in sinceai.app with the same project: eight MLH categories (tick them on your submission), the Red Hat OpenShift AI Technology Award and the FIWARE Open Innovation Award. They never replace your company challenge or use its places.",
       links: [
         { label: "Optional awards in Builder Resources", href: AWARDS_HREF },
         { label: "MLH prize page", href: MLH_PRIZE_PAGE },
