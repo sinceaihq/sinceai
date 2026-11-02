@@ -10,7 +10,7 @@ import {
   showroomCounter,
 } from "./companies";
 import { EVENT_2026 } from "./facts";
-import { BIOCITY_STANDS, getStandPartner, OPEN_STAND_LABEL } from "./partners";
+import { BIOCITY_STANDS, getStandPartner } from "./partners";
 import { GUIDE_BASE_PATH } from "./route";
 import { getScheduleItem } from "./schedule";
 import { formatTime, formatTimeRange } from "./time";
@@ -115,26 +115,19 @@ const inWords = (n: number) => WORDS[n] ?? String(n);
 
 const showroomNames = SHOWROOM_ORDER.map((id) => getCompany(id)!.name);
 const towerStandCount = STAND_COMPANIES.length - SHOWROOM_ORDER.length;
-const openStandCount = BIOCITY_STANDS.filter((s) => !s.partnerId).length;
 
 const standById = (id: string): PartnerStand => {
   const stand = BIOCITY_STANDS.find((s) => s.id === id);
   if (!stand) throw new Error(`Unknown BioCity stand: ${id}`);
   return stand;
 };
-/** "Stand 2 · Solita", or "Stand 1" for an open stand. */
-const standLabel = (stand: PartnerStand) => {
-  const partner = getStandPartner(stand);
-  return partner ? `Stand ${stand.rank} · ${partner.name}` : `Stand ${stand.rank}`;
-};
+/** "Stand 1 · Solita" */
+const standLabel = (stand: PartnerStand) => `Stand ${stand.rank} · ${getStandPartner(stand).name}`;
 /** "Aulagalleria, facing the event entrance" */
 const standWhere = (stand: PartnerStand) =>
   `${stand.area}, ${stand.location.charAt(0).toLowerCase()}${stand.location.slice(1)}`;
-/** "Solita's stand (Stand 2)" / "Stand 1 (open)" */
-const standMention = (stand: PartnerStand) => {
-  const partner = getStandPartner(stand);
-  return partner ? `${partner.name}'s stand (Stand ${stand.rank})` : `Stand ${stand.rank}`;
-};
+/** "Solita's stand (Stand 1)" */
+const standMention = (stand: PartnerStand) => `${getStandPartner(stand).name}'s stand (Stand ${stand.rank})`;
 
 const briefings = getScheduleItem("fri-briefings");
 const opening = getScheduleItem("fri-opening");
@@ -187,9 +180,7 @@ export const PLACES_3D: readonly Place3D[] = [
       "Companies and partners come in from Tykistökatu through the open entrance recess, past the supercar display; builders enter from Jussin aukio into the Aulagalleria. The main lobby is the build hall, open around the clock, and Joki is down a short stair at its far (south-east) end.",
     alt: `3D model of BioCity's ground floor: the long main lobby filled with rows of build tables, the partner corner at its far (south-east) end by the stair down to Joki with ${inWords(
       BIOCITY_STANDS.length,
-    )} partner stands — ${listNames(BIOCITY_STANDS.filter((s) => getStandPartner(s)).map(standMention))}${
-      openStandCount ? ` and ${inWords(openStandCount)} open stand position${openStandCount > 1 ? "s" : ""}` : ""
-    } — the curved Aulagalleria with the courtyard entrance, and the Tykistökatu entrance recess with the supercar display.`,
+    )} partner stands — ${listNames(BIOCITY_STANDS.map(standMention))} — the curved Aulagalleria with the courtyard entrance, and the Tykistökatu entrance recess with the supercar display.`,
     poster: "/assets/guide/3d/posters/biocity.webp",
     views: [
       { id: "default", label: "Build hall" },
@@ -276,9 +267,7 @@ const roomTargets: Target3D[] = [...CHALLENGE_COMPANIES]
 const standTargets: Target3D[] = BIOCITY_STANDS.map((stand) => ({
   id: stand.id,
   label: standLabel(stand),
-  detail: getStandPartner(stand)
-    ? `BioCity · ${standWhere(stand)}`
-    : `${OPEN_STAND_LABEL} · BioCity · ${standWhere(stand)}`,
+  detail: `BioCity · ${standWhere(stand)}`,
   place: "biocity",
   kind: "stand",
   href: STANDS_HREF,
@@ -526,17 +515,10 @@ export function targetsForPlace(place: PlaceId): Target3D[] {
 // ── Walking routes ───────────────────────────────────────────────────────────
 
 const stand2 = standById("bc-2");
-/** "Pruna AI's stand (Stand 3), …and Major League Hacking's stand (Stand 6) are in the row by the corridor to the meals." */
+/** "Pruna AI's stand (Stand 2), …and Major League Hacking's stand (Stand 5) are in the row by the corridor to the meals." */
 function partnerRowSentence(): string {
-  const row = BIOCITY_STANDS.filter((s) => s.id !== "bc-2");
-  const taken = row.filter((s) => getStandPartner(s)).map(standMention);
-  const open = row.length - taken.length;
-  const list = taken.length > 1 ? `${taken.slice(0, -1).join(", ")} and ${taken.at(-1)}` : (taken[0] ?? "");
-  const verb = taken.length > 1 ? "are" : "is";
-  const rest = open ? `, with ${inWords(open)} open position${open > 1 ? "s" : ""}` : "";
-  return taken.length
-    ? `${list} ${verb} in the row by the corridor to the meals${rest}.`
-    : `the partner row is by the corridor to the meals${rest}.`;
+  const row = BIOCITY_STANDS.filter((s) => s.id !== "bc-2").map(standMention);
+  return `${row.slice(0, -1).join(", ")} and ${row.at(-1)} are in the row by the corridor to the meals.`;
 }
 const MAIN_STAIRS = "climb the wide outdoor stairs at its east corner (about 30 steps)";
 /** Friday, inside door B: no single room — each company has its own (see tourForCompany). */
@@ -717,7 +699,7 @@ export const TOURS_3D: readonly Tour3D[] = [
       "From a drop-off on Tykistökatu into BioCity's entrance recess and down the build hall to the partner corner at its far (south-east) end.",
     place: "biocity",
     legs: ["out-co-kerb-bio-main", "int-bio-tyk-to-stands"],
-    to: "bc-1",
+    to: "bc-3",
     distanceM: 72,
     minutes: 0.9,
     steps: [

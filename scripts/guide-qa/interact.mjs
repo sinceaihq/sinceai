@@ -419,7 +419,7 @@ if (process.env.SKIP3D !== "1") {
   for (const [q, scene, expect] of [
     ["?focus=elisa", "Showroom", "Elisa"],
     ["?focus=valmet", "Joki Q&A floors", "Valmet"],
-    ["?focus=red-hat", "BioCity build hall", "Stand 1 · Red Hat"],
+    ["?focus=solita", "BioCity build hall", "Stand 1 · Solita"],
     ["?scene=biocity", "BioCity build hall", null],
   ]) {
     const { ctx: c2, page: p2 } = await newPage();
@@ -490,9 +490,8 @@ if (process.env.SKIP3D !== "1") {
   // Partner stands are named in the map's location list.
   await page.goto(BASE + `${G}/partners#stands`, { waitUntil: "networkidle" });
   const mapText = (await page.locator("main").innerText()).replace(/\u00a0/g, " ");
-  ok("map list names Red Hat stand", /Stand 1 · Red Hat/.test(mapText));
-  ok("map list names Solita stand", /Stand 2 · Solita/.test(mapText));
-  ok("open stands labelled Visibility / Tech Partner stand", (mapText.match(/Visibility \/ Tech Partner stand ·/g) || []).length >= 2);
+  ok("map list names Solita stand", /Stand 1 · Solita/.test(mapText));
+  ok("map list has no open stand", !/Visibility \/ Tech Partner stand/.test(mapText));
   await ctx.close();
 
   current = "share";

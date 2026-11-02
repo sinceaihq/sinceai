@@ -68,7 +68,7 @@ export const TOURS = [
     "visibility and tech partners",
     "Fri 6 Nov from 18:00",
     ["out-co-kerb-bio-main", "int-bio-tyk-to-stands"],
-    "bc-1",
+    "bc-3",
   ],
   [
     "builders-transfer-to-build",

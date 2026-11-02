@@ -5,11 +5,12 @@ import type { EventPartner, PartnerStand } from "./types";
  *
  * Organiser decisions: every visibility / tech partner stand is in one partner
  * corner — the south-east corner of BioCity's main lobby, where Solita's stand
- * already was (6 Oct 2026) — with six stand positions (13 Oct 2026). Red Hat
- * needs no booth (Red Hat, 21 Oct 2026: remote support Fri–Sat, on site on
- * Sunday), so its position is open: Solita, Pruna AI, BearingPoint, CSC / LUMI
- * AI Factory and Major League Hacking. None of them is a challenge partner.
- * Solita and BearingPoint also mentor builders.
+ * already was (6 Oct 2026) — with five stands: Solita, Pruna AI, BearingPoint,
+ * CSC / LUMI AI Factory and Major League Hacking. None of them is a challenge
+ * partner. Solita and BearingPoint also mentor builders. Red Hat needs no booth
+ * (Red Hat, 21 Oct 2026: remote support Fri–Sat, on site on Sunday), and no
+ * further visibility partner is coming (organiser, 2 Nov 2026), so its position
+ * is gone from the plan rather than held open.
  *
  * MLH's stand is an organiser-planned requirement; MLH has not separately
  * confirmed who staffs it on site, so it stays `working` with a note.
@@ -67,41 +68,25 @@ export const STAND_PARTNERS: readonly EventPartner[] = [
   },
 ] as const;
 
-/** Label used for any stand position that has no partner yet. */
-export const OPEN_STAND_LABEL = "Visibility / Tech Partner stand";
-
 /** The partner corner: where every visibility / tech partner stand is. */
 export const PARTNER_CORNER = "Main lobby · partner corner";
 
 /**
- * The partner corner's six stand positions, ranked by visibility: a row of
- * five along the corner's north-east side facing the build hall's walkway, and
- * Solita's position facing the hall by the passage to Joki. The corridor to the
- * meals and the Aulagalleria, the walkway to Joki and the corner's side door
- * stay clear.
+ * The partner corner's five stands, ranked by visibility: Solita's position
+ * facing the hall by the passage to Joki, and a row of four along the corner's
+ * north-east side facing the build hall's walkway. The corridor to the meals and
+ * the Aulagalleria, the walkway to Joki and the corner's side door stay clear.
  *
- * Six positions fit where five did by planning each stand at about 1.6 × 1.0 m
- * (a standard table and a roll-up) instead of the earlier assumed 2.0 m — the
- * row keeps the same 8.6 m between the meal corridor and the east wall. All six
- * positions are provisional (`working`) until the venue approves the layout and
- * the footprints at setup.
+ * Each row stand is planned at about 1.6 × 1.0 m (a standard table and a
+ * roll-up). The stands stay where they were planned when the row held five, so
+ * ids (bc-2…bc-6, used by hotspots, deep links and the 3D model) no longer match
+ * the ranks. All positions are provisional (`working`) until the venue approves
+ * the layout and the footprints at setup.
  */
 export const BIOCITY_STANDS: readonly PartnerStand[] = [
   {
-    id: "bc-1",
-    rank: 1,
-    venue: "biocity",
-    area: PARTNER_CORNER,
-    location: "First in the partner row, by the corridor to the meals",
-    visibility: "Everyone walking between the build hall, the meals and the Aulagalleria passes it.",
-    // Red Hat's earlier position — Red Hat needs no booth (21 Oct 2026), so it is open.
-    partnerId: null,
-    hotspotId: "stand-bc-1",
-    status: "working",
-  },
-  {
     id: "bc-2",
-    rank: 2,
+    rank: 1,
     venue: "biocity",
     area: PARTNER_CORNER,
     location: "Facing the build hall, by the passage to Joki",
@@ -112,10 +97,10 @@ export const BIOCITY_STANDS: readonly PartnerStand[] = [
   },
   {
     id: "bc-3",
-    rank: 3,
+    rank: 2,
     venue: "biocity",
     area: PARTNER_CORNER,
-    location: "Second in the partner row",
+    location: "First in the partner row",
     visibility: "In the partner row, facing the build hall's walkway.",
     partnerId: "pruna-ai",
     hotspotId: "stand-bc-3",
@@ -123,10 +108,10 @@ export const BIOCITY_STANDS: readonly PartnerStand[] = [
   },
   {
     id: "bc-4",
-    rank: 4,
+    rank: 3,
     venue: "biocity",
     area: PARTNER_CORNER,
-    location: "Third in the partner row, in the middle",
+    location: "Second in the partner row",
     visibility: "In the partner row, facing the build hall's walkway.",
     partnerId: "bearingpoint",
     hotspotId: "stand-bc-4",
@@ -134,10 +119,10 @@ export const BIOCITY_STANDS: readonly PartnerStand[] = [
   },
   {
     id: "bc-5",
-    rank: 5,
+    rank: 4,
     venue: "biocity",
     area: PARTNER_CORNER,
-    location: "Fourth in the partner row",
+    location: "Third in the partner row",
     visibility: "In the partner row, facing the build hall's walkway.",
     partnerId: "csc-lumi",
     hotspotId: "stand-bc-5",
@@ -145,10 +130,10 @@ export const BIOCITY_STANDS: readonly PartnerStand[] = [
   },
   {
     id: "bc-6",
-    rank: 6,
+    rank: 5,
     venue: "biocity",
     area: PARTNER_CORNER,
-    location: "Fifth in the partner row, at the corner's east wall",
+    location: "Fourth in the partner row, at the corner's east wall",
     visibility: "In the partner row, facing the build hall's walkway.",
     partnerId: "mlh",
     hotspotId: "stand-bc-6",
@@ -156,10 +141,8 @@ export const BIOCITY_STANDS: readonly PartnerStand[] = [
   },
 ] as const;
 
-export function getStandPartner(stand: PartnerStand): EventPartner | undefined {
-  return stand.partnerId ? STAND_PARTNERS.find((p) => p.id === stand.partnerId) : undefined;
-}
-
-export function standDisplayName(stand: PartnerStand): string {
-  return getStandPartner(stand)?.name ?? OPEN_STAND_LABEL;
+export function getStandPartner(stand: PartnerStand): EventPartner {
+  const partner = STAND_PARTNERS.find((p) => p.id === stand.partnerId);
+  if (!partner) throw new Error(`No partner for BioCity stand ${stand.id}`);
+  return partner;
 }

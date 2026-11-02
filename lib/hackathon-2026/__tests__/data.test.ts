@@ -1,6 +1,7 @@
 import {
   formatTimeRange,
   BIOCITY_STANDS,
+  getStandPartner,
   briefingRoomLabel,
   CHALLENGE_COMPANIES,
   CHECKLISTS,
@@ -15,7 +16,6 @@ import {
   getCompany,
   getScheduleItem,
   GUIDES,
-  OPEN_STAND_LABEL,
   PARTNER_CORNER,
   placeDetailFor,
   qaStandSentence,
@@ -27,7 +27,6 @@ import {
   SCHEDULE,
   scheduleFor,
   SHOWROOM_ORDER,
-  standDisplayName,
   STAND_PARTNERS,
   STAND_COMPANIES,
   standMapId,
@@ -406,17 +405,15 @@ describe("challenge companies", () => {
 describe("BioCity visibility & tech partner stands", () => {
   const ranked = [...BIOCITY_STANDS].sort((a, b) => a.rank - b.rank);
 
-  it("ranks six positions: one open (Red Hat needs no booth), Solita, Pruna AI, BearingPoint, CSC / LUMI AI Factory, MLH", () => {
-    expect(ranked.map((s) => s.rank)).toEqual([1, 2, 3, 4, 5, 6]);
-    expect(ranked.map((s) => standDisplayName(s))).toEqual([
-      "Visibility / Tech Partner stand",
+  it("ranks five stands, with no open position: Solita, Pruna AI, BearingPoint, CSC / LUMI AI Factory, MLH", () => {
+    expect(ranked.map((s) => s.rank)).toEqual([1, 2, 3, 4, 5]);
+    expect(ranked.map((s) => getStandPartner(s).name)).toEqual([
       "Solita",
       "Pruna AI",
       "BearingPoint",
       "CSC / LUMI AI Factory",
       "Major League Hacking",
     ]);
-    expect(OPEN_STAND_LABEL).toBe("Visibility / Tech Partner stand");
   });
 
   it("gives each of the five stand partners exactly one stand, none a challenge partner, and no stand to Red Hat", () => {
@@ -437,7 +434,7 @@ describe("BioCity visibility & tech partner stands", () => {
 
   it("groups every stand in the partner corner of the main lobby", () => {
     for (const stand of BIOCITY_STANDS) expect(stand.area).toBe(PARTNER_CORNER);
-    expect(BIOCITY_STANDS).toHaveLength(6);
+    expect(BIOCITY_STANDS).toHaveLength(5);
   });
 
   it("puts every stand in BioCity with a map position", () => {
@@ -453,12 +450,11 @@ describe("BioCity visibility & tech partner stands", () => {
       const h = findHotspot("biocity-lobby", id)!;
       return `${h.label} — ${h.description}`;
     };
-    expect(label("bc-1")).toMatch(/^Stand 1 — Visibility \/ Tech Partner stand · Main lobby · partner corner/);
-    expect(label("bc-2")).toMatch(/^Stand 2 · Solita — Main lobby · partner corner/);
-    expect(label("bc-3")).toMatch(/^Stand 3 · Pruna AI — Main lobby · partner corner/);
-    expect(label("bc-4")).toMatch(/^Stand 4 · BearingPoint — Main lobby · partner corner/);
-    expect(label("bc-5")).toMatch(/^Stand 5 · CSC \/ LUMI AI Factory — Main lobby · partner corner/);
-    expect(label("bc-6")).toMatch(/^Stand 6 · Major League Hacking — Main lobby · partner corner/);
+    expect(label("bc-2")).toMatch(/^Stand 1 · Solita — Main lobby · partner corner/);
+    expect(label("bc-3")).toMatch(/^Stand 2 · Pruna AI — Main lobby · partner corner/);
+    expect(label("bc-4")).toMatch(/^Stand 3 · BearingPoint — Main lobby · partner corner/);
+    expect(label("bc-5")).toMatch(/^Stand 4 · CSC \/ LUMI AI Factory — Main lobby · partner corner/);
+    expect(label("bc-6")).toMatch(/^Stand 5 · Major League Hacking — Main lobby · partner corner/);
   });
 });
 

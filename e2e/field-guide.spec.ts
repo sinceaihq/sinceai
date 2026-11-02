@@ -158,16 +158,18 @@ test.describe("content", () => {
     await expect(page.locator("#company-traficom")).toContainText("1091 Hammarbacka");
   });
 
-  test("partner guide groups the six stand positions in the partner corner, with no Red Hat booth", async ({ page }) => {
+  test("partner guide groups the five stands in the partner corner, with no open position and no Red Hat booth", async ({ page }) => {
     await page.goto(`${GUIDE}/partners#stands`);
     const stands = page.locator('[id^="stand-bc-"]');
-    await expect(stands).toHaveCount(6);
-    await expect(page.locator("#stand-bc-1")).toContainText("Stand 1 · most visible");
+    await expect(stands).toHaveCount(5);
+    await expect(page.locator("#stand-bc-2")).toContainText("Stand 1 · most visible");
     await expect(page.locator("#stands")).not.toContainText("Red Hat");
-    const names = ["Visibility / Tech Partner stand", "Solita", "Pruna AI", "BearingPoint", "CSC / LUMI AI Factory", "Major League Hacking"];
-    for (const [i, name] of names.entries()) await expect(page.locator(`#stand-bc-${i + 1}`)).toContainText(name);
+    await expect(page.locator("main")).not.toContainText("open position");
+    await expect(page.locator("main")).not.toContainText("Visibility / Tech Partner stand");
+    const names = ["Solita", "Pruna AI", "BearingPoint", "CSC / LUMI AI Factory", "Major League Hacking"];
+    for (const [i, name] of names.entries()) await expect(page.locator(`#stand-bc-${i + 2}`)).toContainText(name);
     await expect(page.locator("#stand-bc-6")).toContainText("confirmed separately");
-    for (let i = 1; i <= 6; i++) await expect(page.locator(`#stand-bc-${i}`)).toContainText("partner corner");
+    for (let i = 2; i <= 6; i++) await expect(page.locator(`#stand-bc-${i}`)).toContainText("partner corner");
   });
 
   test("builder guide shows the final team formation map with routes A and B as text", async ({ page }) => {
@@ -758,8 +760,8 @@ test.describe("venue explorer", () => {
     await expect(locations).toContainText("1001 Dromberg");
     await expect(locations).toContainText("Company Lounge");
     await expect(locations).not.toContainText("Red Hat");
-    await expect(locations).toContainText("Stand 2 · Solita");
-    await expect(locations).toContainText("Stand 6 · Major League Hacking");
+    await expect(locations).toContainText("Stand 1 · Solita");
+    await expect(locations).toContainText("Stand 5 · Major League Hacking");
     await expect(locations).toContainText("Team Check + card return");
     await expect(locations).toContainText("3027");
   });
