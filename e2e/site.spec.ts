@@ -104,7 +104,7 @@ test.describe("public site", () => {
     await expect(page.locator("#open-source")).toBeInViewport();
   });
 
-  test("the hackathon page shows the complete five-judge panel", async ({ page }) => {
+  test("the hackathon page shows the complete six-judge panel", async ({ page }) => {
     await acceptNoCookies(page);
     await page.addInitScript(() => {
       try {
@@ -115,7 +115,7 @@ test.describe("public site", () => {
     const panel = page.getByRole("region", { name: "Meet the judges." });
     await panel.scrollIntoViewIfNeeded();
     const cards = panel.getByRole("listitem");
-    await expect(cards).toHaveCount(5);
+    await expect(cards).toHaveCount(6);
     await expect(cards.nth(0)).toContainText("Sarita Runeberg");
     await expect(cards.nth(0)).toContainText("Chief Executive Officer");
     await expect(cards.nth(1)).toContainText("Niko Elers");
@@ -127,8 +127,12 @@ test.describe("public site", () => {
     await expect(cards.nth(4)).toContainText("Chandra Challagonda");
     await expect(cards.nth(4)).toContainText("Chief Executive Officer");
     await expect(cards.nth(4)).toContainText("FIWARE Foundation");
+    await expect(cards.nth(5)).toContainText("Matyas Karel Stoch");
+    await expect(cards.nth(5)).toContainText("Founding Engineer");
+    await expect(cards.nth(5)).toContainText("Cloudroom");
+    await expect(cards.nth(5).getByRole("link")).toHaveCount(0);
     await expect(panel).not.toContainText("Judge to be announced");
-    for (const name of [/Sarita Runeberg/, /Niko Elers/, /Tuomas Mäkilä/, /Rasmus Harmaala/, /Chandra Challagonda/]) {
+    for (const name of [/Sarita Runeberg/, /Niko Elers/, /Tuomas Mäkilä/, /Rasmus Harmaala/, /Chandra Challagonda/, /Matyas Karel Stoch/]) {
       const portrait = panel.getByRole("img", { name });
       await expect(portrait).toBeVisible();
       expect(await portrait.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
@@ -163,9 +167,13 @@ test.describe("public site", () => {
       // One column: every card starts below the previous one.
       for (let i = 1; i < boxes.length; i++) expect(boxes[i]!.top).toBeGreaterThan(boxes[i - 1]!.top);
     } else {
-      // Wide desktop: all five cards share one row at the same height.
-      expect(new Set(boxes.map((b) => b.top)).size).toBe(1);
-      expect(new Set(boxes.map((b) => b.height)).size).toBe(1);
+      // Desktop: two even rows of three, every card in a row at the same height.
+      expect(new Set(boxes.slice(0, 3).map((b) => b.top)).size).toBe(1);
+      expect(new Set(boxes.slice(3).map((b) => b.top)).size).toBe(1);
+      expect(boxes[3]!.top).toBeGreaterThan(boxes[0]!.top);
+      expect(boxes[3]!.left).toBe(boxes[0]!.left);
+      expect(new Set(boxes.slice(0, 3).map((b) => b.height)).size).toBe(1);
+      expect(new Set(boxes.slice(3).map((b) => b.height)).size).toBe(1);
     }
     for (const box of boxes) expect(box.right).toBeLessThanOrEqual(page.viewportSize()!.width);
   });

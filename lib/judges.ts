@@ -1,9 +1,9 @@
 /**
- * The judging panel of Since AI Hackathon 2026: five judges who select the
+ * The judging panel of Since AI Hackathon 2026: six judges who select the
  * overall winner at the Sunday finals. This is separate from the company
  * challenge evaluation, which each challenge company does for its own challenge.
  *
- * All five places are confirmed (organiser, 26 Oct 2026); a place still open
+ * All six places are confirmed (organiser, 2 Nov 2026); a place still open
  * would show "to be announced". Titles match the judges' own organisations'
  * descriptions, and their organisations are judges' employers, not event sponsors.
  */
@@ -27,10 +27,11 @@ export interface Judge {
   name: string;
   title: string;
   organization: string;
-  organizationUrl: string;
-  /** Verified professional profiles, shown in this order. */
+  /** Only a verified site; without one, the card names the organisation as plain text. */
+  organizationUrl?: string;
+  /** Verified professional profiles, shown in this order; none until one is verified. */
   profiles: JudgeProfile[];
-  /** One sentence, no credentials beyond what the judge's organisation states. */
+  /** One or two sentences, no credentials beyond what the judge's organisation states. */
   bio: string;
   /**
    * Only an image the person or their organisation provides for reuse.
@@ -40,7 +41,7 @@ export interface Judge {
 }
 
 /** Size of the panel; any open place renders as "to be announced". */
-export const JUDGE_PANEL_SIZE = 5;
+export const JUDGE_PANEL_SIZE = 6;
 
 export const judges: Judge[] = [
   {
@@ -117,6 +118,21 @@ export const judges: Judge[] = [
     portrait: {
       src: "/assets/judges/chandra-challagonda.webp",
       alt: "Portrait of Chandra Challagonda, CEO of FIWARE Foundation",
+    },
+  },
+  {
+    name: "Matyas Karel Stoch",
+    // Title and bio approved by the organiser (2 Nov 2026). No company URL or profile is verified yet,
+    // so none is shown. The only judge from Cloudroom, which is not a sponsor.
+    title: "Founding Engineer",
+    organization: "Cloudroom",
+    profiles: [],
+    bio: "Founding Engineer at Cloudroom, a platform for AI coding agents. Matyas brings hands-on engineering experience with AI-powered developer tools to the Since AI Hackathon 2026 jury.",
+    // Photo supplied by Cloudroom for the judges page; the original is matyas-karel-stoch.png,
+    // converted to an 800x800 WebP without other changes.
+    portrait: {
+      src: "/assets/judges/matyas-karel-stoch.webp",
+      alt: "Portrait of Matyas Karel Stoch, Founding Engineer at Cloudroom",
     },
   },
 ];

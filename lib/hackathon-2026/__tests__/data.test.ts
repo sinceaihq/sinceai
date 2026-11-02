@@ -82,7 +82,7 @@ describe("canonical event facts", () => {
     expect(end.detail).toMatch(/around 15:30/);
     expect(closing.detail).toMatch(/top three teams.*at most two minutes per company, all 15 challenges within 30 minutes/);
     expect(finals.detail).toMatch(/at most four minutes.*up to six minutes of questions from the jury.*five-minute break/);
-    // Five judges share the Q&A: no promise of one question per judge.
+    // Six judges share the Q&A: no promise of one question per judge.
     expect(JSON.stringify(finals)).not.toMatch(/from each judge/);
     expect(evaluation.detail).toMatch(/top three teams by 13:00/);
     const finalistsStage = getScheduleItem("sun-finalists-stage");

@@ -22,7 +22,7 @@ function Portrait({ judge }: { judge?: Judge }) {
           src={judge.portrait.src}
           alt={judge.portrait.alt}
           fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 220px"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
           className="object-cover grayscale transition-[filter] duration-500 group-hover:grayscale-0"
         />
         {judge.portrait.credit && (
@@ -52,12 +52,12 @@ function Portrait({ judge }: { judge?: Judge }) {
 
 /**
  * Grid placement that never leaves a lone card at the left of a row: two per row on tablets
- * (a 4-column grid) and three per row on laptops (a 6-column grid), each card spanning two
- * columns, with a short last row centred; wide screens show the whole panel in one row.
- * Five judges: 1 column, then 2 + 2 + 1, 3 + 2 and 5.
+ * (a 4-column grid) and three per row from laptops up (a 6-column grid), each card spanning
+ * two columns, with a short last row centred.
+ * Six judges: 1 column, then 2 + 2 + 2 and 3 + 3.
  */
 function cellClass(index: number, total: number): string {
-  const classes = ["sm:col-span-2 xl:col-span-1 xl:col-start-auto"];
+  const classes = ["sm:col-span-2"];
   const centredOnTablet = total % 2 === 1 && index === total - 1;
   if (centredOnTablet) classes.push("sm:col-start-2");
   if (total % 3 === 2 && index === total - 2) classes.push("lg:col-start-2");
@@ -73,36 +73,42 @@ function JudgeCard({ judge, className }: { judge: Judge; className: string }) {
       <div className="flex flex-1 flex-col p-5">
         <h3 className="text-xl font-bold tracking-tight text-white">{judge.name}</h3>
         <p className="mt-1 text-sm text-neutral-300">{judge.title}</p>
-        <a
-          href={judge.organizationUrl}
-          {...external}
-          className={`mt-0.5 inline-flex min-h-8 items-center self-start text-sm text-neutral-400 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white hover:decoration-white ${focusRing}`}
-        >
-          {judge.organization}
-          <span aria-hidden="true" className="ml-1">
-            ↗
-          </span>
-          <span className="sr-only"> (opens in a new tab)</span>
-        </a>
+        {judge.organizationUrl ? (
+          <a
+            href={judge.organizationUrl}
+            {...external}
+            className={`mt-0.5 inline-flex min-h-8 items-center self-start text-sm text-neutral-400 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white hover:decoration-white ${focusRing}`}
+          >
+            {judge.organization}
+            <span aria-hidden="true" className="ml-1">
+              ↗
+            </span>
+            <span className="sr-only"> (opens in a new tab)</span>
+          </a>
+        ) : (
+          <p className="mt-0.5 flex min-h-8 items-center text-sm text-neutral-400">{judge.organization}</p>
+        )}
         <p className="mt-4 text-sm text-neutral-400 leading-relaxed">{judge.bio}</p>
-        <div className="mt-auto flex gap-2 pt-5">
-          {judge.profiles.map((profile) => {
-            const Icon = PROFILE_ICON[profile.kind];
-            const label = profileLabel(judge, profile);
-            return (
-              <a
-                key={profile.url}
-                href={profile.url}
-                {...external}
-                aria-label={`${label} (opens in a new tab)`}
-                title={label}
-                className={`inline-flex h-11 w-11 items-center justify-center border border-white/15 text-neutral-400 transition-colors hover:border-white hover:text-white ${focusRing}`}
-              >
-                <Icon size={18} strokeWidth={1.5} aria-hidden="true" />
-              </a>
-            );
-          })}
-        </div>
+        {judge.profiles.length > 0 && (
+          <div className="mt-auto flex gap-2 pt-5">
+            {judge.profiles.map((profile) => {
+              const Icon = PROFILE_ICON[profile.kind];
+              const label = profileLabel(judge, profile);
+              return (
+                <a
+                  key={profile.url}
+                  href={profile.url}
+                  {...external}
+                  aria-label={`${label} (opens in a new tab)`}
+                  title={label}
+                  className={`inline-flex h-11 w-11 items-center justify-center border border-white/15 text-neutral-400 transition-colors hover:border-white hover:text-white ${focusRing}`}
+                >
+                  <Icon size={18} strokeWidth={1.5} aria-hidden="true" />
+                </a>
+              );
+            })}
+          </div>
+        )}
       </div>
     </li>
   );
@@ -126,7 +132,7 @@ function OpenPlaceCard({ className }: { className: string }) {
   );
 }
 
-/** "Meet the judges": the five-judge panel of the Sunday finals. */
+/** "Meet the judges": the six-judge panel of the Sunday finals. */
 export function Judges() {
   if (judges.length === 0) return null;
   const open = Math.max(0, JUDGE_PANEL_SIZE - judges.length);
@@ -144,7 +150,7 @@ export function Judges() {
           8 November. Company challenges are evaluated separately, by each challenge company.
         </p>
 
-        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-5">
+        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-4 lg:grid-cols-6">
           {judges.map((judge, i) => (
             <JudgeCard key={judge.name} judge={judge} className={cellClass(i, total)} />
           ))}
