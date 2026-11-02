@@ -44,7 +44,7 @@ const CARDS = [
     file: "hackathon-2026.png",
     kicker: "Since AI Hackathon 2026",
     title: "6–8 November 2026<br>Turku, Finland",
-    facts: [["48", "hours"], ["15", "company challenges"], ["Open", "worldwide"]],
+    facts: [["€50,000+", "cash prizes"], ["15", "company challenges"], ["Open", "worldwide"]],
     url: "sinceai.ai/hackathon",
   },
 ];

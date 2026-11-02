@@ -6,7 +6,7 @@ import {
   GUIDE_PARENT_PATH,
   GUIDE_X_ROBOTS_TAG,
 } from "./lib/hackathon-2026/route";
-import { CONSOLIDATED_ROUTES } from "./lib/redirects";
+import { CONSOLIDATED_ROUTES, GUIDE_ALIASES } from "./lib/redirects";
 
 const securityHeaders = [
   {
@@ -55,6 +55,7 @@ const nextConfig: NextConfig = {
       { source: GUIDE_PARENT_PATH, destination: GUIDE_BASE_PATH, permanent: false },
       // Content audit (#28): overlapping pages merged into one canonical URL each (308 keeps their search value).
       ...CONSOLIDATED_ROUTES.map(({ source, destination }) => ({ source, destination, permanent: true })),
+      ...GUIDE_ALIASES.map(({ source, destination }) => ({ source, destination, permanent: true })),
     ];
   },
   async headers() {

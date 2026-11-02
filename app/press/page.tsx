@@ -132,7 +132,7 @@ export default function PressPage() {
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">•</span>
-                    <span>Since AI Hackathon 2026 (6–8 November): {ORG.stats.hackathon2026Target} builders, 15 company challenges and a €50,000 prize pool</span>
+                    <span>Since AI Hackathon 2026 (6–8 November): {ORG.stats.hackathon2026Target} builders, 15 company challenges and €50,000+ in cash prizes</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">•</span>
@@ -378,7 +378,7 @@ export default function PressPage() {
                       eight weeks of production support, and connects founders with capital partners such as
                       Antler. Projects from Since AI Hackathon 2025 run in production with Kongsberg and Sandvik.
                       Since AI Hackathon 2026, on 6–8 November 2026 in Turku, Finland, brings together 1,000+
-                      builders, 15 company challenges and a €50,000 prize pool, and is an MLH 2027 Season Member
+                      builders, 15 company challenges and €50,000+ in cash prizes, and is an MLH 2027 Season Member
                       Event. Learn more: sinceai.ai
                     </p>
                   </div>

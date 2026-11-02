@@ -60,7 +60,7 @@ export function StickyApplyBar() {
       <div className="mx-auto max-w-6xl px-6 py-3 flex items-center justify-between gap-4">
         <p className="text-xs sm:text-sm text-white leading-tight">
           <span className="font-semibold" style={{ color: "var(--color-brand)" }}>
-            €50,000
+            €50,000+
           </span>
           <span className="text-neutral-400">
             {" "}

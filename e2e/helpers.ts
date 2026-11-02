@@ -24,7 +24,7 @@ export const COMPANY_IDS = [
   "takomo-golf",
   "forcit-group",
   "lindstrom",
-  "tba-2",
+  "trusted",
   "valmet",
   "dna",
   "turku-energia",

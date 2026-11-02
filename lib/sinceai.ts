@@ -43,13 +43,13 @@ export const UPCOMING_EVENT_2026 = {
 
 /**
  * Since AI Hackathon 2026 partners for marketing copy (organiser roster, 13 Oct 2026, plus
- * Europress Group, confirmed as a company challenge on 23 Oct 2026).
+ * Europress Group, 23 Oct 2026, and TrustED, 1 Nov 2026).
  * The operational source is lib/hackathon-2026 (companies.ts, partners.ts); a test keeps
  * these lists equal to it. Former or unconfirmed 2026 names (Revvity, Bo LKV, Saarioinen,
  * Sandvik, Kongsberg) must not appear as 2026 challenge partners.
  */
 export const HACKATHON_2026_PARTNERS = {
-  /** Company challenges the event is built for: 14 named + 1 to be announced. */
+  /** The company challenges of the event, all named. */
   challengeTarget: 15,
   challengePartners: [
     "Valmet",
@@ -66,6 +66,7 @@ export const HACKATHON_2026_PARTNERS = {
     "DNA",
     "Fonecta",
     "Europress",
+    "TrustED",
   ],
   /** Short form for metadata and one-liners. */
   challengePartnersShort: "Valmet, Bayer, Elisa, Meyer Turku, DNA, Traficom and more",

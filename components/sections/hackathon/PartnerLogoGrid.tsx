@@ -25,24 +25,19 @@ function byName(name: string): Partner {
   return partner;
 }
 
-/** Challenge places still to be announced (lib/hackathon-2026: 15 challenges, 14 partners named). */
-const TBA_PLACES = HACKATHON_2026_PARTNERS.challengeTarget - HACKATHON_2026_PARTNERS.challengePartners.length;
-
 const groups: {
   label: string;
   names: readonly string[];
   boxClass: string;
   sizes: string;
   note?: string;
-  tba?: number;
 }[] = [
   {
     label: `Challenge partners · ${HACKATHON_2026_PARTNERS.challengeTarget} company challenges`,
     names: HACKATHON_2026_PARTNERS.challengePartners,
     boxClass: "w-32 h-12 sm:w-36 sm:h-14 lg:w-40 lg:h-16",
     sizes: "(max-width: 640px) 128px, (max-width: 1024px) 144px, 160px",
-    tba: TBA_PLACES,
-    note: `${HACKATHON_2026_PARTNERS.prizes} ${TBA_PLACES === 1 ? "One more challenge partner" : `${TBA_PLACES} more challenge partners`} to be announced.`,
+    note: HACKATHON_2026_PARTNERS.prizes,
   },
   {
     // Solita and BearingPoint also mentor builders. Not a stand list — see the Field Guide's stand plan.
@@ -70,19 +65,6 @@ const groups: {
     sizes: "(max-width: 640px) 96px, (max-width: 1024px) 112px, 128px",
   },
 ];
-
-/** A held challenge place: a quiet text tile, never a logo or an organisation's name. */
-function TbaItem({ boxClass }: { boxClass: string }) {
-  return (
-    <div className="flex items-center justify-center w-full py-3 sm:py-4">
-      <div
-        className={`flex flex-shrink-0 items-center justify-center border border-white/10 text-center font-mono text-[11px] uppercase tracking-widest text-white/55 ${boxClass}`}
-      >
-        To be announced
-      </div>
-    </div>
-  );
-}
 
 function LogoItem({
   partner,
@@ -153,9 +135,6 @@ export function PartnerLogoGrid() {
                   sizes={group.sizes}
                   nda={i === 0 && NDA_COMPANIES.has(name)}
                 />
-              ))}
-              {Array.from({ length: group.tba ?? 0 }, (_, i) => (
-                <TbaItem key={`tba-${i}`} boxClass={group.boxClass} />
               ))}
             </div>
             {group.note && (

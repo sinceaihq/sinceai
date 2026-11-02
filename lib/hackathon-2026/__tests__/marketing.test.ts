@@ -1,11 +1,11 @@
 import { HACKATHON_2026_CHALLENGE_LIST, HACKATHON_2026_PARTNERS } from "@/lib/sinceai";
-import { CHALLENGE_PRIZES_STATEMENT, NAMED_CHALLENGE_PARTNERS, STAND_PARTNERS, TBA_CHALLENGE_PLACES } from "@/lib/hackathon-2026";
+import { CHALLENGE_COMPANIES, CHALLENGE_PRIZES_STATEMENT, STAND_PARTNERS } from "@/lib/hackathon-2026";
 
 describe("marketing partner lists follow the Field Guide data", () => {
-  it("names the same 14 challenge partners and the 15-challenge target", () => {
-    expect([...HACKATHON_2026_PARTNERS.challengePartners].sort()).toEqual(NAMED_CHALLENGE_PARTNERS.map((c) => c.name).sort());
-    expect(HACKATHON_2026_PARTNERS.challengeTarget).toBe(NAMED_CHALLENGE_PARTNERS.length + TBA_CHALLENGE_PLACES.length);
-    expect(HACKATHON_2026_CHALLENGE_LIST).toMatch(/^Valmet, Bayer, .* Fonecta and Europress$/);
+  it("names the same 15 challenge partners as the 15-challenge target", () => {
+    expect([...HACKATHON_2026_PARTNERS.challengePartners].sort()).toEqual(CHALLENGE_COMPANIES.map((c) => c.name).sort());
+    expect(HACKATHON_2026_PARTNERS.challengeTarget).toBe(CHALLENGE_COMPANIES.length);
+    expect(HACKATHON_2026_CHALLENGE_LIST).toMatch(/^Valmet, Bayer, .* Fonecta, Europress and TrustED$/);
     expect(HACKATHON_2026_PARTNERS.prizes).toBe(CHALLENGE_PRIZES_STATEMENT);
     expect(HACKATHON_2026_PARTNERS.challengePartners).toContain("FORCIT Group");
     expect(JSON.stringify(HACKATHON_2026_PARTNERS)).not.toMatch(/Forcit Group|Forsys|same cash prize/);

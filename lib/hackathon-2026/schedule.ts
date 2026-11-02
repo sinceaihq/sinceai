@@ -362,7 +362,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     detail: "Meet the challenge companies at Joki — Showroom (floor 1) and floors 2–3.",
     detailFor: {
       builders:
-        "Find your company at Joki — Showroom (floor 1) or floors 2–3. Each company posts its representative hours at its stand.",
+        "Find your company at Joki — Showroom (floor 1) or floors 2–3. Each company posts its representative hours at its stand. TrustED takes part remotely: its experts answer on Discord, not at a stand.",
       "challenge-partners":
         "Be available for at least two hours across the published Q&A windows, and post your exact hours at your stand.",
     },

@@ -15,7 +15,7 @@ import { OG_IMAGE } from "@/lib/og";
 export const metadata: Metadata = {
   title: "AI Hackathons 2026 — The Best AI Hackathons | Since AI",
   description:
-    "A guide to the best AI hackathons worldwide. Since AI Hackathon 2026: 6–8 November in Turku, Finland — 48 hours, 1,000+ builders, 15 company challenges. Free.",
+    "A guide to the best AI hackathons worldwide. Since AI Hackathon 2026: 6–8 November in Turku, Finland — 1,000+ builders, 15 company challenges. Free.",
   keywords: [
     "AI hackathons global",
     "AI hackathon 2026",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "AI Hackathons 2026 | Since AI",
     description:
-      "Since AI Hackathon 2026: November 6–8, Turku, Finland. 48 hours, 1,000+ builders, real partner challenges. Free to attend.",
+      "Since AI Hackathon 2026: November 6–8, Turku, Finland. 1,000+ builders, real partner challenges. Free to attend.",
     url: "https://sinceai.ai/ai-hackathons",
     siteName: "Since AI",
     type: "website",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "AI Hackathons 2026 | Since AI",
     description:
-      "Since AI Hackathon 2026: Nov 6–8, Turku. 48-hour format, 1,000+ builders, 15 company challenges from Valmet, Bayer, Elisa, Meyer Turku and more.",
+      "Since AI Hackathon 2026: Nov 6–8, Turku. 1,000+ builders, 15 company challenges from Valmet, Bayer, Elisa, Meyer Turku and more.",
     images: [OG_IMAGE.url],
   },
 };
@@ -69,7 +69,7 @@ const whatMakesGreat = [
 const sinceAiEdge = [
   {
     label: "Duration",
-    since: "48 hours on site, Friday to Sunday",
+    since: "On site, Friday 6 to Sunday 8 November",
     typical: "24–48 hours",
   },
   {
@@ -104,7 +104,7 @@ const upcomingEvents = [
     name: "Since AI Hackathon 2026",
     date: "November 6–8, 2026",
     location: "Turku, Finland",
-    format: "In-person, 48 hours",
+    format: "In-person, 6–8 November",
     size: "1,000+ builders targeted",
     url: "/hackathon",
     highlight: true,
@@ -197,7 +197,7 @@ export default function AIHackathonsPage() {
             <div className="prose prose-invert prose-neutral max-w-none">
               <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-6">
                 The global AI hackathon ecosystem is growing fast. Since AI runs an
-                execution-focused AI hackathon — 48 hours, real
+                execution-focused AI hackathon — a weekend of building, real
                 partner challenges, production mentorship, and post-event support.
               </p>
               <p className="text-lg text-neutral-400 leading-relaxed mb-12">

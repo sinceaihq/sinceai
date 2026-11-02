@@ -74,6 +74,13 @@ describe("calendar export", () => {
 });
 
 describe("company calendar", () => {
+  it("sends a remote partner to no venue and states no support hours", () => {
+    const text = buildCompanyCalendar(getCompany("trusted")!);
+    expect(text).not.toMatch(/LOCATION:EduCity|LOCATION:Joki|VALUE=DATE/);
+    expect(text).toContain("LOCATION:Online (video call\\; Since AI sends the link)");
+    expect(text).toContain("LOCATION:Online (announced at EduCity)");
+  });
+
   const elisa = getCompany("elisa")!;
   const fonecta = getCompany("fonecta")!;
 

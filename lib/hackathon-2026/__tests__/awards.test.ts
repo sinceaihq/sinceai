@@ -4,6 +4,8 @@ import {
   awardHref,
   CHALLENGE_PRIZE_EXCEPTIONS,
   CHALLENGE_PRIZES_STATEMENT,
+  OVERALL_WINNER_PRIZE,
+  OVERALL_WINNER_STATEMENT,
   CHALLENGE_COMPANIES,
   CONFIDENTIAL_RULES,
   DETAILS,
@@ -36,19 +38,27 @@ describe("company challenge prizes", () => {
     expect(prizesFor("valmet")).toEqual({ prizes: STANDARD_CHALLENGE_PRIZES });
   });
 
-  it("gives FORCIT Group a €5,000 pot split €3,000 / €1,500 / €500 — not added on top of the standard prizes", () => {
+  it("gives FORCIT Group a €4,000 pot split €2,500 / €1,000 / €500 — not added on top of the standard prizes", () => {
     const forcit = prizesFor("forcit-group");
-    expect(forcit.prizes).toEqual({ first: 3_000, second: 1_500, third: 500 });
-    expect(prizeTotal(forcit.prizes)).toBe(5_000);
+    expect(forcit.prizes).toEqual({ first: 2_500, second: 1_000, third: 500 });
+    expect(prizeTotal(forcit.prizes)).toBe(4_000);
     expect(forcit.exception?.challenge).toBe("Drill and Blast Cycle Intelligence");
     expect(CHALLENGE_COMPANIES.some((c) => c.id === "forcit-group" && c.name === "FORCIT Group")).toBe(true);
   });
 
-  it("publishes FORCIT's confirmed €5,000 split without a pending note", () => {
+  it("adds up to €51,000 in company and overall prizes, which the site calls €50,000+", () => {
+    const companies = CHALLENGE_COMPANIES.reduce((sum, c) => sum + prizeTotal(prizesFor(c.id).prizes), 0);
+    expect(companies).toBe(14 * 3_000 + 4_000);
+    expect(companies + OVERALL_WINNER_PRIZE).toBe(51_000);
+    expect(OVERALL_WINNER_STATEMENT).toContain("€5,000");
+    expect(CHALLENGE_PRIZES_STATEMENT).not.toContain("overall");
+  });
+
+  it("publishes FORCIT's €4,000 split without a pending note", () => {
     expect(CHALLENGE_PRIZE_EXCEPTIONS.map((e) => e.confirmation)).toEqual(["confirmed"]);
-    expect(prizeLine("forcit-group")).toBe("€3,000 / €1,500 / €500");
+    expect(prizeLine("forcit-group")).toBe("€2,500 / €1,000 / €500");
     expect(prizeLine("valmet")).toBe("€2,000 / €750 / €250");
-    expect(CHALLENGE_PRIZES_STATEMENT).toMatch(/€5,000 prize pot\./);
+    expect(CHALLENGE_PRIZES_STATEMENT).toMatch(/€4,000 prize pot\./);
     expect(CHALLENGE_PRIZES_STATEMENT).not.toMatch(/to be confirmed/i);
     expect(CHALLENGE_PRIZES_STATEMENT).not.toMatch(/same|contract|guarantee/i);
   });

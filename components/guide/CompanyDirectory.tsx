@@ -20,7 +20,7 @@ import { MapViewer } from "./maps/MapViewer";
 const normalise = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 
 /**
- * All 15 company challenges (14 named partners + 1 place to be announced): Friday room, Saturday Q&A and maps. Search is a
+ * All 15 company challenges: Friday room, Saturday Q&A and maps. Search is a
  * progressive enhancement — the full list renders on the server.
  */
 export function CompanyDirectory({ companies }: { companies: readonly ChallengeCompany[] }) {
@@ -105,13 +105,19 @@ export function CompanyDirectory({ companies }: { companies: readonly ChallengeC
               <div className="min-w-0">
                 <p className="text-[11px] font-mono uppercase tracking-widest text-white/55">Sat Q&amp;A</p>
                 <p className="mt-1 font-semibold text-white">{keepDots(qaLocationLabel(company))}</p>
-                <button
-                  type="button"
-                  onClick={(e) => setViewer({ map: getMap(maps.qa), highlight: [company.id], opener: e.currentTarget })}
-                  className="guide-no-print -my-1 inline-flex min-h-11 items-center text-xs text-neutral-400 underline underline-offset-4 hover:text-white cursor-pointer"
-                >
-                  Stand on map
-                </button>
+                {maps.qa ? (
+                  <button
+                    type="button"
+                    onClick={(e) =>
+                      maps.qa && setViewer({ map: getMap(maps.qa), highlight: [company.id], opener: e.currentTarget })
+                    }
+                    className="guide-no-print -my-1 inline-flex min-h-11 items-center text-xs text-neutral-400 underline underline-offset-4 hover:text-white cursor-pointer"
+                  >
+                    Stand on map
+                  </button>
+                ) : (
+                  <p className="mt-1 text-xs text-neutral-400">No stand at Joki</p>
+                )}
               </div>
               <Link
                 href={`${GUIDE_BASE_PATH}/challenge-partners/${company.id}`}

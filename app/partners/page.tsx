@@ -215,7 +215,7 @@ export default function PartnersPage() {
                   </h3>
                   <p className="text-neutral-300 leading-relaxed mb-5">
                     Bring a real AI problem to Since AI Hackathon 2026. Get 1,000+
-                    builders working on it over 48 hours. Best teams continue into
+                    builders working on it over a weekend. Best teams continue into
                     your pilot.
                   </p>
                   <ul className="space-y-2 text-neutral-400 text-sm mb-6">

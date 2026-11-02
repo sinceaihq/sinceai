@@ -6,14 +6,18 @@
  *
  * History, already baked into the committed image: 13 Oct 2026 — Bo LKV's box
  * (floor 3) became Fonecta's and Saarioinen's became "TBA". The EduCity images
- * are no longer patched: they are the organiser's final maps of 26 Oct 2026,
- * rebuilt as supplied by scripts/build-guide-maps.mjs.
+ * are the organiser's final maps of 26 Oct 2026, rebuilt as supplied by
+ * scripts/build-guide-maps.mjs: run this script after it.
  *
  * 26 Oct 2026: Europress Group fills the challenge place held as "To be
  * announced (1)" (EduCity 1090 Ringsberg on the organiser's final map), so the
  * same place's Joki floor-2 stand box — "TBA" on the 2 Oct map — gets the
  * official Europress logo (blue on the white box, like every logo on this map).
  * The stand stays provisional in companies.ts until production confirms it.
+ *
+ * 1 Nov 2026: TrustED fills the last place. On EduCity floor 2 the "TBA" box of
+ * room 2067 gets TrustED's official positive logo. TrustED takes part remotely,
+ * so its old "TBA" stand on Joki floor 3 is removed and left as open floor.
  *
  * The map is supplied raster artwork, so the script edits pixels: it whitens
  * the inside of the box (keeping its border) and centres the logo in it. The
@@ -27,9 +31,14 @@ import sharp from "sharp";
 
 const DIR = path.resolve("public/assets/guide/maps");
 const EUROPRESS = path.resolve("public/assets/sponsors/europress-color.svg");
+const TRUSTED = path.resolve("public/assets/sponsors/trusted-color.png");
 
 /** Box border in joki-2-3-large.webp: [left, top, right, bottom] (border pixels). */
 const EUROPRESS_BOX = [780, 648, 1019, 791];
+/** The "TBA" box of room 2067 in educity-2-large.webp. */
+const TRUSTED_BOX = [329, 803, 511, 992];
+/** The old "TBA" stand on Joki floor 3 in joki-2-3-large.webp, removed with its border. */
+const JOKI_F3_OLD_STAND = [2392, 977, 2632, 1122];
 /** Pixels inside the border that are repainted (anti-aliased border stays). */
 const INSET = 5;
 
@@ -50,6 +59,12 @@ async function fill([l, t, r, b], content) {
   ];
 }
 
+/** A layer that paints a box away, border and all, onto the map's white floor. */
+async function erase([l, t, r, b]) {
+  const pad = 6;
+  return [{ input: await whiteRect(r - l + 2 * pad, b - t + 2 * pad), left: l - pad, top: t - pad }];
+}
+
 async function logoFor(file, [l, , r], share) {
   const width = Math.round((r - l - 2 * INSET) * share);
   return sharp(file, { density: 600 }).resize({ width }).png().toBuffer();
@@ -68,4 +83,8 @@ async function patch(base, layers) {
   console.log(`patched ${base} (${meta.width}×${meta.height})`);
 }
 
-await patch("joki-2-3", await fill(EUROPRESS_BOX, await logoFor(EUROPRESS, EUROPRESS_BOX, 0.8)));
+await patch("joki-2-3", [
+  ...(await fill(EUROPRESS_BOX, await logoFor(EUROPRESS, EUROPRESS_BOX, 0.8))),
+  ...(await erase(JOKI_F3_OLD_STAND)),
+]);
+await patch("educity-2", await fill(TRUSTED_BOX, await logoFor(TRUSTED, TRUSTED_BOX, 0.86)));
