@@ -79,7 +79,7 @@ const hackathonFaqs = [
   },
   {
     q: "Are there prizes besides the company challenges?",
-    a: "Yes — optional awards a team can enter with the same project in sinceai.app: seven Major League Hacking prize categories, the Red Hat OpenShift AI Technology Award and the non-cash FIWARE Open Innovation Award. They never replace the company challenge. Details and how to enter are in the Field Guide's Builder Resources, under Optional awards.",
+    a: "Yes — optional awards a team can enter with the same project in sinceai.app: eight Major League Hacking prize categories, the Red Hat OpenShift AI Technology Award and the non-cash FIWARE Open Innovation Award. They never replace the company challenge. Details and how to enter are in the Field Guide's Builder Resources, under Optional awards.",
     href: AWARDS_HREF,
     linkLabel: "Optional awards in the Field Guide",
   },
