@@ -101,7 +101,7 @@ export function HackathonPopup() {
         Since AI Hackathon 2026
       </h2>
       <p className="mt-2 text-sm text-neutral-300 leading-relaxed">
-        1,000+ builders, real company challenges and a €50,000 prize pool — with 8 weeks of production support for the
+        1,000+ builders, real company challenges and €50,000+ in cash prizes — with 8 weeks of production support for the
         strongest teams.
       </p>
       <div className="mt-4 flex gap-3">

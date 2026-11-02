@@ -18,7 +18,7 @@ const ghostButton =
 // ── Hackathon 2026 ─────────────────────────────────────────────────────────
 
 const HACKATHON_FACTS = [
-  { value: "€50,000", label: "Prize pool", brand: true },
+  { value: "€50,000+", label: "Prize pool", brand: true },
   { value: "1,000+", label: "Builders from around the world" },
   { value: String(HACKATHON_2026_PARTNERS.challengeTarget), label: "Real company challenges" },
   { value: "Free", label: "To take part" },
@@ -33,7 +33,7 @@ function HackathonFeature() {
             id="home-hackathon-title"
             eyebrow="// flagship event · 6–8 November 2026"
             title="Since AI Hackathon 2026."
-            lede={`48 hours, 1,000+ builders and ${HACKATHON_2026_PARTNERS.challengeTarget} real challenges from ${HACKATHON_2026_PARTNERS.challengePartnersShort} — ${fmt(REACH.applicants.total)} applications from ${REACH.applicants.countries} countries so far. The best solutions don't end as demos: they get eight weeks of production support.`}
+            lede={`6–8 November, 1,000+ builders and ${HACKATHON_2026_PARTNERS.challengeTarget} real challenges from ${HACKATHON_2026_PARTNERS.challengePartnersShort} — ${fmt(REACH.applicants.total)} applications from ${REACH.applicants.countries} countries so far. The best solutions don't end as demos: they get eight weeks of production support.`}
           />
           <dl className="mt-10 grid grid-cols-2 gap-px bg-white/10 border border-white/10">
             {HACKATHON_FACTS.map((f) => (
@@ -98,7 +98,7 @@ const STAGES: {
     programs: [
       {
         title: "Hackathons",
-        body: "48-hour hackathons on real challenges from leading companies, with mentors, tools and data from day one. The flagship brings 1,000+ builders to Finland every November.",
+        body: "Weekend hackathons on real challenges from leading companies, with mentors, tools and data from day one. The flagship brings 1,000+ builders to Finland every November.",
         href: "/hackathon",
         cta: "Since AI Hackathon 2026",
       },

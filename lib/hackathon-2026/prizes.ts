@@ -2,14 +2,15 @@
  * Company challenge prizes — Since AI Hackathon 2026. The one place to change
  * a prize amount; every sentence about the company prizes is built from it.
  *
- * Organiser, 26–27 Oct 2026:
+ * Organiser, 1 Nov 2026:
  * - Every other company challenge awards its top three teams €2,000, €750 and €250.
  * - FORCIT Group's Drill and Blast Cycle Intelligence is the one exception: a
- *   €5,000 prize pot split €3,000 / €1,500 / €500, confirmed by FORCIT on
- *   28 Oct 2026.
+ *   €4,000 prize pot split €2,500 / €1,000 / €500. This supersedes the
+ *   €3,000 / €1,500 / €500 split published on 28 Oct 2026.
+ * - The overall winner separately receives €5,000, never counted in a company's awards.
  *
- * The advertised prize pool (app/hackathon) is not derived from here; any
- * change to it is the organiser's decision.
+ * 14 × €3,000 + €4,000 + €5,000 = €51,000 in these cash prizes, which is why
+ * the marketing says "€50,000+": it never adds in-kind technology awards.
  */
 
 export interface PrizeSplit {
@@ -35,12 +36,15 @@ export const CHALLENGE_PRIZE_EXCEPTIONS: readonly PrizeException[] = [
     companyId: "forcit-group",
     company: "FORCIT Group",
     challenge: "Drill and Blast Cycle Intelligence",
-    prizes: { first: 3_000, second: 1_500, third: 500 },
+    prizes: { first: 2_500, second: 1_000, third: 500 },
     confirmation: "confirmed",
   },
 ];
 
 export const prizeTotal = (p: PrizeSplit) => p.first + p.second + p.third;
+
+/** The overall winner's own prize, chosen by the jury at the finals. Separate from every company's awards. */
+export const OVERALL_WINNER_PRIZE = 5_000;
 
 /** "€2,000" */
 export const formatEur = (amount: number) => `€${amount.toLocaleString("en-GB")}`;
@@ -66,6 +70,8 @@ const exceptionText = (e: PrizeException) =>
 export const CHALLENGE_PRIZES_STATEMENT = `Each company challenge awards its top three teams ${formatSplit(
   STANDARD_CHALLENGE_PRIZES,
 )} in cash — except ${CHALLENGE_PRIZE_EXCEPTIONS.map(exceptionText).join("; ")}.`;
+
+export const OVERALL_WINNER_STATEMENT = `The overall winner chosen by the jury at the finals separately receives ${formatEur(OVERALL_WINNER_PRIZE)} in cash.`;
 
 /** One line for a company card or logo grid. */
 export function prizeLine(companyId: string): string {

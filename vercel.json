@@ -2,7 +2,8 @@
   "git": {
     "deploymentEnabled": {
       "feat/hackathon-2026-awards-guide": false,
-      "feat/forcit-prize-confirmed": false
+      "feat/forcit-prize-confirmed": false,
+      "feat/trusted-15th-partner": false
     }
   }
 }

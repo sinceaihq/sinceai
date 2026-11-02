@@ -1,6 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import { RouteLinks } from "@/components/guide/RouteLinks";
-import { briefingRoomLabel, CHALLENGE_COMPANIES, showroomCounter } from "@/lib/hackathon-2026/companies";
+import { briefingRoomLabel, CHALLENGE_COMPANIES, STAND_COMPANIES, showroomCounter } from "@/lib/hackathon-2026/companies";
 import { getTour3D, tourFacts } from "@/lib/hackathon-2026/twin";
 
 const VENUE = "/hackathon-2026/guide/venue";
@@ -41,7 +41,7 @@ describe("RouteLinks", () => {
   it("on a company's page, leads each route to that company's own room or stand (text and 3D)", () => {
     const fri = ["partners-fri-parkcity-edu", "partners-fri-train-edu", "partners-fri-stepfree-edu"];
     const sat = ["companies-tykistokatu-to-showroom", "companies-train-to-biocity", "companies-parkcity-to-biocity"];
-    for (const c of CHALLENGE_COMPANIES) {
+    for (const c of STAND_COMPANIES) {
       const { unmount } = render(
         <>
           <RouteLinks title="Friday" ids={fri} company={c.id} />

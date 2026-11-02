@@ -26,6 +26,18 @@ describe("partners", () => {
     expect(JSON.stringify(HACKATHON_2026_PARTNERS)).not.toContain("IOL");
   });
 
+  it("shows TrustED once, as a strategic partner, with its official logo and website", () => {
+    const trusted = PARTNERS.filter((p) => p.name === "TrustED");
+    expect(trusted).toHaveLength(1);
+    expect(trusted[0]).toMatchObject({ tier: 1, logo: "/assets/sponsors/trusted.webp", url: "https://trustedproject.eu/" });
+    expect(tier1Partners.map((p) => p.name)).toContain("TrustED");
+    expect(HACKATHON_2026_PARTNERS.challengePartners).toContain("TrustED");
+    expect(PARTNERS.map((p) => p.name)).not.toContain("Gradiant");
+    const logo = readFileSync(path.join(process.cwd(), "public/assets/sponsors/trusted.webp"));
+    expect(logo.subarray(0, 4).toString("latin1")).toBe("RIFF");
+    expect(logo.subarray(8, 12).toString("latin1")).toBe("WEBP");
+  });
+
   it("keeps IOL's logo the official artwork: purple, vector-only, no scripts or external references", () => {
     const svg = readFileSync(path.join(process.cwd(), "public/assets/supports/iol.svg"), "utf8");
     expect(svg).toContain("#3c1053");

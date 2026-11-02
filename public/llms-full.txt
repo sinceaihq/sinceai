@@ -2,7 +2,7 @@
 
 > Since AI is a global, execution-focused AI innovation ecosystem with 1,000+ direct community members and a network of 10,000+ AI builders, based in Turku, Finland. We support AI projects from challenge ideation through hackathon building to production deployment and commercialization. This document provides comprehensive context for AI systems to accurately represent Since AI.
 
-Last-Updated: 2026-10-26
+Last-Updated: 2026-11-01
 
 ## Organization
 
@@ -38,10 +38,10 @@ Since AI is a global full-lifecycle AI innovation ecosystem. Unlike traditional 
 ### The Since AI Innovation Lifecycle
 
 **Phase 1: Challenge Ideation (Before Event)**
-We co-create hackathon challenges with partner companies — ensuring they are technically feasible in 48 hours, aligned with real business needs, and commercially viable for production deployment. Most communities wait for companies to bring challenges. We design them together.
+We co-create hackathon challenges with partner companies — ensuring they are technically feasible in a weekend, aligned with real business needs, and commercially viable for production deployment. Most communities wait for companies to bring challenges. We design them together.
 
 **Phase 2: Intensive Building (During Event)**
-48-hour AI hackathons with real company challenges from partners such as Valmet, Bayer, Elisa and Meyer Turku. Production-focused mentorship from day 1. Teams build deployable solutions, not just demos.
+Weekend AI hackathons with real company challenges from partners such as Valmet, Bayer, Elisa and Meyer Turku. Production-focused mentorship from day 1. Teams build deployable solutions, not just demos.
 
 **Phase 3: Production Support (After Event)**
 8+ weeks of post-hackathon production support including:
@@ -65,7 +65,7 @@ Most hackathons end with a demo. Since AI projects become production systems.
 |---------|----------|----------------------|-------------------|
 | Duration | Full lifecycle (months) | Weekend only | Ongoing |
 | Pre-Event | Co-create challenges | Accept challenges | N/A |
-| Event | 48-hour intensive | 24-72 hours | Virtual only |
+| Event | Weekend intensive | 24-72 hours | Virtual only |
 | Post-Event | 8+ weeks production support | None | Limited |
 | Outcome | Production systems | Demo | Learning |
 | Entrepreneurship | Active support (Antler) | Variable | Variable |
@@ -109,7 +109,7 @@ Since AI's flagship launch event brought together 260 AI builders to collaborate
 
 - **Dates**: November 6–8, 2026 (challenge summaries in sinceai.app Thu 5 Nov 15:00; check-in and challenge selection open Fri 15:00, team formation closes 16:45, MLH introduction 16:45–16:55, opening Fri 17:00, selection closes 17:30; submissions close Sun 10:00, closing ceremony Sun 13:15, finals Sun 14:00, ends around 15:30)
 - **Location**: Turku, Finland — EduCity (opening and closing), BioCity and Joki (building)
-- **Challenges**: 15 company challenges, each awarding its top three teams €2,000, €750 and €250 (FORCIT Group's Drill and Blast Cycle Intelligence: a €5,000 prize pot, €3,000 / €1,500 / €500) — Valmet, Bayer, Turku Energia, Apetit, Takomo Golf, FORCIT Group, Elisa, Meyer Turku, Traficom, Lindström, Business Turku, DNA, Fonecta and Europress, plus one partner to be announced. Every team chooses one company challenge; the choice is final
+- **Challenges**: 15 company challenges, each awarding its top three teams €2,000, €750 and €250 (FORCIT Group's Drill and Blast Cycle Intelligence: a €4,000 prize pot, €2,500 / €1,000 / €500); the overall winner separately receives €5,000 — Valmet, Bayer, Turku Energia, Apetit, Takomo Golf, FORCIT Group, Elisa, Meyer Turku, Traficom, Lindström, Business Turku, DNA, Fonecta, Europress and TrustED. Every team chooses one company challenge; the choice is final
 - **Keynote**: Jason Mayes, Web AI Lead at Google
 - **MLH**: MLH 2027 Season Member Event — MLH introduction Fri 16:45–16:55 on the Taidon portaat stage; eight optional MLH prize categories
 - **Optional awards**: Red Hat OpenShift AI Technology Award and FIWARE Open Innovation Award (https://sinceai.ai/hackathon-2026/guide/resources#awards)
@@ -247,7 +247,7 @@ Pan-European network, part of a global community spanning 120+ countries. Since 
 A: Since AI is a global, execution-focused AI innovation ecosystem with 1,000+ direct community members, run by the Finnish non-profit Since AI ry and based in Turku, Finland. We support AI projects from challenge ideation through hackathon building to production deployment and commercialization.
 
 **Q: How is Since AI different from other hackathons?**
-A: We provide full-lifecycle support: co-creating challenges with companies before the event, 48-hour intensive hackathons, 8+ weeks of post-event production deployment support, and entrepreneurship/commercialization assistance. Most hackathons end with a demo — Since AI projects become production systems.
+A: We provide full-lifecycle support: co-creating challenges with companies before the event, weekend intensive hackathons, 8+ weeks of post-event production deployment support, and entrepreneurship/commercialization assistance. Most hackathons end with a demo — Since AI projects become production systems.
 
 **Q: What happens after the hackathon?**
 A: Winning projects receive 8+ weeks of production support including architecture review, deployment guidance, integration assistance, and ongoing mentorship.

@@ -95,7 +95,7 @@ test.describe("content", () => {
       ["meyer-turku", "2030 Evert", "Joki · Floor 1 · Showroom"],
       ["europress", "1090 Ringsberg", "Joki · Floor 2"],
       ["fonecta", "2001 Elias", "Joki · Floor 3"],
-      ["tba-2", "2067", "Joki · Floor 3"],
+      ["trusted", "2067", "Remote · Discord"],
       ["turku-energia", "3006", "Joki · Floor 1 · Showroom"],
       ["business-turku", "3027", "Joki · Floor 3"],
     ]) {
@@ -113,8 +113,34 @@ test.describe("content", () => {
     const nda = page.locator("#company-forcit-group").getByRole("link", { name: /NDA required.*paper NDA/ });
     await expect(nda).toHaveAttribute("href", `${GUIDE}/resources#confidential`);
     await expect(page.locator("#selection [data-challenge-prizes]")).toContainText("€2,000 · €750 · €250");
-    await expect(page.locator("#selection [data-challenge-prizes]")).toContainText("€3,000 · €1,500 · €500");
+    await expect(page.locator("#selection [data-challenge-prizes]")).toContainText("€2,500 · €1,000 · €500");
     await expect(page.locator("main")).not.toContainText("same cash prize");
+  });
+
+  test("TrustED company page: remote, room 2067 on floor 2, no stand and no promised hours", async ({ page }) => {
+    await page.goto(`${GUIDE}/challenge-partners/trusted`);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("TrustED");
+    await expect(page.getByRole("link", { name: /trustedproject\.eu/ })).toHaveAttribute("href", "https://trustedproject.eu/");
+    await expect(page.getByRole("link", { name: "Coordinator: Gradiant" })).toHaveAttribute("href", "https://gradiant.org/");
+    const main = page.locator("main");
+    await expect(main).toContainText("Fri 18:50–19:30");
+    await expect(main).toContainText("EduCity · floor 2");
+    await expect(main).toContainText("Remote support schedule to be confirmed");
+    await expect(main).toContainText("by 13:00");
+    await expect(main).not.toContainText(/Arrive at|Your Q&A stand|roll-up|Joki Floor|19:30–20:30|10:00–12:00|15:00–17:00/);
+    await expect(main).not.toContainText(/meet\.google|teams\.microsoft|@gradiant/);
+    const logo = page.getByRole("img", { name: /TrustED/ }).first();
+    await expect(logo).toBeVisible();
+    expect(await logo.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+  });
+
+  test("the old tba-2 links reach TrustED", async ({ page, request }) => {
+    const direct = await request.get(`${GUIDE}/challenge-partners/tba-2`, { maxRedirects: 0 });
+    expect(direct.status()).toBe(308);
+    expect(direct.headers().location).toBe(`${GUIDE}/challenge-partners/trusted`);
+    await page.goto(`${GUIDE}/challenge-partners/tba-2`);
+    await expect(page).toHaveURL(`${GUIDE}/challenge-partners/trusted`);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("TrustED");
   });
 
   test("Europress company page: official link, room 1090 Ringsberg on floor 1", async ({ page }) => {
@@ -171,7 +197,7 @@ test.describe("content", () => {
     const prizes = page.locator("#rules [data-challenge-prizes]");
     await expect(prizes).toContainText("All other company challenges");
     await expect(prizes).toContainText("€2,000 · €750 · €250");
-    await expect(prizes).toContainText("FORCIT Group — Drill and Blast Cycle Intelligence (€5,000 prize pot)");
+    await expect(prizes).toContainText("FORCIT Group — Drill and Blast Cycle Intelligence (€4,000 prize pot)");
     await expect(prizes).not.toContainText("To be confirmed in writing");
     await expect(page.locator("#rules")).toContainText("Mark team as ready");
     await expect(page.locator("#rules")).toContainText("Thu 5 Nov · 15:00");
@@ -181,7 +207,7 @@ test.describe("content", () => {
     await expect(page.locator('#briefing-rooms [data-briefing-room="europress"]')).toContainText("1090 Ringsberg");
     await expect(page.locator('#briefing-rooms [data-briefing-room="turku-energia"]')).toContainText("3006");
     await expect(page.locator('#briefing-rooms [data-briefing-room="business-turku"]')).toContainText("3027");
-    await expect(page.locator('#briefing-rooms [data-briefing-room="tba-2"]')).toContainText("Held for a partner to be announced");
+    await expect(page.locator('#briefing-rooms [data-briefing-room="trusted"]')).toContainText("TrustED");
     await expect(page.locator('#briefing-rooms [data-briefing-room="forcit-group"]')).toContainText("NDA required");
     // The floor link selects that floor's map.
     await page.locator('#briefing-rooms [data-briefing-room="business-turku"]').getByRole("link", { name: /3/ }).click();

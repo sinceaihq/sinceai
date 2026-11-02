@@ -102,7 +102,7 @@ function eventLines(item: ScheduleItem, audience: Audience, url: string, uidScop
   lines.push(
     `SUMMARY:${escapeText(summary)}`,
     `DESCRIPTION:${escapeText(description)}`,
-    `LOCATION:${escapeText(locationFor(item.place))}`,
+    `LOCATION:${escapeText(item.calendarLocation ?? locationFor(item.place))}`,
     `URL:${url}`,
     `STATUS:${item.status === "confirmed" ? "CONFIRMED" : "TENTATIVE"}`,
     "TRANSP:TRANSPARENT",

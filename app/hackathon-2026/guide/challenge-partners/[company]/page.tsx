@@ -24,6 +24,7 @@ import {
   ghostButtonClass,
   ParkingSummary,
 } from "@/components/guide";
+import { RemoteCompanyGuide } from "@/components/guide/RemoteCompanyGuide";
 import { TwinTeaser } from "@/components/guide/twin/TwinTeaser";
 import {
   briefingRoomLabel,
@@ -35,9 +36,11 @@ import {
   getGuide,
   getScheduleItem,
   GUIDE_BASE_PATH,
+  hasStand,
   keepDots,
   qaLocationLabel,
   qaStandSentence,
+  standMapId,
   CAR_ARRIVAL,
 } from "@/lib/hackathon-2026";
 
@@ -48,6 +51,7 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
   const { company: id } = await params;
   const company = getCompany(id);
   if (!company) notFound();
+  if (!hasStand(company)) return <RemoteCompanyGuide company={company} />;
 
   const maps = companyMapIds(company);
   const schedule = companySchedule(company);
@@ -151,7 +155,7 @@ export default async function CompanyGuidePage({ params }: { params: Promise<{ c
             showroom ? "The Company Lounge is right next to it." : "The Company Lounge is on floor 1, next to the Showroom."
           }`}
         />
-        <VenueExplorer mapIds={[maps.qa]} highlight={[company.id]} label={`${company.name} Q&A stand`} />
+        <VenueExplorer mapIds={[standMapId(company)]} highlight={[company.id]} label={`${company.name} Q&A stand`} />
         <div className="mt-10">
           <RouteLinks
             title="Getting to Joki, step by step in 3D"

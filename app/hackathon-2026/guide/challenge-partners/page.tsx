@@ -86,7 +86,7 @@ export default function ChallengePartnerGuidePage() {
           id="your-place-title"
           eyebrow="// your place"
           title="Your room and your stand."
-          lede="Friday briefing room at EduCity and Saturday Q&A stand at Joki for all 15 company challenges — 14 named challenge partners and one place still to be announced. Open your company page for a one-link summary to share with your team."
+          lede="Friday briefing room at EduCity and Saturday Q&A stand at Joki for the 15 company challenges. TrustED takes part remotely: a Since AI host runs its room and it has no stand. Open your company page for a one-link summary to share with your team."
         />
         <p className="mb-6 flex flex-wrap items-center gap-3 text-xs text-white/55">
           <StatusTag status="working" />

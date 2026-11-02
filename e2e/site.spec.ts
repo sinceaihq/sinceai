@@ -176,12 +176,13 @@ test.describe("public site", () => {
     const main = page.locator("main");
     await expect(main).not.toContainText("No slide decks");
     await expect(main).toContainText("a slide deck is optional, never a substitute");
-    // Selection is in the app, 15:00–17:30 (guide v1.2), and one challenge place is still to be announced.
+    // Selection is in the app, 15:00–17:30 (guide v1.2), and every challenge partner is named.
     await expect(main).toContainText("select one of 15 company challenges in sinceai.app between 15:00 and 17:30");
     await expect(main).not.toContainText("at the 17:00 opening");
-    await expect(main).toContainText("14 partners confirmed, 1 to be announced");
-    await expect(main).toContainText("and one more partner still to be announced");
-    await expect(main).not.toContainText(/two more partners|2 to be announced/);
+    await expect(main).toContainText("Fonecta, Europress and TrustED");
+    await expect(main).not.toContainText(/to be announced/i);
+    await expect(main).toContainText("€50,000+");
+    await expect(main).not.toContainText(/€50,000(?!\+)/);
     // Google is not a 2026 compute partner (its event credits were revoked); LUMI is for eligible participants.
     await expect(main).not.toContainText("Google and LUMI provide");
     await expect(main.getByRole("link", { name: /Google — Since AI Hackathon 2026 infrastructure partner/ })).toHaveCount(0);
@@ -360,7 +361,7 @@ test.describe("hackathon 2026 page", () => {
     );
     const main = await page.locator("main").innerText();
     expect(main).not.toMatch(/MLH 2026 season|2026 Season Member Event/i);
-    for (const name of ["Fonecta", "Lindström", "Business Turku", "FORCIT Group", "€5,000 prize pot"]) expect(main).toContain(name);
+    for (const name of ["Fonecta", "Lindström", "Business Turku", "FORCIT Group", "€4,000 prize pot"]) expect(main).toContain(name);
     expect(main).not.toContain("same cash prize");
     await expect(page.locator("[data-volunteer-cta]")).toHaveAttribute("href", /^https:\/\/docs\.google\.com\/forms\/d\/e\/1FAIpQLSdro-RK8jjZ8BVLXq4ij8m4FcBUOl7Z3QycKwFCFj-xub7dqQ\/viewform/);
     await expect(page.locator("[data-volunteer-cta]")).toHaveCount(1);
@@ -369,12 +370,14 @@ test.describe("hackathon 2026 page", () => {
     for (const name of ["Revvity", "Bo LKV", "Saarioinen", "Sandvik", "Kongsberg"]) expect(without2025).not.toContain(name);
     // The 2026 programme runs Friday 15:00 to Sunday 15:30 — the 72-hour format belongs to 2025 only.
     expect(without2025).not.toMatch(/72[\s-]*(h\b|hours?)/i);
-    await expect(page.getByText("To be announced", { exact: true })).toHaveCount(1);
+    await expect(page.getByText("To be announced", { exact: true })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: /^TrustED — Since AI Hackathon 2026 partner website/ }).first()).toHaveAttribute("href", "https://trustedproject.eu/");
     await expect(page.getByRole("link", { name: /^Europress — Since AI Hackathon 2026 partner website/ }).first()).toHaveAttribute("href", "https://europressgroup.com/");
     await expect(page.getByRole("link", { name: /FORCIT Group .*\(NDA required\)/ }).first()).toBeVisible();
     const ld = await page.locator('script[type="application/ld+json"]').allTextContents();
     const event = ld.map((t) => JSON.parse(t)).find((d) => d["@type"] === "Event");
-    expect(event.sponsor.map((s: { name: string }) => s.name)).toHaveLength(14);
+    expect(event.sponsor.map((s: { name: string }) => s.name)).toHaveLength(15);
+    expect(event.sponsor).toContainEqual({ "@type": "Organization", name: "TrustED", url: "https://trustedproject.eu/" });
     expect(event.location.map((l: { name: string }) => l.name)).toEqual(["EduCity", "BioCity", "Joki"]);
   });
 });

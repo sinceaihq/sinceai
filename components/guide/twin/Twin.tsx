@@ -65,6 +65,7 @@ import {
   type Target3D,
   type Tour3D,
 } from "@/lib/hackathon-2026/twin";
+import { getCompany, hasStand } from "@/lib/hackathon-2026/companies";
 import { cn } from "@/lib/utils";
 import type { TwinEngine, TwinOptions } from "./engine";
 import { nightFactor, sunAtTurku } from "./engine/sky/sun";
@@ -328,6 +329,9 @@ const isPartnerTarget = (t: Target3D) =>
  * (unless the target is a door), then the earliest in event order.
  */
 export function tourForTarget(target: Target3D, tours: readonly Tour3D[] = TOURS_3D): Tour3D | null {
+  // A remote partner travels nowhere: its room is hosted, and the arrival routes are for people who come.
+  const company = target.company ? getCompany(target.company) : undefined;
+  if (company && !hasStand(company)) return null;
   const named = (target as Target3D & { tour?: string }).tour;
   if (named) {
     const tour = tours.find((t) => t.id === named);

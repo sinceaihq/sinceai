@@ -18,8 +18,8 @@ import { GUIDE_BASE_PATH } from "./route";
  * staggered move from 18:30, briefings 18:50–19:30, build from 19:30, company arrival Sun 08:45, each challenge's top
  * three, closing ceremony 13:15, finals 14:00–15:10, end around 15:30) →
  * the organiser's run of show, "Since AI 2026 tapahtuman kulku" (11 Oct 2026: company evaluation briefing Sun 09:00) →
- * organiser final-release brief of 13 Oct 2026 (13 challenge partners + 2 TBA places — Europress fills one since
- * 23 Oct, five finalist teams presenting live) →
+ * organiser final-release brief of 13 Oct 2026 (13 challenge partners + 2 places, filled by Europress on 23 Oct and
+ * TrustED on 1 Nov, five finalist teams presenting live) →
  * organiser decisions of 4 Oct 2026 (Sunday programme, Joki stand setup) →
  * organiser decisions of 3 Oct 2026 →
  * 3 Oct info compilation → 2–3 Oct venue maps → role schedules → older
@@ -76,8 +76,8 @@ export const EVENT_2026 = {
     end: "2026-11-08T15:30:00+02:00",
   },
   /** Bump when operational content changes. */
-  lastUpdated: "2026-10-28",
-  lastUpdatedLabel: "28 Oct 2026",
+  lastUpdated: "2026-11-01",
+  lastUpdatedLabel: "1 Nov 2026",
 } as const;
 
 /** Verified public links. App paths were checked against sinceai.app on 3 Oct 2026. */

@@ -13,7 +13,7 @@ import type {
   V3,
   WalkArea,
 } from "../types";
-import { CHALLENGE_COMPANIES, SHOWROOM_ORDER } from "@/lib/hackathon-2026/companies";
+import { SHOWROOM_ORDER, STAND_COMPANIES } from "@/lib/hackathon-2026/companies";
 import { planGroupTransform } from "../frame";
 import { makeLabel } from "../labels";
 import { INTERIOR_EXPOSURE, interiorExposureFor, openedInteriorScale, outsideInteriorScale, skyIlluminance } from "../sky/sky";
@@ -203,7 +203,7 @@ export async function buildJoki(ctx: TwinContext): Promise<BuildingModule> {
       view: view([px, Y.f1 + 1.68, pz], [c.x, Y.f1 + 1.25, c.z], { hfov: 78, labelGroup: "joki-showroom", open: openAt("joki-1") }),
     });
   });
-  for (const c of CHALLENGE_COMPANIES.filter((x) => x.qa.floor !== 1)) {
+  for (const c of STAND_COMPANIES.filter((x) => x.qa.floor !== 1)) {
     const s = standPose(c.id);
     const y = s.floor === 2 ? Y.f2 : Y.f3;
     const r = Math.hypot(s.x, s.z) || 1;

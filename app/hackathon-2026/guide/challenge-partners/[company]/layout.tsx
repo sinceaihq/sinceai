@@ -30,7 +30,9 @@ export async function generateMetadata({ params }: Omit<Props, "children">): Pro
   if (!company) return {};
   return guideMetadata({
     title: `${company.name} · ${guide.name}`,
-    description: `${company.name} at Since AI Hackathon 2026: Friday briefing in EduCity ${briefingRoomLabel(company)}, Saturday Q&A at ${qaLocationLabel(company)}.`,
+    description: company.remote
+      ? `${company.name} at Since AI Hackathon 2026, taking part remotely: Friday briefing hosted in EduCity room ${briefingRoomLabel(company)}, technical support on Discord and remote evaluation on Sunday.`
+      : `${company.name} at Since AI Hackathon 2026: Friday briefing in EduCity ${briefingRoomLabel(company)}, Saturday Q&A at ${qaLocationLabel(company)}.`,
     path: `/${guide.slug}/${company.id}`,
   });
 }

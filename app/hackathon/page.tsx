@@ -18,7 +18,7 @@ import {
 } from "@/components/sections/hackathon";
 import { TrackedLink } from "@/components/analytics/TrackedLink";
 import ORG from "@/lib/org";
-import { AWARDS_HREF, COMPUTING_HREF } from "@/lib/hackathon-2026";
+import { AWARDS_HREF, COMPUTING_HREF, OVERALL_WINNER_STATEMENT } from "@/lib/hackathon-2026";
 import {
   HACKATHON_2026_CHALLENGE_LIST,
   HACKATHON_2026_PARTNERS,
@@ -43,7 +43,7 @@ const breadcrumbSchema = {
 const hackathonFaqs = [
   {
     q: "What is Since AI Hackathon?",
-    a: "Since AI Hackathon is the flagship annual event of Since AI — a global execution-focused AI innovation ecosystem based in Turku, Finland. The 2026 edition is a Major League Hacking (MLH) 2027 Season Member Event. Builders from across the world gather for a weekend-long, 48-hour AI hackathon to solve real company challenges and ship working AI products.",
+    a: "Since AI Hackathon is the flagship annual event of Since AI — a global execution-focused AI innovation ecosystem based in Turku, Finland. The 2026 edition is a Major League Hacking (MLH) 2027 Season Member Event. Builders from across the world gather for a weekend-long AI hackathon, 6–8 November, to solve real company challenges and ship working AI products.",
   },
   {
     q: "When is Since AI Hackathon 2026?",
@@ -71,7 +71,7 @@ const hackathonFaqs = [
   },
   {
     q: "What companies set challenges?",
-    a: `Since AI Hackathon 2026 has 15 company challenges. ${HACKATHON_2026_PARTNERS.prizes} The challenge partners are ${HACKATHON_2026_CHALLENGE_LIST}; one more challenge partner is still to be announced. Every team chooses one company challenge.`,
+    a: `Since AI Hackathon 2026 has 15 company challenges. ${HACKATHON_2026_PARTNERS.prizes} ${OVERALL_WINNER_STATEMENT} The challenge partners are ${HACKATHON_2026_CHALLENGE_LIST}. Every team chooses one company challenge.`,
   },
   {
     q: "What happens over the weekend?",
@@ -109,16 +109,13 @@ const faqSchema = {
 
 // ── Content data ──────────────────────────────────────────────────────────
 
-/** Challenge places still to be announced (1 on 26 Oct 2026: 15 challenges, 14 partners named). */
-const TBA_PLACES = HACKATHON_2026_PARTNERS.challengeTarget - HACKATHON_2026_PARTNERS.challengePartners.length;
-
 const keyFacts = [
   { label: "Date",           value: UPCOMING_EVENT_2026.dateNote },
   { label: "Venues",         value: "EduCity (opening and closing), BioCity and Joki (building) — Turku, Finland" },
-  { label: "Prize pool",     value: "€50,000 cash" },
-  { label: "Format",         value: "48-hour AI hackathon, Friday to Sunday" },
+  { label: "Prize pool",     value: "€50,000+ in cash" },
+  { label: "Format",         value: "AI hackathon, Friday 6 to Sunday 8 November" },
   { label: "Schedule",       value: "Fri 15:00 check-in · Fri 17:00 opening · Sun 10:00 submissions close · Sun 13:15 closing ceremony · Sun 14:00 finals · ends around 15:30" },
-  { label: "Challenges",     value: `${HACKATHON_2026_PARTNERS.challengeTarget} company challenges — ${HACKATHON_2026_PARTNERS.challengePartners.length} partners confirmed, ${TBA_PLACES} to be announced` },
+  { label: "Challenges",     value: `${HACKATHON_2026_PARTNERS.challengeTarget} company challenges` },
   { label: "Keynote",        value: HACKATHON_2026_PARTNERS.keynote },
   { label: "Expected",       value: "1,000+ builders" },
   { label: "Participation",  value: "Free" },
@@ -223,8 +220,8 @@ export default function HackathonPage() {
             </h1>
 
             <p className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-6 leading-snug max-w-[720px]">
-              48 hours. 1,000+ builders.{" "}
-              <span style={{ color: "var(--color-brand)" }}>€50,000 in cash prizes.</span>
+              6–8 November. 1,000+ builders.{" "}
+              <span style={{ color: "var(--color-brand)" }}>€50,000+ in cash prizes.</span>
             </p>
 
             <p className="text-sm text-white/75 mb-8 tracking-wide">
@@ -354,7 +351,7 @@ export default function HackathonPage() {
         <section className="py-16 px-6 border-t border-white/10">
           <div className="mx-auto max-w-6xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
             <p className="text-xl md:text-2xl font-bold tracking-tight text-white">
-              Free to enter. €50,000 on the table.
+              Free to enter. €50,000+ on the table.
             </p>
             <TrackedLink
               href={APPLY_URL}
@@ -374,7 +371,7 @@ export default function HackathonPage() {
                 {"// what is it"}
               </p>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-8">
-                48 hours. Real challenges. Shipped products.
+                A weekend. Real challenges. Shipped products.
               </h2>
 
               <div className="text-sm text-neutral-400 leading-relaxed max-w-[720px] space-y-4">
@@ -387,9 +384,7 @@ export default function HackathonPage() {
                   Teams form on Friday afternoon, select one of 15 company challenges in
                   sinceai.app between 15:00 and 17:30, and ship by Sunday&apos;s 10:00 deadline.
                   1,000+ builders are expected in 2026, with challenges set by{" "}
-                  {HACKATHON_2026_CHALLENGE_LIST} — and{" "}
-                  {TBA_PLACES === 1 ? "one more partner" : `${TBA_PLACES} more partners`} still to be
-                  announced. Open to developers, researchers, and
+                  {HACKATHON_2026_CHALLENGE_LIST}. Open to developers, researchers, and
                   entrepreneurs worldwide.
                 </p>
                 <p className="text-white font-semibold">
@@ -566,7 +561,7 @@ export default function HackathonPage() {
             </h2>
             <p className="text-sm text-neutral-400 leading-relaxed max-w-[560px] mb-8">
               Registration for Since AI Hackathon 2026 (November 6–8, Turku) is now open.
-              €50,000 cash prize pool. Free to enter for all builders worldwide. Apply at
+              €50,000+ in cash prizes. Free to enter for all builders worldwide. Apply at
               sinceai.app/sign-up and join our community channels to connect with other
               participants before the event.
             </p>

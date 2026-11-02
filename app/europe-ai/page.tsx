@@ -104,7 +104,7 @@ const communities = [
     name: "Junction",
     base: "Helsinki, Finland",
     focus: "General tech hackathon, AI tracks",
-    format: "Annual 48h hackathon",
+    format: "Annual weekend hackathon",
     international: "Yes",
   },
   {

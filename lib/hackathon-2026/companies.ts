@@ -1,25 +1,29 @@
 import { scheduleFor } from "./schedule";
 import type { ChallengeCompany, ScheduleItem } from "./types";
 
+/** A company with a Saturday Q&A stand at Joki. */
+export type StandCompany = ChallengeCompany & { qa: NonNullable<ChallengeCompany["qa"]> };
+
 /**
- * The 15 company challenges — 14 named challenge partners and one place held
- * for a partner still to be announced — with their Friday briefing room
- * (EduCity) and Saturday Q&A location (Joki).
+ * The 15 company challenges with their Friday briefing room (EduCity) and
+ * Saturday Q&A location (Joki).
  *
  * Friday briefing rooms: the organiser's final EduCity maps (supplied 26 Oct
  * 2026, "Yritysten briiffaushuoneet" floors 1–2 and the floor 3 plan). They
  * supersede the 2 Oct placement maps. Floor 1: Elisa 1001 Dromberg, Bayer 1002
  * Moriaberg, Europress 1090 Ringsberg, Traficom 1091 Hammarbacka. Floor 2:
- * Fonecta 2001, Takomo Golf 2002, FORCIT Group 2003, Lindström 2004, TBA 2067,
+ * Fonecta 2001, Takomo Golf 2002, FORCIT Group 2003, Lindström 2004, TrustED 2067,
  * Valmet 2006/2007, DNA 2026, Meyer Turku 2030, Apetit 2027. Floor 3: Turku
  * Energia 3006 and Business Turku 3027 (their earlier floor-2 rooms 2029/2031
  * and 2072 are no longer used).
  *
  * Roster: the organiser roster of 13 Oct 2026 (13 named) plus Europress Group,
  * confirmed as a 2026 company challenge on 23 Oct 2026 — it fills the place
- * held as "To be announced (1)", so the event still has exactly 15 company
- * challenges. Its challenge brief and data are not public. The remaining
- * place (2067) is still to be announced: it is never a company.
+ * held as "To be announced (1)". Its challenge brief and data are not public.
+ * TrustED, the EU-funded project coordinated by Gradiant, fills the last place
+ * (room 2067, organiser 1 Nov 2026): 15 named partners, none still to come.
+ * TrustED takes part remotely, so it has no stand: see `remote` below. Its old
+ * URL, challenge-partners/tba-2, redirects (lib/redirects.ts).
  *
  * Saturday Q&A stands still follow the 2 Oct Joki maps (unchanged); Europress
  * takes the floor-2 stand held for the place it fills, provisional (`pending`)
@@ -108,12 +112,19 @@ export const CHALLENGE_COMPANIES: readonly ChallengeCompany[] = [
     placementStatus: "working",
   },
   {
-    id: "tba-2",
-    name: "To be announced",
-    // The place still held for a partner to be announced (2067 on the final map). Never a company.
+    id: "trusted",
+    name: "TrustED",
+    // The official white artwork from trustedproject.eu, for the dark site.
+    logo: { src: "/assets/sponsors/trusted.webp", width: 1200, height: 279 },
+    url: "https://trustedproject.eu/",
     briefing: { venue: "educity", floor: 2, room: "2067" },
-    qa: { venue: "joki", floor: 3, zone: "Floor 3" },
-    placementStatus: "pending",
+    remote: {
+      coordinator: { name: "Gradiant", url: "https://gradiant.org/" },
+      about:
+        "TrustED is an EU-funded Horizon Europe project on secure, private digital identity and trusted data exchange, coordinated by Gradiant.",
+      supportWindows: [],
+    },
+    placementStatus: "working",
   },
   {
     id: "valmet",
@@ -157,16 +168,13 @@ export const CHALLENGE_COMPANIES: readonly ChallengeCompany[] = [
   },
 ] as const;
 
-/** A challenge place held for a partner still to be announced (not a confirmed organisation). */
-export function isTbaPlace(company: ChallengeCompany): boolean {
-  return company.id === "tba" || company.id.startsWith("tba-");
+/** Whether the company has a Saturday stand at Joki. A remote partner has none. */
+export function hasStand(company: ChallengeCompany): company is StandCompany {
+  return company.qa !== undefined;
 }
 
-/** The named challenge partners (14 on 26 Oct 2026). */
-export const NAMED_CHALLENGE_PARTNERS: readonly ChallengeCompany[] = CHALLENGE_COMPANIES.filter((c) => !isTbaPlace(c));
-
-/** Challenge places still held for partners to be announced (1 on 26 Oct 2026). */
-export const TBA_CHALLENGE_PLACES: readonly ChallengeCompany[] = CHALLENGE_COMPANIES.filter(isTbaPlace);
+/** The companies with a stand at Joki: every challenge partner except a remote one. */
+export const STAND_COMPANIES: readonly StandCompany[] = CHALLENGE_COMPANIES.filter(hasStand);
 
 export function getCompany(id: string): ChallengeCompany | undefined {
   return CHALLENGE_COMPANIES.find((c) => c.id === id);
@@ -178,8 +186,9 @@ export function briefingRoomLabel(company: ChallengeCompany): string {
   return roomName ? `${room} ${roomName}` : room;
 }
 
-/** "Joki · Floor 1 · Showroom", "Joki · Floor 3" */
+/** "Joki · Floor 1 · Showroom", "Joki · Floor 3", "Remote · Discord" */
 export function qaLocationLabel(company: ChallengeCompany): string {
+  if (!hasStand(company)) return "Remote · Discord";
   const { floor, zone } = company.qa;
   return zone.toLowerCase().startsWith("floor") ? `Joki · Floor ${floor}` : `Joki · Floor ${floor} · ${zone}`;
 }
@@ -189,6 +198,7 @@ export function qaLocationLabel(company: ChallengeCompany): string {
  * in — used on the company page and in its calendar file.
  */
 export function companySchedule(company: ChallengeCompany): ScheduleItem[] {
+  if (!hasStand(company)) return remoteCompanySchedule(company);
   const room = `Room ${briefingRoomLabel(company)} · floor ${company.briefing.floor}`;
   const stand = `Your stand · ${qaLocationLabel(company).replace("Joki · ", "")}`;
   const standDetail = qaStandSentence(company);
@@ -212,11 +222,66 @@ export function companySchedule(company: ChallengeCompany): ScheduleItem[] {
   });
 }
 
-/** Map ids used for a company's briefing room and Q&A stand. */
-export function companyMapIds(company: ChallengeCompany): { briefing: string; qa: string } {
+/**
+ * A remote partner's timeline: only what it does itself, with the on-site
+ * partner's arrivals, stands, meals and briefings left out. Its Discord hours
+ * are not a schedule item: nothing here may imply hours it has not confirmed.
+ */
+function remoteCompanySchedule(company: ChallengeCompany): ScheduleItem[] {
+  const REMOTE_BRIEFING_LOCATION = "Online (video call; Since AI sends the link)";
+  const room = `Room ${briefingRoomLabel(company)} · floor ${company.briefing.floor}`;
+  const own: Record<string, Partial<ScheduleItem>> = {
+    "fri-move-to-briefings": {
+      titleFor: { "challenge-partners": `Teams arrive at room ${briefingRoomLabel(company)}` },
+      detailFor: {
+        "challenge-partners": "From 18:30 volunteers guide the teams to the rooms in turn. A Since AI host receives them.",
+      },
+      placeDetailFor: { "challenge-partners": room },
+      calendarLocation: REMOTE_BRIEFING_LOCATION,
+    },
+    "fri-briefings": {
+      detailFor: {
+        "challenge-partners": `A Since AI host in the room introduces the challenge, shows your approved brief on screen and runs the AV and the video call. Your experts join by video to give context and answer questions, which the teams ask in the room. Share materials only with the teams that chose ${company.name}. 19:30 is a hard end for every briefing.`,
+      },
+      placeDetailFor: { "challenge-partners": `${room} · by video` },
+      calendarLocation: REMOTE_BRIEFING_LOCATION,
+    },
+    "sun-evaluation": {
+      place: "app",
+      detailFor: {
+        "challenge-partners":
+          "Your evaluator reviews the submissions to your challenge remotely in sinceai.app and confirms your top three teams to Since AI by 13:00 at the latest. There is no need to travel to EduCity.",
+      },
+      placeDetailFor: { "challenge-partners": "Remote" },
+    },
+    "sun-closing": {
+      detailFor: {
+        "challenge-partners": "Since AI announces your top three teams at EduCity. There is no need to travel.",
+      },
+      calendarLocation: "Online (announced at EduCity)",
+    },
+  };
+  return scheduleFor("challenge-partners")
+    .filter((item) => item.id === "sun-submission-deadline" || item.id in own)
+    .map((item) => ({ ...item, ...own[item.id] }));
+}
+
+/** A remote partner's Discord hours, only once it has confirmed them. */
+export function remoteSupportStatement(company: ChallengeCompany): string {
+  const windows = company.remote?.supportWindows ?? [];
+  return windows.length ? `Remote support: ${windows.join(", ")} (EET)` : "Remote support schedule to be confirmed";
+}
+
+/** The map id of a company's Q&A stand. */
+export function standMapId(company: StandCompany): string {
+  return company.qa.floor === 1 ? "joki-showroom" : "joki-2-3";
+}
+
+/** Map ids used for a company's briefing room and Q&A stand (null without a stand). */
+export function companyMapIds(company: ChallengeCompany): { briefing: string; qa: string | null } {
   return {
     briefing: `educity-${company.briefing.floor}`,
-    qa: company.qa.floor === 1 ? "joki-showroom" : "joki-2-3",
+    qa: hasStand(company) ? standMapId(company) : null,
   };
 }
 
@@ -233,7 +298,7 @@ export function showroomCounter(company: ChallengeCompany): number | undefined {
 }
 
 /** One sentence on where the company's Saturday Q&A stand is. */
-export function qaStandSentence(company: ChallengeCompany): string {
+export function qaStandSentence(company: StandCompany): string {
   const counter = showroomCounter(company);
   if (company.qa.floor === 1) {
     return counter

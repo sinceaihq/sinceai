@@ -9,10 +9,10 @@ import React from "react";
  */
 
 const stats = [
-  { value: "€50,000", label: "// prize pool", desc: "In cash, awarded across tracks", brand: true },
+  { value: "€50,000+", label: "// prize pool", desc: "In cash, across the company challenges and the overall win", brand: true },
   { value: "1,000+",  label: "// builders",   desc: "Expected from across the world" },
   { value: "Free",    label: "// entry",      desc: "No fee for any participant" },
-  { value: "48h",     label: "// format",     desc: "AI hackathon format — 15 company challenges" },
+  { value: "6–8 Nov", label: "// weekend",    desc: "Friday to Sunday — 15 company challenges" },
 ];
 
 export function StatBand() {
