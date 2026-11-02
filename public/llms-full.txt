@@ -111,7 +111,7 @@ Since AI's flagship launch event brought together 260 AI builders to collaborate
 - **Location**: Turku, Finland — EduCity (opening and closing), BioCity and Joki (building)
 - **Challenges**: 15 company challenges, each awarding its top three teams €2,000, €750 and €250 (FORCIT Group's Drill and Blast Cycle Intelligence: a €4,000 prize pot, €2,500 / €1,000 / €500); the overall winner separately receives €5,000 — Valmet, Bayer, Turku Energia, Apetit, Takomo Golf, FORCIT Group, Elisa, Meyer Turku, Traficom, Lindström, Business Turku, DNA, Fonecta, Europress and TrustED. Every team chooses one company challenge; the choice is final
 - **Keynote**: Jason Mayes, Web AI Lead at Google
-- **MLH**: MLH 2027 Season Member Event — MLH introduction Fri 16:45–16:55 on the Taidon portaat stage; seven optional MLH prize categories
+- **MLH**: MLH 2027 Season Member Event — MLH introduction Fri 16:45–16:55 on the Taidon portaat stage; eight optional MLH prize categories
 - **Optional awards**: Red Hat OpenShift AI Technology Award and FIWARE Open Innovation Award (https://sinceai.ai/hackathon-2026/guide/resources#awards)
 - **Finalists**: participant vote Sun 10:00–12:00 (20 comparisons per builder); the five highest-ranked projects from five different company challenges present in the finals
 - **Apply**: https://sinceai.app

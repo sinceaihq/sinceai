@@ -119,7 +119,7 @@ export function HowToEnter() {
   );
 }
 
-/** The seven MLH categories, labelled as prizes provided through MLH. */
+/** The eight MLH categories, labelled as prizes provided through MLH. */
 export function MlhAwards() {
   return (
     <div id={MLH_AWARDS_ANCHOR} data-mlh-awards>

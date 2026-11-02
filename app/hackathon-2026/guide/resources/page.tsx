@@ -38,7 +38,7 @@ const NAV_LABEL: Record<string, string> = {
 /** The page at a glance: what a new builder needs to find within seconds. */
 const AT_A_GLANCE = [
   { href: "#computing", label: "Tools & benefits", text: "Partner technologies, credits and quickstarts." },
-  { href: `#${AWARDS_ANCHOR}`, label: "Optional awards", text: "7 MLH categories, Red Hat and FIWARE awards." },
+  { href: `#${AWARDS_ANCHOR}`, label: "Optional awards", text: "8 MLH categories, Red Hat and FIWARE awards." },
   { href: "#how-to-enter", label: "How to enter", text: "All in sinceai.app — one submission, tick the awards." },
   { href: `#${FIWARE_RESOURCES_ANCHOR}`, label: "Start with FIWARE", text: "A context broker running in ten minutes." },
   { href: `#${CONFIDENTIAL_ANCHOR}`, label: "What is confidential", text: "FORCIT's NDA challenge and public-safe summaries." },

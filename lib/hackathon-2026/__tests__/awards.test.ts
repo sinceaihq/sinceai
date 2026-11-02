@@ -65,17 +65,18 @@ describe("company challenge prizes", () => {
 });
 
 describe("MLH prize categories", () => {
-  it("lists exactly MLH's seven categories for Since AI Hackathon, with MLH's prizes", () => {
+  it("lists exactly MLH's eight categories for Since AI Hackathon, with MLH's prizes", () => {
     expect(MLH_AWARDS.map((a) => [a.title, a.prize])).toEqual([
       ["Best Use of ElevenLabs", "Wireless Earbuds"],
       ["Best Use of Gemini API", "MLH Swag Kits"],
+      ["Best Use of Entire", "Mini Portable Projector"],
       ["Best Use of Solana", "Unruggable Hardware Wallets"],
       ["Best Use of Tiger Data", "Stream Deck Mini"],
-      ["Best Use of Vultr", "M5Stack Official Tab5"],
+      ["Best Use of Vultr", "Assorted Prizes"],
       ["Best Use of Snowflake API", "Arduino Student Kit"],
       ["Best Use of MongoDB Atlas", "M5Stack IoT Kit"],
     ]);
-    expect(new Set(MLH_AWARDS.map((a) => a.id)).size).toBe(7);
+    expect(new Set(MLH_AWARDS.map((a) => a.id)).size).toBe(8);
     for (const a of MLH_AWARDS) {
       expect(a.id).toMatch(/^mlh-[a-z-]+$/);
       expect(new URL(a.href).hostname).toBe("mlh.link");
@@ -248,7 +249,7 @@ describe("optional awards at a glance", () => {
       ["red-hat-openshift-ai", "#award-red-hat-openshift-ai"],
       ["fiware-open-innovation", "#award-fiware-open-innovation"],
     ]);
-    expect(AWARDS_AT_A_GLANCE[0]!.name).toBe("MLH prize categories (7)");
+    expect(AWARDS_AT_A_GLANCE[0]!.name).toBe("MLH prize categories (8)");
     for (const r of AWARDS_AT_A_GLANCE) for (const k of ["win", "enter", "decided", "ask"] as const) expect(r[k].length).toBeGreaterThan(10);
   });
 

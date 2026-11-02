@@ -20,8 +20,7 @@ import { GUIDE_BASE_PATH } from "./facts";
  * - FIWARE: technology partner and provider of the FIWARE Open Innovation
  *   Award; its Builder Pack (Oct 2026) grants publication of its technical
  *   resources — see awards.ts. Red Hat's OpenShift AI Technology Award and the
- *   seven MLH categories are there too.
- * - Aiven: organisation-level technology partner; no event-specific benefit.
+ *   eight MLH categories are there too.
  * - Pruna AI: shared hackathon API key and help on Discord (Pruna's public
  *   onepager). The key is never reproduced here.
  * - Featherless AI: $25 inference credit, up to 1,200 redemptions, no card;
@@ -154,19 +153,6 @@ export const PARTNER_RESOURCES: readonly PartnerResource[] = [
     help: "Red Hat supports builders remotely during the event. Any session or office hours are announced in the event channels.",
     award: "Red Hat OpenShift AI Technology Award",
   },
-  {
-    id: "aiven",
-    name: "Aiven",
-    logo: { src: "/assets/sponsors/aiven.png", width: 480, height: 160 },
-    category: "computing",
-    relationship: "Technology partner",
-    description: "Managed open-source data services — PostgreSQL, Kafka, Valkey, OpenSearch and more.",
-    buildIdeas: ["A real database behind your demo", "Event streams between services", "Search over your data"],
-    getStarted: { label: "Aiven: get started", href: "https://aiven.io/docs/get-started" },
-    access: "Sign up on Aiven's own site; there is no event-specific benefit.",
-    help: "Aiven's public documentation.",
-  },
-
   // ── AI models & inference ────────────────────────────────────────────────
   {
     id: "pruna-ai",
@@ -284,8 +270,8 @@ export const DEVELOPER_TOOLS: readonly ToolLink[] = [
 export const DEVELOPER_TOOLS_NOTE =
   "Popular tools you are free to use. They are not event partners and come with no event credits — free tiers and pricing are set by each provider.";
 
-/** The MLH relationship; its seven prize categories are in awards.ts. */
+/** The MLH relationship; its eight prize categories are in awards.ts. */
 export const MLH_NOTE =
-  "Since AI Hackathon 2026 is an official Major League Hacking 2027 Season Member Event. MLH introduces its tools, sponsor technologies and award categories at 16:45 on Friday, on the Taidon portaat stage — the seven MLH categories are under Optional awards on this page.";
+  "Since AI Hackathon 2026 is an official Major League Hacking 2027 Season Member Event. MLH introduces its tools, sponsor technologies and award categories at 16:45 on Friday, on the Taidon portaat stage — the eight MLH categories are under Optional awards on this page.";
 
 export const resourcesIn = (category: ResourceCategoryId) => PARTNER_RESOURCES.filter((r) => r.category === category);
