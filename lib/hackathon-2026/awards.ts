@@ -9,7 +9,7 @@ import { RESOURCES_PATH } from "./resources";
  *
  * Sources:
  * - MLH: the official event prize page, mlh.com/events/since-ai-hackathon/prizes
- *   (checked 27 Oct 2026) — seven categories, titles, prizes and links as MLH
+ *   (checked 2 Nov 2026) — eight categories, titles, prizes and links as MLH
  *   publishes them. MLH asked for all of them to be published and for entries
  *   to be non-exclusive with the company challenges. Prize codes are never
  *   published here.
@@ -47,7 +47,7 @@ export interface MlhAward {
 const mlhLink = (slug: string, title: string) =>
   `https://mlh.link/${slug}?utm_source=mlh&utm_medium=referral&utm_content=${title.replace(/ /g, "+")}`;
 
-/** The seven MLH categories, in MLH's order. */
+/** The eight MLH categories, in MLH's order. */
 export const MLH_AWARDS: readonly MlhAward[] = [
   {
     id: "mlh-elevenlabs",
@@ -62,6 +62,13 @@ export const MLH_AWARDS: readonly MlhAward[] = [
     prize: "MLH Swag Kits",
     description: "It's time to push the boundaries of what's possible with AI using Google Gemini.",
     href: mlhLink("gemini", "Best Use of Gemini API"),
+  },
+  {
+    id: "mlh-entire",
+    title: "Best Use of Entire",
+    prize: "Mini Portable Projector",
+    description: "Entire is the Git forge for agent-human collaboration.",
+    href: mlhLink("entire", "Best Use of Entire"),
   },
   {
     id: "mlh-solana",
@@ -80,7 +87,7 @@ export const MLH_AWARDS: readonly MlhAward[] = [
   {
     id: "mlh-vultr",
     title: "Best Use of Vultr",
-    prize: "M5Stack Official Tab5",
+    prize: "Assorted Prizes",
     description: "Vultr empowers hackers to bring their high-performance projects to life instantly.",
     href: mlhLink("vultr", "Best Use of Vultr"),
   },
