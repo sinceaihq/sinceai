@@ -53,7 +53,7 @@ const groups: {
   },
   {
     label: "Tech partners",
-    names: ["Google For Developers", "ElevenLabs", "Aiven", "Lovable", "n8n", "Featherless.ai", "JetBrains", "Atlassian"],
+    names: ["ElevenLabs", "Lovable", "n8n", "Featherless.ai"],
     boxClass: "w-28 h-10 sm:w-32 sm:h-11 lg:w-36 lg:h-12",
     sizes: "(max-width: 640px) 112px, (max-width: 1024px) 128px, 144px",
   },
