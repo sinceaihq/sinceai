@@ -174,7 +174,7 @@ describe("developer tools, Google and MLH", () => {
     expect(SUBMISSION.optional.find((f) => f.name === "Gemini API project number")?.note).toMatch(/unless a prize category you enter asks for it/);
   });
 
-  it("acknowledges MLH, its Friday introduction and points to the seven categories", () => {
+  it("acknowledges MLH, its Friday introduction and points to the eight categories", () => {
     expect(MLH_NOTE).toMatch(/official Major League Hacking 2027 Season Member Event/);
     expect(MLH_NOTE).toMatch(/16:45 on Friday, on the Taidon portaat stage/);
     expect(MLH_NOTE).toMatch(/eight MLH categories are under Optional awards/);
