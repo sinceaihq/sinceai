@@ -29,7 +29,6 @@ const HOSTS: Record<string, RegExp> = {
   "csc-lumi": /^(lumi-ai-factory\.github\.io|docs\.lumi-supercomputer\.eu)$/,
   "red-hat": /^(developers\.redhat\.com|www\.redhat\.com)$/,
   fiware: /^(www\.fiware\.org|fiware-tutorials\.readthedocs\.io)$/,
-  aiven: /^aiven\.io$/,
   "pruna-ai": /^(pruna\.notion\.site|docs\.api\.pruna\.ai|www\.pruna\.ai)$/,
   featherless: /^featherless\.ai$/,
   elevenlabs: /^(docs\.google\.com|elevenlabs\.io)$/,
@@ -40,7 +39,7 @@ const HOSTS: Record<string, RegExp> = {
 describe("builder resources: structure", () => {
   it("groups the verified partner resources into four categories", () => {
     expect(RESOURCE_CATEGORIES.map((c) => c.id)).toEqual(["computing", "models", "building", "standards"]);
-    expect(resourcesIn("computing").map((r) => r.id)).toEqual(["csc-lumi", "red-hat", "aiven"]);
+    expect(resourcesIn("computing").map((r) => r.id)).toEqual(["csc-lumi", "red-hat"]);
     expect(resourcesIn("models").map((r) => r.id)).toEqual(["pruna-ai", "featherless", "elevenlabs"]);
     expect(resourcesIn("building").map((r) => r.id)).toEqual(["lovable", "n8n"]);
     expect(resourcesIn("standards").map((r) => r.id)).toEqual(["fiware"]);
@@ -102,12 +101,6 @@ describe("builder resources: what each partner's card says", () => {
     expect(award).toBe("Red Hat OpenShift AI Technology Award");
     expect(allText(card)).not.toMatch(/stand|booth|award|prize|€|EUR|1[ ,.]?000/i);
     expect(allText(r)).not.toMatch(/\d{1,2}:\d{2}/);
-  });
-
-  it("Aiven: documentation only, no event benefit", () => {
-    const r = get("aiven");
-    expect(r.benefit).toBeUndefined();
-    expect(r.access).toMatch(/no event-specific benefit/);
   });
 
   it("Pruna: a shared key described, never reproduced, and only for backends", () => {
@@ -184,7 +177,7 @@ describe("developer tools, Google and MLH", () => {
   it("acknowledges MLH, its Friday introduction and points to the seven categories", () => {
     expect(MLH_NOTE).toMatch(/official Major League Hacking 2027 Season Member Event/);
     expect(MLH_NOTE).toMatch(/16:45 on Friday, on the Taidon portaat stage/);
-    expect(MLH_NOTE).toMatch(/seven MLH categories are under Optional awards/);
+    expect(MLH_NOTE).toMatch(/eight MLH categories are under Optional awards/);
   });
 
   it("shows on-site partners with their registered roles only", () => {
