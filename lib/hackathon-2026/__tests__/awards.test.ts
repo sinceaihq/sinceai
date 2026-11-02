@@ -16,6 +16,7 @@ import {
   MLH_AWARDS,
   MLH_AWARDS_ANCHOR,
   MLH_AWARDS_NOTE,
+  MLH_BY_NEED,
   MLH_PRIZE_PAGE,
   MLH_QUESTIONS,
   PARTNER_RESOURCES,
@@ -81,6 +82,30 @@ describe("MLH prize categories", () => {
       expect(a.id).toMatch(/^mlh-[a-z-]+$/);
       expect(new URL(a.href).hostname).toBe("mlh.link");
     }
+  });
+
+  it("says for each category what is free and where to start", () => {
+    for (const a of MLH_AWARDS) {
+      expect(a.name).toBeTruthy();
+      expect(a.goodFor.length).toBeGreaterThan(0);
+      expect(a.free.length).toBeGreaterThan(0);
+      expect(a.steps.length).toBeGreaterThan(1);
+      const hrefs = [...a.steps.flatMap((s) => (typeof s === "string" ? [] : [s.href])), ...a.links.map((l) => l.href)];
+      expect(hrefs.length).toBeGreaterThan(0);
+      for (const href of hrefs) expect(href).toMatch(/^https:\/\//);
+      expect(new Set(hrefs).size).toBe(hrefs.length);
+    }
+    for (const row of MLH_BY_NEED) for (const id of row.ids) expect(MLH_AWARDS.some((a) => a.id === id)).toBe(true);
+    expect(new Set(MLH_BY_NEED.flatMap((r) => r.ids))).toEqual(new Set(MLH_AWARDS.map((a) => a.id)));
+  });
+
+  it("keeps Google's offers Google's: no Since AI credits, no key, no promo code", () => {
+    const gemini = MLH_AWARDS.find((a) => a.id === "mlh-gemini")!;
+    expect(gemini.prize).toBe("MLH Swag Kits");
+    expect(gemini.note).toMatch(/Google's own public offers/);
+    expect(gemini.note).toMatch(/Since AI has no Google credits of its own/);
+    expect(gemini.note).toMatch(/never an API key/);
+    for (const a of MLH_AWARDS) expect(text(a)).not.toMatch(/code:\s*[A-Z0-9-]{4,}/);
   });
 
   it("labels them as prizes through MLH, non-exclusive with the company challenge", () => {

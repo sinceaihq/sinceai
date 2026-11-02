@@ -63,13 +63,12 @@ function violetLines(ctx: CanvasRenderingContext2D, x: number, y: number, w: num
 }
 
 export interface StandGraphic {
-  /** Partner logo path (repo), or null for a name in lettering / an open stand. */
+  /** Partner logo path (repo), or null for a name in lettering. */
   logo: string | null;
-  /** Big line (partner name or "Visibility / Tech Partner stand"). */
+  /** Big line (partner name). */
   title: string;
-  /** Small line ("Stand 1 · Visibility / Tech partner"). */
+  /** Small line ("Stand 2 · Technology partner"). */
   subtitle: string;
-  open: boolean;
 }
 
 /**
@@ -92,18 +91,18 @@ export function standAtlas(stands: StandGraphic[]): AtlasTexture {
   stands.forEach((s, i) => {
     const [x, y] = origin(i);
     const g = ctx.createLinearGradient(x, y, x, y + tileSize);
-    g.addColorStop(0, s.open ? "#121216" : "#100e1f");
-    g.addColorStop(1, s.open ? "#0b0b0e" : "#08070f");
+    g.addColorStop(0, "#100e1f");
+    g.addColorStop(1, "#08070f");
     ctx.fillStyle = g;
     ctx.fillRect(x, y, tileSize, tileSize);
-    if (!s.open) violetLines(ctx, x, y, tileSize, tileSize, 31 + i * 7);
-    ctx.strokeStyle = s.open ? "rgba(255,255,255,0.18)" : "rgba(139,123,255,0.7)";
+    violetLines(ctx, x, y, tileSize, tileSize, 31 + i * 7);
+    ctx.strokeStyle = "rgba(139,123,255,0.7)";
     ctx.lineWidth = 6 * k;
     ctx.strokeRect(x + 10 * k, y + 10 * k, tileSize - 20 * k, tileSize - 20 * k);
     // Event strip at the bottom.
-    ctx.fillStyle = s.open ? "rgba(139,123,255,0.35)" : EVENT_VIOLET;
+    ctx.fillStyle = EVENT_VIOLET;
     ctx.fillRect(x + 10 * k, y + tileSize - 70 * k, tileSize - 20 * k, 8 * k);
-    ctx.fillStyle = s.open ? "rgba(255,255,255,0.55)" : "rgba(220,214,255,0.9)";
+    ctx.fillStyle = "rgba(220,214,255,0.9)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     const sub = s.subtitle.toUpperCase();
@@ -113,7 +112,7 @@ export function standAtlas(stands: StandGraphic[]): AtlasTexture {
     ctx.fillStyle = "rgba(255,255,255,0.45)";
     ctx.fillText("SINCE AI HACKATHON 2026", x + tileSize / 2, y + 80 * k);
     if (!s.logo) {
-      ctx.fillStyle = s.open ? "rgba(255,255,255,0.78)" : "#ffffff";
+      ctx.fillStyle = "#ffffff";
       const words = s.title.split(" / ");
       if (words.length > 1) {
         const fs = fitFont(ctx, `${words[0]} /`, sans, 700, 76 * k, maxW);

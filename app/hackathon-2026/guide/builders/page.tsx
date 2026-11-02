@@ -31,6 +31,7 @@ import {
 import { TwinTeaser } from "@/components/guide/twin/TwinTeaser";
 import {
   AWARDS_HREF,
+  MLH_AWARDS_HREF,
   BRIEFING_ROOMS_ANCHOR,
   CHECKLISTS,
   CRITICAL_PATH,
@@ -237,6 +238,12 @@ export default function BuilderGuidePage() {
             </span>
             <span className="sr-only"> (opens in a new tab)</span>
           </a>
+          <Link href={MLH_AWARDS_HREF} className={ghostButtonClass}>
+            MLH prizes and free tools{" "}
+            <span aria-hidden="true" className="ml-2">
+              →
+            </span>
+          </Link>
           <Link href={AWARDS_HREF} className={ghostButtonClass}>
             Optional awards: MLH, Red Hat, FIWARE{" "}
             <span aria-hidden="true" className="ml-2">

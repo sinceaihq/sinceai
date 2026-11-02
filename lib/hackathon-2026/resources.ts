@@ -27,13 +27,15 @@ import { GUIDE_BASE_PATH } from "./facts";
  *   private instructions only, never public.
  * - ElevenLabs: one free month of Creator through ElevenLabs' own Discord
  *   process; its Showcase is separate from the official submission. No other
- *   ElevenLabs prize is published until its arrangements are confirmed.
+ *   ElevenLabs benefit is published here; MLH's category is in awards.ts.
  * - Lovable: 100 credits per participant (Lovable Community Team, 23 Apr 2026).
  *   Its community playbook is for event hosts only and is not linked.
  * - n8n: 200 n8n Cloud Pro licences, one month each (n8n, 10 Mar 2026).
  * - Google Cloud promotional credits for this event were revoked (20 May 2026);
- *   Gemini and Google Cloud appear as ordinary tools only. "Best Use of Gemini
- *   API" is an MLH prize category (MLH swag kits), not Google credits.
+ *   Gemini and Google Cloud appear as ordinary tools here. "Best Use of Gemini
+ *   API" is an MLH prize category (MLH swag kits), not Since AI event credits.
+ *   Its card in awards.ts names Google's own public offers from MLH's page,
+ *   labelled as Google's (organiser, 2 Nov 2026).
  *
  * `__tests__/resources.test.ts` guards these rules.
  */
@@ -272,6 +274,6 @@ export const DEVELOPER_TOOLS_NOTE =
 
 /** The MLH relationship; its eight prize categories are in awards.ts. */
 export const MLH_NOTE =
-  "Since AI Hackathon 2026 is an official Major League Hacking 2027 Season Member Event. MLH introduces its tools, sponsor technologies and award categories at 16:45 on Friday, on the Taidon portaat stage — the eight MLH categories are under Optional awards on this page.";
+  "Since AI Hackathon 2026 is an official Major League Hacking 2027 Season Member Event. MLH introduces its tools, sponsor technologies and award categories at 16:45 on Friday, on the Taidon portaat stage — the eight MLH categories are at the top of this page.";
 
 export const resourcesIn = (category: ResourceCategoryId) => PARTNER_RESOURCES.filter((r) => r.category === category);

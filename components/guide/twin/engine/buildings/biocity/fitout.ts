@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import type { CSS2DObject } from "three/addons/renderers/CSS2DRenderer.js";
 import type { TwinContext, V2 } from "../../types";
-import { BIOCITY_STANDS, OPEN_STAND_LABEL, getStandPartner } from "@/lib/hackathon-2026/partners";
+import { BIOCITY_STANDS, getStandPartner } from "@/lib/hackathon-2026/partners";
 import { makeLabel } from "../../labels";
 import { mulberry32 } from "../../util";
 import { LUMINANCE } from "../../sky/sky";
@@ -53,10 +53,10 @@ import {
 
 /**
  * BioCity's event fit-out and signage (SPEC §7.1): the build hall's 56 tables
- * and 280 chairs with laptops and seated builders, the six visibility /
- * tech partner stand positions in the partner corner (a row of five facing the
- * walkway to Joki — an open position, Pruna AI, BearingPoint, CSC / LUMI AI
- * Factory, MLH — and Solita facing the build hall), Since AI wayfinding totems,
+ * and 280 chairs with laptops and seated builders, the five visibility /
+ * tech partner stands in the partner corner (a row of four facing the walkway to
+ * Joki — Pruna AI, BearingPoint, CSC / LUMI AI Factory, MLH — and Solita facing
+ * the build hall), Since AI wayfinding totems,
  * the Mauno restaurant (tables, chairs, pendants, curtains) and its serving
  * lines, the bistro bar, the info desk, and the building's own lettering
  * (vertical BIOCITY, rooftop SCIENCE PARK, the Tykistökatu "A" door board).
@@ -198,24 +198,20 @@ export function buildFitout(b: Buckets, ctx: TwinContext): FitoutResult {
   }
 
   // ── Partner stands (one sign atlas; each stand a pickable group) ──
-  // One tile per partner stand; every open position shares one "open" tile (the atlas holds six).
-  const graphics: StandGraphic[] = [];
-  const tileOf = new Map<string, number>();
-  for (const s of STANDS) {
-    const stand = BIOCITY_STANDS.find((x) => x.id === s.id);
-    const partner = stand ? getStandPartner(stand) : undefined;
-    const key = partner ? partner.id : "open";
-    if (!tileOf.has(key)) {
-      tileOf.set(key, graphics.length);
-      graphics.push({
-        logo: partner ? (STAND_LOGOS_3D[partner.id] ?? null) : null,
-        title: partner ? partner.name : OPEN_STAND_LABEL,
-        subtitle: partner ? `Stand ${stand?.rank} · ${partner.role ?? "Visibility / Tech partner"}` : "Open position",
-        open: !partner,
-      });
-    }
-    tileOf.set(s.id, tileOf.get(key)!);
-  }
+  // One tile per partner stand (the atlas holds six).
+  const standOf = (id: string) => {
+    const stand = BIOCITY_STANDS.find((x) => x.id === id);
+    if (!stand) throw new Error(`biocity: no stand ${id}`);
+    return { stand, partner: getStandPartner(stand) };
+  };
+  const graphics: StandGraphic[] = STANDS.map((s) => {
+    const { stand, partner } = standOf(s.id);
+    return {
+      logo: STAND_LOGOS_3D[partner.id] ?? null,
+      title: partner.name,
+      subtitle: `Stand ${stand.rank} · ${partner.role ?? "Visibility / Tech partner"}`,
+    };
+  });
   const atlas: AtlasTexture = standAtlas(graphics);
   textures.push(atlas.texture);
   readies.push(atlas.ready);
@@ -239,76 +235,56 @@ export function buildFitout(b: Buckets, ctx: TwinContext): FitoutResult {
     const proxyMat = new THREE.MeshBasicMaterial({ visible: false });
     owned.push(proxyMat);
     STANDS.forEach((s: StandPose, i) => {
-      const stand = BIOCITY_STANDS.find((x) => x.id === s.id);
-      const partner = stand ? getStandPartner(stand) : undefined;
+      const { stand, partner } = standOf(s.id);
       const yaw = yawToFace(s.face[0], s.face[1]);
       const m = new THREE.Matrix4().compose(
         new THREE.Vector3(s.x, y0, s.z),
         new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), yaw),
         new THREE.Vector3(1, 1, 1),
       );
-      const uv = atlas.tile(tileOf.get(s.id) ?? i);
+      const uv = atlas.tile(i);
       const parts: THREE.BufferGeometry[] = [];
       const solid: THREE.BufferGeometry[] = [];
       const light: THREE.BufferGeometry[] = [];
-      if (s.markerOnly) {
-        // Open spot only: a printed floor outline and a roll-up with the open-stand graphic.
-        const rp = atlasPlane(0.85, 2.0, uv, [0.08, 0.04, 0.92, 0.96]);
-        rp.rotateY(Math.PI);
-        rp.translate(0.45, 1.1, 0.25);
-        parts.push(rp);
-        const outline: [number, number, number, number][] = [
-          [-s.width / 2, -s.depth / 2, s.width / 2, -s.depth / 2 + 0.05],
-          [-s.width / 2, s.depth / 2 - 0.05, s.width / 2, s.depth / 2],
-          [-s.width / 2, -s.depth / 2, -s.width / 2 + 0.05, s.depth / 2],
-          [s.width / 2 - 0.05, -s.depth / 2, s.width / 2, s.depth / 2],
-        ];
-        for (const [xa, za, xb, zb] of outline) light.push(box(xa, 0.002, za, xb, 0.008, zb));
+      // Back wall graphic (its face towards −z of the stand, at the wall's front).
+      const back = atlasPlane(s.width - 0.06, 2.24, uv, aspectCrop(s.width - 0.06, 2.24));
+      back.rotateY(Math.PI);
+      back.translate(0, 1.18, s.depth / 2 - 0.036);
+      parts.push(back);
+      // Counter front: the logo band of the tile.
+      const front = atlasPlane(1.38, 0.7, uv, aspectCrop(1.38, 0.7, 0.36, 0.7));
+      front.rotateY(Math.PI);
+      front.translate(0, 0.55, -0.2 - 0.276);
+      parts.push(front);
+      solid.push(box(-s.width / 2, 0, s.depth / 2 - 0.035, s.width / 2, 2.3, s.depth / 2 + 0.03));
+      const body = counter.body.clone();
+      body.translate(0, 0, -0.2);
+      solid.push(body);
+      const top = counter.top.clone();
+      top.translate(0, 0, -0.2);
+      solid.push(top);
+      // A wall-mounted screen and the event light lines (top edge, floor edge, counter foot).
+      solid.push(box(-0.62, 1.55, s.depth / 2 - 0.09, 0.62, 2.05, s.depth / 2 - 0.036));
+      light.push(box(-s.width / 2, 2.3, s.depth / 2 - 0.05, s.width / 2, 2.34, s.depth / 2 + 0.03));
+      light.push(box(-s.width / 2, 0.01, s.depth / 2 - 0.06, s.width / 2, 0.03, s.depth / 2 - 0.036));
+      light.push(box(-0.76, 0.02, -0.5, 0.76, 0.04, -0.47));
+      // A partner's roll-up beside the wall, on the open side, and a bar stool behind the counter.
+      if (s.rollup !== false) {
+        const side = s.face[0] > 0.05 ? -1 : 1;
         const rs = roll.stand.clone();
-        rs.translate(0.45, 0, 0.25);
+        rs.translate(side * (s.width / 2 + 0.55), 0, 0.1);
         solid.push(rs);
-      } else {
-        // Back wall graphic (its face towards −z of the stand, at the wall's front).
-        const back = atlasPlane(s.width - 0.06, 2.24, uv, aspectCrop(s.width - 0.06, 2.24));
-        back.rotateY(Math.PI);
-        back.translate(0, 1.18, s.depth / 2 - 0.036);
-        parts.push(back);
-        // Counter front: the logo band of the tile.
-        const front = atlasPlane(1.38, 0.7, uv, aspectCrop(1.38, 0.7, 0.36, 0.7));
-        front.rotateY(Math.PI);
-        front.translate(0, 0.55, -0.2 - 0.276);
-        parts.push(front);
-        solid.push(box(-s.width / 2, 0, s.depth / 2 - 0.035, s.width / 2, 2.3, s.depth / 2 + 0.03));
-        const body = counter.body.clone();
-        body.translate(0, 0, -0.2);
-        solid.push(body);
-        const top = counter.top.clone();
-        top.translate(0, 0, -0.2);
-        solid.push(top);
-        // A wall-mounted screen and the event light lines (top edge, floor edge, counter foot).
-        solid.push(box(-0.62, 1.55, s.depth / 2 - 0.09, 0.62, 2.05, s.depth / 2 - 0.036));
-        light.push(box(-s.width / 2, 2.3, s.depth / 2 - 0.05, s.width / 2, 2.34, s.depth / 2 + 0.03));
-        light.push(box(-s.width / 2, 0.01, s.depth / 2 - 0.06, s.width / 2, 0.03, s.depth / 2 - 0.036));
-        light.push(box(-0.76, 0.02, -0.5, 0.76, 0.04, -0.47));
-        // A partner's roll-up beside the wall, on the open side (stand 3 mirrors stand 1), and a bar
-        // stool behind the counter. An open stand has no roll-up (a bare cassette read as debris).
-        if (partner && s.rollup !== false) {
-          const side = s.face[0] > 0.05 ? -1 : 1;
-          const rs = roll.stand.clone();
-          rs.translate(side * (s.width / 2 + 0.55), 0, 0.1);
-          solid.push(rs);
-          const rp = atlasPlane(0.85, 2.0, uv, [0.1, 0.06, 0.9, 0.95]);
-          rp.rotateY(Math.PI);
-          rp.translate(side * (s.width / 2 + 0.55), 1.09, 0.095);
-          parts.push(rp);
-        }
-        const st = stool.frame.clone();
-        st.translate(-0.45, 0, 0.18);
-        solid.push(st);
-        const ss = stool.seat.clone();
-        ss.translate(-0.45, 0, 0.18);
-        solid.push(ss);
+        const rp = atlasPlane(0.85, 2.0, uv, [0.1, 0.06, 0.9, 0.95]);
+        rp.rotateY(Math.PI);
+        rp.translate(side * (s.width / 2 + 0.55), 1.09, 0.095);
+        parts.push(rp);
       }
+      const st = stool.frame.clone();
+      st.translate(-0.45, 0, 0.18);
+      solid.push(st);
+      const ss = stool.seat.clone();
+      ss.translate(-0.45, 0, 0.18);
+      solid.push(ss);
       for (const p of [...parts, ...solid, ...light]) p.applyMatrix4(m);
       signParts.push(...parts);
       b.add("interior", "standBlack", mergeAll(solid));
@@ -321,15 +297,14 @@ export function buildFitout(b: Buckets, ctx: TwinContext): FitoutResult {
       proxy.userData.pickId = s.id;
       interior.push(proxy);
       pickables.push(proxy);
-      // Short on the map ("Stand 4 · open"); the row's labels alternate in height so neighbours 2.2 m
-      // apart never cover each other.
+      // The row's labels alternate in height so neighbours 2.2 m apart never cover each other.
       const label = makeLabel(
-        partner ? `Stand ${stand?.rank} · ${partner.name}` : `Stand ${stand?.rank} · open`,
-        partner ? "stand" : "open",
+        `Stand ${stand.rank} · ${partner.name}`,
+        "stand",
         s.x,
-        s.labelY ?? (s.markerOnly ? 2.6 : 3.0),
+        s.labelY ?? 3.0,
         s.z,
-        // The partner-stands view shows this group in full, phones included (open stands too).
+        // The partner-stands view shows this group in full, phones included.
         STAND_LABEL_GROUP,
       );
       labels.push({ label, interior: true });

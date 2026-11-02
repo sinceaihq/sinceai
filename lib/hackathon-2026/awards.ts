@@ -30,82 +30,231 @@ export const FIWARE_RESOURCES_ANCHOR = "fiware";
 export const CONFIDENTIAL_ANCHOR = "confidential";
 /** The MLH categories block inside the awards section. */
 export const MLH_AWARDS_ANCHOR = "mlh-awards";
+export const MLH_AWARDS_HREF = `${RESOURCES_PATH}#${MLH_AWARDS_ANCHOR}`;
+export const mlhAwardAnchor = (id: string) => `award-${id}`;
 
 export const MLH_PRIZE_PAGE = "https://www.mlh.com/events/since-ai-hackathon/prizes";
+
+export interface MlhLink {
+  label: string;
+  href: string;
+}
 
 export interface MlhAward {
   /** Stable id, the same one sinceai.app stores for the category. */
   id: string;
   title: string;
+  /** The technology, in a word or two. */
+  name: string;
+  /** What it is for, from MLH's partner page. */
+  goodFor: readonly string[];
   /** The prize as MLH lists it. */
   prize: string;
   /** MLH's own one-line description. */
   description: string;
+  /** What you can use for free, as MLH's partner page lists it. */
+  free: readonly string[];
+  /** A caveat on `free`, or what the category asks of an entry. */
+  note?: string;
+  /** Where to begin, in order. */
+  steps: readonly (MlhLink | string)[];
+  /** Docs, examples and tools. */
+  links: readonly MlhLink[];
+  /** MLH's page for this technology. */
   href: string;
 }
 
 const mlhLink = (slug: string, title: string) =>
   `https://mlh.link/${slug}?utm_source=mlh&utm_medium=referral&utm_content=${title.replace(/ /g, "+")}`;
+const mlh = (slug: string) => `https://mlh.link/${slug}`;
 
-/** The eight MLH categories, in MLH's order. */
+/**
+ * The eight MLH categories, in MLH's order. `free`, `steps` and `links` come from
+ * MLH's partner pages (mlh.com/partners/…, checked 2 Nov 2026). The offers belong
+ * to MLH and each provider, who set the eligibility. Promo codes are never here.
+ */
 export const MLH_AWARDS: readonly MlhAward[] = [
   {
     id: "mlh-elevenlabs",
     title: "Best Use of ElevenLabs",
+    name: "ElevenLabs",
+    goodFor: ["AI voice", "Voice agents", "Text to speech"],
     prize: "Wireless Earbuds",
     description: "Deploy natural, human-sounding audio with ElevenLabs.",
+    free: ["One free month of the Creator plan with a promo code from MLH."],
+    steps: [
+      { label: "Log in on MLH's prize page to claim your code", href: MLH_PRIZE_PAGE },
+      "Follow the code's link to sign up at ElevenLabs",
+      { label: "Make your first API request", href: "https://elevenlabs.io/docs/quickstart" },
+    ],
+    links: [
+      { label: "Agents docs", href: mlh("ElevenLabs-Agents") },
+      { label: "Voice agent demo app", href: mlh("elevenlabs-demo") },
+    ],
     href: mlhLink("elevenlabs", "Best Use of ElevenLabs"),
   },
   {
     id: "mlh-gemini",
     title: "Best Use of Gemini API",
+    name: "Gemini API · Google Cloud",
+    goodFor: ["LLM", "Agentic AI", "RAG", "Multimodal AI"],
     prize: "MLH Swag Kits",
-    description: "It's time to push the boundaries of what's possible with AI using Google Gemini.",
+    description: "It’s time to push the boundaries of what’s possible with AI using Google Gemini.",
+    free: [
+      "Everyone: Google AI Studio, the fastest way to try the models.",
+      "Students: a Google student plan, free for one year, and $10 a month in Google credits through Google Program Benefits.",
+      "Not a student: $300 in Google credits with a new Google Cloud account.",
+    ],
+    note: "These are Google's own public offers, and Google decides who qualifies. Since AI has no Google credits of its own for this event. When you enter, add your Gemini project number, never an API key.",
+    steps: [
+      { label: "Try it in Google AI Studio", href: mlh("gemini-aistudio") },
+      { label: "Claim the student plan", href: mlh("gemini-student-plan") },
+      { label: "Students: activate your monthly credits", href: "https://developers.google.com/program/my-benefits" },
+      { label: "Not a student: Google Cloud free trial", href: "https://docs.cloud.google.com/free/docs/free-cloud-features#free-trial" },
+      { label: "Make your first API request", href: mlh("gemini-quickstart") },
+    ],
+    links: [
+      { label: "API docs", href: mlh("gemini-docs") },
+      { label: "Code examples (Cookbook)", href: mlh("gemini-cookbook") },
+    ],
     href: mlhLink("gemini", "Best Use of Gemini API"),
   },
   {
     id: "mlh-entire",
     title: "Best Use of Entire",
+    name: "Entire",
+    goodFor: ["AI-native version control", "Git forge", "Developer tools"],
     prize: "Mini Portable Projector",
     description: "Entire is the Git forge for agent-human collaboration.",
+    free: ["A free Entire account."],
+    note: "To qualify, use as many of Entire's core capabilities as you can: Sessions, Graph and Brain.",
+    steps: [
+      { label: "Sign up for free", href: mlh("entire-signup") },
+      { label: "Follow the quickstart", href: mlh("entire-quickstart") },
+      { label: "Enable Entire in your repo (video)", href: mlh("entire-101-repo") },
+    ],
+    links: [{ label: "Entire's Discord", href: mlh("entire-discord") }],
     href: mlhLink("entire", "Best Use of Entire"),
   },
   {
     id: "mlh-solana",
     title: "Best Use of Solana",
+    name: "Solana",
+    goodFor: ["Blockchain", "Web3", "Payments", "DeFi"],
     prize: "Unruggable Hardware Wallets",
-    description: "The world of development is evolving fast and Solana is leading the charge.",
+    description:
+      "The world of development is evolving fast and Solana is leading the charge with a network built to handle all of your infrastructure needs.",
+    free: ["Build on Solana DevNet and fund your DevNet wallet from the faucet."],
+    note: "MLH lists a wallet for you and each member of your team.",
+    steps: [
+      { label: "Follow the quick start", href: mlh("solana-quickstart") },
+      { label: "Install the tools in one command", href: mlh("solana-quick-install") },
+      { label: "Fund your DevNet wallet", href: mlh("solana-faucet") },
+    ],
+    links: [
+      { label: "Docs", href: mlh("solana-docs") },
+      { label: "Developer templates", href: mlh("solana-templates") },
+    ],
     href: mlhLink("solana", "Best Use of Solana"),
   },
   {
     id: "mlh-tiger-data",
     title: "Best Use of Tiger Data",
+    name: "Tiger Data",
+    goodFor: ["PostgreSQL", "SQL", "Time series", "Real-time analytics"],
     prize: "Stream Deck Mini",
-    description: "Building high-performance apps under hackathon deadlines shouldn't mean spending half your weekend configuring complex databases or learning obscure query languages.",
+    description:
+      "Building high-performance apps under hackathon deadlines shouldn't mean spending half your weekend configuring complex databases or learning obscure query languages.",
+    free: ["New signups get $1,000 in credits, valid for 30 days."],
+    steps: [
+      { label: "Sign up and follow the quickstart", href: mlh("tigerdata-quickstart") },
+      { label: "Pick a step-by-step tutorial", href: mlh("tigerdata-tutorials") },
+    ],
+    links: [{ label: "Tiger CLI and MCP", href: mlh("tigerdata-cli-mcp") }],
     href: mlhLink("tigerdata", "Best Use of Tiger Data"),
   },
   {
     id: "mlh-vultr",
     title: "Best Use of Vultr",
+    name: "Vultr",
+    goodFor: ["Cloud", "GPUs", "AI agents", "Infrastructure"],
     prize: "Assorted Prizes",
     description: "Vultr empowers hackers to bring their high-performance projects to life instantly.",
+    free: ["$100 in Vultr credits with an MLH promo code."],
+    note: "One registration per person; Vultr's terms apply.",
+    steps: [
+      { label: "Register for your promo code", href: mlh("vultr-discover") },
+      "Verify your registration email. Students enter their school as Company and Student as Job Title",
+      { label: "Create your Vultr account", href: mlh("vultr-signup") },
+      "Enter the code under Billing, in the Gift Code field",
+    ],
+    links: [
+      { label: "Products", href: mlh("vultr-products") },
+      { label: "API docs", href: mlh("vultr-api") },
+      { label: "FAQs", href: mlh("vultr-support") },
+    ],
     href: mlhLink("vultr", "Best Use of Vultr"),
   },
   {
     id: "mlh-snowflake",
     title: "Best Use of Snowflake API",
+    name: "Snowflake",
+    goodFor: ["Data", "LLMs", "RAG", "APIs"],
     prize: "Arduino Student Kit",
     description: "Play with industry-leading LLMs on a single account using the Snowflake APIs.",
+    free: ["A 120-day free Snowflake trial, which MLH describes as a special student trial."],
+    steps: [
+      { label: "Start the free trial", href: mlh("snowflake-signup") },
+      { label: "Build a chat app in 5 minutes (example repo)", href: mlh("snowflake-demo") },
+      { label: "Explore Cortex AI Studio", href: mlh("snowflake-cortex-ai-studio") },
+    ],
+    links: [
+      { label: "REST APIs", href: mlh("snowflake-rest-api") },
+      { label: "Free datasets", href: mlh("snowflake-datasets") },
+    ],
     href: mlhLink("snowflake", "Best Use of Snowflake API"),
   },
   {
     id: "mlh-mongodb-atlas",
     title: "Best Use of MongoDB Atlas",
+    name: "MongoDB Atlas",
+    goodFor: ["Database", "NoSQL", "Vector search"],
     prize: "M5Stack IoT Kit",
     description: "MongoDB Atlas takes the leading modern database and makes it accessible in the cloud!",
+    free: [
+      "Everyone: the Atlas free forever tier, no credit card required.",
+      "Students: $50 in Atlas credits with the GitHub Student Developer Pack.",
+    ],
+    note: "MLH lists a kit for you and each member of your group.",
+    steps: [
+      { label: "Sign up for the free tier", href: mlh("mongodb-free") },
+      { label: "Students: claim the $50 in credits", href: mlh("mongodb-benefits") },
+      { label: "Build your first database", href: mlh("mongodb-gettingstarted") },
+    ],
+    links: [
+      { label: "Docs", href: mlh("mongodb-docs") },
+      { label: "MongoDB University", href: mlh("mongodb-university") },
+    ],
     href: mlhLink("mongodb", "Best Use of MongoDB Atlas"),
   },
 ];
+
+/** Find a technology by what you need; ids are from MLH_AWARDS. */
+export const MLH_BY_NEED: readonly { need: string; ids: readonly string[] }[] = [
+  { need: "AI models", ids: ["mlh-gemini", "mlh-snowflake"] },
+  { need: "Voice", ids: ["mlh-elevenlabs"] },
+  { need: "Databases", ids: ["mlh-mongodb-atlas", "mlh-tiger-data", "mlh-snowflake"] },
+  { need: "Cloud and GPUs", ids: ["mlh-vultr", "mlh-gemini"] },
+  { need: "Web3", ids: ["mlh-solana"] },
+  { need: "AI coding workflow", ids: ["mlh-entire"] },
+];
+
+/** How an MLH category works, for someone seeing it for the first time. */
+export const MLH_HOW_IT_WORKS = [
+  { title: "Pick a technology", text: "Choose any that suit your project. Each card shows what is free and where to start." },
+  { title: "Build it into your project", text: "Use it in your company challenge solution. No separate project is needed." },
+  { title: "Tick it when you submit", text: "Tick the category on your team's submission in sinceai.app, by Sunday 10:00." },
+] as const;
 
 /** Where to ask about the MLH categories — MLH's own introduction and prize page, no new contacts. */
 export const MLH_QUESTIONS =

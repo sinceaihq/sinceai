@@ -162,8 +162,8 @@ export interface PartnerStand {
   location: string;
   /** Why this position matters (shown to partners). */
   visibility: string;
-  /** Assigned partner id, or null for an open stand. */
-  partnerId: string | null;
+  /** Assigned partner id. */
+  partnerId: string;
   /** Hotspot id on the BioCity map. */
   hotspotId: string;
   status: Publishability;

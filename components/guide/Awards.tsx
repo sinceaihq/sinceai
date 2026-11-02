@@ -14,10 +14,12 @@ import {
   HOW_TO_ENTER,
   HOW_TO_ENTER_LINK,
   MLH_AWARDS,
-  MLH_AWARDS_ANCHOR,
   MLH_AWARDS_NOTE,
+  MLH_BY_NEED,
+  MLH_HOW_IT_WORKS,
   MLH_PRIZE_PAGE,
   MLH_QUESTIONS,
+  mlhAwardAnchor,
   RED_HAT_AWARD,
   type TechnologyAward,
 } from "@/lib/hackathon-2026";
@@ -119,26 +121,85 @@ export function HowToEnter() {
   );
 }
 
-/** The eight MLH categories, labelled as prizes provided through MLH. */
+/** The eight MLH technologies, one card each: the prize, what is free and where to start. */
 export function MlhAwards() {
+  const nameOf = (id: string) => MLH_AWARDS.find((a) => a.id === id)?.name ?? id;
   return (
-    <div id={MLH_AWARDS_ANCHOR} data-mlh-awards>
-      <p className="max-w-3xl text-sm text-neutral-300 leading-relaxed">{MLH_AWARDS_NOTE}</p>
-      <ul className="mt-5 grid grid-cols-1 border-l border-t border-white/10 sm:grid-cols-2 lg:grid-cols-4">
+    <div data-mlh-awards>
+      <ol className="grid grid-cols-1 border-l border-t border-white/10 md:grid-cols-3" data-mlh-how>
+        {MLH_HOW_IT_WORKS.map((step, i) => (
+          <li key={step.title} className="border-b border-r border-white/10 p-4">
+            <p className={`${eyebrow} text-(--color-event)`}>Step {i + 1}</p>
+            <p className="mt-2 font-semibold text-white">{step.title}</p>
+            <p className="mt-1 text-sm text-neutral-400 leading-relaxed">{step.text}</p>
+          </li>
+        ))}
+      </ol>
+      <nav aria-label="Find a technology by what you need" className="guide-no-print mt-6" data-mlh-by-need>
+        <p className={`${eyebrow} text-white/55`}>What do you need?</p>
+        <dl className="mt-2 grid grid-cols-1 gap-x-8 gap-y-1.5 text-sm sm:grid-cols-2">
+          {MLH_BY_NEED.map((row) => (
+            <div key={row.need} className="flex flex-wrap gap-x-3">
+              <dt className="font-semibold text-white">{row.need}</dt>
+              <dd className="flex flex-wrap gap-x-3">
+                {row.ids.map((id) => (
+                  <a
+                    key={id}
+                    href={`#${mlhAwardAnchor(id)}`}
+                    className="text-neutral-300 underline decoration-white/30 underline-offset-4 hover:decoration-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  >
+                    {nameOf(id)}
+                  </a>
+                ))}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </nav>
+      <ul className="mt-8 grid grid-cols-1 border-l border-t border-white/10 lg:grid-cols-2">
         {MLH_AWARDS.map((a) => (
-          <li key={a.id} data-mlh-award={a.id} className="flex flex-col border-b border-r border-white/10 p-4">
-            <p className={`${eyebrow} text-white/55`}>Through MLH</p>
-            <h4 className="mt-2 font-bold tracking-tight text-white">{a.title}</h4>
-            <p className="mt-1 text-sm text-(--color-event)">Prize: {a.prize}</p>
-            <p className="mt-2 text-sm text-neutral-400 leading-relaxed">{a.description}</p>
-            <p className="guide-no-print mt-auto pt-2">
+          <li
+            key={a.id}
+            id={mlhAwardAnchor(a.id)}
+            data-mlh-award={a.id}
+            className="guide-target guide-avoid-break flex flex-col border-b border-r border-white/10 p-5"
+          >
+            <h3 className="text-xl font-bold tracking-tight text-white">{a.name}</h3>
+            <p className="mt-1 text-sm text-neutral-400">{a.goodFor.join(" · ")}</p>
+            <p className="mt-3 border-l-2 border-(--color-event) pl-3 text-sm text-white">
+              <span className="font-semibold">{a.title}.</span> Prize: {a.prize}
+            </p>
+            <p className="mt-3 text-sm text-neutral-300 leading-relaxed">{a.description}</p>
+            <p className={`${eyebrow} mt-4 text-white/55`}>Free to use</p>
+            <ul className="mt-1.5 space-y-1 text-sm text-neutral-200 leading-relaxed" data-mlh-free>
+              {a.free.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+            {a.note && <p className="mt-2 text-sm text-neutral-400 leading-relaxed">{a.note}</p>}
+            <p className={`${eyebrow} mt-4 text-white/55`}>Start here</p>
+            <ol className="mt-1.5 list-decimal space-y-1 pl-5 text-sm text-neutral-300 leading-relaxed marker:text-white/55">
+              {a.steps.map((step) => (
+                <li key={typeof step === "string" ? step : step.href}>
+                  {typeof step === "string" ? step : <TextLink href={step.href}>{step.label}</TextLink>}
+                </li>
+              ))}
+            </ol>
+            <p className="guide-no-print mt-auto flex flex-wrap gap-x-4 gap-y-1 pt-4 text-sm">
               <TextLink href={a.href}>
-                Get started<span className="sr-only"> with {a.title}</span>
+                {a.name} on MLH<span className="sr-only"> ({a.title})</span>
               </TextLink>
+              {a.links.map((l) => (
+                <TextLink key={l.href} href={l.href}>
+                  {l.label}
+                  <span className="sr-only"> for {a.name}</span>
+                </TextLink>
+              ))}
             </p>
           </li>
         ))}
       </ul>
+      <p className="mt-5 max-w-3xl text-sm text-neutral-300 leading-relaxed">{MLH_AWARDS_NOTE}</p>
       <div className="mt-3 max-w-3xl">
         <Questions text={MLH_QUESTIONS} link={{ label: "MLH prize page for Since AI Hackathon", href: MLH_PRIZE_PAGE }} />
       </div>

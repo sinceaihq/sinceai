@@ -158,16 +158,18 @@ test.describe("content", () => {
     await expect(page.locator("#company-traficom")).toContainText("1091 Hammarbacka");
   });
 
-  test("partner guide groups the six stand positions in the partner corner, with no Red Hat booth", async ({ page }) => {
+  test("partner guide groups the five stands in the partner corner, with no open position and no Red Hat booth", async ({ page }) => {
     await page.goto(`${GUIDE}/partners#stands`);
     const stands = page.locator('[id^="stand-bc-"]');
-    await expect(stands).toHaveCount(6);
-    await expect(page.locator("#stand-bc-1")).toContainText("Stand 1 · most visible");
+    await expect(stands).toHaveCount(5);
+    await expect(page.locator("#stand-bc-2")).toContainText("Stand 1 · most visible");
     await expect(page.locator("#stands")).not.toContainText("Red Hat");
-    const names = ["Visibility / Tech Partner stand", "Solita", "Pruna AI", "BearingPoint", "CSC / LUMI AI Factory", "Major League Hacking"];
-    for (const [i, name] of names.entries()) await expect(page.locator(`#stand-bc-${i + 1}`)).toContainText(name);
+    await expect(page.locator("main")).not.toContainText("open position");
+    await expect(page.locator("main")).not.toContainText("Visibility / Tech Partner stand");
+    const names = ["Solita", "Pruna AI", "BearingPoint", "CSC / LUMI AI Factory", "Major League Hacking"];
+    for (const [i, name] of names.entries()) await expect(page.locator(`#stand-bc-${i + 2}`)).toContainText(name);
     await expect(page.locator("#stand-bc-6")).toContainText("confirmed separately");
-    for (let i = 1; i <= 6; i++) await expect(page.locator(`#stand-bc-${i}`)).toContainText("partner corner");
+    for (let i = 2; i <= 6; i++) await expect(page.locator(`#stand-bc-${i}`)).toContainText("partner corner");
   });
 
   test("builder guide shows the final team formation map with routes A and B as text", async ({ page }) => {
@@ -610,7 +612,22 @@ test.describe("Builder Resources", () => {
     await expect(mlh).toHaveCount(8);
     await expect(page.locator("[data-mlh-awards]")).toContainText("Prizes provided through Major League Hacking");
     await expect(page.locator('[data-mlh-award="mlh-gemini"]')).toContainText("MLH Swag Kits");
-    for (const link of await page.locator("[data-mlh-award] a").all()) await expect(link).toHaveAttribute("href", /^https:\/\/mlh\.link\//);
+    for (const link of await page.locator("[data-mlh-award] a").all()) {
+      await expect(link).toHaveAttribute("href", /^https:\/\/(mlh\.link|www\.mlh\.com|elevenlabs\.io|developers\.google\.com|docs\.cloud\.google\.com)\//);
+    }
+    // First on the page, each card saying what is free and where to start; the codes themselves are never here.
+    const firstSection = await page.locator("main section[id]").first().getAttribute("id");
+    expect(firstSection).toBe("mlh-awards");
+    for (const card of await mlh.all()) {
+      await expect(card).toContainText("Prize:");
+      await expect(card).toContainText("Free to use");
+      await expect(card).toContainText("Start here");
+    }
+    const gemini = page.locator('[data-mlh-award="mlh-gemini"]');
+    await expect(gemini).toContainText("Google Cloud");
+    await expect(gemini).toContainText("Since AI has no Google credits of its own");
+    await expect(page.locator('[data-mlh-award="mlh-mongodb-atlas"]')).toContainText("free forever tier");
+    await expect(page.locator('[data-mlh-award="mlh-snowflake"]')).toContainText("120-day");
     await expect(page.locator("[data-fiware-resources]")).toContainText("docker run -d --name mongo-db --network fiware mongo:4.4");
     await expect(page.locator("[data-fiware-resources]")).toContainText("Content-Type: application/ld+json");
     // Commands keep one line each (no mid-flag wraps); a long one scrolls inside its block, never the page.
@@ -758,8 +775,8 @@ test.describe("venue explorer", () => {
     await expect(locations).toContainText("1001 Dromberg");
     await expect(locations).toContainText("Company Lounge");
     await expect(locations).not.toContainText("Red Hat");
-    await expect(locations).toContainText("Stand 2 · Solita");
-    await expect(locations).toContainText("Stand 6 · Major League Hacking");
+    await expect(locations).toContainText("Stand 1 · Solita");
+    await expect(locations).toContainText("Stand 5 · Major League Hacking");
     await expect(locations).toContainText("Team Check + card return");
     await expect(locations).toContainText("3027");
   });
