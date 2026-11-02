@@ -581,7 +581,7 @@ test.describe("Builder Resources", () => {
     for (const id of ["red-hat-openshift-ai", "fiware-open-innovation"]) await expect(page.locator(`[data-award="${id}"] [data-award-questions]`)).toContainText("Questions?");
     await expect(page.locator("[data-mlh-awards] [data-award-questions]")).toContainText("16:45");
     const mlh = page.locator("[data-mlh-award]");
-    await expect(mlh).toHaveCount(7);
+    await expect(mlh).toHaveCount(8);
     await expect(page.locator("[data-mlh-awards]")).toContainText("Prizes provided through Major League Hacking");
     await expect(page.locator('[data-mlh-award="mlh-gemini"]')).toContainText("MLH Swag Kits");
     for (const link of await page.locator("[data-mlh-award] a").all()) await expect(link).toHaveAttribute("href", /^https:\/\/mlh\.link\//);
