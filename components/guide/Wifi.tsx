@@ -1,5 +1,5 @@
 import { WIFI, WIFI_ANCHOR } from "@/lib/hackathon-2026";
-import { GuideSection, SectionHeading, StatusTag, TextLink } from "./primitives";
+import { GuideSection, SectionHeading, TextLink } from "./primitives";
 
 function Dash() {
   return (
@@ -14,9 +14,19 @@ export function WifiSection() {
   const { educity, buildSpaces } = WIFI;
   return (
     <GuideSection id={WIFI_ANCHOR}>
-      <SectionHeading id={`${WIFI_ANCHOR}-title`} eyebrow="// wi-fi" title={WIFI.question} lede={WIFI.answer} />
+      <SectionHeading id={`${WIFI_ANCHOR}-title`} eyebrow="// wi-fi" title={WIFI.title} lede={WIFI.answer} />
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="guide-avoid-break border border-white/10 p-5 md:p-6" data-wifi="build-spaces">
+          <p className="font-mono text-[11px] uppercase tracking-widest text-white/55">{buildSpaces.when}</p>
+          <h3 className="mt-2 text-xl font-bold tracking-tight text-white">{buildSpaces.title}</h3>
+          <p className="mt-4 font-mono text-[11px] uppercase tracking-widest text-white/55">Network</p>
+          <p className="mt-1 text-2xl font-bold tracking-tight text-white">{buildSpaces.network}</p>
+          <p className="mt-4 font-mono text-[11px] uppercase tracking-widest text-white/55">Password</p>
+          <p className="mt-1 text-sm text-neutral-300 leading-relaxed">{buildSpaces.password}</p>
+          <p className="mt-4 border-t border-white/10 pt-4 text-sm text-neutral-400 leading-relaxed">{buildSpaces.text}</p>
+        </div>
+
         <div className="guide-avoid-break border border-white/10 p-5 md:p-6" data-wifi="educity">
           <p className="font-mono text-[11px] uppercase tracking-widest text-white/55">{educity.when}</p>
           <h3 className="mt-2 text-xl font-bold tracking-tight text-white">{educity.title}</h3>
@@ -33,16 +43,6 @@ export function WifiSection() {
           <p className="mt-4 border-t border-white/10 pt-4 text-sm text-neutral-400 leading-relaxed">
             <span className="font-semibold text-white">eduroam.</span> {educity.eduroam}
           </p>
-        </div>
-
-        <div className="guide-avoid-break flex flex-col border border-white/10 p-5 md:p-6" data-wifi="build-spaces">
-          <p className="font-mono text-[11px] uppercase tracking-widest text-white/55">{buildSpaces.when}</p>
-          <h3 className="mt-2 text-xl font-bold tracking-tight text-white">{buildSpaces.title}</h3>
-          <div className="mt-4">
-            <StatusTag status="pending" label="Instructions to be confirmed" />
-          </div>
-          <p className="mt-4 text-sm text-neutral-300 leading-relaxed">{buildSpaces.text}</p>
-          <p className="mt-3 text-sm text-neutral-400 leading-relaxed">{buildSpaces.pending}</p>
         </div>
       </div>
 

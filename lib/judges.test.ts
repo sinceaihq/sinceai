@@ -58,14 +58,14 @@ describe("judging panel data", () => {
     });
   });
 
-  it("shows Matyas Karel Stoch with the approved bio, and nothing unverified or private", () => {
+  it("shows Matyas Karel Stoch with the approved bio and links, and no email address", () => {
     const matyas = judges.find((j) => j.name === "Matyas Karel Stoch")!;
     expect(matyas.bio).toBe(
       "Founding Engineer at Cloudroom, a platform for AI coding agents. Matyas brings hands-on engineering experience with AI-powered developer tools to the Since AI Hackathon 2026 jury.",
     );
-    // No company URL or profile has been verified, and his judging account stays internal.
-    expect(matyas.organizationUrl).toBeUndefined();
-    expect(matyas.profiles).toEqual([]);
+    expect(matyas.organizationUrl).toBe("https://www.cloudroom.dev/");
+    expect(matyas.profiles).toEqual([{ kind: "linkedin", url: "https://www.linkedin.com/in/matyas-stoch-a77328389/" }]);
+    // His judging account stays internal.
     expect(JSON.stringify(judges)).not.toMatch(/@/);
     expect(matyas.portrait).toEqual({
       src: "/assets/judges/matyas-karel-stoch.webp",
@@ -80,9 +80,9 @@ describe("judging panel data", () => {
       "https://www.utu.fi/en",
       "https://inovexus.com/",
       "https://fiware.org/",
-      undefined,
+      "https://www.cloudroom.dev/",
     ]);
-    for (const judge of judges.filter((j) => j.organizationUrl)) {
+    for (const judge of judges) {
       expect(judge.profiles.length).toBeGreaterThan(0);
       for (const profile of judge.profiles) expect(profile.url).toMatch(PROFILE_URL[profile.kind]);
     }

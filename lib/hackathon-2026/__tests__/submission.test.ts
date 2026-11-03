@@ -154,7 +154,9 @@ describe("builder FAQ and checklist", () => {
 
   it("answers Wi-Fi and Linux briefly and points to the Wi-Fi instructions", () => {
     const item = DETAILS.builders.find((i) => /Wi-Fi/.test(i.q))!;
-    expect(item.a).toMatch(/free Wi-Fi is arranged/);
+    expect(item.a).toMatch(/free Wi-Fi is available/);
+    expect(item.a).toMatch(/Hackathon network at BioCity and Joki/);
+    expect(item.a).toMatch(/password available at check-in and in the Since AI participant app/);
     expect(item.a).toMatch(/TUAS Guest or eduroam at EduCity/);
     expect(item.a).toMatch(/Linux, Windows and macOS/);
     expect(item.links).toEqual([{ label: "Wi-Fi instructions", href: "#wifi" }]);

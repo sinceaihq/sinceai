@@ -365,7 +365,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
     {
       q: "Is there Wi-Fi? Can we use Linux?",
-      a: "Yes — free Wi-Fi is arranged at the event venues: TUAS Guest or eduroam at EduCity, and at BioCity and Joki the network details come from event staff once they are confirmed. The steps are under Wi-Fi on this page. Bring any laptop: Linux, Windows and macOS all work, and no brand or operating system is required.",
+      a: "Yes — free Wi-Fi is available at the event venues: the Hackathon network at BioCity and Joki, with the password available at check-in and in the Since AI participant app, and TUAS Guest or eduroam at EduCity. The details are under Wi-Fi on this page. Bring any laptop: Linux, Windows and macOS all work, and no brand or operating system is required.",
       links: [{ label: "Wi-Fi instructions", href: `#${WIFI_ANCHOR}` }],
     },
     {

@@ -73,42 +73,36 @@ function JudgeCard({ judge, className }: { judge: Judge; className: string }) {
       <div className="flex flex-1 flex-col p-5">
         <h3 className="text-xl font-bold tracking-tight text-white">{judge.name}</h3>
         <p className="mt-1 text-sm text-neutral-300">{judge.title}</p>
-        {judge.organizationUrl ? (
-          <a
-            href={judge.organizationUrl}
-            {...external}
-            className={`mt-0.5 inline-flex min-h-8 items-center self-start text-sm text-neutral-400 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white hover:decoration-white ${focusRing}`}
-          >
-            {judge.organization}
-            <span aria-hidden="true" className="ml-1">
-              ↗
-            </span>
-            <span className="sr-only"> (opens in a new tab)</span>
-          </a>
-        ) : (
-          <p className="mt-0.5 flex min-h-8 items-center text-sm text-neutral-400">{judge.organization}</p>
-        )}
+        <a
+          href={judge.organizationUrl}
+          {...external}
+          className={`mt-0.5 inline-flex min-h-8 items-center self-start text-sm text-neutral-400 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white hover:decoration-white ${focusRing}`}
+        >
+          {judge.organization}
+          <span aria-hidden="true" className="ml-1">
+            ↗
+          </span>
+          <span className="sr-only"> (opens in a new tab)</span>
+        </a>
         <p className="mt-4 text-sm text-neutral-400 leading-relaxed">{judge.bio}</p>
-        {judge.profiles.length > 0 && (
-          <div className="mt-auto flex gap-2 pt-5">
-            {judge.profiles.map((profile) => {
-              const Icon = PROFILE_ICON[profile.kind];
-              const label = profileLabel(judge, profile);
-              return (
-                <a
-                  key={profile.url}
-                  href={profile.url}
-                  {...external}
-                  aria-label={`${label} (opens in a new tab)`}
-                  title={label}
-                  className={`inline-flex h-11 w-11 items-center justify-center border border-white/15 text-neutral-400 transition-colors hover:border-white hover:text-white ${focusRing}`}
-                >
-                  <Icon size={18} strokeWidth={1.5} aria-hidden="true" />
-                </a>
-              );
-            })}
-          </div>
-        )}
+        <div className="mt-auto flex gap-2 pt-5">
+          {judge.profiles.map((profile) => {
+            const Icon = PROFILE_ICON[profile.kind];
+            const label = profileLabel(judge, profile);
+            return (
+              <a
+                key={profile.url}
+                href={profile.url}
+                {...external}
+                aria-label={`${label} (opens in a new tab)`}
+                title={label}
+                className={`inline-flex h-11 w-11 items-center justify-center border border-white/15 text-neutral-400 transition-colors hover:border-white hover:text-white ${focusRing}`}
+              >
+                <Icon size={18} strokeWidth={1.5} aria-hidden="true" />
+              </a>
+            );
+          })}
+        </div>
       </div>
     </li>
   );
