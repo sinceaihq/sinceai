@@ -306,15 +306,15 @@ export const VENUE_MAPS: readonly VenueMap[] = [
         y: 0.203,
         kind: "entrance",
       }),
-      // The partner corner (organiser, 6 and 13 Oct 2026): one ring for all six visibility / tech partner
-      // stands — they are 1.76 m apart, too close for a ring each on this plan. Plan-B → image: u = 0.806 +
+      // The partner corner (organiser, 6 and 13 Oct and 3 Nov 2026): one ring for all seven visibility / tech
+      // partner stands — they are 1.76 m apart, too close for a ring each on this plan. Plan-B → image: u = 0.806 +
       // 0.0095 (x − 26.35), v = 0.641 + 0.01327 (z + 2.81), fitted on the earlier stand positions; stand
       // centres from components/guide/twin/engine/buildings/biocity/plan.ts.
       hs({
         id: "bio-partner-corner",
         label: "Partner corner",
         description:
-          "All six visibility & tech partner stands · south-east end of the main lobby, by the passage to Joki (provisional layout)",
+          "All seven visibility & tech partner stands · south-east end of the main lobby, by the passage to Joki (provisional layout)",
         x: 0.797,
         y: 0.6,
         kind: "area",
@@ -325,6 +325,7 @@ export const VENUE_MAPS: readonly VenueMap[] = [
       standHotspot("stand-bc-4", 0.798, 0.584),
       standHotspot("stand-bc-5", 0.814, 0.584),
       standHotspot("stand-bc-6", 0.831, 0.584),
+      standHotspot("stand-bc-7", 0.825, 0.62),
       hs({
         id: "bio-build-hall",
         label: "Build area",

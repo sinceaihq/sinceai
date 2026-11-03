@@ -420,6 +420,7 @@ if (process.env.SKIP3D !== "1") {
     ["?focus=elisa", "Showroom", "Elisa"],
     ["?focus=valmet", "Joki Q&A floors", "Valmet"],
     ["?focus=red-hat", "BioCity build hall", "Stand 1 · Red Hat"],
+    ["?focus=fiware", "BioCity build hall", "Stand 7 · FIWARE"],
     ["?scene=biocity", "BioCity build hall", null],
   ]) {
     const { ctx: c2, page: p2 } = await newPage();
@@ -491,6 +492,7 @@ if (process.env.SKIP3D !== "1") {
   await page.goto(BASE + `${G}/partners#stands`, { waitUntil: "networkidle" });
   const mapText = (await page.locator("main").innerText()).replace(/\u00a0/g, " ");
   ok("map list names Red Hat stand", /Stand 1 · Red Hat/.test(mapText));
+  ok("map list names FIWARE stand", /Stand 7 · FIWARE/.test(mapText));
   ok("map list names Solita stand", /Stand 2 · Solita/.test(mapText));
   ok("map list has no open stand", !/Visibility \/ Tech Partner stand/.test(mapText));
   await ctx.close();

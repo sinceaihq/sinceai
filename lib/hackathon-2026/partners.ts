@@ -5,12 +5,15 @@ import type { EventPartner, PartnerStand } from "./types";
  *
  * Organiser decisions: every visibility / tech partner stand is in one partner
  * corner — the south-east corner of BioCity's main lobby, where Solita's stand
- * already was (6 Oct 2026) — with six stands: Red Hat, Solita, Pruna AI,
- * BearingPoint, CSC / LUMI AI Factory and Major League Hacking. None of them is
- * a challenge partner. Solita and BearingPoint also mentor builders. Red Hat
- * first needed no booth (Red Hat, 21 Oct 2026) but has a stand after all
+ * already was (6 Oct 2026) — with seven stands: Red Hat, Solita, Pruna AI,
+ * BearingPoint, CSC / LUMI AI Factory, Major League Hacking and FIWARE. None of
+ * them is a challenge partner. Solita and BearingPoint also mentor builders. Red
+ * Hat first needed no booth (Red Hat, 21 Oct 2026) but has a stand after all
  * (organiser, 3 Nov 2026), back in its planned position; its on-site hours are
  * confirmed separately and it also supports builders on the Since AI Discord.
+ * FIWARE was planned without a BioCity stand (organiser to FIWARE, 1 Nov 2026)
+ * and has one after all (organiser, 3 Nov 2026); its stand hours are confirmed
+ * separately. Jason Fox, its technical mentor, is at EduCity all three days.
  *
  * MLH's stand is an organiser-planned requirement; MLH has not separately
  * confirmed who staffs it on site, so it stays `working` with a note.
@@ -18,7 +21,8 @@ import type { EventPartner, PartnerStand } from "./types";
  * Logos: official artwork only, white / reverse variants for the dark site —
  * Red Hat from the Red Hat Design System's reverse logo (colour on black),
  * BearingPoint from its press brand assets, MLH from mlh.com/brand-guidelines,
- * LUMI AI Factory from its media kit (the CSC logo has no usable reverse file).
+ * LUMI AI Factory from its media kit (the CSC logo has no usable reverse file),
+ * FIWARE the white logo already used on the site.
  */
 export const STAND_PARTNERS: readonly EventPartner[] = [
   {
@@ -77,21 +81,35 @@ export const STAND_PARTNERS: readonly EventPartner[] = [
     status: "working",
     note: "Stand planned by Since AI; MLH's on-site staffing is confirmed separately.",
   },
+  {
+    id: "fiware",
+    name: "FIWARE",
+    logo: { src: "/assets/sponsors/FIWARE.png", width: 480, height: 115 },
+    url: "https://www.fiware.org/",
+    category: "visibility-tech",
+    role: "Technology partner",
+    status: "confirmed",
+    note: "FIWARE's stand hours are confirmed separately; its experts also answer on the Since AI Discord.",
+  },
 ] as const;
 
 /** The partner corner: where every visibility / tech partner stand is. */
 export const PARTNER_CORNER = "Main lobby · partner corner";
 
 /**
- * The partner corner's six stands, ranked by visibility: a row of five along the
- * corner's north-east side facing the build hall's walkway, and Solita's
- * position facing the hall by the passage to Joki. The corridor to the meals and
- * the Aulagalleria, the walkway to Joki and the corner's side door stay clear.
+ * The partner corner's seven stands, ranked by visibility: a row of five along
+ * the corner's north-east side facing the build hall's walkway, Solita's
+ * position facing the hall by the passage to Joki, and FIWARE's behind Solita,
+ * facing the walkway to Joki. The corridor to the meals and the Aulagalleria,
+ * the walkway to Joki, the row's visitor space and the corner's side door stay
+ * clear.
  *
  * Six stands fit where five did by planning each at about 1.6 × 1.0 m (a
  * standard table and a roll-up) instead of the earlier assumed 2.0 m — the row
- * keeps the same 8.6 m between the meal corridor and the east wall. Ids and ranks
- * match (bc-1…bc-6, used by hotspots, deep links and the 3D model). All
+ * keeps the same 8.6 m between the meal corridor and the east wall. FIWARE's
+ * stand, the same size, takes the free floor between Solita's back and the east
+ * wall. Ids and ranks match (bc-1…bc-7, used by hotspots, deep links and the 3D
+ * model). All
  * positions are provisional (`working`) until the venue approves the layout and
  * the footprints at setup.
  */
@@ -160,6 +178,17 @@ export const BIOCITY_STANDS: readonly PartnerStand[] = [
     visibility: "In the partner row, facing the build hall's walkway.",
     partnerId: "mlh",
     hotspotId: "stand-bc-6",
+    status: "working",
+  },
+  {
+    id: "bc-7",
+    rank: 7,
+    venue: "biocity",
+    area: PARTNER_CORNER,
+    location: "Behind Solita's stand, facing the walkway to Joki",
+    visibility: "Everyone walking between the build hall and Joki passes it.",
+    partnerId: "fiware",
+    hotspotId: "stand-bc-7",
     status: "working",
   },
 ] as const;

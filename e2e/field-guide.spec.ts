@@ -158,18 +158,20 @@ test.describe("content", () => {
     await expect(page.locator("#company-traficom")).toContainText("1091 Hammarbacka");
   });
 
-  test("partner guide groups the six stands in the partner corner, Red Hat's first, with no open position", async ({ page }) => {
+  test("partner guide groups the seven stands in the partner corner, Red Hat's first, with no open position", async ({ page }) => {
     await page.goto(`${GUIDE}/partners#stands`);
     const stands = page.locator('[id^="stand-bc-"]');
-    await expect(stands).toHaveCount(6);
+    await expect(stands).toHaveCount(7);
     await expect(page.locator("#stand-bc-1")).toContainText("Stand 1 · most visible");
     await expect(page.locator("main")).not.toContainText("open position");
     await expect(page.locator("main")).not.toContainText("Visibility / Tech Partner stand");
-    const names = ["Red Hat", "Solita", "Pruna AI", "BearingPoint", "CSC / LUMI AI Factory", "Major League Hacking"];
+    const names = ["Red Hat", "Solita", "Pruna AI", "BearingPoint", "CSC / LUMI AI Factory", "Major League Hacking", "FIWARE"];
     for (const [i, name] of names.entries()) await expect(page.locator(`#stand-bc-${i + 1}`)).toContainText(name);
     await expect(page.locator("#stand-bc-1")).toContainText("on-site hours are confirmed separately");
     await expect(page.locator("#stand-bc-6")).toContainText("confirmed separately");
-    for (let i = 1; i <= 6; i++) await expect(page.locator(`#stand-bc-${i}`)).toContainText("partner corner");
+    await expect(page.locator("#stand-bc-7")).toContainText("Behind Solita's stand, facing the walkway to Joki");
+    await expect(page.locator("#stand-bc-7")).toContainText("stand hours are confirmed separately");
+    for (let i = 1; i <= 7; i++) await expect(page.locator(`#stand-bc-${i}`)).toContainText("partner corner");
   });
 
   test("builder guide shows the final team formation map with routes A and B as text", async ({ page }) => {
@@ -544,8 +546,10 @@ test.describe("Builder Resources", () => {
       `${GUIDE}#ai-resources`,
     );
     await expect(page.locator("[data-tool]")).toHaveCount(6);
-    await expect(page.locator("[data-stand-partner]")).toHaveCount(6);
+    await expect(page.locator("[data-stand-partner]")).toHaveCount(7);
     await expect(page.locator('[data-stand-partner="red-hat"]')).toHaveCount(1);
+    await expect(page.locator('[data-stand-partner="fiware"]')).toHaveCount(1);
+    await expect(page.locator('[data-resource="fiware"]')).toContainText("A FIWARE stand is planned in BioCity's partner corner");
     await expect(page.locator("[data-mlh-note]")).toContainText("2027 Season Member Event");
     // Logos load. They are lazy, so wait for each one after scrolling to it instead of reading it at once.
     for (const img of await page.locator("[data-resource] img").all()) {
@@ -782,6 +786,7 @@ test.describe("venue explorer", () => {
     await expect(locations).toContainText("Stand 1 · Red Hat");
     await expect(locations).toContainText("Stand 2 · Solita");
     await expect(locations).toContainText("Stand 6 · Major League Hacking");
+    await expect(locations).toContainText("Stand 7 · FIWARE");
     await expect(locations).toContainText("Team Check + card return");
     await expect(locations).toContainText("3027");
   });

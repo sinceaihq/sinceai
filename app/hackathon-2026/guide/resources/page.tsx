@@ -185,7 +185,7 @@ export default function ResourcesGuidePage() {
           id="on-site-title"
           eyebrow={`// biocity · ${PARTNER_CORNER.toLowerCase()}`}
           title="Partners on site."
-          lede="Six partner stands are planned in BioCity's main lobby, beside the build hall. Solita and BearingPoint also mentor builders."
+          lede="Seven partner stands are planned in BioCity's main lobby, beside the build hall. Solita and BearingPoint also mentor builders."
         />
         <OnSitePartners />
         <p className="mt-6 max-w-3xl text-sm text-neutral-400 leading-relaxed" data-mlh-note>

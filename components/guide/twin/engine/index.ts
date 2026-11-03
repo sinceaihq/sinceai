@@ -3247,6 +3247,10 @@ export function createTwinEngine(container: HTMLElement, opts: TwinOptions): Twi
       } catch {
         continue;
       }
+      // A texture the warm-up already uploaded has immutable GPU storage at the old size: without
+      // dispose, three.js writes the small copy into its corner (texSubImage2D), and an atlas's
+      // bottom-left tile shows the whole atlas shrunk. Dispose frees it; the next frame allocates anew.
+      t.dispose();
       t.image = small;
       t.needsUpdate = true;
       saved += before - textureBytes(t);

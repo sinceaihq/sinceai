@@ -15,6 +15,7 @@ import {
   PASSAGE_MOUTH,
   RETAIL_FRONT,
   ROUTE_LEGS_B,
+  ROW_STAND_WIDTH,
   STANDS,
   TERRACE,
   VAULT,
@@ -173,12 +174,12 @@ describe("BioCity build tables (SPEC §7.1)", () => {
 });
 
 describe("BioCity stands (SPEC §7.1)", () => {
-  it("groups all six stands in the partner corner, Solita where it was", () => {
+  it("groups all seven stands in the partner corner, Solita where it was", () => {
     const solita = STANDS.find((s) => s.id === "bc-2")!;
     expect([solita.x, solita.z, ...solita.face]).toEqual([26.35, -2.81, -1, 0]);
-    expect(STANDS).toHaveLength(6);
+    expect(STANDS).toHaveLength(7);
     // Six fit where five did: the row of five 1.56 m stands spans x 21.15…29.75.
-    const row = STANDS.filter((s) => s.id !== "bc-2").sort((a, b) => a.x - b.x);
+    const row = STANDS.filter((s) => s.id !== "bc-2" && s.id !== "bc-7").sort((a, b) => a.x - b.x);
     expect(row.map((s) => s.id)).toEqual(["bc-1", "bc-3", "bc-4", "bc-5", "bc-6"]);
     expect(row[0].x - row[0].width / 2).toBeCloseTo(21.15, 2);
     expect(row[4].x + row[4].width / 2).toBeCloseTo(29.75, 2);
@@ -192,6 +193,24 @@ describe("BioCity stands (SPEC §7.1)", () => {
         expect(z).toBeLessThan(-1.3);
       }
     }
+  });
+
+  it("puts FIWARE behind Solita, facing the walkway to Joki, with the row's visitor space kept", () => {
+    const fiware = STANDS.find((s) => s.id === "bc-7")!;
+    const solita = STANDS.find((s) => s.id === "bc-2")!;
+    expect(fiware.face).toEqual([0, 1]);
+    expect(fiware.width).toBe(ROW_STAND_WIDTH);
+    const xs = standRing(fiware).map(([x]) => x);
+    const zs = standRing(fiware).map(([, z]) => z);
+    // ≥ 0.6 m behind Solita's back wall, ≥ 0.9 m from the east wall (x 30.1).
+    expect(Math.min(...xs) - (solita.x + solita.depth / 2)).toBeGreaterThanOrEqual(0.6);
+    expect(30.1 - Math.max(...xs)).toBeGreaterThanOrEqual(0.9);
+    // ≥ 1.6 m clear in front of the row (row fronts at z −6.6), and its own visitors' space to the walkway (z −1.3).
+    expect(Math.min(...zs) - -6.6).toBeGreaterThanOrEqual(1.6);
+    expect(-1.3 - Math.max(...zs)).toBeGreaterThanOrEqual(2.5);
+    // "Walk me there" ends in front of it, short of the walkway; the row's walk spots stay north of it.
+    expect(fiware.walk![1]).toBeGreaterThan(Math.max(...zs));
+    for (const id of ["bc-5", "bc-6"]) expect(STANDS.find((s) => s.id === id)!.walk![1]).toBeLessThan(Math.min(...zs) - 0.5);
   });
 
   it("never overlaps another stand (≥ 0.15 m apart)", () => {
@@ -342,7 +361,7 @@ describe("BioCity views and targets", () => {
     for (const key of ["biocity:default", "biocity:entrance", "biocity:gallery", "biocity:stands"]) expect(BIOCITY_VIEWS[key]).toBeDefined();
     const ids = biocityTargets().map((t) => t.id).sort();
     expect(ids).toEqual(
-      ["bc-1", "bc-2", "bc-3", "bc-4", "bc-5", "bc-6", "build-hall", "entrance-biocity-courtyard", "entrance-biocity-tykistokatu", "serving-lines"].sort(),
+      ["bc-1", "bc-2", "bc-3", "bc-4", "bc-5", "bc-6", "bc-7", "build-hall", "entrance-biocity-courtyard", "entrance-biocity-tykistokatu", "serving-lines"].sort(),
     );
     for (const t of biocityTargets()) {
       for (const n of [...t.view.position, ...t.view.target]) expect(Number.isFinite(n)).toBe(true);

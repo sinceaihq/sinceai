@@ -183,7 +183,7 @@ describe("developer tools, Google and MLH", () => {
   });
 
   it("shows on-site partners with their registered roles only", () => {
-    expect(STAND_PARTNERS.map((p) => p.id)).toEqual(["red-hat", "solita", "pruna-ai", "bearingpoint", "csc-lumi", "mlh"]);
+    expect(STAND_PARTNERS.map((p) => p.id)).toEqual(["red-hat", "solita", "pruna-ai", "bearingpoint", "csc-lumi", "mlh", "fiware"]);
   });
 
   it("is in the builders' checklist, with the Red Hat sandbox as an optional step", () => {

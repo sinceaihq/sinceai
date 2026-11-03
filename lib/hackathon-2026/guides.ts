@@ -41,7 +41,7 @@ export const GUIDES: readonly GuideDefinition[] = [
     slug: "partners",
     name: "Partner & Tech Guide",
     navLabel: "Partners & tech",
-    lede: "The six-stand BioCity plan, setup and teardown, presence hours and practicalities for visibility and tech partners.",
+    lede: "The seven-stand BioCity plan, setup and teardown, presence hours and practicalities for visibility and tech partners.",
     forWho: "Visibility, tech and ecosystem partners",
     firstMomentId: "fri-opening",
     metaDescription:
