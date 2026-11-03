@@ -11,8 +11,8 @@ describe("marketing partner lists follow the Field Guide data", () => {
     expect(JSON.stringify(HACKATHON_2026_PARTNERS)).not.toMatch(/Forcit Group|Forsys|same cash prize/);
   });
 
-  it("names the stand partners plus Red Hat, a visibility / technology partner without a booth", () => {
-    expect([...HACKATHON_2026_PARTNERS.visibilityPartners].sort()).toEqual([...STAND_PARTNERS.map((p) => p.name), "Red Hat"].sort());
+  it("names exactly the stand partners, Red Hat included", () => {
+    expect([...HACKATHON_2026_PARTNERS.visibilityPartners].sort()).toEqual(STAND_PARTNERS.map((p) => p.name).sort());
   });
 
   it("never lists a former or unconfirmed company as a 2026 challenge partner", () => {

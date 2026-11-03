@@ -21,6 +21,7 @@ function pose(p: V3, t: V3): Pick<CameraView, "position" | "target"> {
  */
 const rowCamera = (x: number): { p: V3; t: V3; open: boolean } => ({ p: [x - 2.2, 5.6, -0.4], t: [x + 0.3, 1.3, -7.1], open: true });
 const STAND_CAMERAS: Record<string, { p: V3; t: V3; open: boolean }> = {
+  "bc-1": rowCamera(21.93),
   "bc-3": rowCamera(23.69),
   "bc-4": rowCamera(25.45),
   "bc-5": rowCamera(27.21),
@@ -64,7 +65,7 @@ export const BIOCITY_VIEWS: Record<string, CameraView> = {
     labels: true,
     open: OPEN,
   },
-  // The partner corner: all five stands from over the build hall's east end, the walkway to
+  // The partner corner: all six stands from over the build hall's east end, the walkway to
   // Joki in front of them (roof lifted).
   "biocity:stands": {
     ...pose([13.2, 11.5, 4.2], [25.6, 0.6, -4.6]),

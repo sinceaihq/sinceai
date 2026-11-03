@@ -5,21 +5,32 @@ import type { EventPartner, PartnerStand } from "./types";
  *
  * Organiser decisions: every visibility / tech partner stand is in one partner
  * corner — the south-east corner of BioCity's main lobby, where Solita's stand
- * already was (6 Oct 2026) — with five stands: Solita, Pruna AI, BearingPoint,
- * CSC / LUMI AI Factory and Major League Hacking. None of them is a challenge
- * partner. Solita and BearingPoint also mentor builders. Red Hat needs no booth
- * (Red Hat, 21 Oct 2026: remote support Fri–Sat, on site on Sunday), and no
- * further visibility partner is coming (organiser, 2 Nov 2026), so its position
- * is gone from the plan rather than held open.
+ * already was (6 Oct 2026) — with six stands: Red Hat, Solita, Pruna AI,
+ * BearingPoint, CSC / LUMI AI Factory and Major League Hacking. None of them is
+ * a challenge partner. Solita and BearingPoint also mentor builders. Red Hat
+ * first needed no booth (Red Hat, 21 Oct 2026) but has a stand after all
+ * (organiser, 3 Nov 2026), back in its planned position; its on-site hours are
+ * confirmed separately and it also supports builders on the Since AI Discord.
  *
  * MLH's stand is an organiser-planned requirement; MLH has not separately
  * confirmed who staffs it on site, so it stays `working` with a note.
  *
  * Logos: official artwork only, white / reverse variants for the dark site —
+ * Red Hat from the Red Hat Design System's reverse logo (colour on black),
  * BearingPoint from its press brand assets, MLH from mlh.com/brand-guidelines,
  * LUMI AI Factory from its media kit (the CSC logo has no usable reverse file).
  */
 export const STAND_PARTNERS: readonly EventPartner[] = [
+  {
+    id: "red-hat",
+    name: "Red Hat",
+    logo: { src: "/assets/sponsors/red-hat.svg", width: 613, height: 145 },
+    url: "https://www.redhat.com/en/products/ai",
+    category: "visibility-tech",
+    role: "Technology partner",
+    status: "confirmed",
+    note: "Red Hat's on-site hours are confirmed separately; its experts also answer on the Since AI Discord.",
+  },
   {
     id: "solita",
     name: "Solita",
@@ -72,21 +83,33 @@ export const STAND_PARTNERS: readonly EventPartner[] = [
 export const PARTNER_CORNER = "Main lobby · partner corner";
 
 /**
- * The partner corner's five stands, ranked by visibility: Solita's position
- * facing the hall by the passage to Joki, and a row of four along the corner's
- * north-east side facing the build hall's walkway. The corridor to the meals and
+ * The partner corner's six stands, ranked by visibility: a row of five along the
+ * corner's north-east side facing the build hall's walkway, and Solita's
+ * position facing the hall by the passage to Joki. The corridor to the meals and
  * the Aulagalleria, the walkway to Joki and the corner's side door stay clear.
  *
- * Each row stand is planned at about 1.6 × 1.0 m (a standard table and a
- * roll-up). The stands stay where they were planned when the row held five, so
- * ids (bc-2…bc-6, used by hotspots, deep links and the 3D model) no longer match
- * the ranks. All positions are provisional (`working`) until the venue approves
- * the layout and the footprints at setup.
+ * Six stands fit where five did by planning each at about 1.6 × 1.0 m (a
+ * standard table and a roll-up) instead of the earlier assumed 2.0 m — the row
+ * keeps the same 8.6 m between the meal corridor and the east wall. Ids and ranks
+ * match (bc-1…bc-6, used by hotspots, deep links and the 3D model). All
+ * positions are provisional (`working`) until the venue approves the layout and
+ * the footprints at setup.
  */
 export const BIOCITY_STANDS: readonly PartnerStand[] = [
   {
-    id: "bc-2",
+    id: "bc-1",
     rank: 1,
+    venue: "biocity",
+    area: PARTNER_CORNER,
+    location: "First in the partner row, by the corridor to the meals",
+    visibility: "Everyone walking between the build hall, the meals and the Aulagalleria passes it.",
+    partnerId: "red-hat",
+    hotspotId: "stand-bc-1",
+    status: "working",
+  },
+  {
+    id: "bc-2",
+    rank: 2,
     venue: "biocity",
     area: PARTNER_CORNER,
     location: "Facing the build hall, by the passage to Joki",
@@ -97,10 +120,10 @@ export const BIOCITY_STANDS: readonly PartnerStand[] = [
   },
   {
     id: "bc-3",
-    rank: 2,
+    rank: 3,
     venue: "biocity",
     area: PARTNER_CORNER,
-    location: "First in the partner row",
+    location: "Second in the partner row",
     visibility: "In the partner row, facing the build hall's walkway.",
     partnerId: "pruna-ai",
     hotspotId: "stand-bc-3",
@@ -108,10 +131,10 @@ export const BIOCITY_STANDS: readonly PartnerStand[] = [
   },
   {
     id: "bc-4",
-    rank: 3,
+    rank: 4,
     venue: "biocity",
     area: PARTNER_CORNER,
-    location: "Second in the partner row",
+    location: "Third in the partner row, in the middle",
     visibility: "In the partner row, facing the build hall's walkway.",
     partnerId: "bearingpoint",
     hotspotId: "stand-bc-4",
@@ -119,10 +142,10 @@ export const BIOCITY_STANDS: readonly PartnerStand[] = [
   },
   {
     id: "bc-5",
-    rank: 4,
+    rank: 5,
     venue: "biocity",
     area: PARTNER_CORNER,
-    location: "Third in the partner row",
+    location: "Fourth in the partner row",
     visibility: "In the partner row, facing the build hall's walkway.",
     partnerId: "csc-lumi",
     hotspotId: "stand-bc-5",
@@ -130,10 +153,10 @@ export const BIOCITY_STANDS: readonly PartnerStand[] = [
   },
   {
     id: "bc-6",
-    rank: 5,
+    rank: 6,
     venue: "biocity",
     area: PARTNER_CORNER,
-    location: "Fourth in the partner row, at the corner's east wall",
+    location: "Fifth in the partner row, at the corner's east wall",
     visibility: "In the partner row, facing the build hall's walkway.",
     partnerId: "mlh",
     hotspotId: "stand-bc-6",

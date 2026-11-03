@@ -3,7 +3,7 @@ import { CompanyLogo } from "./CompanyLogo";
 import { VenueExplorer } from "./maps/VenueExplorer";
 
 /**
- * BioCity visibility / tech partner stands — five, all in the partner corner of
+ * BioCity visibility / tech partner stands — six, all in the partner corner of
  * the main lobby — ranked by visibility, each with the partner and its role. The
  * map rings the corner once (the stands are too close together for a ring each).
  */
@@ -57,8 +57,8 @@ export function StandPlan() {
         })}
       </ol>
       <p className="text-xs text-white/55 leading-relaxed">
-        All five stands are together in the partner corner at the south-east end of BioCity&rsquo;s main lobby, by the
-        passage to Joki: a row of four facing the walkway and one facing the build hall. Those in the row are planned at
+        All six stands are together in the partner corner at the south-east end of BioCity&rsquo;s main lobby, by the
+        passage to Joki: a row of five facing the walkway and one facing the build hall. Those in the row are planned at
         about 1.6 × 1.0 m. The layout is provisional until the venue approves it, and footprints are confirmed at setup so that
         walkways, the side door and exit routes stay clear.
       </p>

@@ -664,8 +664,8 @@ z 34.4…36.3), EduCity gateway lift (street −1.55 → 3.40, near (196.9,76.8)
   | bc-2 Solita (rank 2, lobby E end at the Joki passage) | (26.35, −2.81) | (10.44, 32.63) | clear; face the lobby (−x) |
   | bc-3 open (W side of the event entrance) | (−6.40, −31.39) | (15.17, −10.57) | mirror of bc-1: **B (−6.4, −31.75)** → (15.47,−10.78); double column (−6.04/−5.65) behind |
   | bc-4 open (lobby W end) | (−24.46, −3.62) | (−17.94, −9.52) | **inside the reserved restaurant terrace** — render as "open stand" marker only; organiser to resolve |
-- **Partner corner, five stands (organiser 2 Nov 2026) [D]:** bc-1 is gone: Red Hat needs no booth and no further visibility partner is coming. The others stay where planned below and rank Solita 1, Pruna AI 2, BearingPoint 3, CSC / LUMI AI Factory 4, MLH 5, so ids no longer match ranks.
-- **Partner corner, six stands (organiser 13 Oct 2026, superseded) [D]:** the table above records the original research positions.
+- **Partner corner, six stands (organiser 13 Oct 2026; Red Hat back at bc-1 3 Nov 2026) [D]:** from 2 to 3 Nov 2026 the plan held five (Red Hat first needed no booth); Red Hat now stands at bc-1 again, and ids match ranks: Red Hat 1, Solita 2, Pruna AI 3, BearingPoint 4, CSC / LUMI AI Factory 5, MLH 6.
+- **Partner corner, six stands (organiser 13 Oct 2026) [D]:** the table above records the original research positions.
   The plan in use is `biocity/plan.ts` `STANDS`: a row of five at z −7.1 facing the walkway to Joki — bc-1 Red Hat
   x 21.93, bc-3 Pruna AI 23.69, bc-4 BearingPoint 25.45, bc-5 CSC / LUMI AI Factory 27.21, bc-6 MLH 28.97, each
   **1.56 × 1.0 m** (a 1.6 m table + roll-up), 0.2 m apart, spanning x 21.15…29.75 exactly as the earlier row of four

@@ -208,8 +208,8 @@ describe("targets", () => {
       expect(t).toMatchObject({ place: "biocity", kind: "stand" });
       expect(t.label).toBe(`Stand ${s.rank} · ${getStandPartner(s).name}`);
     }
-    expect(getTarget3D("bc-1")).toBeUndefined();
-    expect(getTarget3D("bc-2")!.label).toBe("Stand 1 · Solita");
+    expect(getTarget3D("bc-1")!.label).toBe("Stand 1 · Red Hat");
+    expect(getTarget3D("bc-2")!.label).toBe("Stand 2 · Solita");
   });
 
   it("include the entrances people actually use, with the corrected facts", () => {
@@ -495,8 +495,7 @@ describe("time presets", () => {
 
 describe("deep links", () => {
   it("normalise partners to their stands and ignore case", () => {
-    // Red Hat has no booth (21 Oct 2026): its id is no longer a stand.
-    expect(normaliseTarget("red-hat")).toBeNull();
+    expect(normaliseTarget("red-hat")).toBe("bc-1");
     expect(normaliseTarget("solita")).toBe("bc-2");
     expect(normaliseTarget("Solita")).toBe("bc-2");
     expect(normaliseTarget(" ELISA ")).toBe("elisa");
@@ -566,8 +565,8 @@ describe("copy", () => {
   it("names the companies and stands from the shared data", () => {
     for (const c of CHALLENGE_COMPANIES) expect(corpus).toContain(c.name);
     expect(getPlace3D("joki").alt).toContain("Meyer Turku, DNA, Apetit, Elisa, Turku Energia and Bayer");
-    expect(getPlace3D("biocity").alt).toContain("Solita's stand (Stand 1)");
-    expect(getPlace3D("biocity").alt).not.toContain("Red Hat");
+    expect(getPlace3D("biocity").alt).toContain("Red Hat's stand (Stand 1)");
+    expect(getPlace3D("biocity").alt).toContain("Solita's stand (Stand 2)");
   });
 
   it("credits the open data", () => {
