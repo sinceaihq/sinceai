@@ -130,7 +130,6 @@ test.describe("public site", () => {
     await expect(cards.nth(5)).toContainText("Matyas Karel Stoch");
     await expect(cards.nth(5)).toContainText("Founding Engineer");
     await expect(cards.nth(5)).toContainText("Cloudroom");
-    await expect(cards.nth(5).getByRole("link")).toHaveCount(0);
     await expect(panel).not.toContainText("Judge to be announced");
     for (const name of [/Sarita Runeberg/, /Niko Elers/, /Tuomas Mäkilä/, /Rasmus Harmaala/, /Chandra Challagonda/, /Matyas Karel Stoch/]) {
       const portrait = panel.getByRole("img", { name });
@@ -155,6 +154,11 @@ test.describe("public site", () => {
     await expect(panel.getByRole("link", { name: /Chandra Challagonda on LinkedIn/ })).toHaveAttribute(
       "href",
       "https://www.linkedin.com/in/challagonda/",
+    );
+    await expect(panel.getByRole("link", { name: /^Cloudroom/ })).toHaveAttribute("href", "https://www.cloudroom.dev/");
+    await expect(panel.getByRole("link", { name: /Matyas Karel Stoch on LinkedIn/ })).toHaveAttribute(
+      "href",
+      "https://www.linkedin.com/in/matyas-stoch-a77328389/",
     );
     expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
     const boxes = await cards.evaluateAll((els) =>

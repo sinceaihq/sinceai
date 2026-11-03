@@ -62,18 +62,15 @@ describe("Judges", () => {
       "href",
       "https://www.linkedin.com/in/challagonda/",
     );
+    expect(screen.getByRole("link", { name: /^Cloudroom/ })).toHaveAttribute("href", "https://www.cloudroom.dev/");
+    expect(screen.getByRole("link", { name: "Matyas Karel Stoch on LinkedIn (opens in a new tab)" })).toHaveAttribute(
+      "href",
+      "https://www.linkedin.com/in/matyas-stoch-a77328389/",
+    );
     for (const link of screen.getAllByRole("link")) {
       expect(link).toHaveAttribute("target", "_blank");
       expect(link).toHaveAttribute("rel", "noopener noreferrer");
     }
-  });
-
-  it("names Cloudroom without inventing a company link or profile for Matyas Karel Stoch", () => {
-    render(<Judges />);
-    const card = screen.getByRole("heading", { name: "Matyas Karel Stoch" }).closest("li")!;
-    expect(within(card).getByText("Cloudroom")).toBeInTheDocument();
-    expect(within(card).queryByRole("link")).not.toBeInTheDocument();
-    expect(card).not.toHaveTextContent("@");
   });
 
   it("lays six cards out in even rows, with no lone card", () => {

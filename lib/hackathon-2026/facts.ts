@@ -76,8 +76,8 @@ export const EVENT_2026 = {
     end: "2026-11-08T15:30:00+02:00",
   },
   /** Bump when operational content changes. */
-  lastUpdated: "2026-11-02",
-  lastUpdatedLabel: "2 Nov 2026",
+  lastUpdated: "2026-11-03",
+  lastUpdatedLabel: "3 Nov 2026",
 } as const;
 
 /** Verified public links. App paths were checked against sinceai.app on 3 Oct 2026. */

@@ -680,7 +680,10 @@ test.describe("Wi-Fi", () => {
     await expect(page).toHaveURL(/#wifi$/);
     await expect(page.locator("#wifi-title")).toBeInViewport();
     await expect(page.locator('#wifi [data-wifi="educity"]')).toContainText("TUAS Guest");
-    await expect(page.locator('#wifi [data-wifi="build-spaces"]')).toContainText("Instructions to be confirmed");
+    await expect(page.locator('#wifi [data-wifi="build-spaces"]')).toContainText("Hackathon");
+    await expect(page.locator('#wifi [data-wifi="build-spaces"]')).toContainText(
+      "Available at check-in and in the Since AI participant app.",
+    );
   });
 
   test("the builder FAQ answer links to the instructions on the same page", async ({ page }) => {

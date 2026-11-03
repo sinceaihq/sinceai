@@ -11,11 +11,14 @@ describe("event Wi-Fi", () => {
     expect(WIFI.educity.when).toBe("Friday opening and Sunday finals");
   });
 
-  it("publishes no network name, password or portal for BioCity and Joki until confirmed", () => {
-    const text = JSON.stringify(WIFI.buildSpaces);
-    expect(text).toMatch(/once they are confirmed/);
-    expect(text).not.toMatch(/password|SSID|login:|portal|“|"[A-Z][\w-]+ ?(Guest|WiFi|Wi-Fi)"/i);
+  it("names the Hackathon network at BioCity and Joki and says where to get the password", () => {
+    expect(WIFI.title).toBe("Wi-Fi & Internet");
+    expect(WIFI.answer).toBe("Free Wi-Fi is available for hackathon participants at the event venues.");
     expect(WIFI.buildSpaces.title).toBe("BioCity & Visitor Center Joki");
+    expect(WIFI.buildSpaces.network).toBe("Hackathon");
+    // This is all the public guide says about the password: its value stays out of this repository.
+    expect(WIFI.buildSpaces.password).toBe("Available at check-in and in the Since AI participant app.");
+    expect(WIFI.problems).toBe("If you experience connectivity issues, please contact our on-site support team.");
   });
 
   it("promises no speed or uninterrupted service, and forbids testing the networks", () => {

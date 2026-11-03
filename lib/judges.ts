@@ -27,9 +27,8 @@ export interface Judge {
   name: string;
   title: string;
   organization: string;
-  /** Only a verified site; without one, the card names the organisation as plain text. */
-  organizationUrl?: string;
-  /** Verified professional profiles, shown in this order; none until one is verified. */
+  organizationUrl: string;
+  /** Verified professional profiles, shown in this order. */
   profiles: JudgeProfile[];
   /** One or two sentences, no credentials beyond what the judge's organisation states. */
   bio: string;
@@ -122,11 +121,11 @@ export const judges: Judge[] = [
   },
   {
     name: "Matyas Karel Stoch",
-    // Title and bio approved by the organiser (2 Nov 2026). No company URL or profile is verified yet,
-    // so none is shown. The only judge from Cloudroom, which is not a sponsor.
+    // Title, bio and links from the organiser (2 Nov 2026). The only judge from Cloudroom, which is not a sponsor.
     title: "Founding Engineer",
     organization: "Cloudroom",
-    profiles: [],
+    organizationUrl: "https://www.cloudroom.dev/",
+    profiles: [{ kind: "linkedin", url: "https://www.linkedin.com/in/matyas-stoch-a77328389/" }],
     bio: "Founding Engineer at Cloudroom, a platform for AI coding agents. Matyas brings hands-on engineering experience with AI-powered developer tools to the Since AI Hackathon 2026 jury.",
     // Photo supplied by Cloudroom for the judges page; the original is matyas-karel-stoch.png,
     // converted to an 800x800 WebP without other changes.

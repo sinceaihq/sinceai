@@ -1,18 +1,18 @@
 /**
  * Event Wi-Fi — Since AI Hackathon 2026.
  *
+ * BioCity and Joki: the event network and how to get its password (organiser,
+ * 3 Nov 2026). The password itself never goes in this public repository.
  * EduCity: Turku UAS' own visitor network, TUAS Guest ("Register in a browser
  * with your email address", turkuamk.fi campuses page) and eduroam (Turku UAS
- * IT services page), both checked 25 Oct 2026. BioCity and Joki: the event
- * network is being prepared with the venue's network operator (organiser,
- * 26 Oct 2026) — no network name or login is published until it is confirmed.
+ * IT services page), both checked 25 Oct 2026.
  */
 
 export const WIFI_ANCHOR = "wifi";
 
 export const WIFI = {
-  question: "Is free Wi-Fi available at the event?",
-  answer: "Yes — free Wi-Fi is arranged for participants at the event venues. How you connect depends on the venue.",
+  title: "Wi-Fi & Internet",
+  answer: "Free Wi-Fi is available for hackathon participants at the event venues.",
   educity: {
     title: "EduCity",
     when: "Friday opening and Sunday finals",
@@ -29,10 +29,10 @@ export const WIFI = {
   buildSpaces: {
     title: "BioCity & Visitor Center Joki",
     when: "The main build spaces",
+    network: "Hackathon",
+    password: "Available at check-in and in the Since AI participant app.",
     // Not yet load-tested for the expected numbers (organiser, 26 Oct 2026): no capacity claim until it is.
-    text: "Event Wi-Fi for the weekend is being prepared with the venue's network operator. Network capacity is shared, so download what you need before you arrive.",
-    pending:
-      "The network name and connection instructions will come from event staff and the official event channels once they are confirmed.",
+    text: "Network capacity is shared, so download what you need before you arrive.",
   },
   beforeArriving: [
     "Download your programming tools, dependencies, container images and AI models in advance.",
@@ -41,8 +41,7 @@ export const WIFI = {
     "Network capacity is shared — avoid large downloads at peak times.",
     "Do not scan, attack or run unauthorised security tests on the venue networks.",
   ],
-  problems:
-    "Ask an event volunteer or Since AI staff. They direct your issue to the right venue or technical support contact.",
+  problems: "If you experience connectivity issues, please contact our on-site support team.",
   links: [
     { label: "Turku UAS visitor Wi-Fi", href: "https://www.turkuamk.fi/en/about-us/campuses/" },
     { label: "eduroam setup", href: "https://www.turkuamk.fi/en/about-us/contact-us/it-services/" },
