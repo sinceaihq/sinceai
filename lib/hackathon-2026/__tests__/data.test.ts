@@ -132,7 +132,7 @@ describe("canonical event facts", () => {
     const summaries = getScheduleItem("thu-challenge-summaries");
     expect(summaries.start).toBe("2026-11-05T15:00:00+02:00");
     expect(summaries.detail).toMatch(/Public-safe summaries/);
-    expect(summaries.detail).toMatch(/top three teams €2,000, €750 and €250.*FORCIT Group's Drill and Blast Cycle Intelligence: €2,500, €1,000 and €500/);
+    expect(summaries.detail).toMatch(/top three teams €2,000, €750 and €250.*FORCIT Group's Drill and Blast Cycle Intelligence: €3,000, €1,500 and €500/);
     const mlh = getScheduleItem("fri-mlh-intro");
     expect([formatTime(mlh.start), formatTime(mlh.end!)]).toEqual(["16:45", "16:55"]);
     expect(mlh.title).toBe("Major League Hacking: Introduction & Hacker Resources");

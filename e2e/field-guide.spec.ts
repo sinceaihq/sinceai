@@ -113,7 +113,7 @@ test.describe("content", () => {
     const nda = page.locator("#company-forcit-group").getByRole("link", { name: /NDA required.*paper NDA/ });
     await expect(nda).toHaveAttribute("href", `${GUIDE}/resources#confidential`);
     await expect(page.locator("#selection [data-challenge-prizes]")).toContainText("€2,000 · €750 · €250");
-    await expect(page.locator("#selection [data-challenge-prizes]")).toContainText("€2,500 · €1,000 · €500");
+    await expect(page.locator("#selection [data-challenge-prizes]")).toContainText("€3,000 · €1,500 · €500");
     await expect(page.locator("main")).not.toContainText("same cash prize");
   });
 
@@ -201,7 +201,7 @@ test.describe("content", () => {
     const prizes = page.locator("#rules [data-challenge-prizes]");
     await expect(prizes).toContainText("All other company challenges");
     await expect(prizes).toContainText("€2,000 · €750 · €250");
-    await expect(prizes).toContainText("FORCIT Group — Drill and Blast Cycle Intelligence (€4,000 prize pot)");
+    await expect(prizes).toContainText("FORCIT Group — Drill and Blast Cycle Intelligence (€5,000 prize pot)");
     await expect(prizes).not.toContainText("To be confirmed in writing");
     await expect(page.locator("#rules")).toContainText("Mark team as ready");
     await expect(page.locator("#rules")).toContainText("Thu 5 Nov · 15:00");
@@ -643,6 +643,9 @@ test.describe("Builder Resources", () => {
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
     await expect(page.locator("[data-confidential-rules] li")).toHaveCount(5);
+    // FORCIT: paper NDA at its Friday briefing, then FORCIT's own API access (never published credentials).
+    await expect(page.locator("[data-confidential-rules]")).toContainText("NDA on paper with a FORCIT representative during its challenge briefing on Friday");
+    await expect(page.locator("[data-confidential-rules]")).toContainText("Only after FORCIT has accepted your NDA does it give you personal credentials");
     const main = await page.locator("main").innerText();
     expect(main).not.toMatch(/@fiware\.org|@seamware|@joinedcontext|@indoorsos|\+358/);
   });
