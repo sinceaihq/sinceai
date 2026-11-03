@@ -546,10 +546,10 @@ test.describe("Builder Resources", () => {
     await expect(page.locator("[data-stand-partner]")).toHaveCount(5);
     await expect(page.locator('[data-stand-partner="red-hat"]')).toHaveCount(0);
     await expect(page.locator("[data-mlh-note]")).toContainText("2027 Season Member Event");
-    // Logos load.
+    // Logos load. They are lazy, so wait for each one after scrolling to it instead of reading it at once.
     for (const img of await page.locator("[data-resource] img").all()) {
       await img.scrollIntoViewIfNeeded();
-      expect(await img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
+      await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
     }
   });
 
