@@ -453,7 +453,8 @@ test.describe("CSC / LUMI computing resources", () => {
 
 test.describe("Build & submit (builder guide)", () => {
   test("the nav chip leads to the AI policy and the submission guide, visible without expanding anything", async ({ page }) => {
-    await page.goto(`${GUIDE}/builders`);
+    // Let the page hydrate first: on a busy machine a click before that loses its #hash to the router's initial URL.
+    await page.goto(`${GUIDE}/builders`, { waitUntil: "networkidle" });
     await page.getByRole("navigation", { name: "On this page" }).getByRole("link", { name: "Build & submit" }).click();
     await expect(page).toHaveURL(/#building$/);
     await expect(page.locator("#building-title")).toBeInViewport();
@@ -778,9 +779,9 @@ test.describe("venue explorer", () => {
     const locations = page.locator("#locations");
     await expect(locations).toContainText("1001 Dromberg");
     await expect(locations).toContainText("Company Lounge");
-    await expect(locations).not.toContainText("Red Hat");
-    await expect(locations).toContainText("Stand 1 · Solita");
-    await expect(locations).toContainText("Stand 5 · Major League Hacking");
+    await expect(locations).toContainText("Stand 1 · Red Hat");
+    await expect(locations).toContainText("Stand 2 · Solita");
+    await expect(locations).toContainText("Stand 6 · Major League Hacking");
     await expect(locations).toContainText("Team Check + card return");
     await expect(locations).toContainText("3027");
   });
