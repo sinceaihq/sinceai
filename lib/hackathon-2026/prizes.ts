@@ -2,14 +2,15 @@
  * Company challenge prizes — Since AI Hackathon 2026. The one place to change
  * a prize amount; every sentence about the company prizes is built from it.
  *
- * Organiser, 1 Nov 2026:
- * - Every other company challenge awards its top three teams €2,000, €750 and €250.
- * - FORCIT Group's Drill and Blast Cycle Intelligence is the one exception: a
- *   €4,000 prize pot split €2,500 / €1,000 / €500. This supersedes the
- *   €3,000 / €1,500 / €500 split published on 28 Oct 2026.
- * - The overall winner separately receives €5,000, never counted in a company's awards.
+ * Organiser, 1 Nov 2026: every other company challenge awards its top three
+ * teams €2,000, €750 and €250, and the overall winner separately receives
+ * €5,000, never counted in a company's awards.
  *
- * 14 × €3,000 + €4,000 + €5,000 = €51,000 in these cash prizes, which is why
+ * Organiser, 3 Nov 2026: FORCIT Group's Drill and Blast Cycle Intelligence is
+ * the one exception — a €5,000 cash prize pot split €3,000 / €1,500 / €500.
+ * This supersedes the €4,000 (€2,500 / €1,000 / €500) published on 1 Nov 2026.
+ *
+ * 14 × €3,000 + €5,000 + €5,000 = €52,000 in these cash prizes, which is why
  * the marketing says "€50,000+": it never adds in-kind technology awards.
  */
 
@@ -36,7 +37,7 @@ export const CHALLENGE_PRIZE_EXCEPTIONS: readonly PrizeException[] = [
     companyId: "forcit-group",
     company: "FORCIT Group",
     challenge: "Drill and Blast Cycle Intelligence",
-    prizes: { first: 2_500, second: 1_000, third: 500 },
+    prizes: { first: 3_000, second: 1_500, third: 500 },
     confirmation: "confirmed",
   },
 ];

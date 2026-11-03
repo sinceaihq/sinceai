@@ -39,27 +39,28 @@ describe("company challenge prizes", () => {
     expect(prizesFor("valmet")).toEqual({ prizes: STANDARD_CHALLENGE_PRIZES });
   });
 
-  it("gives FORCIT Group a €4,000 pot split €2,500 / €1,000 / €500 — not added on top of the standard prizes", () => {
+  it("gives FORCIT Group a €5,000 pot split €3,000 / €1,500 / €500 — not added on top of the standard prizes", () => {
     const forcit = prizesFor("forcit-group");
-    expect(forcit.prizes).toEqual({ first: 2_500, second: 1_000, third: 500 });
-    expect(prizeTotal(forcit.prizes)).toBe(4_000);
+    expect(forcit.prizes).toEqual({ first: 3_000, second: 1_500, third: 500 });
+    expect(prizeTotal(forcit.prizes)).toBe(5_000);
     expect(forcit.exception?.challenge).toBe("Drill and Blast Cycle Intelligence");
     expect(CHALLENGE_COMPANIES.some((c) => c.id === "forcit-group" && c.name === "FORCIT Group")).toBe(true);
   });
 
-  it("adds up to €51,000 in company and overall prizes, which the site calls €50,000+", () => {
+  it("adds up to €52,000 in company and overall prizes, which the site calls €50,000+", () => {
     const companies = CHALLENGE_COMPANIES.reduce((sum, c) => sum + prizeTotal(prizesFor(c.id).prizes), 0);
-    expect(companies).toBe(14 * 3_000 + 4_000);
-    expect(companies + OVERALL_WINNER_PRIZE).toBe(51_000);
+    expect(companies).toBe(14 * 3_000 + 5_000);
+    expect(companies + OVERALL_WINNER_PRIZE).toBe(52_000);
     expect(OVERALL_WINNER_STATEMENT).toContain("€5,000");
     expect(CHALLENGE_PRIZES_STATEMENT).not.toContain("overall");
   });
 
-  it("publishes FORCIT's €4,000 split without a pending note", () => {
+  it("publishes FORCIT's €5,000 split without a pending note", () => {
     expect(CHALLENGE_PRIZE_EXCEPTIONS.map((e) => e.confirmation)).toEqual(["confirmed"]);
-    expect(prizeLine("forcit-group")).toBe("€2,500 / €1,000 / €500");
+    expect(prizeLine("forcit-group")).toBe("€3,000 / €1,500 / €500");
     expect(prizeLine("valmet")).toBe("€2,000 / €750 / €250");
-    expect(CHALLENGE_PRIZES_STATEMENT).toMatch(/€4,000 prize pot\./);
+    expect(CHALLENGE_PRIZES_STATEMENT).toMatch(/€5,000 prize pot\./);
+    expect(CHALLENGE_PRIZES_STATEMENT).not.toMatch(/€4,000|€2,500/);
     expect(CHALLENGE_PRIZES_STATEMENT).not.toMatch(/to be confirmed/i);
     expect(CHALLENGE_PRIZES_STATEMENT).not.toMatch(/same|contract|guarantee/i);
   });
@@ -188,11 +189,13 @@ describe("voting, finalists and confidential challenges", () => {
     expect(text(VOTING)).not.toMatch(/disqualif|penalt|banned/i);
   });
 
-  it("explains FORCIT's paper NDA, verification and public-safe summary", () => {
+  it("explains FORCIT's paper NDA at its briefing, its own API access, and the public-safe summary", () => {
     const rules = text(CONFIDENTIAL_RULES);
-    expect(rules).toMatch(/paper NDA forms/);
-    expect(rules).toMatch(/only after event staff have verified/);
-    expect(rules).toMatch(/controlled system/);
+    expect(rules).toMatch(/NDA on paper with a FORCIT representative during its challenge briefing on Friday, before any access/);
+    expect(rules).toMatch(/once event staff have recorded their signed NDA/);
+    expect(rules).toMatch(/Only after FORCIT has accepted your NDA does it give you personal credentials \(username and password\) for FORCIT's own API/);
+    expect(rules).toMatch(/credentials and data never go into code, repositories, Discord/);
+    expect(rules).not.toMatch(/signed on site|controlled system/);
     expect(rules).toMatch(/No restricted data in public GitHub repositories, demo videos/);
     expect(rules).toMatch(/public-safe summary/);
     expect(rules).toMatch(/nothing is signed online/i);

@@ -19,7 +19,7 @@ export const CHALLENGE_PRIZES = CHALLENGE_PRIZES_STATEMENT;
 /** Small label shown beside a company whose challenge requires an NDA (FORCIT Group). */
 export const NDA_LABEL = "NDA required";
 export const NDA_NOTE =
-  "This challenge requires FORCIT's paper NDA, signed on site, before its detailed data is shared. Its Thursday summary is public-safe; choosing the challenge is not signing an NDA.";
+  "This challenge requires FORCIT's paper NDA, signed with a FORCIT representative at its Friday briefing, before any access to its data. Its Thursday summary is public-safe; choosing the challenge is not signing an NDA.";
 
 const t = formatTime;
 

@@ -391,7 +391,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
     {
       q: "Our challenge requires an NDA. What changes?",
-      a: "FORCIT Group's challenge requires FORCIT's paper NDA, signed on site, before its detailed data is shared — every member who receives the data signs, and access opens only after event staff have verified it. Keep restricted data out of public repositories, videos and award evidence, and add a public-safe summary to your submission: that is all voters and the public see.",
+      a: "FORCIT Group's challenge requires FORCIT's paper NDA, signed with a FORCIT representative during its challenge briefing on Friday, before any access to the data — every member who receives the data signs. Only after FORCIT has accepted the NDA does it give personal credentials for FORCIT's own API: never share them, and never put them in code, a repository or Discord. Keep restricted data out of public repositories, videos and award evidence, and add a public-safe summary to your submission: that is all voters and the public see.",
       links: [{ label: "Confidential challenges", href: `${RESOURCES_PATH}#${CONFIDENTIAL_ANCHOR}` }],
     },
     {

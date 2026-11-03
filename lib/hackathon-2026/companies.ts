@@ -96,8 +96,9 @@ export const CHALLENGE_COMPANIES: readonly ChallengeCompany[] = [
     id: "forcit-group",
     name: "FORCIT Group",
     logo: { src: "/assets/sponsors/Forcit-Group.png", width: 500, height: 107 },
-    // FORCIT Group (Oy Forcit Ab): Drill and Blast Cycle Intelligence requires FORCIT's paper NDA, signed on site,
-    // before its detailed data is shared (organiser, 27 Oct 2026) — see confidential.ts. Its prize pot is in prizes.ts.
+    // FORCIT Group (Oy Forcit Ab): Drill and Blast Cycle Intelligence requires FORCIT's paper NDA, signed during its
+    // Friday briefing, before FORCIT gives API access (organiser, 27 Oct and 3 Nov 2026) — see confidential.ts. Its
+    // €5,000 prize pot is in prizes.ts.
     ndaRequired: true,
     briefing: { venue: "educity", floor: 2, room: "2003", roomName: "Erik" },
     qa: { venue: "joki", floor: 3, zone: "Floor 3" },
