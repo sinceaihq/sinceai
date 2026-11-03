@@ -210,6 +210,7 @@ describe("targets", () => {
     }
     expect(getTarget3D("bc-1")!.label).toBe("Stand 1 · Red Hat");
     expect(getTarget3D("bc-2")!.label).toBe("Stand 2 · Solita");
+    expect(getTarget3D("bc-7")!.label).toBe("Stand 7 · FIWARE");
   });
 
   it("include the entrances people actually use, with the corrected facts", () => {
@@ -497,6 +498,7 @@ describe("deep links", () => {
   it("normalise partners to their stands and ignore case", () => {
     expect(normaliseTarget("red-hat")).toBe("bc-1");
     expect(normaliseTarget("solita")).toBe("bc-2");
+    expect(normaliseTarget("fiware")).toBe("bc-7");
     expect(normaliseTarget("Solita")).toBe("bc-2");
     expect(normaliseTarget(" ELISA ")).toBe("elisa");
     expect(normaliseTarget("BC-3")).toBe("bc-3");
@@ -567,6 +569,7 @@ describe("copy", () => {
     expect(getPlace3D("joki").alt).toContain("Meyer Turku, DNA, Apetit, Elisa, Turku Energia and Bayer");
     expect(getPlace3D("biocity").alt).toContain("Red Hat's stand (Stand 1)");
     expect(getPlace3D("biocity").alt).toContain("Solita's stand (Stand 2)");
+    expect(getPlace3D("biocity").alt).toContain("FIWARE's stand (Stand 7)");
   });
 
   it("credits the open data", () => {

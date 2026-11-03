@@ -357,7 +357,7 @@ export const FIWARE_AWARD: TechnologyAward & {
     // conflict of interest (FIWARE to the organiser, 2 Nov 2026).
     "Chandra Challagonda, CEO of FIWARE Foundation, is the sole evaluator of this award and evaluates the eligible entries on Sunday 8 November. The award is announced at the closing ceremony.",
   questions: {
-    text: "Ask Jason Fox, the FIWARE technical mentor, on site at EduCity all three days — or the FIWARE mentors on the Since AI Discord.",
+    text: "Ask Jason Fox, the FIWARE technical mentor, on site at EduCity all three days, visit FIWARE's stand in BioCity's partner corner — or ask the FIWARE mentors on the Since AI Discord.",
     link: { label: "Since AI Discord", href: GUIDE_LINKS.discord },
   },
   mentor:
@@ -449,7 +449,7 @@ export const AWARDS_AT_A_GLANCE: readonly AwardGlanceRow[] = [
     win: "A non-cash prize package from FIWARE Foundation.",
     enter: "Under optional awards in sinceai.app: the same project (route A) or a separate prototype (route B).",
     decided: "Evaluated on Sunday 8 November during judging; announced at the closing ceremony.",
-    ask: "Jason Fox on site at EduCity, and the Since AI Discord.",
+    ask: "Jason Fox on site at EduCity, FIWARE's stand in BioCity's partner corner, and the Since AI Discord.",
   },
 ];
 

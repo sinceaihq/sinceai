@@ -71,7 +71,7 @@ export const HACKATHON_2026_PARTNERS = {
   /** Short form for metadata and one-liners. */
   challengePartnersShort: "Valmet, Bayer, Elisa, Meyer Turku, DNA, Traficom and more",
   /** Visibility / technology partners (not challenge partners). */
-  visibilityPartners: ["Solita", "Red Hat", "BearingPoint", "Pruna AI", "CSC / LUMI AI Factory", "Major League Hacking"],
+  visibilityPartners: ["Solita", "Red Hat", "BearingPoint", "Pruna AI", "CSC / LUMI AI Factory", "Major League Hacking", "FIWARE"],
   /** The one statement on company challenge prizes — built from lib/hackathon-2026/prizes. */
   prizes: CHALLENGE_PRIZES_STATEMENT,
   /** Keynote speaker. */

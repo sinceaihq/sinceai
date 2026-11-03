@@ -515,9 +515,10 @@ export function targetsForPlace(place: PlaceId): Target3D[] {
 // ── Walking routes ───────────────────────────────────────────────────────────
 
 const stand2 = standById("bc-2");
+const stand7 = standById("bc-7");
 /** "Red Hat's stand (Stand 1), …and Major League Hacking's stand (Stand 6) are in the row by the corridor to the meals." */
 function partnerRowSentence(): string {
-  const row = BIOCITY_STANDS.filter((s) => s.id !== "bc-2").map(standMention);
+  const row = BIOCITY_STANDS.filter((s) => s.id !== stand2.id && s.id !== stand7.id).map(standMention);
   return `${row.slice(0, -1).join(", ")} and ${row.at(-1)} are in the row by the corridor to the meals.`;
 }
 const MAIN_STAIRS = "climb the wide outdoor stairs at its east corner (about 30 steps)";
@@ -724,7 +725,7 @@ export const TOURS_3D: readonly Tour3D[] = [
         "Central walkway",
       ),
       step(
-        `The partner corner is on your left before the passage to Joki: ${partnerRowSentence()} ${standMention(stand2)} faces the hall by the walkway.`,
+        `The partner corner is on your left before the passage to Joki: ${partnerRowSentence()} ${standMention(stand2)} faces the hall by the walkway, and ${standMention(stand7)} is behind it, facing the walkway to Joki.`,
         [9.67, 29.45],
         "Partner corner",
       ),
@@ -1067,7 +1068,7 @@ export function placeForTarget(id: string | null | undefined): PlaceId {
 
 /**
  * Normalise a deep-link target to a known target id: case-insensitive;
- * partner ids map to their stand (solita → bc-2, mlh → bc-6) and room
+ * partner ids map to their stand (solita → bc-2, fiware → bc-7) and room
  * numbers to the company's room (room-1002 → room-bayer). Unknown → null.
  */
 export function normaliseTarget(id: string | null | undefined): string | null {

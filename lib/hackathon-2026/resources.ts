@@ -20,7 +20,8 @@ import { GUIDE_BASE_PATH } from "./facts";
  *   until the organiser confirms it.
  * - FIWARE: technology partner and provider of the FIWARE Open Innovation
  *   Award; its Builder Pack (Oct 2026) grants publication of its technical
- *   resources — see awards.ts. Red Hat's OpenShift AI Technology Award and the
+ *   resources — see awards.ts. A stand in BioCity's partner corner after all
+ *   (organiser, 3 Nov 2026); its hours are not published until confirmed. Red Hat's OpenShift AI Technology Award and the
  *   eight MLH categories are there too.
  * - Pruna AI: shared hackathon API key and help on Discord (Pruna's public
  *   onepager). The key is never reproduced here.
@@ -235,7 +236,7 @@ export const PARTNER_RESOURCES: readonly PartnerResource[] = [
     getStarted: { label: "FIWARE builder resources", href: "#fiware" },
     docs: { label: "Step-by-step tutorials", href: "https://fiware-tutorials.readthedocs.io/en/latest/" },
     access: "Open source — free to use, no event code needed.",
-    help: "Jason Fox, FIWARE's primary technical mentor, is on site all three days; FIWARE's mentors also answer on the Since AI Discord.",
+    help: "A FIWARE stand is planned in BioCity's partner corner. Jason Fox, FIWARE's primary technical mentor, is on site all three days, and FIWARE's mentors also answer on the Since AI Discord.",
     award: "FIWARE Open Innovation Award",
   },
   {

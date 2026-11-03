@@ -27,6 +27,8 @@ const STAND_CAMERAS: Record<string, { p: V3; t: V3; open: boolean }> = {
   "bc-5": rowCamera(27.21),
   "bc-6": rowCamera(28.97),
   "bc-2": { p: [16.4, 6.4, -1.2], t: [26.2, 1.1, -2.7], open: true },
+  // FIWARE: from over the walkway to Joki, south-west of the stand, past Solita's side.
+  "bc-7": { p: [25.9, 6.0, 2.8], t: [28.4, 1.4, -4.4], open: true },
 };
 
 function standView(id: string): CameraView {
@@ -65,8 +67,8 @@ export const BIOCITY_VIEWS: Record<string, CameraView> = {
     labels: true,
     open: OPEN,
   },
-  // The partner corner: all six stands from over the build hall's east end, the walkway to
-  // Joki in front of them (roof lifted).
+  // The partner corner: all seven stands from over the build hall's east end (FIWARE's behind Solita's,
+  // its label above), the walkway to Joki in front of them (roof lifted).
   "biocity:stands": {
     ...pose([13.2, 11.5, 4.2], [25.6, 0.6, -4.6]),
     hfov: 62,

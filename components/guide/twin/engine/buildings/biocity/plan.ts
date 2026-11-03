@@ -502,6 +502,11 @@ export interface StandPose {
  * (z ≥ −1.3), the side door in the east wall (z −3.58…−2.67) and the column at (24.16, −4.95), which
  * stands in the row's visitor zone in front of stand 3. Footprints are provisional until the venue
  * approves the layout [D].
+ *
+ * FIWARE's stand (organiser, 3 Nov 2026), the seventh and the same 1.56 × 1.0 m, takes the free floor
+ * between Solita's back and the east wall, facing the walkway to Joki: 0.64 m off Solita's back wall,
+ * 1.65 m clear in front of the row (the row's visitors), 1.0 m from the east wall and outside the
+ * side door's and the Joki passage's clear zones; its visitors stand between it and the walkway.
  */
 const ROW_Z = -7.1;
 /** Stand width along the row (m). */
@@ -510,8 +515,9 @@ const ROW: { id: string; x: number; labelY: number; walk: V2 }[] = [
   { id: "bc-1", x: 21.93, labelY: 3.0, walk: [21.93, -4.4] },
   { id: "bc-3", x: 23.69, labelY: 3.6, walk: [23.2, -4.4] },
   { id: "bc-4", x: 25.45, labelY: 2.6, walk: [25.45, -4.6] },
-  { id: "bc-5", x: 27.21, labelY: 3.2, walk: [27.21, -4.6] },
-  { id: "bc-6", x: 28.97, labelY: 3.8, walk: [28.6, -5.0] },
+  // bc-5 and bc-6: their visitors stand in front of the row, north of FIWARE's stand.
+  { id: "bc-5", x: 27.21, labelY: 3.2, walk: [27.0, -5.6] },
+  { id: "bc-6", x: 28.97, labelY: 3.8, walk: [28.9, -5.6] },
 ];
 
 export const STANDS: StandPose[] = [
@@ -530,6 +536,8 @@ export const STANDS: StandPose[] = [
   ),
   // Solita: the lobby's east end by the Joki passage, facing the build hall (unchanged).
   { id: "bc-2", x: 26.35, z: -2.81, face: [-1, 0], width: 2.0, depth: 1.0, rollup: true },
+  // FIWARE: behind Solita, facing the walkway to Joki (no roll-up: Solita's back wall is on its open side).
+  { id: "bc-7", x: 28.3, z: -4.42, face: [0, 1], width: ROW_STAND_WIDTH, depth: 1.0, rollup: false, labelY: 2.6, walk: [28.3, -2.0] },
 ];
 
 /** Label group of the stand labels: the biocity:stands view shows the group in full (phones too). */

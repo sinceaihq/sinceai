@@ -73,7 +73,7 @@ export interface StandGraphic {
 
 /**
  * The stand graphics in one atlas (back walls and counter fronts share it): a 2 × 2 grid of 1024²
- * tiles for up to four graphics, else a 3-column grid of 682² tiles (six graphics: 2046 × 1364).
+ * tiles for up to four graphics, else a 3-column grid of 682² tiles (six graphics: 2046 × 1364, seven: 2046 × 2046).
  * Logos and lettering stay inside the middle 60 % of a tile's width, so a stand's narrower back wall
  * and counter front can show an undistorted slice of it (fitout.ts `aspectCrop`).
  */

@@ -53,10 +53,11 @@ import {
 
 /**
  * BioCity's event fit-out and signage (SPEC §7.1): the build hall's 56 tables
- * and 280 chairs with laptops and seated builders, the six visibility /
+ * and 280 chairs with laptops and seated builders, the seven visibility /
  * tech partner stands in the partner corner (a row of five facing the walkway to
- * Joki — Red Hat, Pruna AI, BearingPoint, CSC / LUMI AI Factory, MLH — and Solita
- * facing the build hall), Since AI wayfinding totems,
+ * Joki — Red Hat, Pruna AI, BearingPoint, CSC / LUMI AI Factory, MLH — Solita
+ * facing the build hall and FIWARE behind it facing the walkway to Joki), Since AI
+ * wayfinding totems,
  * the Mauno restaurant (tables, chairs, pendants, curtains) and its serving
  * lines, the bistro bar, the info desk, and the building's own lettering
  * (vertical BIOCITY, rooftop SCIENCE PARK, the Tykistökatu "A" door board).
@@ -71,6 +72,7 @@ const STAND_LOGOS_3D: Record<string, string> = {
   bearingpoint: "/assets/guide/3d/logos/bearingpoint.png",
   "csc-lumi": "/assets/guide/3d/logos/csc-lumi.png",
   mlh: "/assets/guide/3d/logos/mlh.png",
+  fiware: "/assets/guide/3d/logos/fiware.png",
 };
 
 /**
@@ -199,7 +201,7 @@ export function buildFitout(b: Buckets, ctx: TwinContext): FitoutResult {
   }
 
   // ── Partner stands (one sign atlas; each stand a pickable group) ──
-  // One tile per partner stand (the atlas holds six).
+  // One tile per partner stand (the atlas holds seven, in a 3 × 3 grid).
   const standOf = (id: string) => {
     const stand = BIOCITY_STANDS.find((x) => x.id === id);
     if (!stand) throw new Error(`biocity: no stand ${id}`);

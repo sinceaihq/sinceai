@@ -665,11 +665,12 @@ z 34.4…36.3), EduCity gateway lift (street −1.55 → 3.40, near (196.9,76.8)
   | bc-3 open (W side of the event entrance) | (−6.40, −31.39) | (15.17, −10.57) | mirror of bc-1: **B (−6.4, −31.75)** → (15.47,−10.78); double column (−6.04/−5.65) behind |
   | bc-4 open (lobby W end) | (−24.46, −3.62) | (−17.94, −9.52) | **inside the reserved restaurant terrace** — render as "open stand" marker only; organiser to resolve |
 - **Partner corner, six stands (organiser 13 Oct 2026; Red Hat back at bc-1 3 Nov 2026) [D]:** from 2 to 3 Nov 2026 the plan held five (Red Hat first needed no booth); Red Hat now stands at bc-1 again, and ids match ranks: Red Hat 1, Solita 2, Pruna AI 3, BearingPoint 4, CSC / LUMI AI Factory 5, MLH 6.
+- **Partner corner, seventh stand: FIWARE (organiser 3 Nov 2026) [D]:** bc-7 at (28.3, −4.42), 1.56 × 1.0 m, facing the walkway to Joki (+z), on the free floor between Solita's back wall (x 26.85, 0.67 m) and the east wall (x 30.1, 1.02 m). It keeps 1.68 m clear in front of the row (row fronts z −6.6), 2.62 m for its own visitors to the walkway (z −1.3), and stays out of the side door's and the Joki passage's clear zones; no roll-up (Solita is on its open side). The row's "Walk me there" spots for bc-5 and bc-6 moved to z −5.6, in front of the row.
 - **Partner corner, six stands (organiser 13 Oct 2026) [D]:** the table above records the original research positions.
   The plan in use is `biocity/plan.ts` `STANDS`: a row of five at z −7.1 facing the walkway to Joki — bc-1 Red Hat
   x 21.93, bc-3 Pruna AI 23.69, bc-4 BearingPoint 25.45, bc-5 CSC / LUMI AI Factory 27.21, bc-6 MLH 28.97, each
   **1.56 × 1.0 m** (a 1.6 m table + roll-up), 0.2 m apart, spanning x 21.15…29.75 exactly as the earlier row of four
-  2.0 m stands did — plus bc-2 Solita unchanged at (26.35, −2.81) facing the hall. `plan.test.ts` checks every
+  2.0 m stands did — plus bc-2 Solita unchanged at (26.35, −2.81) facing the hall and bc-7 FIWARE behind it. `plan.test.ts` checks every
   clearance (stands ≥ 0.15 m apart, 0.3 m from CAD walls and columns, 0.8 m from the bistro bar, every route ≥ 1 m,
   side door and Joki passage clear). Footprints are provisional until the venue approves the layout.
 - **Supercar recess / pilotis:** §5.
