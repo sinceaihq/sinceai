@@ -94,12 +94,14 @@ describe("builder resources: what each partner's card says", () => {
     expect(r.getStarted.href).toBe("https://developers.redhat.com/developer-sandbox");
     expect(r.benefit).toMatch(/free for 30 days/);
     expect(r.benefit).toMatch(/Set it up before the event/);
-    expect(r.help).toMatch(/supports builders remotely/);
+    // A stand after all (organiser, 3 Nov 2026), plus Discord; no invented hours.
+    expect(r.help).toMatch(/A Red Hat stand is planned in BioCity's partner corner/);
+    expect(r.help).toMatch(/answer on the Since AI Discord/);
     expect(r.help).toMatch(/office hours are announced in the event channels/);
-    // No booth (Red Hat, 21 Oct 2026). The award is named and linked; its terms live in awards.ts only.
+    // The award is named and linked; its terms live in awards.ts only.
     const { award, ...card } = r;
     expect(award).toBe("Red Hat OpenShift AI Technology Award");
-    expect(allText(card)).not.toMatch(/stand|booth|award|prize|€|EUR|1[ ,.]?000/i);
+    expect(allText(card)).not.toMatch(/booth|award|prize|€|EUR|1[ ,.]?000/i);
     expect(allText(r)).not.toMatch(/\d{1,2}:\d{2}/);
   });
 
@@ -181,7 +183,7 @@ describe("developer tools, Google and MLH", () => {
   });
 
   it("shows on-site partners with their registered roles only", () => {
-    expect(STAND_PARTNERS.map((p) => p.id)).toEqual(["solita", "pruna-ai", "bearingpoint", "csc-lumi", "mlh"]);
+    expect(STAND_PARTNERS.map((p) => p.id)).toEqual(["red-hat", "solita", "pruna-ai", "bearingpoint", "csc-lumi", "mlh"]);
   });
 
   it("is in the builders' checklist, with the Red Hat sandbox as an optional step", () => {

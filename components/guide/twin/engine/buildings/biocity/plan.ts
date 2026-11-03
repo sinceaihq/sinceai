@@ -491,13 +491,14 @@ export interface StandPose {
 }
 
 /**
- * The partner corner at the main lobby's south-east end (where Solita's stand was): a row of four
+ * The partner corner at the main lobby's south-east end (where Solita's stand was): a row of five
  * stands along the corner's north-east side, backs 0.9 m off the bistro bar and the corner room,
- * fronts facing the walkway to Joki; Solita in its own position facing the build hall. Each row stand
- * is planned at 1.56 × 1.0 m (a standard 1.6 m table and a roll-up): the row runs x 22.91…29.75 at a
- * 1.76 m pitch (0.2 m between stands). Its western position, x 21.15…22.71, is no longer in use: no
- * further visibility partner is coming (organiser, 2 Nov 2026), and the others stay where planned.
- * Kept clear: the corridor to the meals and the Aulagalleria (route at x 19.9), the walkway to Joki
+ * fronts facing the walkway to Joki; Solita in its own position facing the build hall. Six stands
+ * (organiser, 13 Oct 2026; Red Hat back in its position 3 Nov 2026) fit in the span that held five
+ * by planning each at 1.56 × 1.0 m (a standard 1.6 m table and a roll-up) instead of the earlier
+ * assumed 2.0 m: the row runs x 21.15…29.75 at a 1.76 m pitch (0.2 m between stands). Kept clear:
+ * the corridor to the meals and the Aulagalleria (route at x 19.9; the row starts 1.25 m east of
+ * it), the walkway to Joki
  * (z ≥ −1.3), the side door in the east wall (z −3.58…−2.67) and the column at (24.16, −4.95), which
  * stands in the row's visitor zone in front of stand 3. Footprints are provisional until the venue
  * approves the layout [D].
@@ -506,6 +507,7 @@ const ROW_Z = -7.1;
 /** Stand width along the row (m). */
 export const ROW_STAND_WIDTH = 1.56;
 const ROW: { id: string; x: number; labelY: number; walk: V2 }[] = [
+  { id: "bc-1", x: 21.93, labelY: 3.0, walk: [21.93, -4.4] },
   { id: "bc-3", x: 23.69, labelY: 3.6, walk: [23.2, -4.4] },
   { id: "bc-4", x: 25.45, labelY: 2.6, walk: [25.45, -4.6] },
   { id: "bc-5", x: 27.21, labelY: 3.2, walk: [27.21, -4.6] },

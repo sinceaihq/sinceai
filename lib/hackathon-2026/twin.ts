@@ -121,12 +121,12 @@ const standById = (id: string): PartnerStand => {
   if (!stand) throw new Error(`Unknown BioCity stand: ${id}`);
   return stand;
 };
-/** "Stand 1 · Solita" */
+/** "Stand 2 · Solita" */
 const standLabel = (stand: PartnerStand) => `Stand ${stand.rank} · ${getStandPartner(stand).name}`;
 /** "Aulagalleria, facing the event entrance" */
 const standWhere = (stand: PartnerStand) =>
   `${stand.area}, ${stand.location.charAt(0).toLowerCase()}${stand.location.slice(1)}`;
-/** "Solita's stand (Stand 1)" */
+/** "Solita's stand (Stand 2)" */
 const standMention = (stand: PartnerStand) => `${getStandPartner(stand).name}'s stand (Stand ${stand.rank})`;
 
 const briefings = getScheduleItem("fri-briefings");
@@ -515,7 +515,7 @@ export function targetsForPlace(place: PlaceId): Target3D[] {
 // ── Walking routes ───────────────────────────────────────────────────────────
 
 const stand2 = standById("bc-2");
-/** "Pruna AI's stand (Stand 2), …and Major League Hacking's stand (Stand 5) are in the row by the corridor to the meals." */
+/** "Red Hat's stand (Stand 1), …and Major League Hacking's stand (Stand 6) are in the row by the corridor to the meals." */
 function partnerRowSentence(): string {
   const row = BIOCITY_STANDS.filter((s) => s.id !== "bc-2").map(standMention);
   return `${row.slice(0, -1).join(", ")} and ${row.at(-1)} are in the row by the corridor to the meals.`;

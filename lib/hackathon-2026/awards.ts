@@ -304,7 +304,7 @@ export const RED_HAT_AWARD: TechnologyAward = {
   ],
   evaluation: "A Red Hat reviewer evaluates the eligible entries in sinceai.app; Since AI confirms the winner.",
   questions: {
-    text: "Red Hat supports builders remotely during the event. Any session or office hours are announced in the event channels.",
+    text: "A Red Hat stand is planned in BioCity's partner corner, and Red Hat's experts answer on the Since AI Discord. Any session or office hours are announced in the event channels.",
     link: { label: "Red Hat in Builder Resources", href: `${RESOURCES_PATH}#resource-red-hat` },
   },
   docs: [
@@ -440,7 +440,7 @@ export const AWARDS_AT_A_GLANCE: readonly AwardGlanceRow[] = [
     win: RED_HAT_AWARD.prize,
     enter: "Enter the same project under optional awards in sinceai.app, with evidence.",
     decided: "A Red Hat reviewer evaluates; Since AI confirms the winner. Announced in the event channels.",
-    ask: "Red Hat's remote support during the event.",
+    ask: "Red Hat's stand in BioCity's partner corner, and the Since AI Discord.",
   },
   {
     id: FIWARE_AWARD.id,

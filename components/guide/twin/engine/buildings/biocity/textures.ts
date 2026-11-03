@@ -67,7 +67,7 @@ export interface StandGraphic {
   logo: string | null;
   /** Big line (partner name). */
   title: string;
-  /** Small line ("Stand 2 · Technology partner"). */
+  /** Small line ("Stand 3 · Technology partner"). */
   subtitle: string;
 }
 

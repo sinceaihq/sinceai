@@ -14,9 +14,10 @@ import { GUIDE_BASE_PATH } from "./facts";
  * Verified with the organiser (26 Oct 2026):
  * - CSC / LUMI AI Factory: compute partner; private instructions already sent.
  * - Red Hat: technology partner; the Developer Sandbox is free for 30 days
- *   (developers.redhat.com/developer-sandbox, checked 26 Oct 2026). No booth:
- *   remote support Fri–Sat (Red Hat, 21 Oct 2026). Nothing beyond the sandbox
- *   and public docs is published until the organiser confirms it.
+ *   (developers.redhat.com/developer-sandbox, checked 26 Oct 2026). A stand in
+ *   BioCity's partner corner after all (organiser, 3 Nov 2026), and Discord
+ *   support. Nothing beyond the sandbox, the stand and public docs is published
+ *   until the organiser confirms it.
  * - FIWARE: technology partner and provider of the FIWARE Open Innovation
  *   Award; its Builder Pack (Oct 2026) grants publication of its technical
  *   resources — see awards.ts. Red Hat's OpenShift AI Technology Award and the
@@ -152,7 +153,7 @@ export const PARTNER_RESOURCES: readonly PartnerResource[] = [
     benefit:
       "The Developer Sandbox is free for 30 days for anyone. Set it up before the event, so your account and sandbox are ready when you start building.",
     access: "Self-service from Red Hat's Developer Sandbox page — no event code needed.",
-    help: "Red Hat supports builders remotely during the event. Any session or office hours are announced in the event channels.",
+    help: "A Red Hat stand is planned in BioCity's partner corner, and Red Hat's experts answer on the Since AI Discord. Any session or office hours are announced in the event channels.",
     award: "Red Hat OpenShift AI Technology Award",
   },
   // ── AI models & inference ────────────────────────────────────────────────
