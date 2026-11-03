@@ -353,13 +353,15 @@ export const FIWARE_AWARD: TechnologyAward & {
     { name: "Practical value", weight: 15, text: "Clear real-world impact; an understandable use case." },
   ],
   evaluation:
-    "Jason Fox, FIWARE expert and trainer, is the sole evaluator of this award. He evaluates the eligible entries on Sunday 8 November, and the award is announced at the closing ceremony.",
+    // FIWARE's CEO takes this over from the Builder Pack's evaluator, who is on site as a mentor and would have a
+    // conflict of interest (FIWARE to the organiser, 2 Nov 2026).
+    "Chandra Challagonda, CEO of FIWARE Foundation, is the sole evaluator of this award and evaluates the eligible entries on Sunday 8 November. The award is announced at the closing ceremony.",
   questions: {
     text: "Ask Jason Fox, the FIWARE technical mentor, on site at EduCity all three days — or the FIWARE mentors on the Since AI Discord.",
     link: { label: "Since AI Discord", href: GUIDE_LINKS.discord },
   },
   mentor:
-    "Jason Fox is also the primary FIWARE technical mentor, on site at EduCity all three days, 6–8 November. Bring him your NGSI-LD design questions, entity modelling and architecture reviews.",
+    "Jason Fox is the primary FIWARE technical mentor, on site at EduCity all three days, 6–8 November, and takes no part in evaluating this award. Bring him your NGSI-LD design questions, entity modelling and architecture reviews.",
   benefits: [
     { title: "FIWARE Foundation membership for one year", text: "Access to the FIWARE member network, working groups and technical roadmaps." },
     { title: "Invitation to FIWARE Global Summit 2027", text: "A personal invitation and recognition for the team lead at FIWARE's flagship annual event." },

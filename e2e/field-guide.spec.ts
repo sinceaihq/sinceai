@@ -596,7 +596,8 @@ test.describe("Builder Resources", () => {
     const fiware = page.locator('[data-award="fiware-open-innovation"]');
     await expect(fiware.getByRole("heading", { level: 4 })).toHaveText("FIWARE Open Innovation Award");
     await expect(fiware).toContainText("travel and accommodation are not included");
-    await expect(fiware).toContainText("sole evaluator");
+    await expect(fiware).toContainText("Chandra Challagonda, CEO of FIWARE Foundation, is the sole evaluator");
+    await expect(fiware).toContainText("takes no part in evaluating this award");
     await expect(fiware.locator("[data-fiware-benefits] li")).toHaveCount(5);
     // The prize package and conditions sit behind native disclosures, closed by default; prize and criteria stay visible.
     for (const sel of ["[data-fiware-benefits]", "[data-fiware-conditions]"]) await expect(fiware.locator(sel)).not.toHaveAttribute("open", "");

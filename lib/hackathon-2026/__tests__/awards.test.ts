@@ -137,7 +137,7 @@ describe("Red Hat OpenShift AI Technology Award", () => {
 });
 
 describe("FIWARE Open Innovation Award", () => {
-  it("uses the Builder Pack's rubric, routes A and B, and Jason Fox as the sole evaluator", () => {
+  it("uses the Builder Pack's rubric, routes A and B, and FIWARE's CEO as the sole evaluator", () => {
     expect(FIWARE_AWARD.criteria.map((c) => [c.name, c.weight])).toEqual([
       ["FIWARE integration", 35],
       ["Technical quality", 30],
@@ -146,8 +146,11 @@ describe("FIWARE Open Innovation Award", () => {
     ]);
     expect(FIWARE_AWARD.routes.map((r) => r.letter)).toEqual(["A", "B"]);
     expect(FIWARE_AWARD.routes[1]!.text).toMatch(/never enters the company challenge rankings or the selection of the five finalists/);
-    expect(FIWARE_AWARD.evaluation).toMatch(/Jason Fox.*sole evaluator/);
+    expect(FIWARE_AWARD.evaluation).toMatch(/^Chandra Challagonda, CEO of FIWARE Foundation, is the sole evaluator/);
+    // Jason Fox mentors builders on site, so he must never read as an evaluator: a conflict of interest.
+    expect(FIWARE_AWARD.evaluation).not.toMatch(/Jason Fox/);
     expect(FIWARE_AWARD.mentor).toMatch(/all three days/);
+    expect(FIWARE_AWARD.mentor).toMatch(/Jason Fox is the primary FIWARE technical mentor.*takes no part in evaluating this award/);
     expect(FIWARE_AWARD.eligibility.join(" ")).toMatch(/Merely mentioning FIWARE is not enough/);
     expect(FIWARE_AWARD.eligibility.join(" ")).toMatch(/working demo, not slides/);
   });
