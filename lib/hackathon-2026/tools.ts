@@ -24,7 +24,12 @@ import { WORKSHOPS } from "./workshops";
  *   (cursor.com/pricing, cursor.com/students).
  * - Lovable: a free plan with daily build credits (lovable.dev/pricing).
  * - Gemini API / Google AI Studio: a free tier for some models, with limits
- *   (aistudio.google.com/docs/pricing).
+ *   (aistudio.google.com/docs/pricing). MLH's Gemini page lists Google's
+ *   public offers: a Google AI Pro student plan free for one year, $10 a month
+ *   in Google credits for students, and $300 for new Google Cloud accounts.
+ * - Google Cloud Free Trial: $300 of credit for 90 days for new accounts; it
+ *   cannot pay for Gemini API costs in AI Studio
+ *   (docs.cloud.google.com/free/docs/free-cloud-features).
  * None of these providers (GitHub, Google, Anthropic, Cursor, OpenAI) is a
  * Since AI sponsor; listing a tool is not a partnership claim.
  *
@@ -140,8 +145,8 @@ export const AI_TOOLS: readonly AiTool[] = [
     featured: true,
     summary: "Get AI coding assistance inside your editor.",
     access: [
-      { kind: "free-plan", text: "Free plan with monthly limits" },
       { kind: "student", text: "Copilot Student free for verified students" },
+      { kind: "free-plan", text: "Free plan with monthly limits" },
     ],
     cta: { label: "Get GitHub Copilot", href: "https://github.com/features/copilot/plans" },
     setup: { label: "Students: GitHub Student Developer Pack", href: "https://mlh.link/github" },
@@ -189,8 +194,8 @@ export const AI_TOOLS: readonly AiTool[] = [
     partnerId: "lovable",
     summary: "Describe an app in plain language and get a working full-stack web app.",
     access: [
-      { kind: "event", text: "100 credits per participant" },
-      { kind: "free-plan", text: "Free plan with daily credits" },
+      { kind: "event", text: "Lovable Pro free for 1 month · 100 credits" },
+      { kind: "free-plan", text: "Free plan with daily credits after that" },
     ],
     cta: { label: "Get started with Lovable", href: "https://lovable.dev" },
     setup: { label: "Lovable docs", href: "https://docs.lovable.dev/introduction/welcome" },
@@ -201,7 +206,10 @@ export const AI_TOOLS: readonly AiTool[] = [
     category: "coding",
     partnerId: "n8n",
     summary: "Automate workflows with AI agents that call your APIs, data and tools.",
-    access: [{ kind: "limited", text: "1 month of Cloud Pro · 200 redemptions" }],
+    access: [
+      { kind: "event", text: "n8n Cloud Pro free for 1 month" },
+      { kind: "limited", text: "200 licences · one per team" },
+    ],
     cta: { label: "Get started with n8n", href: "https://docs.n8n.io/" },
     setup: { label: "How to redeem", href: "https://n8n.notion.site/voucher-code" },
   },
@@ -226,8 +234,9 @@ export const AI_TOOLS: readonly AiTool[] = [
     mlhAwardId: "mlh-gemini",
     summary: "Try Google's Gemini models in your browser, then call them from your app with an API key.",
     access: [
-      { kind: "free-plan", text: "Free tier for some models, with limits" },
-      { kind: "student", text: "Google student offers" },
+      { kind: "student", text: "Google AI Pro free for 1 year" },
+      { kind: "student", text: "$10 a month in Google credits for AI Studio" },
+      { kind: "free-plan", text: "AI Studio free tier for everyone" },
     ],
     cta: { label: "Open Google AI Studio", href: "https://mlh.link/gemini-aistudio" },
     setup: { label: "Your first API request", href: "https://mlh.link/gemini-quickstart" },
@@ -249,7 +258,7 @@ export const AI_TOOLS: readonly AiTool[] = [
     partnerId: "elevenlabs",
     mlhAwardId: "mlh-elevenlabs",
     summary: "Voice AI: text to speech, speech to text, dubbing and voice agents.",
-    access: [{ kind: "event", text: "1 free month of Creator" }],
+    access: [{ kind: "event", text: "Creator plan free for 1 month" }],
     cta: { label: "Get started with ElevenLabs", href: "https://elevenlabs.io/docs/quickstart" },
   },
   {
@@ -258,7 +267,10 @@ export const AI_TOOLS: readonly AiTool[] = [
     category: "models",
     partnerId: "featherless",
     summary: "Open-weight models — Qwen, Llama, Mistral, DeepSeek and more — through one OpenAI-style API.",
-    access: [{ kind: "limited", text: "$25 credit · up to 1,200 redemptions" }],
+    access: [
+      { kind: "event", text: "$25 free credit · no credit card" },
+      { kind: "limited", text: "Limited redemptions · claim early" },
+    ],
     cta: { label: "Get started with Featherless", href: "https://featherless.ai/docs/quickstart-guide" },
   },
   {
@@ -267,7 +279,7 @@ export const AI_TOOLS: readonly AiTool[] = [
     category: "models",
     partnerId: "pruna-ai",
     summary: "Fast image and video generation and editing behind one API.",
-    access: [{ kind: "event", text: "Shared hackathon API key" }],
+    access: [{ kind: "event", text: "Free API use with the hackathon key" }],
     cta: { label: "Get started with Pruna", href: "https://docs.api.pruna.ai/guides/quickstart" },
     setup: { label: "Building with Pruna at Since AI", href: "https://pruna.notion.site/building-with-pruna-at-since-ai-hackathon" },
   },
@@ -281,13 +293,14 @@ export const AI_TOOLS: readonly AiTool[] = [
     featured: true,
     summary: "Run your app, your data and AI services on Google's cloud.",
     access: [
-      { kind: "trial", text: "Free trial for new accounts" },
-      { kind: "student", text: "Student credits from Google" },
+      { kind: "trial", text: "$300 free credit for 90 days · new accounts" },
+      { kind: "student", text: "Student offers from Google" },
     ],
     cta: { label: "Get started with Google Cloud", href: "https://docs.cloud.google.com/docs" },
     setup: { label: "Free trial terms", href: "https://docs.cloud.google.com/free/docs/free-cloud-features#free-trial" },
     more: [
-      "Google's own public offers: Google decides who qualifies. Since AI has no Google credits of its own for this event — the student and new-account offers are listed under Google Gemini & AI Studio.",
+      "Google's Free Trial gives new accounts $300 of credit for 90 days — for Google Cloud services; it can't pay for Gemini API costs in AI Studio. Signing up needs a payment method.",
+      "These are Google's own public offers, and Google decides who qualifies. Since AI has no Google credits of its own for this event — the student offers are under Google Gemini & AI Studio.",
     ],
   },
   {
@@ -381,6 +394,34 @@ export const AI_TOOLS: readonly AiTool[] = [
 ] as const;
 
 export const FEATURED_TOOLS = AI_TOOLS.filter((t) => t.featured);
+
+export interface BuilderPerk {
+  /** The tool card it links to. */
+  toolId: string;
+  /** What you get, big. */
+  value: string;
+  /** What it is. */
+  what: string;
+  /** Who gets it, and the one condition that matters. */
+  who: string;
+  kind: AccessKind;
+}
+
+/**
+ * The free plans and credits worth knowing before Friday, biggest first. Each
+ * line restates its tool card's access label (and so its one source) in a
+ * builder's words; a perk test keeps the two in step.
+ */
+export const BUILDER_PERKS: readonly BuilderPerk[] = [
+  { toolId: "lovable", value: "Lovable Pro", what: "Free for 1 month · 100 credits", who: "Every participant", kind: "event" },
+  { toolId: "featherless", value: "$25 credit", what: "Featherless AI · open-weight models", who: "Every participant · no card · claim early", kind: "event" },
+  { toolId: "elevenlabs", value: "ElevenLabs Creator", what: "Free for 1 month · voice AI", who: "Every participant", kind: "event" },
+  { toolId: "n8n", value: "n8n Cloud Pro", what: "Free for 1 month · AI agents & automation", who: "One per team, so every team gets one", kind: "event" },
+  { toolId: "pruna-ai", value: "Pruna AI", what: "Free image & video API during the hackathon", who: "Every team · shared hackathon key", kind: "event" },
+  { toolId: "gemini", value: "Google AI Pro", what: "Free for 1 year + $10 a month for AI Studio", who: "Students · Google's offer via MLH", kind: "student" },
+  { toolId: "google-cloud", value: "$300 credit", what: "Google Cloud · 90 days", who: "New Google Cloud accounts", kind: "trial" },
+  { toolId: "github-copilot", value: "Copilot Student", what: "Free GitHub Copilot plan", who: "Verified students · Free plan for everyone", kind: "student" },
+] as const;
 
 export const toolsIn = (category: ToolCategoryId) => AI_TOOLS.filter((t) => t.category === category);
 
