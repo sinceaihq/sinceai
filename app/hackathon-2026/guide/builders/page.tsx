@@ -24,6 +24,7 @@ import {
   VenueCards,
   VenueExplorer,
   WifiSection,
+  BuilderPerks,
   FeaturedToolStrip,
   WinningProject,
   ghostButtonClass,
@@ -169,8 +170,10 @@ export default function BuilderGuidePage() {
           id="build-with-ai-title"
           eyebrow="// ai tools · credits · workshops"
           title="Build with AI."
-          lede="Free and student AI tools, partner credits, MLH's hardware and workshops — what each gives you and how to start, on one page."
+          lede="Claim your free Pro plans and credits before you start — Lovable Pro, ElevenLabs Creator, $25 of Featherless credit, n8n Cloud Pro for your team and Google AI Pro for students. Each tile shows how to claim it."
         />
+        <BuilderPerks resourcesPath={RESOURCES_PATH} />
+        <p className="mb-3 mt-8 text-sm font-semibold text-white">Plus the tools you already know:</p>
         <FeaturedToolStrip resourcesPath={RESOURCES_PATH} />
         <div className="mt-6">
           <Link href={RESOURCES_PATH} className={primaryButtonClass}>

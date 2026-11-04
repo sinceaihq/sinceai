@@ -25,14 +25,20 @@ import { GUIDE_BASE_PATH } from "./facts";
  *   eight MLH categories are there too.
  * - Pruna AI: shared hackathon API key and help on Discord (Pruna's public
  *   onepager). The key is never reproduced here.
- * - Featherless AI: $25 inference credit, up to 1,200 redemptions, no card;
- *   private instructions only, never public.
+ * - Featherless AI: $25 inference credit, up to 1,200 redemptions, no card,
+ *   redeemable through Sun 8 Nov (Featherless, 9/15/26 Oct 2026); private
+ *   instructions only, never public.
  * - ElevenLabs: one free month of Creator through ElevenLabs' own Discord
  *   process; its Showcase is separate from the official submission. No other
  *   ElevenLabs benefit is published here; MLH's category is in awards.ts.
- * - Lovable: 100 credits per participant (Lovable Community Team, 23 Apr 2026).
- *   Its community playbook is for event hosts only and is not linked.
- * - n8n: 200 n8n Cloud Pro licences, one month each (n8n, 10 Mar 2026).
+ * - Lovable: every participant gets Lovable Pro (Pro Plan 1, 100 credits) at no
+ *   cost for its monthly plan, redeemed by the end of the event; checkout may
+ *   ask for payment details and can be cancelled at once (Lovable Community
+ *   Team, 4 Nov 2026). The code itself and the host-only community playbook
+ *   are never published.
+ * - n8n: 200 one-month n8n Cloud Pro licences, redeemable until 22 Nov 2026
+ *   (n8n, 29 Oct 2026). Organiser, 4 Nov 2026: one per team, so every team
+ *   can have one.
  * - Google Cloud promotional credits for this event were revoked (20 May 2026);
  *   Gemini and Google Cloud appear as ordinary tools here. "Best Use of Gemini
  *   API" is an MLH prize category (MLH swag kits), not Since AI event credits.
@@ -47,9 +53,9 @@ export const RESOURCES_PATH = `${GUIDE_BASE_PATH}/resources`;
 export const RESOURCES_GUIDE = {
   name: "AI Tools & Resources",
   navLabel: "AI Tools",
-  lede: "AI coding assistants, models, cloud credits and free resources for your project — what each one is, what you get and how to start.",
+  lede: "Free Pro plans, credits and AI tools for your project — Lovable Pro, n8n Cloud Pro, ElevenLabs Creator, $25 of Featherless credit, Google's student offers and more. What you get and how to claim it.",
   metaDescription:
-    "Since AI Hackathon 2026 AI Tools & Resources: AI coding assistants, models, cloud credits, computing, AI models, app builders, FIWARE and developer tools — quickstarts, participant benefits, optional MLH, Red Hat and FIWARE awards and where to get help.",
+    "Since AI Hackathon 2026 AI Tools & Resources: free Pro plans and credits for builders — Lovable Pro, n8n Cloud Pro, ElevenLabs Creator, Featherless AI credit, Google AI Pro for students, GitHub Copilot — plus AI models, cloud, FIWARE, optional MLH, Red Hat and FIWARE awards and where to get help.",
 } as const;
 
 /** Shown under the hero: how access works, and the freedom to choose tools. */
@@ -186,7 +192,7 @@ export const PARTNER_RESOURCES: readonly PartnerResource[] = [
     getStarted: { label: "Featherless quickstart", href: "https://featherless.ai/docs/quickstart-guide" },
     docs: { label: "Featherless docs", href: "https://featherless.ai/docs/overview" },
     benefit:
-      "$25 of inference credit per eligible participant, no credit card needed, for a limited number of redemptions (up to 1,200).",
+      "$25 of free inference credit per eligible participant — no credit card needed. Redemptions are limited (up to 1,200), so claim yours early; it works until the end of the event.",
     access: EVENT_ACCESS,
     help: "Featherless' public documentation.",
   },
@@ -220,7 +226,8 @@ export const PARTNER_RESOURCES: readonly PartnerResource[] = [
     description: "Build full-stack web apps by describing them in plain language, then refine the code.",
     buildIdeas: ["A working front end in minutes", "Internal tools and dashboards", "Clickable demos of your idea"],
     getStarted: { label: "Lovable docs", href: "https://docs.lovable.dev/introduction/welcome" },
-    benefit: "100 Lovable credits per participant, shared as a coupon shortly before the event.",
+    benefit:
+      "Lovable Pro free for a month for every participant: Pro Plan 1 with 100 credits and all its Pro features. Redeem it by the end of the event; checkout may ask for payment details, and you can cancel straight after activating.",
     access: EVENT_ACCESS,
     help: "Lovable's documentation and in-product help.",
   },
@@ -249,7 +256,8 @@ export const PARTNER_RESOURCES: readonly PartnerResource[] = [
     buildIdeas: ["AI agents that call your tools", "Automated data pipelines", "Connect your app to chat, email or sheets"],
     getStarted: { label: "n8n docs", href: "https://docs.n8n.io/" },
     partnerGuide: { label: "How to redeem an n8n voucher", href: "https://n8n.notion.site/voucher-code" },
-    benefit: "One month of n8n Cloud Pro per redemption, limited to 200 redemptions.",
+    benefit:
+      "One month of n8n Cloud Pro free. There are 200 licences, so claim one per team — that way every team can have one. Redeem it by 22 November.",
     access: EVENT_ACCESS,
     help: "n8n's documentation and community forum.",
   },

@@ -115,9 +115,10 @@ describe("builder resources: what each partner's card says", () => {
 
   it("Featherless: $25, no card, limited to 1,200 redemptions, private instructions", () => {
     const r = get("featherless");
-    expect(r.benefit).toMatch(/\$25 of inference credit per eligible participant/);
+    expect(r.benefit).toMatch(/\$25 of free inference credit per eligible participant/);
     expect(r.benefit).toMatch(/no credit card/);
     expect(r.benefit).toMatch(/up to 1,200/);
+    expect(r.benefit).toMatch(/works until the end of the event/);
     expect(r.access).toBe(EVENT_ACCESS);
     expect(r.partnerGuide).toBeUndefined();
     expect(allText(r)).not.toMatch(/redeem|coupon code|promo|voucher|\.pdf|qr/i);
@@ -131,16 +132,22 @@ describe("builder resources: what each partner's card says", () => {
     expect(allText(r)).not.toMatch(/\bPro\b|\bScale\b|winner|prize|best .* project/i);
   });
 
-  it("Lovable: 100 credits per participant, no exclusivity, no host-only playbook", () => {
+  it("Lovable: Pro free for a month for every participant, no exclusivity, no host-only playbook", () => {
     const r = get("lovable");
-    expect(r.benefit).toBe("100 Lovable credits per participant, shared as a coupon shortly before the event.");
+    expect(r.benefit).toMatch(/^Lovable Pro free for a month for every participant: Pro Plan 1 with 100 credits/);
+    expect(r.benefit).toMatch(/Redeem it by the end of the event/);
+    expect(r.benefit).toMatch(/payment details, and you can cancel straight after activating/);
+    expect(allText(r)).not.toMatch(/COMM-|discount code|feedback/i);
     expect(r.access).toBe(EVENT_ACCESS);
     expect(allText(r)).not.toMatch(/exclusive|only tool|community-hackathon-playbook/i);
   });
 
-  it("n8n: one month of Cloud Pro per redemption, limited to 200, with n8n's public redemption guide", () => {
+  it("n8n: one month of Cloud Pro free, 200 licences, one per team, with n8n's public redemption guide", () => {
     const r = get("n8n");
-    expect(r.benefit).toBe("One month of n8n Cloud Pro per redemption, limited to 200 redemptions.");
+    expect(r.benefit).toBe(
+      "One month of n8n Cloud Pro free. There are 200 licences, so claim one per team — that way every team can have one. Redeem it by 22 November.",
+    );
+    expect(allText(r)).not.toMatch(/COMMUNITY-HACKATHON/i);
     expect(r.partnerGuide?.href).toBe("https://n8n.notion.site/voucher-code");
     expect(r.access).toBe(EVENT_ACCESS);
   });
@@ -149,7 +156,7 @@ describe("builder resources: what each partner's card says", () => {
     const money = allText(PARTNER_RESOURCES).match(/[$€£]\s?\d[\d,.]*/g) ?? [];
     expect(money).toEqual(["$25"]);
     const counts = PARTNER_RESOURCES.flatMap((r) => (r.benefit ?? "").match(/\b\d[\d,]*\b/g) ?? []);
-    expect(counts).toEqual(["30", "2026", "30", "25", "1,200", "100", "200"]);
+    expect(counts).toEqual(["30", "2026", "30", "25", "1,200", "1", "100", "200", "22"]);
   });
 });
 

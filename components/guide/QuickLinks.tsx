@@ -3,7 +3,7 @@ import Link from "next/link";
 import { BUILDING_HREF, RESOURCES_PATH } from "@/lib/hackathon-2026";
 
 const LINKS = [
-  { href: RESOURCES_PATH, label: "AI Tools & Resources", sub: "Copilot, Gemini & more", Icon: Sparkles, lead: true },
+  { href: RESOURCES_PATH, label: "AI Tools & Resources", sub: "Free Pro plans & credits", Icon: Sparkles, lead: true },
   { href: "#weekend", label: "Schedule", sub: "Fri–Sun, Turku time", Icon: CalendarClock },
   { href: "#guides", label: "Your guide", sub: "By role", Icon: Users },
   { href: "/hackathon-2026/guide/venue#maps", label: "Venue & food", sub: "Rooms, maps, meals", Icon: MapPin },

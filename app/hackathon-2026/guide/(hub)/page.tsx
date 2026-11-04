@@ -5,6 +5,7 @@ import {
   BuildingHubLink,
   ComputingCallout,
   FactsStrip,
+  BuilderPerks,
   FeaturedToolStrip,
   FoodSummary,
   ParkingHubSection,
@@ -81,8 +82,10 @@ export default function FieldGuideHubPage() {
           id="ai-tools-title"
           eyebrow="// ai tools & resources"
           title="Start building with AI."
-          lede="AI coding assistants, models, cloud credits and free resources — what each one is, what you get and how to start."
+          lede="Pro plans and credits for every builder — Lovable Pro, ElevenLabs Creator, $25 of Featherless credit, n8n Cloud Pro for every team and Google AI Pro for students. Here is what you get; the page has how to claim it."
         />
+        <BuilderPerks resourcesPath={RESOURCES_PATH} />
+        <p className="mb-3 mt-8 text-sm font-semibold text-white">Plus the tools you already know:</p>
         <FeaturedToolStrip resourcesPath={RESOURCES_PATH} />
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
           <Link href={RESOURCES_PATH} className={primaryButtonClass}>
