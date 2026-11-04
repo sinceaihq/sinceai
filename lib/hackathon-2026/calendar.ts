@@ -74,8 +74,18 @@ function locationFor(place: Place): string {
   return `${venue.name}, ${venueAddressLine(venue)}`;
 }
 
+/** "BioCity · Presidenttiauditorio, Tykistökatu 6, 20520 Turku" — the room first, then the address maps can find. */
+function locationLine(item: ScheduleItem, audience: Audience): string {
+  if (item.calendarLocation) return item.calendarLocation;
+  const room = placeDetailFor(item, audience);
+  if (!room || item.place === "app" || item.place === "biocity-joki") return locationFor(item.place);
+  const venue = getVenue(item.place);
+  return `${venue.name} · ${room}, ${venueAddressLine(venue)}`;
+}
+
 function eventLines(item: ScheduleItem, audience: Audience, url: string, uidScope: string): string[] {
-  const summary = `${titleFor(item, audience)}${item.approx ? " (approx.)" : ""}`;
+  // "Since AI ·" keeps an imported "Dinner" or "Breakfast" recognisable among someone's own events.
+  const summary = `Since AI · ${titleFor(item, audience)}${item.approx ? " (approx.)" : ""}`;
   const description = [
     detailFor(item, audience),
     placeDetailFor(item, audience),
@@ -102,7 +112,7 @@ function eventLines(item: ScheduleItem, audience: Audience, url: string, uidScop
   lines.push(
     `SUMMARY:${escapeText(summary)}`,
     `DESCRIPTION:${escapeText(description)}`,
-    `LOCATION:${escapeText(item.calendarLocation ?? locationFor(item.place))}`,
+    `LOCATION:${escapeText(locationLine(item, audience))}`,
     `URL:${url}`,
     `STATUS:${item.status === "confirmed" ? "CONFIRMED" : "TENTATIVE"}`,
     "TRANSP:TRANSPARENT",
@@ -126,6 +136,9 @@ function calendarDocument(
     "METHOD:PUBLISH",
     `X-WR-CALNAME:${escapeText(name)}`,
     `X-WR-TIMEZONE:${EVENT_2026.timezone}`,
+    // For a subscribed calendar: how often to look for programme changes (apps may check less often).
+    "REFRESH-INTERVAL;VALUE=DURATION:PT6H",
+    "X-PUBLISHED-TTL:PT6H",
     ...items.flatMap((item) => eventLines(item, audience, url, uidScope)),
     "END:VCALENDAR",
   ];
@@ -159,6 +172,16 @@ export function buildCompanyCalendar(company: ChallengeCompany): string {
 export const calendarFileName = (audience: Audience) => `since-ai-hackathon-2026-${getGuide(audience).slug}.ics`;
 
 export const calendarPath = (audience: Audience) => `/hackathon-2026/guide/calendar/${getGuide(audience).slug}`;
+
+/** The public https link a calendar app subscribes to (Google "From URL", Outlook "Subscribe from web"). */
+export const calendarSubscribeUrl = (audience: Audience) => `${GUIDE_BASE_URL.replace(/\/hackathon-2026\/guide$/, "")}${calendarPath(audience)}`;
+
+/** The same link as webcal://, which Apple Calendar opens as a subscription. */
+export const calendarWebcalUrl = (audience: Audience) => calendarSubscribeUrl(audience).replace(/^https:/, "webcal:");
+
+/** Subscribing vs importing, said plainly. */
+export const CALENDAR_SUBSCRIBE_NOTE =
+  "Subscribing keeps the schedule up to date if it changes — your calendar app checks for changes itself, and Google can take a day. A downloaded file is a fixed copy.";
 
 export const companyCalendarFileName = (company: ChallengeCompany) => `since-ai-hackathon-2026-${company.id}.ics`;
 

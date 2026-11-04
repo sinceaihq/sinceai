@@ -50,9 +50,9 @@ test.describe("routes and indexing", () => {
     const buildersIcs = (await builders.text()).replace(/\r\n /g, "");
     expect(buildersIcs).toContain("BEGIN:VCALENDAR");
     // MLH's two workshops, Friday in Presidenttiauditorio (20:30 and 21:00 Turku time = 18:30 and 19:00 UTC).
-    expect(buildersIcs).toContain("SUMMARY:GitHub Copilot Workshop");
+    expect(buildersIcs).toContain("SUMMARY:Since AI · GitHub Copilot Workshop");
     expect(buildersIcs).toContain("DTSTART:20261106T183000Z\r\nDTEND:20261106T190000Z");
-    expect(buildersIcs).toContain("SUMMARY:Google AI Studio Workshop");
+    expect(buildersIcs).toContain("SUMMARY:Since AI · Google AI Studio Workshop");
     expect(buildersIcs).toContain("DTSTART:20261106T190000Z\r\nDTEND:20261106T193000Z");
     expect(buildersIcs).toContain("Presidenttiauditorio");
 
@@ -1079,5 +1079,64 @@ test.describe("first screen, MLH and workshops (4 Nov 2026)", () => {
     await expect(summary).toContainText("Presidenttiauditorio");
     await expect(page.locator("#mlh-awards [data-workshop]")).toHaveCount(0);
     await expect(summary.getByRole("link", { name: /MLH, workshops and hardware/ })).toHaveAttribute("href", `${GUIDE}/builders#mlh`);
+  });
+});
+
+test.describe("weekend calendar and building a winning project (4 Nov 2026)", () => {
+  test("one 'Add weekend schedule' action near the top, honest options for every calendar app", async ({ page }) => {
+    await page.goto(GUIDE);
+    const add = page.locator("[data-add-calendar]").first();
+    await expect(add.locator("summary")).toContainText("Add weekend schedule");
+    await expect(add.locator("summary")).toContainText("Opening, workshops, deadlines and finals");
+    // After "what's next" and the quick links.
+    const order = await page.evaluate(() => {
+      const nn = document.querySelector("section[aria-labelledby='now-next-title']")!;
+      const cal = document.querySelector("[data-add-calendar]")!;
+      return nn.compareDocumentPosition(cal) & Node.DOCUMENT_POSITION_FOLLOWING;
+    });
+    expect(order).toBeTruthy();
+    await add.locator("summary").click();
+    await expect(add.locator('[data-calendar-app="apple"] a')).toHaveAttribute(
+      "href",
+      "webcal://sinceai.ai/hackathon-2026/guide/calendar/builders",
+    );
+    await expect(add.locator('[data-calendar-app="google"]')).toContainText("From URL");
+    await expect(add.locator('[data-calendar-app="google"]')).toContainText("Import & export");
+    await expect(add.locator('[data-calendar-app="outlook"]')).toContainText("Subscribe from web");
+    const download = add.locator('[data-calendar-app="other"] a');
+    await expect(download).toHaveAttribute("href", `${GUIDE}/calendar/builders`);
+    await expect(download).toHaveAttribute("download", "since-ai-hackathon-2026-builders.ics");
+    await expect(add).toContainText("https://sinceai.ai/hackathon-2026/guide/calendar/builders");
+    await expect(add).toContainText("A downloaded file is a fixed copy");
+    expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
+  });
+
+  test("the builder guide shows how to build a winning project right after the steps", async ({ page }) => {
+    await page.goto(`${GUIDE}/builders`);
+    const order = await page.$$eval("main section[id]", (els) => els.map((e) => e.id));
+    expect(order.indexOf("win")).toBe(order.indexOf("steps") + 1);
+    const win = page.locator("#win");
+    await expect(page.locator("#win-title")).toHaveText("Build a project that wins.");
+    await expect(win.locator('[data-winning-card="company"] h3')).toHaveText("Talk to your challenge company.");
+    await expect(win.locator('[data-winning-card="demo"] h3')).toHaveText("Make your demo impossible to misunderstand.");
+    // Details on demand.
+    const questions = win.getByText("5 questions to ask your company");
+    await questions.click();
+    await expect(win.getByText("“What would stop you from actually using it?”")).toBeVisible();
+    await win.getByText("How to make a great demo").click();
+    await expect(win.getByText("Show it working.")).toBeVisible();
+    await expect(win).toContainText("Build what matters. Show why it matters.");
+    await expect(win).not.toContainText(/mandatory|disqualif|guarantee/i);
+    // The builder schedule offers the same calendar action.
+    await expect(page.locator("#schedule [data-add-calendar] summary")).toContainText("Add weekend schedule");
+    expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
+  });
+
+  test("the hub links builders to the advice", async ({ page }) => {
+    await page.goto(GUIDE);
+    await expect(page.locator("#guides").getByRole("link", { name: /how to build a project that wins/ })).toHaveAttribute(
+      "href",
+      `${GUIDE}/builders#win`,
+    );
   });
 });

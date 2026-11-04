@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  AddToCalendar,
   AccommodationSection,
   BuildingHubLink,
   ResourcesHubLink,
@@ -33,6 +34,7 @@ import {
   GUIDE_BASE_PATH,
   HUB,
   HUB_MILESTONE_IDS,
+  WINNING_ANCHOR,
 } from "@/lib/hackathon-2026";
 
 const milestones = HUB_MILESTONE_IDS.map(getScheduleItem);
@@ -51,6 +53,7 @@ export default function FieldGuideHubPage() {
       >
         <NowNext items={nowNextItems} firstMoment={getScheduleItem("fri-registration")} />
         <QuickLinks />
+        <AddToCalendar />
         {/* Renders only before the CSC / LUMI registration deadline (30 Oct 2026). */}
         <ComputingCallout inPage />
       </GuideHero>
@@ -78,6 +81,17 @@ export default function FieldGuideHubPage() {
           lede="Your guide has your arrival time, your next step and where to get help."
         />
         <GuideCards compact />
+        <p className="mt-4 text-sm">
+          <Link
+            href={`${GUIDE_BASE_PATH}/builders#${WINNING_ANCHOR}`}
+            className="inline-flex min-h-11 items-center font-semibold text-white underline underline-offset-4 decoration-white/40 hover:decoration-white"
+          >
+            Builders: how to build a project that wins
+            <span aria-hidden="true" className="ml-1.5">
+              →
+            </span>
+          </Link>
+        </p>
         <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
           <Link
             href={`${GUIDE_BASE_PATH}/venue`}

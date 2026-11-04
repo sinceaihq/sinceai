@@ -121,12 +121,12 @@ describe("MLH workshops (Quinn Dines, 3 Nov 2026)", () => {
     expect(builders.indexOf("fri-mlh-copilot")).toBeLessThan(builders.indexOf("fri-mlh-ai-studio"));
     expect(HUB_MILESTONE_IDS).toEqual(expect.arrayContaining(["fri-mlh-copilot", "fri-mlh-ai-studio"]));
     const ics = unfold(buildCalendar("builders"));
-    expect(ics).toContain("SUMMARY:GitHub Copilot Workshop");
-    expect(ics).toContain("SUMMARY:Google AI Studio Workshop");
+    expect(ics).toContain("SUMMARY:Since AI · GitHub Copilot Workshop");
+    expect(ics).toContain("SUMMARY:Since AI · Google AI Studio Workshop");
     expect(ics).toContain("UID:fri-mlh-copilot.builders@sinceai.ai\r\nDTSTAMP:20261104T000000Z\r\nDTSTART:20261106T183000Z\r\nDTEND:20261106T190000Z");
     expect(ics).toContain("DTSTART:20261106T190000Z\r\nDTEND:20261106T193000Z");
     expect(ics).toMatch(/Presidenttiauditorio/);
-    expect(ics).toMatch(/LOCATION:BioCity\\, Tykistökatu 6/);
+    expect(ics).toContain("LOCATION:BioCity · Presidenttiauditorio\\, Tykistökatu 6\\, 20520 Turku");
   });
 
   it("shows in now / next before, during and after the workshops", () => {

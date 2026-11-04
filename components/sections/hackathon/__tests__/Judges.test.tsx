@@ -12,7 +12,7 @@ describe("Judges", () => {
     expect(within(cards[2]).getByRole("heading", { name: "Tuomas Mäkilä" })).toBeInTheDocument();
     expect(within(cards[3]).getByRole("heading", { name: "Rasmus Harmaala" })).toBeInTheDocument();
     expect(within(cards[4]).getByRole("heading", { name: "Chandra Challagonda" })).toBeInTheDocument();
-    expect(within(cards[4]).getByText("Chief Executive Officer")).toBeInTheDocument();
+    expect(within(cards[4]).getByText("CEO of FIWARE Foundation & Group DPO at Adfinis AG")).toBeInTheDocument();
     expect(within(cards[5]).getByRole("heading", { name: "Matyas Karel Stoch" })).toBeInTheDocument();
     expect(within(cards[5]).getByText("Founding Engineer")).toBeInTheDocument();
     expect(within(section).queryByRole("heading", { name: "Judge to be announced" })).not.toBeInTheDocument();

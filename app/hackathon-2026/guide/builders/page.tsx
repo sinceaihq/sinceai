@@ -4,7 +4,7 @@ import {
   BriefingRoomTable,
   BuildingSection,
   ChallengeRules,
-  CalendarButton,
+  AddToCalendar,
   Checklist,
   ComputingCallout,
   ComputingNote,
@@ -26,6 +26,7 @@ import {
   WifiSection,
   Workshops,
   MlhOnSite,
+  WinningProject,
   ghostButtonClass,
   primaryButtonClass,
   ParkingNote,
@@ -46,6 +47,8 @@ import {
   VOTE_COMPARISONS,
   VOTING,
   MLH_ANCHOR,
+  WINNING,
+  WINNING_ANCHOR,
   WORKSHOPS_ANCHOR,
 } from "@/lib/hackathon-2026";
 
@@ -105,6 +108,7 @@ export default function BuilderGuidePage() {
         lede={guide.lede}
       >
         <NowNext items={schedule} audience={AUDIENCE} firstMoment={getScheduleItem(guide.firstMomentId)} />
+        <AddToCalendar />
         <FactsStrip
           label="Key times"
           facts={[
@@ -122,6 +126,7 @@ export default function BuilderGuidePage() {
       <SectionNav
         items={[
           { id: "steps", label: "Steps" },
+          { id: WINNING_ANCHOR, label: "Win" },
           { id: "rules", label: "Challenge rules" },
           { id: BRIEFING_ROOMS_ANCHOR, label: "Briefing rooms" },
           { id: "schedule", label: "Schedule" },
@@ -142,6 +147,16 @@ export default function BuilderGuidePage() {
           title="Eight moves, check-in to the vote."
         />
         <CriticalPath label="Builder steps" steps={CRITICAL_PATH.builders ?? []} />
+      </GuideSection>
+
+      <GuideSection id={WINNING_ANCHOR}>
+        <SectionHeading
+          id={`${WINNING_ANCHOR}-title`}
+          eyebrow="// solve the right problem · show it clearly"
+          title={WINNING.title}
+          lede={WINNING.intro}
+        />
+        <WinningProject />
       </GuideSection>
 
       <GuideSection id="rules">
@@ -202,8 +217,8 @@ export default function BuilderGuidePage() {
           title="Friday to Sunday."
           lede="Local Turku time (EET, UTC+2)."
         />
-        <div className="mb-8 flex flex-wrap gap-3">
-          <CalendarButton audience={AUDIENCE} />
+        <div className="mb-8 max-w-2xl">
+          <AddToCalendar />
         </div>
         <Schedule items={schedule} audience={AUDIENCE} />
       </GuideSection>
