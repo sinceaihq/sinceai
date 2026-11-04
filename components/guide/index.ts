@@ -29,6 +29,7 @@ export { GuideCards } from "./GuideCards";
 export { QuickLinks } from "./QuickLinks";
 export { Workshops } from "./Workshops";
 export { MlhOnSite } from "./MlhOnSite";
+export { WinningProject } from "./WinningProject";
 export { PrintButton } from "./PrintButton";
 export { VenueExplorer } from "./maps/VenueExplorer";
 export { MapImage } from "./maps/MapImage";
@@ -44,5 +45,6 @@ export {
   ghostButtonClass,
 } from "./primitives";
 export { CalendarButton } from "./CalendarButton";
+export { AddToCalendar } from "./AddToCalendar";
 export { ShareButton } from "./ShareButton";
 export { PhotoGallery } from "./PhotoGallery";

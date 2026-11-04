@@ -125,7 +125,7 @@ test.describe("public site", () => {
     await expect(cards.nth(3)).toContainText("Rasmus Harmaala");
     await expect(cards.nth(3)).toContainText("Deep Tech Investor & Founder");
     await expect(cards.nth(4)).toContainText("Chandra Challagonda");
-    await expect(cards.nth(4)).toContainText("Chief Executive Officer");
+    await expect(cards.nth(4)).toContainText("CEO of FIWARE Foundation & Group DPO at Adfinis AG");
     await expect(cards.nth(4)).toContainText("FIWARE Foundation");
     await expect(cards.nth(5)).toContainText("Matyas Karel Stoch");
     await expect(cards.nth(5)).toContainText("Founding Engineer");

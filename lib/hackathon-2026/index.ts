@@ -28,3 +28,4 @@ export * from "./awards";
 export * from "./voting";
 export * from "./confidential";
 export * from "./workshops";
+export * from "./winning";

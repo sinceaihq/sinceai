@@ -198,6 +198,7 @@ describe("voting, finalists and confidential challenges", () => {
     expect(rules).not.toMatch(/signed on site|controlled system/);
     expect(rules).toMatch(/No restricted data in public GitHub repositories, demo videos/);
     expect(rules).toMatch(/public-safe summary/);
+    expect(rules).toMatch(/the video and deck only once your team confirms them public-safe, and not if FORCIT turns them off/);
     expect(rules).toMatch(/nothing is signed online/i);
   });
 

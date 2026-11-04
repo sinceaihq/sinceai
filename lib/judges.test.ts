@@ -15,7 +15,7 @@ describe("judging panel data", () => {
       ["Niko Elers", "Investment Director", "Voima Ventures"],
       ["Tuomas Mäkilä", "Associate Professor, Software Engineering", "University of Turku"],
       ["Rasmus Harmaala", "Deep Tech Investor & Founder", "Inovexus"],
-      ["Chandra Challagonda", "Chief Executive Officer", "FIWARE Foundation"],
+      ["Chandra Challagonda", "CEO of FIWARE Foundation & Group DPO at Adfinis AG", "FIWARE Foundation"],
       ["Matyas Karel Stoch", "Founding Engineer", "Cloudroom"],
     ]);
     // The panel is complete: six judges and no open place left.

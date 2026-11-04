@@ -39,7 +39,7 @@ export const CONFIDENTIAL_RULES = [
   },
   {
     title: "A public-safe summary for everyone else",
-    text: "Add a public-safe summary to your submission in sinceai.app. Voters and the public see only that summary, your project name and team. Optional-award reviewers see only public-safe material — that summary and award evidence that contains nothing restricted — unless the organisers clear more with FORCIT. FORCIT's evaluators and the organisers see the full submission.",
+    text: "Add a public-safe summary to your submission in sinceai.app and confirm it. Voters see your project name, that summary, your demo video and your pitch deck — the video and deck only once your team confirms them public-safe, and not if FORCIT turns them off. Keep all four free of FORCIT's data. The public sees only your project name and team. Optional-award reviewers see only public-safe material — that summary and award evidence that contains nothing restricted — unless the organisers clear more with FORCIT. FORCIT's evaluators and the organisers see the full submission.",
   },
 ] as const;
 

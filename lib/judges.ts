@@ -106,9 +106,10 @@ export const judges: Judge[] = [
   },
   {
     name: "Chandra Challagonda",
-    // CEO of FIWARE Foundation (organiser, 26 Oct 2026; fiware.org/governance/team). This card is about the
-    // overall jury only: the separate FIWARE award, which Chandra also evaluates, is in the Field Guide.
-    title: "Chief Executive Officer",
+    // Title as the organiser gave it (4 Nov 2026); CEO of FIWARE Foundation since 26 Oct 2026
+    // (fiware.org/governance/team). This card is about the overall jury only: the separate FIWARE award,
+    // which Chandra also evaluates, is in the Field Guide.
+    title: "CEO of FIWARE Foundation & Group DPO at Adfinis AG",
     organization: "FIWARE Foundation",
     organizationUrl: "https://fiware.org/",
     profiles: [{ kind: "linkedin", url: "https://www.linkedin.com/in/challagonda/" }],
