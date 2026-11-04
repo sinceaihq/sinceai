@@ -21,7 +21,8 @@ import { GUIDE_BASE_PATH, GUIDE_LINKS } from "./facts";
 
 export const COMPUTING_ANCHOR = "ai-resources";
 /** The hub section, linked from the builder guide and the hero callouts. */
-export const COMPUTING_HREF = `${GUIDE_BASE_PATH}#${COMPUTING_ANCHOR}`;
+/** CSC / LUMI in full lives on AI Tools & Resources (organiser, 4 Nov 2026); the hub links there. */
+export const COMPUTING_HREF = `${GUIDE_BASE_PATH}/resources#${COMPUTING_ANCHOR}`;
 
 export interface ComputingResource {
   name: string;

@@ -3,10 +3,9 @@ import {
   AddToCalendar,
   AccommodationSection,
   BuildingHubLink,
-  ResourcesHubLink,
   ComputingCallout,
-  ComputingSection,
   FactsStrip,
+  FeaturedToolStrip,
   FoodSummary,
   ParkingHubSection,
   GuideCards,
@@ -27,6 +26,8 @@ import {
 import { TwinTeaser } from "@/components/guide/twin/TwinTeaser";
 import {
   COMPUTING_ANCHOR,
+  COMPUTING_HREF,
+  RESOURCES_PATH,
   DISCORD_GUIDE,
   DISCORD_GUIDE_PATH,
   EVENT_2026,
@@ -55,23 +56,50 @@ export default function FieldGuideHubPage() {
         <QuickLinks />
         <AddToCalendar />
         {/* Renders only before the CSC / LUMI registration deadline (30 Oct 2026). */}
-        <ComputingCallout inPage />
+        <ComputingCallout />
       </GuideHero>
 
       <SectionNav
         items={[
+          { id: "ai-tools", label: "AI tools" },
           { id: "guides", label: "Your guide" },
           { id: "weekend", label: "Schedule" },
           { id: "venues", label: "Venues" },
           { id: "wifi", label: "Wi-Fi" },
           { id: "food", label: "Food" },
-          { id: COMPUTING_ANCHOR, label: "AI resources" },
           { id: "parking", label: "Parking" },
           { id: "accommodation", label: "Hotels" },
           { id: "preview", label: "3D campus" },
           { id: "help", label: "Help" },
         ]}
       />
+
+      <GuideSection id="ai-tools">
+        {/* Earlier links to the hub's CSC / LUMI section land here; its full content is on AI Tools & Resources. */}
+        <span id={COMPUTING_ANCHOR} className="block scroll-mt-32" />
+        <SectionHeading
+          id="ai-tools-title"
+          eyebrow="// ai tools & resources"
+          title="Start building with AI."
+          lede="AI coding assistants, models, cloud credits and free resources — what each one is, what you get and how to start."
+        />
+        <FeaturedToolStrip resourcesPath={RESOURCES_PATH} />
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <Link href={RESOURCES_PATH} className={primaryButtonClass}>
+            Open AI Tools &amp; Resources
+            <span aria-hidden="true" className="ml-2">
+              →
+            </span>
+          </Link>
+          <p className="text-sm text-neutral-400">
+            CSC / LUMI supercomputer access was for those who registered by Fri 30 Oct —{" "}
+            <Link href={COMPUTING_HREF} className="text-white underline underline-offset-4">
+              details
+            </Link>
+            .
+          </p>
+        </div>
+      </GuideSection>
 
       <GuideSection id="guides">
         <SectionHeading
@@ -130,7 +158,6 @@ export default function FieldGuideHubPage() {
         </div>
         <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
           <BuildingHubLink />
-          <ResourcesHubLink />
         </div>
       </GuideSection>
 
@@ -177,7 +204,6 @@ export default function FieldGuideHubPage() {
 
       <FoodSummary />
 
-      <ComputingSection />
 
       <ParkingHubSection />
 

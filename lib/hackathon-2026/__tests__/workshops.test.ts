@@ -151,7 +151,9 @@ describe("Presidenttiauditorio on the BioCity plan", () => {
 
   it("is a location with its Finnish name, 258 seats and the workshops it hosts", () => {
     expect(room.label).toBe("Presidenttiauditorio");
-    expect(room.description).toBe("BioCity · Auditorium · 258 seats · MLH workshops Fri 20:30–21:30");
+    expect(room.description).toBe(
+      "BioCity · Auditorium · 258 seats · Workshops: MLH Fri 20:30–21:30, BearingPoint Sat 12:00–12:30",
+    );
     expect(map.alt).toMatch(/Presidenttiauditorio \(258 seats\)/);
     expect(map.source).toBe("Turun Teknologiakiinteistöt floor plan");
   });
@@ -220,5 +222,52 @@ describe("MLH at Since AI (organiser, 4 Nov 2026)", () => {
       "Friday 20:30 — GitHub Copilot · 21:00 — Google AI Studio, in Presidenttiauditorio.",
     );
     for (const w of WORKSHOPS) expect(text).not.toContain(w.text);
+  });
+});
+
+describe("BearingPoint workshop (organiser, 4 Nov 2026)", () => {
+  it("is Saturday 12:00–12:30 in Presidenttiauditorio, confirmed, with BearingPoint's description", () => {
+    const item = getScheduleItem("sat-bearingpoint-workshop");
+    expect(item.title).toBe("BearingPoint Workshop – From AI Prototype to Business Impact");
+    expect([item.start, item.end]).toEqual(["2026-11-07T12:00:00+02:00", "2026-11-07T12:30:00+02:00"]);
+    expect(formatTimeRange(item)).toBe("12:00–12:30");
+    expect(item.place).toBe("biocity");
+    expect(item.placeDetail).toBe("Presidenttiauditorio");
+    expect(item.status).toBe("confirmed");
+    expect(item.tag).toBe("Workshop");
+    expect(item.detail).toBe(
+      "Hosted by BearingPoint. Learn how to turn an AI prototype into real business impact with BearingPoint. Discover practical ways to transform innovative ideas into valuable real-world solutions.",
+    );
+    expect(JSON.stringify(item)).not.toMatch(/planned|to be confirmed|tentative/i);
+    expect(item.link).toEqual({ label: "View room on map", href: "/hackathon-2026/guide/venue#place-bio-presidenttiauditorio" });
+  });
+
+  it("is in the builders' and partners' schedules once, never at the superseded 15:00 stand slot", () => {
+    for (const audience of ["builders", "partners"] as const) {
+      const bp = scheduleFor(audience).filter((i) => /BearingPoint/i.test(i.title));
+      expect(bp.map((i) => i.id)).toEqual(["sat-bearingpoint-workshop"]);
+    }
+    expect(JSON.stringify(scheduleFor())).not.toMatch(/T15:00:00\+02:00","end":"2026-11-07T15:30/);
+    expect(HUB_MILESTONE_IDS).toContain("sat-bearingpoint-workshop");
+  });
+
+  it("is in the calendar files at 10:00–10:30 UTC, confirmed, in the room", () => {
+    for (const audience of ["builders", "partners"] as const) {
+      const ics = unfold(buildCalendar(audience));
+      expect(ics).toContain(
+        `UID:sat-bearingpoint-workshop.${audience}@sinceai.ai\r\nDTSTAMP:20261104T000000Z\r\nDTSTART:20261107T100000Z\r\nDTEND:20261107T103000Z\r\nSUMMARY:Since AI · BearingPoint Workshop – From AI Prototype to Business Impact`,
+      );
+      const event = ics.split("BEGIN:VEVENT").find((e) => e.includes("UID:sat-bearingpoint-workshop"))!;
+      expect(event).toContain("STATUS:CONFIRMED");
+      expect(event).toContain("LOCATION:BioCity · Presidenttiauditorio\\, Tykistökatu 6\\, 20520 Turku");
+    }
+  });
+
+  it("never overlaps another session in Presidenttiauditorio", () => {
+    const inRoom = scheduleFor().filter((i) => i.placeDetail === "Presidenttiauditorio");
+    expect(inRoom.map((i) => i.id)).toEqual(["fri-mlh-copilot", "fri-mlh-ai-studio", "sat-bearingpoint-workshop"]);
+    for (let i = 1; i < inRoom.length; i++) {
+      expect(Date.parse(inRoom[i].start)).toBeGreaterThanOrEqual(Date.parse(inRoom[i - 1].end!));
+    }
   });
 });

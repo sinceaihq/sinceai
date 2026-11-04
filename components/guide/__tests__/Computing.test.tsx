@@ -56,7 +56,7 @@ describe("CSC / LUMI computing resources, before the deadline", () => {
   it("the hero callout links to the hub section with the deadline", () => {
     render(<ComputingCallout />);
     const link = screen.getByRole("link", { name: /Register by Fri 30 Oct/ });
-    expect(link).toHaveAttribute("href", "/hackathon-2026/guide#ai-resources");
+    expect(link).toHaveAttribute("href", "/hackathon-2026/guide/resources#ai-resources");
     expect(link).toHaveTextContent(/Optional/);
     expect(link).toHaveTextContent(/instructions are in your Since AI email/);
   });
@@ -70,7 +70,7 @@ describe("CSC / LUMI computing resources, before the deadline", () => {
     render(<ComputingNote />);
     expect(screen.getByRole("link", { name: "AI resources in the Field Guide" })).toHaveAttribute(
       "href",
-      "/hackathon-2026/guide#ai-resources",
+      "/hackathon-2026/guide/resources#ai-resources",
     );
     expect(screen.getByText(/Friday 30 October 2026 deadline/)).toBeInTheDocument();
   });

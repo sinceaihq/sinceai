@@ -24,8 +24,7 @@ import {
   VenueCards,
   VenueExplorer,
   WifiSection,
-  Workshops,
-  MlhOnSite,
+  FeaturedToolStrip,
   WinningProject,
   ghostButtonClass,
   primaryButtonClass,
@@ -34,7 +33,6 @@ import {
 import { TwinTeaser } from "@/components/guide/twin/TwinTeaser";
 import {
   AWARDS_HREF,
-  MLH_AWARDS_HREF,
   BRIEFING_ROOMS_ANCHOR,
   CHECKLISTS,
   CRITICAL_PATH,
@@ -47,9 +45,13 @@ import {
   VOTE_COMPARISONS,
   VOTING,
   MLH_ANCHOR,
+  MLH_HREF,
+  RESOURCES_PATH,
   WINNING,
   WINNING_ANCHOR,
+  WORKSHOP_PLACE,
   WORKSHOPS_ANCHOR,
+  WORKSHOPS_HREF,
 } from "@/lib/hackathon-2026";
 
 const AUDIENCE = "builders" as const;
@@ -127,10 +129,10 @@ export default function BuilderGuidePage() {
         items={[
           { id: "steps", label: "Steps" },
           { id: WINNING_ANCHOR, label: "Win" },
+          { id: "build-with-ai", label: "Build with AI" },
           { id: "rules", label: "Challenge rules" },
           { id: BRIEFING_ROOMS_ANCHOR, label: "Briefing rooms" },
           { id: "schedule", label: "Schedule" },
-          { id: MLH_ANCHOR, label: "MLH & workshops" },
           { id: "building", label: "Build & submit" },
           { id: "wifi", label: "Wi-Fi" },
           { id: "maps", label: "Maps" },
@@ -157,6 +159,44 @@ export default function BuilderGuidePage() {
           lede={WINNING.intro}
         />
         <WinningProject />
+      </GuideSection>
+
+      <GuideSection id="build-with-ai">
+        {/* Earlier links to the Builder Guide's MLH and workshop sections land here. */}
+        <span id={MLH_ANCHOR} className="block scroll-mt-32" />
+        <span id={WORKSHOPS_ANCHOR} className="block scroll-mt-32" />
+        <SectionHeading
+          id="build-with-ai-title"
+          eyebrow="// ai tools · credits · workshops"
+          title="Build with AI."
+          lede="Free and student AI tools, partner credits, MLH's hardware and workshops — what each gives you and how to start, on one page."
+        />
+        <FeaturedToolStrip resourcesPath={RESOURCES_PATH} />
+        <div className="mt-6">
+          <Link href={RESOURCES_PATH} className={primaryButtonClass}>
+            Open AI Tools &amp; Resources
+            <span aria-hidden="true" className="ml-2">
+              →
+            </span>
+          </Link>
+        </div>
+        <ul className="mt-6 max-w-3xl space-y-2 text-sm text-neutral-300 leading-relaxed">
+          <li>
+            <span className="font-semibold text-white">MLH workshops, Friday:</span> GitHub Copilot 20:30 · Google AI Studio
+            21:00, BioCity · {WORKSHOP_PLACE}. Seats are limited — one person per team recommended; the tools work without
+            attending.{" "}
+            <Link href={WORKSHOPS_HREF} className="text-white underline underline-offset-4">
+              Workshop details
+            </Link>
+          </li>
+          <li>
+            <span className="font-semibold text-white">MLH in BioCity:</span> the Hardware Lab, Arduino UNO Q giveaways and
+            help from MLH&apos;s team.{" "}
+            <Link href={MLH_HREF} className="text-white underline underline-offset-4">
+              MLH at Since AI
+            </Link>
+          </li>
+        </ul>
       </GuideSection>
 
       <GuideSection id="rules">
@@ -223,23 +263,6 @@ export default function BuilderGuidePage() {
         <Schedule items={schedule} audience={AUDIENCE} />
       </GuideSection>
 
-      <GuideSection id={MLH_ANCHOR}>
-        <SectionHeading
-          id={`${MLH_ANCHOR}-title`}
-          eyebrow="// major league hacking · biocity"
-          title="MLH at Since AI"
-        />
-        <MlhOnSite />
-        <div id={WORKSHOPS_ANCHOR} className="mt-14 scroll-mt-32">
-          <h3 id={`${WORKSHOPS_ANCHOR}-title`} className="text-2xl font-bold tracking-tight text-white md:text-3xl">
-            Workshops
-          </h3>
-          <p className="mt-2 mb-6 max-w-2xl text-neutral-300">
-            Two optional, hands-on MLH sessions on Friday evening to get you building with AI tools.
-          </p>
-          <Workshops />
-        </div>
-      </GuideSection>
 
       <GuideSection id="app">
         <SectionHeading
@@ -273,8 +296,8 @@ export default function BuilderGuidePage() {
             </span>
             <span className="sr-only"> (opens in a new tab)</span>
           </a>
-          <Link href={MLH_AWARDS_HREF} className={ghostButtonClass}>
-            MLH prizes and free tools{" "}
+          <Link href={RESOURCES_PATH} className={ghostButtonClass}>
+            AI Tools &amp; Resources{" "}
             <span aria-hidden="true" className="ml-2">
               →
             </span>

@@ -324,7 +324,7 @@ export const VENUE_MAPS: readonly VenueMap[] = [
         id: WORKSHOP_ROOM.hotspotId,
         label: "Presidenttiauditorio",
         description: `BioCity · Auditorium · ${WORKSHOP_ROOM.seats} seats${
-          WORKSHOP_ROOM_CONFIRMED ? " · MLH workshops Fri 20:30–21:30" : ""
+          WORKSHOP_ROOM_CONFIRMED ? " · Workshops: MLH Fri 20:30–21:30, BearingPoint Sat 12:00–12:30" : ""
         }`,
         x: 0.355,
         y: 0.135,

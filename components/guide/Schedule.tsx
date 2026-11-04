@@ -94,6 +94,14 @@ export function Schedule({
                           Deadline
                         </span>
                       )}
+                      {!deadline && (item.tag ?? (item.kind === "meal" ? "Meal" : null)) && (
+                        <span
+                          data-schedule-tag
+                          className="border border-white/15 px-1.5 py-px text-[10px] font-mono uppercase tracking-widest text-neutral-300"
+                        >
+                          {item.tag ?? "Meal"}
+                        </span>
+                      )}
                     </p>
                     {detail && <p className="mt-1 text-sm text-neutral-400 leading-relaxed">{detail}</p>}
                     <p className="mt-2 flex flex-wrap items-center gap-2">

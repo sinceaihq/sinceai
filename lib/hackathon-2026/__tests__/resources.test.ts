@@ -179,7 +179,7 @@ describe("developer tools, Google and MLH", () => {
   it("acknowledges MLH, its Friday introduction and points to the eight categories", () => {
     expect(MLH_NOTE).toMatch(/official Major League Hacking 2027 Season Member Event/);
     expect(MLH_NOTE).toMatch(/16:45 on Friday, on the Taidon portaat stage/);
-    expect(MLH_NOTE).toMatch(/eight MLH categories are at the top of this page/);
+    expect(MLH_NOTE).toMatch(/eight MLH prize categories are under Optional awards on this page/);
   });
 
   it("shows on-site partners with their registered roles only", () => {
@@ -188,7 +188,7 @@ describe("developer tools, Google and MLH", () => {
 
   it("is in the builders' checklist, with the Red Hat sandbox as an optional step", () => {
     const before = CHECKLISTS.builders.find((g) => g.title === "Before you arrive")!.items.join(" ");
-    expect(before).toMatch(/Builder Resources/);
+    expect(before).toMatch(/AI Tools & Resources/);
     expect(before).toMatch(/Developer Sandbox is set up before the event/);
   });
 });
