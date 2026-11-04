@@ -103,7 +103,7 @@ export const CRITICAL_PATH: Partial<Record<Audience, readonly { label: string; t
     { label: "MLH · opening", time: "16:45 · 17:00", text: "MLH intro, then the opening and Jason Mayes at Taidon portaat; from 18:30 follow your route." },
     { label: "Briefing", time: "18:50–19:30", text: "Your company's room at EduCity." },
     { label: "Build", time: "from 19:30", text: "Dinner and building in BioCity or Joki, around the clock." },
-    { label: "Submit", time: "Sun 10:00", text: "Your team submits in sinceai.app, not Devpost — the deadline is fixed. Tick any MLH categories; enter Red Hat or FIWARE under optional awards." },
+    { label: "Submit", time: "Sun 10:00", text: "Your team submits in sinceai.app, not Devpost — the deadline is fixed. Tick any partner technologies and MLH categories — the Red Hat and FIWARE ticks enter those awards." },
     { label: "Vote", time: "Sun 10:00–12:00", text: `Complete your ${VOTE_COMPARISONS} comparisons in sinceai.app.` },
   ],
   "challenge-partners": [
@@ -380,7 +380,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
     {
       q: "Can we win anything besides our company challenge?",
-      a: "Yes — optional awards, entered in sinceai.app with the same project: eight MLH categories (tick them on your submission), the Red Hat OpenShift AI Technology Award and the FIWARE Open Innovation Award. They never replace your company challenge or use its places.",
+      a: "Yes — optional awards, entered on your submission in sinceai.app with the same project: eight MLH categories, and the Red Hat OpenShift AI Technology Award and FIWARE Open Innovation Award by ticking Red Hat OpenShift AI or FIWARE under Partner technologies. A separate FIWARE prototype is its own entry on the open challenges page. They never replace your company challenge or use its places.",
       links: [
         { label: "Optional awards in AI Tools & Resources", href: AWARDS_HREF },
         { label: "MLH prize categories", href: MLH_AWARDS_HREF },
@@ -389,7 +389,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
     {
       q: "Our challenge requires an NDA. What changes?",
-      a: "FORCIT Group's challenge requires FORCIT's paper NDA, signed with a FORCIT representative during its challenge briefing on Friday, before any access to the data — every member who receives the data signs. Only after FORCIT has accepted the NDA does it give personal credentials for FORCIT's own API: never share them, and never put them in code, a repository or Discord. Keep restricted data out of public repositories, videos and award evidence, and add a public-safe summary to your submission: that is all voters and the public see.",
+      a: "FORCIT Group's challenge requires FORCIT's paper NDA, signed with a FORCIT representative during its challenge briefing on Friday, before any access to the data — every member who receives the data signs. Only after FORCIT has accepted the NDA does it give personal credentials for FORCIT's own API: never share them, and never put them in code, a repository or Discord. Keep restricted data out of public repositories, videos and award evidence, and confirm a public-safe summary on your submission: voters see the same card as for any project, with only what you confirmed public-safe.",
       links: [{ label: "Confidential challenges", href: `${RESOURCES_PATH}#${CONFIDENTIAL_ANCHOR}` }],
     },
     {
@@ -427,12 +427,16 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
       a: "Your company owns any NDA process, its text, signatures and records — sinceai.app never collects NDA signatures or documents, and choosing a challenge is not signing one. Do not reveal confidential content before signatures are complete, and plan a signing method that works for a full room of teams — with paper forms. Your Thursday summary must be safe to publish without an NDA. If your challenge needs an NDA, the guide shows a small \"NDA required\" label beside your company before teams choose.",
       points: [
         "Event staff record in sinceai.app which team members are covered — who verified it and when — before restricted data is shared. No scans or signatures are stored.",
-        "Outside your company's evaluators and the organisers, projects made for your challenge are shown only by name, team and a public-safe summary in the participant vote and the results; optional-award reviewers see only that summary and public-safe evidence unless the organisers clear more with you.",
+        "Outside your company's evaluators and the organisers, voters see the same vote card as for every project, with only what the team confirmed public-safe — project name, tagline, public summary and Built with — and its demo video and pitch deck unless you turn them off. Teams' demo videos are required unless you or the organisers make them optional for your challenge. The card carries no NDA label; until a team confirms, voters see a neutral placeholder. Optional-award reviewers see only public-safe material unless the organisers clear more with you.",
       ],
     },
     {
       q: "Meals",
       a: "Food will be reserved for company representatives at the scheduled meal times. Joining the meals is entirely optional.",
+    },
+    {
+      q: "What teams submit, and what voters see",
+      a: "Every team submits in sinceai.app by Sunday 10:00: project name, a one-sentence tagline, a description, Built with, a repository link, a YouTube demo video and its source code as a .zip — and optionally a demo URL, a pitch deck and up to two supporting documents. Your evaluators see all of it. The participant vote shows one card per project, the same for every challenge: project, tagline, the first lines of the description, the demo video, the pitch deck and up to five Built-with chips. Voters never see repository or demo links.",
     },
     {
       q: "Sunday results",
@@ -559,7 +563,8 @@ export const BUILDING_FAQ: readonly GuideDetail[] = [
   },
   {
     q: "Is a demo video or a pitch deck required? Which files can we upload?",
-    a: "Neither is required. A short demo video — about two minutes — is strongly recommended: add a YouTube link, or upload MP4 or WebM. A pitch deck can be PDF, PPT or PPTX; supporting documents can be PDF, PPT, PPTX, DOC, DOCX, TXT or Markdown. ZIP files are not accepted — share code through your repository link. Files can be added once the submission is saved.",
+    a: "A demo video is required: a public or unlisted YouTube link, ideally under two minutes. YouTube is the only format — MP4 or WebM files can't be uploaded. Your source code is required too, as one .zip of up to 100 MB without node_modules or data files. A pitch deck (one PDF, PPT or PPTX) and up to two supporting documents (PDF, PPT, PPTX, DOC, DOCX, TXT or Markdown) are optional. Files can be added before your first submit. On a confidential challenge the video is required unless the company or the organisers make it optional — the form tells you.",
+    links: [{ label: "What voters see", href: "#vote-card" }],
   },
   {
     q: "Who submits for the team?",

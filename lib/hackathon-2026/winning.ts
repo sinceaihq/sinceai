@@ -6,8 +6,8 @@ import { formatTimeRange } from "./time";
 /**
  * "Build a project that wins" — advice for builders, not a rule (organiser,
  * 4 Nov 2026). It adds no requirement, criterion, length limit or language
- * rule: the submission rules are in submission.ts (a demo video is
- * recommended, about two minutes, never required), judging is each company's
+ * rule: the submission rules are in submission.ts (a YouTube demo video is
+ * required, ideally under two minutes), judging is each company's
  * and the jury's. Company contact goes through the official routes only: the
  * Friday briefing, the Saturday Q&A windows at Joki (times from schedule.ts)
  * and the support route each company gives at its briefing.
@@ -38,7 +38,7 @@ export const WINNING = {
   },
   demo: {
     title: "Make your demo impossible to misunderstand.",
-    text: "Show your solution working. Record a clear screen demo, explain it in English and add captions if you can. Make the business value obvious — voters compare two projects at a time, and your video is the first thing they watch.",
+    text: "Show your solution working. Record a clear screen demo, explain it in English and add captions if you can. Make the business value obvious — voters compare two projects at a time, and your video is on every vote card.",
     howLabel: "How to make a great demo",
     steps: [
       {

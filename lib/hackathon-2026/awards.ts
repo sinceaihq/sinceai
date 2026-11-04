@@ -292,8 +292,8 @@ export const RED_HAT_AWARD: TechnologyAward = {
     "The solution must meaningfully use Red Hat OpenShift AI — for example to build, serve or monitor the model your solution relies on.",
   ],
   evidence: [
-    "A short description of how and where your solution uses OpenShift AI.",
-    "Technical evidence of real use: screenshots, a short screen recording, configuration or deployment files, or the relevant part of your repository.",
+    "How and where your solution uses OpenShift AI — at least 40 characters, in the tick's How did you use it? field.",
+    "An https link to technical evidence of real use: screenshots, a short screen recording, configuration or deployment files, or the relevant part of your repository.",
     "Nothing confidential: no restricted challenge data, keys or credentials.",
   ],
   criteria: [
@@ -328,12 +328,12 @@ export const FIWARE_AWARD: TechnologyAward & {
     {
       letter: "A",
       title: "Your company challenge solution",
-      text: "Your team's company challenge solution uses FIWARE technology — enter the same project for the award in sinceai.app.",
+      text: "Your team's company challenge solution uses FIWARE technology — tick FIWARE under Partner technologies on your submission. That tick enters the same project for the award.",
     },
     {
       letter: "B",
       title: "A separate FIWARE prototype",
-      text: "Your team builds an additional prototype on a problem of its own choosing. It is an extra award entry only: it never enters the company challenge rankings or the selection of the five finalists, and your company challenge entry still comes first. Enter it in sinceai.app by the deadline shown there and demo it live to the FIWARE evaluator; evaluation is on Sunday 8 November during judging.",
+      text: "Your team builds an additional prototype on a problem of its own choosing. It is an extra award entry only: it never enters the company challenge rankings or the selection of the five finalists, and your company challenge entry still comes first. Enter it on the open challenges page in sinceai.app by the deadline shown there and demo it live to the FIWARE evaluator; evaluation is on Sunday 8 November during judging.",
     },
   ],
   eligibility: [
@@ -342,8 +342,8 @@ export const FIWARE_AWARD: TechnologyAward & {
     "Sharing your code as open source during the event is strongly encouraged.",
   ],
   evidence: [
-    "Which FIWARE technologies you used and how they fit your architecture.",
-    "A link to your repository or demo showing the integration working.",
+    "Which FIWARE technologies you used — chosen from the list on the form — and how they fit your architecture, in at least 40 characters.",
+    "An https link to evidence of the integration working, such as your repository or a recording, and your confirmation that you will demo it working, live.",
     "Nothing confidential: no restricted challenge data in public code, videos or evidence.",
   ],
   criteria: [
@@ -394,8 +394,8 @@ export const HOW_TO_ENTER = [
     text: "On the same submission, select zero, one or several MLH categories. Gemini API entries add their Gemini project number — never an API key.",
   },
   {
-    title: "Enter Red Hat or FIWARE in the app",
-    text: "Enter the same project for the Red Hat or FIWARE award under optional awards in sinceai.app, with the evidence it asks for. A separate FIWARE prototype (route B) is its own extra entry.",
+    title: "Tick Red Hat or FIWARE under Partner technologies",
+    text: "On the same submission, tick Red Hat OpenShift AI or FIWARE under Partner technologies and add the evidence it asks for — that enters your project for the award. A separate FIWARE prototype (route B) is its own entry on the open challenges page in sinceai.app.",
   },
 ] as const;
 
@@ -438,7 +438,7 @@ export const AWARDS_AT_A_GLANCE: readonly AwardGlanceRow[] = [
     name: RED_HAT_AWARD.title,
     href: `#${awardAnchor(RED_HAT_AWARD.id)}`,
     win: RED_HAT_AWARD.prize,
-    enter: "Enter the same project under optional awards in sinceai.app, with evidence.",
+    enter: "Tick Red Hat OpenShift AI under Partner technologies on your submission, with evidence.",
     decided: "A Red Hat reviewer evaluates; Since AI confirms the winner. Announced in the event channels.",
     ask: "Red Hat's stand in BioCity's partner corner, and the Since AI Discord.",
   },
@@ -447,7 +447,7 @@ export const AWARDS_AT_A_GLANCE: readonly AwardGlanceRow[] = [
     name: FIWARE_AWARD.title,
     href: `#${awardAnchor(FIWARE_AWARD.id)}`,
     win: "A non-cash prize package from FIWARE Foundation.",
-    enter: "Under optional awards in sinceai.app: the same project (route A) or a separate prototype (route B).",
+    enter: "Route A: tick FIWARE under Partner technologies on your submission. Route B: a separate prototype on the open challenges page.",
     decided: "Evaluated on Sunday 8 November during judging; announced at the closing ceremony.",
     ask: "Jason Fox on site at EduCity, FIWARE's stand in BioCity's partner corner, and the Since AI Discord.",
   },

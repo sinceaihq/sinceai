@@ -116,7 +116,15 @@ function HowToSubmit() {
           <dl className="mt-3">
             {SUBMISSION.files.map((f) => (
               <div key={f.kind} className="border-t border-white/10 py-2.5 text-sm" data-file-kind={f.kind}>
-                <dt className="font-semibold text-white">{f.kind}</dt>
+                <dt className="flex flex-wrap items-baseline gap-x-2 font-semibold text-white">
+                  {f.kind}
+                  <span
+                    className={`font-mono text-[10px] uppercase tracking-widest ${f.required ? "text-(--color-event)" : "text-white/50"}`}
+                    data-file-required={f.required ? "yes" : "no"}
+                  >
+                    {f.required ? "Required" : "Optional"}
+                  </span>
+                </dt>
                 <dd className="text-neutral-300">{f.formats.join(", ")}</dd>
                 {"note" in f && f.note && <dd className="text-neutral-400 leading-relaxed">{f.note}</dd>}
               </div>
@@ -124,6 +132,27 @@ function HowToSubmit() {
           </dl>
           <p className="mt-3 text-xs text-neutral-400 leading-relaxed">{SUBMISSION.filesNote}</p>
         </div>
+      </div>
+
+      <div id="vote-card" className="guide-avoid-break mt-4 scroll-mt-32 border border-white/10 p-5 md:p-6" data-vote-card-guide>
+        <h4 className="text-lg font-bold tracking-tight text-white">What voters see</h4>
+        <p className="mt-1 text-sm text-neutral-400">One vote card, the same for every challenge, top to bottom:</p>
+        <ol className="mt-4 grid grid-cols-1 gap-px bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
+          {SUBMISSION.voteCard.map((row, i) => (
+            <li key={row.name} className="bg-black p-3 text-sm" data-vote-card-row={row.name}>
+              <span className="font-mono text-[11px] text-(--color-event)">{i + 1}</span>{" "}
+              <span className="font-semibold text-white">{row.name}</span>
+              <span className="block text-neutral-400 leading-relaxed">{row.text}</span>
+            </li>
+          ))}
+        </ol>
+        <ul className="mt-4 space-y-2 text-sm text-neutral-300 leading-relaxed">
+          {SUBMISSION.voteCardNotes.map((n) => (
+            <li key={n} className="border-l-2 border-white/15 pl-3">
+              {n}
+            </li>
+          ))}
+        </ul>
       </div>
 
       <ol className="mt-4 grid grid-cols-1 border-l border-t border-white/10 sm:grid-cols-2 lg:grid-cols-3">
@@ -136,8 +165,8 @@ function HowToSubmit() {
         ))}
       </ol>
       <p className="mt-4 text-sm text-neutral-400 leading-relaxed" data-submit-awards>
-        <span className="font-semibold text-white">Optional awards:</span> tick MLH categories on the same submission and
-        enter Red Hat or FIWARE in sinceai.app —{" "}
+        <span className="font-semibold text-white">Optional awards:</span> on the same submission, tick MLH categories,
+        and tick Red Hat OpenShift AI or FIWARE under Partner technologies to enter those awards —{" "}
         <Link href={AWARDS_HREF} className={inlineLink}>
           how to enter the optional awards
         </Link>

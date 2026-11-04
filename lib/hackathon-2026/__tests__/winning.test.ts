@@ -45,7 +45,7 @@ describe("Build a project that wins (advice, not rules)", () => {
   it("adds no rule: no requirement, length limit, language rule, criterion or guaranteed win", () => {
     expect(all).not.toMatch(/\bmust\b|required|mandatory|disqualif|minimum|maximum|criteri|guarantee|will win/i);
     // The video length is the existing recommendation (submission.ts), not a new limit.
-    expect(SUBMISSION.strongEntry.join(" ")).toMatch(/about two minutes — recommended, not required/);
+    expect(SUBMISSION.strongEntry.join(" ")).toMatch(/under two minutes in all/);
     expect(WINNING.demo.steps[3].text).toMatch(/About two minutes is plenty/);
     expect(WINNING.demo.text).toMatch(/explain it in English and add captions if you can/);
   });

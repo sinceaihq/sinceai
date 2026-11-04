@@ -129,7 +129,8 @@ describe("Red Hat OpenShift AI Technology Award", () => {
     ]);
     expect(text(RED_HAT_AWARD.eligibility)).toMatch(/official company challenge/);
     expect(text(RED_HAT_AWARD.eligibility)).toMatch(/standalone app built for this award alone is not eligible/);
-    expect(RED_HAT_AWARD.evidence.join(" ")).toMatch(/Technical evidence of real use/);
+    expect(RED_HAT_AWARD.evidence.join(" ")).toMatch(/https link to technical evidence of real use/);
+    expect(RED_HAT_AWARD.evidence.join(" ")).toMatch(/at least 40 characters/);
   });
 
   it("does not name the reviewer or publish agreement details", () => {
@@ -198,7 +199,10 @@ describe("voting, finalists and confidential challenges", () => {
     expect(rules).not.toMatch(/signed on site|controlled system/);
     expect(rules).toMatch(/No restricted data in public GitHub repositories, demo videos/);
     expect(rules).toMatch(/public-safe summary/);
-    expect(rules).toMatch(/the video and deck only once your team confirms them public-safe, and not if FORCIT turns them off/);
+    expect(rules).toMatch(/project name, tagline, summary and Built with contain no FORCIT data/);
+    expect(rules).toMatch(/the same card as every other project/);
+    expect(rules).toMatch(/the video and deck unless FORCIT turns them off/);
+    expect(rules).toMatch(/demo video is required unless FORCIT or the organisers make it optional/);
     expect(rules).toMatch(/nothing is signed online/i);
   });
 
@@ -306,8 +310,11 @@ describe("submission form pointers", () => {
     const optIn = SUBMISSION.optional.find((f) => /MLH prize categories/.test(f.name))!;
     expect(optIn.note).toMatch(/tick the MLH categories/i);
     expect(optIn.link?.href).toBe(AWARDS_HREF);
-    const summary = SUBMISSION.optional.find((f) => f.name === "Public summary")!;
-    expect(summary.note).toMatch(/^For confidential challenges/);
+    const summary = SUBMISSION.required.find((f) => f.name === "Public summary (confidential challenges only)")!;
+    expect(summary.note).toMatch(/^A public-safe summary/);
+    // Red Hat and FIWARE are entered by ticking them under Partner technologies.
+    const partners = SUBMISSION.optional.find((f) => f.name === "Partner technologies")!;
+    expect(partners.note).toMatch(/Ticking Red Hat OpenShift AI or FIWARE also enters that award/);
     expect(summary.link?.href).toBe("/hackathon-2026/guide/resources#confidential");
   });
 });
