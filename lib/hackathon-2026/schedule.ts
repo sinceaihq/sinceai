@@ -1,6 +1,14 @@
 import { CHALLENGE_PRIZES_STATEMENT } from "./prizes";
 import { ALL_AUDIENCES, type Audience, type ScheduleItem } from "./types";
-import { WORKSHOP_BRING, WORKSHOP_MAP_LINK, WORKSHOP_PLACE, WORKSHOPS, type Workshop } from "./workshops";
+import {
+  BEARINGPOINT_ROOM_VERIFIED,
+  BEARINGPOINT_WORKSHOP,
+  WORKSHOP_BRING,
+  WORKSHOP_MAP_LINK,
+  WORKSHOP_PLACE,
+  WORKSHOPS,
+  type Workshop,
+} from "./workshops";
 
 const THU = "2026-11-05";
 const FRI = "2026-11-06";
@@ -67,6 +75,7 @@ const workshopItem = (w: Workshop): ScheduleItem => ({
   placeDetail: WORKSHOP_PLACE,
   audiences: ["builders", "partners"],
   kind: "session",
+  tag: "Workshop",
   status: "confirmed",
   note: "Limited seating — we recommend one person per team. You don't need to attend to use the tools.",
   link: WORKSHOP_MAP_LINK,
@@ -176,6 +185,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   },
   {
     id: "fri-mlh-intro",
+    tag: "Talk",
     start: at(FRI, "16:45"),
     end: at(FRI, "16:55"),
     title: "Major League Hacking: Introduction & Hacker Resources",
@@ -189,6 +199,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   },
   {
     id: "fri-opening",
+    tag: "Ceremony",
     start: at(FRI, "17:00"),
     end: at(FRI, "17:30"),
     title: "Opening ceremony",
@@ -209,6 +220,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   },
   {
     id: "fri-keynote",
+    tag: "Talk",
     start: at(FRI, "17:30"),
     end: at(FRI, "18:30"),
     title: "Keynote and tech talk: Jason Mayes",
@@ -378,6 +390,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   },
   {
     id: "sat-qa-morning",
+    tag: "Company Q&A",
     start: at(SAT, "09:00"),
     end: at(SAT, "12:00"),
     title: "Challenge partner Q&A open",
@@ -392,6 +405,22 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     audiences: ["builders", "challenge-partners"],
     kind: "session",
     status: "confirmed",
+  },
+  {
+    // Time confirmed by BearingPoint (organiser, 4 Nov 2026); the room is planned until production verifies it.
+    id: BEARINGPOINT_WORKSHOP.scheduleId,
+    start: BEARINGPOINT_WORKSHOP.start,
+    end: BEARINGPOINT_WORKSHOP.end,
+    title: BEARINGPOINT_WORKSHOP.title,
+    detail: `Hosted by ${BEARINGPOINT_WORKSHOP.host}. ${BEARINGPOINT_WORKSHOP.text}`,
+    place: "biocity",
+    placeDetail: BEARINGPOINT_WORKSHOP.place,
+    audiences: ["builders", "partners"],
+    kind: "session",
+    tag: "Workshop",
+    status: "confirmed",
+    ...(BEARINGPOINT_ROOM_VERIFIED ? {} : { note: "The time is confirmed; the room will be confirmed by Since AI." }),
+    link: BEARINGPOINT_WORKSHOP.mapLink,
   },
   {
     id: "sat-lunch",
@@ -424,6 +453,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   },
   {
     id: "sat-qa-afternoon",
+    tag: "Company Q&A",
     start: at(SAT, "14:30"),
     end: at(SAT, "18:00"),
     title: "Challenge partner Q&A open",
@@ -617,6 +647,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   },
   {
     id: "sun-closing-ceremony",
+    tag: "Ceremony",
     start: at(SUN, "13:15"),
     title: "Closing ceremony begins",
     detail: "The hosts thank everyone, followed by a short motivational talk of at most ten minutes.",
@@ -644,6 +675,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
   },
   {
     id: "sun-finals",
+    tag: "Ceremony",
     start: at(SUN, "14:00"),
     end: at(SUN, "15:10"),
     title: "Finals: five finalist teams present live",
@@ -729,6 +761,7 @@ export const HUB_MILESTONE_IDS = [
   "fri-mlh-copilot",
   "fri-mlh-ai-studio",
   "sat-qa-morning",
+  "sat-bearingpoint-workshop",
   "sun-submission-deadline",
   "sun-closing-ceremony",
   "sun-closing",

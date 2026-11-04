@@ -171,14 +171,14 @@ export default function VenueExplorerPage() {
         <SectionHeading id="help-title" eyebrow="// help" title="Can't find it?" />
         <HelpSection />
         <div className="mt-8">
-          {/* The Venue Explorer stays about places; tools and awards live in Builder Resources. */}
+          {/* The Venue Explorer stays about places; tools and awards live in AI Tools & Resources. */}
           <nav
-            aria-label="Builder Resources"
+            aria-label="AI Tools & Resources"
             className="flex flex-wrap gap-x-6 gap-y-1 text-sm"
             data-venue-resource-links
           >
             <Link href={RESOURCES_PATH} className="inline-flex min-h-11 items-center text-neutral-300 underline underline-offset-4 decoration-white/30 hover:text-white">
-              Builder Resources: tools and credits
+              AI Tools & Resources: tools and credits
             </Link>
             <Link href={AWARDS_HREF} className="inline-flex min-h-11 items-center text-neutral-300 underline underline-offset-4 decoration-white/30 hover:text-white">
               Optional awards: MLH, Red Hat, FIWARE

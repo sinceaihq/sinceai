@@ -43,7 +43,7 @@ export const WORKSHOP_MAP_LINK = WORKSHOP_ROOM_CONFIRMED
   : { label: "BioCity map", href: `${VENUE_PATH}#map-biocity-lobby` };
 
 export const WORKSHOPS_ANCHOR = "workshops";
-export const WORKSHOPS_HREF = `${GUIDE_BASE_PATH}/builders#${WORKSHOPS_ANCHOR}`;
+export const WORKSHOPS_HREF = `${GUIDE_BASE_PATH}/resources#${WORKSHOPS_ANCHOR}`;
 
 export interface Workshop {
   id: string;
@@ -117,6 +117,32 @@ export const WORKSHOP_CANT_ATTEND = {
   ],
 } as const;
 
+/**
+ * BearingPoint's workshop (organiser, 4 Nov 2026): Oskari Kangasniemi accepted
+ * the updated invitation for Saturday 7 November, 12:00–12:30, in BioCity's
+ * Presidenttiauditorio. Since AI holds the whole of BioCity and Joki for the
+ * weekend, 24/7, so the room needs no separate booking — it is confirmed. It
+ * supersedes the earlier plan of Sat 15:00–15:30 at BearingPoint's stand,
+ * which was never in this schedule. No other programme item uses the
+ * auditorium (MLH: Fri 20:30–21:30), so nothing overlaps.
+ */
+export const BEARINGPOINT_ROOM_VERIFIED = true;
+
+export const BEARINGPOINT_WORKSHOP = {
+  id: "bearingpoint-ai-to-impact",
+  scheduleId: "sat-bearingpoint-workshop",
+  start: "2026-11-07T12:00:00+02:00",
+  end: "2026-11-07T12:30:00+02:00",
+  title: "BearingPoint Workshop – From AI Prototype to Business Impact",
+  host: "BearingPoint",
+  text: "Learn how to turn an AI prototype into real business impact with BearingPoint. Discover practical ways to transform innovative ideas into valuable real-world solutions.",
+  place: BEARINGPOINT_ROOM_VERIFIED ? WORKSHOP_ROOM.name : `${WORKSHOP_ROOM.name} (planned — room to be confirmed)`,
+  mapLink: {
+    label: BEARINGPOINT_ROOM_VERIFIED ? "View room on map" : "Planned room on map",
+    href: `${VENUE_PATH}#place-${WORKSHOP_ROOM.hotspotId}`,
+  },
+} as const;
+
 /** One line where the MLH introduction is mentioned, so the two are never confused. */
 export const WORKSHOPS_VS_INTRO =
   "Separate from MLH's ten-minute introduction at 16:45 on the EduCity stage.";
@@ -140,7 +166,7 @@ export const WORKSHOPS_VS_INTRO =
  * wants volunteer help with lending and returns.
  */
 export const MLH_ANCHOR = "mlh";
-export const MLH_HREF = `${GUIDE_BASE_PATH}/builders#${MLH_ANCHOR}`;
+export const MLH_HREF = `${GUIDE_BASE_PATH}/resources#${MLH_ANCHOR}`;
 export const MLH_MAP_LINK = { label: "Find MLH on the map", href: `${VENUE_PATH}#place-stand-bc-6` } as const;
 export const MLH_HARDWARE_LINK = {
   label: "Explore hardware resources",

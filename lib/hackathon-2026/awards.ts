@@ -305,7 +305,7 @@ export const RED_HAT_AWARD: TechnologyAward = {
   evaluation: "A Red Hat reviewer evaluates the eligible entries in sinceai.app; Since AI confirms the winner.",
   questions: {
     text: "A Red Hat stand is planned in BioCity's partner corner, and Red Hat's experts answer on the Since AI Discord. Any session or office hours are announced in the event channels.",
-    link: { label: "Red Hat in Builder Resources", href: `${RESOURCES_PATH}#resource-red-hat` },
+    link: { label: "Red Hat in AI Tools & Resources", href: `${RESOURCES_PATH}#tool-red-hat` },
   },
   docs: [
     { label: "Developer Sandbox (free for 30 days)", href: "https://developers.redhat.com/developer-sandbox" },

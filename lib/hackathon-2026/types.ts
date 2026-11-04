@@ -63,6 +63,8 @@ export interface ScheduleItem {
   noteFor?: Partial<Record<Audience, string>>;
   /** One guide link shown under the item, e.g. the map of its room. */
   link?: { label: string; href: string };
+  /** A short type label beside the title, so workshops, ceremonies and Q&A stand out from the rest. */
+  tag?: "Workshop" | "Ceremony" | "Company Q&A" | "Talk";
 }
 
 export interface Entrance {

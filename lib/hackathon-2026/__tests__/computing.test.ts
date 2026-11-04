@@ -104,7 +104,8 @@ describe("CSC / LUMI AI Factory computing resources", () => {
 
   it("anchors the hub section, which the builder guide links to", () => {
     expect(COMPUTING_ANCHOR).toBe("ai-resources");
-    expect(COMPUTING_HREF).toBe(`${GUIDE_BASE_PATH}#ai-resources`);
+    // The full section lives on AI Tools & Resources (organiser, 4 Nov 2026).
+    expect(COMPUTING_HREF).toBe(`${GUIDE_BASE_PATH}/resources#ai-resources`);
     const before = CHECKLISTS.builders.find((g) => g.title === "Before you arrive")!;
     expect(before.items.some((i) => i.includes("CSC / LUMI") && i.includes("Friday 30 October 2026"))).toBe(true);
   });

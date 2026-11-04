@@ -45,11 +45,11 @@ import { GUIDE_BASE_PATH } from "./facts";
 export const RESOURCES_PATH = `${GUIDE_BASE_PATH}/resources`;
 
 export const RESOURCES_GUIDE = {
-  name: "Builder Resources",
-  navLabel: "Resources",
-  lede: "Explore the technologies available for your build. Since AI works with technology partners to provide computing resources, development tools, learning materials and selected participant benefits — and you can win optional awards with the same project.",
+  name: "AI Tools & Resources",
+  navLabel: "AI Tools",
+  lede: "AI coding assistants, models, cloud credits and free resources for your project — what each one is, what you get and how to start.",
   metaDescription:
-    "Since AI Hackathon 2026 Builder Resources: computing, AI models, app builders, FIWARE and developer tools — quickstarts, participant benefits, optional MLH, Red Hat and FIWARE awards and where to get help.",
+    "Since AI Hackathon 2026 AI Tools & Resources: AI coding assistants, models, cloud credits, computing, AI models, app builders, FIWARE and developer tools — quickstarts, participant benefits, optional MLH, Red Hat and FIWARE awards and where to get help.",
 } as const;
 
 /** Shown under the hero: how access works, and the freedom to choose tools. */
@@ -276,6 +276,6 @@ export const DEVELOPER_TOOLS_NOTE =
 
 /** The MLH relationship; its eight prize categories are in awards.ts. */
 export const MLH_NOTE =
-  "Since AI Hackathon 2026 is an official Major League Hacking 2027 Season Member Event. MLH introduces its tools, sponsor technologies and award categories at 16:45 on Friday, on the Taidon portaat stage — the eight MLH categories are at the top of this page.";
+  "Since AI Hackathon 2026 is an official Major League Hacking 2027 Season Member Event. MLH introduces its tools, sponsor technologies and award categories at 16:45 on Friday, on the Taidon portaat stage — the eight MLH prize categories are under Optional awards on this page.";
 
 export const resourcesIn = (category: ResourceCategoryId) => PARTNER_RESOURCES.filter((r) => r.category === category);

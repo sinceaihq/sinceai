@@ -266,7 +266,7 @@ describe("award links", () => {
   it("answers questions only with support already published — Red Hat's resource card, FIWARE's mentor and Discord, MLH's introduction", () => {
     const redHat = PARTNER_RESOURCES.find((r) => r.id === "red-hat")!;
     expect(RED_HAT_AWARD.questions.text).toBe(redHat.help);
-    expect(RED_HAT_AWARD.questions.link.href).toBe("/hackathon-2026/guide/resources#resource-red-hat");
+    expect(RED_HAT_AWARD.questions.link.href).toBe("/hackathon-2026/guide/resources#tool-red-hat");
     expect(FIWARE_AWARD.questions.text).toMatch(/Jason Fox.*on site at EduCity.*Discord/);
     expect(FIWARE_AWARD.questions.link.href).toMatch(/^https:\/\/discord\./);
     expect(MLH_QUESTIONS).toMatch(/16:45 on Friday, on the Taidon portaat stage/);

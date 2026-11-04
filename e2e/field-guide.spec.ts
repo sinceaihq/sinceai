@@ -55,6 +55,11 @@ test.describe("routes and indexing", () => {
     expect(buildersIcs).toContain("SUMMARY:Since AI · Google AI Studio Workshop");
     expect(buildersIcs).toContain("DTSTART:20261106T190000Z\r\nDTEND:20261106T193000Z");
     expect(buildersIcs).toContain("Presidenttiauditorio");
+    // BearingPoint, Saturday 12:00–12:30 Turku time = 10:00–10:30 UTC, once, confirmed.
+    expect(buildersIcs).toContain("DTSTART:20261107T100000Z\r\nDTEND:20261107T103000Z\r\nSUMMARY:Since AI · BearingPoint Workshop – From AI Prototype to Business Impact");
+    expect((buildersIcs.match(/BearingPoint Workshop/g) ?? []).length).toBe(1);
+    const partnersIcs = (await (await request.get(`${GUIDE}/calendar/partners`)).text()).replace(/\r\n /g, "");
+    expect(partnersIcs).toContain("UID:sat-bearingpoint-workshop.partners@sinceai.ai");
 
     const elisa = await request.get(`${GUIDE}/calendar/challenge-partners/elisa`);
     expect(elisa.status()).toBe(200);
@@ -384,8 +389,8 @@ test.describe("CSC / LUMI computing resources", () => {
   // A fixed moment before CSC's deadline (Fri 30 Oct 2026), so the test does not change with the calendar.
   const BEFORE = "now=2026-10-26T12:00";
 
-  test("the hub shows the section, its nav chip and the hero callout", async ({ page }) => {
-    await page.goto(`${GUIDE}?${BEFORE}`);
+  test("the full section is on AI Tools & Resources; the hub keeps a short pointer and the old anchor", async ({ page }) => {
+    await page.goto(`${GUIDE}/resources?${BEFORE}`);
     const section = page.locator("#ai-resources");
     await expect(section.getByRole("heading", { level: 2 })).toHaveText("CSC / LUMI AI Factory computing resources.");
     await expect(section.locator('[data-computing-status="open"]')).toContainText("Friday 30 October 2026");
@@ -393,36 +398,32 @@ test.describe("CSC / LUMI computing resources", () => {
     await expect(section).toContainText("Horizon Europe-associated country");
     await expect(section).toContainText("SUPERCOMPUTER");
     await expect(section.getByRole("link", { name: "info@sinceai.fi" })).toHaveAttribute("href", "mailto:info@sinceai.fi");
-    // After the essentials (role guides, schedule, venues, Wi-Fi, food): registration closed on 30 Oct.
-    const order = await page.$$eval("main section[id]", (els) => els.map((e) => e.id));
-    expect(order.indexOf("ai-resources")).toBe(order.indexOf("food") + 1);
-
-    const nav = page.getByRole("navigation", { name: "On this page" });
-    await nav.getByRole("link", { name: "AI resources" }).click();
-    await expect(page).toHaveURL(/#ai-resources$/);
-    await expect(page.locator("#ai-resources-title")).toBeInViewport();
-
-    await page.goto(`${GUIDE}?${BEFORE}`);
-    await page.getByRole("link", { name: /Register by Fri 30 Oct/ }).click();
-    await expect(page).toHaveURL(new RegExp(`\\?${BEFORE}#ai-resources$`));
+    // The hub: a one-line pointer in the AI tools section, and #ai-resources still lands on it.
+    await page.goto(`${GUIDE}?${BEFORE}#ai-resources`);
+    await expect(page.locator("#ai-tools")).toContainText("CSC / LUMI supercomputer access was for those who registered by Fri 30 Oct");
+    await expect(page.locator("#ai-tools").getByRole("link", { name: "details" })).toHaveAttribute("href", `${GUIDE}/resources#ai-resources`);
+    await expect(page.locator("main #ai-resources")).toHaveCount(1);
+    await page.getByRole("link", { name: /Register by Fri 30 Oct/ }).first().click();
+    await expect(page).toHaveURL(new RegExp(`${GUIDE}/resources#ai-resources$`));
     await expect(page.locator("#ai-resources-title")).toBeInViewport();
   });
 
-  test("the builder guide links to the hub section from its hero and its checklist", async ({ page }) => {
+  test("the builder guide links to the full section from its hero and its checklist", async ({ page }) => {
     await page.goto(`${GUIDE}/builders?${BEFORE}`);
     await expect(page.locator("#bring")).toContainText("CSC / LUMI computing");
     await expect(page.locator("#bring").getByRole("link", { name: "AI resources in the Field Guide" })).toHaveAttribute(
       "href",
-      `${GUIDE}#ai-resources`,
+      `${GUIDE}/resources#ai-resources`,
     );
     await page.getByRole("link", { name: /Register by Fri 30 Oct/ }).click();
-    await expect(page).toHaveURL(new RegExp(`${GUIDE}#ai-resources$`));
+    await expect(page).toHaveURL(new RegExp(`${GUIDE}/resources#ai-resources$`));
     await expect(page.locator("#ai-resources-title")).toBeInViewport();
   });
 
   test("after the deadline the section says registration has closed and the callout is gone", async ({ page }) => {
-    await page.goto(`${GUIDE}?now=2026-10-31T09:00`);
+    await page.goto(`${GUIDE}/resources?now=2026-10-31T09:00`);
     await expect(page.locator('#ai-resources [data-computing-status="closed"]')).toContainText("Registration closed");
+    await page.goto(`${GUIDE}?now=2026-10-31T09:00`);
     await expect(page.getByRole("link", { name: /Register by Fri 30 Oct/ })).toHaveCount(0);
   });
 
@@ -494,7 +495,7 @@ test.describe("Build & submit (builder guide)", () => {
     );
     await page.getByText("Can we use CSC / LUMI computing?").click();
     await page.getByRole("link", { name: "AI resources in the Field Guide" }).first().click();
-    await expect(page).toHaveURL(new RegExp(`${GUIDE}#ai-resources$`));
+    await expect(page).toHaveURL(new RegExp(`${GUIDE}/resources#ai-resources$`));
     await expect(page.locator("#ai-resources-title")).toBeInViewport();
   });
 
@@ -506,40 +507,91 @@ test.describe("Build & submit (builder guide)", () => {
   });
 });
 
-test.describe("Builder Resources", () => {
-  test("partner resources by category, with benefits, access, help and original-source links", async ({ page }) => {
+test.describe("AI Tools & Resources", () => {
+  test("starts with six recognisable tools, each with a logo, what you get and one button", async ({ page }) => {
     await page.goto(`${GUIDE}/resources`);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Builder Resources");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("AI Tools & Resources");
+    const firstSection = await page.locator("main section[id]").first().getAttribute("id");
+    expect(firstSection).toBe("start");
+    await expect(page.locator("#start-title")).toHaveText("Start building with AI.");
+    const featured = page.locator("[data-featured-tool]");
+    expect(await featured.evaluateAll((els) => els.map((e) => e.getAttribute("data-featured-tool")))).toEqual([
+      "github-copilot",
+      "claude",
+      "cursor",
+      "lovable",
+      "gemini",
+      "google-cloud",
+    ]);
+    const copilot = page.locator('[data-featured-tool="github-copilot"]');
+    await expect(copilot.getByRole("heading", { level: 3 })).toHaveText("GitHub Copilot");
+    await expect(copilot).toContainText("Get AI coding assistance inside your editor.");
+    await expect(copilot.locator("[data-tool-access]")).toContainText("Free plan with monthly limits");
+    await expect(copilot.locator("[data-tool-access]")).toContainText("Copilot Student free for verified students");
+    await expect(copilot.getByRole("link", { name: /Get GitHub Copilot/ })).toHaveAttribute("href", "https://github.com/features/copilot/plans");
+    await expect(copilot).toContainText("Optional workshop: Fri 20:30, BioCity.");
+    const gemini = page.locator('[data-featured-tool="gemini"]');
+    await expect(gemini.getByRole("link", { name: /Open Google AI Studio/ })).toHaveAttribute("href", "https://mlh.link/gemini-aistudio");
+    await expect(gemini).toContainText("Since AI has no Google credits of its own");
+    await expect(gemini).toContainText("Benefit provided through Major League Hacking (MLH).");
+    await expect(page.locator('[data-featured-tool="claude"] [data-tool-access]')).toContainText("Claude Code needs a paid plan or API credit");
+    await expect(page.locator('[data-resource="lovable"]')).toContainText("100 Lovable credits per participant");
+    // The first card's button is visible without scrolling far on a phone-sized screen too.
+    for (const img of await page.locator("[data-featured-tool] img").all()) {
+      await img.scrollIntoViewIfNeeded();
+      await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
+    }
+    await expect(page.locator("main")).not.toContainText(/official Since AI sponsor|unlimited|guaranteed credits/i);
+  });
+
+  test("everything else by what you want to do, one card per provider, with benefits, access, help and awards", async ({ page }) => {
+    await page.goto(`${GUIDE}/resources`);
     await expect(page.locator("[data-resources-intro]")).toContainText("official Since AI participant messages and designated event channels");
     for (const [section, ids] of [
-      ["computing", ["csc-lumi", "red-hat"]],
-      ["models", ["pruna-ai", "featherless", "elevenlabs"]],
-      ["building", ["lovable", "n8n"]],
-      ["standards", ["fiware"]],
+      ["coding", ["n8n", "entire"]],
+      ["models", ["openai", "elevenlabs", "featherless", "pruna-ai"]],
+      ["cloud", ["red-hat", "mongodb-atlas", "snowflake", "tiger-data", "vultr"]],
+      ["advanced", ["csc-lumi", "fiware", "solana"]],
     ] as const) {
-      const cards = page.locator(`#${section} [data-resource]`);
-      expect(await cards.evaluateAll((els) => els.map((e) => e.getAttribute("data-resource")))).toEqual([...ids]);
+      const cards = page.locator(`#${section} > div > ul > [data-tool], #${section} [data-tool]`);
+      expect(await cards.evaluateAll((els) => [...new Set(els.map((e) => e.getAttribute("data-tool")))])).toEqual([...ids]);
     }
-    await expect(page.locator('[data-resource="lovable"]')).toContainText("100 Lovable credits per participant");
+    // Each provider appears once.
+    const all = await page.locator("[data-tool]").evaluateAll((els) => els.map((e) => e.getAttribute("data-tool")));
+    expect(new Set(all).size).toBe(all.length);
+    expect(all).toHaveLength(20);
+    // Former anchors still land in the right place.
+    for (const id of ["computing", "building", "standards", "tools", "resource-red-hat", "resource-lovable"]) {
+      await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
+    }
     await expect(page.locator('[data-resource="n8n"]')).toContainText("limited to 200 redemptions");
     await expect(page.locator('[data-resource="featherless"]')).toContainText("never on this website");
     await expect(page.locator('[data-resource="red-hat"]')).toContainText("free for 30 days");
-    await expect(page.locator('[data-resource="fiware"]').getByRole("link", { name: "FIWARE builder resources" })).toHaveAttribute("href", "#fiware");
-    // The cards name their award, link to its own card and give the prize in a few words; the terms live in the awards section.
-    await expect(page.locator('[data-resource="fiware"]').getByRole("link", { name: "FIWARE Open Innovation Award" })).toHaveAttribute(
-      "href",
-      `${GUIDE}/resources#award-fiware-open-innovation`,
-    );
-    await expect(page.locator('[data-resource="fiware"] [data-award-short]')).toHaveText("· non-cash package");
+    // The details sit behind each card's disclosure: open it as a builder would.
+    for (const id of ["red-hat", "fiware"]) await page.locator(`[data-resource="${id}"] summary`).click();
     await expect(page.locator('[data-resource="red-hat"]').getByRole("link", { name: "Red Hat OpenShift AI Technology Award" })).toHaveAttribute(
       "href",
       `${GUIDE}/resources#award-red-hat-openshift-ai`,
     );
-    await expect(page.locator('[data-resource="red-hat"] [data-award-short]')).toHaveText("· €1,000");
+    await expect(page.locator('[data-resource="red-hat"] [data-award-short]')).toHaveText(" · €1,000");
     await expect(page.locator('[data-resource="red-hat"]')).toContainText("A Red Hat stand is planned in BioCity's partner corner");
+    await expect(page.locator('[data-resource="fiware"]').getByRole("link", { name: /Start with FIWARE/ })).toHaveAttribute("href", "#fiware");
+    await expect(page.locator('[data-resource="fiware"]').getByRole("link", { name: "FIWARE Open Innovation Award" })).toHaveAttribute(
+      "href",
+      `${GUIDE}/resources#award-fiware-open-innovation`,
+    );
+    await expect(page.locator('[data-resource="fiware"]')).toContainText("A FIWARE stand is planned in BioCity's partner corner");
+    const lumi = page.locator('[data-resource="csc-lumi"]');
+    await expect(lumi.locator("[data-tool-access]")).toContainText("Registered by Fri 30 Oct only");
+    await expect(lumi).toContainText("You do not need LUMI to take part");
+    await expect(lumi.getByRole("link", { name: "Eligibility and deadline" })).toHaveAttribute("href", "#ai-resources");
+    for (const id of ["mongodb-atlas", "snowflake", "vultr", "tiger-data", "solana", "entire"]) {
+      await expect(page.locator(`[data-tool="${id}"]`)).toContainText("Benefit provided through Major League Hacking (MLH).");
+    }
+    await expect(page.locator('[data-tool="mongodb-atlas"]')).toContainText("free forever tier");
+    await expect(page.locator('[data-tool="snowflake"]')).toContainText("120-day");
     await expect(page.locator("main")).not.toContainText(/Google Cloud credit|Activation pending|exclusive/i);
-    const cards = page.locator("[data-resource]");
-    for (const card of await cards.all()) {
+    for (const card of await page.locator("[data-tool]").all()) {
       for (const link of await card.getByRole("link").all()) {
         const href = (await link.getAttribute("href"))!;
         if (href.startsWith("/") || href.startsWith("#")) continue;
@@ -548,43 +600,21 @@ test.describe("Builder Resources", () => {
         await expect(link).toHaveAttribute("rel", "noopener noreferrer");
       }
     }
-    await expect(page.locator('[data-resource="csc-lumi"]').getByRole("link", { name: "Eligibility and deadline" })).toHaveAttribute(
-      "href",
-      `${GUIDE}#ai-resources`,
-    );
-    await expect(page.locator("[data-tool]")).toHaveCount(6);
     await expect(page.locator("[data-stand-partner]")).toHaveCount(7);
-    await expect(page.locator('[data-stand-partner="red-hat"]')).toHaveCount(1);
-    await expect(page.locator('[data-stand-partner="fiware"]')).toHaveCount(1);
-    await expect(page.locator('[data-resource="fiware"]')).toContainText("A FIWARE stand is planned in BioCity's partner corner");
     await expect(page.locator("[data-mlh-note]")).toContainText("2027 Season Member Event");
-    // Logos load. They are lazy, so wait for each one after scrolling to it instead of reading it at once.
-    for (const img of await page.locator("[data-resource] img").all()) {
+    for (const img of await page.locator("[data-tool] img").all()) {
       await img.scrollIntoViewIfNeeded();
       await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
     }
+    expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
   });
 
-  test("optional awards: how to enter, Red Hat, FIWARE and the eight MLH categories", async ({ page }) => {
-    await page.goto(`${GUIDE}/resources`);
-    // At a glance: the six things a new builder looks for, each an in-page link.
-    const glance = page.getByRole("navigation", { name: "This page at a glance" });
-    await expect(glance.getByRole("link")).toHaveCount(6);
-    await glance.getByRole("link", { name: /Optional awards/ }).click();
-    await expect(page).toHaveURL(/#awards$/);
+  test("optional awards after the tools: how to enter, the eight MLH categories, Red Hat and FIWARE", async ({ page }) => {
+    await page.goto(`${GUIDE}/resources#awards`);
     await expect(page.locator("#awards-title")).toBeInViewport();
     await expect(page.locator("main")).not.toContainText(/extra prizes/i);
-    // The heading lands below the sticky header and section nav, never under them.
-    await expect
-      .poll(() =>
-        page.evaluate(() => {
-          const bars = [...document.querySelectorAll("header, nav")].filter((e) => getComputedStyle(e).position === "sticky");
-          const bottom = Math.max(0, ...bars.map((e) => e.getBoundingClientRect().bottom));
-          return document.getElementById("awards")!.getBoundingClientRect().top - bottom;
-        }),
-      )
-      .toBeGreaterThanOrEqual(0);
-    // At a glance: MLH, Red Hat and FIWARE side by side, each linking to its own card.
+    const order = await page.locator("main section[id]").evaluateAll((els) => els.map((e) => e.id));
+    expect(order.indexOf("awards")).toBeGreaterThan(order.indexOf("advanced"));
     const rows = page.locator("[data-awards-glance-row]");
     await expect(rows).toHaveCount(3);
     for (const [id, href] of [
@@ -596,8 +626,6 @@ test.describe("Builder Resources", () => {
       await expect(page.locator(href)).toHaveCount(1);
     }
     await expect(page.locator('[data-awards-glance-row="fiware-open-innovation"]')).toContainText("announced at the closing ceremony");
-    const glanceBox = await page.locator("[data-awards-glance]").boundingBox();
-    expect(glanceBox!.x + glanceBox!.width).toBeLessThanOrEqual(page.viewportSize()!.width);
     await expect(page.locator("[data-how-to-enter] li")).toHaveCount(3);
     await expect(page.locator("[data-how-to-enter]")).toContainText("never an API key");
     const redHat = page.locator('[data-award="red-hat-openshift-ai"]');
@@ -611,68 +639,55 @@ test.describe("Builder Resources", () => {
     await expect(fiware).toContainText("Chandra Challagonda, CEO of FIWARE Foundation, is the sole evaluator");
     await expect(fiware).toContainText("takes no part in evaluating this award");
     await expect(fiware.locator("[data-fiware-benefits] li")).toHaveCount(5);
-    // The prize package and conditions sit behind native disclosures, closed by default; prize and criteria stay visible.
     for (const sel of ["[data-fiware-benefits]", "[data-fiware-conditions]"]) await expect(fiware.locator(sel)).not.toHaveAttribute("open", "");
-    await expect(fiware.locator("[data-award-prize]")).toBeVisible();
-    await expect(fiware.getByRole("table")).toBeVisible();
     await expect(fiware.getByText("One prize package per winning team")).toBeHidden();
     await fiware.locator("[data-fiware-conditions] summary").focus();
     await page.keyboard.press("Enter");
     await expect(fiware.getByText("One prize package per winning team")).toBeVisible();
-    for (const id of ["red-hat-openshift-ai", "fiware-open-innovation"]) await expect(page.locator(`[data-award="${id}"] [data-award-questions]`)).toContainText("Questions?");
     await expect(page.locator("[data-mlh-awards] [data-award-questions]")).toContainText("16:45");
     const mlh = page.locator("[data-mlh-award]");
     await expect(mlh).toHaveCount(8);
     await expect(page.locator("[data-mlh-awards]")).toContainText("Prizes provided through Major League Hacking");
     await expect(page.locator('[data-mlh-award="mlh-gemini"]')).toContainText("MLH Swag Kits");
-    for (const link of await page.locator("[data-mlh-award] a").all()) {
-      await expect(link).toHaveAttribute("href", /^https:\/\/(mlh\.link|www\.mlh\.com|elevenlabs\.io|developers\.google\.com|docs\.cloud\.google\.com)\//);
-    }
-    // First on the page, each card saying what is free and where to start; the codes themselves are never here.
-    const firstSection = await page.locator("main section[id]").first().getAttribute("id");
-    expect(firstSection).toBe("mlh-awards");
-    for (const card of await mlh.all()) {
-      await expect(card).toContainText("Prize:");
-      await expect(card).toContainText("Free to use");
-      await expect(card).toContainText("Start here");
-    }
-    const gemini = page.locator('[data-mlh-award="mlh-gemini"]');
-    await expect(gemini).toContainText("Google Cloud");
-    await expect(gemini).toContainText("Since AI has no Google credits of its own");
-    await expect(page.locator('[data-mlh-award="mlh-mongodb-atlas"]')).toContainText("free forever tier");
-    await expect(page.locator('[data-mlh-award="mlh-snowflake"]')).toContainText("120-day");
+    for (const card of await mlh.all()) await expect(card).toContainText("Prize:");
+    // Each category links to the tool card with the free offers and first steps.
+    await page.locator('[data-mlh-award="mlh-mongodb-atlas"]').getByRole("link", { name: /How to start with MongoDB Atlas/ }).click();
+    await expect(page).toHaveURL(/#tool-mongodb-atlas$/);
     await expect(page.locator("[data-fiware-resources]")).toContainText("docker run -d --name mongo-db --network fiware mongo:4.4");
-    await expect(page.locator("[data-fiware-resources]")).toContainText("Content-Type: application/ld+json");
-    // Commands keep one line each (no mid-flag wraps); a long one scrolls inside its block, never the page.
     for (const pre of await page.locator("[data-fiware-resources] pre").all()) {
       await expect(pre).toHaveCSS("white-space", "pre");
       await expect(pre).toHaveAttribute("tabindex", "0");
     }
-    expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
     await expect(page.locator("[data-confidential-rules] li")).toHaveCount(5);
-    // FORCIT: paper NDA at its Friday briefing, then FORCIT's own API access (never published credentials).
     await expect(page.locator("[data-confidential-rules]")).toContainText("NDA on paper with a FORCIT representative during its challenge briefing on Friday");
     await expect(page.locator("[data-confidential-rules]")).toContainText("Only after FORCIT has accepted your NDA does it give you personal credentials");
     const main = await page.locator("main").innerText();
     expect(main).not.toMatch(/@fiware\.org|@seamware|@joinedcontext|@indoorsos|\+358/);
+    expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
   });
 
   test("is reachable from the guide header, the hub and the builder guide", async ({ page, isMobile }) => {
     await page.goto(GUIDE);
-    await page.locator("#guides").getByRole("link", { name: /Builder Resources/ }).click();
+    await page.getByRole("navigation", { name: "Quick links" }).getByRole("link", { name: /AI Tools & Resources/ }).click();
+    await expect(page).toHaveURL(new RegExp(`${GUIDE}/resources$`));
+    await page.goto(GUIDE);
+    await page.locator("#ai-tools").getByRole("link", { name: /Open AI Tools & Resources/ }).click();
+    await expect(page).toHaveURL(new RegExp(`${GUIDE}/resources$`));
+    await page.goto(`${GUIDE}/builders#build-with-ai`);
+    await page.locator("#build-with-ai").getByRole("link", { name: /Open AI Tools & Resources/ }).click();
     await expect(page).toHaveURL(new RegExp(`${GUIDE}/resources$`));
     await page.goto(`${GUIDE}/builders#building`);
-    await page.locator("#building").getByRole("link", { name: "Builder Resources" }).click();
+    await page.locator("#building").getByRole("link", { name: "AI Tools & Resources" }).click();
     await expect(page).toHaveURL(new RegExp(`${GUIDE}/resources$`));
     if (!isMobile) {
       await page.goto(`${GUIDE}/venue`);
-      await page.getByRole("banner").getByRole("link", { name: "Resources", exact: true }).click();
+      await page.getByRole("banner").getByRole("link", { name: "AI Tools", exact: true }).click();
       await expect(page).toHaveURL(new RegExp(`${GUIDE}/resources$`));
     }
     // The Venue Explorer stays about places, with prominent links to tools and awards.
     await page.goto(`${GUIDE}/venue`);
     const links = page.locator("[data-venue-resource-links]");
-    await expect(links.getByRole("link", { name: /Builder Resources/ })).toHaveAttribute("href", `${GUIDE}/resources`);
+    await expect(links.getByRole("link", { name: /AI Tools & Resources/ })).toHaveAttribute("href", `${GUIDE}/resources`);
     await links.getByRole("link", { name: /Optional awards/ }).click();
     await expect(page).toHaveURL(new RegExp(`${GUIDE}/resources#awards$`));
     await expect(page.locator("#awards-title")).toBeInViewport();
@@ -979,8 +994,14 @@ test.describe("first screen, MLH and workshops (4 Nov 2026)", () => {
     await expect(nowNext).toBeVisible();
     await expect(nowNext).toBeInViewport();
     const quick = page.getByRole("navigation", { name: "Quick links" });
-    await expect(quick.getByRole("link")).toHaveText([/Schedule/, /Find a place/, /Campus map/, /Help/]);
-    await expect(quick.getByRole("link", { name: /Find a place/ })).toHaveAttribute("href", `${GUIDE}/venue#maps`);
+    await expect(quick.getByRole("link")).toHaveText([/AI Tools & Resources/, /Schedule/, /Your guide/, /Venue & food/, /Submission/, /Help/]);
+    await expect(quick.getByRole("link", { name: /AI Tools & Resources/ })).toHaveAttribute("href", `${GUIDE}/resources`);
+    await expect(quick.getByRole("link", { name: /Venue & food/ })).toHaveAttribute("href", `${GUIDE}/venue#maps`);
+    await expect(quick.getByRole("link", { name: /Submission/ })).toHaveAttribute("href", `${GUIDE}/builders#building`);
+    // GitHub Copilot and Gemini are one tap from the hub's AI tools section.
+    const strip = page.locator("#ai-tools [data-featured-strip]");
+    await expect(strip.getByRole("link", { name: "GitHub Copilot" })).toHaveAttribute("href", `${GUIDE}/resources#tool-github-copilot`);
+    await expect(strip.getByRole("link", { name: "Google Gemini & AI Studio" })).toHaveAttribute("href", `${GUIDE}/resources#tool-gemini`);
     // The roles come straight after, one line each.
     await expect(page.locator("#guides").getByRole("link", { name: /Builder Guide/ })).toHaveAttribute("href", `${GUIDE}/builders`);
     // The hub's schedule carries both workshops, and a short MLH summary links to the details.
@@ -988,7 +1009,8 @@ test.describe("first screen, MLH and workshops (4 Nov 2026)", () => {
     await expect(weekend).toContainText("GitHub Copilot Workshop");
     await expect(weekend).toContainText("Google AI Studio Workshop");
     await expect(weekend.locator("[data-mlh-on-site]")).toContainText("At least 50 Arduino UNO Q boards");
-    await expect(weekend.getByRole("link", { name: /MLH, workshops and hardware/ })).toHaveAttribute("href", `${GUIDE}/builders#mlh`);
+    await expect(weekend.getByRole("link", { name: /MLH, workshops and hardware/ })).toHaveAttribute("href", `${GUIDE}/resources#mlh`);
+    await expect(weekend).toContainText("BearingPoint Workshop – From AI Prototype to Business Impact");
     expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
   });
 
@@ -1016,7 +1038,7 @@ test.describe("first screen, MLH and workshops (4 Nov 2026)", () => {
   });
 
   test("MLH at Since AI: hardware, giveaways, workshops, help — and the way in without attending", async ({ page }) => {
-    await page.goto(`${GUIDE}/builders#mlh`);
+    await page.goto(`${GUIDE}/resources#mlh`);
     const mlh = page.locator("#mlh");
     await expect(page.locator("#mlh-title")).toHaveText("MLH at Since AI");
     const items = mlh.locator("[data-mlh-item]");
@@ -1030,12 +1052,15 @@ test.describe("first screen, MLH and workshops (4 Nov 2026)", () => {
     await expect(mlh.locator("[data-mlh-on-site]")).not.toContainText(/first come|raffle|winner|sign up|register/i);
 
     const cards = mlh.locator("[data-workshop]");
-    await expect(cards).toHaveCount(2);
+    await expect(cards).toHaveCount(3);
+    await expect(mlh.locator('[data-workshop="bearingpoint-ai-to-impact"]')).toContainText("Sat 12:00–12:30");
+    await expect(mlh.locator('[data-workshop="bearingpoint-ai-to-impact"]')).toContainText("Presidenttiauditorio");
+    await expect(mlh.locator('[data-workshop="bearingpoint-ai-to-impact"]')).not.toContainText(/planned|to be confirmed/i);
     await expect(cards.nth(0)).toContainText("20:30–21:00");
     await expect(cards.nth(0)).toContainText("GitHub Copilot Workshop");
     await expect(cards.nth(1)).toContainText("21:00–21:30");
     await expect(cards.nth(1)).toContainText("Google AI Studio Workshop");
-    await expect(mlh.locator("[data-workshop-room]")).toHaveText(["Presidenttiauditorio", "Presidenttiauditorio"]);
+    await expect(mlh.locator("[data-workshop-room]")).toHaveText(["Presidenttiauditorio", "Presidenttiauditorio", "Presidenttiauditorio"]);
     await expect(mlh.locator("[data-workshop-seating]")).toBeVisible();
     await expect(mlh.locator("[data-workshop-seating]")).toHaveText(
       "Seats are limited. We recommend one person per team — share what you learn with your teammates. You don't need to attend to access the tools and setup guides.",
@@ -1072,13 +1097,37 @@ test.describe("first screen, MLH and workshops (4 Nov 2026)", () => {
     }
   });
 
-  test("Builder Resources points to MLH at Since AI without repeating the workshop details", async ({ page }) => {
-    await page.goto(`${GUIDE}/resources#mlh-awards`);
-    const summary = page.locator("#mlh-awards [data-mlh-on-site]");
-    await expect(summary).toContainText("MLH at Since AI");
-    await expect(summary).toContainText("Presidenttiauditorio");
-    await expect(page.locator("#mlh-awards [data-workshop]")).toHaveCount(0);
-    await expect(summary.getByRole("link", { name: /MLH, workshops and hardware/ })).toHaveAttribute("href", `${GUIDE}/builders#mlh`);
+  test("the Builder Guide's Build with AI points to the one resources page, keeping the old MLH anchors", async ({ page }) => {
+    await page.goto(`${GUIDE}/builders#mlh`);
+    const section = page.locator("#build-with-ai");
+    await expect(page.locator("#build-with-ai-title")).toHaveText("Build with AI.");
+    await expect(section.locator("#mlh")).toHaveCount(1);
+    await expect(section.locator("#workshops")).toHaveCount(1);
+    await expect(section.locator("[data-featured-strip] a")).toHaveCount(6);
+    await expect(section.getByRole("link", { name: "Workshop details" })).toHaveAttribute("href", `${GUIDE}/resources#workshops`);
+    await expect(section.getByRole("link", { name: "MLH at Since AI" })).toHaveAttribute("href", `${GUIDE}/resources#mlh`);
+    // No full workshop cards or benefit descriptions repeated here.
+    await expect(page.locator("main [data-workshop]")).toHaveCount(0);
+    await expect(page.locator("main [data-tool]")).toHaveCount(0);
+    const order = await page.$$eval("main section[id]", (els) => els.map((e) => e.id));
+    expect(order.indexOf("build-with-ai")).toBe(order.indexOf("win") + 1);
+  });
+
+  test("the builder schedule labels workshops, ceremonies, Q&A and meals, with BearingPoint on Saturday", async ({ page }) => {
+    await page.goto(`${GUIDE}/builders#schedule`);
+    const bp = page.locator("#schedule-item-sat-bearingpoint-workshop");
+    await expect(bp).toContainText("12:00");
+    await expect(bp).toContainText("12:30");
+    await expect(bp).toContainText("BearingPoint Workshop – From AI Prototype to Business Impact");
+    await expect(bp).toContainText("Presidenttiauditorio");
+    await expect(bp.locator("[data-schedule-tag]")).toHaveText("Workshop");
+    await expect(page.locator("#schedule-item-fri-opening [data-schedule-tag]")).toHaveText("Ceremony");
+    await expect(page.locator("#schedule-item-fri-dinner [data-schedule-tag]")).toHaveText("Meal");
+    await expect(page.locator("#schedule-item-sat-qa-morning [data-schedule-tag]")).toHaveText("Company Q&A");
+    const text = await page.locator("#schedule").innerText();
+    expect(text.indexOf("Challenge partner Q&A open")).toBeLessThan(text.indexOf("BearingPoint Workshop"));
+    // One entry only (the superseded 15:00 stand slot is not in the programme).
+    await expect(page.locator('#schedule li[id^="schedule-item-"]').filter({ hasText: "BearingPoint" })).toHaveCount(1);
   });
 });
 

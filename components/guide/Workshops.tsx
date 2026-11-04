@@ -1,6 +1,7 @@
 import { Laptop, Users } from "lucide-react";
 import Link from "next/link";
 import {
+  BEARINGPOINT_WORKSHOP,
   formatTime,
   WORKSHOP_BRING,
   WORKSHOP_CANT_ATTEND,
@@ -104,6 +105,29 @@ export function Workshops() {
         </ul>
         <p className="mt-4 text-xs text-white/55 leading-relaxed">
           {WORKSHOP_SEATS_NOTE} {WORKSHOPS_VS_INTRO}
+        </p>
+      </div>
+
+      <div data-workshop={BEARINGPOINT_WORKSHOP.id} className="guide-avoid-break border border-white/10 p-5 md:p-6">
+        <p className="font-mono text-sm font-bold tabular-nums text-(--color-event)">
+          <span className="sr-only">Saturday </span>
+          <span aria-hidden="true">Sat </span>
+          {formatTime(BEARINGPOINT_WORKSHOP.start)}–{formatTime(BEARINGPOINT_WORKSHOP.end)}
+        </p>
+        <h3 className="mt-2 text-xl font-bold tracking-tight text-white">{BEARINGPOINT_WORKSHOP.title}</h3>
+        <p className="mt-1 text-xs font-mono uppercase tracking-widest text-white/55">{BEARINGPOINT_WORKSHOP.host}</p>
+        <p className="mt-3 max-w-3xl text-sm text-neutral-300 leading-relaxed">{BEARINGPOINT_WORKSHOP.text}</p>
+        <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+          <span className="text-white">
+            BioCity · <span data-workshop-room>{BEARINGPOINT_WORKSHOP.place}</span>
+          </span>
+          <Link
+            href={BEARINGPOINT_WORKSHOP.mapLink.href}
+            className="inline-flex min-h-11 items-center text-neutral-300 underline underline-offset-4 decoration-white/40 hover:text-white hover:decoration-white"
+          >
+            {BEARINGPOINT_WORKSHOP.mapLink.label}
+            <span className="sr-only"> for the BearingPoint workshop</span>
+          </Link>
         </p>
       </div>
     </div>
