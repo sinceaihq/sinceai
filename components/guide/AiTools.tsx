@@ -2,7 +2,9 @@ import Image from "next/image";
 import type { ReactNode } from "react";
 import {
   ACCESS_LABEL,
+  AI_TOOLS,
   awardHref,
+  BUILDER_PERKS,
   FEATURED_TOOLS,
   formatTime,
   logoFor,
@@ -290,6 +292,48 @@ export function FeaturedToolStrip({ resourcesPath }: { resourcesPath: string }) 
           </a>
         </li>
       ))}
+    </ul>
+  );
+}
+
+/**
+ * The free plans and credits, at a glance and biggest first — each tile a link
+ * to its tool card for the terms and how to claim. Used at the top of AI Tools
+ * & Resources and on the hub.
+ */
+export function BuilderPerks({ resourcesPath = "" }: { resourcesPath?: string }) {
+  return (
+    <ul
+      className="grid grid-cols-1 border-l border-t border-white/10 sm:grid-cols-2 lg:grid-cols-4"
+      aria-label="Free plans and credits for Since AI builders"
+      data-builder-perks
+    >
+      {BUILDER_PERKS.map((perk) => {
+        const tool = AI_TOOLS.find((t) => t.id === perk.toolId)!;
+        const logo = logoFor(tool);
+        return (
+          <li key={perk.toolId} className="border-b border-r border-white/10" data-perk={perk.toolId}>
+            <a
+              href={`${resourcesPath}#${toolAnchor(tool.id)}`}
+              className="group flex h-full flex-col p-4 transition-colors hover:bg-white/[0.04] focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white md:p-5"
+            >
+              <span className="flex items-center justify-between gap-3">
+                <span className={`border px-1.5 py-px font-mono text-[10px] uppercase tracking-widest ${BADGE[perk.kind]}`}>
+                  {ACCESS_LABEL[perk.kind]}
+                </span>
+                {logo?.mark && <Image src={logo.src} alt="" width={20} height={20} className="h-5 w-5 opacity-80" />}
+              </span>
+              <span className="mt-3 block text-xl font-bold tracking-tight text-white md:text-2xl">{perk.value}</span>
+              <span className="mt-1 block text-sm text-neutral-200">{perk.what}</span>
+              <span className="mt-2 block text-xs text-neutral-400">{perk.who}</span>
+              <span className="mt-auto pt-3 text-xs font-semibold text-white/70 group-hover:text-white">
+                How to claim <span aria-hidden="true">→</span>
+                <span className="sr-only"> — {tool.name}</span>
+              </span>
+            </a>
+          </li>
+        );
+      })}
     </ul>
   );
 }

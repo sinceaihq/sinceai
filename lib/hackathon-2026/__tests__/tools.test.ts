@@ -5,6 +5,7 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import {
   AI_TOOLS,
+  BUILDER_PERKS,
   DEVELOPER_TOOLS,
   FEATURED_TOOLS,
   logoFor,
@@ -74,7 +75,7 @@ describe("AI Tools & Resources directory", () => {
     const claude = AI_TOOLS.find((t) => t.id === "claude")!;
     expect(claude.access.map((a) => a.text)).toEqual(["Free Claude plan", "Claude Code needs a paid plan or API credit"]);
     const copilot = AI_TOOLS.find((t) => t.id === "github-copilot")!;
-    expect(copilot.access.map((a) => a.text)).toEqual(["Free plan with monthly limits", "Copilot Student free for verified students"]);
+    expect(copilot.access.map((a) => a.text)).toEqual(["Copilot Student free for verified students", "Free plan with monthly limits"]);
     expect(AI_TOOLS.find((t) => t.id === "cursor")!.access.some((a) => a.kind === "student")).toBe(false);
   });
 
@@ -90,5 +91,40 @@ describe("AI Tools & Resources directory", () => {
       const logo = logoFor(t);
       if (logo) expect(existsSync(path.join(process.cwd(), "public", logo.src))).toBe(true);
     }
+  });
+
+  it("leads with the free plans and credits, each one restating its tool card", () => {
+    expect(BUILDER_PERKS.map((p) => p.toolId)).toEqual([
+      "lovable",
+      "featherless",
+      "elevenlabs",
+      "n8n",
+      "pruna-ai",
+      "gemini",
+      "google-cloud",
+      "github-copilot",
+    ]);
+    for (const perk of BUILDER_PERKS) {
+      const tool = AI_TOOLS.find((t) => t.id === perk.toolId)!;
+      // The perk's kind of access is one its card shows: a Since AI benefit only where the card has one.
+      expect(tool.access.map((a) => a.kind)).toContain(perk.kind);
+      if (perk.kind === "event") expect(tool.partnerId).toBeDefined();
+    }
+    const text = (id: string) => {
+      const p = BUILDER_PERKS.find((x) => x.toolId === id)!;
+      return `${p.value} ${p.what} ${p.who}`;
+    };
+    const card = (id: string) => AI_TOOLS.find((t) => t.id === id)!.access.map((a) => a.text).join(" ");
+    expect(text("lovable")).toMatch(/Lovable Pro.*1 month.*100 credits/);
+    expect(card("lovable")).toMatch(/Lovable Pro free for 1 month · 100 credits/);
+    expect(text("n8n")).toMatch(/One per team/);
+    expect(card("n8n")).toMatch(/200 licences · one per team/);
+    expect(text("featherless")).toMatch(/\$25 credit.*no card.*claim early/);
+    expect(text("gemini")).toMatch(/Students/);
+    expect(text("google-cloud")).toMatch(/\$300 credit.*90 days.*New Google Cloud accounts/);
+    expect(card("google-cloud")).toMatch(/\$300 free credit for 90 days/);
+    expect(text("github-copilot")).toMatch(/Verified students/);
+    // Never a Copilot Pro or Claude promise nobody made.
+    expect(JSON.stringify(BUILDER_PERKS)).not.toMatch(/Copilot Pro|Claude|Cursor|unlimited|guaranteed/i);
   });
 });

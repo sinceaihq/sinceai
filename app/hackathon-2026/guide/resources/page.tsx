@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  BuilderPerks,
   ComputingSection,
   FeaturedToolCard,
   GuideHero,
@@ -71,6 +72,7 @@ export default function ResourcesGuidePage() {
       <SectionNav
         items={[
           { id: "start", label: "Start here" },
+          { id: "free", label: "Free for you" },
           ...TOOL_CATEGORIES.map((c) => ({ id: c.id, label: NAV_LABEL[c.id] ?? c.title })),
           { id: MLH_ANCHOR, label: "MLH on site" },
           { id: AWARDS_ANCHOR, label: "Optional awards" },
@@ -84,8 +86,20 @@ export default function ResourcesGuidePage() {
           id="start-title"
           eyebrow="// start here"
           title="Start building with AI."
-          lede="Explore AI coding assistants, models, cloud credits and free resources to help you build your hackathon project."
+          lede="Paid AI tools, free for your project. Participants can claim Lovable Pro, ElevenLabs Creator and $25 of Featherless credit, every team can take an n8n Cloud Pro licence, and students get Google AI Pro and GitHub Copilot Student free."
         />
+        <div id="free" className="scroll-mt-32">
+          <h3 id="free-title" className="mb-4 text-xl font-bold tracking-tight text-white md:text-2xl">
+            Free Pro plans and credits for Since AI builders
+          </h3>
+          <BuilderPerks />
+          <p className="mt-4 max-w-3xl text-sm text-neutral-400 leading-relaxed" data-perks-note>
+            Codes and redemption steps reach you in official Since AI participant messages and event channels — never on
+            this website, so please don&apos;t share them outside the event. Google&apos;s and GitHub&apos;s student offers
+            are their own: they decide who qualifies.
+          </p>
+        </div>
+        <h3 className="mb-4 mt-12 text-xl font-bold tracking-tight text-white md:text-2xl">The AI tools you already know</h3>
         <ul
           className="grid grid-cols-1 border-l border-t border-white/10 sm:grid-cols-2 lg:grid-cols-3"
           data-featured-tools

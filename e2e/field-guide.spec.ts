@@ -535,7 +535,15 @@ test.describe("AI Tools & Resources", () => {
     await expect(gemini).toContainText("Since AI has no Google credits of its own");
     await expect(gemini).toContainText("Benefit provided through Major League Hacking (MLH).");
     await expect(page.locator('[data-featured-tool="claude"] [data-tool-access]')).toContainText("Claude Code needs a paid plan or API credit");
-    await expect(page.locator('[data-resource="lovable"]')).toContainText("100 Lovable credits per participant");
+    await expect(page.locator('[data-resource="lovable"] [data-tool-access]')).toContainText("Lovable Pro free for 1 month · 100 credits");
+    // The free plans and credits lead the page, each tile linking to its card.
+    const perks = page.locator("#start [data-builder-perks] [data-perk]");
+    await expect(perks).toHaveCount(8);
+    await expect(perks.first()).toContainText("Lovable Pro");
+    await expect(page.locator('#start [data-perk="n8n"]')).toContainText("One per team, so every team gets one");
+    await expect(page.locator('#start [data-perk="google-cloud"]')).toContainText("$300 credit");
+    await expect(page.locator('#start [data-perk="featherless"] a')).toHaveAttribute("href", "#tool-featherless");
+    await expect(page.locator("[data-perks-note]")).toContainText("never on this website");
     // The first card's button is visible without scrolling far on a phone-sized screen too.
     for (const img of await page.locator("[data-featured-tool] img").all()) {
       await img.scrollIntoViewIfNeeded();
@@ -564,7 +572,7 @@ test.describe("AI Tools & Resources", () => {
     for (const id of ["computing", "building", "standards", "tools", "resource-red-hat", "resource-lovable"]) {
       await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
     }
-    await expect(page.locator('[data-resource="n8n"]')).toContainText("limited to 200 redemptions");
+    await expect(page.locator('[data-resource="n8n"] [data-tool-access]')).toContainText("200 licences · one per team");
     await expect(page.locator('[data-resource="featherless"]')).toContainText("never on this website");
     await expect(page.locator('[data-resource="red-hat"]')).toContainText("free for 30 days");
     // The details sit behind each card's disclosure: open it as a builder would.
@@ -998,6 +1006,10 @@ test.describe("first screen, MLH and workshops (4 Nov 2026)", () => {
     await expect(quick.getByRole("link", { name: /AI Tools & Resources/ })).toHaveAttribute("href", `${GUIDE}/resources`);
     await expect(quick.getByRole("link", { name: /Venue & food/ })).toHaveAttribute("href", `${GUIDE}/venue#maps`);
     await expect(quick.getByRole("link", { name: /Submission/ })).toHaveAttribute("href", `${GUIDE}/builders#building`);
+    await expect(quick.getByRole("link", { name: /AI Tools & Resources/ })).toContainText("Free Pro plans & credits");
+    // The free plans and credits are on the hub too, each a link to its card on the resources page.
+    await expect(page.locator("#ai-tools [data-perk]")).toHaveCount(8);
+    await expect(page.locator('#ai-tools [data-perk="lovable"] a')).toHaveAttribute("href", `${GUIDE}/resources#tool-lovable`);
     // GitHub Copilot and Gemini are one tap from the hub's AI tools section.
     const strip = page.locator("#ai-tools [data-featured-strip]");
     await expect(strip.getByRole("link", { name: "GitHub Copilot" })).toHaveAttribute("href", `${GUIDE}/resources#tool-github-copilot`);
@@ -1101,6 +1113,7 @@ test.describe("first screen, MLH and workshops (4 Nov 2026)", () => {
     await page.goto(`${GUIDE}/builders#mlh`);
     const section = page.locator("#build-with-ai");
     await expect(page.locator("#build-with-ai-title")).toHaveText("Build with AI.");
+    await expect(section.locator("[data-perk]")).toHaveCount(8);
     await expect(section.locator("#mlh")).toHaveCount(1);
     await expect(section.locator("#workshops")).toHaveCount(1);
     await expect(section.locator("[data-featured-strip] a")).toHaveCount(6);
