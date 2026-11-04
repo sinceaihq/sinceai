@@ -44,20 +44,38 @@ describe("Build & submit section", () => {
   it("separates required and optional fields, and lists the real file formats", () => {
     render(<BuildingSection />);
     const required = screen.getByRole("heading", { name: "Required" }).parentElement!;
-    expect(required).toHaveTextContent(/Repository \/ demo link/);
-    expect(required).toHaveTextContent(/GenAI tools used/);
-    expect(required).toHaveTextContent(/Every team member accepts them personally/);
-    expect(required).not.toHaveTextContent(/video/i);
+    for (const name of ["Tagline", "Repository", "Demo video", "Source code", "MLH questions"]) expect(required).toHaveTextContent(name);
+    expect(required).toHaveTextContent(/YouTube is the only accepted format/);
+    expect(required).toHaveTextContent(/every team member ticks them personally/);
     const optional = screen.getByRole("heading", { name: "Optional" }).parentElement!;
-    expect(optional).toHaveTextContent(/Submission video URL/);
-    expect(document.querySelector('[data-file-kind="Demo video"]')).toHaveTextContent("MP4, WebM");
-    expect(document.querySelector('[data-file-kind="Pitch deck"]')).toHaveTextContent("PDF, PPT, PPTX");
-    expect(screen.getByText(/ZIP archives are not accepted/)).toBeInTheDocument();
+    for (const name of ["Demo URL", "Pitch deck", "Partner technologies", "MLH prize categories"]) expect(optional).toHaveTextContent(name);
+    const file = (kind: string) => document.querySelector(`[data-file-kind="${kind}"]`)!;
+    expect(file("Demo video")).toHaveTextContent("YouTube link");
+    expect(file("Demo video")).not.toHaveTextContent(/MP4, WebM/);
+    expect(file("Source code")).toHaveTextContent("ZIP");
+    expect(file("Source code").querySelector("[data-file-required]")).toHaveAttribute("data-file-required", "yes");
+    expect(file("Pitch deck")).toHaveTextContent("PDF, PPT, PPTX");
+    expect(file("Pitch deck").querySelector("[data-file-required]")).toHaveAttribute("data-file-required", "no");
+  });
+
+  it("shows what voters see: one card for every challenge, no links", () => {
+    render(<BuildingSection />);
+    const card = document.querySelector("[data-vote-card-guide]")!;
+    expect(card).toHaveTextContent("What voters see");
+    expect(Array.from(card.querySelectorAll("[data-vote-card-row]")).map((r) => r.getAttribute("data-vote-card-row"))).toEqual([
+      "Project",
+      "Tagline",
+      "Description",
+      "Demo video",
+      "Pitch deck",
+      "Built with",
+    ]);
+    expect(card).toHaveTextContent(/Never on the card: your repository, your demo URL or other links/);
   });
 
   it("numbers the six submission steps and links the dashboard safely", () => {
     render(<BuildingSection />);
-    expect(screen.getByText("Everyone accepts the IP terms")).toBeInTheDocument();
+    expect(screen.getByText("Everyone accepts the terms")).toBeInTheDocument();
     expect(screen.getAllByText(/^Step \d$/)).toHaveLength(6);
     // The button, and the same link in the Devpost answer.
     const links = screen.getAllByRole("link", { name: /Open your sinceai\.app dashboard \(opens in a new tab\)/ });

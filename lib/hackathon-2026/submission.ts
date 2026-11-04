@@ -5,13 +5,25 @@ import { RESOURCES_PATH } from "./resources";
 /**
  * Building with AI and submitting a project — Since AI Hackathon 2026.
  *
- * The submission facts follow sinceai.app as built (sinceai-platform `main`,
- * checked 25 Oct 2026): `frontend/app/submit/` (form, required fields, team IP
- * terms), `backend/src/submission/submission.dto.ts` and
- * `backend/src/upload/attachment.constants.ts` (file types). Size and count
- * limits are server configuration, so they are not quoted here — the upload
- * form shows them. Re-check these files before changing a field, a format or
- * the flow.
+ * The final submission form and vote card (organiser, 4 Nov 2026), as built in
+ * sinceai-platform PR #488 (`feat/submission-rework`) and reconciled with PR
+ * #487 (NDA-safe ballot):
+ * - Required: project name, tagline (≤ 140), About (≤ 5,000), Built with, a
+ *   repository link, a YouTube demo video and the source code as one .zip
+ *   (≤ 100 MB), plus MLH's three questions and the challenge terms.
+ * - The demo video is a YouTube link only — no MP4 or WebM upload. On a
+ *   confidential (NDA) challenge it is required too, unless the company or the
+ *   organisers make it optional for that challenge; the form says so.
+ * - Optional: a demo URL, one pitch deck, up to two supporting documents,
+ *   partner technologies (Red Hat and FIWARE ticks enter their awards), MLH
+ *   prize categories and MLH's optional questions.
+ * - The vote card is the same for every challenge: project identity, tagline,
+ *   the first lines of the description, the demo video, the pitch deck, up to
+ *   five Built-with chips, Vote. Never repository or demo links, never an NDA
+ *   label. On a confidential challenge it shows only what the team confirmed
+ *   public-safe.
+ * Size limits other than the source zip are server configuration, so they are
+ * not quoted here — the upload form shows them.
  *
  * The legacy Devpost page describes a different process; sinceai.app is the
  * only official submission platform.
@@ -56,73 +68,107 @@ export const SUBMISSION = {
     "The official submission platform is sinceai.app, not Devpost. An entry on Devpost alone is not a submission.",
   whereToSubmit:
     "On your sinceai.app dashboard, the event card shows Submit project while submissions are open (Edit submission once you have submitted).",
-  /** Marked required (*) on the form, in its order. */
+  /** Required to submit, in the form's order. */
   required: [
     { name: "Challenge", note: "Your team's Friday selection, filled in for you; only the organisers can change it." },
-    { name: "Project name" },
-    { name: "Submission URL", note: "Where the project can be viewed after the event." },
-    { name: "About the project", note: "The problem and your solution — up to 5,000 characters." },
-    { name: "Repository / demo link", note: "Your code or a working demo." },
-    { name: "Built with", note: "Technologies used, comma-separated." },
-    { name: "Technology feedback", note: "Feedback on the tech you used this weekend." },
-    { name: "GenAI tools used", note: "Select every tool you used — or “I did not use GenAI”." },
-    { name: "Generative AI in your project", note: "Did you implement a generative AI model or API? How and why — or N/A." },
-    { name: "Challenge IP terms", note: "Every team member accepts them personally." },
+    { name: "Project name", note: "Up to 80 characters." },
+    { name: "Tagline", note: "One sentence on what your project does, up to 140 characters. Voters read it first on every vote card." },
+    {
+      name: "About the project",
+      note: "The problem, your solution, how you built it, what you met on the way and what comes next — up to 5,000 characters. Judges read all of it; voters see the first lines.",
+    },
+    { name: "Built with", note: "Technologies you used, comma-separated. The first five appear as chips on your vote card." },
+    { name: "Repository", note: "A link to your code, public or private. If it is private, judges use your source-code .zip." },
+    {
+      name: "Demo video",
+      note: "A public or unlisted YouTube link, ideally under two minutes. YouTube is the only accepted format — no video file uploads.",
+    },
+    { name: "Source code", note: "One .zip of your code as it stands at the deadline, up to 100 MB." },
+    {
+      name: "MLH questions",
+      note: "Technology feedback, the GenAI tools you used (or “I did not use GenAI”) and whether you implemented a generative AI model or API.",
+    },
+    {
+      name: "Challenge terms",
+      note: "Accepted by submitting. On a challenge that transfers ownership, every team member ticks them personally first.",
+    },
+    {
+      name: "Public summary (confidential challenges only)",
+      note: "A public-safe summary, and your confirmation that the project name, tagline, summary and Built with contain no confidential data.",
+      link: { label: "What is confidential", href: `${RESOURCES_PATH}#${CONFIDENTIAL_ANCHOR}` },
+    },
   ] satisfies readonly SubmissionField[],
   optional: [
-    { name: "Submission video URL", note: "A YouTube video link." },
-    { name: "Files", note: "Pitch deck, supporting documents and an uploaded demo video." },
+    { name: "Demo URL", note: "A link where your project can be tried, if it is deployed. Judges see it; voters don't." },
+    { name: "Pitch deck", note: "One PDF or PowerPoint. Voters can open it from your vote card." },
+    { name: "Supporting documents", note: "Up to two, for the judges." },
     {
-      name: "Domain name, MLH prize categories and schools of team members",
-      note: "Tick the MLH categories that fit here; Red Hat and FIWARE are entered under optional awards.",
+      name: "Partner technologies",
+      note: "Tick the partner technologies you used and say how in a sentence or two. Ticking Red Hat OpenShift AI or FIWARE also enters that award, with the evidence it asks for.",
       link: { label: "Optional awards", href: AWARDS_HREF },
     },
     {
-      name: "Public summary",
-      note: "For confidential challenges: the summary voters, the public and optional-award reviewers see instead of restricted material.",
-      link: { label: "What is confidential", href: `${RESOURCES_PATH}#${CONFIDENTIAL_ANCHOR}` },
+      name: "MLH prize categories",
+      note: "Tick the MLH categories that fit — zero, one or several.",
+      link: { label: "Optional awards", href: AWARDS_HREF },
     },
+    { name: "Domain name and schools of team members", note: "Optional MLH questions." },
     { name: "Gemini API project number", note: "Leave it blank unless a prize category you enter asks for it." },
   ] satisfies readonly SubmissionField[],
-  /** The attachment allow-list (attachment.constants.ts). */
+  /** What a team attaches. The demo video is a YouTube link, never a file. */
   files: [
-    { kind: "Pitch deck", formats: ["PDF", "PPT", "PPTX"] },
-    { kind: "Supporting documents", formats: ["PDF", "PPT", "PPTX", "DOC", "DOCX", "TXT", "Markdown"] },
-    { kind: "Demo video", formats: ["MP4", "WebM"], note: "Or a YouTube link in the video URL field." },
+    { kind: "Source code", formats: ["ZIP"], required: true, note: "One file, up to 100 MB. Leave out dependencies such as node_modules, and data files." },
+    { kind: "Pitch deck", formats: ["PDF", "PPT", "PPTX"], required: false, note: "One file." },
+    { kind: "Supporting documents", formats: ["PDF", "PPT", "PPTX", "DOC", "DOCX", "TXT", "Markdown"], required: false, note: "Up to two." },
+    { kind: "Demo video", formats: ["YouTube link"], required: true, note: "Public or unlisted. No MP4 or WebM uploads." },
   ],
   filesNote:
-    "All files are optional. ZIP archives are not accepted — share code through your repository link. The upload form shows the current size and count limits.",
+    "Files can be added before your first submit and are saved with it. The upload form shows the other size limits.",
   steps: [
     {
       title: "Prepare the details",
-      text: "Collect the required fields while you build — not at 09:50 on Sunday.",
+      text: "Write the tagline and description, list your Built with and keep your repository up to date while you build — not at 09:50 on Sunday.",
     },
     {
-      title: "Check your links",
-      text: "Open your submission URL and repository / demo link logged out. A private repository works only if judges and evaluators can open it.",
+      title: "Upload your demo video to YouTube",
+      text: "Record a short demo, ideally under two minutes, and upload it as public or unlisted. Open the link logged out to check it plays.",
     },
     {
-      title: "Everyone accepts the IP terms",
-      text: "Each team member opens the submission page and ticks the challenge IP terms for their own work. The entry goes through once everyone has.",
+      title: "Zip your source code",
+      text: "One .zip, up to 100 MB, without node_modules or data files. Judges use it if your repository or demo can't be opened.",
     },
     {
-      title: "Submit and save",
-      text: "Any team member submits — one entry per team. Files attach to a saved submission, so this comes first.",
+      title: "Fill in the form and add files",
+      text: "Any team member submits — one entry per team. Add the zip, and a pitch deck if you have one, in the same go.",
     },
     {
-      title: "Add files",
-      text: "Then add a pitch deck, documents or a demo video if you want to. Each upload is saved as it finishes.",
+      title: "Everyone accepts the terms",
+      text: "On a challenge that transfers ownership, each team member ticks the challenge terms for their own work — do it as soon as your team has its challenge.",
     },
     {
       title: "Check before 10:00",
-      text: "Review the entry and every file. You can edit and add files until submissions close.",
+      text: "Review the entry, the video and every file. You can edit until submissions close.",
     },
   ],
   strongEntry: [
-    "A working prototype, a live demo or clear steps to run it — the product is the pitch.",
-    "A repository with the actual project, a README and setup instructions.",
-    "A short demo video, about two minutes — recommended, not required.",
+    "A working prototype — the product is the pitch.",
+    "A tagline a voter understands in five seconds.",
+    "A demo video that shows it working in the first 20 seconds, under two minutes in all.",
+    "A repository with a README and setup instructions.",
     "A concise deck only if it helps; it never replaces a working prototype.",
+  ],
+  /** The vote card, top to bottom — the same for every challenge. */
+  voteCard: [
+    { name: "Project", text: "Challenge, project name and team." },
+    { name: "Tagline", text: "Your one sentence, in full." },
+    { name: "Description", text: "The first few lines of About the project, with Read more." },
+    { name: "Demo video", text: "Your YouTube video, playable on the card. Voters can vote without watching to the end." },
+    { name: "Pitch deck", text: "When you added one." },
+    { name: "Built with", text: "The first five technologies, as small chips." },
+  ],
+  voteCardNotes: [
+    "Never on the card: your repository, your demo URL or other links. Voters compare about 20 pairs quickly and don't clone or deploy anything; judges and organisers still see your links.",
+    "Confidential (NDA) challenges get the same card, with only what your team confirmed public-safe: the project name, tagline, public summary and Built with — and the video and deck unless the company has turned them off. Until you confirm, voters see a neutral placeholder. The card shows no confidentiality label.",
   ],
   dashboardHref: GUIDE_LINKS.appDashboard,
 } as const;

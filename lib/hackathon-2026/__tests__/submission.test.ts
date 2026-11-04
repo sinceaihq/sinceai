@@ -80,56 +80,81 @@ describe("submission facts (as built in sinceai.app)", () => {
     expect(JSON.stringify(SUBMISSION)).not.toMatch(/midnight|23:59/);
   });
 
-  it("lists the form's required fields, including GenAI disclosure and each member's IP acceptance", () => {
+  it("lists the final form's required fields (organiser, 4 Nov 2026)", () => {
     expect(SUBMISSION.required.map((f) => f.name)).toEqual([
       "Challenge",
       "Project name",
-      "Submission URL",
+      "Tagline",
       "About the project",
-      "Repository / demo link",
       "Built with",
-      "Technology feedback",
-      "GenAI tools used",
-      "Generative AI in your project",
-      "Challenge IP terms",
+      "Repository",
+      "Demo video",
+      "Source code",
+      "MLH questions",
+      "Challenge terms",
+      "Public summary (confidential challenges only)",
     ]);
-    expect(SUBMISSION.required.find((f) => f.name === "Challenge IP terms")?.note).toMatch(/Every team member/);
+    const note = (name: string) => SUBMISSION.required.find((f) => f.name === name)!.note!;
+    expect(note("Tagline")).toMatch(/up to 140 characters/);
+    expect(note("Built with")).toMatch(/first five appear as chips/);
+    expect(note("Challenge terms")).toMatch(/every team member ticks them personally/);
+    expect(note("MLH questions")).toMatch(/GenAI tools you used/);
+    expect(note("Public summary (confidential challenges only)")).toMatch(/project name, tagline, summary and Built with/);
   });
 
-  it("keeps the video, deck and documents optional", () => {
-    const optional = SUBMISSION.optional.map((f) => f.name);
-    expect(optional).toContain("Submission video URL");
-    expect(optional).toContain("Files");
-    expect(SUBMISSION.required.map((f) => f.name).join(" ")).not.toMatch(/video|deck|document/i);
+  it("makes the demo video a required YouTube link — no video files", () => {
+    const note = SUBMISSION.required.find((f) => f.name === "Demo video")!.note!;
+    expect(note).toMatch(/YouTube is the only accepted format/);
+    const video = SUBMISSION.files.find((f) => f.kind === "Demo video")!;
+    expect(video.formats).toEqual(["YouTube link"]);
+    expect(video.required).toBe(true);
+    expect(JSON.stringify(SUBMISSION.files)).not.toMatch(/"MP4"|"WebM"/);
     const answer = faq(BUILDING_FAQ, /demo video or a pitch deck required/);
-    expect(answer).toMatch(/Neither is required/);
-    expect(SUBMISSION.strongEntry.join(" ")).toMatch(/recommended, not required/);
+    expect(answer).toMatch(/A demo video is required: a public or unlisted YouTube link/);
+    expect(answer).toMatch(/MP4 or WebM files can't be uploaded/);
+    expect(answer).toMatch(/unless the company or the organisers make it optional/);
+    expect(JSON.stringify(SUBMISSION)).not.toMatch(/recommended, not required|Neither is required/);
   });
 
-  it("lists exactly the formats the upload allow-list accepts — and no ZIP", () => {
-    expect(SUBMISSION.files.map((f) => [f.kind, f.formats])).toEqual([
-      ["Pitch deck", ["PDF", "PPT", "PPTX"]],
-      ["Supporting documents", ["PDF", "PPT", "PPTX", "DOC", "DOCX", "TXT", "Markdown"]],
-      ["Demo video", ["MP4", "WebM"]],
+  it("requires the source code as one .zip and keeps the deck and documents optional", () => {
+    expect(SUBMISSION.files.map((f) => [f.kind, f.formats, f.required])).toEqual([
+      ["Source code", ["ZIP"], true],
+      ["Pitch deck", ["PDF", "PPT", "PPTX"], false],
+      ["Supporting documents", ["PDF", "PPT", "PPTX", "DOC", "DOCX", "TXT", "Markdown"], false],
+      ["Demo video", ["YouTube link"], true],
     ]);
-    expect(SUBMISSION.files.flatMap((f) => f.formats)).not.toContain("ZIP");
-    expect(SUBMISSION.filesNote).toMatch(/ZIP archives are not accepted/);
-    expect(faq(BUILDING_FAQ, /Which files can we upload/)).toMatch(/ZIP files are not accepted/);
-    // Limits are server configuration: never quoted.
-    expect(JSON.stringify(SUBMISSION)).not.toMatch(/\d+\s*(MB|GB)/);
+    expect(SUBMISSION.files[0]!.note).toMatch(/up to 100 MB/);
+    expect(faq(BUILDING_FAQ, /Which files can we upload/)).toMatch(/one \.zip of up to 100 MB/);
+    expect(SUBMISSION.optional.map((f) => f.name)).toEqual([
+      "Demo URL",
+      "Pitch deck",
+      "Supporting documents",
+      "Partner technologies",
+      "MLH prize categories",
+      "Domain name and schools of team members",
+      "Gemini API project number",
+    ]);
+    expect(SUBMISSION.filesNote).toMatch(/before your first submit/);
   });
 
-  it("orders the flow: IP terms, then save, then files, then a final check", () => {
-    const titles = SUBMISSION.steps.map((s) => s.title);
-    expect(titles).toEqual([
+  it("describes one vote card for every challenge, without links or NDA labels", () => {
+    expect(SUBMISSION.voteCard.map((r) => r.name)).toEqual(["Project", "Tagline", "Description", "Demo video", "Pitch deck", "Built with"]);
+    const notes = SUBMISSION.voteCardNotes.join(" ");
+    expect(notes).toMatch(/Never on the card: your repository, your demo URL or other links/);
+    expect(notes).toMatch(/Confidential \(NDA\) challenges get the same card/);
+    expect(notes).toMatch(/The card shows no confidentiality label/);
+    expect(notes).toMatch(/neutral placeholder/);
+  });
+
+  it("orders the flow: details, video, zip, form, terms, final check", () => {
+    expect(SUBMISSION.steps.map((s) => s.title)).toEqual([
       "Prepare the details",
-      "Check your links",
-      "Everyone accepts the IP terms",
-      "Submit and save",
-      "Add files",
+      "Upload your demo video to YouTube",
+      "Zip your source code",
+      "Fill in the form and add files",
+      "Everyone accepts the terms",
       "Check before 10:00",
     ]);
-    expect(SUBMISSION.steps[3]!.text).toMatch(/Files attach to a saved submission/);
     expect(SUBMISSION.steps[3]!.text).toMatch(/one entry per team/);
   });
 

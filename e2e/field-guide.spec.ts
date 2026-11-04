@@ -473,12 +473,20 @@ test.describe("Build & submit (builder guide)", () => {
     const submit = section.locator("#submit");
     await expect(submit.getByText("Sunday 8 November, 10:00 EET")).toBeVisible();
     await expect(submit).toContainText("not Devpost");
-    await expect(submit.locator('[data-file-kind="Demo video"]')).toContainText("MP4, WebM");
-    await expect(submit).toContainText("ZIP archives are not accepted");
+    // The final form (4 Nov 2026): a YouTube video and the source zip are required; no video files.
+    await expect(submit.locator('[data-file-kind="Demo video"]')).toContainText("YouTube link");
+    await expect(submit.locator('[data-file-kind="Demo video"]')).not.toContainText("MP4, WebM");
+    await expect(submit.locator('[data-file-kind="Source code"] [data-file-required]')).toHaveText("Required");
+    await expect(submit).toContainText("YouTube is the only accepted format");
+    // What voters see: one card, no links.
+    const card = submit.locator("[data-vote-card-guide]");
+    await expect(card.locator("[data-vote-card-row]")).toHaveCount(6);
+    await expect(card).toContainText("Never on the card: your repository, your demo URL or other links");
     // Under the steps: one line to the optional awards; the form's MLH prize categories and public summary say where to look.
     await expect(submit.locator("[data-submit-awards]").getByRole("link")).toHaveAttribute("href", `${GUIDE}/resources#awards`);
-    await expect(submit).toContainText("Tick the MLH categories that fit here");
-    await expect(submit).toContainText("For confidential challenges");
+    await expect(submit).toContainText("Tick the MLH categories that fit");
+    await expect(submit).toContainText("Ticking Red Hat OpenShift AI or FIWARE also enters that award");
+    await expect(submit).toContainText("Public summary (confidential challenges only)");
   });
 
   test("FAQ answers open, and their links point to the right places", async ({ page }) => {

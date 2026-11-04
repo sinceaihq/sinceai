@@ -38,8 +38,8 @@ export const CONFIDENTIAL_RULES = [
     text: "No restricted data in public GitHub repositories, demo videos, screenshots or the evidence for MLH, Red Hat or FIWARE awards — unless FORCIT has given explicit permission.",
   },
   {
-    title: "A public-safe summary for everyone else",
-    text: "Add a public-safe summary to your submission in sinceai.app and confirm it. Voters see your project name, that summary, your demo video and your pitch deck — the video and deck only once your team confirms them public-safe, and not if FORCIT turns them off. Keep all four free of FORCIT's data. The public sees only your project name and team. Optional-award reviewers see only public-safe material — that summary and award evidence that contains nothing restricted — unless the organisers clear more with FORCIT. FORCIT's evaluators and the organisers see the full submission.",
+    title: "A public-safe vote card",
+    text: "Add a public-safe summary to your submission in sinceai.app and confirm that your project name, tagline, summary and Built with contain no FORCIT data. Voters then see the same card as every other project: those four, your demo video and your pitch deck — the video and deck unless FORCIT turns them off. Your demo video is required unless FORCIT or the organisers make it optional; the form tells you. Keep the video and deck free of FORCIT's data unless FORCIT has approved it. Until you confirm, voters see a neutral placeholder. The public sees only your project name and team. Optional-award reviewers see only public-safe material unless the organisers clear more with FORCIT. FORCIT's evaluators and the organisers see the full submission, including your repository and zip.",
   },
 ] as const;
 

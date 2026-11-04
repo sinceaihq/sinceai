@@ -89,7 +89,7 @@ const hackathonFaqs = [
   },
   {
     q: "How do teams submit their projects?",
-    a: "In sinceai.app — the official submission platform, not Devpost — by Sunday 8 November 2026 at 10:00 (EET). Each team submits one entry with its project details, a submission URL and a repository or demo link, and every team member accepts the challenge's IP terms in the app. A demo video, a pitch deck and supporting documents are optional.",
+    a: "In sinceai.app — the official submission platform, not Devpost — by Sunday 8 November 2026 at 10:00 (EET). Each team submits one entry with its project name, a one-sentence tagline, a description, the technologies it built with, a repository link, a YouTube demo video and its source code as a .zip, and accepts the challenge's IP terms in the app. A demo URL, a pitch deck and supporting documents are optional.",
   },
   {
     q: "Which code of conduct applies?",
