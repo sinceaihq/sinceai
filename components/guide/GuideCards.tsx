@@ -1,8 +1,44 @@
 import Link from "next/link";
 import { formatMoment, getScheduleItem, GUIDES, guidePath, titleFor } from "@/lib/hackathon-2026";
 
-/** Hub: pick your role. Each card shows that role's first moment. */
-export function GuideCards() {
+/** One line per role: the role, who it is for and its first moment — the hub's role chooser. */
+function CompactGuideCards() {
+  return (
+    <ul className="border-t border-white/10">
+      {GUIDES.map((guide) => {
+        const first = getScheduleItem(guide.firstMomentId);
+        return (
+          <li key={guide.slug} className="border-b border-white/10">
+            <Link
+              href={guidePath(guide.audience)}
+              className="group flex min-h-16 items-center justify-between gap-4 py-4 transition-colors hover:bg-white/[0.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              <span className="min-w-0">
+                <span className="block text-lg font-bold tracking-tight text-white md:text-xl">{guide.name}</span>
+                <span className="mt-0.5 block text-sm text-neutral-400">{guide.forWho}</span>
+              </span>
+              <span className="flex shrink-0 items-center gap-4">
+                <span className="hidden text-right text-sm sm:block">
+                  <span className="block font-mono text-[11px] uppercase tracking-widest text-(--color-event)">
+                    {formatMoment(first.start, first.approx)}
+                  </span>
+                  <span className="mt-0.5 block text-neutral-300">{titleFor(first, guide.audience)}</span>
+                </span>
+                <span aria-hidden="true" className="text-2xl text-white/55 transition-colors group-hover:text-white">
+                  →
+                </span>
+              </span>
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+/** Hub: pick your role. Each card shows that role's first moment; `compact` is one line per role. */
+export function GuideCards({ compact = false }: { compact?: boolean } = {}) {
+  if (compact) return <CompactGuideCards />;
   return (
     <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
       {GUIDES.map((guide, i) => {

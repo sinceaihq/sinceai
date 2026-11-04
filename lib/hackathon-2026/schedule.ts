@@ -1,5 +1,6 @@
 import { CHALLENGE_PRIZES_STATEMENT } from "./prizes";
 import { ALL_AUDIENCES, type Audience, type ScheduleItem } from "./types";
+import { WORKSHOP_BRING, WORKSHOP_MAP_LINK, WORKSHOP_PLACE, WORKSHOPS, type Workshop } from "./workshops";
 
 const THU = "2026-11-05";
 const FRI = "2026-11-06";
@@ -47,9 +48,29 @@ const BREAKFAST_TBA = "Menu coming soon — the breakfast menu will be announced
  * 13:30–14:00, the five finalists present 14:00–15:10 and the event ends
  * around 15:30.
  *
+ * Friday evening: MLH's GitHub Copilot (20:30–21:00) and Google AI Studio
+ * (21:00–21:30) workshops at BioCity — times, words and the room's status live
+ * in workshops.ts (Quinn Dines, MLH, 3 Nov 2026; organiser, 4 Nov 2026).
+ *
  * Items in the run of show that are internal to the companies' own programme
  * and not confirmed for publication are left out of this public schedule.
  */
+
+/** A workshop as a schedule item: the room stays "to be confirmed" until workshops.ts says otherwise. */
+const workshopItem = (w: Workshop): ScheduleItem => ({
+  id: w.scheduleId,
+  start: w.start,
+  end: w.end,
+  title: w.title,
+  detail: `Hosted by ${w.host}. ${w.text} ${WORKSHOP_BRING}`,
+  place: "biocity",
+  placeDetail: WORKSHOP_PLACE,
+  audiences: ["builders", "partners"],
+  kind: "session",
+  status: "confirmed",
+  note: "Limited seating — we recommend one person per team. You don't need to attend to use the tools.",
+  link: WORKSHOP_MAP_LINK,
+});
 export const SCHEDULE: readonly ScheduleItem[] = [
   // ── Thursday 5 November ────────────────────────────────────────────────────
   {
@@ -308,6 +329,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     kind: "meal",
     status: "working",
   },
+  ...WORKSHOPS.map(workshopItem),
   {
     id: "fri-night",
     start: at(FRI, "22:00"),
@@ -704,6 +726,8 @@ export const HUB_MILESTONE_IDS = [
   "fri-keynote",
   "fri-briefings",
   "fri-build-start",
+  "fri-mlh-copilot",
+  "fri-mlh-ai-studio",
   "sat-qa-morning",
   "sun-submission-deadline",
   "sun-closing-ceremony",

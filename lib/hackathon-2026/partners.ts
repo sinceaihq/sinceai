@@ -78,8 +78,9 @@ export const STAND_PARTNERS: readonly EventPartner[] = [
     url: "https://www.mlh.com/",
     category: "visibility-tech",
     role: "Official hackathon league",
-    status: "working",
-    note: "Stand planned by Since AI; MLH's on-site staffing is confirmed separately.",
+    // Organiser, 4 Nov 2026: two MLH representatives on site, with MLH's Hardware Lab (see workshops.ts).
+    status: "confirmed",
+    note: "Two MLH team members on site, with the MLH Hardware Lab, workshops and help getting started.",
   },
   {
     id: "fiware",

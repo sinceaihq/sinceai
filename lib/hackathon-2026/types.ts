@@ -61,6 +61,8 @@ export interface ScheduleItem {
   /** Short visible note for working/pending details. */
   note?: string;
   noteFor?: Partial<Record<Audience, string>>;
+  /** One guide link shown under the item, e.g. the map of its room. */
+  link?: { label: string; href: string };
 }
 
 export interface Entrance {

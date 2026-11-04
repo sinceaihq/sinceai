@@ -1,7 +1,6 @@
 import Link from "next/link";
 import {
   FoodSection,
-  ghostButtonClass,
   ParkingSection,
   GuideHero,
   GuideSection,
@@ -67,63 +66,40 @@ export default function VenueExplorerPage() {
         title={VENUE_GUIDE.name}
         lede={VENUE_GUIDE.lede}
       >
-        {/* The Venue Explorer stays about places; tools and awards live in Builder Resources. */}
-        <nav aria-label="Builder Resources" className="flex flex-col gap-3 sm:flex-row" data-venue-resource-links>
-          <Link href={RESOURCES_PATH} className={ghostButtonClass}>
-            Builder Resources: tools and credits{" "}
-            <span aria-hidden="true" className="ml-2">
-              →
-            </span>
-          </Link>
-          <Link href={AWARDS_HREF} className={ghostButtonClass}>
-            Optional awards: MLH, Red Hat, FIWARE{" "}
-            <span aria-hidden="true" className="ml-2">
-              →
-            </span>
-          </Link>
+        <nav aria-label="Floor plans by building" className="grid grid-cols-3 gap-px border border-white/10 bg-white/10">
+          {VENUES.map((venue) => (
+            <a
+              key={venue.id}
+              href={`#maps-${venue.id}`}
+              className="flex min-h-14 flex-col justify-center bg-black px-3 py-2 transition-colors hover:bg-white/[0.04] focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white"
+            >
+              <span className="font-semibold text-white">{venue.name}</span>
+              <span className="text-xs text-neutral-400">Floor plans</span>
+            </a>
+          ))}
         </nav>
       </GuideHero>
 
       <SectionNav
         items={[
-          { id: "preview-3d", label: "3D preview" },
-          { id: "photos", label: "Photos" },
           { id: "maps", label: "Floor plans" },
           { id: "route", label: "Between venues" },
           { id: "venues", label: "Addresses" },
-          { id: "parking", label: "Parking" },
           { id: "food", label: "Food" },
+          { id: "preview-3d", label: "3D campus" },
+          { id: "photos", label: "Photos" },
+          { id: "parking", label: "Parking" },
           { id: "locations", label: "All locations" },
           { id: "help", label: "Help" },
         ]}
       />
 
-      <GuideSection id="preview-3d" className="border-t-0 pt-8 md:pt-12">
-        <SectionHeading
-          id="preview-3d-title"
-          eyebrow="// the whole campus in 3D"
-          title="See the space before you arrive."
-          lede="Walk the arrival routes, find your room or stand and see the campus at the hour you arrive: EduCity, BioCity and Joki, built to scale from City of Turku open data. The floor plans below stay the reference for rooms and stands."
-        />
-        <Twin />
-      </GuideSection>
-
-      <GuideSection id="photos">
-        <SectionHeading
-          id="photos-title"
-          eyebrow="// what it looks like"
-          title="The real spaces."
-          lede="Recognise the buildings and rooms before you arrive. Tap a photo to see it full size."
-        />
-        <PhotoGallery photos={VENUE_PHOTOS} />
-      </GuideSection>
-
-      <GuideSection id="maps">
+      <GuideSection id="maps" className="border-t-0 pt-8 md:pt-12">
         <SectionHeading
           id="maps-title"
           eyebrow="// floor plans"
-          title="Every floor that matters."
-          lede="The 2026 event maps and the venue's official floor plans. Tap a map to zoom and pan; every location is also listed as text."
+          title="Find a room or stand."
+          lede="Pick a building and floor. Tap the plan to zoom and pan — every place on it is listed beside it."
         />
         <VenueExplorer mapIds={MAP_ORDER} syncHash label="All venue maps" />
       </GuideSection>
@@ -138,9 +114,29 @@ export default function VenueExplorerPage() {
         <VenueCards venues={["educity", "biocity", "joki"]} />
       </GuideSection>
 
-      <ParkingSection />
-
       <FoodSection />
+
+      <GuideSection id="preview-3d">
+        <SectionHeading
+          id="preview-3d-title"
+          eyebrow="// optional · the campus in 3D"
+          title="Explore the campus in 3D."
+          lede="EduCity, BioCity and Joki to scale, from City of Turku open data: walk the arrival routes and find your room or stand. The floor plans above stay the reference."
+        />
+        <Twin />
+      </GuideSection>
+
+      <GuideSection id="photos">
+        <SectionHeading
+          id="photos-title"
+          eyebrow="// what it looks like"
+          title="The real spaces."
+          lede="Tap a photo to see it full size."
+        />
+        <PhotoGallery photos={VENUE_PHOTOS} />
+      </GuideSection>
+
+      <ParkingSection />
 
       <GuideSection id="locations">
         <SectionHeading
@@ -174,6 +170,21 @@ export default function VenueExplorerPage() {
       <GuideSection id="help">
         <SectionHeading id="help-title" eyebrow="// help" title="Can't find it?" />
         <HelpSection />
+        <div className="mt-8">
+          {/* The Venue Explorer stays about places; tools and awards live in Builder Resources. */}
+          <nav
+            aria-label="Builder Resources"
+            className="flex flex-wrap gap-x-6 gap-y-1 text-sm"
+            data-venue-resource-links
+          >
+            <Link href={RESOURCES_PATH} className="inline-flex min-h-11 items-center text-neutral-300 underline underline-offset-4 decoration-white/30 hover:text-white">
+              Builder Resources: tools and credits
+            </Link>
+            <Link href={AWARDS_HREF} className="inline-flex min-h-11 items-center text-neutral-300 underline underline-offset-4 decoration-white/30 hover:text-white">
+              Optional awards: MLH, Red Hat, FIWARE
+            </Link>
+          </nav>
+        </div>
       </GuideSection>
     </>
   );

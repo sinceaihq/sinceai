@@ -38,7 +38,7 @@ test.describe("routes and indexing", () => {
   test("the bare event path leads to the hub", async ({ page }) => {
     await page.goto("/hackathon-2026");
     await expect(page).toHaveURL(new RegExp(`${GUIDE}$`));
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Field Guide");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Since AI Hackathon 2026");
   });
 
   test("calendar files per guide and per company", async ({ request }) => {
@@ -47,7 +47,14 @@ test.describe("routes and indexing", () => {
     expect(builders.headers()["content-type"]).toContain("text/calendar");
     expect(builders.headers()["content-disposition"]).toContain("since-ai-hackathon-2026-builders.ics");
     expect(builders.headers()["x-robots-tag"]).toContain("noindex");
-    expect(await builders.text()).toContain("BEGIN:VCALENDAR");
+    const buildersIcs = (await builders.text()).replace(/\r\n /g, "");
+    expect(buildersIcs).toContain("BEGIN:VCALENDAR");
+    // MLH's two workshops, Friday in Presidenttiauditorio (20:30 and 21:00 Turku time = 18:30 and 19:00 UTC).
+    expect(buildersIcs).toContain("SUMMARY:GitHub Copilot Workshop");
+    expect(buildersIcs).toContain("DTSTART:20261106T183000Z\r\nDTEND:20261106T190000Z");
+    expect(buildersIcs).toContain("SUMMARY:Google AI Studio Workshop");
+    expect(buildersIcs).toContain("DTSTART:20261106T190000Z\r\nDTEND:20261106T193000Z");
+    expect(buildersIcs).toContain("Presidenttiauditorio");
 
     const elisa = await request.get(`${GUIDE}/calendar/challenge-partners/elisa`);
     expect(elisa.status()).toBe(200);
@@ -168,7 +175,7 @@ test.describe("content", () => {
     const names = ["Red Hat", "Solita", "Pruna AI", "BearingPoint", "CSC / LUMI AI Factory", "Major League Hacking", "FIWARE"];
     for (const [i, name] of names.entries()) await expect(page.locator(`#stand-bc-${i + 1}`)).toContainText(name);
     await expect(page.locator("#stand-bc-1")).toContainText("on-site hours are confirmed separately");
-    await expect(page.locator("#stand-bc-6")).toContainText("confirmed separately");
+    await expect(page.locator("#stand-bc-6")).toContainText("Two MLH team members on site");
     await expect(page.locator("#stand-bc-7")).toContainText("Behind Solita's stand, facing the walkway to Joki");
     await expect(page.locator("#stand-bc-7")).toContainText("stand hours are confirmed separately");
     for (let i = 1; i <= 7; i++) await expect(page.locator(`#stand-bc-${i}`)).toContainText("partner corner");
@@ -386,9 +393,9 @@ test.describe("CSC / LUMI computing resources", () => {
     await expect(section).toContainText("Horizon Europe-associated country");
     await expect(section).toContainText("SUPERCOMPUTER");
     await expect(section.getByRole("link", { name: "info@sinceai.fi" })).toHaveAttribute("href", "mailto:info@sinceai.fi");
-    // Right after the role guides.
+    // After the essentials (role guides, schedule, venues, Wi-Fi, food): registration closed on 30 Oct.
     const order = await page.$$eval("main section[id]", (els) => els.map((e) => e.id));
-    expect(order.indexOf("ai-resources")).toBe(order.indexOf("guides") + 1);
+    expect(order.indexOf("ai-resources")).toBe(order.indexOf("food") + 1);
 
     const nav = page.getByRole("navigation", { name: "On this page" });
     await nav.getByRole("link", { name: "AI resources" }).click();
@@ -961,5 +968,116 @@ test.describe("resilience", () => {
       expect(res.status(), path).toBe(200);
     }
     expect(seen.size).toBeGreaterThan(20);
+  });
+});
+
+test.describe("first screen, MLH and workshops (4 Nov 2026)", () => {
+  test("the hub's first screen says what's next and offers four ways in, before anything else", async ({ page }) => {
+    await page.goto(GUIDE);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Since AI Hackathon 2026");
+    const nowNext = page.locator("section[aria-labelledby='now-next-title']");
+    await expect(nowNext).toBeVisible();
+    await expect(nowNext).toBeInViewport();
+    const quick = page.getByRole("navigation", { name: "Quick links" });
+    await expect(quick.getByRole("link")).toHaveText([/Schedule/, /Find a place/, /Campus map/, /Help/]);
+    await expect(quick.getByRole("link", { name: /Find a place/ })).toHaveAttribute("href", `${GUIDE}/venue#maps`);
+    // The roles come straight after, one line each.
+    await expect(page.locator("#guides").getByRole("link", { name: /Builder Guide/ })).toHaveAttribute("href", `${GUIDE}/builders`);
+    // The hub's schedule carries both workshops, and a short MLH summary links to the details.
+    const weekend = page.locator("#weekend");
+    await expect(weekend).toContainText("GitHub Copilot Workshop");
+    await expect(weekend).toContainText("Google AI Studio Workshop");
+    await expect(weekend.locator("[data-mlh-on-site]")).toContainText("At least 50 Arduino UNO Q boards");
+    await expect(weekend.getByRole("link", { name: /MLH, workshops and hardware/ })).toHaveAttribute("href", `${GUIDE}/builders#mlh`);
+    expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
+  });
+
+  test("the builder schedule has both workshops after the opening, in Presidenttiauditorio, linked to the room", async ({ page }) => {
+    await page.goto(`${GUIDE}/builders#schedule`);
+    const schedule = page.locator("#schedule");
+    const copilot = schedule.locator("#schedule-item-fri-mlh-copilot");
+    await expect(copilot).toContainText("20:30");
+    await expect(copilot).toContainText("21:00");
+    await expect(copilot).toContainText("GitHub Copilot Workshop");
+    await expect(copilot).toContainText("Presidenttiauditorio");
+    await expect(copilot).toContainText("we recommend one person per team");
+    const studio = schedule.locator("#schedule-item-fri-mlh-ai-studio");
+    await expect(studio).toContainText("21:30");
+    await expect(studio).toContainText("Google AI Studio Workshop");
+    const text = await schedule.innerText();
+    expect(text.indexOf("Major League Hacking: Introduction")).toBeLessThan(text.indexOf("Opening ceremony"));
+    expect(text.indexOf("Opening ceremony")).toBeLessThan(text.indexOf("GitHub Copilot Workshop"));
+    expect(text.indexOf("GitHub Copilot Workshop")).toBeLessThan(text.indexOf("Google AI Studio Workshop"));
+    await expect(schedule).not.toContainText(/room to be confirmed/i);
+    await copilot.getByRole("link", { name: /View room on map/ }).click();
+    await expect(page).toHaveURL(new RegExp(`${GUIDE}/venue#place-bio-presidenttiauditorio$`));
+    await expect(page.locator('#maps [role="tab"][aria-selected="true"]')).toHaveText(/BioCity · Main lobby/i);
+    await expect(page.locator("#maps li").filter({ hasText: "(highlighted)" })).toHaveText(/Presidenttiauditorio — BioCity\s·\sAuditorium\s·\s258 seats/);
+  });
+
+  test("MLH at Since AI: hardware, giveaways, workshops, help — and the way in without attending", async ({ page }) => {
+    await page.goto(`${GUIDE}/builders#mlh`);
+    const mlh = page.locator("#mlh");
+    await expect(page.locator("#mlh-title")).toHaveText("MLH at Since AI");
+    const items = mlh.locator("[data-mlh-item]");
+    await expect(items).toHaveCount(4);
+    await expect(mlh.locator('[data-mlh-item="hardware"]')).toContainText("MLH Hardware Lab");
+    await expect(mlh.locator('[data-mlh-item="hardware"]')).toContainText("on loan");
+    await expect(mlh.locator('[data-mlh-item="giveaways"]')).toContainText("At least 50 Arduino UNO Q boards");
+    await expect(mlh.locator('[data-mlh-item="help"]')).toContainText("Two MLH team members are on site in BioCity");
+    await expect(mlh).toContainText("BioCity · MLH area");
+    await expect(mlh.getByRole("link", { name: /Explore hardware resources/ })).toHaveAttribute("href", "https://www.mlh.com/resources/hardware");
+    await expect(mlh.locator("[data-mlh-on-site]")).not.toContainText(/first come|raffle|winner|sign up|register/i);
+
+    const cards = mlh.locator("[data-workshop]");
+    await expect(cards).toHaveCount(2);
+    await expect(cards.nth(0)).toContainText("20:30–21:00");
+    await expect(cards.nth(0)).toContainText("GitHub Copilot Workshop");
+    await expect(cards.nth(1)).toContainText("21:00–21:30");
+    await expect(cards.nth(1)).toContainText("Google AI Studio Workshop");
+    await expect(mlh.locator("[data-workshop-room]")).toHaveText(["Presidenttiauditorio", "Presidenttiauditorio"]);
+    await expect(mlh.locator("[data-workshop-seating]")).toBeVisible();
+    await expect(mlh.locator("[data-workshop-seating]")).toHaveText(
+      "Seats are limited. We recommend one person per team — share what you learn with your teammates. You don't need to attend to access the tools and setup guides.",
+    );
+    await expect(cards.nth(0).getByRole("link", { name: /Get GitHub Copilot/ })).toHaveAttribute("href", "https://mlh.link/github");
+    await expect(cards.nth(0)).toContainText("GitHub Student Developer Pack");
+    await expect(mlh.locator("[data-workshops-cant-attend]")).toContainText("Can't attend?");
+    await expect(mlh.locator("[data-workshops-cant-attend]")).toContainText("Follow the setup guides or ask the MLH team for help.");
+    await expect(mlh).toContainText("Presidenttiauditorio has 258 seats");
+    await expect(mlh).not.toContainText(/300 seats|400 seats|guaranteed seat|must attend/i);
+    expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
+
+    await mlh.getByRole("link", { name: /Find MLH on the map/ }).click();
+    await expect(page).toHaveURL(new RegExp(`${GUIDE}/venue#place-stand-bc-6$`));
+    const ringed = page.locator("#maps li").filter({ hasText: "(highlighted)" });
+    await expect(ringed).toHaveCount(1);
+    await expect(ringed).toContainText("Major League Hacking");
+  });
+
+  test("the Venue Explorer leads with the floor plans; the 3D campus is optional, further down", async ({ page }) => {
+    await page.goto(`${GUIDE}/venue`);
+    const order = await page.locator("main section[id], main div[id]").evaluateAll((els) => els.map((e) => e.id));
+    expect(order.indexOf("maps")).toBeGreaterThanOrEqual(0);
+    expect(order.indexOf("maps")).toBeLessThan(order.indexOf("route"));
+    expect(order.indexOf("route")).toBeLessThan(order.indexOf("preview-3d"));
+    expect(order.indexOf("maps")).toBeLessThan(order.indexOf("photos"));
+    await expect(page.getByRole("navigation", { name: "Floor plans by building" }).getByRole("link")).toHaveText([/EduCity/, /BioCity/, /Joki/]);
+    await page.getByRole("navigation", { name: "Floor plans by building" }).getByRole("link", { name: /BioCity/ }).click();
+    await expect(page.locator('#maps [role="tab"][aria-selected="true"]')).toHaveText(/BioCity/i);
+    // The BioCity plan lists the places people look for.
+    const list = page.locator("#maps ul").first();
+    for (const place of ["Presidenttiauditorio", "Main entrance", "Event entrance", "Restaurant Mauno", "To Joki", "Stand 6 · Major League Hacking"]) {
+      await expect(list).toContainText(place);
+    }
+  });
+
+  test("Builder Resources points to MLH at Since AI without repeating the workshop details", async ({ page }) => {
+    await page.goto(`${GUIDE}/resources#mlh-awards`);
+    const summary = page.locator("#mlh-awards [data-mlh-on-site]");
+    await expect(summary).toContainText("MLH at Since AI");
+    await expect(summary).toContainText("Presidenttiauditorio");
+    await expect(page.locator("#mlh-awards [data-workshop]")).toHaveCount(0);
+    await expect(summary.getByRole("link", { name: /MLH, workshops and hardware/ })).toHaveAttribute("href", `${GUIDE}/builders#mlh`);
   });
 });
