@@ -24,6 +24,8 @@ import {
   VenueCards,
   VenueExplorer,
   WifiSection,
+  Workshops,
+  MlhOnSite,
   ghostButtonClass,
   primaryButtonClass,
   ParkingNote,
@@ -43,6 +45,8 @@ import {
   scheduleFor,
   VOTE_COMPARISONS,
   VOTING,
+  MLH_ANCHOR,
+  WORKSHOPS_ANCHOR,
 } from "@/lib/hackathon-2026";
 
 const AUDIENCE = "builders" as const;
@@ -100,7 +104,9 @@ export default function BuilderGuidePage() {
         title={guide.name}
         lede={guide.lede}
       >
+        <NowNext items={schedule} audience={AUDIENCE} firstMoment={getScheduleItem(guide.firstMomentId)} />
         <FactsStrip
+          label="Key times"
           facts={[
             { label: "Challenge summaries", value: "Thu 15:00", sub: "In sinceai.app · choose from these" },
             { label: "Registration", value: "Fri 15:00", sub: "EduCity · every member in person", strong: true },
@@ -111,24 +117,20 @@ export default function BuilderGuidePage() {
           ]}
         />
         <ComputingCallout />
-        <NowNext items={schedule} audience={AUDIENCE} firstMoment={getScheduleItem(guide.firstMomentId)} />
       </GuideHero>
 
       <SectionNav
         items={[
           { id: "steps", label: "Steps" },
           { id: "rules", label: "Challenge rules" },
-          { id: "team-formation", label: "Team formation" },
           { id: BRIEFING_ROOMS_ANCHOR, label: "Briefing rooms" },
           { id: "schedule", label: "Schedule" },
-          { id: "app", label: "sinceai.app" },
+          { id: MLH_ANCHOR, label: "MLH & workshops" },
           { id: "building", label: "Build & submit" },
-          { id: "venues", label: "Venues" },
           { id: "wifi", label: "Wi-Fi" },
-          { id: "accommodation", label: "Hotels" },
-          { id: "bring", label: "Checklist" },
           { id: "maps", label: "Maps" },
-          { id: "details", label: "Details" },
+          { id: "bring", label: "Checklist" },
+          { id: "details", label: "FAQ" },
           { id: "help", label: "Help" },
         ]}
       />
@@ -147,7 +149,7 @@ export default function BuilderGuidePage() {
           id="rules-title"
           eyebrow="// company challenge · team · friday"
           title="One company challenge per team. Ready, select — final."
-          lede="The rules for choosing your challenge, in one place. The app enforces the same times; your guide and sinceai.app say the same thing."
+          lede="How choosing your challenge works. sinceai.app enforces the same times."
         />
         <ChallengeRules />
       </GuideSection>
@@ -206,12 +208,30 @@ export default function BuilderGuidePage() {
         <Schedule items={schedule} audience={AUDIENCE} />
       </GuideSection>
 
+      <GuideSection id={MLH_ANCHOR}>
+        <SectionHeading
+          id={`${MLH_ANCHOR}-title`}
+          eyebrow="// major league hacking · biocity"
+          title="MLH at Since AI"
+        />
+        <MlhOnSite />
+        <div id={WORKSHOPS_ANCHOR} className="mt-14 scroll-mt-32">
+          <h3 id={`${WORKSHOPS_ANCHOR}-title`} className="text-2xl font-bold tracking-tight text-white md:text-3xl">
+            Workshops
+          </h3>
+          <p className="mt-2 mb-6 max-w-2xl text-neutral-300">
+            Two optional, hands-on MLH sessions on Friday evening to get you building with AI tools.
+          </p>
+          <Workshops />
+        </div>
+      </GuideSection>
+
       <GuideSection id="app">
         <SectionHeading
           id="app-title"
           eyebrow="// sinceai.app"
           title="The app runs your weekend."
-          lede="Your team, your challenge and your submission all live in sinceai.app. Your team lead marks the team as ready and selects its challenge on Friday 15:00–17:30; any team member can submit."
+          lede="Your team, your challenge and your submission all live in sinceai.app."
         />
         <ol className="grid grid-cols-1 border-l border-t border-white/10 sm:grid-cols-2 lg:grid-cols-3">
           {APP_STEPS.map((step) => (
@@ -260,7 +280,7 @@ export default function BuilderGuidePage() {
           id="venues-title"
           eyebrow="// where"
           title="Start at EduCity. Build at BioCity and Joki."
-          lede="After the briefing (18:50–19:30), move with your team to BioCity or Joki, eat when it suits you and pick a workspace. Both stay open around the clock. Sunday's closing is back at EduCity."
+          lede="After your briefing, move with your team to BioCity or Joki and pick a workspace — both are open around the clock. Sunday's closing is back at EduCity."
         />
         <VenueCards venues={["educity", "biocity", "joki"]} />
         <ParkingNote className="mt-6" />
@@ -296,7 +316,7 @@ export default function BuilderGuidePage() {
           id="maps-title"
           eyebrow="// maps"
           title="Find your way."
-          lede="Friday team formation and briefing rooms at EduCity, then the build spaces. Tap a map to zoom."
+          lede="EduCity for Friday, then the build spaces. Tap a map to zoom."
         />
         <VenueExplorer
           mapIds={[

@@ -21,7 +21,7 @@ function Row({
 }: {
   label: string;
   item: ScheduleItem;
-  audience: Audience;
+  audience?: Audience;
   emphasis?: boolean;
 }) {
   return (
@@ -52,7 +52,8 @@ export function NowNext({
   firstMoment,
 }: {
   items: ScheduleItem[];
-  audience: Audience;
+  /** Omitted on the hub: the shared wording, for everyone. */
+  audience?: Audience;
   firstMoment: ScheduleItem;
 }) {
   const now = useGuideNow();
@@ -74,7 +75,7 @@ export function NowNext({
             .map((item) => <Row key={item.id} label="Now" item={item} audience={audience} emphasis />)
         ) : (
           <p className="text-sm text-neutral-400">
-            {audience === "builders"
+            {audience === "builders" || audience === undefined
               ? "Building time — nothing scheduled right now."
               : "Nothing scheduled for you right now."}
           </p>

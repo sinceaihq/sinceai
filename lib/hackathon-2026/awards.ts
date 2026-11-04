@@ -258,7 +258,7 @@ export const MLH_HOW_IT_WORKS = [
 
 /** Where to ask about the MLH categories — MLH's own introduction and prize page, no new contacts. */
 export const MLH_QUESTIONS =
-  "Come to MLH's introduction at 16:45 on Friday, on the Taidon portaat stage, or see MLH's prize page.";
+  "Come to MLH's introduction at 16:45 on Friday, on the Taidon portaat stage, or its workshops at BioCity from 20:30 — or see MLH's prize page.";
 
 export const MLH_AWARDS_NOTE =
   "Prizes provided through Major League Hacking (MLH) and its sponsors; MLH runs these categories and their judging. Tick any categories that fit on your team's submission in sinceai.app: zero, one or several, with the same project. MLH's prize page has the full details.";

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   detailFor,
   formatTime,
@@ -103,6 +104,20 @@ export function Schedule({
                       <p className="mt-2 text-xs text-(--color-event) leading-relaxed">
                         <span className="sr-only">Note: </span>
                         {note}
+                      </p>
+                    )}
+                    {item.link && (
+                      <p className="guide-no-print mt-1">
+                        <Link
+                          href={item.link.href}
+                          className="inline-flex min-h-11 items-center text-sm text-white underline underline-offset-4 decoration-white/40 hover:decoration-white"
+                        >
+                          {item.link.label}
+                          <span className="sr-only"> for {titleFor(item, audience)}</span>
+                          <span aria-hidden="true" className="ml-1.5">
+                            →
+                          </span>
+                        </Link>
                       </p>
                     )}
                   </div>

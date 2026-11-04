@@ -16,11 +16,12 @@ function tabLabel(map: VenueMap) {
  * text list of every location (the map is an enhancement, not the only way in).
  *
  * With `syncHash`, #map-<id> and #maps-<venue> select a map (deep links from
- * venue cards and other guides).
+ * venue cards and other guides), and #place-<hotspot id> selects the map that
+ * shows it and rings the place (e.g. a room from the schedule).
  */
 export function VenueExplorer({
   mapIds,
-  highlight = [],
+  highlight: highlightProp = [],
   initialMapId,
   syncHash = false,
   label = "Venue maps",
@@ -42,6 +43,7 @@ export function VenueExplorer({
   );
   const [activeId, setActiveId] = useState(initialMapId ?? maps[0]?.id);
   const [viewerOpen, setViewerOpen] = useState(false);
+  const [placeFromHash, setPlaceFromHash] = useState<string | null>(null);
   const [opener, setOpener] = useState<HTMLElement | null>(null);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -54,7 +56,10 @@ export function VenueExplorer({
       const hash = window.location.hash.slice(1);
       const byMap = hash.startsWith("map-") ? maps.find((m) => m.id === hash.slice(4)) : undefined;
       const byVenue = hash.startsWith("maps-") ? maps.find((m) => m.venue === hash.slice(5)) : undefined;
-      const target = byMap ?? byVenue;
+      const placeId = hash.startsWith("place-") ? hash.slice(6) : null;
+      const byPlace = placeId ? maps.find((m) => m.hotspots.some((h) => h.id === placeId)) : undefined;
+      const target = byMap ?? byVenue ?? byPlace;
+      setPlaceFromHash(byPlace ? placeId : null);
       if (target) {
         setActiveId(target.id);
         rootRef.current?.scrollIntoView({ block: "start" });
@@ -68,7 +73,17 @@ export function VenueExplorer({
     };
   }, [syncHash, maps]);
 
+  // Keep the selected tab visible in the scrolling tab row (phones) — horizontally only, never the page.
+  const activeIndex = active ? maps.indexOf(active) : -1;
+  useEffect(() => {
+    const tab = tabRefs.current[activeIndex];
+    const row = tab?.parentElement;
+    if (!tab || !row || row.scrollWidth <= row.clientWidth) return;
+    row.scrollLeft = tab.offsetLeft - row.offsetLeft - (row.clientWidth - tab.offsetWidth) / 2;
+  }, [activeIndex]);
+
   if (!active) return null;
+  const highlight = placeFromHash ? [...highlightProp, placeFromHash] : highlightProp;
 
   const onTabKey = (e: React.KeyboardEvent, index: number) => {
     let next = index;

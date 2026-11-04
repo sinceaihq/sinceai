@@ -1,6 +1,7 @@
 import { getCompany, SHOWROOM_ORDER } from "./companies";
 import { BIOCITY_STANDS, getStandPartner } from "./partners";
 import type { MapHotspot, VenueMap } from "./types";
+import { WORKSHOP_ROOM, WORKSHOP_ROOM_CONFIRMED } from "./workshops";
 
 /**
  * Venue maps for the 2D Venue Explorer.
@@ -285,7 +286,7 @@ export const VENUE_MAPS: readonly VenueMap[] = [
     srcLarge: "/assets/guide/maps/biocity-lobby-large.webp",
     width: 1600,
     height: 1131,
-    alt: "BioCity ground floor plan: the long main lobby (build area) along Lemminkäisenkatu, the curved Aulagalleria with the north-east entrance from Jussin aukio, the restaurant serving lines and the passage to Joki at the south-east end.",
+    alt: "BioCity ground floor plan: the long main lobby (build area) along Lemminkäisenkatu, the curved Aulagalleria with the north-east entrance from Jussin aukio, Presidenttiauditorio (258 seats) in the north-west corner, the restaurant serving lines and the passage to Joki at the south-east end.",
     caption:
       "Planned event entrance on the courtyard side (Jussin aukio). Build tables fill the main lobby; Joki connects at its south-east end.",
     source: "Turun Teknologiakiinteistöt floor plan",
@@ -296,6 +297,7 @@ export const VENUE_MAPS: readonly VenueMap[] = [
       { fi: "Sisäänkäynti vierailukeskus Joesta", en: "Passage from Joki" },
       { fi: "Ruokailulinjasto", en: "Food serving line" },
       { fi: "Liiketila", en: "Retail space (not in use)" },
+      { fi: "Presidenttiauditorio · 258 henk.", en: "Auditorium · 258 seats (henk. = people)" },
     ],
     hotspots: [
       hs({
@@ -305,6 +307,28 @@ export const VENUE_MAPS: readonly VenueMap[] = [
         x: 0.555,
         y: 0.203,
         kind: "entrance",
+      }),
+      // The main entrance: the revolving door on Tykistökatu (venues.ts), at the plan's own arrow.
+      hs({
+        id: "bio-main-entrance",
+        label: "Main entrance",
+        description: "Tykistökatu 6 · revolving door — companies and partners come in here",
+        x: 0.288,
+        y: 0.687,
+        kind: "entrance",
+      }),
+      // Presidenttiauditorio, the auditorium in the plan's north-west corner, off the Aulagalleria (241 m²,
+      // 258 seats on the plan). The ring sits in the seating fan, clear of the plan's own label. The MLH
+      // workshops are shown here only once workshops.ts marks the room confirmed.
+      hs({
+        id: WORKSHOP_ROOM.hotspotId,
+        label: "Presidenttiauditorio",
+        description: `BioCity · Auditorium · ${WORKSHOP_ROOM.seats} seats${
+          WORKSHOP_ROOM_CONFIRMED ? " · MLH workshops Fri 20:30–21:30" : ""
+        }`,
+        x: 0.355,
+        y: 0.135,
+        kind: "area",
       }),
       // The partner corner (organiser, 6 and 13 Oct and 3 Nov 2026): one ring for all seven visibility / tech
       // partner stands — they are 1.76 m apart, too close for a ring each on this plan. Plan-B → image: u = 0.806 +
@@ -335,7 +359,14 @@ export const VENUE_MAPS: readonly VenueMap[] = [
         kind: "area",
         audiences: ["builders"],
       }),
-      hs({ id: "bio-food-line", label: "Restaurant serving lines", x: 0.724, y: 0.292, kind: "service" }),
+      hs({
+        id: "bio-food-line",
+        label: "Restaurant Mauno",
+        description: "Serving lines for the event meals",
+        x: 0.724,
+        y: 0.292,
+        kind: "service",
+      }),
       hs({
         id: "bio-joki-passage",
         label: "To Joki",

@@ -227,7 +227,10 @@ describe("canonical event facts", () => {
       ["sun-lunch", "10:00–13:00"],
     ]);
     // The superseded times and breakfast menus of the 14 Oct 2026 update.
-    expect(JSON.stringify({ SCHEDULE, DETAILS })).not.toMatch(/21:30|10:00–12:30|from 07:30|taskurieska|by Mauno/);
+    // (MLH's Google AI Studio workshop really does end at 21:30, so meals are checked on their own.)
+    const mealItems = SCHEDULE.filter((i) => i.kind === "meal");
+    expect(JSON.stringify({ mealItems, DETAILS })).not.toMatch(/21:30|10:00–12:30|from 07:30|taskurieska|by Mauno/);
+    expect(JSON.stringify({ SCHEDULE, DETAILS })).not.toMatch(/10:00–12:30|from 07:30|taskurieska|by Mauno/);
   });
 
   it("tears visibility stands down after the event, not at the 10:00 deadline", () => {
@@ -436,10 +439,11 @@ describe("BioCity visibility & tech partner stands", () => {
     }
   });
 
-  it("does not claim MLH's on-site staffing, and keeps the layout provisional", () => {
+  it("has MLH's two on-site team members (organiser, 4 Nov 2026), and keeps the layout provisional", () => {
     const mlh = STAND_PARTNERS.find((p) => p.id === "mlh")!;
-    expect(mlh.status).toBe("working");
-    expect(mlh.note).toMatch(/confirmed separately/);
+    expect(mlh.status).toBe("confirmed");
+    expect(mlh.note).toMatch(/^Two MLH team members on site, with the MLH Hardware Lab/);
+    expect(mlh.note).not.toMatch(/hours|\d{1,2}:\d{2}/);
     for (const stand of BIOCITY_STANDS) expect(stand.status).toBe("working");
   });
 

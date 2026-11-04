@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { GuideHero, GuideSection, HelpSection, SectionHeading, SectionNav } from "@/components/guide";
+import { GuideHero, GuideSection, HelpSection, MlhOnSite, SectionHeading, SectionNav } from "@/components/guide";
 import {
   AwardsAtAGlance,
   ConfidentialRules,
@@ -111,6 +111,9 @@ export default function ResourcesGuidePage() {
           title="Free tools and prizes through MLH."
           lede="Use any of these in your project and you can win its prize on top of your company challenge. Most have a free tier, credits or a trial to get you started."
         />
+        <div className="mb-10">
+          <MlhOnSite compact />
+        </div>
         <MlhAwards />
       </GuideSection>
 

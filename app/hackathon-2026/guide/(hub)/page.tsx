@@ -5,7 +5,6 @@ import {
   ResourcesHubLink,
   ComputingCallout,
   ComputingSection,
-  CriticalPath,
   FactsStrip,
   FoodSummary,
   ParkingHubSection,
@@ -13,6 +12,9 @@ import {
   GuideHero,
   GuideSection,
   HelpSection,
+  MlhOnSite,
+  NowNext,
+  QuickLinks,
   RouteCard,
   Schedule,
   SectionHeading,
@@ -34,40 +36,36 @@ import {
 } from "@/lib/hackathon-2026";
 
 const milestones = HUB_MILESTONE_IDS.map(getScheduleItem);
+/** "What's next" for everyone: Thursday's summaries, MLH's introduction and the shared milestones. */
+const nowNextItems = [getScheduleItem("thu-challenge-summaries"), getScheduleItem("fri-mlh-intro"), ...milestones].sort(
+  (a, b) => Date.parse(a.start) - Date.parse(b.start),
+);
 
 export default function FieldGuideHubPage() {
   return (
     <>
       <GuideHero
         crumbs={[{ label: "Hackathon 2026", href: "/hackathon" }, { label: "Field Guide" }]}
-        title="Field Guide"
+        title="Since AI Hackathon 2026"
         lede={HUB.lede}
       >
-        <FactsStrip
-          facts={[
-            { label: "Dates", value: "6–8 Nov 2026", sub: "Turku, Finland" },
-            { label: "Official opening", value: "Fri 17:00", sub: "EduCity", strong: true },
-            { label: "Build spaces", value: "BioCity + Joki", sub: "Around the clock" },
-            { label: "Submissions close", value: "Sun 10:00", sub: "Hard deadline", strong: true },
-            { label: "Closing ceremony", value: "Sun 13:15", sub: "EduCity · top three per challenge 13:30" },
-            { label: "Finals", value: "Sun 14:00", sub: "Five teams live on stage · ends around 15:30" },
-          ]}
-        />
-        <p className="text-sm text-neutral-400">{HUB.openingNote}</p>
+        <NowNext items={nowNextItems} firstMoment={getScheduleItem("fri-registration")} />
+        <QuickLinks />
+        {/* Renders only before the CSC / LUMI registration deadline (30 Oct 2026). */}
         <ComputingCallout inPage />
       </GuideHero>
 
       <SectionNav
         items={[
           { id: "guides", label: "Your guide" },
-          { id: COMPUTING_ANCHOR, label: "AI resources" },
-          { id: "weekend", label: "Weekend" },
+          { id: "weekend", label: "Schedule" },
           { id: "venues", label: "Venues" },
           { id: "wifi", label: "Wi-Fi" },
-          { id: "parking", label: "Parking" },
           { id: "food", label: "Food" },
+          { id: COMPUTING_ANCHOR, label: "AI resources" },
+          { id: "parking", label: "Parking" },
           { id: "accommodation", label: "Hotels" },
-          { id: "preview", label: "3D preview" },
+          { id: "preview", label: "3D campus" },
           { id: "help", label: "Help" },
         ]}
       />
@@ -76,11 +74,11 @@ export default function FieldGuideHubPage() {
         <SectionHeading
           id="guides-title"
           eyebrow="// choose your guide"
-          title="One page per role."
-          lede="Each guide puts your next action first: where to be, when, what to bring — and where to get help."
+          title="Who are you?"
+          lede="Your guide has your arrival time, your next step and where to get help."
         />
-        <GuideCards />
-        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+        <GuideCards compact />
+        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
           <Link
             href={`${GUIDE_BASE_PATH}/venue`}
             className="group flex h-full items-center justify-between gap-6 border border-white/10 p-6 transition-colors hover:border-white/30 hover:bg-white/[0.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:p-8"
@@ -122,28 +120,30 @@ export default function FieldGuideHubPage() {
         </div>
       </GuideSection>
 
-      <ComputingSection />
-
       <GuideSection id="weekend">
         <SectionHeading
           id="weekend-title"
-          eyebrow="// the weekend at a glance"
+          eyebrow="// schedule"
           title="Friday to Sunday."
-          lede={`Shared milestones for everyone. Role-specific times are in your guide. All times ${EVENT_2026.timezoneLabel}.`}
+          lede={`The moments everyone shares. Your guide has your role's times. All times ${EVENT_2026.timezoneLabel}.`}
         />
-        <div className="mb-12">
-          <CriticalPath
-            label="Event flow"
-            steps={[
-              { label: "Arrive", time: "Fri afternoon", text: "EduCity — role-specific arrival times." },
-              { label: "Opening", time: "Fri 17:00", text: "EduCity lobby, Taidon portaat — challenge selection until 17:30, then Jason Mayes." },
-              { label: "Briefings", time: "Fri 18:50", text: "Company rooms at EduCity, until 19:30." },
-              { label: "Build", time: "Fri 19:30 →", text: "Dinner, then BioCity + Joki around the clock." },
-              { label: "Closing · finals", time: "Sun 13:15", text: "EduCity — closing ceremony, each challenge's top three, then the finals at 14:00." },
+        <div className="mb-10">
+          <FactsStrip
+            label="Key times"
+            facts={[
+              { label: "Registration", value: "Fri 15:00", sub: "EduCity" },
+              { label: "Official opening", value: "Fri 17:00", sub: "EduCity", strong: true },
+              { label: "Build", value: "Fri 19:30 →", sub: "BioCity + Joki, around the clock" },
+              { label: "Submissions close", value: "Sun 10:00", sub: "Hard deadline · sinceai.app", strong: true },
+              { label: "Closing ceremony", value: "Sun 13:15", sub: "EduCity · top three per challenge 13:30" },
+              { label: "Finals", value: "Sun 14:00", sub: "Five teams on stage · ends around 15:30" },
             ]}
           />
         </div>
         <Schedule items={milestones} idPrefix="hub" />
+        <div className="mt-12">
+          <MlhOnSite compact />
+        </div>
       </GuideSection>
 
       <GuideSection id="venues">
@@ -161,9 +161,11 @@ export default function FieldGuideHubPage() {
 
       <WifiSection />
 
-      <ParkingHubSection />
-
       <FoodSummary />
+
+      <ComputingSection />
+
+      <ParkingHubSection />
 
       <AccommodationSection />
 

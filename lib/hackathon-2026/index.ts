@@ -27,3 +27,4 @@ export * from "./prizes";
 export * from "./awards";
 export * from "./voting";
 export * from "./confidential";
+export * from "./workshops";

@@ -25,9 +25,9 @@ export function GuideHero({
   children?: ReactNode;
 }) {
   return (
-    <section aria-labelledby="page-title" className="relative px-6 pt-12 pb-12 md:pt-20 md:pb-16">
+    <section aria-labelledby="page-title" className="relative px-6 pt-8 pb-10 md:pt-20 md:pb-16">
       <div className="mx-auto max-w-5xl">
-        <nav aria-label="Breadcrumb" className="mb-6">
+        <nav aria-label="Breadcrumb" className="mb-4 md:mb-6">
           <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-mono uppercase tracking-widest text-white/55">
             {crumbs.map((crumb, i) => (
               <li key={crumb.label} className="flex items-center gap-2">
@@ -54,17 +54,17 @@ export function GuideHero({
         <div className="flex flex-wrap items-end gap-x-6 gap-y-4">
           <h1
             id="page-title"
-            className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[0.95]"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[0.95]"
           >
             {title}
           </h1>
           {titleAddon}
         </div>
-        <p className="mt-6 max-w-2xl text-base md:text-lg text-neutral-300 leading-relaxed">{lede}</p>
+        <p className="mt-4 max-w-2xl text-base md:mt-6 md:text-lg text-neutral-300 leading-relaxed">{lede}</p>
         <p className="mt-4 text-xs font-mono uppercase tracking-widest text-white/55">
           {EVENT_2026.dateLabel}&nbsp;· {EVENT_2026.city}&nbsp;· Updated {EVENT_2026.lastUpdatedLabel}
         </p>
-        {children && <div className="mt-10 space-y-6">{children}</div>}
+        {children && <div className="mt-8 space-y-6 md:mt-10">{children}</div>}
       </div>
     </section>
   );

@@ -19,7 +19,7 @@ export const GUIDES: readonly GuideDefinition[] = [
     slug: "builders",
     name: "Builder Guide",
     navLabel: "Builders",
-    lede: "Your team, your company challenge, Friday's rooms and routes, the build weekend and submission — in one place.",
+    lede: "Your team, your challenge, Friday's rooms, the build weekend and how to submit.",
     forWho: "Accepted participants and their teams",
     firstMomentId: "fri-registration",
     metaDescription:
@@ -82,16 +82,14 @@ export const guidePath = (audience: Audience) => `${GUIDE_BASE_PATH}/${getGuide(
 export const HUB = {
   name: "Hackathon 2026 / Field Guide",
   shortName: "Field Guide",
-  lede: "Three venues, one event flow. Challenge summaries open in sinceai.app on Thursday at 15:00. Friday starts at EduCity with registration, team formation, challenge selection, the opening and the challenge briefings. The build continues across BioCity and Joki. On Sunday, everyone returns to EduCity: the closing ceremony at 13:15, each challenge's top three at 13:30, then the finals at 14:00.",
-  openingNote:
-    "The official opening is Friday 6 November at 17:00. Arrival times differ by role — your guide has yours.",
+  lede: "Where to go, when, and what to do next.",
   metaDescription:
     "The Since AI Hackathon 2026 Field Guide: schedules, venues, maps and checklists for builders, challenge partners, partners, judges and speakers — 6–8 November 2026, Turku.",
 } as const;
 
 export const VENUE_GUIDE = {
   name: "Venue Explorer",
-  lede: "Floor plans for EduCity, BioCity and Joki, the walk between them, the weekend menu — and a 3D preview of the spaces. Tools, credits and optional awards are in Builder Resources.",
+  lede: "Every room and stand on the floor plans, the walk between buildings and the weekend menu — plus an optional 3D campus.",
   metaDescription:
     "Since AI Hackathon 2026 Venue Explorer: zoomable floor plans for EduCity, BioCity and Joki, company rooms and stands, the meal schedule and special diets, venue photos and a 3D preview of the event spaces.",
 } as const;
