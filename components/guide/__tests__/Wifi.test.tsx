@@ -7,14 +7,16 @@ describe("WifiSection", () => {
     expect(screen.getByRole("region", { name: "Wi-Fi & Internet" })).toHaveAttribute("id", "wifi");
   });
 
-  it("names the Hackathon network first, with where to get the password, then the EduCity steps", () => {
+  it("names the Hackathon network and its password first, then the EduCity steps", () => {
     render(<WifiSection />);
     const build = document.querySelector('[data-wifi="build-spaces"]') as HTMLElement;
     const educity = document.querySelector('[data-wifi="educity"]') as HTMLElement;
     expect(build.compareDocumentPosition(educity) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(build).toHaveTextContent("BioCity & Visitor Center Joki");
     expect(within(build).getByText("Hackathon")).toBeInTheDocument();
-    expect(within(build).getByText("Available at check-in and in the Since AI participant app.")).toBeInTheDocument();
+    expect(within(build).getByText("Weekend45")).toBeInTheDocument();
+    expect(build).toHaveTextContent(/Case-sensitive/);
+    expect(within(build).getByRole("button", { name: "Copy the password Weekend45 for the Hackathon Wi-Fi" })).toBeInTheDocument();
     expect(within(educity).getAllByRole("listitem")).toHaveLength(4);
     expect(educity).toHaveTextContent("TUAS Guest");
     expect(educity).toHaveTextContent(/eduroam/);
