@@ -1,8 +1,9 @@
 /**
  * Event Wi-Fi — Since AI Hackathon 2026.
  *
- * BioCity and Joki: the event network and how to get its password (organiser,
- * 3 Nov 2026). The password itself never goes in this public repository.
+ * BioCity and Visitor Center Joki: the event network, SSID Hackathon, and its
+ * password, published for participants by the organiser on 5 Nov 2026.
+ * The value is case-sensitive.
  * EduCity: Turku UAS' own visitor network, TUAS Guest ("Register in a browser
  * with your email address", turkuamk.fi campuses page) and eduroam (Turku UAS
  * IT services page), both checked 25 Oct 2026.
@@ -30,7 +31,8 @@ export const WIFI = {
     title: "BioCity & Visitor Center Joki",
     when: "The main build spaces",
     network: "Hackathon",
-    password: "Available at check-in and in the Since AI participant app.",
+    password: "Weekend45",
+    passwordNote: "Case-sensitive: capital W. The same network and password in both buildings.",
     // Not yet load-tested for the expected numbers (organiser, 26 Oct 2026): no capacity claim until it is.
     text: "Network capacity is shared, so download what you need before you arrive.",
   },

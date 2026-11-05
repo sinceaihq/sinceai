@@ -1,4 +1,5 @@
 import { WIFI, WIFI_ANCHOR } from "@/lib/hackathon-2026";
+import { CopyCode } from "./CopyCode";
 import { GuideSection, SectionHeading, TextLink } from "./primitives";
 
 function Dash() {
@@ -21,9 +22,14 @@ export function WifiSection() {
           <p className="font-mono text-[11px] uppercase tracking-widest text-white/55">{buildSpaces.when}</p>
           <h3 className="mt-2 text-xl font-bold tracking-tight text-white">{buildSpaces.title}</h3>
           <p className="mt-4 font-mono text-[11px] uppercase tracking-widest text-white/55">Network</p>
-          <p className="mt-1 text-2xl font-bold tracking-tight text-white">{buildSpaces.network}</p>
+          <p className="mt-1 text-2xl font-bold tracking-tight text-white" data-wifi-ssid>
+            {buildSpaces.network}
+          </p>
           <p className="mt-4 font-mono text-[11px] uppercase tracking-widest text-white/55">Password</p>
-          <p className="mt-1 text-sm text-neutral-300 leading-relaxed">{buildSpaces.password}</p>
+          <div className="mt-2" data-wifi-password>
+            <CopyCode code={buildSpaces.password} context={`the ${buildSpaces.network} Wi-Fi`} kind="password" />
+          </div>
+          <p className="mt-2 text-xs text-neutral-400 leading-relaxed">{buildSpaces.passwordNote}</p>
           <p className="mt-4 border-t border-white/10 pt-4 text-sm text-neutral-400 leading-relaxed">{buildSpaces.text}</p>
         </div>
 
