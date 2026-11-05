@@ -68,7 +68,7 @@ export const SELECTION_RULES = [
   },
   {
     title: "Your team lead marks the team as ready",
-    text: "On site, the team lead checks the member list and confirms Mark team as ready in sinceai.app. After that the roster is fixed: nobody can be added, removed or swapped, and nobody can leave.",
+    text: "Before the event or on site, the team lead checks the member list and confirms Mark team as ready in sinceai.app. After that the roster is fixed: nobody can be added, removed or swapped, and nobody can leave.",
   },
   {
     title: "Choose one company challenge — it is final",

@@ -76,7 +76,7 @@ const APP_STEPS = [
     title: "Ready, then select",
     who: "Your team lead",
     when: "Fri 15:00–17:30",
-    text: "The lead confirms Mark team as ready — the roster is then fixed — and selects one company challenge for the whole team. Final; places are limited.",
+    text: "The lead confirms Mark team as ready, if not done already — the roster is then fixed — and selects one company challenge for the whole team. Final; places are limited.",
   },
   {
     title: "Where to go",

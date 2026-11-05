@@ -129,7 +129,7 @@ export const SCHEDULE: readonly ScheduleItem[] = [
     title: "Ready teams select their challenge",
     titleFor: { builders: "Mark your team ready, then select" },
     detail:
-      `From 15:00 the team lead marks the team as ready in sinceai.app — the roster is then fixed — and selects one of the 15 company challenges for the whole team. The choice is final and cannot be changed. Places are limited, first come first served. ${CHALLENGE_PRIZES_STATEMENT}`,
+      `From 15:00 the team lead marks the team as ready in sinceai.app, if not done already — the roster is then fixed — and selects one of the 15 company challenges for the whole team. The choice is final and cannot be changed. Places are limited, first come first served. ${CHALLENGE_PRIZES_STATEMENT}`,
     place: "app",
     audiences: ["builders"],
     kind: "session",

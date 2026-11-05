@@ -99,7 +99,7 @@ export const CRITICAL_PATH: Partial<Record<Audience, readonly { label: string; t
   builders: [
     { label: "Read", time: "Thu 15:00", text: "Challenge summaries in sinceai.app — agree on at least three." },
     { label: "Check in", time: "Fri 15:00", text: "EduCity — every member, in person. Then Team Check." },
-    { label: "Ready · select", time: "15:00–17:30", text: "Team lead marks the team ready, then selects one company challenge — final." },
+    { label: "Ready · select", time: "15:00–17:30", text: "Team lead marks the team ready, if not done already, then selects one company challenge — final." },
     { label: "MLH · opening", time: "16:45 · 17:00", text: "MLH intro, then the opening and Jason Mayes at Taidon portaat; from 18:30 follow your route." },
     { label: "Briefing", time: "18:50–19:30", text: "Your company's room at EduCity." },
     { label: "Build", time: "from 19:30", text: "Dinner and building in BioCity or Joki, around the clock." },
@@ -143,7 +143,7 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
         "You are accepted to the hackathon and can sign in to your own sinceai.app account — every member needs their own.",
         "Everyone in your team has joined the same team in sinceai.app — build it before the event (up to five members).",
         "From Thu 5 Nov 15:00: your team has read the challenge summaries in sinceai.app and agreed on at least three challenges it would be happy with — places are limited.",
-        "Your team knows who its team lead is: on Friday the lead marks the team as ready and selects the challenge (15:00–17:30). The roster and the choice are then final.",
+        "Your team knows who its team lead is: the lead marks the team as ready, before the event or on Friday, and selects the challenge on Friday (15:00–17:30). The roster and the choice are then final.",
         "You have joined the Since AI Discord for updates and teammates.",
         "Attendance confirmed on your sinceai.app dashboard, if it asks you to.",
         `Meal RSVP done on your sinceai.app dashboard by ${DIETARY.deadlineLabel}, with any dietary needs.`,
@@ -168,7 +168,7 @@ export const CHECKLISTS: Record<Audience, readonly ChecklistGroup[]> = {
       title: "On the day",
       items: [
         "Fri 15:00 — every team member checks in in person at EduCity, then Team Check (route A) or team formation (route B).",
-        "From 15:00 — your team lead marks the team as ready in sinceai.app and selects your company challenge. Final.",
+        "From 15:00 — your team lead marks the team as ready in sinceai.app, if not done already, and selects your company challenge. Final.",
         "16:45 — team formation closes: no new teams, joining or roster changes.",
         "16:45–16:55 — Major League Hacking: a 10-minute introduction to MLH's tools, sponsor technologies and awards on the Taidon portaat stage.",
         "Fri 17:00–17:30 — opening ceremony at Taidon portaat. Selection closes at 17:30.",
@@ -342,7 +342,7 @@ export const DETAILS: Record<Audience, readonly GuideDetail[]> = {
     },
     {
       q: "How does challenge selection work?",
-      a: `${CHALLENGE_PRIZES} Every team must choose exactly one of the 15 company challenges. Public-safe summaries open in sinceai.app on Thursday 5 November at 15:00 — choose from these only, and agree on at least three you would be happy with. On Friday from 15:00, your team lead checks the member list and confirms Mark team as ready; the roster is then fixed. Straight after, the lead selects your company challenge. The choice is final — it cannot be changed or cancelled — and places are limited, first come first served. Team formation closes at 16:45 and selection at 17:30.`,
+      a: `${CHALLENGE_PRIZES} Every team must choose exactly one of the 15 company challenges. Public-safe summaries open in sinceai.app on Thursday 5 November at 15:00 — choose from these only, and agree on at least three you would be happy with. Before the event or on Friday, your team lead checks the member list and confirms Mark team as ready; the roster is then fixed. From 15:00 on Friday, the lead selects your company challenge. The choice is final — it cannot be changed or cancelled — and places are limited, first come first served. Team formation closes at 16:45 and selection at 17:30.`,
       points: [
         "Only the team lead of a ready team can select; other members see the choice in the app.",
         "At 17:30 the app shows your team's route: challenge, departure time, room and floor. The briefing rooms are also in this guide.",
