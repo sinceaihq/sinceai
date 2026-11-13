@@ -145,4 +145,4 @@ These are the established conventions. Follow them when building new pages or se
 - This applies to `"use client"` pages too: metadata must be in the server `layout.tsx`
 - JSON-LD schemas are injected via the `StructuredData` component in `layout.tsx` — never use inline `<script dangerouslySetInnerHTML>` in pages
 - Breadcrumb schema should be present on every page except the homepage
-- Exception: the Hackathon 2026 Field Guide (`/hackathon-2026/guide/*`) is shared by direct link only — noindex via metadata and `X-Robots-Tag`, intentionally absent from `app/sitemap.ts` and the public nav/footer
+- Exception: the Hackathon 2026 Field Guide (`/hackathon-2026/guide/*`) is shared by direct link only — noindex via metadata and `X-Robots-Tag`, intentionally absent from `app/sitemap.ts` and the public nav/footer. Since the event ended it is an archive: `GuideShell` shows an archive notice on every page (`isEventOver()` in `lib/hackathon-2026/time.ts`), and `/events` and `/hackathon` link to it. Its schedule, rooms and instructions stay as they were published — do not rewrite them after the fact

@@ -27,6 +27,11 @@ export const faqs: Faq[] = [
       "Since AI Hackathon 2026 took place on November 6 to 8, 2026, in Turku, Finland: the opening and the closing were at EduCity, Joukahaisenkatu 7, and teams built at BioCity and Joki next door. It had 15 company challenges from Valmet, Bayer, Elisa, Meyer Turku, DNA, Traficom, Fonecta and more. The event has ended, and the dates of the next edition have not been announced.",
   },
   {
+    question: "What is the difference between sinceai.ai and sinceai.app?",
+    answer:
+      "sinceai.ai is the public website: what Since AI is, its events and past hackathons, partners, projects and guides. sinceai.app is the Since AI platform for builders, where you sign in: you create your profile there, and during a hackathon you apply, form a team and submit your project there. If you are looking for information, use sinceai.ai; if you need to sign in and do something as a participant, use sinceai.app.",
+  },
+  {
     question: "Who can join Since AI?",
     answer:
       "Since AI is open to AI developers, researchers, founders, and partner organizations globally. Community activity happens primarily in English. There is no membership fee — the organization is a non-profit.",

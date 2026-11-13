@@ -239,6 +239,21 @@ export default function HackathonPage() {
           <FadeIn className="relative z-10 mx-auto w-full max-w-6xl pb-12"
             style={{ paddingTop: "clamp(100px, 13vh, 140px)" }}
           >
+            <nav aria-label="Breadcrumb" className="mb-4 pr-[84px] lg:pr-0">
+              <ol className="flex flex-wrap items-center gap-x-2 text-xs font-mono uppercase tracking-widest text-white/60">
+                <li>
+                  <Link
+                    href="/events"
+                    className="inline-block py-2 underline underline-offset-4 decoration-white/30 hover:text-white hover:decoration-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  >
+                    Events
+                  </Link>
+                </li>
+                <li aria-hidden="true">/</li>
+                <li aria-current="page" className="text-white/80">Hackathon 2026</li>
+              </ol>
+            </nav>
+
             <p className="text-xs font-mono uppercase tracking-widest text-white/60 mb-5 pr-[84px] lg:pr-0">
               {"// mlh 2027 season member event"}
             </p>

@@ -237,6 +237,37 @@ export default function ForBuildersPage() {
                 </div>
               </section>
 
+              {/* Which site does what */}
+              <section aria-labelledby="two-sites-title" className="mb-16" data-site-and-app>
+                <h2 id="two-sites-title" className="text-3xl font-bold text-white mb-8 tracking-tight">
+                  sinceai.ai and sinceai.app
+                </h2>
+                <dl className="grid grid-cols-1 gap-px border border-white/10 bg-white/10 sm:grid-cols-2">
+                  <div className="bg-black p-6">
+                    <dt className="text-base font-bold text-white mb-2">sinceai.ai — this website</dt>
+                    <dd className="text-neutral-400 text-sm leading-relaxed">
+                      Information, open to everyone: what Since AI is, events and past hackathons,
+                      partners, projects and guides. Nothing here needs an account.
+                    </dd>
+                  </div>
+                  <div className="bg-black p-6">
+                    <dt className="text-base font-bold text-white mb-2">sinceai.app — the platform</dt>
+                    <dd className="text-neutral-400 text-sm leading-relaxed">
+                      Where you sign in as a builder: create your profile, and during a hackathon
+                      apply, form a team and submit your project.{" "}
+                      <a
+                        href="https://sinceai.app/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-white underline underline-offset-4 hover:text-neutral-300"
+                      >
+                        Open sinceai.app<span className="sr-only"> (opens in a new tab)</span>
+                      </a>
+                    </dd>
+                  </div>
+                </dl>
+              </section>
+
               {/* 5. Who Since AI is for */}
               <section className="mb-16">
                 <h2 className="text-3xl font-bold text-white mb-8 tracking-tight">

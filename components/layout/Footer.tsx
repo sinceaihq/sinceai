@@ -88,6 +88,17 @@ export const Footer: React.FC<FooterProps> = () => {
             >
               {ORG.contact.infoEmail}
             </a>
+            <p className="text-sm text-neutral-400 leading-relaxed">
+              Builder platform (sign in, teams, submissions):{" "}
+              <a
+                href="https://sinceai.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 items-center text-neutral-300 underline underline-offset-4 hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+              >
+                sinceai.app<span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            </p>
           </div>
 
           {/* ── Social links ─────────────────────────────────── */}
