@@ -44,6 +44,9 @@ const IGNORED = [
   /Failed to create WebGL context/,
   // Network-level failures are reported without their URL; requestfailed below catches ours with the URL.
   /Failed to load resource: net::ERR_/,
+  // Next.js preloads the stylesheet of a route it prefetches; Chrome says so when the visitor does not go there.
+  // Only stylesheets: an image preloaded but never shown is ours to fix (see PartnerMarquee).
+  /_next\/static\/css\/\S+ was preloaded using link preload but not used/,
 ];
 
 /** Collects console errors and warnings for a page. */
