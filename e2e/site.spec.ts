@@ -36,12 +36,6 @@ test.describe("public site", () => {
   for (const route of SITE_ROUTES) {
     test(`${route} — 200, indexable, no console errors, no overflow, no 3D`, async ({ page }) => {
       await acceptNoCookies(page);
-      // The "Apply" popup opens after 2 s once a day; it is covered by its own test below.
-      await page.addInitScript(() => {
-        try {
-          localStorage.setItem("hackathon2026_popup_v1", String(Date.now()));
-        } catch {}
-      });
       const problems = watchConsole(page);
       const origin = new URL(test.info().project.use.baseURL ?? "http://localhost").origin;
       page.on("response", (r) => {
@@ -89,11 +83,6 @@ test.describe("public site", () => {
       expect(new URL(res.headers()["location"], "http://x").pathname + (to.includes("#") ? "#" + to.split("#")[1] : "")).toBe(to);
     }
     await acceptNoCookies(page);
-    await page.addInitScript(() => {
-      try {
-        localStorage.setItem("hackathon2026_popup_v1", String(Date.now()));
-      } catch {}
-    });
     await page.goto("/impact");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Impact & numbers");
     await expect(page.getByRole("heading", { name: "Events to date" })).toBeVisible();
@@ -106,11 +95,6 @@ test.describe("public site", () => {
 
   test("the hackathon page shows the complete six-judge panel", async ({ page }) => {
     await acceptNoCookies(page);
-    await page.addInitScript(() => {
-      try {
-        localStorage.setItem("hackathon2026_popup_v1", String(Date.now()));
-      } catch {}
-    });
     await page.goto("/hackathon", { waitUntil: "networkidle" });
     const panel = page.getByRole("region", { name: "Meet the judges." });
     await panel.scrollIntoViewIfNeeded();
@@ -134,7 +118,10 @@ test.describe("public site", () => {
     for (const name of [/Sarita Runeberg/, /Niko Elers/, /Tuomas Mäkilä/, /Rasmus Harmaala/, /Chandra Challagonda/, /Matyas Karel Stoch/]) {
       const portrait = panel.getByRole("img", { name });
       await expect(portrait).toBeVisible();
-      expect(await portrait.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+      await portrait.scrollIntoViewIfNeeded();
+      await expect
+        .poll(() => portrait.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0))
+        .toBe(true);
     }
     await expect(panel.getByRole("link", { name: /Voima Ventures/ })).toHaveAttribute("href", "https://voimaventures.com/");
     await expect(panel.getByRole("link", { name: /Tuomas Mäkilä on LinkedIn/ })).toHaveAttribute(
@@ -188,8 +175,8 @@ test.describe("public site", () => {
     const main = page.locator("main");
     await expect(main).not.toContainText("No slide decks");
     await expect(main).toContainText("a slide deck is optional, never a substitute");
-    // Selection is in the app, 15:00–17:30 (guide v1.2), and every challenge partner is named.
-    await expect(main).toContainText("select one of 15 company challenges in sinceai.app between 15:00 and 17:30");
+    // Selection was in the app, 15:00–17:30 (guide v1.2), and every challenge partner is named.
+    await expect(main).toContainText("selected one of 15 company challenges in sinceai.app between 15:00 and 17:30");
     await expect(main).not.toContainText("at the 17:00 opening");
     await expect(main).toContainText("Fonecta, Europress and TrustED");
     await expect(main).not.toContainText(/to be announced/i);
@@ -198,15 +185,15 @@ test.describe("public site", () => {
     // Google is not a 2026 compute partner (its event credits were revoked); LUMI is for eligible participants.
     await expect(main).not.toContainText("Google and LUMI provide");
     await expect(main.getByRole("link", { name: /Google — Since AI Hackathon 2026 infrastructure partner/ })).toHaveCount(0);
-    await expect(main).toContainText("gives eligible, pre-registered participants access to the LUMI");
+    await expect(main).toContainText("gave eligible, pre-registered participants access to the LUMI");
     await expect(main).toContainText("the official submission platform, not Devpost");
-    await expect(main).toContainText("AI-assisted development is permitted and encouraged");
+    await expect(main).toContainText("AI-assisted development was permitted and encouraged");
   });
 
   test("the awards FAQ answer links to Optional awards; its JSON-LD answer stays plain text", async ({ page }) => {
     await acceptNoCookies(page);
     await page.goto("/hackathon");
-    const item = page.locator("details.faq-item").filter({ hasText: "Are there prizes besides the company challenges?" });
+    const item = page.locator("details.faq-item").filter({ hasText: "Were there prizes besides the company challenges?" });
     await item.locator("summary").click();
     await expect(item.getByRole("link", { name: "Optional awards in the Field Guide" })).toHaveAttribute(
       "href",
@@ -227,27 +214,13 @@ test.describe("public site", () => {
     expect(jsonLd).toContain("https://huggingface.co/sinceaihq");
   });
 
-  test("the Hackathon announcement waits for engagement, never blocks the page, and stays closed", async ({ page }) => {
+  test("no announcement card or dialog appears for the finished hackathon, even after scrolling", async ({ page }) => {
     await acceptNoCookies(page);
     await page.goto("/");
-    const card = page.getByRole("complementary", { name: "Since AI Hackathon 2026" });
-    // Not on arrival: no modal, no announcement until the visitor engages.
-    await page.waitForTimeout(3000);
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight * 0.5));
+    await page.waitForTimeout(2000);
     await expect(page.getByRole("dialog")).toHaveCount(0);
-    await expect(card).toHaveCount(0);
-    // After scrolling a third of the page it appears, and the page still scrolls.
-    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight * 0.5));
-    await expect(card).toBeVisible({ timeout: 10_000 });
-    const before = await page.evaluate(() => window.scrollY);
-    await page.mouse.wheel(0, 300);
-    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(before);
-    await expect(card.getByRole("link", { name: "Apply →" })).toHaveAttribute("href", "https://sinceai.app/sign-up");
-    await page.keyboard.press("Escape");
-    await expect(card).toHaveCount(0);
-    await page.reload();
-    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight * 0.5));
-    await page.waitForTimeout(1500);
-    await expect(card).toHaveCount(0);
+    await expect(page.getByRole("complementary", { name: "Since AI Hackathon 2026" })).toHaveCount(0);
   });
 
   test("the ecosystem map is in the first screen and names the city under the pointer", async ({ page }) => {
@@ -342,11 +315,6 @@ test.describe("public site", () => {
 test.describe("hackathon 2026 page", () => {
   test("carries the MLH 2027 Trust Badge, both codes of conduct and the 26 Oct 2026 roster", async ({ page }) => {
     await acceptNoCookies(page);
-    await page.addInitScript(() => {
-      try {
-        localStorage.setItem("hackathon2026_popup_v1", String(Date.now()));
-      } catch {}
-    });
     await page.goto("/hackathon");
     const badge = page.locator("#mlh-trust-badge");
     await expect(badge).toBeVisible();
@@ -375,8 +343,9 @@ test.describe("hackathon 2026 page", () => {
     expect(main).not.toMatch(/MLH 2026 season|2026 Season Member Event/i);
     for (const name of ["Fonecta", "Lindström", "Business Turku", "FORCIT Group", "€5,000 prize pot"]) expect(main).toContain(name);
     expect(main).not.toContain("same cash prize");
-    await expect(page.locator("[data-volunteer-cta]")).toHaveAttribute("href", /^https:\/\/docs\.google\.com\/forms\/d\/e\/1FAIpQLSdro-RK8jjZ8BVLXq4ij8m4FcBUOl7Z3QycKwFCFj-xub7dqQ\/viewform/);
-    await expect(page.locator("[data-volunteer-cta]")).toHaveCount(1);
+    // Volunteer applications closed with the event: the call to action is gone.
+    await expect(page.locator("[data-volunteer-cta]")).toHaveCount(0);
+    await expect(page.getByRole("link", { name: /volunteer/i })).toHaveCount(0);
     // Former 2026 names appear only in the 2025 edition paragraph.
     const without2025 = main.replace(/The inaugural Since AI Hackathon[\s\S]*?72 hours\./, "");
     for (const name of ["Revvity", "Bo LKV", "Saarioinen", "Sandvik", "Kongsberg"]) expect(without2025).not.toContain(name);

@@ -37,7 +37,7 @@ const builderFaqs = [
   {
     question: "Do I need to be based in Europe to join Since AI?",
     answer:
-      "No. Since AI is open to builders globally. Our network spans 120+ countries. Since AI Hackathon 2026 accepts international applications, and our Discord community is active worldwide.",
+      "No. Since AI is open to builders globally. Our network spans 120+ countries. Since AI hackathons accept international applications, and our Discord community is active worldwide.",
   },
   {
     question: "Is there a cost to join Since AI?",
@@ -45,9 +45,9 @@ const builderFaqs = [
       "No. Since AI is a non-profit. Joining the community, participating in Discord, and applying to hackathons is free. Our operations are funded by partner sponsorships.",
   },
   {
-    question: "What is the application process for Since AI Hackathon 2026?",
+    question: "How do I apply to a Since AI Hackathon?",
     answer:
-      "Applications for Since AI Hackathon 2026 open on a rolling basis ahead of the event. Apply at sinceai.ai/hackathon. You can apply as an individual or as a pre-formed team. Team formation support is available at the event.",
+      "Applications open ahead of each event and are announced in the community first. No application is open right now: Since AI Hackathon 2026 took place on 6–8 November 2026, and the next edition has not been announced. You can apply as an individual or as a pre-formed team. Team formation support is available at the event.",
   },
   {
     question: "Do I keep the IP from my work at Since AI events?",
@@ -180,26 +180,23 @@ export default function ForBuildersPage() {
                 <div className="space-y-5">
                   <div className="p-8 border border-white/10 bg-white/[0.02]">
                     <h3 className="text-lg font-bold text-white mb-2 tracking-tight">
-                      Apply to Since AI Hackathon 2026
+                      Build at a Since AI Hackathon
                     </h3>
                     <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-white/55 mb-4">
-                      <span>6–8 November</span>
-                      <span aria-hidden="true">·</span>
-                      <span>1,000+ builders targeted</span>
-                      <span aria-hidden="true">·</span>
-                      <span>November 6–8, 2026</span>
+                      <span>Most recent: 6–8 November 2026</span>
                       <span aria-hidden="true">·</span>
                       <span>Turku, Finland</span>
                     </div>
                     <p className="text-neutral-400 text-sm leading-relaxed mb-5">
-                      15 company challenges from Valmet, Bayer, Elisa, Meyer Turku, DNA,
-                      Traficom and more. Free to attend. Open globally.
+                      Since AI Hackathon 2026 had 15 company challenges from Valmet, Bayer, Elisa,
+                      Meyer Turku, DNA, Traficom and more. Free to attend. Open globally. The next
+                      edition is not announced yet — the community hears first.
                     </p>
                     <Link
                       href="/hackathon"
                       className="inline-flex items-center justify-center px-7 py-3 text-sm font-semibold text-black bg-white rounded-none hover:bg-neutral-100 transition-all"
                     >
-                      Apply →
+                      About Hackathon 2026 →
                     </Link>
                   </div>
 
@@ -238,6 +235,37 @@ export default function ForBuildersPage() {
                     </a>
                   </div>
                 </div>
+              </section>
+
+              {/* Which site does what */}
+              <section aria-labelledby="two-sites-title" className="mb-16" data-site-and-app>
+                <h2 id="two-sites-title" className="text-3xl font-bold text-white mb-8 tracking-tight">
+                  sinceai.ai and sinceai.app
+                </h2>
+                <dl className="grid grid-cols-1 gap-px border border-white/10 bg-white/10 sm:grid-cols-2">
+                  <div className="bg-black p-6">
+                    <dt className="text-base font-bold text-white mb-2">sinceai.ai — this website</dt>
+                    <dd className="text-neutral-400 text-sm leading-relaxed">
+                      Information, open to everyone: what Since AI is, events and past hackathons,
+                      partners, projects and guides. Nothing here needs an account.
+                    </dd>
+                  </div>
+                  <div className="bg-black p-6">
+                    <dt className="text-base font-bold text-white mb-2">sinceai.app — the platform</dt>
+                    <dd className="text-neutral-400 text-sm leading-relaxed">
+                      Where you sign in as a builder: create your profile, and during a hackathon
+                      apply, form a team and submit your project.{" "}
+                      <a
+                        href="https://sinceai.app/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-white underline underline-offset-4 hover:text-neutral-300"
+                      >
+                        Open sinceai.app<span className="sr-only"> (opens in a new tab)</span>
+                      </a>
+                    </dd>
+                  </div>
+                </dl>
               </section>
 
               {/* 5. Who Since AI is for */}
@@ -358,12 +386,13 @@ export default function ForBuildersPage() {
                   Ready to build?
                 </h2>
                 <p className="text-neutral-400 mb-8 max-w-lg mx-auto leading-relaxed">
-                  Apply to Hackathon 2026 or join the network today. No experience
-                  threshold. No membership fee. Just ship.
+                  Join the network today. No experience threshold. No membership fee.
+                  Just ship.
                 </p>
                 <ButtonPair
-                  primaryLabel="Apply to Hackathon 2026 →"
-                  primaryHref="/hackathon"
+                  primaryLabel="Join Since AI →"
+                  primaryHref="https://sinceai.app/sign-up"
+                  primaryAnalyticsEvent="register_click"
                   secondaryLabel="Join the Discord →"
                   secondaryHref={ORG.social.discord}
                   secondaryAnalyticsEvent="discord_join_click"

@@ -1,15 +1,17 @@
 import { Metadata } from "next";
 import StructuredData from "@/components/StructuredData";
-import { getFirstEventSchema, getUpcoming2026EventSchema, getBreadcrumbSchema } from "@/lib/schema";
-import { FIRST_EVENT, COPY } from "@/lib/sinceai";
+import { getFirstEventSchema, getHackathon2026EventSchema, getBreadcrumbSchema } from "@/lib/schema";
+import { FIRST_EVENT } from "@/lib/sinceai";
 import { ORG } from "@/lib/org";
 import { OG_IMAGE } from "@/lib/og";
+
+// Evergreen on purpose: no "next:" or "upcoming" promise that goes stale when an event ends.
+const DESCRIPTION = `Hackathons and meetups for builders who ship: Since AI Hackathon 2026 (6–8 November 2026) and 2025 (${FIRST_EVENT.attendance} builders), both in Turku, Finland.`;
 
 export const metadata: Metadata = {
   title:
     "Events — Since AI Hackathons & AI Builder Meetups",
-  description:
-    `Hackathons and meetups for builders who ship. ${COPY.firstEventLineShort}. Next: Since AI Hackathon 2026, 6–8 November.`,
+  description: DESCRIPTION,
   keywords: [
     "Since AI hackathon",
     "AI hackathon Turku",
@@ -25,8 +27,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Events — Since AI Hackathons & AI Builder Meetups",
-    description:
-      `Global execution-focused AI hackathons. ${FIRST_EVENT.attendance} builders at the inaugural event, 30+ projects shipped. Since AI Hackathon 2026: November 6–8, Turku.`,
+    description: DESCRIPTION,
     type: "website",
     locale: "en_US",
     siteName: "Since AI",
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Events — Since AI Hackathons & AI Builder Meetups",
-    description: `Global execution-focused AI hackathons. ${FIRST_EVENT.attendance} builders at the inaugural event, 30+ projects shipped. Since AI Hackathon 2026: November 6–8, Turku.`,
+    description: DESCRIPTION,
     images: [OG_IMAGE.url],
   },
   robots: {
@@ -50,29 +51,31 @@ export default function EventsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const firstEventSchema = getFirstEventSchema();
-  const upcoming2026Schema = getUpcoming2026EventSchema();
+  const events = [getHackathon2026EventSchema(), getFirstEventSchema()];
   const breadcrumbSchema = getBreadcrumbSchema([
     { name: "Home", url: ORG.baseUrl },
     { name: "Events", url: `${ORG.baseUrl}/events` },
   ]);
 
+  // Each event is described once; the list points to it by @id.
   const itemListSchema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: "Since AI Hackathons",
-    description: "Past and upcoming AI hackathons organized by Since AI in Turku, Finland",
-    numberOfItems: 2,
-    itemListElement: [
-      { "@type": "ListItem", position: 1, item: upcoming2026Schema },
-      { "@type": "ListItem", position: 2, item: firstEventSchema },
-    ],
+    description: "AI hackathons organised by Since AI in Turku, Finland, newest first",
+    numberOfItems: events.length,
+    itemListElement: events.map((event, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: { "@id": event["@id"] },
+    })),
   };
 
   return (
     <>
-      <StructuredData data={firstEventSchema} />
-      <StructuredData data={upcoming2026Schema} />
+      {events.map((event) => (
+        <StructuredData key={event["@id"]} data={event} />
+      ))}
       <StructuredData data={itemListSchema} />
       <StructuredData data={breadcrumbSchema} />
       {children}

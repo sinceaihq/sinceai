@@ -1,23 +1,26 @@
 import React from "react";
+import { REACH, fmt } from "@/lib/reach";
+import { HACKATHON_2026_PARTNERS } from "@/lib/sinceai";
 
 /**
- * High-contrast stat band that sits directly under the hackathon hero.
+ * Stat band directly under the hackathon hero: the event in four figures.
  *
- * This is the first thing paid-traffic visitors read after the headline, so it
- * answers "why should I care" in one glance: the money, the scale, the price,
- * and the format. The prize numeral is the single brand-pink moment on the page.
+ * Every figure here was published by the organisers before the event. The
+ * application count carries its date; attendance, projects and winners are not
+ * shown until the organisers confirm them. The prize numeral is the single
+ * brand-pink moment on the page.
  */
 
 const stats = [
   { value: "€50,000+", label: "// prize pool", desc: "In cash, across the company challenges and the overall win", brand: true },
-  { value: "1,000+",  label: "// builders",   desc: "Expected from across the world" },
-  { value: "Free",    label: "// entry",      desc: "No fee for any participant" },
-  { value: "6–8 Nov", label: "// weekend",    desc: "Friday to Sunday — 15 company challenges" },
+  { value: String(HACKATHON_2026_PARTNERS.challengeTarget), label: "// company challenges", desc: "Each set by a company with a real problem" },
+  { value: fmt(REACH.applicants.total), label: "// applications", desc: `From ${REACH.applicants.countries} countries, as of ${REACH.asOfLabel}` },
+  { value: "6–8 Nov", label: "// 2026", desc: "Friday to Sunday in Turku, Finland" },
 ];
 
 export function StatBand() {
   return (
-    <section className="py-16 px-6 border-t border-white/10">
+    <section aria-label="Since AI Hackathon 2026 in figures" className="py-16 px-6 border-t border-white/10">
       <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {stats.map((stat) => (
@@ -31,7 +34,7 @@ export function StatBand() {
               >
                 <span className={stat.brand ? "" : "text-white"}>{stat.value}</span>
               </p>
-              <p className="text-sm text-neutral-400 leading-relaxed mt-2 max-w-[180px]">
+              <p className="text-sm text-neutral-400 leading-relaxed mt-2 max-w-[200px]">
                 {stat.desc}
               </p>
             </div>
@@ -40,7 +43,7 @@ export function StatBand() {
 
         <p className="text-xs font-mono uppercase tracking-widest text-white/55 mt-12 pt-6 border-t border-white/10">
           MLH 2027 Season Member Event &nbsp;·&nbsp; EduCity · BioCity · Joki, Turku, Finland
-          &nbsp;·&nbsp; Open to builders worldwide
+          &nbsp;·&nbsp; Free for builders worldwide
         </p>
       </div>
     </section>

@@ -88,6 +88,6 @@ describe("Judges", () => {
 
   it("keeps the panel separate from company evaluation", () => {
     render(<Judges />);
-    expect(screen.getByText(/Company challenges are evaluated separately/)).toBeInTheDocument();
+    expect(screen.getByText(/Company challenges were evaluated separately/)).toBeInTheDocument();
   });
 });

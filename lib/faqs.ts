@@ -9,7 +9,7 @@ export const faqs: Faq[] = [
   {
     question: "Where is Since AI based?",
     answer:
-      "Since AI is headquartered in Turku, Finland, with active networks across Helsinki, Tampere, Tallinn, Stockholm, and other European AI hubs. Since AI Hackathon 2026, the flagship event, takes place in Turku in November 6 to 8, 2026.",
+      "Since AI is headquartered in Turku, Finland, with active networks across Helsinki, Tampere, Tallinn, Stockholm, and other European AI hubs. Since AI Hackathon, the flagship event, is held in Turku — most recently on November 6 to 8, 2026.",
   },
   {
     question: "Who are Since AI's partners?",
@@ -22,9 +22,14 @@ export const faqs: Faq[] = [
       "Since AI is built around execution, not content or networking. The focus is on moving builders from idea to prototype, prototype to production, and production to startup-scale opportunity. The ecosystem spans industrial partners, research groups, and venture capital, not just developers.",
   },
   {
-    question: "When and where is Since AI Hackathon 2026?",
+    question: "When and where was Since AI Hackathon 2026?",
     answer:
-      "Since AI Hackathon 2026 takes place November 6 to 8, 2026, in Turku, Finland: the opening (Friday 17:00) and the closing (Sunday) are at EduCity, Joukahaisenkatu 7, and teams build at BioCity and Joki next door. It targets 1,000+ builders, with 15 company challenges from Valmet, Bayer, Elisa, Meyer Turku, DNA, Traficom, Fonecta and more.",
+      "Since AI Hackathon 2026 took place on November 6 to 8, 2026, in Turku, Finland: the opening and the closing were at EduCity, Joukahaisenkatu 7, and teams built at BioCity and Joki next door. It had 15 company challenges from Valmet, Bayer, Elisa, Meyer Turku, DNA, Traficom, Fonecta and more. The event has ended, and the dates of the next edition have not been announced.",
+  },
+  {
+    question: "What is the difference between sinceai.ai and sinceai.app?",
+    answer:
+      "sinceai.ai is the public website: what Since AI is, its events and past hackathons, partners, projects and guides. sinceai.app is the Since AI platform for builders, where you sign in: you create your profile there, and during a hackathon you apply, form a team and submit your project there. If you are looking for information, use sinceai.ai; if you need to sign in and do something as a participant, use sinceai.app.",
   },
   {
     question: "Who can join Since AI?",
@@ -49,7 +54,7 @@ export const faqs: Faq[] = [
   {
     question: "What are the best AI hackathons globally?",
     answer:
-      "Leading AI hackathons globally include Since AI Hackathon 2026 in Turku (1,000+ builders targeted), Junction in Helsinki, TUM.ai Makeathon in Munich, GenAI Zurich, and HackZurich. Since AI Hackathon 2026 is one of the largest execution-focused AI-only events globally for 2026.",
+      "Leading AI hackathons globally include Since AI Hackathon in Turku, Junction in Helsinki, TUM.ai Makeathon in Munich, GenAI Zurich, and HackZurich. Since AI Hackathon 2026 took place on November 6 to 8, 2026, with 15 company challenges.",
   },
   {
     question: "Can my university or research group collaborate with Since AI?",

@@ -6,6 +6,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { ORG } from "@/lib/org";
+import { REACH, fmt } from "@/lib/reach";
 import StructuredData from "@/components/StructuredData";
 import { PartnersSection } from "@/components/sections/homepage/PartnersSection";
 import { ButtonPair } from "@/components/ui/ButtonPair";
@@ -15,12 +16,12 @@ export const metadata: Metadata = {
   title:
     "Partner with Since AI — AI Talent, Challenges and Pilots",
   description:
-    "Reach 10,000+ AI builders worldwide: sponsor Since AI Hackathon 2026 challenges, recruit top AI talent and run applied AI pilots with proven builders.",
+    "Reach 10,000+ AI builders worldwide: sponsor Since AI Hackathon challenges, recruit top AI talent and run applied AI pilots with proven builders.",
   alternates: { canonical: "https://sinceai.ai/partners" },
   openGraph: {
     title: "Partner with Since AI — Recruit AI Talent, Sponsor Hackathon Challenges",
     description:
-      "Access 10,000+ AI builders globally. Sponsor Since AI Hackathon 2026 challenges, recruit top AI talent, and run applied AI pilots.",
+      "Access 10,000+ AI builders globally. Sponsor Since AI Hackathon challenges, recruit top AI talent, and run applied AI pilots.",
     url: "https://sinceai.ai/partners",
     siteName: "Since AI",
     type: "website",
@@ -30,14 +31,14 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Partner with Since AI",
     description:
-      "Access 10,000+ AI builders. Sponsor Hackathon 2026, recruit talent, run AI pilots.",
+      "Access 10,000+ AI builders. Sponsor a hackathon challenge, recruit talent, run AI pilots.",
     images: [OG_IMAGE.url],
   },
 };
 
 const partnerFaqs = [
   {
-    question: "What's the cost of sponsoring a Since AI Hackathon 2026 challenge?",
+    question: "What's the cost of sponsoring a Since AI Hackathon challenge?",
     answer:
       "Partnership packages are tiered based on scope — challenge sponsorship, recruiting access, workshop, or full strategic partnership. Contact partners@sinceai.fi for a tailored proposal.",
   },
@@ -186,10 +187,10 @@ export default function PartnersPage() {
             {/* Stats strip */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-20">
               {[
-                { value: "10,000+", label: "AI builders in our network" },
-                { value: "1,000+", label: "Builders targeted at Hackathon 2026" },
-                { value: "100+", label: "Partners & supporters" },
-                { value: "100+", label: "Countries represented" },
+                { value: ORG.stats.network, label: "AI builders in our network" },
+                { value: fmt(REACH.applicants.total), label: `Applications for Hackathon 2026 (as of ${REACH.asOfLabel})` },
+                { value: ORG.stats.partners, label: "Partners & supporters" },
+                { value: ORG.stats.countries, label: "Countries represented" },
               ].map((s) => (
                 <div
                   key={s.label}
@@ -214,9 +215,9 @@ export default function PartnersPage() {
                     Sponsor a hackathon challenge
                   </h3>
                   <p className="text-neutral-300 leading-relaxed mb-5">
-                    Bring a real AI problem to Since AI Hackathon 2026. Get 1,000+
-                    builders working on it over a weekend. Best teams continue into
-                    your pilot.
+                    Bring a real AI problem to a Since AI Hackathon. Builders work on
+                    it over a weekend — 15 companies set challenges in 2026. Best teams
+                    continue into your pilot.
                   </p>
                   <ul className="space-y-2 text-neutral-400 text-sm mb-6">
                     <li className="flex items-start gap-3">

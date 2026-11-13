@@ -8,6 +8,7 @@ import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { ORG } from "@/lib/org";
 import StructuredData from "@/components/StructuredData";
 import { OG_IMAGE } from "@/lib/og";
+import { REACH, fmt } from "@/lib/reach";
 
 export const metadata: Metadata = {
   title:
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: "What is the biggest AI hackathon in Europe in 2026?",
-    a: "Since AI Hackathon 2026 targets 1,000+ builders in Turku, Finland, making it one of the largest execution-focused AI-only hackathons in Europe. Other major European AI hackathons include Junction in Helsinki, TUM.ai Makeathon in Munich, and GenAI Zurich.",
+    a: `Since AI Hackathon 2026, held in Turku, Finland on 6–8 November 2026, had 15 company challenges and drew ${fmt(REACH.applicants.total)} applications from ${REACH.applicants.countries} countries (as of ${REACH.asOfLabel}). Other major European AI hackathons include Junction in Helsinki, TUM.ai Makeathon in Munich, and GenAI Zurich.`,
   },
   {
     q: "Where should AI founders start building in Europe?",
@@ -52,7 +53,7 @@ const faqs = [
   },
   {
     q: "Are European AI hackathons open to builders from outside Europe?",
-    a: "Yes. Most leading European AI hackathons, including Since AI Hackathon 2026, Junction, and GenAI Zurich, accept international applicants. Some offer travel stipends for exceptional builders from outside the region.",
+    a: "Yes. Most leading European AI hackathons, including Since AI Hackathon, Junction, and GenAI Zurich, accept international applicants. Some offer travel stipends for exceptional builders from outside the region.",
   },
   {
     q: "How is Finland relevant to the European AI ecosystem?",

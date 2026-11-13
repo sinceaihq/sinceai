@@ -6,8 +6,13 @@ import Logo from "@/components/brand/logo";
 import { TrackedLink } from "@/components/analytics/TrackedLink";
 import { ORG } from "@/lib/org";
 
+/**
+ * "Events" leads: it lists what is coming and every past hackathon with its
+ * guide and projects. (Before, /events was reachable only from the footer on
+ * desktop.) A single event's page lives under it — see ACTIVE_UNDER.
+ */
 const NAV_LINKS = [
-  { label: "Hackathon", href: "/hackathon" },
+  { label: "Events", href: "/events" },
   { label: "Builders", href: "/for-builders" },
   { label: "Partners", href: "/partners" },
   { label: "About", href: "/about" },
@@ -16,12 +21,17 @@ const NAV_LINKS = [
 
 /** Shown in the mobile menu under the main links. */
 const MORE_LINKS = [
-  { label: "Events", href: "/events" },
+  { label: "Hackathon 2026", href: "/hackathon" },
   { label: "Projects", href: "/projects" },
   { label: "Blog", href: "/blog" },
   { label: "Impact", href: "/impact" },
   { label: "FAQ", href: "/faq" },
 ] as const;
+
+/** Pages that belong to a main link without sharing its path. */
+const ACTIVE_UNDER: Record<string, readonly string[]> = {
+  "/events": ["/hackathon"],
+};
 
 export const Navbar = () => {
   const pathname = usePathname();
@@ -62,7 +72,10 @@ export const Navbar = () => {
     };
   }, [menuOpen]);
 
-  const isActive = (href: string) => pathname === href || (href !== "/" && pathname.startsWith(href + "/"));
+  const isActive = (href: string) =>
+    pathname === href ||
+    (href !== "/" && pathname.startsWith(href + "/")) ||
+    (ACTIVE_UNDER[href]?.includes(pathname) ?? false);
 
   return (
     <>
@@ -103,7 +116,7 @@ export const Navbar = () => {
             analyticsEvent="register_click"
             className="hidden md:inline-block text-[13px] font-bold text-black bg-white rounded-none px-4 py-2 border border-white whitespace-nowrap transition-colors duration-300 hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
-            Apply →<span className="sr-only"> (opens in a new tab)</span>
+            Join Since AI <span aria-hidden="true">→</span><span className="sr-only"> (opens in a new tab)</span>
           </TrackedLink>
 
           <button
@@ -188,7 +201,7 @@ export const Navbar = () => {
               analyticsEvent="register_click"
               className="inline-flex min-h-12 items-center justify-center text-sm font-bold text-black bg-white rounded-none px-5 py-3 transition-colors hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
             >
-              Apply for Hackathon 2026 →<span className="sr-only"> (opens in a new tab)</span>
+              Join Since AI <span aria-hidden="true">→</span><span className="sr-only"> (opens in a new tab)</span>
             </TrackedLink>
             <TrackedLink
               href={ORG.social.discord}

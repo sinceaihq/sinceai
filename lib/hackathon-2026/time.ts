@@ -94,6 +94,11 @@ export function groupByDay<T extends Pick<ScheduleItem, "start">>(
 /** Default length of a point-in-time item when computing "now". */
 const POINT_DURATION_MS = 15 * 60 * 1000;
 
+/** True once the event has ended — the instant the "now / next" card switches to its closing state. */
+export function isEventOver(nowMs: number = Date.now()): boolean {
+  return nowMs >= Date.parse(EVENT_2026.eventEnd) + POINT_DURATION_MS;
+}
+
 export type NowNextState =
   | { phase: "before"; next: ScheduleItem | null; msUntilStart: number }
   | { phase: "during"; now: ScheduleItem[]; next: ScheduleItem | null }
@@ -106,10 +111,9 @@ export type NowNextState =
 export function getNowNext(items: readonly ScheduleItem[], nowMs: number): NowNextState {
   const timed = items.filter((i) => !i.allDay);
   const eventStart = Date.parse(EVENT_2026.window.start);
-  const eventEnd = Date.parse(EVENT_2026.eventEnd);
   const firstStart = timed.length ? Math.min(...timed.map((i) => Date.parse(i.start))) : eventStart;
 
-  if (nowMs >= eventEnd + POINT_DURATION_MS) return { phase: "after" };
+  if (isEventOver(nowMs)) return { phase: "after" };
 
   const upcoming = timed.filter((i) => Date.parse(i.start) > nowMs);
   const next = upcoming.length ? upcoming[0] : null;

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Projects — Since AI | Challenge Themes from Hackathon 2025",
     description:
-      "High-signal prototypes from partner challenge themes. Maritime safety, industrial automation, B2B sales, and more. Built by 260+ AI builders in Turku.",
+      "High-signal prototypes from partner challenge themes. Maritime safety, industrial automation, B2B sales, and more. Built by 260 AI builders in Turku.",
     type: "website",
     locale: "en_US",
     siteName: "Since AI",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Projects — Since AI | Challenge Themes from Hackathon 2025",
-    description: "High-signal prototypes from partner challenge themes. Maritime safety, industrial automation, B2B sales, and more. Built by 260+ AI builders in Turku.",
+    description: "High-signal prototypes from partner challenge themes. Maritime safety, industrial automation, B2B sales, and more. Built by 260 AI builders in Turku.",
     images: [OG_IMAGE.url],
   },
   robots: {

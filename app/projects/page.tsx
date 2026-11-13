@@ -248,10 +248,11 @@ export default function ProjectsPage() {
           <div className="max-w-4xl mx-auto text-center">
             <div className="fade-in-view">
               <p className="text-neutral-400 mb-4">
-                <span className="text-white font-semibold">Since AI Hackathon 2025</span> — Nov 21–23, 2025 • EduCity, Turku • 260+ builders
+                <span className="text-white font-semibold">Since AI Hackathon 2025</span> — Nov 21–23, 2025 • EduCity, Turku • 260 builders
               </p>
               <p className="text-white/55 text-sm">
-                <span className="text-neutral-300">Next:</span> Hackathon 2026 — November 6-8, 2026
+                <span className="text-neutral-300">Most recent:</span>{" "}
+                <Link href="/hackathon" className="underline hover:text-white">Since AI Hackathon 2026</Link> — 6–8 November 2026, Turku
               </p>
             </div>
           </div>
