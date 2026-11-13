@@ -10,8 +10,9 @@ import { GA_ID } from "@/lib/gtag";
 
 // Self-hosted variable fonts (app/fonts, SIL Open Font License): builds never depend on the
 // Google Fonts network, and visitors never contact a third party for them.
-// The site font's fallback is a monospace stack with nearly the same advance width (0.6 em),
-// so text keeps its line breaks while JetBrains Mono loads.
+// The site font's fallback is a monospace stack with the same advance width (0.6 em), so text
+// keeps its line breaks while JetBrains Mono loads. Windows has none of those fonts: there the
+// fallback is Consolas (0.55 em), scaled to 0.6 em as "JetBrains Mono Fallback" in globals.css.
 const jetbrainsMono = localFont({
   src: "./fonts/JetBrainsMono-latin-variable.woff2",
   weight: "100 800",
@@ -19,7 +20,7 @@ const jetbrainsMono = localFont({
   display: "swap",
   variable: "--font-mono",
   adjustFontFallback: false,
-  fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "Liberation Mono", "monospace"],
+  fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "JetBrains Mono Fallback", "Consolas", "Liberation Mono", "monospace"],
 });
 
 // Used only where explicitly needed, so it is not preloaded ahead of the site font.
