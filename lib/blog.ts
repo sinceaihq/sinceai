@@ -366,9 +366,9 @@ export const blogPosts: BlogPost[] = [
     featured: false,
     toc: [
       { id: "the-core-idea-optimize-for-ship-story-in-72-hours", label: "The core idea: optimize for \"ship + story\" in 72 hours" },
-      { id: "the-ideal-team-size-why-3-5-wins", label: "The ideal team size (why 3–5 wins)" },
+      { id: "the-ideal-team-size-why-35-wins", label: "The ideal team size (why 3–5 wins)" },
       { id: "the-5-roles-that-win", label: "The 5 roles that win" },
-      { id: "the-underrated-roles-if-you-have-4-5-people", label: "The underrated roles (if you have 4–5 people)" },
+      { id: "the-underrated-roles-if-you-have-45-people", label: "The underrated roles (if you have 4–5 people)" },
       { id: "the-best-team-compositions", label: "The best team compositions" },
       { id: "the-most-important-rule-one-decision-maker-per-area", label: "The most important rule: one decision-maker per area" },
       { id: "the-team-contract-5-lines-that-prevent-drama", label: "The \"team contract\" (5 lines that prevent drama)" },

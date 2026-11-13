@@ -50,14 +50,19 @@ function LogoItem({ name, src, href, loading = "lazy", ...rest }: Logo & React.A
       aria-label={`${name} — Since AI partner`}
       {...rest}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={src}
-        alt={`${name} logo — Since AI partner`}
-        loading={loading}
-        width={120}
-        height={40}
-      />
+      {/* <picture> keeps React from turning the three eager logos into preload hints. Those hints
+          travel in this route's RSC payload, so every page that prefetches "/" or "/hackathon"
+          downloaded three logos it never shows (and Chrome logged "preloaded but not used"). */}
+      <picture className="contents">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={src}
+          alt={`${name} logo — Since AI partner`}
+          loading={loading}
+          width={120}
+          height={40}
+        />
+      </picture>
     </a>
   );
 }
