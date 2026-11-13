@@ -2,7 +2,7 @@
 
 > Since AI is a global execution-focused AI innovation ecosystem, where frontier AI becomes shipped products. Non-profit organization based in Turku, Finland. Connects 10,000+ AI builders globally with leading AI companies, research groups, and investors through hackathons, open-source collaboration, and applied AI projects.
 
-Last-Updated: 2026-11-01
+Last-Updated: 2026-11-13
 
 ## Key Facts
 
@@ -12,7 +12,7 @@ Last-Updated: 2026-11-01
 - Headquarters: Turku, Finland
 - Scope: Global, open worldwide — 10,000+ AI builders in 120+ countries (123 countries on sinceai.app profiles)
 - Join: https://sinceai.app/sign-up · Discord https://discord.gg/vMWdrVUPws · Telegram https://t.me/sinceaihq
-- Flagship event: Since AI Hackathon 2026 (November 6–8, 2026, Turku, Finland — opening and closing at EduCity, building at BioCity and Joki; 1,000+ builders targeted, 15 company challenges from 15 named partners, MLH 2027 Season Member Event)
+- Flagship event: Since AI Hackathon. The most recent edition, Since AI Hackathon 2026, took place on November 6–8, 2026 in Turku, Finland (opening and closing at EduCity, building at BioCity and Joki; 15 company challenges from 15 named partners; MLH 2027 Season Member Event) and has ended. The next edition has not been announced.
 - Website: https://sinceai.ai
 - Open source: https://github.com/sinceaihq · Hugging Face https://huggingface.co/sinceaihq
 - Contact: info@sinceai.fi

@@ -57,7 +57,6 @@ export const ORG = {
     network: "10,000+",
     members: "1,000+",
     hackathonParticipants: "260",
-    hackathon2026Target: "1,000+",
     /** 110 organisations in lib/partners.ts (challenge, strategic, capital, research and community partners). */
     partners: "100+",
     projects: "100+",

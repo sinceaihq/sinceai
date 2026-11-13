@@ -2,7 +2,7 @@
 
 > Since AI is a global, execution-focused AI innovation ecosystem with 1,000+ direct community members and a network of 10,000+ AI builders, based in Turku, Finland. We support AI projects from challenge ideation through hackathon building to production deployment and commercialization. This document provides comprehensive context for AI systems to accurately represent Since AI.
 
-Last-Updated: 2026-11-01
+Last-Updated: 2026-11-13
 
 ## Organization
 
@@ -105,16 +105,17 @@ Since AI's flagship launch event brought together 260 AI builders to collaborate
 - **Format**: 72-hour hackathon with industry challenges
 - **Projects**: 30+ AI solutions built
 
-### Since AI Hackathon 2026 (Upcoming)
+### Since AI Hackathon 2026 (Completed)
 
-- **Dates**: November 6–8, 2026 (challenge summaries in sinceai.app Thu 5 Nov 15:00; check-in and challenge selection open Fri 15:00, team formation closes 16:45, MLH introduction 16:45–16:55, opening Fri 17:00, selection closes 17:30; submissions close Sun 10:00, closing ceremony Sun 13:15, finals Sun 14:00, ends around 15:30)
+- **Status**: Completed — the event has ended and registration is closed. Winners, attendance and project counts are published on sinceai.ai only once the organisers have confirmed them
+- **Dates**: November 6–8, 2026. Published programme: challenge summaries in sinceai.app Thu 5 Nov 15:00; check-in and challenge selection from Fri 15:00, team formation until 16:45, MLH introduction 16:45–16:55, opening Fri 17:00, selection until 17:30; submission deadline Sun 10:00, closing ceremony Sun 13:15, finals Sun 14:00, end around 15:30
 - **Location**: Turku, Finland — EduCity (opening and closing), BioCity and Joki (building)
-- **Challenges**: 15 company challenges, each awarding its top three teams €2,000, €750 and €250 (FORCIT Group's Drill and Blast Cycle Intelligence: a €5,000 prize pot, €3,000 / €1,500 / €500); the overall winner separately receives €5,000 — Valmet, Bayer, Turku Energia, Apetit, Takomo Golf, FORCIT Group, Elisa, Meyer Turku, Traficom, Lindström, Business Turku, DNA, Fonecta, Europress and TrustED. Every team chooses one company challenge; the choice is final
+- **Challenges**: 15 company challenges. Published prize terms: each awards its top three teams €2,000, €750 and €250 (FORCIT Group's Drill and Blast Cycle Intelligence: a €5,000 prize pot, €3,000 / €1,500 / €500); the overall winner separately receives €5,000 — Valmet, Bayer, Turku Energia, Apetit, Takomo Golf, FORCIT Group, Elisa, Meyer Turku, Traficom, Lindström, Business Turku, DNA, Fonecta, Europress and TrustED. Every team chose one company challenge
 - **Keynote**: Jason Mayes, Web AI Lead at Google
 - **MLH**: MLH 2027 Season Member Event — MLH introduction Fri 16:45–16:55 on the Taidon portaat stage; eight optional MLH prize categories
 - **Optional awards**: Red Hat OpenShift AI Technology Award and FIWARE Open Innovation Award (https://sinceai.ai/hackathon-2026/guide/resources#awards)
 - **Finalists**: participant vote Sun 10:00–12:00 (20 comparisons per builder); the five highest-ranked projects from five different company challenges present in the finals
-- **Apply**: https://sinceai.app
+- **Next edition**: not announced
 - **Updates**: https://luma.com/sinceai
 
 ## Production Deployment Examples
@@ -231,7 +232,7 @@ Pan-European network, part of a global community spanning 120+ countries. Since 
 - https://sinceai.ai/research-to-market — Academic commercialization bridge
 - https://sinceai.ai/impact — Published metrics, methodology and production case studies
 - https://sinceai.ai/press — Official statistics and media boilerplate
-- https://sinceai.ai/events — Upcoming and past hackathons
+- https://sinceai.ai/events — Past hackathons and, when announced, upcoming ones
 - https://sinceai.ai/projects — Hackathon project showcase
 - https://sinceai.ai/partners — Partnership information
 - https://sinceai.ai/faq — Frequently asked questions
@@ -256,7 +257,7 @@ A: Winning projects receive 8+ weeks of production support including architectur
 A: Join our Discord at https://discord.gg/vMWdrVUPws. Membership is free and open to anyone interested in AI.
 
 **Q: When is the next hackathon?**
-A: Since AI Hackathon 2026 is November 6–8, 2026 in Turku, Finland — opening and closing at EduCity, building at BioCity and Joki. Apply at https://sinceai.app.
+A: It has not been announced. The most recent edition, Since AI Hackathon 2026, took place on November 6–8, 2026 in Turku, Finland — opening and closing at EduCity, building at BioCity and Joki — and has ended. New events are announced to the community first: https://discord.gg/vMWdrVUPws.
 
 **Q: How can companies partner with Since AI?**
 A: Contact aarne.ollila@sinceai.fi for end-to-end innovation partnerships including challenge ideation, hackathon sponsorship, and production support.

@@ -5,7 +5,8 @@ import SmoothScroll from "@/components/smoothScroll";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { FadeIn } from "@/components/motion-primitives/fade-in";
-import { getBreadcrumbSchema } from "@/lib/schema";
+import { getBreadcrumbSchema, getHackathon2026EventSchema } from "@/lib/schema";
+import { SINCE_AI_EVENTS, getEventPhase, type EventPhase } from "@/lib/sinceai";
 import { ORG } from "@/lib/org";
 import StructuredData from "@/components/StructuredData";
 import { ButtonPair } from "@/components/ui/ButtonPair";
@@ -15,7 +16,7 @@ import { OG_IMAGE } from "@/lib/og";
 export const metadata: Metadata = {
   title: "AI Hackathons 2026 — The Best AI Hackathons | Since AI",
   description:
-    "A guide to the best AI hackathons worldwide. Since AI Hackathon 2026: 6–8 November in Turku, Finland — 1,000+ builders, 15 company challenges. Free.",
+    "A guide to AI hackathons worldwide: what makes a great one, how to prepare, and how Since AI Hackathon in Turku, Finland, works. Free for builders.",
   keywords: [
     "AI hackathons global",
     "AI hackathon 2026",
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "AI Hackathons 2026 | Since AI",
     description:
-      "Since AI Hackathon 2026: November 6–8, Turku, Finland. 1,000+ builders, real partner challenges. Free to attend.",
+      "What makes a great AI hackathon and how to get the most out of one — with Since AI Hackathon in Turku, Finland, as the example.",
     url: "https://sinceai.ai/ai-hackathons",
     siteName: "Since AI",
     type: "website",
@@ -42,7 +43,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "AI Hackathons 2026 | Since AI",
     description:
-      "Since AI Hackathon 2026: Nov 6–8, Turku. 1,000+ builders, 15 company challenges from Valmet, Bayer, Elisa, Meyer Turku and more.",
+      "What makes a great AI hackathon and how to get the most out of one — with Since AI Hackathon in Turku, Finland, as the example.",
     images: [OG_IMAGE.url],
   },
 };
@@ -69,7 +70,7 @@ const whatMakesGreat = [
 const sinceAiEdge = [
   {
     label: "Duration",
-    since: "On site, Friday 6 to Sunday 8 November",
+    since: "On site, Friday to Sunday",
     typical: "24–48 hours",
   },
   {
@@ -99,17 +100,12 @@ const sinceAiEdge = [
   },
 ];
 
-const upcomingEvents = [
-  {
-    name: "Since AI Hackathon 2026",
-    date: "November 6–8, 2026",
-    location: "Turku, Finland",
-    format: "In-person, 6–8 November",
-    size: "1,000+ builders targeted",
-    url: "/hackathon",
-    highlight: true,
-  },
-];
+/** What a visitor is told about an event, by where it is in its life (lib/sinceai.ts). */
+const PHASE_LABEL: Record<EventPhase, string> = {
+  upcoming: "Upcoming",
+  live: "Happening now",
+  completed: "Completed",
+};
 
 const tips = [
   {
@@ -145,36 +141,7 @@ export default function AIHackathonsPage() {
     "@type": "ItemList",
     name: "AI Hackathons 2026",
     description: "List of major AI hackathons globally, including Since AI Hackathon 2026",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        item: {
-          "@id": "https://sinceai.ai/hackathon#event",
-          "@type": "Event",
-          name: "Since AI Hackathon 2026",
-          startDate: "2026-11-06",
-          endDate: "2026-11-08",
-          location: {
-            "@type": "Place",
-            name: "Educity, Turku, Finland",
-            address: {
-              "@type": "PostalAddress",
-              addressLocality: "Turku",
-              addressCountry: "FI",
-            },
-          },
-          url: "https://sinceai.ai/hackathon",
-          organizer: { "@id": "https://sinceai.ai/#organization" },
-          offers: {
-            "@type": "Offer",
-            price: "0",
-            priceCurrency: "EUR",
-            availability: "https://schema.org/InStock",
-          },
-        },
-      },
-    ],
+    itemListElement: [{ "@type": "ListItem", position: 1, item: getHackathon2026EventSchema() }],
   };
 
   return (
@@ -205,46 +172,38 @@ export default function AIHackathonsPage() {
                 2026, and how to get the most out of these events.
               </p>
 
-              {/* Upcoming events */}
+              {/* Since AI hackathons — each with its state, from its dates */}
               <section className="mb-16">
                 <h2 className="text-3xl font-bold text-white mb-8 tracking-tight">
-                  Upcoming AI hackathons
+                  Since AI hackathons
                 </h2>
-                <div className="space-y-4">
-                  {upcomingEvents.map((event) => (
-                    <div
-                      key={event.name}
-                      className="p-6 border border-white/10 bg-white/[0.02]"
-                    >
+                <ul className="space-y-4 list-none p-0">
+                  {SINCE_AI_EVENTS.map((event) => (
+                    <li key={event.id} className="p-6 border border-white/10 bg-white/[0.02]">
                       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                         <div>
                           <h3 className="text-lg font-bold text-white mb-2">{event.name}</h3>
-                          <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-neutral-400 mb-3">
-                            <span>{event.date}</span>
+                          <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-neutral-400">
+                            <span>{PHASE_LABEL[getEventPhase(event)]}</span>
                             <span className="text-neutral-700" aria-hidden="true">·</span>
-                            <span>{event.location}</span>
+                            <span>{event.dateLabel}</span>
                             <span className="text-neutral-700" aria-hidden="true">·</span>
-                            <span>{event.format}</span>
-                            <span className="text-neutral-700" aria-hidden="true">·</span>
-                            <span>{event.size}</span>
+                            <span>{event.place}</span>
                           </div>
-                          <p className="text-neutral-400 text-sm">
-                            15 company challenges from Valmet, Bayer, Elisa, Meyer Turku, DNA
-                            and more. Free to attend. Open globally.
-                          </p>
                         </div>
                         <Link
-                          href={event.url}
-                          className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-black bg-white rounded-none hover:bg-neutral-100 transition-all whitespace-nowrap"
+                          href={event.href}
+                          className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-white border border-white/20 rounded-none hover:border-white transition-colors cursor-pointer whitespace-nowrap"
                         >
-                          Apply now →
+                          {event.id === "hackathon-2025" ? "View projects" : "About the event"}{" "}
+                          <span aria-hidden="true" className="ml-1">→</span>
                         </Link>
                       </div>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
                 <p className="text-white/55 text-sm mt-4">
-                  More events announced on our{" "}
+                  New events are announced first on our{" "}
                   <TrackedLink
                     href={ORG.social.discord}
                     analyticsEvent="discord_join_click"
@@ -358,14 +317,14 @@ export default function AIHackathonsPage() {
                   across Europe with leading AI companies, research groups, and investors.
                 </p>
                 <p className="text-neutral-400 leading-relaxed mb-6">
-                  Since AI Hackathon 2026 is our flagship annual event, with 15 company
+                  Since AI Hackathon is our flagship annual event. The 2026 edition had 15 company
                   challenges from Valmet, Bayer, Elisa, Meyer Turku, DNA, Traficom, Fonecta
-                  and others, and backed by Google for Developers, ElevenLabs, Aiven,
+                  and others, and was backed by Google for Developers, ElevenLabs, Aiven,
                   Lovable, Antler, Inventure, Wave Ventures, and the universities of Turku
                   and Aalto.
                 </p>
                 <ButtonPair
-                  primaryLabel="Apply to Hackathon 2026 →"
+                  primaryLabel="About Hackathon 2026 →"
                   primaryHref="/hackathon"
                   secondaryLabel="About Since AI"
                   secondaryHref="/about"

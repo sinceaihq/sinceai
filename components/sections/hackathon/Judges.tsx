@@ -140,8 +140,8 @@ export function Judges() {
           Meet the judges.
         </h2>
         <p className="mt-4 mb-10 max-w-2xl text-sm text-neutral-400 leading-relaxed">
-          The judging panel selects the overall winner of Since AI Hackathon 2026 at the finals in Turku on Sunday
-          8 November. Company challenges are evaluated separately, by each challenge company.
+          The judging panel of Since AI Hackathon 2026: the jury for the overall winner at the finals in Turku on
+          Sunday 8 November 2026. Company challenges were evaluated separately, by each challenge company.
         </p>
 
         <ul className="grid grid-cols-1 gap-4 sm:grid-cols-4 lg:grid-cols-6">

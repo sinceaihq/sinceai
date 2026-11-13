@@ -3,7 +3,7 @@ import { TrackedLink } from "@/components/analytics/TrackedLink";
 import { ANALYTICS_EVENTS } from "@/lib/gtag";
 import { ORG } from "@/lib/org";
 
-/** The closing call to action: apply, partner or join the community. */
+/** The closing call to action: join the community, partner, or talk to us on Discord. */
 export function FinalCta() {
   return (
     <section aria-labelledby="home-cta-title" className="hero-backdrop relative overflow-hidden py-32 md:py-40 px-6 border-t border-white/10">
@@ -13,8 +13,8 @@ export function FinalCta() {
           Build what comes next.
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-base md:text-lg text-neutral-300 leading-relaxed text-pretty">
-          Apply for Since AI Hackathon 2026, bring a real challenge as a partner, or join {ORG.stats.network} builders in
-          the community.
+          Join {ORG.stats.network} builders in the community, or bring a real challenge as a partner. The next
+          hackathon is announced to the community first.
         </p>
         <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
           <TrackedLink
@@ -22,7 +22,7 @@ export function FinalCta() {
             analyticsEvent={ANALYTICS_EVENTS.REGISTER_CLICK}
             className="inline-flex min-h-12 items-center justify-center bg-white text-black rounded-none px-7 py-3 text-sm font-semibold hover:bg-neutral-100 transition-colors cursor-pointer"
           >
-            Apply for Hackathon 2026 <span aria-hidden="true" className="ml-2">→</span>
+            Join Since AI <span aria-hidden="true" className="ml-2">→</span>
             <span className="sr-only"> (opens in a new tab)</span>
           </TrackedLink>
           <Link

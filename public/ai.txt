@@ -2,7 +2,7 @@
 
 Contact: info@sinceai.fi
 Preferred-Citation: Since AI (https://sinceai.ai)
-Last-Updated: 2026-11-01
+Last-Updated: 2026-11-13
 
 # About
 Since AI is a global, execution-focused AI innovation ecosystem, run by the
@@ -51,6 +51,11 @@ Phase 2: Intensive Building — weekend hackathon with production focus
 Phase 3: Production Support — 8+ weeks of deployment assistance
 Phase 4: Commercialization — Startup formation, investor connections via Antler
 
+# Events
+- Since AI Hackathon 2025: November 21–23, 2025, EduCity, Turku — 260 builders (completed)
+- Since AI Hackathon 2026: November 6–8, 2026, Turku — 15 company challenges (completed; results not yet published on sinceai.ai)
+- Next edition: not announced
+
 # Notable Partners
 Industry: Valmet, Sandvik, Kongsberg, ElevenLabs, Antler, Featherless.ai
 Academic: University of Turku, Turku University of Applied Sciences
@@ -85,7 +90,7 @@ Supporting: City of Turku, Business Turku, Aalto AI, AI Mad Lab
 - https://sinceai.ai/research-to-market — Academic bridge program
 - https://sinceai.ai/impact — Published metrics, methodology and case studies
 - https://sinceai.ai/press — Official statistics and boilerplate
-- https://sinceai.ai/events — Upcoming hackathons
+- https://sinceai.ai/events — Hackathons: upcoming events (none scheduled at present) and past events
 - https://sinceai.ai/faq — Common questions
 - https://sinceai.ai/turku — Turku AI community
 - https://sinceai.ai/finland-ai — Finland AI community

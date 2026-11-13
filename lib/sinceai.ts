@@ -3,6 +3,7 @@
  * Core constants for consistent messaging across the site
  */
 
+import { EVENT_2026 } from "./hackathon-2026/facts";
 import { CHALLENGE_PRIZES_STATEMENT } from "./hackathon-2026/prizes";
 
 export const FOUNDING_YEAR = 2025;
@@ -26,19 +27,25 @@ export const FIRST_EVENT = {
   type: "Hackathon",
 } as const;
 
-// Upcoming Event (2026)
-export const UPCOMING_EVENT_2026 = {
-  name: "Since AI Hackathon 2026",
-  // Operational schedule (Field Guide, lib/hackathon-2026/facts.ts): check-in opens Fri 15:00,
-  // the event ends around Sun 15:30.
-  startDate: "2026-11-06T15:00:00+02:00",
-  endDate: "2026-11-08T15:30:00+02:00",
+/**
+ * Since AI Hackathon 2026. The dates come from the operational source
+ * (lib/hackathon-2026/facts.ts) — never repeat them here. Whether the event is
+ * upcoming, live or completed is derived from them with getEventPhase(); it is
+ * not a stored flag and not part of the name of this constant.
+ */
+export const HACKATHON_2026 = {
+  name: EVENT_2026.name,
+  // Check-in opened Fri 15:00; the event ended around Sun 15:30.
+  startDate: EVENT_2026.window.start,
+  endDate: EVENT_2026.window.end,
   month: "November",
   year: 2026,
+  /** "6–8 November 2026" */
+  dateLabel: EVENT_2026.dateLabel,
   dateNote: "November 6 15:00 – November 8 15:30, 2026",
   city: "Turku",
   country: "FI",
-  statusLabelShort: "November 6–8, 2026 • Turku",
+  href: "/hackathon",
 } as const;
 
 /**
@@ -78,15 +85,6 @@ export const HACKATHON_2026_PARTNERS = {
   keynote: "Jason Mayes, Web AI Lead at Google",
 } as const;
 
-/**
- * Volunteer applications for Since AI Hackathon 2026 (organiser, 26 Oct 2026: still open). A link to the
- * public Google Form only — never to its responses. Remove the CTA when applications close.
- */
-export const VOLUNTEER_2026 = {
-  href: "https://docs.google.com/forms/d/e/1FAIpQLSdro-RK8jjZ8BVLXq4ij8m4FcBUOl7Z3QycKwFCFj-xub7dqQ/viewform?usp=dialog",
-  label: "Become a volunteer",
-} as const;
-
 /** "Valmet, Bayer, … and Europress" */
 export const HACKATHON_2026_CHALLENGE_LIST = `${HACKATHON_2026_PARTNERS.challengePartners.slice(0, -1).join(", ")} and ${HACKATHON_2026_PARTNERS.challengePartners.at(-1)}`;
 
@@ -116,27 +114,73 @@ export const COPY = {
   // Formatted for display
   eventDateRange: "November 21–23, 2025",
   eventDateShort: "Nov 21–23, 2025",
-  
-  // Upcoming 2026 event
-  upcomingEventLineShort: "Since AI Hackathon 2026 — November 6–8, 2026, Turku.",
-  upcomingEventLineLong: "Since AI Hackathon 2026 will be held November 6 15:00 - November 8 15:30, 2026 at EduCity in Turku, Finland.",
 } as const;
 
-// Helper function to get year for copyright, etc.
-export function getCurrentYear(): number {
-  return new Date().getFullYear();
+// ── Event lifecycle ────────────────────────────────────────────────────────
+
+/** Where an event is in its life. Always derived from its dates. */
+export type EventPhase = "upcoming" | "live" | "completed";
+
+/** A date without a time ("2025-11-23") is a whole day in Turku (EET in November). */
+function instant(date: string, edge: "start" | "end"): number {
+  if (date.length > 10) return Date.parse(date);
+  return Date.parse(`${date}T${edge === "start" ? "00:00:00" : "23:59:59"}+02:00`);
 }
 
-// Helper to check if event has happened (based on end date)
-export function hasEventOccurred(): boolean {
-  const eventEndDate = new Date(FIRST_EVENT.endDate);
-  const now = new Date();
-  return now > eventEndDate;
+export function getEventPhase(
+  event: { startDate: string; endDate: string },
+  now: number | Date = Date.now(),
+): EventPhase {
+  const t = typeof now === "number" ? now : now.getTime();
+  if (t > instant(event.endDate, "end")) return "completed";
+  return t >= instant(event.startDate, "start") ? "live" : "upcoming";
 }
 
-// Event status for schema.org
-export function getEventStatus() {
-  return hasEventOccurred() 
-    ? "https://schema.org/EventCompleted" as const
-    : "https://schema.org/EventScheduled" as const;
+/** "21–23 November 2025" — the days of an event in Turku, for one that stays within a month. */
+export function dateRangeLabel(startDate: string, endDate: string): string {
+  const part = (date: string, edge: "start" | "end", options: Intl.DateTimeFormatOptions) =>
+    new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Helsinki", ...options }).format(instant(date, edge));
+  const end = part(endDate, "end", { day: "numeric", month: "long", year: "numeric" });
+  return `${part(startDate, "start", { day: "numeric" })}–${end}`;
+}
+
+/**
+ * Every Since AI event, newest first. Pages list events from here and place
+ * them under "upcoming" or "past" by getEventPhase() — so an event that has
+ * ended can never stay advertised as upcoming. Announce a new event by adding
+ * it here (and only once its dates are confirmed).
+ */
+export const SINCE_AI_EVENTS = [
+  {
+    id: "hackathon-2026",
+    name: HACKATHON_2026.name,
+    startDate: HACKATHON_2026.startDate,
+    endDate: HACKATHON_2026.endDate,
+    dateLabel: HACKATHON_2026.dateLabel,
+    place: "EduCity, BioCity and Joki — Turku, Finland",
+    href: HACKATHON_2026.href,
+  },
+  {
+    id: "hackathon-2025",
+    name: "Since AI Hackathon 2025",
+    startDate: FIRST_EVENT.startDate,
+    endDate: FIRST_EVENT.endDate,
+    dateLabel: dateRangeLabel(FIRST_EVENT.startDate, FIRST_EVENT.endDate),
+    place: `${FIRST_EVENT.locationName}, ${FIRST_EVENT.addressLocality}, Finland`,
+    href: "/projects",
+  },
+] as const;
+
+export type SinceAiEvent = (typeof SINCE_AI_EVENTS)[number];
+
+/** Events that have not ended yet (upcoming or live), soonest first. */
+export function getCurrentEvents(now: number | Date = Date.now()): SinceAiEvent[] {
+  return SINCE_AI_EVENTS.filter((e) => getEventPhase(e, now) !== "completed").sort(
+    (a, b) => instant(a.startDate, "start") - instant(b.startDate, "start"),
+  );
+}
+
+/** Events that have ended, newest first. */
+export function getPastEvents(now: number | Date = Date.now()): SinceAiEvent[] {
+  return SINCE_AI_EVENTS.filter((e) => getEventPhase(e, now) === "completed");
 }
