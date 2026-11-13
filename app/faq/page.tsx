@@ -89,7 +89,7 @@ export default function FAQPage() {
               <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed mb-16">
                 {ORG.mission.purpose} This page answers common questions about
                 joining, partnering, and participating in Since AI&apos;s programs.
-                Last updated: September 29, 2026.
+                Last updated: November 13, 2026.
               </p>
 
               {/* 3. FAQ list — flat H2 + p, fully visible to crawlers */}

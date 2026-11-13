@@ -1,12 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FeaturedSpeakers, Judges } from "@/components/sections/hackathon";
 import { FadeInView } from "@/components/motion-primitives/fade-in";
-import { TrackedLink } from "@/components/analytics/TrackedLink";
-import { ANALYTICS_EVENTS } from "@/lib/gtag";
 import { ORG } from "@/lib/org";
 import { PARTNERS, type Partner } from "@/lib/partners";
-import { HACKATHON_2026_PARTNERS, MLH_2027 } from "@/lib/sinceai";
+import { HACKATHON_2026, HACKATHON_2026_PARTNERS, MLH_2027 } from "@/lib/sinceai";
 import { SectionIntro } from "./SectionIntro";
 import { REACH, fmt } from "@/lib/reach";
 
@@ -17,11 +14,15 @@ const ghostButton =
 
 // ── Hackathon 2026 ─────────────────────────────────────────────────────────
 
+// The flagship event after it has ended: a short record of it and where to read more — never an
+// invitation to apply. Figures are the ones published before the event; the application count is
+// dated. Attendance, projects and winners appear only once the organisers confirm them.
+
 const HACKATHON_FACTS = [
-  { value: "€50,000+", label: "Prize pool", brand: true },
-  { value: "1,000+", label: "Builders from around the world" },
+  { value: "€50,000+", label: "Cash prize pool", brand: true },
   { value: String(HACKATHON_2026_PARTNERS.challengeTarget), label: "Real company challenges" },
-  { value: "Free", label: "To take part" },
+  { value: fmt(REACH.applicants.total), label: `Applications, as of ${REACH.asOfLabel}` },
+  { value: String(REACH.applicants.countries), label: "Countries among the applicants" },
 ] as const;
 
 function HackathonFeature() {
@@ -31,9 +32,9 @@ function HackathonFeature() {
         <div>
           <SectionIntro
             id="home-hackathon-title"
-            eyebrow="// flagship event · 6–8 November 2026"
+            eyebrow={`// flagship event · held ${HACKATHON_2026.dateLabel}`}
             title="Since AI Hackathon 2026."
-            lede={`6–8 November, 1,000+ builders and ${HACKATHON_2026_PARTNERS.challengeTarget} real challenges from ${HACKATHON_2026_PARTNERS.challengePartnersShort} — ${fmt(REACH.applicants.total)} applications from ${REACH.applicants.countries} countries so far. The best solutions don't end as demos: they get eight weeks of production support.`}
+            lede={`On 6–8 November 2026 builders came to Turku for ${HACKATHON_2026_PARTNERS.challengeTarget} real challenges from ${HACKATHON_2026_PARTNERS.challengePartnersShort}. The best solutions don't end as demos: they get eight weeks of production support.`}
           />
           <dl className="mt-10 grid grid-cols-2 gap-px bg-white/10 border border-white/10">
             {HACKATHON_FACTS.map((f) => (
@@ -57,19 +58,18 @@ function HackathonFeature() {
             Keynote by {HACKATHON_2026_PARTNERS.keynote} · {MLH_2027.label}
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <TrackedLink href="https://sinceai.app/sign-up" analyticsEvent={ANALYTICS_EVENTS.REGISTER_CLICK} className={primaryButton}>
-              Apply now <span aria-hidden="true" className="ml-2">→</span>
-              <span className="sr-only"> (opens in a new tab)</span>
-            </TrackedLink>
-            <Link href="/hackathon" className={ghostButton}>
-              Explore the hackathon
+            <Link href="/hackathon" className={primaryButton}>
+              About Hackathon 2026 <span aria-hidden="true" className="ml-2">→</span>
+            </Link>
+            <Link href="/events" className={ghostButton}>
+              All events
             </Link>
           </div>
         </div>
         <figure className="relative m-0 aspect-[4/3] overflow-hidden border border-white/10">
           <Image
             src="/assets/images/educity-card.webp"
-            alt="EduCity in Turku at night — home of the opening and the finals of Since AI Hackathon 2026"
+            alt="EduCity in Turku at night — where Since AI Hackathon 2026 opened and held its finals"
             fill
             sizes="(max-width: 1024px) 100vw, 560px"
             className="object-cover"
@@ -98,9 +98,9 @@ const STAGES: {
     programs: [
       {
         title: "Hackathons",
-        body: "Weekend hackathons on real challenges from leading companies, with mentors, tools and data from day one. The flagship brings 1,000+ builders to Finland every November.",
-        href: "/hackathon",
-        cta: "Since AI Hackathon 2026",
+        body: "Weekend hackathons on real challenges from leading companies, with mentors, tools and data from day one. The flagship has been held in Turku, Finland, in November 2025 and 2026.",
+        href: "/events",
+        cta: "Events and past hackathons",
       },
       {
         title: "Global builder community",
@@ -297,8 +297,6 @@ export function BelowHero() {
       <FadeInView>
         <Ecosystem />
       </FadeInView>
-      <FeaturedSpeakers />
-      <Judges />
     </div>
   );
 }

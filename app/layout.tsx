@@ -5,7 +5,6 @@ import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import "./globals.css";
 import StructuredData from "@/components/StructuredData";
 import { CookieConsent } from "@/components/CookieConsent";
-import { HackathonPopup } from "@/components/HackathonPopup";
 import { ORG } from "@/lib/org";
 import { GA_ID } from "@/lib/gtag";
 
@@ -192,7 +191,6 @@ export default function RootLayout({
       <body className="antialiased bg-black">
         {children}
         <CookieConsent />
-        <HackathonPopup />
         <GoogleAnalytics gaId={GA_ID} />
       </body>
     </html>

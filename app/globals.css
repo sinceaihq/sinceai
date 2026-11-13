@@ -402,18 +402,6 @@ html:has(body[data-scroll-locked]) {
   }
 }
 
-/* The Hackathon 2026 announcement card (HackathonPopup) slides up from the edge. */
-@keyframes announce-in {
-  from { opacity: 0; translate: 0 16px; }
-  to { opacity: 1; translate: 0 0; }
-}
-.announce-in {
-  animation: announce-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-@media (prefers-reduced-motion: reduce) {
-  .announce-in { animation: none; }
-}
-
 /* ── Homepage hero backdrop: two soft light sources and a fine grid, CSS only ── */
 .hero-backdrop::before,
 .hero-backdrop::after {

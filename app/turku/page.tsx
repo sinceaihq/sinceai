@@ -7,7 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { getBreadcrumbSchema } from "@/lib/schema";
 import { ORG } from "@/lib/org";
-import { FIRST_EVENT, UPCOMING_EVENT_2026 } from "@/lib/sinceai";
+import { FIRST_EVENT } from "@/lib/sinceai";
 import { ButtonPair } from "@/components/ui/ButtonPair";
 import { OG_IMAGE } from "@/lib/og";
 
@@ -260,15 +260,15 @@ export default function TurkuPage() {
                 />
               </section>
 
-              {/* Upcoming Events */}
+              {/* Events */}
               <section className="mb-12">
                 <h2 className="text-3xl font-bold text-white mb-6 tracking-tight">
-                  Upcoming AI Events in Turku
+                  AI Events in Turku
                 </h2>
                 <ul className="space-y-3 text-neutral-300 mb-4">
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">&bull;</span>
-                    <span><strong className="text-white">Annual AI Hackathon:</strong> a weekend of building ({UPCOMING_EVENT_2026.month} {UPCOMING_EVENT_2026.year})</span>
+                    <span><strong className="text-white">Annual AI Hackathon:</strong> a weekend of building, held in November 2025 and November 2026</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">&bull;</span>
@@ -285,7 +285,7 @@ export default function TurkuPage() {
                 </ul>
                 <p className="text-neutral-400">
                   <Link href="/events" className="text-white hover:text-neutral-300 underline">
-                    View all upcoming events &rarr;
+                    View all events &rarr;
                   </Link>
                 </p>
               </section>

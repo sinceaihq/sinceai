@@ -26,16 +26,10 @@ const metrics: {
       "Active members in our core Discord community. Figure from Discord server analytics.",
   },
   {
-    metric: "Hackathon builders to date",
+    metric: "Builders at Since AI Hackathon 2025",
     value: ORG.stats.hackathonParticipants,
     methodology:
-      "Cumulative builders across all Since AI events. Since AI Hackathon, Nov 21–23 2025, EduCity, Turku: 260 builders. Exact figure, not rounded.",
-  },
-  {
-    metric: "Hackathon 2026 participants targeted",
-    value: ORG.stats.hackathon2026Target,
-    methodology:
-      "Target based on venue capacity (EduCity, BioCity and Joki in Turku) and partner challenge scale. Since AI Hackathon 2026: 6–8 November 2026.",
+      "Since AI Hackathon, Nov 21–23 2025, EduCity, Turku: 260 builders. Exact figure, not rounded. The figure for Since AI Hackathon 2026 (6–8 November 2026) is added once the organisers have confirmed it.",
   },
   {
     metric: "Partners & supporters",
@@ -57,7 +51,7 @@ const metrics: {
   {
     metric: "Since AI Hackathon 2026 applications",
     value: fmt(REACH.applicants.total),
-    methodology: `Registrations for 6–8 November 2026 as of ${REACH.asOfLabel}, from ${REACH.applicants.countries} countries of residence; ${fmt(REACH.applicants.travelling)} applicants plan to travel to Turku from abroad. The homepage map shows both datasets by country.`,
+    methodology: `Registrations for 6–8 November 2026 as of ${REACH.asOfLabel}, from ${REACH.applicants.countries} countries of residence; ${fmt(REACH.applicants.travelling)} applicants planned to travel to Turku from abroad. The homepage map shows both datasets by country.`,
   },
 ];
 
@@ -67,8 +61,8 @@ const EVENTS: { name: string; href?: string; dates: string; builders: string; pr
     name: "Since AI Hackathon 2026",
     href: "/hackathon",
     dates: "6–8 Nov 2026",
-    builders: `${ORG.stats.hackathon2026Target} targeted`,
-    projects: "Upcoming",
+    builders: `Not yet published (${fmt(REACH.applicants.total)} applications)`,
+    projects: "Not yet published",
   },
 ];
 

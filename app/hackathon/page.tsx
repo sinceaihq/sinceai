@@ -5,7 +5,6 @@ import SmoothScroll from "@/components/smoothScroll";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import StructuredData from "@/components/StructuredData";
-import { HackathonCountdown } from "@/components/HackathonCountdown";
 import { PartnerMarquee } from "@/components/PartnerMarquee";
 import { FadeIn, FadeInView } from "@/components/motion-primitives/fade-in";
 import {
@@ -14,20 +13,28 @@ import {
   StatBand,
   PartnerLogoGrid,
   FaqAccordion,
-  StickyApplyBar,
 } from "@/components/sections/hackathon";
 import { TrackedLink } from "@/components/analytics/TrackedLink";
 import ORG from "@/lib/org";
-import { AWARDS_HREF, COMPUTING_HREF, OVERALL_WINNER_STATEMENT } from "@/lib/hackathon-2026";
+import { AWARDS_HREF, COMPUTING_HREF, GUIDE_BASE_PATH, OVERALL_WINNER_STATEMENT } from "@/lib/hackathon-2026";
+import { REACH, fmt } from "@/lib/reach";
 import {
+  HACKATHON_2026,
   HACKATHON_2026_CHALLENGE_LIST,
   HACKATHON_2026_PARTNERS,
   MLH_2027,
-  UPCOMING_EVENT_2026,
-  VOLUNTEER_2026,
 } from "@/lib/sinceai";
 
-const APPLY_URL = "https://sinceai.app/sign-up";
+/**
+ * Since AI Hackathon 2026 ended on 8 November 2026, and this page is its record:
+ * what the event was, where its guide is and what to do next. It never invites
+ * anyone to apply. Winners, attendance and project counts are added only once
+ * the organisers have confirmed them; until then the page gives the figures
+ * published before the event, with their date.
+ */
+const APPLICATIONS = `${fmt(REACH.applicants.total)} from ${REACH.applicants.countries} countries (as of ${REACH.asOfLabel})`;
+const DISCORD = ORG.social.discord.replace("https://", "");
+const TELEGRAM = ORG.social.telegram.replace("https://", "");
 
 // ── Schemas ────────────────────────────────────────────────────────────────
 
@@ -36,64 +43,69 @@ const breadcrumbSchema = {
   "@type": "BreadcrumbList",
   itemListElement: [
     { "@type": "ListItem", position: 1, name: "Home",              item: "https://sinceai.ai" },
-    { "@type": "ListItem", position: 2, name: "Since AI Hackathon 2026", item: "https://sinceai.ai/hackathon" },
+    { "@type": "ListItem", position: 2, name: "Events",            item: "https://sinceai.ai/events" },
+    { "@type": "ListItem", position: 3, name: "Since AI Hackathon 2026", item: "https://sinceai.ai/hackathon" },
   ],
 };
 
 const hackathonFaqs = [
   {
     q: "What is Since AI Hackathon?",
-    a: "Since AI Hackathon is the flagship annual event of Since AI — a global execution-focused AI innovation ecosystem based in Turku, Finland. The 2026 edition is a Major League Hacking (MLH) 2027 Season Member Event. Builders from across the world gather for a weekend-long AI hackathon, 6–8 November, to solve real company challenges and ship working AI products.",
+    a: "Since AI Hackathon is the flagship annual event of Since AI — a global execution-focused AI innovation ecosystem based in Turku, Finland. The 2026 edition, a Major League Hacking (MLH) 2027 Season Member Event, took place in Turku on 6–8 November 2026: builders from across the world gathered for a weekend to solve real company challenges and ship working AI products.",
   },
   {
-    q: "When is Since AI Hackathon 2026?",
-    a: `Since AI Hackathon 2026 runs November 6–8, 2026 in Turku, Finland. Challenge summaries open in sinceai.app on Thursday 5 November at 15:00. Check-in, team formation and challenge selection open Friday 6 November at 15:00 at EduCity; team formation closes at 16:45, the opening ceremony starts at 17:00 and challenge selection closes at 17:30. Submissions close Sunday 8 November at 10:00, the closing ceremony starts at 13:15, each company challenge's top three teams are announced from 13:30, the finals start at 14:00 and the event ends around 15:30. Registration is open — apply at sinceai.app/sign-up.`,
+    q: "When was Since AI Hackathon 2026?",
+    a: "Since AI Hackathon 2026 took place on November 6–8, 2026 in Turku, Finland, and has ended. The published programme ran from check-in, team formation and challenge selection on Friday 6 November at 15:00 at EduCity, through the opening ceremony at 17:00, to the submission deadline on Sunday 8 November at 10:00, the closing ceremony at 13:15 and the finals at 14:00, ending around 15:30.",
   },
   {
-    q: "Is Since AI Hackathon an official MLH event?",
-    a: "Yes. Since AI Hackathon 2026 is a Major League Hacking (MLH) Member Event of the 2027 MLH season, which covers the 2026–27 hackathon year. MLH is the world's largest hackathon league. The MLH Code of Conduct applies at the event alongside Since AI's own Code of Conduct.",
+    q: "Can I still register for Since AI Hackathon 2026?",
+    a: `No. Since AI Hackathon 2026 has ended and registration is closed. The dates of the next edition have not been announced. To hear first, join the Since AI community on Discord (${DISCORD}) or Telegram (${TELEGRAM}).`,
   },
   {
-    q: "Who can participate?",
-    a: "Since AI Hackathon is open to builders worldwide — developers, researchers, designers, and entrepreneurs. Students and professionals both welcome. The event is held in English.",
+    q: "Where are the results and the projects?",
+    a: "Winners and final figures are published on sinceai.ai only once the organisers have confirmed them; none are published on this page yet. Projects from Since AI Hackathon 2025 are at sinceai.ai/projects.",
   },
   {
-    q: "Where is the event held?",
-    a: "On the Turku science park campus in Turku, Finland. The opening on Friday and the closing on Sunday are at EduCity (Joukahaisenkatu 7), the campus of Turku University of Applied Sciences; teams build around the clock next door at BioCity (Tykistökatu 6) and Joki (Lemminkäisenkatu 12b).",
+    q: "Was Since AI Hackathon 2026 an official MLH event?",
+    a: "Yes. Since AI Hackathon 2026 was a Major League Hacking (MLH) Member Event of the 2027 MLH season, which covers the 2026–27 hackathon year. MLH is the world's largest hackathon league. The MLH Code of Conduct applied at the event alongside Since AI's own Code of Conduct.",
   },
   {
-    q: "Is registration free?",
-    a: "Yes. Since AI Hackathon is free to attend for builders. Sponsorship and challenge partner opportunities are available for companies — see sinceai.ai/partners.",
+    q: "Who could participate?",
+    a: "Since AI Hackathon 2026 was open to builders worldwide — developers, researchers, designers, and entrepreneurs. Students and professionals were both welcome. The event was held in English.",
   },
   {
-    q: "How do I register?",
-    a: `Registration for Since AI Hackathon 2026 is now open. Apply at sinceai.app/sign-up — free for all builders worldwide. Join our Discord (${ORG.social.discord.replace("https://", "")}) or Telegram (${ORG.social.telegram.replace("https://", "")}) to connect with other participants.`,
+    q: "Where was the event held?",
+    a: "On the Turku science park campus in Turku, Finland. The opening on Friday and the closing on Sunday were at EduCity (Joukahaisenkatu 7), the campus of Turku University of Applied Sciences; teams built around the clock next door at BioCity (Tykistökatu 6) and Joki (Lemminkäisenkatu 12b).",
+  },
+  {
+    q: "Was participation free?",
+    a: "Yes. Since AI Hackathon 2026 was free to attend for builders. Companies take part as sponsors and challenge partners — see sinceai.ai/partners.",
   },
   {
     q: "What companies set challenges?",
-    a: `Since AI Hackathon 2026 has 15 company challenges. ${HACKATHON_2026_PARTNERS.prizes} ${OVERALL_WINNER_STATEMENT} The challenge partners are ${HACKATHON_2026_CHALLENGE_LIST}. Every team chooses one company challenge.`,
+    a: `Since AI Hackathon 2026 had 15 company challenges, and every team chose one. The challenge partners were ${HACKATHON_2026_CHALLENGE_LIST}. The prize terms published for the event: ${HACKATHON_2026_PARTNERS.prizes} ${OVERALL_WINNER_STATEMENT}`,
   },
   {
-    q: "What happens over the weekend?",
-    a: "Teams of up to five form in sinceai.app — ideally before the event. On Friday at EduCity every member checks in, the team lead marks the team as ready and selects one of the 15 company challenges in the app between 15:00 and 17:30; the choice is final. Major League Hacking introduces its tools and awards on stage at 16:45; after the 17:00 opening and Jason Mayes' keynote and tech talk, each company briefs its teams. Teams then build at BioCity and Joki, which stay open around the clock, with company Q&A on Saturday. Submissions close Sunday at 10:00, and every eligible builder completes 20 comparisons in the participant vote by 12:00. Each company picks the top three teams of its challenge, and in the 14:00 finals five finalist teams — the highest-ranked projects from five different company challenges — present live on stage to the jury, which selects the overall winner.",
+    q: "How did the weekend work?",
+    a: "Teams of up to five formed in sinceai.app. On Friday at EduCity every member checked in, the team lead marked the team as ready and selected one of the 15 company challenges in the app between 15:00 and 17:30; the choice was final. The programme then had Major League Hacking's introduction at 16:45, the opening at 17:00, Jason Mayes' keynote and tech talk, and each company's briefing for its teams. Teams built at BioCity and Joki, which stayed open around the clock, with company Q&A on Saturday. Submissions closed on Sunday at 10:00, followed by a participant vote of 20 comparisons per eligible builder. Each company picked the top three teams of its challenge, and the finals were for five finalist teams — the highest-ranked projects from five different company challenges — presenting live on stage to the jury that selects the overall winner.",
   },
   {
-    q: "Are there prizes besides the company challenges?",
-    a: "Yes — optional awards a team can enter with the same project in sinceai.app: eight Major League Hacking prize categories, the Red Hat OpenShift AI Technology Award and the non-cash FIWARE Open Innovation Award. They never replace the company challenge. Details and how to enter are in the Field Guide's AI Tools & Resources, under Optional awards.",
+    q: "Were there prizes besides the company challenges?",
+    a: "Yes — optional awards a team could enter with the same project in sinceai.app: eight Major League Hacking prize categories, the Red Hat OpenShift AI Technology Award and the non-cash FIWARE Open Innovation Award. They never replaced the company challenge. The details are in the Field Guide's AI Tools & Resources, under Optional awards.",
     href: AWARDS_HREF,
     linkLabel: "Optional awards in the Field Guide",
   },
   {
-    q: "Can we use AI tools like ChatGPT, Claude, Cursor or GitHub Copilot?",
-    a: "Yes — AI-assisted development is permitted and encouraged, with any AI assistant, coding agent, model or platform. Teams stay responsible for their solution: understand and verify what you ship, be ready to explain it, disclose the main AI tools you used, and keep pre-existing work apart from what you build at the event. Licences and each challenge's rules and data restrictions still apply.",
+    q: "Could teams use AI tools like ChatGPT, Claude, Cursor or GitHub Copilot?",
+    a: "Yes — AI-assisted development was permitted and encouraged, with any AI assistant, coding agent, model or platform. Teams stayed responsible for their solution: understanding and verifying what they shipped, being ready to explain it, disclosing the main AI tools they used, and keeping pre-existing work apart from what they built at the event. Licences and each challenge's rules and data restrictions still applied.",
   },
   {
-    q: "How do teams submit their projects?",
-    a: "In sinceai.app — the official submission platform, not Devpost — by Sunday 8 November 2026 at 10:00 (EET). Each team submits one entry with its project name, a one-sentence tagline, a description, the technologies it built with, a repository link, a YouTube demo video and its source code as a .zip, and accepts the challenge's IP terms in the app. A demo URL, a pitch deck and supporting documents are optional.",
+    q: "How did teams submit their projects?",
+    a: "In sinceai.app — the official submission platform, not Devpost — by Sunday 8 November 2026 at 10:00 (EET). Each team submitted one entry with its project name, a one-sentence tagline, a description, the technologies it built with, a repository link, a YouTube demo video and its source code as a .zip, and accepted the challenge's IP terms in the app. A demo URL, a pitch deck and supporting documents were optional.",
   },
   {
-    q: "Which code of conduct applies?",
-    a: `Since AI's Code of Conduct (sinceai.ai/code-of-conduct) and the MLH Code of Conduct (${MLH_2027.codeOfConduct}) both apply to everyone at the event.`,
+    q: "Which code of conduct applied?",
+    a: `Since AI's Code of Conduct (sinceai.ai/code-of-conduct) and the MLH Code of Conduct (${MLH_2027.codeOfConduct}) both applied to everyone at the event.`,
   },
 ];
 
@@ -110,15 +122,16 @@ const faqSchema = {
 // ── Content data ──────────────────────────────────────────────────────────
 
 const keyFacts = [
-  { label: "Date",           value: UPCOMING_EVENT_2026.dateNote },
+  { label: "Status",         value: "Completed — the event has ended and registration is closed" },
+  { label: "Date",           value: HACKATHON_2026.dateNote },
   { label: "Venues",         value: "EduCity (opening and closing), BioCity and Joki (building) — Turku, Finland" },
   { label: "Prize pool",     value: "€50,000+ in cash" },
-  { label: "Format",         value: "AI hackathon, Friday 6 to Sunday 8 November" },
-  { label: "Schedule",       value: "Fri 15:00 check-in · Fri 17:00 opening · Sun 10:00 submissions close · Sun 13:15 closing ceremony · Sun 14:00 finals · ends around 15:30" },
+  { label: "Format",         value: "AI hackathon, Friday 6 to Sunday 8 November 2026" },
+  { label: "Programme",      value: "Fri 15:00 check-in · Fri 17:00 opening · Sun 10:00 submission deadline · Sun 13:15 closing ceremony · Sun 14:00 finals · end around 15:30" },
   { label: "Challenges",     value: `${HACKATHON_2026_PARTNERS.challengeTarget} company challenges` },
   { label: "Keynote",        value: HACKATHON_2026_PARTNERS.keynote },
-  { label: "Expected",       value: "1,000+ builders" },
-  { label: "Participation",  value: "Free" },
+  { label: "Applications",   value: APPLICATIONS },
+  { label: "Participation",  value: "Free for builders" },
   { label: "Open to",        value: "Builders worldwide — students and professionals" },
   { label: "MLH",            value: MLH_2027.label },
   { label: "Organised by",   value: "Since AI (sinceai.ai)" },
@@ -128,23 +141,31 @@ const whyItems = [
   {
     num: "01",
     title: "Real industry challenges",
-    body: `Solve actual problems set by ${HACKATHON_2026_PARTNERS.challengePartnersShort} — 15 company challenges. The best solutions get noticed — and hired.`,
+    body: `${HACKATHON_2026_PARTNERS.challengeTarget} company challenges in 2026, set by ${HACKATHON_2026_PARTNERS.challengePartnersShort} — real problems from companies that need them solved.`,
   },
   {
     num: "02",
     title: "MLH Member Event",
-    body: "Since AI Hackathon 2026 is a Major League Hacking (MLH) 2027 Season Member Event — part of the world's largest hackathon league and its global builder community.",
+    body: "Since AI Hackathon 2026 was a Major League Hacking (MLH) 2027 Season Member Event — part of the world's largest hackathon league and its global builder community.",
   },
   {
     num: "03",
     title: "Global builder network",
-    body: "Join 10,000+ Since AI community members globally. Past participants have been hired, founded startups, and built lasting professional connections.",
+    body: `Join ${ORG.stats.network} Since AI community members globally. Past participants have been hired, founded startups, and built lasting professional connections.`,
   },
   {
     num: "04",
     title: "Working demos only",
-    body: "No mockups. Since AI Hackathon rewards teams that build and demo working AI products — and the five finalist teams present theirs live on stage.",
+    body: "No mockups. Since AI Hackathon rewards teams that build and demo working AI products — the finals are five finalist teams presenting theirs live on stage.",
   },
+];
+
+/** Where a visitor goes from a finished event. */
+const nextLinks = [
+  { href: GUIDE_BASE_PATH, label: "How the weekend ran: the Hackathon 2026 Field Guide" },
+  { href: "/projects", label: "Projects from Since AI Hackathon 2025" },
+  { href: "/production-support", label: "After a hackathon: eight weeks of production support" },
+  { href: "/events", label: "All Since AI events" },
 ];
 
 // Google is not a 2026 compute partner: its event credits were revoked (lib/hackathon-2026/resources.ts).
@@ -156,6 +177,13 @@ const headlinePartners = [
     href: "https://lumi-ai-factory.eu/",
   },
 ];
+
+const primaryButton =
+  "inline-block bg-white text-black rounded-none px-6 py-3 font-semibold hover:bg-neutral-100 transition-colors cursor-pointer text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
+const ghostButton =
+  "inline-block border border-white/20 text-white rounded-none px-6 py-3 font-semibold hover:border-white transition-colors cursor-pointer text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
+const textLink =
+  "text-sm text-neutral-300 underline decoration-white/25 underline-offset-4 hover:text-white hover:decoration-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
 
 // ── Page ──────────────────────────────────────────────────────────────────
 
@@ -178,7 +206,7 @@ export default function HackathonPage() {
               src="/assets/images/educity-hero.webp"
               srcSet="/assets/images/educity-hero-828.webp 828w, /assets/images/educity-hero.webp 1920w"
               sizes="100vw"
-              alt="EduCity, Turku — venue for Since AI Hackathon 2026"
+              alt="EduCity, Turku — venue of Since AI Hackathon 2026"
               fetchPriority="high"
               decoding="async"
               className="absolute inset-0 h-full w-full object-cover"
@@ -192,7 +220,7 @@ export default function HackathonPage() {
 
           {/* Official MLH 2027-season Trust Badge (mlh.com/brand-guidelines): in the page header, top
               right, below the fixed navbar. MLH's own embed pins it to the viewport; here it scrolls
-              with the hero so it never covers the navbar or the sticky Apply bar. */}
+              with the hero so it never covers the navbar. */}
           <a
             id="mlh-trust-badge"
             href={MLH_2027.trustBadgeHref}
@@ -220,48 +248,33 @@ export default function HackathonPage() {
             </h1>
 
             <p className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-6 leading-snug max-w-[720px]">
-              6–8 November. 1,000+ builders.{" "}
-              <span style={{ color: "var(--color-brand)" }}>€50,000+ in cash prizes.</span>
+              6–8 November 2026, Turku. 15 company challenges.{" "}
+              <span style={{ color: "var(--color-brand)" }}>€50,000+ cash prize pool.</span>
             </p>
 
-            <p className="text-sm text-white/75 mb-8 tracking-wide">
-              November 6–8, 2026 &nbsp;/&nbsp; Turku, Finland &nbsp;/&nbsp; 15 company challenges &nbsp;/&nbsp; Free to enter &nbsp;/&nbsp; Open to builders worldwide
-            </p>
-
-            <div className="w-full sm:w-fit mb-8">
-              <HackathonCountdown
-                startDate={UPCOMING_EVENT_2026.startDate}
-                endDate={UPCOMING_EVENT_2026.endDate}
-              />
-            </div>
-
-            <p className="text-sm text-white mb-8">
+            {/* The state of the event, in words — never only a coloured dot. */}
+            <p className="text-sm text-white mb-3" data-event-status="completed">
               <span
-                className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 mr-2 align-middle"
+                className="inline-block w-1.5 h-1.5 rounded-full bg-neutral-400 mr-2 align-middle"
                 aria-hidden="true"
               />
-              Registration is open — apply now
+              This event has ended. Registration is closed.
+            </p>
+            <p className="text-sm text-white/75 mb-8 max-w-[640px] leading-relaxed">
+              Thank you to every builder, partner, mentor, judge and volunteer. This page is the record of
+              the event; winners and final figures are added once the organisers have confirmed them.
             </p>
 
             <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
-              <TrackedLink
-                href={APPLY_URL}
-                analyticsEvent="register_click"
-                className="inline-block bg-white text-black rounded-none px-6 py-3 font-semibold hover:bg-neutral-100 transition-colors cursor-pointer text-sm"
-              >
-                Apply now — free →
+              <TrackedLink href={ORG.social.discord} analyticsEvent="discord_join_click" className={primaryButton}>
+                Join the community <span aria-hidden="true">→</span>
+                <span className="sr-only"> on Discord (opens in a new tab)</span>
               </TrackedLink>
-              <Link
-                href="/hackathon-2026/guide"
-                className="inline-block border border-white/20 text-white rounded-none px-6 py-3 font-semibold hover:border-white transition-colors cursor-pointer text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-              >
+              <Link href={GUIDE_BASE_PATH} className={ghostButton}>
                 Hackathon 2026 guide <span aria-hidden="true">→</span>
               </Link>
-              <Link
-                href="/partners"
-                className="inline-block border border-white/20 text-white rounded-none px-6 py-3 font-semibold hover:border-white transition-colors cursor-pointer text-sm"
-              >
-                Partner with us →
+              <Link href="/partners" className={ghostButton}>
+                Partner with us <span aria-hidden="true">→</span>
               </Link>
             </div>
           </FadeIn>
@@ -280,7 +293,51 @@ export default function HackathonPage() {
           <StatBand />
         </FadeInView>
 
-        {/* ── SECTION 3: Headline partners ─────────────────────── */}
+        {/* ── SECTION 3: What it was ───────────────────────────── */}
+        <FadeInView>
+          <section className="py-24 px-6 border-t border-white/10">
+            <div className="mx-auto max-w-6xl">
+              <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
+                {"// what it was"}
+              </p>
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-8">
+                A weekend. Real challenges. Shipped products.
+              </h2>
+
+              <div className="text-sm text-neutral-400 leading-relaxed max-w-[720px] space-y-4">
+                <p>
+                  Since AI Hackathon is the flagship annual event of Since AI — a global
+                  execution-focused AI innovation ecosystem based in Turku, Finland, backed
+                  by 100+ strategic, capital, and research partners.
+                </p>
+                <p>
+                  In 2026, teams formed on Friday afternoon, selected one of 15 company challenges in
+                  sinceai.app between 15:00 and 17:30, and worked to Sunday&apos;s 10:00 submission
+                  deadline. The challenges were set by {HACKATHON_2026_CHALLENGE_LIST}. The event was
+                  open to developers, researchers, and entrepreneurs worldwide.
+                </p>
+                <p className="text-white font-semibold">
+                  No mockups. Working demos first — a slide deck is optional, never a substitute.
+                </p>
+              </div>
+            </div>
+          </section>
+        </FadeInView>
+
+        {/* ── SECTION 4: Challenge partners (logo grid) ────────── */}
+        <FadeInView>
+          <PartnerLogoGrid />
+        </FadeInView>
+
+        {/* ── SECTION 5: Speakers & judges ─────────────────────── */}
+        <FadeInView>
+          <FeaturedSpeakers />
+        </FadeInView>
+        <FadeInView>
+          <Judges />
+        </FadeInView>
+
+        {/* ── SECTION 6: Headline partners ─────────────────────── */}
         <FadeInView>
           <section className="py-24 px-6 border-t border-white/10">
             <div className="mx-auto max-w-6xl">
@@ -322,9 +379,9 @@ export default function HackathonPage() {
               </div>
 
               <p className="text-sm text-neutral-400 leading-relaxed mt-8 max-w-2xl">
-                CSC / LUMI AI Factory gives eligible, pre-registered participants access to the LUMI
-                supercomputer and the Aitta inference service, with LUMI AI Factory experts on site. Using
-                it is optional; eligibility and the other tools are in the{" "}
+                CSC / LUMI AI Factory gave eligible, pre-registered participants access to the LUMI
+                supercomputer and the Aitta inference service. Using it was optional; eligibility and
+                the other tools are described in the{" "}
                 <Link href={COMPUTING_HREF} className="text-white underline underline-offset-4 hover:text-neutral-300">
                   Field Guide
                 </Link>
@@ -334,73 +391,12 @@ export default function HackathonPage() {
           </section>
         </FadeInView>
 
-        {/* ── SECTION 4: Speakers & judges ─────────────────────── */}
-        <FadeInView>
-          <FeaturedSpeakers />
-        </FadeInView>
-        <FadeInView>
-          <Judges />
-        </FadeInView>
-
-        {/* ── SECTION 5: Challenge partners (logo grid) ────────── */}
-        <FadeInView>
-          <PartnerLogoGrid />
-        </FadeInView>
-
-        {/* ── SECTION 6: Mid-page CTA ─────────────────────────── */}
-        <section className="py-16 px-6 border-t border-white/10">
-          <div className="mx-auto max-w-6xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-            <p className="text-xl md:text-2xl font-bold tracking-tight text-white">
-              Free to enter. €50,000+ on the table.
-            </p>
-            <TrackedLink
-              href={APPLY_URL}
-              analyticsEvent="register_click"
-              className="shrink-0 inline-block bg-white text-black rounded-none px-6 py-3 font-semibold hover:bg-neutral-100 transition-colors cursor-pointer text-sm"
-            >
-              Apply now →
-            </TrackedLink>
-          </div>
-        </section>
-
-        {/* ── SECTION 7: What is it ────────────────────────────── */}
+        {/* ── SECTION 7: The format ───────────────────────────── */}
         <FadeInView>
           <section className="py-24 px-6 border-t border-white/10">
             <div className="mx-auto max-w-6xl">
               <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
-                {"// what is it"}
-              </p>
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-8">
-                A weekend. Real challenges. Shipped products.
-              </h2>
-
-              <div className="text-sm text-neutral-400 leading-relaxed max-w-[720px] space-y-4">
-                <p>
-                  Since AI Hackathon is the flagship annual event of Since AI — a global
-                  execution-focused AI innovation ecosystem based in Turku, Finland, backed
-                  by 100+ strategic, capital, and research partners.
-                </p>
-                <p>
-                  Teams form on Friday afternoon, select one of 15 company challenges in
-                  sinceai.app between 15:00 and 17:30, and ship by Sunday&apos;s 10:00 deadline.
-                  1,000+ builders are expected in 2026, with challenges set by{" "}
-                  {HACKATHON_2026_CHALLENGE_LIST}. Open to developers, researchers, and
-                  entrepreneurs worldwide.
-                </p>
-                <p className="text-white font-semibold">
-                  No mockups. Working demos first — a slide deck is optional, never a substitute.
-                </p>
-              </div>
-            </div>
-          </section>
-        </FadeInView>
-
-        {/* ── SECTION 8: Why participate ──────────────────────── */}
-        <FadeInView>
-          <section className="py-24 px-6 border-t border-white/10">
-            <div className="mx-auto max-w-6xl">
-              <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
-                {"// why participate"}
+                {"// the format"}
               </p>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-10">
                 Built for builders who ship.
@@ -428,7 +424,7 @@ export default function HackathonPage() {
           </section>
         </FadeInView>
 
-        {/* ── SECTION 9: Venue ────────────────────────────────── */}
+        {/* ── SECTION 8: Venue ────────────────────────────────── */}
         <FadeInView>
           <section className="py-24 px-6 border-t border-white/10">
             <div className="mx-auto max-w-6xl">
@@ -442,26 +438,24 @@ export default function HackathonPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
                 <div>
                   <p className="text-sm text-neutral-400 leading-relaxed mb-6">
-                    Since AI Hackathon 2026 takes place on the Turku science park campus. Friday&apos;s
-                    opening and Sunday&apos;s closing are at EduCity — the campus of Turku University of
-                    Applied Sciences (Turku AMK), Joukahaisenkatu 7, 20520 Turku. Teams build around the
-                    clock next door at BioCity and Joki. The Hackathon 2026 guide has every room, map and
-                    walking route.
+                    Since AI Hackathon 2026 took place on the Turku science park campus. Friday&apos;s
+                    opening and Sunday&apos;s closing were at EduCity — the campus of Turku University of
+                    Applied Sciences (Turku AMK), Joukahaisenkatu 7, 20520 Turku. Teams built around the
+                    clock next door at BioCity and Joki. The Hackathon 2026 guide keeps every room, map
+                    and walking route.
                   </p>
                   <div className="flex flex-wrap gap-x-8 gap-y-2">
-                    <Link
-                      href="/hackathon-2026/guide/venue"
-                      className="text-sm text-neutral-400 hover:text-white transition-colors"
-                    >
-                      Venue maps & 3D campus →
+                    <Link href={`${GUIDE_BASE_PATH}/venue`} className={textLink}>
+                      Venue maps & directions <span aria-hidden="true">→</span>
                     </Link>
                     <a
                       href="https://maps.google.com/?q=EduCity+Joukahaisenkatu+7+Turku"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-neutral-400 hover:text-white transition-colors"
+                      className={textLink}
                     >
-                      EduCity on Google Maps ↗
+                      EduCity on Google Maps <span aria-hidden="true">↗</span>
+                      <span className="sr-only"> (opens in a new tab)</span>
                     </a>
                   </div>
                 </div>
@@ -469,7 +463,7 @@ export default function HackathonPage() {
                 <div className="relative w-full h-[280px] overflow-hidden">
                   <Image
                     src="/assets/images/educity-card.webp"
-                    alt="EduCity building — venue for Since AI Hackathon 2026, Turku, Finland"
+                    alt="EduCity building — venue of Since AI Hackathon 2026, Turku, Finland"
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover"
@@ -480,45 +474,7 @@ export default function HackathonPage() {
           </section>
         </FadeInView>
 
-        {/* ── SECTION 10: Past edition ─────────────────────────── */}
-        <FadeInView>
-          <section className="py-24 px-6 border-t border-white/10">
-            <div className="mx-auto max-w-6xl">
-              <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
-                {"// previous editions"}
-              </p>
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-8">
-                Since AI Hackathon 2025.
-              </h2>
-
-              <div className="border-l border-white/10 pl-6">
-                <p className="text-sm text-neutral-400 leading-relaxed mb-8 max-w-[640px]">
-                  The inaugural Since AI Hackathon brought together 260 builders from across
-                  Finland and Europe. Teams tackled real industry challenges from Kongsberg,
-                  Sandvik, Valmet, and other partner companies, shipping 30+ AI prototypes
-                  in 72 hours.
-                </p>
-
-                <div className="flex flex-wrap gap-8">
-                  <Link
-                    href="/projects"
-                    className="text-sm text-neutral-400 hover:text-white transition-colors"
-                  >
-                    View shipped projects →
-                  </Link>
-                  <Link
-                    href="/events"
-                    className="text-sm text-neutral-400 hover:text-white transition-colors"
-                  >
-                    All events →
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </section>
-        </FadeInView>
-
-        {/* ── SECTION 11: Key facts ────────────────────────────── */}
+        {/* ── SECTION 9: Key facts ─────────────────────────────── */}
         <section className="py-24 px-6 border-t border-white/10">
           <div className="mx-auto max-w-6xl">
             <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
@@ -546,71 +502,92 @@ export default function HackathonPage() {
           </div>
         </section>
 
-        {/* ── SECTION 12: Registration ─────────────────────────── */}
+        {/* ── SECTION 10: What's next ──────────────────────────── */}
         <section
-          id="registration"
-          className="py-40 px-6 border-t border-white/10 border-b border-white/10"
+          id="next"
+          aria-labelledby="next-title"
+          className="py-24 px-6 border-t border-white/10"
           style={{ scrollMarginTop: "80px" }}
         >
           <div className="mx-auto max-w-6xl">
             <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
-              {"// registrations"}
+              {"// what's next"}
             </p>
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-6">
-              Registration is open.
+            <h2 id="next-title" className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-6">
+              The next edition is not announced yet.
             </h2>
             <p className="text-sm text-neutral-400 leading-relaxed max-w-[560px] mb-8">
-              Registration for Since AI Hackathon 2026 (November 6–8, Turku) is now open.
-              €50,000+ in cash prizes. Free to enter for all builders worldwide. Apply at
-              sinceai.app/sign-up and join our community channels to connect with other
-              participants before the event.
+              Since AI Hackathon 2026 has ended, and there is nothing to apply for right now. Dates and
+              registration for the next Since AI Hackathon are announced in the community first.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 mb-12">
-              <TrackedLink
-                href={APPLY_URL}
-                analyticsEvent="register_click"
-                className="inline-block bg-white text-black rounded-none px-6 py-3 font-semibold hover:bg-neutral-100 transition-colors cursor-pointer text-sm"
-              >
-                Apply now — free →
+              <TrackedLink href={ORG.social.discord} analyticsEvent="discord_join_click" className={primaryButton}>
+                Join Discord <span aria-hidden="true">→</span>
+                <span className="sr-only"> (opens in a new tab)</span>
               </TrackedLink>
-              <a
-                href={ORG.social.telegram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block border border-white/20 text-white rounded-none px-6 py-3 font-semibold hover:border-white transition-colors cursor-pointer text-sm"
-              >
-                Join Telegram →
-              </a>
+              <TrackedLink href={ORG.social.telegram} analyticsEvent="telegram_join_click" className={ghostButton}>
+                Join Telegram <span aria-hidden="true">→</span>
+                <span className="sr-only"> (opens in a new tab)</span>
+              </TrackedLink>
             </div>
 
-            <div className="border-t border-white/10 pt-6 space-y-3">
-              <p className="text-sm text-neutral-400">
-                Setting a challenge or sponsoring?{" "}
-                <Link
-                  href="/partners"
-                  className="text-neutral-400 hover:text-white transition-colors underline"
-                >
-                  Partner with Since AI →
-                </Link>
-              </p>
-              <p className="text-sm text-neutral-400">
-                Want to help run the weekend in Turku?{" "}
-                <a
-                  href={VOLUNTEER_2026.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center text-neutral-400 hover:text-white transition-colors underline sm:min-h-0"
-                  data-volunteer-cta
-                >
-                  {VOLUNTEER_2026.label} ↗<span className="sr-only"> (application form, opens in a new tab)</span>
-                </a>
-              </p>
-            </div>
+            <ul className="border-t border-white/10">
+              {nextLinks.map((link) => (
+                <li key={link.href} className="border-b border-white/10">
+                  <Link
+                    href={link.href}
+                    className="flex min-h-14 items-center justify-between gap-6 py-3 text-sm text-neutral-300 hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  >
+                    {link.label}
+                    <span aria-hidden="true">→</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            <p className="text-sm text-neutral-400 mt-6">
+              Setting a challenge or sponsoring a future event?{" "}
+              <Link href="/partners" className={textLink}>
+                Partner with Since AI
+              </Link>
+            </p>
           </div>
         </section>
 
-        {/* ── SECTION 13: FAQ ───────────────────────────────────── */}
+        {/* ── SECTION 11: Past edition ─────────────────────────── */}
+        <FadeInView>
+          <section className="py-24 px-6 border-t border-white/10">
+            <div className="mx-auto max-w-6xl">
+              <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
+                {"// previous editions"}
+              </p>
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-8">
+                Since AI Hackathon 2025.
+              </h2>
+
+              <div className="border-l border-white/10 pl-6">
+                <p className="text-sm text-neutral-400 leading-relaxed mb-8 max-w-[640px]">
+                  The inaugural Since AI Hackathon brought together 260 builders from across
+                  Finland and Europe. Teams tackled real industry challenges from Kongsberg,
+                  Sandvik, Valmet, and other partner companies, shipping 30+ AI prototypes
+                  in 72 hours.
+                </p>
+
+                <div className="flex flex-wrap gap-8">
+                  <Link href="/projects" className={textLink}>
+                    View shipped projects <span aria-hidden="true">→</span>
+                  </Link>
+                  <Link href="/events" className={textLink}>
+                    All events <span aria-hidden="true">→</span>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </section>
+        </FadeInView>
+
+        {/* ── SECTION 12: FAQ ───────────────────────────────────── */}
         <section className="py-24 px-6 border-t border-white/10">
           <div className="mx-auto max-w-6xl">
             <p className="text-xs font-mono uppercase tracking-widest text-white/55 mb-3">
@@ -623,36 +600,27 @@ export default function HackathonPage() {
             <FaqAccordion faqs={hackathonFaqs} />
 
             <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3">
-              <Link
-                href="/faq"
-                className="text-sm text-neutral-400 hover:text-white transition-colors"
-              >
-                More questions? See our full FAQ →
+              <Link href="/faq" className={textLink}>
+                More questions? See our full FAQ <span aria-hidden="true">→</span>
               </Link>
-              <Link
-                href="/code-of-conduct"
-                className="text-sm text-neutral-400 hover:text-white transition-colors"
-              >
-                Since AI Code of Conduct →
+              <Link href="/code-of-conduct" className={textLink}>
+                Since AI Code of Conduct <span aria-hidden="true">→</span>
               </Link>
               <a
                 href={MLH_2027.codeOfConduct}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-neutral-400 hover:text-white transition-colors"
+                className={textLink}
               >
-                MLH Code of Conduct ↗
+                MLH Code of Conduct <span aria-hidden="true">↗</span>
+                <span className="sr-only"> (opens in a new tab)</span>
               </a>
             </div>
           </div>
         </section>
 
-        {/* Spacer so the sticky Apply bar never covers the footer's last row */}
         <Footer discordUrl={ORG.social.discord} />
-        <div aria-hidden="true" className="h-16" />
       </main>
-
-      <StickyApplyBar />
     </SmoothScroll>
   );
 }

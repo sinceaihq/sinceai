@@ -102,8 +102,8 @@ const CHAPTERS: { when: string; where: string; title: string; body: ReactNode; n
       <>
         {fmt(REACH.members.total)} builders join the Since AI platform from {REACH.members.countries} countries —{" "}
         {pct(REACH.members.outsideFinland)} of them outside Finland. By {REACH.asOfLabel},{" "}
-        {fmt(REACH.applicants.total)} people from {REACH.applicants.countries} countries have applied for the next
-        hackathon.
+        {fmt(REACH.applicants.total)} people from {REACH.applicants.countries} countries had applied for Since AI
+        Hackathon 2026.
       </>
     ),
   },
@@ -114,9 +114,9 @@ const CHAPTERS: { when: string; where: string; title: string; body: ReactNode; n
     now: true,
     body: (
       <>
-        6–8 November, 1,000+ builders and {HACKATHON_2026_PARTNERS.challengeTarget} company challenges from{" "}
-        {HACKATHON_2026_PARTNERS.challengePartnersShort}, with €50,000+ in cash prizes, as an MLH 2027 Season Member Event.
-        The best teams get eight weeks of production support.{" "}
+        {HACKATHON_2026_PARTNERS.challengeTarget} company challenges from{" "}
+        {HACKATHON_2026_PARTNERS.challengePartnersShort}, with a €50,000+ cash prize pool, as an MLH 2027 Season Member
+        Event. The best teams get eight weeks of production support.{" "}
         <Link href="/hackathon" className={inline}>
           About the hackathon
         </Link>

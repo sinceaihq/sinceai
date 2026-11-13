@@ -116,9 +116,9 @@ export function PartnerLogoGrid() {
           Real problems from real companies.
         </h2>
         <p className="text-sm text-neutral-400 leading-relaxed max-w-[640px] mb-14">
-          Since AI Hackathon 2026 is built for 15 company challenges, each set by a
-          company that actually needs it solved. Build something they can use — and
-          get in front of the people who do the hiring.
+          Since AI Hackathon 2026 had 15 company challenges, each set by a company
+          that actually needed it solved — so teams built something a company could
+          use, in front of the people who work on the problem.
         </p>
 
         {groups.map((group, i) => (

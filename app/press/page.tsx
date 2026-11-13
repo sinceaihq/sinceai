@@ -6,11 +6,12 @@ import { Footer } from "@/components/layout/Footer";
 import { FadeIn } from "@/components/motion-primitives/fade-in";
 import { Download, Mail } from "lucide-react";
 import { ORG } from "@/lib/org";
+import { REACH, fmt } from "@/lib/reach";
 
 export default function PressPage() {
   const stats = [
     { label: "AI builders in our network", value: ORG.stats.network },
-    { label: "Builders targeted at Hackathon 2026", value: ORG.stats.hackathon2026Target },
+    { label: `Applications for Hackathon 2026 (as of ${REACH.asOfLabel})`, value: fmt(REACH.applicants.total) },
     { label: "Partners & supporters", value: ORG.stats.partners },
     { label: "Builders at Hackathon 2025", value: ORG.stats.hackathonParticipants },
   ];
@@ -132,7 +133,7 @@ export default function PressPage() {
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">•</span>
-                    <span>Since AI Hackathon 2026 (6–8 November): {ORG.stats.hackathon2026Target} builders, 15 company challenges and €50,000+ in cash prizes</span>
+                    <span>Held Since AI Hackathon 2026 on 6–8 November 2026 in Turku, with 15 company challenges and a €50,000+ cash prize pool</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-white font-bold mt-1">•</span>
@@ -361,8 +362,8 @@ export default function PressPage() {
                       the Finnish non-profit Since AI ry. Since AI runs high-intensity hackathons on real challenges
                       from industry partners and supports the strongest teams after the event, with eight weeks of
                       production support. Its network counts 10,000+ AI builders in 120+ countries and 100+ partners
-                      and supporters, including Google for Developers, ElevenLabs, Valmet, Bayer and Antler. The
-                      flagship event, Since AI Hackathon 2026, brings 1,000+ builders to Turku, Finland on 6–8
+                      and supporters, including Google for Developers, ElevenLabs, Valmet, Bayer and Antler. Its
+                      flagship event, Since AI Hackathon, was most recently held in Turku, Finland on 6–8
                       November 2026. Learn more: sinceai.ai
                     </p>
                   </div>
@@ -377,8 +378,8 @@ export default function PressPage() {
                       challenges together with companies, runs high-intensity hackathons, gives the strongest teams
                       eight weeks of production support, and connects founders with capital partners such as
                       Antler. Projects from Since AI Hackathon 2025 run in production with Kongsberg and Sandvik.
-                      Since AI Hackathon 2026, on 6–8 November 2026 in Turku, Finland, brings together 1,000+
-                      builders, 15 company challenges and €50,000+ in cash prizes, and is an MLH 2027 Season Member
+                      Since AI Hackathon 2026, held on 6–8 November 2026 in Turku, Finland, had 15 company
+                      challenges and a cash prize pool of €50,000+, and was an MLH 2027 Season Member
                       Event. Learn more: sinceai.ai
                     </p>
                   </div>

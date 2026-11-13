@@ -103,7 +103,7 @@ export const Navbar = () => {
             analyticsEvent="register_click"
             className="hidden md:inline-block text-[13px] font-bold text-black bg-white rounded-none px-4 py-2 border border-white whitespace-nowrap transition-colors duration-300 hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
-            Apply →<span className="sr-only"> (opens in a new tab)</span>
+            Join Since AI <span aria-hidden="true">→</span><span className="sr-only"> (opens in a new tab)</span>
           </TrackedLink>
 
           <button
@@ -188,7 +188,7 @@ export const Navbar = () => {
               analyticsEvent="register_click"
               className="inline-flex min-h-12 items-center justify-center text-sm font-bold text-black bg-white rounded-none px-5 py-3 transition-colors hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
             >
-              Apply for Hackathon 2026 →<span className="sr-only"> (opens in a new tab)</span>
+              Join Since AI <span aria-hidden="true">→</span><span className="sr-only"> (opens in a new tab)</span>
             </TrackedLink>
             <TrackedLink
               href={ORG.social.discord}
