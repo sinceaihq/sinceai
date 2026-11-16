@@ -26,6 +26,25 @@ describe("partners", () => {
     expect(JSON.stringify(HACKATHON_2026_PARTNERS)).not.toContain("IOL");
   });
 
+  it("opens the Community Supporters with Liedon Säästöpankkisäätiö, City of Turku and the Wihuri Foundation", () => {
+    expect(tier3Partners.slice(0, 3).map((p) => p.name)).toEqual([
+      "Liedon Säästöpankkisäätiö",
+      "City of Turku",
+      "Jenny and Antti Wihuri Foundation",
+    ]);
+    expect(tier3Partners[0]).toMatchObject({
+      logo: "/assets/supports/liedon-saastopankkisaatio.png",
+      url: "https://liedonsaastopankkisaatio.fi/",
+    });
+    expect(tier3Partners[2]).toMatchObject({
+      logo: "/assets/supports/wihuri-foundation.png",
+      url: "https://wihurinrahasto.fi/en/",
+    });
+    for (const name of ["City of Turku", "Liedon Säästöpankkisäätiö", "Jenny and Antti Wihuri Foundation"]) {
+      expect(PARTNERS.filter((p) => p.name === name)).toHaveLength(1);
+    }
+  });
+
   it("shows TrustED once, as a strategic partner, with its official logo and website", () => {
     const trusted = PARTNERS.filter((p) => p.name === "TrustED");
     expect(trusted).toHaveLength(1);

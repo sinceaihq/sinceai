@@ -345,7 +345,30 @@ export const PARTNERS: Partner[] = [
   },
 
   // ─── Tier 3: Community Supporters ───────────────────────────────────────────
-  // Ordered by global reference value (strongest first).
+  // The first three are fixed by the organiser (12 Nov 2026): Liedon
+  // Säästöpankkisäätiö, City of Turku, Jenny and Antti Wihuri Foundation.
+  // The rest are ordered by global reference value (strongest first).
+  {
+    // Official white logo (LSPS_logo_text_white_rgb), trimmed: the green and
+    // grey versions have dark lettering that disappears on the black page.
+    name: "Liedon Säästöpankkisäätiö",
+    logo: "/assets/supports/liedon-saastopankkisaatio.png",
+    url: "https://liedonsaastopankkisaatio.fi/",
+    tier: 3,
+  },
+  {
+    name: "City of Turku",
+    logo: "/assets/supports/cityofturku.png",
+    url: "https://www.turku.fi",
+    tier: 3,
+  },
+  {
+    // Official white logo from the foundation's logo pack, trimmed.
+    name: "Jenny and Antti Wihuri Foundation",
+    logo: "/assets/supports/wihuri-foundation.png",
+    url: "https://wihurinrahasto.fi/en/",
+    tier: 3,
+  },
   {
     name: "OxAI",
     logo: "/assets/sponsors/OxAI.png",
@@ -410,12 +433,6 @@ export const PARTNERS: Partner[] = [
     name: "1991",
     logo: "/assets/sponsors/1991.svg",
     url: "https://www.1991.vc/",
-    tier: 3,
-  },
-  {
-    name: "City of Turku",
-    logo: "/assets/supports/cityofturku.png",
-    url: "https://www.turku.fi",
     tier: 3,
   },
   {
