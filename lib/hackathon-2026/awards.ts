@@ -561,7 +561,7 @@ export const FIWARE_EXAMPLES = [
   { title: "AI agents for manufacturing digital twins", text: "Agents that generate NGSI-LD digital twins of industrial equipment and orchestrate production routines — broker instances and an AR/VR demo environment from the iHub cluster." },
   { title: "Indoor location for emergency responders", text: "Model buildings and floor plans in NGSI-LD and add a floor-level location layer where GPS fails — with IndoorSOS mapping data and a synthetic dataset." },
   { title: "Smart city mobility and public space", text: "Bring mobility, footfall and public space sensor data into a Context Broker for real-time dashboards or predictive services — with the City of The Hague." },
-  { title: "Water network monitoring", text: "Model pipes, pumps and sensors as NGSI-LD entities, detect anomalies and share quality data between operators — with XAMK." },
+  { title: "Water network monitoring", text: "Model pipes, pumps and sensors as NGSI-LD entities, detect anomalies and share quality data between operators." },
   { title: "Sovereign AI data pipeline", text: "Collect data as NGSI-LD entities, export a training set with provenance, fine-tune a small open model with LoRA and deploy it as a FIWARE-aware agent." },
   { title: "MCP-powered industrial AI on coraine", text: "An MCP server on the coraine broker so AI assistants can query live industrial context — with a human approving every physical action." },
 ] as const;
